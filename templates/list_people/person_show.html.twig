@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Fiche personne{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+<section id="profil">
+    <div class="row">
+
+        <div class="col-md-12 mb-4">
+            <form action="" method="post" class="col-md-8 mx-auto card shadow">
+                <div class="form-group row">
+                    <h1 class="card-header col-md-12 h2 bg-secondary text-light">Fiche personne</h1>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="group-form row">
+                            <label for="last-name" class="col-md-4 col-form-label">Nom</label>
+                            <div class="col-md-8">
+                                <input type="text" name="last-name" id="last-name" class="form-control mb-4" value="">
+                            </div>
+                        </div>
+                        <div class="group-form row">
+                            <label for="first-name" class="col-md-4 col-form-label">Prénom</label>
+                            <div class="col-md-8">
+                                <input type="text" name="first-name" id="first-name" class="form-control mb-4" value="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="birthdate" class="col-md-4 col-form-label">Date de naissance</label>
+                            <div class="col-md-4">
+                                <input type="date" name="birthdate" id="birthdate" class="form-control mb-4" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="family-typology" class="col-md-4 col-form-label">Typologie familiale</label>
+                            <div class="col-md-8">
+                                <select name="family-typology" id="family-typology"
+                                    class="custom-select form-control w-50 shadow-sm" required>
+                                    <option value="1">Femme seule</option>
+                                    <option value="2">Homme seule</option>
+                                    <option value="3">Couple sans enfant</option>
+                                    <option value="4">Couple avec enfant(s)</option>
+                                    <option value="5">Femme avec enfant(s)</option>
+                                    <option value="6">Homme avec enfant(s)</option>
+                                    <option value="7">Autre groupe</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="group-form row">
+                            <label for="nb-people" class="col-md-4 col-form-label">Nombre de personnes</label>
+                            <div class="col-md-2">
+                                <input type="text" name="nb-people" id="nb-people" class="form-control mb-4" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="float-right">
+                                    <input type="submit" value="Mettre à jour" id="updateInfo"
+                                        class="btn btn-primary shadow">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+
+{% endblock %}
