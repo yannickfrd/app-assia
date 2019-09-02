@@ -13,13 +13,13 @@ use App\Repository\PersonRepository;
 class ListPeopleController extends AbstractController
 {
     /**
-     * @Route("/list/people", name="list_people")
+     * @Route("/list/people", name="app")
      */
     public function index(PersonRepository $repo) {
         // $repo = $this->getDoctrine()->getRepository(Person::class);
         $people = $repo->findAll();
 
-        return $this->render('list_people/index.html.twig', [
+        return $this->render('app/index.html.twig', [
             'controller_name' => 'ListPeopleController',
             "people" => $people
         ]);
@@ -29,7 +29,7 @@ class ListPeopleController extends AbstractController
      * @Route("/", name="home")
      */
     public function home() {
-        return $this->render("list_people/home.html.twig", [
+        return $this->render("app/home.html.twig", [
             "title" => "Bienvenue sur l'application de suivi social d'ESPERER 95",
         ]);
     }
@@ -59,7 +59,7 @@ class ListPeopleController extends AbstractController
                      ->add("comment")
                      ->getForm();
 
-        return $this->render("list_people/person_show.html.twig", [
+        return $this->render("app/person_show.html.twig", [
             "formPerson" => $form->createView()
         ]);
     }
@@ -70,7 +70,7 @@ class ListPeopleController extends AbstractController
     public function personShow(Person $person) {
         // $repo = $this->getDoctrine()->getRepository(Person::class);
         // $person = $repo->find($id);
-        return $this->render("list_people/person_show.html.twig", [
+        return $this->render("app/person_show.html.twig", [
             "person" => $person
         ]);
     }
