@@ -59,18 +59,18 @@ class ListPeopleController extends AbstractController
                      ->add("comment")
                      ->getForm();
 
-        return $this->render("app/person_show.html.twig", [
+        return $this->render("app/personCard.html.twig", [
             "formPerson" => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/list/person/{id}", name="person_show")
+     * @Route("/list/person/{id}", name="personCard")
      */
     public function personShow(Person $person) {
         // $repo = $this->getDoctrine()->getRepository(Person::class);
         // $person = $repo->find($id);
-        return $this->render("app/person_show.html.twig", [
+        return $this->render("app/personCard.html.twig", [
             "person" => $person
         ]);
     }
