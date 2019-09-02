@@ -10,7 +10,45 @@
 
 {% block body %}
 
+{% if formPerson is defined %}
 
+
+<div class="col-md-8 mx-auto card shadow">
+    <div class="form-group row">
+        <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
+    </div>
+    {{ form_start(formPerson) }}
+    <div class="form-group row">
+        <div class="col-md-12">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="group-form row">
+                        <label for="last-name" class="col-md-4 col-form-label">Prénom</label>
+                        <div class="col-md-8">
+                            {{ form_widget(formPerson.firstname) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="group-form row">
+                        <label for="last-name" class="col-md-4 col-form-label">Nom</label>
+                        <div class="col-md-8">
+                            {{ form_widget(formPerson.lastname) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_end(formPerson) }}
+
+    </div>
+</div>
+
+{% endif %}
 
 <section id="profil">
     <div class="row">
@@ -18,30 +56,53 @@
         <div class="col-md-12 mb-4">
             <form action="" method="post" class="col-md-8 mx-auto card shadow">
                 <div class="form-group row">
-                    <h1 class="card-header col-md-12 h2 bg-secondary text-light">Fiche personne</h1>
+                    <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-md-12">
                         <div class="group-form row">
-                            <label for="last-name" class="col-md-4 col-form-label">Nom</label>
+                            <label for="first-name" class="col-md-4 col-form-label">Prénom</label>
                             <div class="col-md-8">
-                                <input type="text" name="last-name" id="last-name" class="form-control mb-4" value="">
+                                <input type="text" name="first-name" id="first-name" class="form-control mb-4"
+                                    value="{% if person is defined %}{{person.firstname}}{% endif %}">
                             </div>
                         </div>
                         <div class="group-form row">
-                            <label for="first-name" class="col-md-4 col-form-label">Prénom</label>
+                            <label for="last-name" class="col-md-4 col-form-label">Nom</label>
                             <div class="col-md-8">
-                                <input type="text" name="first-name" id="first-name" class="form-control mb-4" value="">
+                                <input type="text" name="last-name" id="last-name" class="form-control mb-4"
+                                    value="{% if person is defined %}{{person.lastname}}{% endif %}">
                             </div>
                         </div>
                         <div class="row">
                             <label for="birthdate" class="col-md-4 col-form-label">Date de naissance</label>
                             <div class="col-md-4">
-                                <input type="date" name="birthdate" id="birthdate" class="form-control mb-4" value="">
+                                <input type="date" name="birthdate" id="birthdate" class="form-control mb-4"
+                                    value="{% if person is defined %}{{person.birthdate | date("d/m/Y")}}{% endif %}">
+                            </div>
+                        </div>
+                        <div class="group-form row">
+                            <label for="sex" class="col-md-4 col-form-label">Sexe</label>
+                            <div class="col-md-4">
+                                <input type="text" name="sex" id="sex" class="form-control mb-4"
+                                    value="{% if person is defined %}{{person.sex}}{% endif %}">
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="nationaly" class="col-md-4 col-form-label">Nationalité</label>
+                            <div class="col-md-8">
+                                <select name="nationaly" id="nationaly"
+                                    class="custom-select form-control w-50 shadow-sm" required>
+                                    <option value="1">France</option>
+                                    <option value="2">Union Européenne</option>
+                                    <option value="3">Hors UE</option>
+                                    <option value="4">Apatride</option>
+                                    <option value="5">Non renseigné</option>
+                                </select>
+                            </div>
+                        </div>
+                        {# <div class="form-group row">
                             <label for="family-typology" class="col-md-4 col-form-label">Typologie familiale</label>
                             <div class="col-md-8">
                                 <select name="family-typology" id="family-typology"
@@ -61,19 +122,35 @@
                             <div class="col-md-2">
                                 <input type="text" name="nb-people" id="nb-people" class="form-control mb-4" value="">
                             </div>
+                        </div> #}
+                        {% if person is defined %}
+                        <div class="row">
+                            <label for="creation-date" class="col-md-4 col-form-label">Date de création</label>
+                            <div class="col-md-4">
+                                <input type="text" name="creation-date" id="creation-date" class="form-control mb-4"
+                                    readonly value="{{person.creationDate | date("d/m/Y H:i")}}">
+                            </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <div class="float-right">
-                                    <input type="submit" value="Mettre à jour" id="updateInfo"
-                                        class="btn btn-primary shadow">
-                                </div>
+                        <div class="row">
+                            <label for="update-date" class="col-md-4 col-form-label">Date de
+                                modification</label>
+                            <div class="col-md-4">
+                                <input type="text" name="update-date" id="update-date" class="form-control mb-4"
+                                    readonly value="{{person.creationDate | date("d/m/Y H:i")}}">
+                            </div>
+                        </div {% endif %} <div class="form-group row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                <input type="submit"
+                                    value="{% if person is defined %}Mettre à jour{% else %}Enregistrer{% endif %}"
+                                    id="updateInfo" class="btn btn-primary shadow">
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
         </div>
+        </form>
+    </div>
     </div>
     </div>
 </section>

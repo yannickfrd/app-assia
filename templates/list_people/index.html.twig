@@ -64,6 +64,8 @@
             </thead>
 
             <tbody>
+
+                {% for person in people %}
                 <tr>
                     <th scope="row">
                         <div class="custom-control custom-checkbox">
@@ -73,16 +75,18 @@
                         </div>
                     </th>
                     <td>
-                        <a href="{{ path("person_show") }}" class="text-primary font-weight-bold">MADELAINE</a>
+                        <a href="{{ path('person_show', {'id':person.id}) }}"
+                            class="text-primary font-weight-bold">{{ person.lastname }}</a>
                         <a class="text-blue" href=""></a>
                     </td>
-                    <td>Romain</td>
-                    <td>01/01/1985</td>
-                    <td>Homme seul</td>
-                    <td>1</td>
-                    <td>12/02/2018</td>
+                    <td>{{ person.firstname }}</td>
+                    <td>{{ person.birthdate | date("d/m/Y") }}</td>
+                    <td>{{ person.sex }}</td>
+                    <td>{{ person.sex }}</td>
+                    <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
                     <td></td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
