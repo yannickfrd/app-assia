@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
@@ -20,16 +21,20 @@ class PersonType extends AbstractType
         ->add("birthdate", DateType::class, [
             "widget" => "single_text"
         ])
-        ->add("sex")
+        ->add("sex", ChoiceType::class, [
+            // "placeholder" => "Sélectionner une option",
+            "choices" => [
+                "-- Sélectionner --" => NULL,
+                "Femme" => "1",
+                "Homme" => "2",
+                "Autre" => "3"
+            ],
+        ])
         ->add("comment")
         // ->add("creationDate", DateTimeType::class, [
         //     "widget" => "single_text",
         //     'format' => 'dd/MM/YYY H:m',
         // ])                    
-        // ->add("updateDate", DateTimeType::class, [
-        //     "widget" => "single_text",
-        //     'format' => 'dd/MM/YYY H:m',
-        // ])
         ;
     }
 

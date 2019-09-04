@@ -21,112 +21,83 @@
                 <div class="form-group row">
                     <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
                 </div>
+
                 {{ form_start(formPerson) }}
-                {# {{ form_widget(formPerson) }} #}
+
+                {% if person.id %}
+                <div class="small text-secondary">
+                    <p>Créé le {{person.creationDate | date("d/m/Y à H:i") }} (modifié le
+                        {{person.updateDate | date("d/m/Y à H:i") }}).</p>
+                    {# {{ form_row(formPerson.updateDate, {"label": "Date de modification", "attr": {"readonly" : "readonly", } }) }} #}
+                </div>
+                {% else %}
+                <div class="text-secondary mb-4">
+                    <p> </p>
+                </div> {% endif %}
 
                 <div class="">
-                    {{ form_errors(formPerson.firstname, { "label": "Erreur" }) }}
+                    {{ form_errors(formPerson.firstname, { 
+                        "label": "Erreur" 
+                    }) }}
+                </div>
+                <div class="group-form row">
+                    {{ form_label(formPerson.lastname, "Nom", { 
+                        "label_attr": {"class" : "col-md-4 col-form-label"} 
+                    }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(formPerson.lastname, { 
+                            "attr": {"class" : "form-control mb-4", "placeholder" : "Nom"} 
+                        }) }}
+                    </div>
+                </div>
+                <div class="group-form row">
+                    {{ form_label(formPerson.firstname, "Prénom", { 
+                            "label_attr": {"class" : "col-md-4 col-form-label"} 
+                        }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(formPerson.firstname, { 
+                                "attr": {"class" : "form-control mb-4", "placeholder" : "Prénom"} 
+                            }) }}
+                    </div>
+                </div>
+                <div class="group-form row">
+                    {{ form_label(formPerson.birthdate, "Date de naissance", { 
+                        "label_attr": {"class" : "col-md-4 col-form-label"} 
+                    }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(formPerson.birthdate, {
+                            "attr": {"class" : "form-control mb-4"}, "required": false
+                        }) }}
+                    </div>
+                </div>
+                <div class="group-form row">
+                    {{ form_label(formPerson.sex, "Sexe", {
+                         "label_attr": {"class" : "col-md-4 col-form-label"} 
+                    }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(formPerson.sex, { 
+                            "attr": {"class" : "form-control mb-4"} 
+                        }) }}
+                    </div>
+                </div>
+                <div class="">
+                    {{ form_widget(formPerson.comment, { 
+                        "attr": {"class" : "form-control mb-4", "rows" : 4, "placeholder" : "Saisir un commentaire sur la personne."}  
+                    }) }}
                 </div>
 
-                {{ form_row(formPerson.firstname, { "label": "Prénom", "attr": { "placeholder" : "Prénom", } }) }}
-                {{ form_row(formPerson.lastname, { "label": "Nom", "attr": { "placeholder" : "Nom" } }) }}
-                {{ form_row(formPerson.birthdate, { "label": "Date naissance", "required": false}) }}
-                {{ form_row(formPerson.sex, { "label": "Sexe", "attr": { "placeholder" : "Sexe" } }) }}
-                {{ form_row(formPerson.comment, { "label": "Commentaire" }) }}
-                {# {{ form_row(formPerson.creationDate, { 
-                    "label": "Date de création", 
-                    "attr": { 
-                        "readonly": "readonly"
-                     } }) }} #}
-                {# {{ form_row(formPerson.updateDate, { "label": "Date de modification", "attr": { "readonly" : "readonly", } }) }} #}
-
-                <div class="col-md-12 mb-4">
-                    <div class="float-right">
+                <div class="col-md-12">
+                    <div class="mb-4 float-right">
                         <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
                             value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
                     </div>
                 </div>
-
-                {{ form_end(formPerson) }}
+                {{ form_widget(formPerson._token) }}
+                {{ form_end(formPerson, {"render_rest": false}) }}
             </div>
             {% endif %}
         </div>
     </div>
-
-    {# Version 1 du formulaire  #}
-    {% if person is defined %}
-    <div class="row">
-
-        <div class="col-md-12 mb-4">
-            <form action="" method="post" class="col-md-8 mx-auto card shadow">
-                <div class="form-group row">
-                    <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-md-12">
-                        <div class="group-form row">
-                            <label for="first-name" class="col-md-4 col-form-label">Prénom</label>
-                            <div class="col-md-8">
-                                <input type="text" name="first-name" id="first-name" class="form-control mb-4"
-                                    value="{% if person is defined %}{{person.firstname}}{% endif %}">
-                            </div>
-                        </div>
-                        <div class="group-form row">
-                            <label for="last-name" class="col-md-4 col-form-label">Nom</label>
-                            <div class="col-md-8">
-                                <input type="text" name="last-name" id="last-name" class="form-control mb-4"
-                                    value="{% if person is defined %}{{person.lastname}}{% endif %}">
-                            </div>
-                        </div>
-                        <div class="group-form row">
-                            <label for="birthdate" class="col-md-4 col-form-label">Date de naissance</label>
-                            <div class="col-md-4">
-                                <input type="date" name="birthdate" id="birthdate" class="form-control mb-4"
-                                    value="{% if person is defined %}{{person.birthdate | date("d/m/Y")}}{% endif %}">
-                            </div>
-                        </div>
-                        <div class="group-form row">
-                            <label for="sex" class="col-md-4 col-form-label">Sexe</label>
-                            <div class="col-md-4">
-                                <input type="text" name="sex" id="sex" class="form-control mb-4"
-                                    value="{% if person is defined %}{{person.sex}}{% endif %}">
-                            </div>
-                        </div>
-
-                        {% if person is defined %}
-                        <div class="row">
-                            <label for="creation-date" class="col-md-4 col-form-label">Date de création</label>
-                            <div class="col-md-4">
-                                <input type="text" name="creation-date" id="creation-date" class="form-control mb-4"
-                                    readonly value="{{person.creationDate | date("d/m/Y H:i")}}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label for="update-date" class="col-md-4 col-form-label">Date de
-                                modification</label>
-                            <div class="col-md-4">
-                                <input type="text" name="update-date" id="update-date" class="form-control mb-4"
-                                    readonly value="{{person.creationDate | date("d/m/Y H:i")}}">
-                            </div>
-                        </div {% endif %} <div class="form-group row">
-                        <div class="col-md-12">
-                            <div class="float-right">
-                                <input type="submit"
-                                    value="{% if person is defined %}Mettre à jour{% else %}Enregistrer{% endif %}"
-                                    id="updateInfo" class="btn btn-primary shadow">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    {% endif %}
-
-
 </section>
-
-
 
 {% endblock %}

@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -57,7 +59,6 @@ class ListPeopleController extends AbstractController
         dump($person);
 
         if($form->isSubmitted() && $form->isValid()) {
-            date_default_timezone_set("Europe/Paris");
             if(!$person->getId()) {
                 $person->setCreationDate(new \DateTime());
             }
@@ -70,7 +71,8 @@ class ListPeopleController extends AbstractController
 
         return $this->render("app/personCard.html.twig", [
             "formPerson" => $form->createView(),
-            "editMode" => $person->getId() != NULL
+            "editMode" => $person->getId() != NULL,
+            "person"=> $person
         ]);
     }
 
