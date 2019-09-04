@@ -48,9 +48,15 @@ class Group
      */
     private $people;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
+     */
+    private $socialSupports;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
+        $this->socialSupports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +145,37 @@ class Group
     {
         if ($this->people->contains($person)) {
             $this->people->removeElement($person);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SocialSupport[]
+     */
+    public function getSocialSupports(): Collection
+    {
+        return $this->socialSupports;
+    }
+
+    public function addSocialSupport(SocialSupport $socialSupport): self
+    {
+        if (!$this->socialSupports->contains($socialSupport)) {
+            $this->socialSupports[] = $socialSupport;
+            $socialSupport->setGroupPeople($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSocialSupport(SocialSupport $socialSupport): self
+    {
+        if ($this->socialSupports->contains($socialSupport)) {
+            $this->socialSupports->removeElement($socialSupport);
+            // set the owning side to null (unless already changed)
+            if ($socialSupport->getGroupPeople() === $this) {
+                $socialSupport->setGroupPeople(null);
+            }
         }
 
         return $this;
