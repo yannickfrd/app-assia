@@ -3,12 +3,18 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\FormBuilderInterface;
+
 use Doctrine\Common\Persistence\ObjectManager;
+
 use App\Entity\Person;
 use App\Repository\PersonRepository;
+use App\Form\PersonType;
 
 class ListPeopleController extends AbstractController
 {
@@ -36,42 +42,53 @@ class ListPeopleController extends AbstractController
 
     /**
      * @Route("/list/person/new", name="create_person")
+     * @Route("/list/person/{id}", name="personCard")
      */
-    public function createPerson(Request $request, ObjectManager $manager) {
-        $person = new Person();
+    public function formPerson(Person $person = NULL, Request $request, ObjectManager $manager) {
+        
+        if (!$person) {
+            $person = new Person();
+        }
 
-        $form = $this->createFormBuilder($person)
-                     ->add("firstname", TextType::class, [
-                         "attr" => [
-                             "class" => "form-control mb-4",
-                             "placeholder" => "Prénom"
-                         ]
-                     ])
-                     ->add("lastname", TextType::class, [
-                        "attr" => [
-                            "class" => "form-control mb-4",
-                            "placeholder" => "Nom"
-                        ]
-                    ])
-                    ->add("birthdate")
-                     ->add("sex")
-                     ->add("nationality")
-                     ->add("comment")
-                     ->getForm();
+        $form = $this->createForm(PersonType::class, $person);
+
+        $form->handleRequest($request);
+
+        dump($person);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            date_default_timezone_set("Europe/Paris");
+            if(!$person->getId()) {
+                $person->setCreationDate(new \DateTime());
+            }
+            $person->setUpdateDate(new \DateTime());
+            $manager->persist($person);
+            $manager->flush();
+
+            return $this->redirectToRoute("personCard", ["id" => $person->getId()]);
+        }
 
         return $this->render("app/personCard.html.twig", [
-            "formPerson" => $form->createView()
+            "formPerson" => $form->createView(),
+            "editMode" => $person->getId() != NULL
         ]);
     }
 
     /**
      * @Route("/list/person/{id}", name="personCard")
      */
-    public function personShow(Person $person) {
-        // $repo = $this->getDoctrine()->getRepository(Person::class);
-        // $person = $repo->find($id);
-        return $this->render("app/personCard.html.twig", [
-            "person" => $person
-        ]);
-    }
+    // public function personShow(Person $person) {
+    //     $repo = $this->getDoctrine()->getRepository(Person::class);
+    //     $person = $repo->find($id);
+    //     return $this->render("app/personCard.html.twig", [
+    //         "person" => $person
+    //     ]);
+
+    //     $form = $this->formPerson($person, "update");
+
+    //     return $this->render("app/personCard.html.twig", [
+    //         "formPerson" => $form->createView()
+    //     ]);
+    // }
+
 }

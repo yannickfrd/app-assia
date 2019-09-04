@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  */
@@ -17,17 +19,20 @@ class Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50)   
+     * @Assert\Length(max=50,maxMessage="Le nom est trop long (50 caractères maximum).")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(max=50,maxMessage="Le prénom est trop long (50 caractères maximum).")     
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères maximum).")     
      */
     private $usename;
 
@@ -67,7 +72,7 @@ class Person
     private $comment;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $creationDate;
 
@@ -77,7 +82,7 @@ class Person
     private $createBy;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $updateDate;
 

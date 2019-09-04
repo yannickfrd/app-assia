@@ -51,21 +51,20 @@
                             <a class="nav-link" href="#">Recherche</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path("app") }}">Personnes suivies</a>
+                            <a class="nav-link" href="{{ path("app") }}">Suivis</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Fiche personne</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path("create_person") }}">Ajouter une personne</a>
+                            <a class="nav-link" href="{{ path("create_person") }}">Nouvelle personne</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Statistiques</a>
                         </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
+                        <label for="search" class="sr-only col-form-label">Recherche</label>
+                        <input id="search" class="form-control mr-sm-2" type="text" placeholder="Recherche">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit"><span
+                                class="fas fa-search"></span></button></button>
                     </form>
                 </div>
             </nav>
