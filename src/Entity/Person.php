@@ -22,19 +22,19 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)   
-     * @Assert\Length(max=50,maxMessage="Le nom est trop long (50 caractères maximum).")
+     * @Assert\Length(max=50,maxMessage="Le nom est trop long (50 caractères max.).")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\Length(max=50,maxMessage="Le prénom est trop long (50 caractères maximum).")     
+     * @Assert\Length(max=50,maxMessage="Le prénom est trop long (50 caractères max).")     
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères maximum).")     
+     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères max).")     
      */
     private $usename;
 

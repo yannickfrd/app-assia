@@ -10,19 +10,40 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add("firstname")
-        ->add("lastname")
+        ->add("lastname", NULL, [
+            "label" => "Nom",
+            "attr" => [
+                "placeholder" => "Nom"
+            ]
+        ])
+        ->add("firstname", NULL, [
+            "label" => "Prénom",
+            "attr" => [
+                "placeholder" => "Prénom"
+            ]
+        ])
         ->add("birthdate", DateType::class, [
-            "widget" => "single_text"
+            "label" => "Date de naissance",
+            "widget" => "single_text",
+            "attr" => [
+                "class" => "col-md-6"
+            ],
+            "required" => false
+            
         ])
         ->add("sex", ChoiceType::class, [
-            // "placeholder" => "Sélectionner une option",
+            "label" => "Sexe",
+            "attr" => [
+                "class" => "col-md-6"
+            ],
+            "placeholder" => "Sélectionner une option",
             "choices" => [
                 "-- Sélectionner --" => NULL,
                 "Femme" => "1",
@@ -30,7 +51,13 @@ class PersonType extends AbstractType
                 "Autre" => "3"
             ],
         ])
-        ->add("comment")
+        ->add("comment",NULL, [
+            "label" => "Commentaire",
+            "attr" => [
+                "rows" => 4,
+                "placeholder" => "Saisir un commentaire sur la personne"
+            ]
+        ])
         // ->add("creationDate", DateTimeType::class, [
         //     "widget" => "single_text",
         //     'format' => 'dd/MM/YYY H:m',

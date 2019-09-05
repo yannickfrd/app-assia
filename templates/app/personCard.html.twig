@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme formPerson 'bootstrap_4_layout.html.twig' %}
+{% form_theme formPerson 'bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block title %}Fiche personne{% endblock %}
 
@@ -8,12 +8,10 @@
 
 {% endblock %}
 
-
 {% block body %}
 
 <section id="profil">
 
-    {# Version 2 du formulaire  #}
     <div class="row">
         <div class="col-md-12 mb-4">
             {% if formPerson is defined %}
@@ -21,9 +19,6 @@
                 <div class="form-group row">
                     <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
                 </div>
-
-                {{ form_start(formPerson) }}
-
                 {% if person.id %}
                 <div class="small text-secondary">
                     <p>Créé le {{person.creationDate | date("d/m/Y à H:i") }} (modifié le
@@ -31,68 +26,23 @@
                     {# {{ form_row(formPerson.updateDate, {"label": "Date de modification", "attr": {"readonly" : "readonly", } }) }} #}
                 </div>
                 {% else %}
-                <div class="text-secondary mb-4">
-                    <p> </p>
-                </div> {% endif %}
+                <div class="mb-4"></div>
+                {% endif %}
 
-                <div class="">
-                    {{ form_errors(formPerson.firstname, { 
-                        "label": "Erreur" 
-                    }) }}
-                </div>
-                <div class="group-form row">
-                    {{ form_label(formPerson.lastname, "Nom", { 
-                        "label_attr": {"class" : "col-md-4 col-form-label"} 
-                    }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(formPerson.lastname, { 
-                            "attr": {"class" : "form-control mb-4", "placeholder" : "Nom"} 
-                        }) }}
-                    </div>
-                </div>
-                <div class="group-form row">
-                    {{ form_label(formPerson.firstname, "Prénom", { 
-                            "label_attr": {"class" : "col-md-4 col-form-label"} 
-                        }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(formPerson.firstname, { 
-                                "attr": {"class" : "form-control mb-4", "placeholder" : "Prénom"} 
-                            }) }}
-                    </div>
-                </div>
-                <div class="group-form row">
-                    {{ form_label(formPerson.birthdate, "Date de naissance", { 
-                        "label_attr": {"class" : "col-md-4 col-form-label"} 
-                    }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(formPerson.birthdate, {
-                            "attr": {"class" : "form-control mb-4"}, "required": false
-                        }) }}
-                    </div>
-                </div>
-                <div class="group-form row">
-                    {{ form_label(formPerson.sex, "Sexe", {
-                         "label_attr": {"class" : "col-md-4 col-form-label"} 
-                    }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(formPerson.sex, { 
-                            "attr": {"class" : "form-control mb-4"} 
-                        }) }}
-                    </div>
-                </div>
-                <div class="">
-                    {{ form_widget(formPerson.comment, { 
-                        "attr": {"class" : "form-control mb-4", "rows" : 4, "placeholder" : "Saisir un commentaire sur la personne."}  
-                    }) }}
-                </div>
+                {{ form_start(formPerson) }}
 
-                <div class="col-md-12">
-                    <div class="mb-4 float-right">
-                        <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                            value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
-                    </div>
-                </div>
+                {{ form_row(formPerson.lastname) }}
+                {{ form_row(formPerson.firstname) }}
+                {{ form_row(formPerson.lastname) }}
+                {{ form_row(formPerson.birthdate) }}
+                {{ form_row(formPerson.sex) }}
+                {{ form_row(formPerson.comment) }}
                 {{ form_widget(formPerson._token) }}
+
+                <div class="mb-4 float-right">
+                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                </div>
                 {{ form_end(formPerson, {"render_rest": false}) }}
             </div>
             {% endif %}
@@ -101,3 +51,50 @@
 </section>
 
 {% endblock %}
+
+
+{# <div class="group-form row">
+    {{ form_label(formPerson.lastname, "Nom", { 
+        "label_attr": {"class" : "col-md-4 col-form-label"} 
+    }) }}
+    <div class="col-md-8">
+        {{ form_widget(formPerson.lastname, { 
+            "attr": {"class" : "form-control mb-4", "placeholder" : "Nom"} 
+        }) }}
+    </div>
+</div>
+<div class="group-form row">
+    {{ form_label(formPerson.firstname, "Prénom", { 
+            "label_attr": {"class" : "col-md-4 col-form-label"} 
+        }) }}
+    <div class="col-md-8">
+        {{ form_widget(formPerson.firstname, { 
+                "attr": {"class" : "form-control mb-4", "placeholder" : "Prénom"} 
+            }) }}
+    </div>
+</div>
+<div class="group-form row">
+    {{ form_label(formPerson.birthdate, "Date de naissance", { 
+        "label_attr": {"class" : "col-md-4 col-form-label"} 
+    }) }}
+    <div class="col-md-8">
+        {{ form_widget(formPerson.birthdate, {
+            "attr": {"class" : "form-control mb-4"}, "required": false
+        }) }}
+    </div>
+</div>
+<div class="group-form row">
+    {{ form_label(formPerson.sex, "Sexe", {
+         "label_attr": {"class" : "col-md-4 col-form-label"} 
+    }) }}
+    <div class="col-md-8">
+        {{ form_widget(formPerson.sex, { 
+            "attr": {"class" : "form-control mb-4"} 
+        }) }}
+    </div>
+</div>
+<div class="">
+    {{ form_widget(formPerson.comment, { 
+        "attr": {"class" : "form-control mb-4", "rows" : 4, "placeholder" : "Saisir un commentaire sur la personne."}  
+    }) }}
+</div> #}
