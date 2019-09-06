@@ -43,7 +43,7 @@ class PersonType extends AbstractType
             "attr" => [
                 "class" => "col-md-6"
             ],
-            "placeholder" => "Sélectionner une option",
+            // "placeholder" => "Sélectionner une option",
             "choices" => [
                 "-- Sélectionner --" => NULL,
                 "Femme" => "1",
@@ -60,7 +60,7 @@ class PersonType extends AbstractType
         ])
         // ->add("creationDate", DateTimeType::class, [
         //     "widget" => "single_text",
-        //     'format' => 'dd/MM/YYY H:m',
+        //     "format" => "dd/MM/YYY H:m",
         // ])                    
         ;
     }
@@ -68,7 +68,7 @@ class PersonType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Person::class,
+            "data_class" => Person::class,
         ]);
     }
 }

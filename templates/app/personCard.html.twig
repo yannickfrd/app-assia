@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends"base.html.twig" %}
 
-{% form_theme formPerson 'bootstrap_4_horizontal_layout.html.twig' %}
+{% form_theme formPerson "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
 {% block title %}Fiche personne{% endblock %}
 
@@ -19,7 +19,7 @@
                 <div class="form-group row">
                     <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
                 </div>
-                {% if person.id %}
+                {% if editMode %}
                 <div class="small text-secondary">
                     <p>Créé le {{person.creationDate | date("d/m/Y à H:i") }} (modifié le
                         {{person.updateDate | date("d/m/Y à H:i") }}).</p>
