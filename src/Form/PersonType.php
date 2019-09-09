@@ -38,7 +38,7 @@ class PersonType extends AbstractType
             "required" => false
             
         ])
-        ->add("sex", ChoiceType::class, [
+        ->add("gender", ChoiceType::class, [
             "label" => "Sexe",
             "attr" => [
                 "class" => "col-md-6"

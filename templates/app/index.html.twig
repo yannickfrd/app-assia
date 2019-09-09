@@ -41,22 +41,17 @@
                         </a>
                     </th>
                     <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Typologie familiale
+                        <a href="" class="sorting-indicator text-light">Sexe
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
                     <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Nombre de personnes
+                        <a href="" class="sorting-indicator text-light">Date de création
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
                     <th scope="col" class="align-middle th-date">
-                        <a href="" class="sorting-indicator text-light">Date de début
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-date">
-                        <a href="" class="sorting-indicator text-light">Date de fin
+                        <a href="" class="sorting-indicator text-light">Date de mise à jour
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
@@ -81,10 +76,15 @@
                     </td>
                     <td>{{ person.firstname }}</td>
                     <td>{{ person.birthdate | date("d/m/Y") }}</td>
-                    <td>{{ person.sex }}</td>
-                    <td>{{ person.sex }}</td>
+                    <td>
+                        {% if person.gender == 1 %}
+                        {{ "Femme" }}
+                        {% else %}
+                        {{ "Homme" }}
+                        {% endif %}
+                    </td>
                     <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
-                    <td></td>
+                    <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

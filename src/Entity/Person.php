@@ -46,7 +46,7 @@ class Person
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
      */
-    private $sex;
+    private $gender;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
@@ -54,12 +54,12 @@ class Person
     private $nationality;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phone1;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phone2;
 
@@ -94,14 +94,15 @@ class Person
     private $updateBy;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Group", mappedBy="people")
+     * @ORM\ManyToMany(targetEntity="App\Entity\PeopleGroup", mappedBy="people")
      */
-    private $groups;
+    private $peopleGroups;
+
 
     public function __construct()
     {
         $this->updateDate = new \DateTime();
-        $this->groups = new ArrayCollection();
+        $this->peopleGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,14 +158,14 @@ class Person
         return $this;
     }
 
-    public function getSex(): ?string
+    public function getGender(): ?string
     {
-        return $this->sex;
+        return $this->gender;
     }
 
-    public function setSex(?string $sex): self
+    public function setGender(?string $gender): self
     {
-        $this->sex = $sex;
+        $this->gender = $gender;
 
         return $this;
     }
@@ -273,33 +274,33 @@ class Person
     public function setUpdateBy(?string $updateBy): self
     {
         $this->updateBy = $updateBy;
-
+        
         return $this;
     }
 
     /**
-    * @return Collection|Group[]
-    */
-    public function getGroups(): Collection
+     * @return Collection|PeopleGroup[]
+     */
+    public function getPeopleGroups(): Collection
     {
-        return $this->groups;
+        return $this->peopleGroups;
     }
 
-    public function addGroup(Group $group): self
+    public function addPeopleGroup(PeopleGroup $peopleGroup): self
     {
-        if (!$this->groups->contains($group)) {
-            $this->groups[] = $group;
-            $group->addPerson($this);
+        if (!$this->peopleGroups->contains($peopleGroup)) {
+            $this->peopleGroups[] = $peopleGroup;
+            $peopleGroup->addPerson($this);
         }
 
         return $this;
     }
 
-    public function removeGroup(Group $group): self
+    public function removePeopleGroup(PeopleGroup $peopleGroup): self
     {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
-            $group->removePerson($this);
+        if ($this->peopleGroups->contains($peopleGroup)) {
+            $this->peopleGroups->removeElement($peopleGroup);
+            $peopleGroup->removePerson($this);
         }
 
         return $this;

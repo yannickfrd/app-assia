@@ -17,17 +17,17 @@ class SocialSupport
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      */
     private $beginningDate;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $endDate;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="integer")
      */
     private $status;
 
@@ -42,25 +42,15 @@ class SocialSupport
     private $creationDate;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $createBy;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $updateDate;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $updateBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Group", inversedBy="socialSupports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="socialSupports")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $groupPeople;
+    private $peopleGroup;
 
     public function getId(): ?int
     {
@@ -91,12 +81,12 @@ class SocialSupport
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?int
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(int $status): self
     {
         $this->status = $status;
 
@@ -127,18 +117,6 @@ class SocialSupport
         return $this;
     }
 
-    public function getCreateBy(): ?int
-    {
-        return $this->createBy;
-    }
-
-    public function setCreateBy(?int $createBy): self
-    {
-        $this->createBy = $createBy;
-
-        return $this;
-    }
-
     public function getUpdateDate(): ?\DateTimeInterface
     {
         return $this->updateDate;
@@ -151,26 +129,14 @@ class SocialSupport
         return $this;
     }
 
-    public function getUpdateBy(): ?int
+    public function getPeopleGroup(): ?PeopleGroup
     {
-        return $this->updateBy;
+        return $this->peopleGroup;
     }
 
-    public function setUpdateBy(?int $updateBy): self
+    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
     {
-        $this->updateBy = $updateBy;
-
-        return $this;
-    }
-
-    public function getGroupPeople(): ?Group
-    {
-        return $this->groupPeople;
-    }
-
-    public function setGroupPeople(?Group $groupPeople): self
-    {
-        $this->groupPeople = $groupPeople;
+        $this->peopleGroup = $peopleGroup;
 
         return $this;
     }

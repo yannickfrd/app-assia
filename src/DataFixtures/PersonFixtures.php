@@ -12,6 +12,6 @@ class PersonFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
 
-        $manager->flush();
+        // $manager->flush();
     }
 }

@@ -35,7 +35,7 @@
                 {{ form_row(formPerson.firstname) }}
                 {{ form_row(formPerson.lastname) }}
                 {{ form_row(formPerson.birthdate) }}
-                {{ form_row(formPerson.sex) }}
+                {{ form_row(formPerson.gender) }}
                 {{ form_row(formPerson.comment) }}
                 {{ form_widget(formPerson._token) }}
 
@@ -84,11 +84,11 @@
     </div>
 </div>
 <div class="group-form row">
-    {{ form_label(formPerson.sex, "Sexe", {
+    {{ form_label(formPerson.gender, "Sexe", {
          "label_attr": {"class" : "col-md-4 col-form-label"} 
     }) }}
     <div class="col-md-8">
-        {{ form_widget(formPerson.sex, { 
+        {{ form_widget(formPerson.gender, { 
             "attr": {"class" : "form-control mb-4"} 
         }) }}
     </div>

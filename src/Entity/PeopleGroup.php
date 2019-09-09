@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\PeopleGroupRepository")
  */
-class Group
+class PeopleGroup
 {
     /**
      * @ORM\Id()
@@ -19,14 +19,24 @@ class Group
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="integer")
      */
     private $familyTypology;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $nbrPeople;
+    private $nbPeople;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $creationDate;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="peopleGroups")
+     */
+    private $people;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -36,20 +46,10 @@ class Group
     /**
      * @ORM\Column(type="datetime")
      */
-    private $creationDate;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private $updateDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="groups")
-     */
-    private $people;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="peopleGroup")
      */
     private $socialSupports;
 
@@ -64,38 +64,26 @@ class Group
         return $this->id;
     }
 
-    public function getFamilyTypology(): ?string
+    public function getFamilyTypology(): ?int
     {
         return $this->familyTypology;
     }
 
-    public function setFamilyTypology(string $familyTypology): self
+    public function setFamilyTypology(int $familyTypology): self
     {
         $this->familyTypology = $familyTypology;
 
         return $this;
     }
 
-    public function getNbrPeople(): ?int
+    public function getNbPeople(): ?int
     {
-        return $this->nbrPeople;
+        return $this->nbPeople;
     }
 
-    public function setNbrPeople(int $nbrPeople): self
+    public function setNbPeople(int $nbPeople): self
     {
-        $this->nbrPeople = $nbrPeople;
-
-        return $this;
-    }
-
-    public function getComment(): ?string
-    {
-        return $this->comment;
-    }
-
-    public function setComment(?string $comment): self
-    {
-        $this->comment = $comment;
+        $this->nbPeople = $nbPeople;
 
         return $this;
     }
@@ -108,18 +96,6 @@ class Group
     public function setCreationDate(\DateTimeInterface $creationDate): self
     {
         $this->creationDate = $creationDate;
-
-        return $this;
-    }
-
-    public function getUpdateDate(): ?\DateTimeInterface
-    {
-        return $this->updateDate;
-    }
-
-    public function setUpdateDate(\DateTimeInterface $updateDate): self
-    {
-        $this->updateDate = $updateDate;
 
         return $this;
     }
@@ -150,6 +126,30 @@ class Group
         return $this;
     }
 
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getUpdateDate(): ?\DateTimeInterface
+    {
+        return $this->updateDate;
+    }
+
+    public function setUpdateDate(\DateTimeInterface $updateDate): self
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+
     /**
      * @return Collection|SocialSupport[]
      */
@@ -162,7 +162,7 @@ class Group
     {
         if (!$this->socialSupports->contains($socialSupport)) {
             $this->socialSupports[] = $socialSupport;
-            $socialSupport->setGroupPeople($this);
+            $socialSupport->setPeopleGroup($this);
         }
 
         return $this;
@@ -173,8 +173,8 @@ class Group
         if ($this->socialSupports->contains($socialSupport)) {
             $this->socialSupports->removeElement($socialSupport);
             // set the owning side to null (unless already changed)
-            if ($socialSupport->getGroupPeople() === $this) {
-                $socialSupport->setGroupPeople(null);
+            if ($socialSupport->getPeopleGroup() === $this) {
+                $socialSupport->setPeopleGroup(null);
             }
         }
 

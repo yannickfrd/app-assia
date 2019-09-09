@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190901182253 extends AbstractMigration
+final class Version20190909095601 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,8 @@ final class Version20190901182253 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE person (id INT AUTO_INCREMENT NOT NULL, lastname VARCHAR(50) NOT NULL, firstname VARCHAR(50) NOT NULL, usename VARCHAR(50) DEFAULT NULL, birthdate DATETIME DEFAULT NULL, gender VARCHAR(10) DEFAULT NULL, nationality VARCHAR(10) DEFAULT NULL, phone1 VARCHAR(15) DEFAULT NULL, phone2 VARCHAR(15) DEFAULT NULL, mail VARCHAR(100) DEFAULT NULL, comment LONGTEXT DEFAULT NULL, creation_date DATETIME NOT NULL, create_by VARCHAR(50) DEFAULT NULL, update_date DATETIME NOT NULL, update_by VARCHAR(50) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE social_support (id INT AUTO_INCREMENT NOT NULL, people_group_id INT NOT NULL, beginning_date DATE NOT NULL, end_date DATE DEFAULT NULL, status INT NOT NULL, comment LONGTEXT DEFAULT NULL, creation_date DATETIME NOT NULL, update_date DATETIME NOT NULL, INDEX IDX_F7F3E388FA5F5D2 (people_group_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE social_support ADD CONSTRAINT FK_F7F3E388FA5F5D2 FOREIGN KEY (people_group_id) REFERENCES people_group (id)');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +31,6 @@ final class Version20190901182253 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE person');
+        $this->addSql('DROP TABLE social_support');
     }
 }
