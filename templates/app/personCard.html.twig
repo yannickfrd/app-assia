@@ -10,7 +10,7 @@
 
 {% block body %}
 
-<section id="profil">
+<section id="person">
 
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -36,6 +36,7 @@
                 {{ form_row(formPerson.lastname) }}
                 {{ form_row(formPerson.birthdate) }}
                 {{ form_row(formPerson.gender) }}
+                {{ form_row(formPerson.rolesPerson) }}
                 {{ form_row(formPerson.comment) }}
                 {{ form_widget(formPerson._token) }}
 
@@ -49,38 +50,6 @@
         </div>
     </div>
 </section>
-
-{% for peopleGroup in person.peopleGroups %}
-
-<section>
-    <h2 class="mb-4">Ménage</h2>
-    <p><b>Typologie du ménage :</b>
-        {% if peopleGroup.familyTypology == 1 %}
-        {{ "Femme seule" }}
-        {% elseif peopleGroup.familyTypology == 2 %}
-        {{ "Homme seule" }}
-        {% elseif peopleGroup.familyTypology == 3 %}
-        {{ "Couple sans enfant" }}
-        {% elseif peopleGroup.familyTypology == 4 %}
-        {{ "Femme seule avec enfant(s)" }}
-        {% elseif peopleGroup.familyTypology == 5 %}
-        {{ "Homme seul avec enfant(s)" }}
-        {% elseif peopleGroup.familyTypology == 6 %}
-        {{ "Couple avec enfant(s)" }}
-        {% endif %}
-    </p>
-    <p><b>Nombre de personnes :</b> {{ peopleGroup.nbPeople }} </p>
-    <p><b>Commentaire :</b> {{ peopleGroup.comment }} </p>
-</section>
-
-<section>
-    <h2 class="mb-4">Suivi social</h2>
-    <P><b>Date de début :</b></P>
-    <P><b>Date de fin :</b></P>
-    <P><b>Statut du suivi :</b></P>
-</section>
-
-{% endfor %}
 
 <section>
     <h3 class="my-4">Personnes du ménage</h3>
@@ -121,6 +90,11 @@
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Rôle
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
                     <th scope="col" class="align-middle th-width-100px">
                         <a href="" class="sorting-indicator text-light">Date de création
                             <span class="fas fa-caret-up">
@@ -136,7 +110,7 @@
 
             <tbody>
 
-                {% for person in people %}
+                {# {% for person in people %}
                 <tr>
                     <th scope="row">
                         <div class="custom-control custom-checkbox">
@@ -165,7 +139,7 @@
                     <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
                     <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
                 </tr>
-                {% endfor %}
+                {% endfor %} #}
             </tbody>
         </table>
     </div>

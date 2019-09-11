@@ -46,12 +46,12 @@ class Person
     private $age;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $gender;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $nationality;
 
@@ -96,15 +96,15 @@ class Person
     private $updateBy;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\PeopleGroup", mappedBy="people")
+     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="person", orphanRemoval=true, cascade={"persist"})
      */
-    private $peopleGroups;
+    private $rolesPerson;
 
 
     public function __construct()
     {
         $this->updateDate = new \DateTime();
-        $this->peopleGroups = new ArrayCollection();
+        $this->rolesPerson = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,24 +176,24 @@ class Person
         return $this;
     }
 
-    public function getGender(): ?string
+    public function getGender(): ?int
     {
         return $this->gender;
     }
 
-    public function setGender(?string $gender): self
+    public function setGender(?int $gender): self
     {
         $this->gender = $gender;
 
         return $this;
     }
 
-    public function getNationality(): ?string
+    public function getNationality(): ?int
     {
         return $this->nationality;
     }
 
-    public function setNationality(?string $nationality): self
+    public function setNationality(?int $nationality): self
     {
         $this->nationality = $nationality;
 
@@ -297,28 +297,31 @@ class Person
     }
 
     /**
-     * @return Collection|PeopleGroup[]
+     * @return Collection|RolePerson[]
      */
-    public function getPeopleGroups(): Collection
+    public function getRolesPerson(): Collection
     {
-        return $this->peopleGroups;
+        return $this->rolesPerson;
     }
 
-    public function addPeopleGroup(PeopleGroup $peopleGroup): self
+    public function addRolesPerson(RolePerson $rolesPerson): self
     {
-        if (!$this->peopleGroups->contains($peopleGroup)) {
-            $this->peopleGroups[] = $peopleGroup;
-            $peopleGroup->addPerson($this);
+        if (!$this->rolesPerson->contains($rolesPerson)) {
+            $this->rolesPerson[] = $rolesPerson;
+            $rolesPerson->setPerson($this);
         }
 
         return $this;
     }
 
-    public function removePeopleGroup(PeopleGroup $peopleGroup): self
+    public function removeRolesPerson(RolePerson $rolesPerson): self
     {
-        if ($this->peopleGroups->contains($peopleGroup)) {
-            $this->peopleGroups->removeElement($peopleGroup);
-            $peopleGroup->removePerson($this);
+        if ($this->rolesPerson->contains($rolesPerson)) {
+            $this->rolesPerson->removeElement($rolesPerson);
+            // set the owning side to null (unless already changed)
+            if ($rolesPerson->getPerson() === $this) {
+                $rolesPerson->setPerson(null);
+            }
         }
 
         return $this;

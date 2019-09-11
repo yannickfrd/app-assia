@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\PeopleGroup;
 use App\Entity\Person;
+use App\Entity\RolePerson;
 use App\Entity\SocialSupport;
 
 class AppFixtures extends Fixture
@@ -66,43 +67,71 @@ class AppFixtures extends Fixture
             // Crée des fausses personnes pour le ménage
             for ($j = 1; $j <= $nbPeople; $j++) {
 
+                $rolePerson = new RolePerson();
+
                 $person = new Person();
 
                 if ($familyTypology == 1) {
                     $firstname = $faker->firstName($gender = "female");
+                    $birthdate = $this->birthdate("adult");
                     $sex = 1;
+                    $head = true;
+                    $role = 1;
                 } elseif ($familyTypology == 2) {
                     $firstname = $faker->firstName($gender = "male");
+                    $birthdate = $this->birthdate("adult");
                     $sex = 2;
+                    $head = true;
+                    $role = 1;
                 } elseif ($familyTypology == 3 || $familyTypology == 6) {
                     if ($j == 1) {
                         $firstname = $faker->firstName($gender = "female");
+                        $birthdate = $this->birthdate("adult");
                         $sex = 1;
+                        $head = true;
+                        $role = 1;
                     } elseif ($j == 2) {
                         $firstname = $faker->firstName($gender = "male");
+                        $birthdate = $this->birthdate("adult");
                         $sex = 2;
+                        $head = false;
+                        $role = 2;
                     }
                 } elseif ($familyTypology == 4) {
                     if ($j == 1) {
                         $firstname = $faker->firstName($gender = "female");
+                        $birthdate = $this->birthdate("adult");
                         $sex = 1;
+                        $head = true;
+                        $role = 1;
                     }
                 } elseif ($familyTypology == 5) {
                     if ($j == 1) {
                         $firstname = $faker->firstName($gender = "male");
+                        $birthdate = $this->birthdate("adult");
                         $sex = 2;
+                        $head = true;
+                        $role = 1;
                     }
                 }
 
                 if (($familyTypology >= 4 && $familyTypology <= 5 && $j >=2) || ($familyTypology == 6 && $j >=3)) {
                     $birthdate = $this->birthdate("child");
                     $sex = mt_rand(1, 2);
+                    $head = false;
+                    $role = 3;
                     if ($sex == 1) {
                         $firstname = $faker->firstName($gender = "female");
                     } else {
                         $firstname = $faker->firstName($gender = "male");
                     }
                 }
+
+                $rolePerson->setHead($head)
+                        ->setRole($role)
+                        ->setPeopleGroup($peopleGroup);
+
+                $manager->persist($rolePerson);
 
                 $person->setFirstName($firstname)
                     ->setLastName($lastname)
@@ -113,12 +142,12 @@ class AppFixtures extends Fixture
                     ->setComment($faker->paragraph())
                     ->setCreationDate($creationDate)
                     ->setUpdateDate($updateDate)
-                    ->addPeopleGroup($peopleGroup);
+                    ->addRolesPerson($rolePerson);
+                // Prépare le manager à faire persister les données dans le temps
+                $manager->persist($person);
 
-            // Prépare le manager à faire persister les données dans le temps
-            $manager->persist($person);
             }
-        // Envoie réellement la requête SQL
+        // Envoie la requête SQL
         $manager->flush();
         }
     }

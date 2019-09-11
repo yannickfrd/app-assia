@@ -50,17 +50,17 @@ class PersonRepository extends ServiceEntityRepository
     */
 
     // Trouve tous les personnes du même groupe ménage
-    public function findByPeopleGroup($peopleGroup) {
+    // public function findByPeopleGroup($peopleGroup) {
         
-        return $this->createQueryBuilder("p")
-                    ->select("p")
-                    ->leftJoin("p.peopleGroups", "g")
-                    ->addSelect("g")
-                    ->andWhere("g = :g")
-                    ->setParameter("g", $peopleGroup)
-                    ->getQuery()
-                    ->getResult();
-    }
+    //     return $this->createQueryBuilder("p")
+    //                 ->select("p")
+    //                 ->leftJoin("p.peopleGroups", "g")
+    //                 ->addSelect("g")
+    //                 ->andWhere("g = :g")
+    //                 ->setParameter("g", $peopleGroup)
+    //                 ->getQuery()
+    //                 ->getResult();
+    // }
     
     // Trouve tous les personnes du même groupe ménage (première version)
     // public function findByPeopleGroupV1($peopleGroup){

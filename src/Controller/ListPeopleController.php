@@ -16,8 +16,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use App\Entity\PeopleGroup;
 use App\Entity\Person;
+use App\Entity\RolePerson;
 use App\Repository\PersonRepository;
 use App\Form\PersonType;
+use App\Form\PeopleGroupType;
+
 
 class ListPeopleController extends AbstractController
 {
@@ -46,6 +49,41 @@ class ListPeopleController extends AbstractController
     }
 
     /**
+     * @Route("/list/group/new", name="create_people_group")
+     * @Route("/list/group/{id}", name="peopleGroupCard")
+     */
+    public function formPeopleGroup(PeopleGroup $peopleGroup = NULL, Request $request, ObjectManager $manager) {
+        
+        if (!$peopleGroup) {
+            $peopleGroup = new peopleGroup();
+        }
+
+        $form = $this->createForm(PeopleGroupType::class, $peopleGroup);
+
+        $form->handleRequest($request);
+
+        dump($peopleGroup);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            if(!$peopleGroup->getId()) {
+                $peopleGroup->setCreationDate(new \DateTime());
+            }
+            $peopleGroup->setUpdateDate(new \DateTime());
+            $manager->persist($peopleGroup);
+            $manager->flush();
+
+            return $this->redirectToRoute("peopleGroupCard", ["id" => $peopleGroup->getId()]);
+        }
+
+        return $this->render("app/peopleGroupCard.html.twig", [
+            "formPeopleGroup" => $form->createView(),
+            "editMode" => $peopleGroup->getId() != NULL,
+            "peopleGroup" => $peopleGroup,
+        ]);
+    }
+
+    
+    /**
      * @Route("/list/person/new", name="create_person")
      * @Route("/list/person/{id}", name="personCard")
      */
@@ -64,6 +102,9 @@ class ListPeopleController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
             if(!$person->getId()) {
                 $person->setCreationDate(new \DateTime());
+                $person->addRolesPerson();
+            } else {
+                $person->removeRolesPerson();
             }
             $person->setUpdateDate(new \DateTime());
             $manager->persist($person);
@@ -79,15 +120,15 @@ class ListPeopleController extends AbstractController
         // }
         // $repo = $this->getDoctrine()->getRepository(Person::class);
 
-        $people = $repo->findByPeopleGroup($person->getPeopleGroups());
+        // $people = $repo->findByPeopleGroup($person->getPeopleGroups());
 
-        dump($people);
+        // dump($people);
 
         return $this->render("app/personCard.html.twig", [
             "formPerson" => $form->createView(),
             "editMode" => $person->getId() != NULL,
             "person" => $person,
-            "people" => $people
+            // "people" => $people
         ]);
     }
 

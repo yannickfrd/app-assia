@@ -11,6 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PeopleGroup
 {
+    public const TYPOLOGY = [
+        1 => "Femme seule",
+        2 => "Homme seul",
+        3 => "Couple sans enfant",
+        4 => "Femme seule avec enfant(s)",
+        5 => "Homme seul avec enfant(s)",
+        6 => "Couple avec enfant(s)"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -34,11 +43,6 @@ class PeopleGroup
     private $creationDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="peopleGroups")
-     */
-    private $people;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -53,10 +57,15 @@ class PeopleGroup
      */
     private $socialSupports;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="peopleGroup", cascade={"persist"})
+     */
+    private $rolePeople;
+
     public function __construct()
     {
-        $this->people = new ArrayCollection();
         $this->socialSupports = new ArrayCollection();
+        $this->rolePeople = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,32 +105,6 @@ class PeopleGroup
     public function setCreationDate(\DateTimeInterface $creationDate): self
     {
         $this->creationDate = $creationDate;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Person[]
-     */
-    public function getPeople(): Collection
-    {
-        return $this->people;
-    }
-
-    public function addPerson(Person $person): self
-    {
-        if (!$this->people->contains($person)) {
-            $this->people[] = $person;
-        }
-
-        return $this;
-    }
-
-    public function removePerson(Person $person): self
-    {
-        if ($this->people->contains($person)) {
-            $this->people->removeElement($person);
-        }
 
         return $this;
     }
@@ -179,5 +162,41 @@ class PeopleGroup
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|RolePerson[]
+     */
+    public function getRolePeople(): Collection
+    {
+        return $this->rolePeople;
+    }
+
+    public function addRolePerson(RolePerson $rolePerson): self
+    {
+        if (!$this->rolePeople->contains($rolePerson)) {
+            $this->rolePeople[] = $rolePerson;
+            $rolePerson->setPeopleGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRolePerson(RolePerson $rolePerson): self
+    {
+        if ($this->rolePeople->contains($rolePerson)) {
+            $this->rolePeople->removeElement($rolePerson);
+            // set the owning side to null (unless already changed)
+            if ($rolePerson->getPeopleGroup() === $this) {
+                $rolePerson->setPeopleGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFamilyTypologyText() 
+    {
+        return self::TYPOLOGY[$this->familyTypology];
     }
 }

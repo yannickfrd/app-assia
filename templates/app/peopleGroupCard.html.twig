@@ -1,0 +1,240 @@
+{% extends"base.html.twig" %}
+
+{% form_theme formPeopleGroup "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+
+{% block title %}Fiche personne{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+<div>
+    <h1 class="h2 mb-3">Groupe de personnes (ménage)</h1>
+
+    {% if editMode %}
+    <div class="small text-secondary">
+        <p>Créé le {{peopleGroup.creationDate | date("d/m/Y à H:i") }} (modifié le
+            {{peopleGroup.updateDate | date("d/m/Y à H:i") }})</p>
+    </div>
+    {% endif %}
+</div>
+
+<hr>
+
+<section id="people-group">
+    <h2 class="h3 my-4">Personnes du ménage</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow">
+            <thead class="bg-dark">
+                <tr>
+                    <th scope="col" class="align-middle th-width-20px">
+                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
+                            title="Tout sélectionner">
+                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
+                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
+                                    sélectionner<span></label>
+                        </div>
+                    </th>
+                    <th scope="col" class="align-middle th-width-120px">
+                        <a href="" class="sorting-indicator text-light">Prénom
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-150px">
+                        <a href="" class="sorting-indicator text-light">Nom
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de<br />naissance
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Âge
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Sexe
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Rôle
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-100px">
+                        <a href="" class="sorting-indicator text-light">Date de <br />création
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de <br />mise à jour
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for rolePerson in peopleGroup.rolePeople %}
+                <tr>
+                    <th scope="row">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
+                                value="" class="checkbox" />
+                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
+                        </div>
+                    </th>
+                    <td>
+                        <a href="{{ path('personCard', {'id':rolePerson.person.id}) }}"
+                            class="text-primary font-weight-bold">{{ rolePerson.person.firstname }}</a>
+                        <a class="text-blue" href=""></a>
+                    </td>
+                    <td>{{ rolePerson.person.lastname }}</td>
+                    <td>{{ rolePerson.person.birthdate | date("d/m/Y") }}</td>
+                    <td>{{ rolePerson.person.age }} an(s)</td>
+                    <td>
+                        {% if rolePerson.person.gender == 1 %}
+                        {{ "Femme" }}
+                        {% else %}
+                        {{ "Homme" }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if rolePerson.role == 1 %}
+                        {{ "Demandeur" }}
+                        {% elseif rolePerson.role == 2 %}
+                        {{ "Conjoint(e)" }}
+                        {% elseif rolePerson.role == 3 %}
+                        {{ "Enfant" }}
+                        {% else %}
+                        {{ "Autre membre" }}
+                        {% endif %}
+                    </td>
+                    <td>{{ rolePerson.person.creationDate | date("d/m/Y H:i") }}</td>
+                    <td>{{ rolePerson.person.updateDate | date("d/m/Y H:i") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="people-group">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="">
+                {{ form_start(formPeopleGroup) }}
+
+                {{ form_row(formPeopleGroup.familyTypology) }}
+                {{ form_row(formPeopleGroup.nbPeople) }}
+                {{ form_row(formPeopleGroup.comment) }}
+                {{ form_widget(formPeopleGroup._token) }}
+
+                <div class="float-right">
+                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                </div>
+                {{ form_end(formPeopleGroup, {"render_rest": false}) }}
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr>
+
+<section id="social-supports">
+    <h2 class="h3 my-4">Historique des suivis sociaux</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow">
+            <thead class="bg-dark">
+                <tr>
+                    <th scope="col" class="align-middle th-width-20px">
+                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
+                            title="Tout sélectionner">
+                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
+                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
+                                    sélectionner<span></label>
+                        </div>
+                    </th>
+                    <th scope="col" class="align-middle th-width-100px">
+                        <a href="" class="sorting-indicator text-light">Statut
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de<br />début
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de<br />fin
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-150px">
+                        <a href="" class="sorting-indicator text-light">Travailleur/euse social(e)
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-150px">
+                        <a href="" class="sorting-indicator text-light">Service
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-100px">
+                        <a href="" class="sorting-indicator text-light">Pôle
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for socialSupport in peopleGroup.socialSupports %}
+                <tr>
+                    <th scope="row">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
+                                value="" class="checkbox" />
+                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
+                        </div>
+                    </th>
+                    <td>
+                        {% if socialSupport.status == 1 %}
+                        {{ "A venir" }}
+                        {% elseif socialSupport.status == 2 %}
+                        {{ "En cours" }}
+                        {% elseif socialSupport.status == 3 %}
+                        {{ "En suspens" }}
+                        {% elseif socialSupport.status == 4 %}
+                        {{ "Terminé" }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="" class="text-primary font-weight-bold">
+                            {{ socialSupport.beginningDate | date("d/m/Y") }}
+                        </a>
+                        <a class="text-blue" href=""></a>
+                    </td>
+                    <td>{{ socialSupport.endDate | date("d/m/Y") }}</td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<hr>
+
+{% endblock %}
