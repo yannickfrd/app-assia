@@ -50,6 +50,130 @@
     </div>
 </section>
 
+{% for peopleGroup in person.peopleGroups %}
+
+<section>
+    <h2 class="mb-4">Ménage</h2>
+    <p><b>Typologie du ménage :</b>
+        {% if peopleGroup.familyTypology == 1 %}
+        {{ "Femme seule" }}
+        {% elseif peopleGroup.familyTypology == 2 %}
+        {{ "Homme seule" }}
+        {% elseif peopleGroup.familyTypology == 3 %}
+        {{ "Couple sans enfant" }}
+        {% elseif peopleGroup.familyTypology == 4 %}
+        {{ "Femme seule avec enfant(s)" }}
+        {% elseif peopleGroup.familyTypology == 5 %}
+        {{ "Homme seul avec enfant(s)" }}
+        {% elseif peopleGroup.familyTypology == 6 %}
+        {{ "Couple avec enfant(s)" }}
+        {% endif %}
+    </p>
+    <p><b>Nombre de personnes :</b> {{ peopleGroup.nbPeople }} </p>
+    <p><b>Commentaire :</b> {{ peopleGroup.comment }} </p>
+</section>
+
+<section>
+    <h2 class="mb-4">Suivi social</h2>
+    <P><b>Date de début :</b></P>
+    <P><b>Date de fin :</b></P>
+    <P><b>Statut du suivi :</b></P>
+</section>
+
+{% endfor %}
+
+<section>
+    <h3 class="my-4">Personnes du ménage</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow">
+            <thead class="bg-dark">
+                <tr>
+                    <th scope="col" class="align-middle th-width-20px">
+                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
+                            title="Tout sélectionner">
+                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
+                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
+                                    sélectionner<span></label>
+                        </div>
+                    </th>
+                    <th scope="col" class="align-middle th-width-150px">
+                        <a href="" class="sorting-indicator text-light">Nom
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-120px">
+                        <a href="" class="sorting-indicator text-light">Prénom
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de<br />naissance
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Âge
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Sexe
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-100px">
+                        <a href="" class="sorting-indicator text-light">Date de création
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de mise à jour
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for person in people %}
+                <tr>
+                    <th scope="row">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
+                                value="" class="checkbox" />
+                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
+                        </div>
+                    </th>
+
+                    <td>
+                        <a href="{{ path('personCard', {'id':person.id}) }}"
+                            class="text-primary font-weight-bold">{{ person.lastname }}</a>
+                        <a class="text-blue" href=""></a>
+                    </td>
+                    <td>{{ person.firstname }}</td>
+                    <td>{{ person.birthdate | date("d/m/Y") }}</td>
+                    <td>{{ person.age }} an(s)</td>
+
+                    <td>
+                        {% if person.gender == 1 %}
+                        {{ "Femme" }}
+                        {% else %}
+                        {{ "Homme" }}
+                        {% endif %}
+                    </td>
+                    <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
+                    <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+
 {% endblock %}
 
 

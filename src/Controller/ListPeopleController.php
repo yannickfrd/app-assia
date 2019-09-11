@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Repository\PersonRepository;
 use App\Form\PersonType;
@@ -26,6 +27,8 @@ class ListPeopleController extends AbstractController
     public function index(PersonRepository $repo) {
         // $repo = $this->getDoctrine()->getRepository(Person::class);
         $people = $repo->findAll();
+
+        dump($people);
 
         return $this->render("app/index.html.twig", [
             "controller_name" => "ListPeopleController",
@@ -46,7 +49,7 @@ class ListPeopleController extends AbstractController
      * @Route("/list/person/new", name="create_person")
      * @Route("/list/person/{id}", name="personCard")
      */
-    public function formPerson(Person $person = NULL, Request $request, ObjectManager $manager) {
+    public function formPerson(PersonRepository $repo, Person $person = NULL, Request $request, ObjectManager $manager) {
         
         if (!$person) {
             $person = new Person();
@@ -69,10 +72,22 @@ class ListPeopleController extends AbstractController
             return $this->redirectToRoute("personCard", ["id" => $person->getId()]);
         }
 
+        // Donne l'ID groupe ménage de la personne
+        // $peopleGroups = $person->getPeopleGroups();
+        // foreach($peopleGroups as $peopleGroup) {
+        //     $peopleGroupId = $peopleGroup->getid();
+        // }
+        // $repo = $this->getDoctrine()->getRepository(Person::class);
+
+        $people = $repo->findByPeopleGroup($person->getPeopleGroups());
+
+        dump($people);
+
         return $this->render("app/personCard.html.twig", [
             "formPerson" => $form->createView(),
             "editMode" => $person->getId() != NULL,
-            "person"=> $person
+            "person" => $person,
+            "people" => $people
         ]);
     }
 

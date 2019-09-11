@@ -15,7 +15,7 @@
     <h1 class="my-4">Liste des personnes suivies</h1>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover shadow">
-            <thead class="bg-secondary">
+            <thead class="bg-dark">
                 <tr>
                     <th scope="col" class="align-middle th-width-20px">
                         <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
@@ -24,6 +24,11 @@
                             <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
                                     sélectionner<span></label>
                         </div>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">ID ménage
+                            <span class="fas fa-caret-up">
+                        </a>
                     </th>
                     <th scope="col" class="align-middle th-width-150px">
                         <a href="" class="sorting-indicator text-light">Nom
@@ -40,8 +45,23 @@
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
-                    <th scope="col" class="align-middle th-width-100px">
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Âge
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
                         <a href="" class="sorting-indicator text-light">Sexe
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-100px">
+                        <a href="" class="sorting-indicator text-light">Typologie familiale
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-100px">
+                        <a href="" class="sorting-indicator text-light">Nb de personnes
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
@@ -69,6 +89,11 @@
                             <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
                         </div>
                     </th>
+
+                    {% for peopleGroup in person.peopleGroups %}
+                    <td>{{ peopleGroup.id }}</td>
+                    {% endfor %}
+
                     <td>
                         <a href="{{ path('personCard', {'id':person.id}) }}"
                             class="text-primary font-weight-bold">{{ person.lastname }}</a>
@@ -76,6 +101,9 @@
                     </td>
                     <td>{{ person.firstname }}</td>
                     <td>{{ person.birthdate | date("d/m/Y") }}</td>
+                    <td>{{ person.age }} an(s)</td>
+
+
                     <td>
                         {% if person.gender == 1 %}
                         {{ "Femme" }}
@@ -83,6 +111,26 @@
                         {{ "Homme" }}
                         {% endif %}
                     </td>
+
+                    {% for peopleGroup in person.peopleGroups %}
+                    <td>
+                        {% if peopleGroup.familyTypology == 1 %}
+                        {{ "Femme seule" }}
+                        {% elseif peopleGroup.familyTypology == 2 %}
+                        {{ "Homme seule" }}
+                        {% elseif peopleGroup.familyTypology == 3 %}
+                        {{ "Couple sans enfant" }}
+                        {% elseif peopleGroup.familyTypology == 4 %}
+                        {{ "Femme seule avec enfant(s)" }}
+                        {% elseif peopleGroup.familyTypology == 5 %}
+                        {{ "Homme seul avec enfant(s)" }}
+                        {% elseif peopleGroup.familyTypology == 6 %}
+                        {{ "Couple avec enfant(s)" }}
+                        {% endif %}
+                    </td>
+                    <td>{{ peopleGroup.nbPeople }}</td>
+                    {% endfor %}
+
                     <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
                     <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
                 </tr>

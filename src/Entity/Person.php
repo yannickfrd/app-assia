@@ -43,6 +43,8 @@ class Person
      */
     private $birthdate;
 
+    private $age;
+
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
      */
@@ -154,6 +156,22 @@ class Person
     public function setBirthdate(?\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getAge(): ?int
+    {
+        $now   = new \DateTime();
+        return $this->birthdate->diff($now)->y;
+    }
+
+    public function setAge(int $age): self
+    {
+        $now = new \DateTime();
+        $interval = $now->diff($this->birthdate);
+        $days = $interval->days;
+        $this->age = floor($days / 365.225);
 
         return $this;
     }

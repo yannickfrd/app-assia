@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
             // Définit le nombre de personnes
             if ($familyTypology <= 2) {
                 $nbPeople = 1;
-            } elseif ($familyTypology == 5) {
+            } elseif ($familyTypology == 3) {
                 $nbPeople = 2;
             } elseif ($familyTypology == 6) {
                 $nbPeople = mt_rand(3, 6);
@@ -61,21 +61,52 @@ class AppFixtures extends Fixture
 
             $manager->persist($socialSupport); 
 
+            $lastname = $faker->lastName();
+
             // Crée des fausses personnes pour le ménage
             for ($j = 1; $j <= $nbPeople; $j++) {
 
                 $person = new Person();
 
-                $sex = mt_rand(1, 2);
-                if ($sex == 1) {
+                if ($familyTypology == 1) {
                     $firstname = $faker->firstName($gender = "female");
-                } else {
+                    $sex = 1;
+                } elseif ($familyTypology == 2) {
                     $firstname = $faker->firstName($gender = "male");
+                    $sex = 2;
+                } elseif ($familyTypology == 3 || $familyTypology == 6) {
+                    if ($j == 1) {
+                        $firstname = $faker->firstName($gender = "female");
+                        $sex = 1;
+                    } elseif ($j == 2) {
+                        $firstname = $faker->firstName($gender = "male");
+                        $sex = 2;
+                    }
+                } elseif ($familyTypology == 4) {
+                    if ($j == 1) {
+                        $firstname = $faker->firstName($gender = "female");
+                        $sex = 1;
+                    }
+                } elseif ($familyTypology == 5) {
+                    if ($j == 1) {
+                        $firstname = $faker->firstName($gender = "male");
+                        $sex = 2;
+                    }
+                }
+
+                if (($familyTypology >= 4 && $familyTypology <= 5 && $j >=2) || ($familyTypology == 6 && $j >=3)) {
+                    $birthdate = $this->birthdate("child");
+                    $sex = mt_rand(1, 2);
+                    if ($sex == 1) {
+                        $firstname = $faker->firstName($gender = "female");
+                    } else {
+                        $firstname = $faker->firstName($gender = "male");
+                    }
                 }
 
                 $person->setFirstName($firstname)
-                    ->setLastName($faker->lastName())
-                    ->setBirthdate($faker->dateTimeBetween($startDate = '-55 years', $endDate = '-18 years', $timezone = null))
+                    ->setLastName($lastname)
+                    ->setBirthdate($birthdate)
                     ->setGender($sex)
                     ->setmail($faker->freeEmail())
                     ->setphone1($faker->mobileNumber())
@@ -91,4 +122,18 @@ class AppFixtures extends Fixture
         $manager->flush();
         }
     }
+
+    // Donne une date de naissanc en fonction du role de la personne
+    protected function birthdate($role = "adult") {
+
+        $faker = \Faker\Factory::create("fr_FR");
+
+        if ($role == "adult") {
+            $birthdate = $faker->dateTimeBetween($startDate = "-55 years", $endDate = "-18 years", $timezone = null);
+        } else {
+            $birthdate = $faker->dateTimeBetween($startDate = "-18 years", $endDate = "now", $timezone = null);
+        }
+        return $birthdate;
+    }
+
 }
