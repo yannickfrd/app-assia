@@ -4,11 +4,24 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RolePersonRepository")
  */
 class RolePerson
 {
+    public const ROLE = [
+        1 => "Demandeur",
+        2 => "Conjoint·e",
+        3 => "Époux/se",
+        4 => "Enfant",
+        5 => "Membre de la famille",
+        6 => "Parent isolé",
+        7 => "Personne isolée",
+        8 => "Autre"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -89,5 +102,10 @@ class RolePerson
         $this->peopleGroup = $peopleGroup;
 
         return $this;
+    }
+
+    public function listRole() 
+    {
+        return self::ROLE[$this->role];
     }
 }

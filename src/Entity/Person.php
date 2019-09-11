@@ -13,6 +13,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Person
 {
+    public const GENDER = [
+        1 => "Femme",
+        2 => "Homme",
+        3 => "Non renseigné"
+    ];
+
+    public const NATIONALITY = [
+        1 => "France",
+        2 => "Union-Européenne",
+        3 => "Hors-UE",
+        4 => "Apatride",
+        5 => "Non renseignée"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -325,5 +339,15 @@ class Person
         }
 
         return $this;
+    }
+
+    public function listGender() 
+    {
+        return self::GENDER[$this->gender];
+    }
+    
+    public function listNationality() 
+    {
+        return self::NATIONALITY[$this->nationality];
     }
 }

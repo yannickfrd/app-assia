@@ -4,11 +4,20 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SocialSupportRepository")
  */
 class SocialSupport
 {
+    public const STATUS = [
+        1 => "À venir",
+        2 => "En cours",
+        3 => "En suspens",
+        4 => "Terminé"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -139,5 +148,10 @@ class SocialSupport
         $this->peopleGroup = $peopleGroup;
 
         return $this;
+    }
+
+    public function listStatus() 
+    {
+        return self::STATUS[$this->status];
     }
 }

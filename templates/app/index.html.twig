@@ -84,7 +84,6 @@
             </thead>
 
             <tbody>
-
                 {% for person in people %}
                 {% for rolePerson in person.rolesPerson %}
                 {% if rolePerson.head is defined %}
@@ -96,11 +95,6 @@
                             <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
                         </div>
                     </th>
-
-                    {# {% for peopleGroup in person.peopleGroups %}
-                    <td>{{ peopleGroup.id }}</td>
-                    {% endfor %} #}
-
                     <td>
                         <a href="{{ path('peopleGroupCard', {'id':rolePerson.peopleGroup.id}) }}"
                             class="text-primary font-weight-bold">{{ person.lastname }}</a>
@@ -109,39 +103,16 @@
                     <td>{{ person.firstname }}</td>
                     <td>{{ person.birthdate | date("d/m/Y") }}</td>
                     <td>{{ person.age }} an(s)</td>
-
-                    <td>
-                        {% if person.gender == 1 %}
-                        {{ "Femme" }}
-                        {% else %}
-                        {{ "Homme" }}
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if rolePerson.role == 1 %}
-                        {{ "Demandeur" }}
-                        {% elseif rolePerson.role == 2 %}
-                        {{ "Conjoint(e)" }}
-                        {% elseif rolePerson.role == 3 %}
-                        {{ "Enfant" }}
-                        {% else %}
-                        {{ "Autre membre" }}
-                        {% endif %}
-                    </td>
-
-                    <td>{{ rolePerson.peopleGroup.familyTypologyText }}</td>
+                    <td>{{ person.listGender }}</td>
+                    <td>{{ rolePerson.listRole }}</td>
+                    <td>{{ rolePerson.peopleGroup.listFamilyTypology }}</td>
                     <td>{{ rolePerson.peopleGroup.nbPeople }}</td>
-
                     <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
                     <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
-
                 </tr>
-
                 {% endif %}
                 {% endfor %}
                 {% endfor %}
-
             </tbody>
         </table>
     </div>

@@ -6,12 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PeopleGroupRepository")
  */
 class PeopleGroup
 {
-    public const TYPOLOGY = [
+    public const FAMILY_TYPOLOGY = [
         1 => "Femme seule",
         2 => "Homme seul",
         3 => "Couple sans enfant",
@@ -195,8 +197,8 @@ class PeopleGroup
         return $this;
     }
 
-    public function getFamilyTypologyText() 
+    public function listFamilyTypology() 
     {
-        return self::TYPOLOGY[$this->familyTypology];
+        return self::FAMILY_TYPOLOGY[$this->familyTypology];
     }
 }
