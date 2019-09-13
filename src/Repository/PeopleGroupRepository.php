@@ -47,4 +47,31 @@ class PeopleGroupRepository extends ServiceEntityRepository
         ;
     }
     */
+        // Trouve tous les personnes du même groupe ménage
+    public function findPeopleFromGroup($peopleGroup) {
+        
+        return $this->createQueryBuilder("grp")
+                    ->leftJoin("grp.rolePeople", "role")
+                    ->leftJoin("role.person", "pers")
+                    ->select("grp", "role", "pers")
+                    ->andWhere("grp = :grp")
+                    ->setParameter("grp", $peopleGroup)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+        // Trouve tous les personnes du même groupe ménage
+        public function findPeopleFromGroupV2($peopleGroup) {
+        
+            $q = Doctrine_Query::create()
+            ->from('PeopleGroup g')
+            ->leftJoin('g.rolePeople r')
+            ->leftJoin('r.person p')
+            ->where('g.id = ?', 1);
+          $user = $q->fetchOne();
+        }
+    
+
+
+
 }

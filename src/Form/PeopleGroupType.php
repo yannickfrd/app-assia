@@ -15,6 +15,16 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class PeopleGroupType extends AbstractType
 {
+    public const FAMILY_TYPOLOGY = [
+        "-- Sélectionner --" => NULL,
+        "Femme seule" => 1,
+        "Homme seul" => 2,
+        "Couple sans enfant" => 3,
+        "Femme seule avec enfant(s)" => 4,
+        "Homme seul avec enfant(s)" => 5,
+        "Couple avec enfant(s)" => 6,
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -23,15 +33,7 @@ class PeopleGroupType extends AbstractType
             "attr" => [
                 "class" => "col-md-12"
             ],
-            "choices" => [
-                "-- Sélectionner --" => NULL,
-                "Femme seule" => 1,
-                "Homme seul" => 2,
-                "Couple sans enfant" => 3,
-                "Femme seule avec enfant(s)" => 4,
-                "Homme seul avec enfant(s)" => 5,
-                "Couple avec enfant(s)" => 6,
-            ]
+            "choices" => $this->listFamilyTypology()
             ])
         ->add("nbPeople", NULL, [
             "label" => "Nombre de personnes",
@@ -53,5 +55,10 @@ class PeopleGroupType extends AbstractType
         $resolver->setDefaults([
             "data_class" => PeopleGroup::class,
         ]);
+    }
+
+    public function listFamilyTypology() 
+    {
+        return self::FAMILY_TYPOLOGY;
     }
 }

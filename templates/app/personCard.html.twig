@@ -11,6 +11,13 @@
 {% block body %}
 
 <section id="person">
+    <div class="my-3">
+        {% for rolesPerson in person.rolesPerson %}
+        <a href="{{ path('peopleGroupCard', {'id':rolesPerson.peopleGroup.id}) }}" class="text-primary">Retour à
+            la fiche du ménage n°{{rolesPerson.peopleGroup.id}}</a>
+        <br />
+        {% endfor %}
+    </div>
 
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -36,9 +43,11 @@
                 {{ form_row(formPerson.lastname) }}
                 {{ form_row(formPerson.birthdate) }}
                 {{ form_row(formPerson.gender) }}
-                {{ form_row(formPerson.rolesPerson) }}
+                {% for rolePerson in formPerson.rolesPerson %}
+                {{ form_widget(rolePerson) }}
+                {% endfor %}
                 {{ form_row(formPerson.comment) }}
-                {{ form_widget(formPerson._token) }}
+                {{ form_row(formPerson._token) }}
 
                 <div class="mb-4 float-right">
                     <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
@@ -90,11 +99,11 @@
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
-                    <th scope="col" class="align-middle th-width-80px">
+                    {# <th scope="col" class="align-middle th-width-80px">
                         <a href="" class="sorting-indicator text-light">Rôle
                             <span class="fas fa-caret-up">
                         </a>
-                    </th>
+                    </th> #}
                     <th scope="col" class="align-middle th-width-100px">
                         <a href="" class="sorting-indicator text-light">Date de création
                             <span class="fas fa-caret-up">

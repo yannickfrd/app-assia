@@ -7,8 +7,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -18,9 +21,9 @@ use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Repository\PersonRepository;
+use App\Repository\PeopleGroupRepository;
 use App\Form\PersonType;
 use App\Form\PeopleGroupType;
-
 
 class ListPeopleController extends AbstractController
 {
@@ -49,22 +52,74 @@ class ListPeopleController extends AbstractController
     }
 
     /**
+     * @Route("/list/group/{id}/person/{id}", name="peopleGroupCard")
+     */
+    public function editPersonFromGroup(PeopleGroup $peopleGroup = NULL, Request $request, ObjectManager $manager) {
+
+    }
+
+
+    /**
      * @Route("/list/group/new", name="create_people_group")
      * @Route("/list/group/{id}", name="peopleGroupCard")
      */
-    public function formPeopleGroup(PeopleGroup $peopleGroup = NULL, Request $request, ObjectManager $manager) {
+    public function formPeopleGroup(PeopleGroup $peopleGroup = NULL, Request $request, ObjectManager $manager, PeopleGroupRepository $repo) {
         
         if (!$peopleGroup) {
             $peopleGroup = new peopleGroup();
         }
 
-        $form = $this->createForm(PeopleGroupType::class, $peopleGroup);
+        // $form = $this->createFormBuilder($peopleGroup->getRolePeople())
+        // ->add("lastname", NULL, [
+        //     "label" => "Nom"
+        // ])
+        // ->add("firstname", NULL, [
+        //     "label" => "Prénom"
+        // ])
+        // ->add("birthdate", DateType::class, [
+        //     "label" => "Date de naissance",
+        //     "widget" => "single_text",
+        //     "required" => false
+            
+        // ])
+        // ->add("gender", ChoiceType::class, [
+        //     "label" => "Sexe",
+        //     "choices" => [
+        //         "-- Sélectionner --" => NULL,
+        //         "Femme" => 1,
+        //         "Homme" => 2,
+        //     ],
+        // ])
+        // ->add("rolesPerson", ChoiceType::class, [
+        //     "label" => "Rôle",
+        //     "attr" => [
+        //         "class" => "col-md-6"
+        //     ],
+        //     "choices" => [
+        //         "-- Sélectionner --" => NULL,
+        //         "DP" => 1,
+        //         "Conjoint(e)" => 2,
+        //         "Enfant" => 3,
+        //         "Autre" => 4
+        //     ],
+        // ])
+        // ->getForm();
 
-        $form->handleRequest($request);
+        $group = $repo->findPeopleFromGroup($peopleGroup);
+        foreach($group as $rolePerson) {
+            dump($rolePerson);
+            foreach($rolePerson as $person) {
+                dump($person);
+            }
+        }
+
+        $formPeopleGroup = $this->createForm(PeopleGroupType::class, $peopleGroup);
+
+        $formPeopleGroup->handleRequest($request);
 
         dump($peopleGroup);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if($formPeopleGroup->isSubmitted() && $formPeopleGroup->isValid()) {
             if(!$peopleGroup->getId()) {
                 $peopleGroup->setCreationDate(new \DateTime());
             }
@@ -72,13 +127,16 @@ class ListPeopleController extends AbstractController
             $manager->persist($peopleGroup);
             $manager->flush();
 
+            $request->getSession()->getFlashBag()->add('notice', 'Les modifications ont bien été enregistrée.');
+
             return $this->redirectToRoute("peopleGroupCard", ["id" => $peopleGroup->getId()]);
         }
 
         return $this->render("app/peopleGroupCard.html.twig", [
-            "formPeopleGroup" => $form->createView(),
+            "formPeopleGroup" => $formPeopleGroup->createView(),
             "editMode" => $peopleGroup->getId() != NULL,
             "peopleGroup" => $peopleGroup,
+            // "people" => $people
         ]);
     }
 
@@ -102,9 +160,9 @@ class ListPeopleController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
             if(!$person->getId()) {
                 $person->setCreationDate(new \DateTime());
-                $person->addRolesPerson();
+                // $person->addRolesPerson();
             } else {
-                $person->removeRolesPerson();
+                // $person->removeRolesPerson();
             }
             $person->setUpdateDate(new \DateTime());
             $manager->persist($person);

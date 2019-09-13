@@ -2,9 +2,11 @@
 
 {% form_theme formPeopleGroup "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
-{% block title %}Fiche personne{% endblock %}
+{% block title %}Fiche ménage{% endblock %}
 
 {% block stylesheets %}
+
+<link href="{{ asset("css/table.css") }}" rel="stylesheet" />
 
 {% endblock %}
 
@@ -23,21 +25,26 @@
 
 <hr>
 
+{# <section>
+    <div>
+        {% for rolePerson in peopleGroup.rolePeople %}
+        <ul>
+            <li>{{ rolePerson.person.firstname }}</li>
+        </ul>
+        {% endfor %}
+    </div>
+</section> #}
+
+<hr>
+
 <section id="people-group">
     <h2 class="h3 my-4">Personnes du ménage</h2>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover shadow">
             <thead class="bg-dark">
                 <tr>
-                    <th scope="col" class="align-middle th-width-20px">
-                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
-                            title="Tout sélectionner">
-                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
-                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
-                                    sélectionner<span></label>
-                        </div>
-                    </th>
-                    <th scope="col" class="align-middle th-width-120px">
+                    <th scope="col" class="align-middle th-width-20px"></th>
+                    <th scope="col" class="align-middle th-width-150px">
                         <a href="" class="sorting-indicator text-light">Prénom
                             <span class="fas fa-caret-up">
                         </a>
@@ -47,12 +54,12 @@
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
-                    <th scope="col" class="align-middle th-date">
+                    <th scope="col" class="align-middle th-width-150px">
                         <a href="" class="sorting-indicator text-light">Date de<br />naissance
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
-                    <th scope="col" class="align-middle th-width-80px">
+                    <th scope="col" class="align-middle th-width-50px">
                         <a href="" class="sorting-indicator text-light">Âge
                             <span class="fas fa-caret-up">
                         </a>
@@ -62,12 +69,17 @@
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
-                    <th scope="col" class="align-middle th-width-80px">
+                    <th scope="col" class="align-middle th-width-100px">
                         <a href="" class="sorting-indicator text-light">Rôle
                             <span class="fas fa-caret-up">
                         </a>
                     </th>
-                    <th scope="col" class="align-middle th-width-100px">
+                    <th scope="col" class="align-middle th-width-50px">
+                        <a href="" class="sorting-indicator text-light">
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    {# <th scope="col" class="align-middle th-width-100px">
                         <a href="" class="sorting-indicator text-light">Date de <br />création
                             <span class="fas fa-caret-up">
                         </a>
@@ -76,7 +88,7 @@
                         <a href="" class="sorting-indicator text-light">Date de <br />mise à jour
                             <span class="fas fa-caret-up">
                         </a>
-                    </th>
+                    </th> #}
                 </tr>
             </thead>
 
@@ -84,26 +96,59 @@
 
                 {% for rolePerson in peopleGroup.rolePeople %}
                 <tr>
-                    <th scope="row">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
-                                value="" class="checkbox" />
-                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
-                        </div>
-                    </th>
-                    <td>
-                        <a href="{{ path('personCard', {'id':rolePerson.person.id}) }}"
-                            class="text-primary font-weight-bold">{{ rolePerson.person.firstname }}</a>
-                        <a class="text-blue" href=""></a>
-                    </td>
-                    <td>{{ rolePerson.person.lastname }}</td>
-                    <td>{{ rolePerson.person.birthdate | date("d/m/Y") }}</td>
-                    <td>{{ rolePerson.person.age }} an(s)</td>
-                    <td>{{ rolePerson.person.listGender }}</td>
-                    <td>{{ rolePerson.listRole }}</td>
+                    <form action="/list/group/{{ rolePerson.peopleGroup.id }}" method="post">
+                        <th scope="row">
+                            <a href="{{ path('personCard', {'id':rolePerson.person.id}) }}"
+                                class="text-primary font-weight-bold"><span class="fas fa-user-edit"></span>
+                            </a>
+                        </th>
+                        <td class="px-1">
+                            <input type="text" class="form-control" value="{{ rolePerson.person.firstname }}">
+                        </td>
+                        <td class="px-1"><input type="text" class="form-control"
+                                value="{{ rolePerson.person.lastname }}"></td>
+                        <td class="px-1"><input type="date" class="form-control"
+                                value="{{ rolePerson.person.birthdate | date("d/m/Y") }}"></td>
+                        {# <td>{{ rolePerson.person.birthdate | date("d/m/Y") }}</td> #}
+                        <td class="px-1">{{ rolePerson.person.age }} {% if rolePerson.person.age > 1  %} ans {% endif %}
+                        </td>
+                        <td class="px-1">
+                            <select type="text" class="custom-select form-control">
+                                <option value="1" {% if rolePerson.person.gender == 1 %} {{ "selected" }} {% endif %}>
+                                    Femme
+                                </option>
+                                <option value="2" {% if rolePerson.person.gender == 2 %} {{ "selected" }} {% endif %}>
+                                    Homme
+                                </option>
 
-                    <td>{{ rolePerson.person.creationDate | date("d/m/Y H:i") }}</td>
-                    <td>{{ rolePerson.person.updateDate | date("d/m/Y H:i") }}</td>
+                            </select>
+                        </td>
+                        <td class="px-1">
+                            <select type="text" class="custom-select form-control">
+                                <option value="1" {% if rolePerson.role == 1 %} {{ "selected" }} {% endif %}>
+                                    Demandeur
+                                </option>
+                                <option value="2" {% if rolePerson.role == 2 %} {{ "selected" }} {% endif %}>
+                                    Conjoint
+                                </option>
+                                <option value="3" {% if rolePerson.role == 3 %} {{ "selected" }} {% endif %}>
+                                    Époux/se
+                                </option>
+                                <option value="4" {% if rolePerson.role == 4 %} {{ "selected" }} {% endif %}>
+                                    Enfant
+                                </option>
+                                <option value="5" {% if rolePerson.role >= 5 %} {{ "selected" }} {% endif %}>
+                                    Autre
+                                </option>
+                            </select>
+                        </td>
+                        <td class="px-1">
+                            <button type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                                id="save"><span class=" fas fa-save"></span></button>
+                        </td>
+                        {# <td>{{ rolePerson.person.creationDate | date("d/m/Y H:i") }}</td>
+                        <td>{{ rolePerson.person.updateDate | date("d/m/Y H:i") }}</td> #}
+                    </form>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -113,23 +158,28 @@
 
 <section id="people-group">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="">
                 {{ form_start(formPeopleGroup) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(formPeopleGroup.familyTypology) }}
+                        {{ form_row(formPeopleGroup.nbPeople) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(formPeopleGroup.comment) }}
+                        {{ form_row(formPeopleGroup._token) }}
 
-                {{ form_row(formPeopleGroup.familyTypology) }}
-                {{ form_row(formPeopleGroup.nbPeople) }}
-                {{ form_row(formPeopleGroup.comment) }}
-                {{ form_widget(formPeopleGroup._token) }}
+                        <div class="float-right">
+                            <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                                value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                        </div>
+                    </div>
 
-                <div class="float-right">
-                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                    {{ form_end(formPeopleGroup, {"render_rest": false}) }}
                 </div>
-                {{ form_end(formPeopleGroup, {"render_rest": false}) }}
             </div>
         </div>
-    </div>
 </section>
 
 <hr>
