@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\PeopleGroupRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\GroupPeopleRepository")
  */
-class PeopleGroup
+class GroupPeople
 {
     public const FAMILY_TYPOLOGY = [
         1 => "Femme seule",
@@ -55,12 +55,12 @@ class PeopleGroup
     private $updateDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="peopleGroup")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
      */
     private $socialSupports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="peopleGroup", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", cascade={"persist"})
      */
     private $rolePeople;
 
@@ -147,7 +147,7 @@ class PeopleGroup
     {
         if (!$this->socialSupports->contains($socialSupport)) {
             $this->socialSupports[] = $socialSupport;
-            $socialSupport->setPeopleGroup($this);
+            $socialSupport->setGroupPeople($this);
         }
 
         return $this;
@@ -158,8 +158,8 @@ class PeopleGroup
         if ($this->socialSupports->contains($socialSupport)) {
             $this->socialSupports->removeElement($socialSupport);
             // set the owning side to null (unless already changed)
-            if ($socialSupport->getPeopleGroup() === $this) {
-                $socialSupport->setPeopleGroup(null);
+            if ($socialSupport->getGroupPeople() === $this) {
+                $socialSupport->setGroupPeople(null);
             }
         }
 
@@ -178,7 +178,7 @@ class PeopleGroup
     {
         if (!$this->rolePeople->contains($rolePerson)) {
             $this->rolePeople[] = $rolePerson;
-            $rolePerson->setPeopleGroup($this);
+            $rolePerson->setGroupPeople($this);
         }
 
         return $this;
@@ -189,8 +189,8 @@ class PeopleGroup
         if ($this->rolePeople->contains($rolePerson)) {
             $this->rolePeople->removeElement($rolePerson);
             // set the owning side to null (unless already changed)
-            if ($rolePerson->getPeopleGroup() === $this) {
-                $rolePerson->setPeopleGroup(null);
+            if ($rolePerson->getGroupPeople() === $this) {
+                $rolePerson->setGroupPeople(null);
             }
         }
 

@@ -56,10 +56,10 @@ class SocialSupport
     private $updateDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="socialSupports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="socialSupports")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $peopleGroup;
+    private $groupPeople;
 
     public function getId(): ?int
     {
@@ -138,14 +138,14 @@ class SocialSupport
         return $this;
     }
 
-    public function getPeopleGroup(): ?PeopleGroup
+    public function getGroupPeople(): ?GroupPeople
     {
-        return $this->peopleGroup;
+        return $this->groupPeople;
     }
 
-    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
+    public function setGroupPeople(?GroupPeople $groupPeople): self
     {
-        $this->peopleGroup = $peopleGroup;
+        $this->groupPeople = $groupPeople;
 
         return $this;
     }

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Person;
-use App\Entity\PeopleGroup;
+use App\Entity\GroupPeople;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -50,26 +50,26 @@ class PersonRepository extends ServiceEntityRepository
     */
 
     // Trouve tous les personnes du même groupe ménage
-    public function findByPeopleGroup($peopleGroup) {
+    public function findByGroupPeople($groupPeople) {
         
         return $this->createQueryBuilder("p")
                     ->select("p")
-                    ->leftJoin("p.peopleGroups", "g")
+                    ->leftJoin("p.groupPeoples", "g")
                     ->addSelect("g")
                     ->andWhere("g = :g")
-                    ->setParameter("g", $peopleGroup)
+                    ->setParameter("g", $groupPeople)
                     ->getQuery()
                     ->getResult();
     }
     
     // Trouve tous les personnes du même groupe ménage (première version)
-    // public function findByPeopleGroupV1($peopleGroup){
+    // public function findByGroupPeopleV1($groupPeople){
     //     $query = $this->createQueryBuilder('p')
     //                   ->select('p')
-    //                   ->leftJoin('p.peopleGroups', 'g')
+    //                   ->leftJoin('p.groupPeoples', 'g')
     //                   ->addSelect('g');
     //     $query = $query->add('where', $query->expr()->in('g', ':g'))
-    //                   ->setParameter('g', $peopleGroup)
+    //                   ->setParameter('g', $groupPeople)
     //                   ->getQuery()
     //                   ->getResult();
           

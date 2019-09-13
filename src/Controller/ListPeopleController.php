@@ -17,13 +17,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-use App\Entity\PeopleGroup;
+use App\Entity\GroupPeople;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Repository\PersonRepository;
-use App\Repository\PeopleGroupRepository;
+use App\Repository\GroupPeopleRepository;
 use App\Form\PersonType;
-use App\Form\PeopleGroupType;
+use App\Form\GroupPeopleType;
 
 class ListPeopleController extends AbstractController
 {
@@ -52,24 +52,24 @@ class ListPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/list/group/{id}/person/{id}", name="peopleGroupCard")
+     * @Route("/list/group/{id}/person/{id}", name="groupPeopleCard")
      */
-    public function editPersonFromGroup(PeopleGroup $peopleGroup = NULL, Request $request, ObjectManager $manager) {
+    public function editPersonFromGroup(GroupPeople $groupPeople = NULL, Request $request, ObjectManager $manager) {
 
     }
 
 
     /**
-     * @Route("/list/group/new", name="create_people_group")
-     * @Route("/list/group/{id}", name="peopleGroupCard")
+     * @Route("/list/group/new", name="create_group_people")
+     * @Route("/list/group/{id}", name="groupPeopleCard")
      */
-    public function formPeopleGroup(PeopleGroup $peopleGroup = NULL, Request $request, ObjectManager $manager, PeopleGroupRepository $repo) {
+    public function formGroupPeople(GroupPeople $groupPeople = NULL, Request $request, ObjectManager $manager, GroupPeopleRepository $repo) {
         
-        if (!$peopleGroup) {
-            $peopleGroup = new peopleGroup();
+        if (!$groupPeople) {
+            $groupPeople = new groupPeople();
         }
 
-        // $form = $this->createFormBuilder($peopleGroup->getRolePeople())
+        // $form = $this->createFormBuilder($groupPeople->getRolePeople())
         // ->add("lastname", NULL, [
         //     "label" => "Nom"
         // ])
@@ -105,7 +105,7 @@ class ListPeopleController extends AbstractController
         // ])
         // ->getForm();
 
-        $group = $repo->findPeopleFromGroup($peopleGroup);
+        $group = $repo->findPeopleFromGroup($groupPeople);
         foreach($group as $rolePerson) {
             dump($rolePerson);
             foreach($rolePerson as $person) {
@@ -113,29 +113,29 @@ class ListPeopleController extends AbstractController
             }
         }
 
-        $formPeopleGroup = $this->createForm(PeopleGroupType::class, $peopleGroup);
+        $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
 
-        $formPeopleGroup->handleRequest($request);
+        $formGroupPeople->handleRequest($request);
 
-        dump($peopleGroup);
+        dump($groupPeople);
 
-        if($formPeopleGroup->isSubmitted() && $formPeopleGroup->isValid()) {
-            if(!$peopleGroup->getId()) {
-                $peopleGroup->setCreationDate(new \DateTime());
+        if($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
+            if(!$groupPeople->getId()) {
+                $groupPeople->setCreationDate(new \DateTime());
             }
-            $peopleGroup->setUpdateDate(new \DateTime());
-            $manager->persist($peopleGroup);
+            $groupPeople->setUpdateDate(new \DateTime());
+            $manager->persist($groupPeople);
             $manager->flush();
 
             $request->getSession()->getFlashBag()->add('notice', 'Les modifications ont bien été enregistrée.');
 
-            return $this->redirectToRoute("peopleGroupCard", ["id" => $peopleGroup->getId()]);
+            return $this->redirectToRoute("groupPeopleCard", ["id" => $groupPeople->getId()]);
         }
 
-        return $this->render("app/peopleGroupCard.html.twig", [
-            "formPeopleGroup" => $formPeopleGroup->createView(),
-            "editMode" => $peopleGroup->getId() != NULL,
-            "peopleGroup" => $peopleGroup,
+        return $this->render("app/groupPeopleCard.html.twig", [
+            "formGroupPeople" => $formGroupPeople->createView(),
+            "editMode" => $groupPeople->getId() != NULL,
+            "groupPeople" => $groupPeople,
             // "people" => $people
         ]);
     }
@@ -172,13 +172,13 @@ class ListPeopleController extends AbstractController
         }
 
         // Donne l'ID groupe ménage de la personne
-        // $peopleGroups = $person->getPeopleGroups();
-        // foreach($peopleGroups as $peopleGroup) {
-        //     $peopleGroupId = $peopleGroup->getid();
+        // $groupPeoples = $person->getGroupPeoples();
+        // foreach($groupPeoples as $groupPeople) {
+        //     $groupPeopleId = $groupPeople->getid();
         // }
         // $repo = $this->getDoctrine()->getRepository(Person::class);
 
-        // $people = $repo->findByPeopleGroup($person->getPeopleGroups());
+        // $people = $repo->findByGroupPeople($person->getGroupPeoples());
 
         // dump($people);
 

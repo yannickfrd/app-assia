@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\PeopleGroup;
+use App\Entity\GroupPeople;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method PeopleGroup|null find($id, $lockMode = null, $lockVersion = null)
- * @method PeopleGroup|null findOneBy(array $criteria, array $orderBy = null)
- * @method PeopleGroup[]    findAll()
- * @method PeopleGroup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method GroupPeople|null find($id, $lockMode = null, $lockVersion = null)
+ * @method GroupPeople|null findOneBy(array $criteria, array $orderBy = null)
+ * @method GroupPeople[]    findAll()
+ * @method GroupPeople[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PeopleGroupRepository extends ServiceEntityRepository
+class GroupPeopleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PeopleGroup::class);
+        parent::__construct($registry, GroupPeople::class);
     }
 
     // /**
-    //  * @return PeopleGroup[] Returns an array of PeopleGroup objects
+    //  * @return GroupPeople[] Returns an array of GroupPeople objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class PeopleGroupRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?PeopleGroup
+    public function findOneBySomeField($value): ?GroupPeople
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')
@@ -48,23 +48,23 @@ class PeopleGroupRepository extends ServiceEntityRepository
     }
     */
         // Trouve tous les personnes du même groupe ménage
-    public function findPeopleFromGroup($peopleGroup) {
+    public function findPeopleFromGroup($groupPeople) {
         
         return $this->createQueryBuilder("grp")
                     ->leftJoin("grp.rolePeople", "role")
                     ->leftJoin("role.person", "pers")
                     ->select("grp", "role", "pers")
                     ->andWhere("grp = :grp")
-                    ->setParameter("grp", $peopleGroup)
+                    ->setParameter("grp", $groupPeople)
                     ->getQuery()
                     ->getResult();
     }
 
         // Trouve tous les personnes du même groupe ménage
-        public function findPeopleFromGroupV2($peopleGroup) {
+        public function findPeopleFromGroupV2($groupPeople) {
         
             $q = Doctrine_Query::create()
-            ->from('PeopleGroup g')
+            ->from('GroupPeople g')
             ->leftJoin('g.rolePeople r')
             ->leftJoin('r.person p')
             ->where('g.id = ?', 1);

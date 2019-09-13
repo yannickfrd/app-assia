@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\Entity\PeopleGroup;
+use App\Entity\GroupPeople;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\SocialSupport;
@@ -38,14 +38,14 @@ class AppFixtures extends Fixture
             // Définit la date de mise à jour
             $updateDate = $faker->dateTimeBetween($min, $endDate = "now", $timezone = null);
 
-            $peopleGroup = new PeopleGroup();
-            $peopleGroup->setFamilyTypology($familyTypology)
+            $groupPeople = new GroupPeople();
+            $groupPeople->setFamilyTypology($familyTypology)
                 ->setNbPeople($nbPeople)
                 ->setComment($faker->paragraph())
                 ->setCreationDate($creationDate)
                 ->setUpdateDate($updateDate);
 
-            $manager->persist($peopleGroup); 
+            $manager->persist($groupPeople); 
 
             
             // Crée un faux suivi pour le ménage
@@ -58,7 +58,7 @@ class AppFixtures extends Fixture
                         ->setComment($comment)
                         ->setCreationDate($creationDate)
                         ->setUpdateDate($updateDate)
-                        ->setPeopleGroup($peopleGroup);
+                        ->setGroupPeople($groupPeople);
 
             $manager->persist($socialSupport); 
 
@@ -119,7 +119,7 @@ class AppFixtures extends Fixture
                     $birthdate = $this->birthdate("child");
                     $sex = mt_rand(1, 2);
                     $head = false;
-                    $role = 3;
+                    $role = 4;
                     if ($sex == 1) {
                         $firstname = $faker->firstName($gender = "female");
                     } else {
@@ -129,7 +129,7 @@ class AppFixtures extends Fixture
 
                 $rolePerson->setHead($head)
                         ->setRole($role)
-                        ->setPeopleGroup($peopleGroup);
+                        ->setGroupPeople($groupPeople);
 
                 $manager->persist($rolePerson);
 

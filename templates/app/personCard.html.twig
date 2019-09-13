@@ -13,8 +13,8 @@
 <section id="person">
     <div class="my-3">
         {% for rolesPerson in person.rolesPerson %}
-        <a href="{{ path('peopleGroupCard', {'id':rolesPerson.peopleGroup.id}) }}" class="text-primary">Retour à
-            la fiche du ménage n°{{rolesPerson.peopleGroup.id}}</a>
+        <a href="{{ path('groupPeopleCard', {'id':rolesPerson.groupPeople.id}) }}" class="text-primary">Retour à
+            la fiche du ménage n°{{rolesPerson.groupPeople.id}}</a>
         <br />
         {% endfor %}
     </div>

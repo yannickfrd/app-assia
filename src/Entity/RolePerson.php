@@ -46,10 +46,10 @@ class RolePerson
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="rolePeople")
-     * @ORM\JoinColumn(name="people_group_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePeople")
+     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
      */
-    private $peopleGroup;
+    private $groupPeople;
 
     public function getId(): ?int
     {
@@ -92,14 +92,14 @@ class RolePerson
         return $this;
     }
 
-    public function getPeopleGroup(): ?PeopleGroup
+    public function getGroupPeople(): ?GroupPeople
     {
-        return $this->peopleGroup;
+        return $this->groupPeople;
     }
 
-    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
+    public function setGroupPeople(?GroupPeople $groupPeople): self
     {
-        $this->peopleGroup = $peopleGroup;
+        $this->groupPeople = $groupPeople;
 
         return $this;
     }

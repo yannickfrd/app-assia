@@ -96,7 +96,7 @@
                         </div>
                     </th>
                     <td>
-                        <a href="{{ path('peopleGroupCard', {'id':rolePerson.peopleGroup.id}) }}"
+                        <a href="{{ path('groupPeopleCard', {'id':rolePerson.groupPeople.id}) }}"
                             class="text-primary font-weight-bold">{{ person.lastname }}</a>
                     </td>
                     <td>{{ person.firstname }}</td>
@@ -104,8 +104,8 @@
                     <td>{{ person.age }} an(s)</td>
                     <td>{{ person.listGender }}</td>
                     <td>{{ rolePerson.listRole }}</td>
-                    <td>{{ rolePerson.peopleGroup.listFamilyTypology }}</td>
-                    <td>{{ rolePerson.peopleGroup.nbPeople }}</td>
+                    <td>{{ rolePerson.groupPeople.listFamilyTypology }}</td>
+                    <td>{{ rolePerson.groupPeople.nbPeople }}</td>
                     <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
                     <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
                 </tr>

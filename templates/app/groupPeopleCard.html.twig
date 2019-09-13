@@ -1,6 +1,6 @@
 {% extends"base.html.twig" %}
 
-{% form_theme formPeopleGroup "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme formGroupPeople "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
 {% block title %}Fiche ménage{% endblock %}
 
@@ -17,8 +17,8 @@
 
     {% if editMode %}
     <div class="small text-secondary">
-        <p>Créé le {{peopleGroup.creationDate | date("d/m/Y à H:i") }} (modifié le
-            {{peopleGroup.updateDate | date("d/m/Y à H:i") }})</p>
+        <p>Créé le {{groupPeople.creationDate | date("d/m/Y à H:i") }} (modifié le
+            {{groupPeople.updateDate | date("d/m/Y à H:i") }})</p>
     </div>
     {% endif %}
 </div>
@@ -27,7 +27,7 @@
 
 {# <section>
     <div>
-        {% for rolePerson in peopleGroup.rolePeople %}
+        {% for rolePerson in groupPeople.rolePeople %}
         <ul>
             <li>{{ rolePerson.person.firstname }}</li>
         </ul>
@@ -94,9 +94,9 @@
 
             <tbody>
 
-                {% for rolePerson in peopleGroup.rolePeople %}
+                {% for rolePerson in groupPeople.rolePeople %}
                 <tr>
-                    <form action="/list/group/{{ rolePerson.peopleGroup.id }}" method="post">
+                    <form action="/list/group/{{ rolePerson.groupPeople.id }}" method="post">
                         <th scope="row">
                             <a href="{{ path('personCard', {'id':rolePerson.person.id}) }}"
                                 class="text-primary font-weight-bold"><span class="fas fa-user-edit"></span>
@@ -160,15 +160,15 @@
     <div class="row">
         <div class="col-md-12">
             <div class="">
-                {{ form_start(formPeopleGroup) }}
+                {{ form_start(formGroupPeople) }}
                 <div class="row">
                     <div class="col-md-6">
-                        {{ form_row(formPeopleGroup.familyTypology) }}
-                        {{ form_row(formPeopleGroup.nbPeople) }}
+                        {{ form_row(formGroupPeople.familyTypology) }}
+                        {{ form_row(formGroupPeople.nbPeople) }}
                     </div>
                     <div class="col-md-6">
-                        {{ form_row(formPeopleGroup.comment) }}
-                        {{ form_row(formPeopleGroup._token) }}
+                        {{ form_row(formGroupPeople.comment) }}
+                        {{ form_row(formGroupPeople._token) }}
 
                         <div class="float-right">
                             <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
@@ -176,7 +176,7 @@
                         </div>
                     </div>
 
-                    {{ form_end(formPeopleGroup, {"render_rest": false}) }}
+                    {{ form_end(formGroupPeople, {"render_rest": false}) }}
                 </div>
             </div>
         </div>
@@ -233,7 +233,7 @@
 
             <tbody>
 
-                {% for socialSupport in peopleGroup.socialSupports %}
+                {% for socialSupport in groupPeople.socialSupports %}
                 <tr>
                     <th scope="row">
                         <div class="custom-control custom-checkbox">
