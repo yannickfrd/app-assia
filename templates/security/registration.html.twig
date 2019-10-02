@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+{% form_theme formRegistration "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block stylesheets %} {% endblock %}
+
+{% block body %}
+
+<section id="inscription">
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+
+            <h1>Inscription</h1>
+
+            {{ form_start(formRegistration)}}
+
+            {{ form_row(formRegistration.firstname) }}
+            {{ form_row(formRegistration.lastname) }}
+            {{ form_row(formRegistration.username) }}
+            {{ form_row(formRegistration.email) }}
+            {{ form_row(formRegistration.password) }}
+            {{ form_row(formRegistration.confirmPassword) }}
+            {{ form_row(formRegistration._token) }}
+
+            <button type="submit" class="btn btn-primary">Inscription</button>
+
+            {{ form_end(formRegistration, {"render_rest": false}) }}
+
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

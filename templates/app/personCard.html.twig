@@ -1,4 +1,4 @@
-{% extends"base.html.twig" %}
+{% extends "base.html.twig" %}
 
 {% form_theme formPerson "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
@@ -38,7 +38,6 @@
 
                 {{ form_start(formPerson) }}
 
-                {{ form_row(formPerson.lastname) }}
                 {{ form_row(formPerson.firstname) }}
                 {{ form_row(formPerson.lastname) }}
                 {{ form_row(formPerson.birthdate) }}

@@ -151,7 +151,6 @@
                         {% for formRolePerson in formGroupPeople.rolePeople %}
                         {% for formPerson in formRolePerson %}
                         {% for person in formPerson %}
-                        {# {% if form_widget(person) is not empty %} #}
                         <tr>
                             <th scope="row">
                                 <a href="{{ path('personCard', {'id':1}) }}" class="text-primary font-weight-bold"><span
@@ -169,7 +168,6 @@
                                     id="save"><span class=" fas fa-save"></span></button>
                             </td>
                         </tr>
-                        {# {% endif %} #}
                         {% endfor %}
                         {% endfor %}
                         {% endfor %}

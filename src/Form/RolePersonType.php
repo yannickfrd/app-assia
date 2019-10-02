@@ -36,7 +36,7 @@ class RolePersonType extends AbstractType
                 "label" => "Rôle",
                 "choices" => $this->listRole(),
             ])
-            ->add("person", PersonTestType::class)
+            ->add("person", PersonType::class)
         ;
     }
 
