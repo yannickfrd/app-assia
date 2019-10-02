@@ -15,7 +15,8 @@ class SocialSupport
         1 => "À venir",
         2 => "En cours",
         3 => "En suspens",
-        4 => "Terminé"
+        4 => "Terminé",
+        5 => "Autre"
     ];
 
     /**

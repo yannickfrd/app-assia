@@ -49,6 +49,8 @@ class PersonRepository extends ServiceEntityRepository
     }
     */
 
+
+    
     // Trouve tous les personnes du même groupe ménage
     public function findByGroupPeople($groupPeople) {
         
@@ -62,6 +64,22 @@ class PersonRepository extends ServiceEntityRepository
                     ->getResult();
     }
     
+    // Trouve tous les personnes du même groupe ménage
+    public function Test($groupPeople) {
+        
+        return $this->createQueryBuilder("p")
+                    ->leftJoin("p.rolePeople", "r")
+                    ->leftJoin("r.groupPeople", "g")
+                    ->select("p")
+                    ->addSelect("r")
+                    ->addSelect("g")
+                    ->andWhere("g = :g")
+                    ->setParameter("g", $groupPeople)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+
     // Trouve tous les personnes du même groupe ménage (première version)
     // public function findByGroupPeopleV1($groupPeople){
     //     $query = $this->createQueryBuilder('p')

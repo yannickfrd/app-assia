@@ -60,7 +60,7 @@ class GroupPeople
     private $socialSupports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople")
      */
     private $rolePeople;
 

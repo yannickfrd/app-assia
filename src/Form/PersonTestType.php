@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
-class PersonType extends AbstractType
+class PersonTestType extends AbstractType
 {
     public const GENDER = [
         "-- Sélectionner --" => NULL,
@@ -28,13 +28,13 @@ class PersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add("lastname", NULL, [
+        ->add("lastname", TextType::class, [
             "label" => "Nom",
             "attr" => [
                 "placeholder" => "Nom"
             ]
         ])
-        ->add("firstname", NULL, [
+        ->add("firstname", TextType::class, [
             "label" => "Prénom",
             "attr" => [
                 "placeholder" => "Prénom"
@@ -43,26 +43,18 @@ class PersonType extends AbstractType
         ->add("birthdate", DateType::class, [
             "label" => "Date de naissance",
             "widget" => "single_text",
+            'html5' => false,
+            "format" => "dd/MM/YYYY",
             "attr" => [
-                "class" => "col-md-6"
+                "class" => "js-datepicker input-date",
+                "placeholder" => "jj/mm/aaaa",
             ],
             "required" => false
             
         ])
         ->add("gender", ChoiceType::class, [
             "label" => "Sexe",
-            "attr" => [
-                "class" => "col-md-6"
-            ],
-            // "placeholder" => "Sélectionner une option",
             "choices" => $this->listGender(),
-        ])
-        ->add("comment",NULL, [
-            "label" => "Commentaire",
-            "attr" => [
-                "rows" => 5,
-                "placeholder" => "Saisir un commentaire sur la personne"
-            ]
         ]);
     }
 

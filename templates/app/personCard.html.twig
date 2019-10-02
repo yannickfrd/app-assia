@@ -43,9 +43,6 @@
                 {{ form_row(formPerson.lastname) }}
                 {{ form_row(formPerson.birthdate) }}
                 {{ form_row(formPerson.gender) }}
-                {% for rolePerson in formPerson.rolesPerson %}
-                {{ form_widget(rolePerson) }}
-                {% endfor %}
                 {{ form_row(formPerson.comment) }}
                 {{ form_row(formPerson._token) }}
 

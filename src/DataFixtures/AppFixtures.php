@@ -54,7 +54,7 @@ class AppFixtures extends Fixture
             $comment = "<p>" . join($faker->paragraphs(3),"</p><p>") . "</p>";
 
             $socialSupport->setBeginningDate($creationDate)
-                        ->setStatus(mt_rand(1, 5))
+                        ->setStatus(mt_rand(1, 4))
                         ->setComment($comment)
                         ->setCreationDate($creationDate)
                         ->setUpdateDate($updateDate)

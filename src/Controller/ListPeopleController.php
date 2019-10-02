@@ -69,50 +69,6 @@ class ListPeopleController extends AbstractController
             $groupPeople = new groupPeople();
         }
 
-        // $form = $this->createFormBuilder($groupPeople->getRolePeople())
-        // ->add("lastname", NULL, [
-        //     "label" => "Nom"
-        // ])
-        // ->add("firstname", NULL, [
-        //     "label" => "Prénom"
-        // ])
-        // ->add("birthdate", DateType::class, [
-        //     "label" => "Date de naissance",
-        //     "widget" => "single_text",
-        //     "required" => false
-            
-        // ])
-        // ->add("gender", ChoiceType::class, [
-        //     "label" => "Sexe",
-        //     "choices" => [
-        //         "-- Sélectionner --" => NULL,
-        //         "Femme" => 1,
-        //         "Homme" => 2,
-        //     ],
-        // ])
-        // ->add("rolesPerson", ChoiceType::class, [
-        //     "label" => "Rôle",
-        //     "attr" => [
-        //         "class" => "col-md-6"
-        //     ],
-        //     "choices" => [
-        //         "-- Sélectionner --" => NULL,
-        //         "DP" => 1,
-        //         "Conjoint(e)" => 2,
-        //         "Enfant" => 3,
-        //         "Autre" => 4
-        //     ],
-        // ])
-        // ->getForm();
-
-        $group = $repo->findPeopleFromGroup($groupPeople);
-        foreach($group as $rolePerson) {
-            dump($rolePerson);
-            foreach($rolePerson as $person) {
-                dump($person);
-            }
-        }
-
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
 
         $formGroupPeople->handleRequest($request);
@@ -136,7 +92,6 @@ class ListPeopleController extends AbstractController
             "formGroupPeople" => $formGroupPeople->createView(),
             "editMode" => $groupPeople->getId() != NULL,
             "groupPeople" => $groupPeople,
-            // "people" => $people
         ]);
     }
 

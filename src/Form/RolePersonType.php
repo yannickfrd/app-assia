@@ -30,15 +30,13 @@ class RolePersonType extends AbstractType
         $builder
             ->add('head', CheckBoxType::class, [
                 "label" => "Demandeur principal",
-            ]
-            )
+                "required" => false
+            ])
             ->add("role", ChoiceType::class, [
                 "label" => "Rôle",
-                "attr" => [
-                    "class" => "col-md-6"
-                ],
                 "choices" => $this->listRole(),
             ])
+            ->add("person", PersonTestType::class)
         ;
     }
 

@@ -3,12 +3,14 @@
 namespace App\Form;
 
 use App\Entity\GroupPeople;
+use App\Entity\RolePerson;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -41,7 +43,17 @@ class GroupPeopleType extends AbstractType
                 "class" => "col-md-4"
             ]
         ])
-        ->add("comment",NULL, [
+        ->add('rolePeople', CollectionType::class, [
+            'entry_type'   => RolePersonType::class,
+            'allow_add'    => true,
+            'allow_delete' => false
+        ])
+        // ->add('rolePeople', EntityType::class, [
+        //     'class'        => RolePerson::class,
+        //     'choice_label' => 'role',
+        //     'multiple'     => true,
+        // ])
+        ->add("comment", NULL, [
             "label" => "Commentaire",
             "attr" => [
                 "rows" => 5,

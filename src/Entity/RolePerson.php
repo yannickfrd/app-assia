@@ -40,7 +40,7 @@ class RolePerson
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson", cascade={"persist"})
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      */
     private $person;

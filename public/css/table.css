@@ -44,3 +44,8 @@ table .th-width-130px {
 table .th-width-150px {
     width: 150px;
 }
+
+.input-date {
+    width: 120px;
+    max-width: 120px;
+}
