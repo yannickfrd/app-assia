@@ -35,101 +35,7 @@
 <hr>
 
 <section id="people-group">
-    <h2 class="h3 my-4">Personnes du ménage</h2>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover shadow">
-            <thead class="bg-dark">
-                <tr>
-                    <th scope="col" class="align-middle th-width-20px"></th>
-                    <th scope="col" class="align-middle text-light th-width-150px">Prénom</th>
-                    <th scope="col" class="align-middle text-light th-width-150px">Nom</th>
-                    <th scope="col" class="align-middle text-light th-width-150px">Date de naissance</th>
-                    <th scope="col" class="align-middle text-light th-width-50px">Âge</th>
-                    <th scope="col" class="align-middle text-light th-width-80px">Sexe</th>
-                    <th scope="col" class="align-middle text-light th-width-100px">Rôle</th>
-                    <th scope="col" class="align-middle th-width-50px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for rolePerson in groupPeople.rolePeople %}
-                <tr>
-                    <form action="/list/group/{{ rolePerson.groupPeople.id }}" method="post">
-                        <th scope="row">
-                            <a href="{{ path('personCard', {'id':rolePerson.person.id}) }}"
-                                class="text-primary font-weight-bold"><span class="fas fa-user-edit"></span>
-                            </a>
-                        </th>
-                        <td class="px-1">
-                            <input type="text" class="form-control" value="{{ rolePerson.person.firstname }}">
-                        </td>
-                        <td class="px-1"><input type="text" class="form-control"
-                                value="{{ rolePerson.person.lastname }}"></td>
-                        <td class="px-1"><input type="date" class="form-control"
-                                value="{{ rolePerson.person.birthdate | date("d/m/Y") }}"></td>
-                        <td class="px-1">{{ rolePerson.person.age }} {% if rolePerson.person.age > 1  %} ans {% endif %}
-                        </td>
-                        <td class="px-1">
-                            <select type="text" class="custom-select form-control">
-                                <option value="1" {% if rolePerson.person.gender == 1 %} {{ "selected" }} {% endif %}>
-                                    Femme
-                                </option>
-                                <option value="2" {% if rolePerson.person.gender == 2 %} {{ "selected" }} {% endif %}>
-                                    Homme
-                                </option>
-
-                            </select>
-                        </td>
-                        <td class="px-1">
-                            <select type="text" class="custom-select form-control">
-                                <option value="1" {% if rolePerson.role == 1 %} {{ "selected" }} {% endif %}>
-                                    Demandeur
-                                </option>
-                                <option value="2" {% if rolePerson.role == 2 %} {{ "selected" }} {% endif %}>
-                                    Conjoint
-                                </option>
-                                <option value="3" {% if rolePerson.role == 3 %} {{ "selected" }} {% endif %}>
-                                    Époux/se
-                                </option>
-                                <option value="4" {% if rolePerson.role == 4 %} {{ "selected" }} {% endif %}>
-                                    Enfant
-                                </option>
-                                <option value="5" {% if rolePerson.role >= 5 %} {{ "selected" }} {% endif %}>
-                                    Autre
-                                </option>
-                            </select>
-                        </td>
-                        <td class="px-1">
-                            <button type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                                id="save"><span class=" fas fa-save"></span></button>
-                        </td>
-
-                    </form>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<section id="people-group">
     {{ form_start(formGroupPeople) }}
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="">
-                {{ form_row(formGroupPeople.familyTypology) }}
-                {{ form_row(formGroupPeople.nbPeople) }}
-                {{ form_row(formGroupPeople.comment) }}
-                {{ form_row(formGroupPeople._token) }}
-
-                <div class="float-right">
-                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
-                </div>
-
-            </div>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -143,33 +49,33 @@
                             <th scope="col" class="align-middle text-light th-width-120px">Date de naissance</th>
                             <th scope="col" class="align-middle text-light th-width-50px">Âge</th>
                             <th scope="col" class="align-middle text-light th-width-100px">Sexe</th>
-                            <th scope="col" class="align-middle text-light th-width-120px">Rôle</th>
+                            <th scope="col" class="align-middle text-light th-width-150px">Rôle</th>
                             <th scope="col" class="align-middle th-width-50px"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for formRolePerson in formGroupPeople.rolePeople %}
-                        {% for formPerson in formRolePerson %}
-                        {% for person in formPerson %}
+
+
+                        {% for formPerson in formGroupPeople.rolePerson.children %}
+
+                        {% dump(formPerson) %}
                         <tr>
                             <th scope="row">
-                                <a href="{{ path('personCard', {'id':1}) }}" class="text-primary font-weight-bold"><span
-                                        class="fas fa-user-edit"></span>
+                                <a href="{{ path('personCard', {'id':formPerson.person.id.vars.value}) }}"
+                                    class="text-primary font-weight-bold"><span class="fas fa-user-edit"></span>
                                 </a>
                             </th>
-                            <td class="px-0">{{ form_widget(formPerson.firstname) }}</td>
-                            <td class="px-1">{{ form_widget(formPerson.lastname) }}</td>
-                            <td class="px-0">{{ form_widget(formPerson.birthdate) }}</td>
-                            <td class="px-0"> age</td>
-                            <td class="px-0">{{ form_widget(formPerson.gender) }}</td>
-                            <td class="px-1">{{ form_widget(formRolePerson.role) }}</td>
+                            <td class="px-1">{{ form_widget(formPerson.person.firstname) }}</td>
+                            <td class="px-1">{{ form_widget(formPerson.person.lastname) }}</td>
+                            <td class="px-1">{{ form_widget(formPerson.person.birthdate) }}</td>
+                            <td class="px-1"> {#{{ formPerson.person.age.vars.value }} #} an(s)</td>
+                            <td class="px-1">{{ form_widget(formPerson.person.gender) }}</td>
+                            <td class="px-1">{{ form_widget(formPerson.role) }}</td>
                             <td class="px-1">
                                 <button type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
                                     id="save"><span class=" fas fa-save"></span></button>
                             </td>
                         </tr>
-                        {% endfor %}
-                        {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -177,8 +83,23 @@
         </div>
     </div>
 
-    {# {% set prototype_person = formGroupPeople.rolePeople.vars.prototype %}
-    {{ form_widget(prototype_person) }} #}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                {{ form_row(formGroupPeople.familyTypology) }}
+                {{ form_row(formGroupPeople.nbPeople) }}
+                {{ form_row(formGroupPeople.comment) }}
+                {{ form_row(formGroupPeople._token) }}
+
+                <div class="float-right">
+                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     {{ form_end(formGroupPeople, {"render_rest": false}) }}
 </section>

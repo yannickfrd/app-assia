@@ -68,7 +68,7 @@ class PersonRepository extends ServiceEntityRepository
     public function Test($groupPeople) {
         
         return $this->createQueryBuilder("p")
-                    ->leftJoin("p.rolePeople", "r")
+                    ->leftJoin("p.rolePerson", "r")
                     ->leftJoin("r.groupPeople", "g")
                     ->select("p")
                     ->addSelect("r")

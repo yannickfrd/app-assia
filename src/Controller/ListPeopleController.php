@@ -73,7 +73,7 @@ class ListPeopleController extends AbstractController
 
         $formGroupPeople->handleRequest($request);
 
-        dump($groupPeople->getRolePeople());
+        dump($groupPeople);
 
         if($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
             if(!$groupPeople->getId()) {

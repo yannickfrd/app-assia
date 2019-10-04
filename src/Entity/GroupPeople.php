@@ -62,12 +62,12 @@ class GroupPeople
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople")
      */
-    private $rolePeople;
+    private $rolePerson;
 
     public function __construct()
     {
         $this->socialSupports = new ArrayCollection();
-        $this->rolePeople = new ArrayCollection();
+        $this->rolePerson = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,15 +169,15 @@ class GroupPeople
     /**
      * @return Collection|RolePerson[]
      */
-    public function getRolePeople(): Collection
+    public function getrolePerson(): Collection
     {
-        return $this->rolePeople;
+        return $this->rolePerson;
     }
 
     public function addRolePerson(RolePerson $rolePerson): self
     {
-        if (!$this->rolePeople->contains($rolePerson)) {
-            $this->rolePeople[] = $rolePerson;
+        if (!$this->rolePerson->contains($rolePerson)) {
+            $this->rolePerson[] = $rolePerson;
             $rolePerson->setGroupPeople($this);
         }
 
@@ -186,8 +186,8 @@ class GroupPeople
 
     public function removeRolePerson(RolePerson $rolePerson): self
     {
-        if ($this->rolePeople->contains($rolePerson)) {
-            $this->rolePeople->removeElement($rolePerson);
+        if ($this->rolePerson->contains($rolePerson)) {
+            $this->rolePerson->removeElement($rolePerson);
             // set the owning side to null (unless already changed)
             if ($rolePerson->getGroupPeople() === $this) {
                 $rolePerson->setGroupPeople(null);

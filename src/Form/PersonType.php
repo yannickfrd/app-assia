@@ -28,6 +28,7 @@ class PersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+        ->add("id")
         ->add("lastname", NULL, [
             "label" => "Nom",
             "attr" => [
@@ -44,15 +45,16 @@ class PersonType extends AbstractType
             "label" => "Date de naissance",
             "widget" => "single_text",
             "attr" => [
-                "class" => "col-md-6"
+                "class" => "col-md-12"
             ],
             "required" => false
             
         ])
+        // ->add("age")
         ->add("gender", ChoiceType::class, [
             "label" => "Sexe",
             "attr" => [
-                "class" => "col-md-6"
+                "class" => "col-md-12"
             ],
             // "placeholder" => "Sélectionner une option",
             "choices" => $this->listGender(),

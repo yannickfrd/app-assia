@@ -51,7 +51,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
     public function findPeopleFromGroup($groupPeople) {
         
         return $this->createQueryBuilder("grp")
-                    ->leftJoin("grp.rolePeople", "role")
+                    ->leftJoin("grp.rolePerson", "role")
                     ->leftJoin("role.person", "pers")
                     ->select("grp", "role", "pers")
                     ->andWhere("grp = :grp")
@@ -65,7 +65,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
         
             $q = Doctrine_Query::create()
             ->from('GroupPeople g')
-            ->leftJoin('g.rolePeople r')
+            ->leftJoin('g.rolePerson r')
             ->leftJoin('r.person p')
             ->where('g.id = ?', 1);
           $user = $q->fetchOne();

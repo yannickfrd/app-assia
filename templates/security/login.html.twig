@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{# {% form_theme "form/bootstrap_4_horizontal_v2_layout.html.twig" %} #}
-
 {% block title %}Connexion{% endblock %}
 
 {% block stylesheets %} {% endblock %}
@@ -35,5 +33,11 @@
         </form>
     </section>
 </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="{{ asset("js/seePassword.js") }}"></script>
 
 {% endblock %}

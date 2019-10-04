@@ -21,10 +21,15 @@
             {{ form_row(formRegistration.lastname) }}
             {{ form_row(formRegistration.username) }}
             {{ form_row(formRegistration.email) }}
-            {{ form_row(formRegistration.password) }}
-            {{ form_row(formRegistration.confirmPassword) }}
+            <div class="password-group">
+                {{ form_row(formRegistration.password) }}
+                <span class="show-password fas fa-eye"></span>
+            </div>
+            <div class="password-group">
+                {{ form_row(formRegistration.confirmPassword) }}
+                <span class="show-password fas fa-eye"></span>
+            </div>
             {{ form_row(formRegistration._token) }}
-
             <button type="submit" class="btn btn-primary">Inscription</button>
 
             {{ form_end(formRegistration, {"render_rest": false}) }}
@@ -33,5 +38,11 @@
     </div>
 
 </section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="{{ asset("js/seePassword.js") }}"></script>
 
 {% endblock %}

@@ -43,12 +43,12 @@ class GroupPeopleType extends AbstractType
                 "class" => "col-md-4"
             ]
         ])
-        ->add('rolePeople', CollectionType::class, [
+        ->add('rolePerson', CollectionType::class, [
             'entry_type'   => RolePersonType::class,
             'allow_add'    => true,
             'allow_delete' => false
         ])
-        // ->add('rolePeople', EntityType::class, [
+        // ->add('rolePerson', EntityType::class, [
         //     'class'        => RolePerson::class,
         //     'choice_label' => 'role',
         //     'multiple'     => true,

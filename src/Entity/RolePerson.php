@@ -46,7 +46,7 @@ class RolePerson
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePeople")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePerson")
      * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
      */
     private $groupPeople;

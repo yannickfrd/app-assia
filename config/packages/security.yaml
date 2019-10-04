@@ -1,12 +1,12 @@
 security:
     encoders:
         App\Entity\User:
-            algorithm: bcrypt
+            algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         in_memory: { memory: null }
-        in_database:
+        users:
             entity:
                 class: App\Entity\User
                 property: username
@@ -17,7 +17,7 @@ security:
         main:
             anonymous: true
 
-            provider : in_database
+            provider : users
 
             form_login:
                 login_path: security_login
