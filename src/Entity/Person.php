@@ -42,6 +42,7 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message = "Le nom ne peut être vide.")
      * @Assert\Length(max=50,maxMessage="Le prénom est trop long (50 caractères max).")     
      */
     private $firstname;
@@ -95,7 +96,7 @@ class Person
     private $creationDate;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $createBy;
 
@@ -105,7 +106,7 @@ class Person
     private $updateDate;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $updateBy;
 

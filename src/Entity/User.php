@@ -30,6 +30,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message = "L'email ne peut être vide.")
      * @Assert\Email(message="L'adresse email n'est pas valide.")
      */
     private $email;
@@ -47,18 +48,40 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message = "Le nom ne peut être vide.")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message = "Le prénom ne peut être vide.")
      */
     private $firstname;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     /**
      * @ORM\Column(type="datetime")
      */
     private $creationDate;
+
+    /**
+     * @ORM\Column(type="integer", options={"default":0})
+     */
+    private $loginCount;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastLogin;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $failureLoginCount;
 
     public function getId(): ?int
     {
@@ -152,7 +175,47 @@ class User implements UserInterface
 
     public function getSalt() {}
 
-    public function getRoles() {
-        return ["ROLE_USER"];
-    }
+        public function getRoles(): array
+        {
+            $roles = $this->roles;
+            $roles[] = 'ROLE_USER';
+        
+            return array_unique($roles);
+        }
+
+        public function getLoginCount(): ?int
+        {
+            return $this->loginCount;
+        }
+
+        public function setLoginCount(int $loginCount): self
+        {
+            $this->loginCount = $loginCount;
+
+            return $this;
+        }
+
+        public function getLastLogin(): ?\DateTimeInterface
+        {
+            return $this->lastLogin;
+        }
+
+        public function setLastLogin(?\DateTimeInterface $lastLogin): self
+        {
+            $this->lastLogin = $lastLogin;
+
+            return $this;
+        }
+
+        public function getFailureLoginCount(): ?int
+        {
+            return $this->failureLoginCount;
+        }
+
+        public function setFailureLoginCount(?int $failureLoginCount): self
+        {
+            $this->failureLoginCount = $failureLoginCount;
+
+            return $this;
+        }
 }

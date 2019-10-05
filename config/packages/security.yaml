@@ -22,6 +22,7 @@ security:
             form_login:
                 login_path: security_login
                 check_path: security_login
+                # default_target_path: security_login_valid
 
             logout:
                 path: security_logout
@@ -36,5 +37,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/connexion$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/group, roles: ROLE_USER }
+        
+

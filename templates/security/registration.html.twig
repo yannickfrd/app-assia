@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme formRegistration "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
 {% block title %}Inscription{% endblock %}
 
@@ -15,24 +15,26 @@
 
             <h1>Inscription</h1>
 
-            {{ form_start(formRegistration)}}
+            {{ message }}
 
-            {{ form_row(formRegistration.firstname) }}
-            {{ form_row(formRegistration.lastname) }}
-            {{ form_row(formRegistration.username) }}
-            {{ form_row(formRegistration.email) }}
+            {{ form_start(form)}}
+
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.lastname) }}
+            {{ form_row(form.username) }}
+            {{ form_row(form.email) }}
             <div class="password-group">
-                {{ form_row(formRegistration.password) }}
+                {{ form_row(form.password) }}
                 <span class="show-password fas fa-eye"></span>
             </div>
             <div class="password-group">
-                {{ form_row(formRegistration.confirmPassword) }}
+                {{ form_row(form.confirmPassword) }}
                 <span class="show-password fas fa-eye"></span>
             </div>
-            {{ form_row(formRegistration._token) }}
+            {{ form_row(form._token) }}
             <button type="submit" class="btn btn-primary">Inscription</button>
 
-            {{ form_end(formRegistration, {"render_rest": false}) }}
+            {{ form_end(form, {"render_rest": false}) }}
 
         </div>
     </div>

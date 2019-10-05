@@ -12,11 +12,12 @@
 
 <section id="person">
     <div class="my-3">
-        {% for rolesPerson in person.rolesPerson %}
-        <a href="{{ path('groupPeopleCard', {'id':rolesPerson.groupPeople.id}) }}" class="text-primary">Retour à
-            la fiche du ménage n°{{ rolesPerson.groupPeople.id }}</a>
+        {% dump(app.session.get("groupPeople")) %}
+        <a href="{{ path('groupPeopleCard', {'id':app.session.get("groupPeople").id}) }}" class="text-primary"><span
+                class="fas fa-users"></span> Retour à la fiche du ménage {{app.session.get("groupPeople").id}}</a>
+        <span class="small text-secondary">{{ app.session.get("groupPeople").listFamilyTypology }} -
+            {{ app.session.get("groupPeople").nbPeople }} personne(s)</span>
         <br />
-        {% endfor %}
     </div>
 
     <div class="row">
@@ -53,100 +54,6 @@
             </div>
             {% endif %}
         </div>
-    </div>
-</section>
-
-<section>
-    <h3 class="my-4">Personnes du ménage</h3>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover shadow">
-            <thead class="bg-dark">
-                <tr>
-                    <th scope="col" class="align-middle th-width-20px">
-                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
-                            title="Tout sélectionner">
-                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
-                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
-                                    sélectionner<span></label>
-                        </div>
-                    </th>
-                    <th scope="col" class="align-middle th-width-150px">
-                        <a href="" class="sorting-indicator text-light">Nom
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-120px">
-                        <a href="" class="sorting-indicator text-light">Prénom
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-date">
-                        <a href="" class="sorting-indicator text-light">Date de<br />naissance
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-80px">
-                        <a href="" class="sorting-indicator text-light">Âge
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-80px">
-                        <a href="" class="sorting-indicator text-light">Sexe
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    {# <th scope="col" class="align-middle th-width-80px">
-                        <a href="" class="sorting-indicator text-light">Rôle
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th> #}
-                    <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Date de création
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-date">
-                        <a href="" class="sorting-indicator text-light">Date de mise à jour
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {# {% for person in people %}
-                <tr>
-                    <th scope="row">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
-                                value="" class="checkbox" />
-                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
-                        </div>
-                    </th>
-
-                    <td>
-                        <a href="{{ path('personCard', {'id':person.id}) }}"
-                            class="text-primary font-weight-bold">{{ person.lastname }}</a>
-                        <a class="text-blue" href=""></a>
-                    </td>
-                    <td>{{ person.firstname }}</td>
-                    <td>{{ person.birthdate | date("d/m/Y") }}</td>
-                    <td>{{ person.age }} an(s)</td>
-
-                    <td>
-                        {% if person.gender == 1 %}
-                        {{ "Femme" }}
-                        {% else %}
-                        {{ "Homme" }}
-                        {% endif %}
-                    </td>
-                    <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
-                    <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
-                </tr>
-                {% endfor %} #}
-            </tbody>
-        </table>
     </div>
 </section>
 

@@ -64,19 +64,48 @@
                         <button class="btn btn-primary my-2 my-sm-0" type="submit"><span
                                 class="fas fa-search"></span></button></button>
                     </form>
-                    <div>
-                        {% if not app.user %}
-                        <a class="nav-link" href="{{ path("security_login") }}">Connexion</a>
+
+                    <div class="ml-3 text-light">
+                        {% if app.user %}
+                        <a class="text-light font-weight-bold" href="{{ path("security_logout") }}"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
+                            title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin | date("d/m/Y H:i") }} <br />Profil : 
+                            {% for role in app.user.roles %}
+                            {{ role }}, 
+                            {% endfor %}
+                            ">
+                            <span class="fas fa-user"></span> {{ app.user.username }}
+                        </a>
+                        <br />
+                        <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
                         {% else %}
-                        <a class="nav-link" href="{{ path("security_logout") }}">Déconnexion</a>
+                        <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
+                        <br />
+                        <a class="text-light" href="{{ path("security_registration") }}">S'inscrire</a>
                         {% endif %}
                     </div>
+
                 </div>
             </nav>
         </header>
 
         <div class="container">
+
+            {# Message en session flash #}
+            {% if app.request.hasPreviousSession %}
+            {% for label, messages in app.flashes %}
+            {% for message in messages %}
+            <div id="msg-profil" class="alert alert-{{ label }} alert-dismissible mb-3 fade show" role="alert">
+                {{ message }} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+
             {% block body %} {% endblock %}
+
         </div>
 
     </main>
@@ -88,10 +117,10 @@
     </footer>
 
 
-    {# <script src="public/js/jquery.js"></script> #}
-    {# <script src="public/js/scroll_to.js"></script> #}
-    {# <script src="public/js/app.js"></script> #}
-    {# <script src="public/js/seePassword.js"></script> #}
+    <script src="{{ asset("js/jquery.js") }}"></script>
+    <script src="{{ asset("js/scroll_to.js") }}"></script>
+    <script src="{{ asset("js/app.js") }}"></script>
+    {# <script src="{{ asset("js/seePassword.js") }}"></script> #}
     <!-- Les fichiers Javascript pour Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">

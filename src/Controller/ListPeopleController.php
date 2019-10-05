@@ -2,39 +2,44 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Person;
 
-use Symfony\Component\Routing\Annotation\Route;
+use App\Form\PersonType;
+use App\Entity\RolePerson;
+
+use App\Entity\GroupPeople;
+use App\Form\GroupPeopleType;
+use App\Repository\PersonRepository;
+use App\Repository\GroupPeopleRepository;
 use Symfony\Component\HttpFoundation\Request;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-
-use Symfony\Component\Form\FormBuilderInterface;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-use App\Entity\GroupPeople;
-use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Repository\PersonRepository;
-use App\Repository\GroupPeopleRepository;
-use App\Form\PersonType;
-use App\Form\GroupPeopleType;
+use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ListPeopleController extends AbstractController
 {
+    private $session;
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     /**
      * @Route("/list/people", name="app")
      */
     public function index(PersonRepository $repo) {
         // $repo = $this->getDoctrine()->getRepository(Person::class);
         $people = $repo->findAll();
-
-        dump($people);
 
         return $this->render("app/index.html.twig", [
             "controller_name" => "ListPeopleController",
@@ -52,28 +57,24 @@ class ListPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/list/group/{id}/person/{id}", name="groupPeopleCard")
-     */
-    public function editPersonFromGroup(GroupPeople $groupPeople = NULL, Request $request, ObjectManager $manager) {
-
-    }
-
-
-    /**
-     * @Route("/list/group/new", name="create_group_people")
-     * @Route("/list/group/{id}", name="groupPeopleCard")
+     * @Route("/group/new", name="create_group_people")
+     * @Route("/group/{id}", name="groupPeopleCard")
      */
     public function formGroupPeople(GroupPeople $groupPeople = NULL, Request $request, ObjectManager $manager, GroupPeopleRepository $repo) {
         
         if (!$groupPeople) {
             $groupPeople = new groupPeople();
+        } else {
+            $this->session->set("groupPeople", [
+                "id" => $groupPeople->getId(),
+                "listFamilyTypology" => $groupPeople->listFamilyTypology(),
+                "nbPeople" => $groupPeople->getNbPeople(),
+            ]);
         }
 
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
 
         $formGroupPeople->handleRequest($request);
-
-        dump($groupPeople);
 
         if($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
             if(!$groupPeople->getId()) {
@@ -83,7 +84,10 @@ class ListPeopleController extends AbstractController
             $manager->persist($groupPeople);
             $manager->flush();
 
-            $request->getSession()->getFlashBag()->add('notice', 'Les modifications ont bien été enregistrée.');
+            $this->addFlash(
+                "success",
+                "Les modifications ont bien été enregistrées."
+            );
 
             return $this->redirectToRoute("groupPeopleCard", ["id" => $groupPeople->getId()]);
         }
@@ -95,10 +99,9 @@ class ListPeopleController extends AbstractController
         ]);
     }
 
-    
     /**
-     * @Route("/list/person/new", name="create_person")
-     * @Route("/list/person/{id}", name="personCard")
+     * @Route("/person/new", name="create_person")
+     * @Route("/group/person/{id}", name="personCard")
      */
     public function formPerson(PersonRepository $repo, Person $person = NULL, Request $request, ObjectManager $manager) {
         
@@ -110,15 +113,26 @@ class ListPeopleController extends AbstractController
 
         $form->handleRequest($request);
 
-        dump($person);
+        // dump($person);
 
         if($form->isSubmitted() && $form->isValid()) {
             if(!$person->getId()) {
                 $person->setCreationDate(new \DateTime());
                 // $person->addRolesPerson();
+                $this->addFlash(
+                    "success",
+                    "La personne est enregistrée."
+                );
             } else {
                 // $person->removeRolesPerson();
+                $this->addFlash(
+                    "success",
+                    "Les modifications ont été enregistrées."
+                );
             }
+
+
+
             $person->setUpdateDate(new \DateTime());
             $manager->persist($person);
             $manager->flush();
@@ -126,40 +140,10 @@ class ListPeopleController extends AbstractController
             return $this->redirectToRoute("personCard", ["id" => $person->getId()]);
         }
 
-        // Donne l'ID groupe ménage de la personne
-        // $groupPeoples = $person->getGroupPeoples();
-        // foreach($groupPeoples as $groupPeople) {
-        //     $groupPeopleId = $groupPeople->getid();
-        // }
-        // $repo = $this->getDoctrine()->getRepository(Person::class);
-
-        // $people = $repo->findByGroupPeople($person->getGroupPeoples());
-
-        // dump($people);
-
         return $this->render("app/personCard.html.twig", [
             "formPerson" => $form->createView(),
             "editMode" => $person->getId() != NULL,
             "person" => $person,
-            // "people" => $people
         ]);
     }
-
-    /**
-     * @Route("/list/person/{id}", name="personCard")
-     */
-    // public function personShow(Person $person) {
-    //     $repo = $this->getDoctrine()->getRepository(Person::class);
-    //     $person = $repo->find($id);
-    //     return $this->render("app/personCard.html.twig", [
-    //         "person" => $person
-    //     ]);
-
-    //     $form = $this->formPerson($person, "update");
-
-    //     return $this->render("app/personCard.html.twig", [
-    //         "formPerson" => $form->createView()
-    //     ]);
-    // }
-
 }

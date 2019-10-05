@@ -14,7 +14,6 @@
 
 <script>
     $(document).ready(function () {
-        // you may need to change this code if you are not using Bootstrap Datepicker
         $('.js-datepicker').datepicker({
             format: 'yyyy-mm-dd'
         });
@@ -55,25 +54,22 @@
                     </thead>
                     <tbody>
 
-
                         {% for formPerson in formGroupPeople.rolePerson.children %}
-
-                        {% dump(formPerson) %}
                         <tr>
                             <th scope="row">
-                                <a href="{{ path('personCard', {'id':formPerson.person.id.vars.value}) }}"
-                                    class="text-primary font-weight-bold"><span class="fas fa-user-edit"></span>
+                                <a href="{{ path('personCard', {'id':formPerson.vars.value.person.id}) }}"
+                                    class="text-primary font-weight-bold"><span class="mt-2 fas fa-user-edit"></span>
                                 </a>
                             </th>
                             <td class="px-1">{{ form_widget(formPerson.person.firstname) }}</td>
                             <td class="px-1">{{ form_widget(formPerson.person.lastname) }}</td>
                             <td class="px-1">{{ form_widget(formPerson.person.birthdate) }}</td>
-                            <td class="px-1"> {#{{ formPerson.person.age.vars.value }} #} an(s)</td>
+                            <td class="px-1 pt-4"> {{ formPerson.vars.value.person.age }} an(s)</td>
                             <td class="px-1">{{ form_widget(formPerson.person.gender) }}</td>
                             <td class="px-1">{{ form_widget(formPerson.role) }}</td>
                             <td class="px-1">
-                                <button type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                                    id="save"><span class=" fas fa-save"></span></button>
+                                <button type="submit" name="remove" id="remove" class="btn btn-danger shadow"
+                                    id="remove"><span class=" fas fa-trash"></span></button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -83,6 +79,9 @@
         </div>
     </div>
 
+    <a href="{{ path('create_person') }}" class="float-right text-primary"><span class="fas fa-plus-square"></span>
+        Ajouter une personne</a>
+    <br />
 
     <div class="row">
         <div class="col-md-12">
@@ -169,6 +168,11 @@
             </tbody>
         </table>
     </div>
+
+    <a href="{{ path('create_person') }}" class="text-primary"><span class="fas fa-plus-square"></span>
+        Créer un nouveau suivi</a>
+
+    <br />
 </section>
 
 <hr>
