@@ -106,8 +106,8 @@
                     <td>{{ rolePerson.listRole }}</td>
                     <td>{{ rolePerson.groupPeople.getFamilyTypologyType }}</td>
                     <td>{{ rolePerson.groupPeople.nbPeople }}</td>
-                    <td>{{ person.creationDate | date("d/m/Y H:i") }}</td>
-                    <td>{{ person.updateDate | date("d/m/Y H:i") }}</td>
+                    <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
+                    <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
                 </tr>
                 {% endif %}
                 {% endfor %}

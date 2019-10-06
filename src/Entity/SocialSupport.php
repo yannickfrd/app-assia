@@ -49,12 +49,12 @@ class SocialSupport
     /**
      * @ORM\Column(type="datetime")
      */
-    private $creationDate;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updateDate;
+    private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="socialSupports")
@@ -115,26 +115,26 @@ class SocialSupport
         return $this;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->creationDate;
+        return $this->createdAt;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->creationDate = $creationDate;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdateDate(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updateDate;
+        return $this->updatedAt;
     }
 
-    public function setUpdateDate(\DateTimeInterface $updateDate): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updateDate = $updateDate;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

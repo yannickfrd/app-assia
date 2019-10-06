@@ -25,8 +25,8 @@
 
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p>Créé le {{group_people.creationDate | date("d/m/Y à H:i") }} (modifié le
-            {{group_people.updateDate | date("d/m/Y à H:i") }})</p>
+        <p>Créé le {{group_people.createdAt | date("d/m/Y à H:i") }} (modifié le
+            {{group_people.updatedAt | date("d/m/Y à H:i") }})</p>
     </div>
     {% endif %}
 </div>

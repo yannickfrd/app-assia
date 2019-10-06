@@ -46,7 +46,7 @@ class SecurityController extends AbstractController
             $hashPassword = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashPassword);
 
-            $user->setCreationDate(new \DateTime());
+            $user->setCreatedAt(new \DateTime());
 
             $manager->persist($user);
             $manager->flush();

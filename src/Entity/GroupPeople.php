@@ -48,22 +48,22 @@ class GroupPeople
     /**
      * @ORM\Column(type="datetime")
      */
-    private $creationDate;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $createBy;
+    private $createdBy;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updateDate;
+    private $updatedAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $updateBy;
+    private $updatedBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople")
@@ -79,8 +79,8 @@ class GroupPeople
     {
         $this->socialSupports = new ArrayCollection();
         $this->rolePerson = new ArrayCollection();
-        $this->creationDate = new \Datetime();
-        $this->updateDate = new \Datetime();
+        $this->createdAt = new \Datetime();
+        $this->updatedAt = new \Datetime();
     }
 
     public function getId(): ?int
@@ -129,50 +129,50 @@ class GroupPeople
         return $this;
     }    
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->creationDate;
+        return $this->createdAt;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->creationDate = $creationDate;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getCreateBy(): ?int
+    public function getCreatedBy(): ?int
     {
-        return $this->createBy;
+        return $this->createdBy;
     }
 
-    public function setCreateBy(?int $createBy): self
+    public function setCreatedBy(?int $createdBy): self
     {
-        $this->createBy = $createBy;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    public function getUpdateDate(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updateDate;
+        return $this->updatedAt;
     }    
 
-    public function setUpdateDate(\DateTimeInterface $updateDate): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updateDate = $updateDate;
+        $this->updatedAt = $updatedAt;
         
         return $this;
     }    
     
-    public function getUpdateBy(): ?int
+    public function getUpdatedBy(): ?int
     {
-        return $this->updateBy;
+        return $this->updatedBy;
     }
 
-    public function setUpdateBy(?int $updateBy): self
+    public function setUpdatedBy(?int $updatedBy): self
     {
-        $this->updateBy = $updateBy;
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }

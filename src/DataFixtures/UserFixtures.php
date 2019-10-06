@@ -26,9 +26,9 @@ class UserFixtures extends Fixture
             $user = new User();
     
             // Définit la date de création
-            $creationDate = $faker->dateTimeBetween($startDate = "-12 months", $endDate = "now", $timezone = null);
+            $createdAt = $faker->dateTimeBetween($startDate = "-12 months", $endDate = "now", $timezone = null);
             $now = new \DateTime();
-            $interval = $now->diff($creationDate);
+            $interval = $now->diff($createdAt);
             $days = $interval->days;
             $min = "-" . $days . " days";
             // Définit la date de mise à jour
@@ -41,7 +41,7 @@ class UserFixtures extends Fixture
                 ->setLastName($faker->lastName())            
                 ->setPassword($this->passwordEncoder->encodePassword($user,"test123"))
                 ->setEmail($faker->freeEmail())
-                ->setCreationDate($creationDate)
+                ->setCreatedAt($createdAt)
                 ->setLoginCount(mt_rand(0, 99))
                 ->setLastLogin($lastLogin);
 

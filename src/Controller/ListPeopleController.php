@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -98,8 +99,8 @@ class ListPeopleController extends AbstractController
             $user = $this->security->getUser();
 
             if(!$groupPeople->getId()) {
-                $groupPeople->setCreationDate(new \DateTime());
-                $groupPeople->setCreateBy($user->getid());
+                $groupPeople->setCreatedAt(new \DateTime());
+                $groupPeople->setCreatedBy($user->getid());
                 $this->addFlash(
                     "success",
                     "Le ménage a été enregistré."
@@ -110,8 +111,8 @@ class ListPeopleController extends AbstractController
                     "Les modifications ont été enregistrées."
                 );
             }
-            $groupPeople->setUpdateDate(new \DateTime());
-            $groupPeople->setUpdateBy($user->getid());
+            $groupPeople->setUpdatedAt(new \DateTime());
+            $groupPeople->setUpdatedBy($user->getid());
             $this->manager->persist($groupPeople);
             $this->manager->flush();
 
@@ -160,8 +161,8 @@ class ListPeopleController extends AbstractController
 
             if(!$person->getId()) {
                 
-                $person->setCreationDate(new \DateTime())
-                        ->setCreateBy($user->getid());
+                $person->setCreatedAt(new \DateTime())
+                        ->setCreatedBy($user->getid());
 
                 $rolePerson = new RolePerson();
                 $rolePerson->setHead(FALSE)
@@ -178,8 +179,8 @@ class ListPeopleController extends AbstractController
                 );
             } else {
                 // $person->removeRolesPerson();
-                $person->setUpdateDate(new \DateTime());
-                $person->setUpdateBy($user->getid());
+                $person->setUpdatedAt(new \DateTime());
+                $person->setUpdatedBy($user->getid());
                 $this->addFlash(
                     "success",
                     "Les modifications ont été enregistrées."

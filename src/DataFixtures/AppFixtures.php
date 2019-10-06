@@ -30,20 +30,20 @@ class AppFixtures extends Fixture
             }
 
             // Définit la date de création
-            $creationDate = $faker->dateTimeBetween($startDate = "-12 months", $endDate = "now", $timezone = null);
+            $createdAt = $faker->dateTimeBetween($startDate = "-12 months", $endDate = "now", $timezone = null);
             $now = new \DateTime();
-            $interval = $now->diff($creationDate);
+            $interval = $now->diff($createdAt);
             $days = $interval->days;
             $min = "-" . $days . " days";
             // Définit la date de mise à jour
-            $updateDate = $faker->dateTimeBetween($min, $endDate = "now", $timezone = null);
+            $updatedAt = $faker->dateTimeBetween($min, $endDate = "now", $timezone = null);
 
             $groupPeople = new GroupPeople();
             $groupPeople->setFamilyTypology($familyTypology)
                 ->setNbPeople($nbPeople)
                 ->setComment($faker->paragraph())
-                ->setCreationDate($creationDate)
-                ->setUpdateDate($updateDate);
+                ->setCreatedAt($createdAt)
+                ->setUpdatedAt($updatedAt);
 
             $manager->persist($groupPeople); 
 
@@ -53,11 +53,11 @@ class AppFixtures extends Fixture
 
             $comment = "<p>" . join($faker->paragraphs(3),"</p><p>") . "</p>";
 
-            $socialSupport->setBeginningDate($creationDate)
+            $socialSupport->setBeginningDate($createdAt)
                         ->setStatus(mt_rand(1, 4))
                         ->setComment($comment)
-                        ->setCreationDate($creationDate)
-                        ->setUpdateDate($updateDate)
+                        ->setCreatedAt($createdAt)
+                        ->setUpdatedAt($updatedAt)
                         ->setGroupPeople($groupPeople);
 
             $manager->persist($socialSupport); 
@@ -140,8 +140,8 @@ class AppFixtures extends Fixture
                     ->setmail($faker->freeEmail())
                     ->setphone1($faker->mobileNumber())
                     ->setComment($faker->paragraph())
-                    ->setCreationDate($creationDate)
-                    ->setUpdateDate($updateDate)
+                    ->setCreatedAt($createdAt)
+                    ->setUpdatedAt($updatedAt)
                     ->addRolesPerson($rolePerson);
                 // Prépare le manager à faire persister les données dans le temps
                 $manager->persist($person);

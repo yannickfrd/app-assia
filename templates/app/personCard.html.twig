@@ -29,9 +29,9 @@
                 </div>
                 {% if edit_mode %}
                 <div class="small text-secondary">
-                    <p>Créé le {{person.creationDate | date("d/m/Y à H:i") }} (modifié le
-                        {{person.updateDate | date("d/m/Y à H:i") }}).</p>
-                    {# {{ form_row(form_person.updateDate, {"label": "Date de modification", "attr": {"readonly" : "readonly", } }) }} #}
+                    <p>Créé le {{person.createdAt | date("d/m/Y à H:i") }} (modifié le
+                        {{person.updatedAt | date("d/m/Y à H:i") }}).</p>
+                    {# {{ form_row(form_person.updatedAt, {"label": "Date de modification", "attr": {"readonly" : "readonly", } }) }} #}
                 </div>
                 {% else %}
                 <div class="mb-4"></div>
