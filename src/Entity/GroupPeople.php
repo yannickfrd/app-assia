@@ -19,7 +19,8 @@ class GroupPeople
         3 => "Couple sans enfant",
         4 => "Femme seule avec enfant(s)",
         5 => "Homme seul avec enfant(s)",
-        6 => "Couple avec enfant(s)"
+        6 => "Couple avec enfant(s)",
+        7 => "Autre"
     ];
 
     /**
@@ -40,14 +41,19 @@ class GroupPeople
     private $nbPeople;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+    
+    /**
      * @ORM\Column(type="datetime")
      */
     private $creationDate;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $comment;
+    private $createBy;
 
     /**
      * @ORM\Column(type="datetime")
@@ -55,19 +61,26 @@ class GroupPeople
     private $updateDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $socialSupports;
+    private $updateBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople")
      */
     private $rolePerson;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
+     */
+    private $socialSupports;
+    
     public function __construct()
     {
         $this->socialSupports = new ArrayCollection();
         $this->rolePerson = new ArrayCollection();
+        $this->creationDate = new \Datetime();
+        $this->updateDate = new \Datetime();
     }
 
     public function getId(): ?int
@@ -78,6 +91,11 @@ class GroupPeople
     public function getFamilyTypology(): ?int
     {
         return $this->familyTypology;
+    }
+
+    public function getFamilyTypologyType(): string
+    {
+        return self::FAMILY_TYPOLOGY[$this->familyTypology];
     }
 
     public function setFamilyTypology(int $familyTypology): self
@@ -99,6 +117,18 @@ class GroupPeople
         return $this;
     }
 
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }    
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }    
+
     public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
@@ -111,14 +141,14 @@ class GroupPeople
         return $this;
     }
 
-    public function getComment(): ?string
+    public function getCreateBy(): ?int
     {
-        return $this->comment;
+        return $this->createBy;
     }
 
-    public function setComment(?string $comment): self
+    public function setCreateBy(?int $createBy): self
     {
-        $this->comment = $comment;
+        $this->createBy = $createBy;
 
         return $this;
     }
@@ -126,15 +156,27 @@ class GroupPeople
     public function getUpdateDate(): ?\DateTimeInterface
     {
         return $this->updateDate;
-    }
+    }    
 
     public function setUpdateDate(\DateTimeInterface $updateDate): self
     {
         $this->updateDate = $updateDate;
+        
+        return $this;
+    }    
+    
+    public function getUpdateBy(): ?int
+    {
+        return $this->updateBy;
+    }
+
+    public function setUpdateBy(?int $updateBy): self
+    {
+        $this->updateBy = $updateBy;
 
         return $this;
     }
-
+    
     /**
      * @return Collection|SocialSupport[]
      */
@@ -195,10 +237,5 @@ class GroupPeople
         }
 
         return $this;
-    }
-
-    public function listFamilyTypology() 
-    {
-        return self::FAMILY_TYPOLOGY[$this->familyTypology];
     }
 }

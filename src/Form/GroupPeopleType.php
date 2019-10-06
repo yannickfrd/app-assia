@@ -35,7 +35,7 @@ class GroupPeopleType extends AbstractType
             "attr" => [
                 "class" => "col-md-12"
             ],
-            "choices" => $this->listFamilyTypology()
+            "choices" => $this->getFamilyTypologyType()
             ])
         ->add("nbPeople", NULL, [
             "label" => "Nombre de personnes",
@@ -69,7 +69,7 @@ class GroupPeopleType extends AbstractType
         ]);
     }
 
-    public function listFamilyTypology() 
+    public function getFamilyTypologyType() 
     {
         return self::FAMILY_TYPOLOGY;
     }

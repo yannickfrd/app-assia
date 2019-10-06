@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme formPerson "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form_person "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
 {% block title %}Fiche personne{% endblock %}
 
@@ -13,44 +13,44 @@
 <section id="person">
     <div class="my-3">
         {% dump(app.session.get("groupPeople")) %}
-        <a href="{{ path('groupPeopleCard', {'id':app.session.get("groupPeople").id}) }}" class="text-primary"><span
+        <a href="{{ path('group_people_card', {'id':app.session.get("groupPeople").id}) }}" class="text-primary"><span
                 class="fas fa-users"></span> Retour à la fiche du ménage {{app.session.get("groupPeople").id}}</a>
-        <span class="small text-secondary">{{ app.session.get("groupPeople").listFamilyTypology }} -
+        <span class="small text-secondary">{{ app.session.get("groupPeople").getFamilyTypologyType }} -
             {{ app.session.get("groupPeople").nbPeople }} personne(s)</span>
         <br />
     </div>
 
     <div class="row">
         <div class="col-md-12 mb-4">
-            {% if formPerson is defined %}
+            {% if form_person is defined %}
             <div class="col-md-8 mx-auto card shadow">
                 <div class="form-group row">
                     <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
                 </div>
-                {% if editMode %}
+                {% if edit_mode %}
                 <div class="small text-secondary">
                     <p>Créé le {{person.creationDate | date("d/m/Y à H:i") }} (modifié le
                         {{person.updateDate | date("d/m/Y à H:i") }}).</p>
-                    {# {{ form_row(formPerson.updateDate, {"label": "Date de modification", "attr": {"readonly" : "readonly", } }) }} #}
+                    {# {{ form_row(form_person.updateDate, {"label": "Date de modification", "attr": {"readonly" : "readonly", } }) }} #}
                 </div>
                 {% else %}
                 <div class="mb-4"></div>
                 {% endif %}
 
-                {{ form_start(formPerson) }}
+                {{ form_start(form_person) }}
 
-                {{ form_row(formPerson.firstname) }}
-                {{ form_row(formPerson.lastname) }}
-                {{ form_row(formPerson.birthdate) }}
-                {{ form_row(formPerson.gender) }}
-                {{ form_row(formPerson.comment) }}
-                {{ form_row(formPerson._token) }}
+                {{ form_row(form_person.firstname) }}
+                {{ form_row(form_person.lastname) }}
+                {{ form_row(form_person.birthdate) }}
+                {{ form_row(form_person.gender) }}
+                {{ form_row(form_person.comment) }}
+                {{ form_row(form_person._token) }}
 
                 <div class="mb-4 float-right">
                     <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
                 </div>
-                {{ form_end(formPerson, {"render_rest": false}) }}
+                {{ form_end(form_person, {"render_rest": false}) }}
             </div>
             {% endif %}
         </div>

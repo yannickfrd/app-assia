@@ -30,7 +30,7 @@ class RolePerson
     private $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":0})
      */
     private $head;
 
@@ -46,7 +46,7 @@ class RolePerson
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePerson")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePerson", cascade={"persist"})
      * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
      */
     private $groupPeople;

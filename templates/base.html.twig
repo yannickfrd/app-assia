@@ -41,22 +41,26 @@
 
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == "home" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("home") }}"><span class="fas fa-home"></span> Accueil<span
                                     class="sr-only">(Accueil)</span></a>
                         </li>
-                        <li class="nav-item">
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == "search" %} active {% endif %}">
                             <a class="nav-link" href="#">Recherche</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item
+                            {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("app") }}">Suivis</a>
                         </li>
-                        <li class="nav-item">
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("create_group_people") }}">Nouveau ménage</a>
                         </li>
-                        <li class="nav-item">
+                        {# <li class="nav-item">
                             <a class="nav-link" href="{{ path("create_person") }}">Nouvelle personne</a>
-                        </li>
+                        </li> #}
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
                         <label for="search" class="sr-only col-form-label">Recherche</label>

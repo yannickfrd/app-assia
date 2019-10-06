@@ -57,7 +57,7 @@ class PersonType extends AbstractType
                 "class" => "col-md-12"
             ],
             // "placeholder" => "Sélectionner une option",
-            "choices" => $this->listGender(),
+            "choices" => $this->getGenderType(),
         ])
         ->add("comment",NULL, [
             "label" => "Commentaire",
@@ -75,7 +75,7 @@ class PersonType extends AbstractType
         ]);
     }
 
-    public function listGender() 
+    public function getGenderType() 
     {
         return self::GENDER;
     }

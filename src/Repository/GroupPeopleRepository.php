@@ -19,6 +19,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
         parent::__construct($registry, GroupPeople::class);
     }
 
+    
     // /**
     //  * @return GroupPeople[] Returns an array of GroupPeople objects
     //  */

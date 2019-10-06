@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -151,6 +152,13 @@ class Person
         return $this;
     }
 
+    public function getSlug(): string
+    {
+        $slugify = new Slugify();
+        
+        return $slugify->slugify($this->firstname . "-" . $this->lastname); 
+    }
+
     public function getUsename(): ?string
     {
         return $this->usename;
@@ -177,8 +185,12 @@ class Person
 
     public function getAge(): ?int
     {
-        $now   = new \DateTime();
-        return $this->birthdate->diff($now)->y;
+        if ($this->birthdate) {
+            $now   = new \DateTime();
+            return $this->birthdate->diff($now)->y;
+        } else {
+            return NULL;
+        }
     }
 
     public function setAge(int $age): self
@@ -203,6 +215,11 @@ class Person
         return $this;
     }
 
+    public function getGenderType() 
+    {
+        return self::GENDER[$this->gender];
+    }
+    
     public function getNationality(): ?int
     {
         return $this->nationality;
@@ -213,6 +230,11 @@ class Person
         $this->nationality = $nationality;
 
         return $this;
+    }
+
+    public function getNationalityType() 
+    {
+        return self::NATIONALITY[$this->nationality];
     }
 
     public function getPhone1(): ?string
@@ -340,15 +362,5 @@ class Person
         }
 
         return $this;
-    }
-
-    public function listGender() 
-    {
-        return self::GENDER[$this->gender];
-    }
-    
-    public function listNationality() 
-    {
-        return self::NATIONALITY[$this->nationality];
     }
 }

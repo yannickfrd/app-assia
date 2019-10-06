@@ -1,6 +1,6 @@
 {% extends"base.html.twig" %}
 
-{% form_theme formGroupPeople "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form_group_people "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
 {% block title %}Fiche ménage{% endblock %}
 
@@ -23,10 +23,10 @@
 <div>
     <h1 class="h2 mb-3">Groupe de personnes (ménage)</h1>
 
-    {% if editMode %}
+    {% if edit_mode %}
     <div class="small text-secondary">
-        <p>Créé le {{groupPeople.creationDate | date("d/m/Y à H:i") }} (modifié le
-            {{groupPeople.updateDate | date("d/m/Y à H:i") }})</p>
+        <p>Créé le {{group_people.creationDate | date("d/m/Y à H:i") }} (modifié le
+            {{group_people.updateDate | date("d/m/Y à H:i") }})</p>
     </div>
     {% endif %}
 </div>
@@ -34,7 +34,7 @@
 <hr>
 
 <section id="people-group">
-    {{ form_start(formGroupPeople) }}
+    {{ form_start(form_group_people) }}
 
     <div class="row">
         <div class="col-md-12">
@@ -54,25 +54,45 @@
                     </thead>
                     <tbody>
 
-                        {% for formPerson in formGroupPeople.rolePerson.children %}
+                        {% for form_person in form_group_people.rolePerson.children %}
                         <tr>
                             <th scope="row">
-                                <a href="{{ path('personCard', {'id':formPerson.vars.value.person.id}) }}"
+                                <a href="{{ path('person_show', {'id':form_person.vars.value.person.id, 'slug':form_person.vars.value.person.slug}) }}"
                                     class="text-primary font-weight-bold"><span class="mt-2 fas fa-user-edit"></span>
                                 </a>
                             </th>
-                            <td class="px-1">{{ form_widget(formPerson.person.firstname) }}</td>
-                            <td class="px-1">{{ form_widget(formPerson.person.lastname) }}</td>
-                            <td class="px-1">{{ form_widget(formPerson.person.birthdate) }}</td>
-                            <td class="px-1 pt-4"> {{ formPerson.vars.value.person.age }} an(s)</td>
-                            <td class="px-1">{{ form_widget(formPerson.person.gender) }}</td>
-                            <td class="px-1">{{ form_widget(formPerson.role) }}</td>
+                            <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
+                            <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
+                            <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
+                            <td class="px-1 pt-4"> {{ form_person.vars.value.person.age }} an(s)</td>
+                            <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
+                            <td class="px-1">{{ form_widget(form_person.role) }}</td>
                             <td class="px-1">
-                                <button type="submit" name="remove" id="remove" class="btn btn-danger shadow"
-                                    id="remove"><span class=" fas fa-trash"></span></button>
+                                <a href="{{ path('remove_person', {'id':form_person.vars.value.person.id}) }}"
+                                    name="remove" id="remove" class="btn btn-danger shadow" id="remove"><span
+                                        class=" fas fa-trash"></span></a>
                             </td>
                         </tr>
                         {% endfor %}
+                        {# <form action="">
+                            <tr>
+                                <th scope="row">
+                                    <a href="" class="text-primary font-weight-bold"><span
+                                            class="mt-2 fas fa-user-edit"></span>
+                                    </a>
+                                </th>
+                                <td class="px-1"></td>
+                                <td class="px-1"></td>
+                                <td class="px-1"></td>
+                                <td class="px-1"></td>
+                                <td class="px-1"></td>
+                                <td class="px-1"></td>
+                                <td class="px-1">
+                                    <a href="" name="remove" id="remove" class="btn btn-primary shadow"
+                                        id="remove"><span class=" fas fa-save"></span></a>
+                                </td>
+                            </tr>
+                        </form> #}
                     </tbody>
                 </table>
             </div>
@@ -86,21 +106,21 @@
     <div class="row">
         <div class="col-md-12">
             <div class="mt-4">
-                {{ form_row(formGroupPeople.familyTypology) }}
-                {{ form_row(formGroupPeople.nbPeople) }}
-                {{ form_row(formGroupPeople.comment) }}
-                {{ form_row(formGroupPeople._token) }}
+                {{ form_row(form_group_people.familyTypology) }}
+                {{ form_row(form_group_people.nbPeople) }}
+                {{ form_row(form_group_people.comment) }}
+                {{ form_row(form_group_people._token) }}
 
                 <div class="float-right">
                     <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                        value="{% if editMode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
                 </div>
 
             </div>
         </div>
     </div>
 
-    {{ form_end(formGroupPeople, {"render_rest": false}) }}
+    {{ form_end(form_group_people, {"render_rest": false}) }}
 </section>
 
 <hr>
@@ -148,7 +168,7 @@
 
             <tbody>
 
-                {% for socialSupport in groupPeople.socialSupports %}
+                {% for socialSupport in group_people.socialSupports %}
                 <tr>
                     <th scope="row">
                     </th>
