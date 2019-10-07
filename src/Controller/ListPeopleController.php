@@ -125,7 +125,7 @@ class ListPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/group/{group_id}/person/remove-{person_id}-role-{role_person_id}", name="remove_person", methods="REMOVE")
+     * @Route("/group/{group_id}/person/remove-{person_id}_{role_person_id}_{_token}", name="remove_person", methods="GET")
      * @ParamConverter("groupPeople", options={"id" = "group_id"})
      * @ParamConverter("rolePerson", options={"id" = "role_person_id"})
      * @ParamConverter("person", options={"id" = "person_id"})

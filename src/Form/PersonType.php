@@ -41,6 +41,9 @@ class PersonType extends FormType
             ],
             "choices" => $this->getchoices(Person::GENDER),
         ])
+        ->add("phone1")
+        ->add("phone2")
+        ->add("email")
         ->add("comment",NULL, [
             "attr" => [
                 "rows" => 5,

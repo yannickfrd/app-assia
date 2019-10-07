@@ -61,14 +61,16 @@
                             <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                             <td class="px-1">{{ form_widget(form_person.role) }}</td>
                             <td class="px-1">
-                                <form method="post"
+                                <a href="{{ path('remove_person', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                    class="btn btn-danger shadow"><span class="fas fa-trash"></span></a>
+                                {# <form method="post"
                                     action="{{ path('remove_person', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id}) }}"
                                     onsubmit="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')">
                                     <input type="hidden" name="_method" value="REMOVE">
                                     <input type="hidden" name="_token"
                                         value="{{ csrf_token('remove' ~ form_person.vars.value.id) }}">
                                     <button class="btn btn-danger shadow"><span class="fas fa-trash"></span></button>
-                                </form>
+                                    </form> #}
                             </td>
                         </tr>
                         {% endfor %}

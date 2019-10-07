@@ -75,18 +75,21 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Assert\Regex(pattern="^0[1-9]([-._ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone1;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Assert\Regex(pattern="^0[1-9]([-._ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone2;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Assert\Email(message="L'adresse email n'est pas valide.")
      */
-    private $mail;
+    private $email;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -263,14 +266,14 @@ class Person
         return $this;
     }
 
-    public function getMail(): ?string
+    public function getEmail(): ?string
     {
-        return $this->mail;
+        return $this->email;
     }
 
-    public function setMail(?string $mail): self
+    public function setEmail(?string $email): self
     {
-        $this->mail = $mail;
+        $this->email = $email;
 
         return $this;
     }

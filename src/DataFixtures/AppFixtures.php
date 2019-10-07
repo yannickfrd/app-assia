@@ -137,7 +137,7 @@ class AppFixtures extends Fixture
                     ->setLastName($lastname)
                     ->setBirthdate($birthdate)
                     ->setGender($sex)
-                    ->setmail($faker->freeEmail())
+                    ->setEmail($faker->freeEmail())
                     ->setphone1($faker->mobileNumber())
                     ->setComment($faker->paragraph())
                     ->setCreatedAt($createdAt)

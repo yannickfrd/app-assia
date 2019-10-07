@@ -38,6 +38,7 @@ class GroupPeople
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Range(min = 1, max = 9)
      */
     private $nbPeople;
 
