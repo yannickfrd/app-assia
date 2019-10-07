@@ -10,21 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-
-class RolePersonType extends AbstractType
+class RolePersonType extends FormType
 {
-    public const ROLE = [
-        "-- Sélectionner --" => NULL,
-        "Demandeur" => 1,
-        "Conjoint·e" => 2,
-        "Époux/se" => 3,
-        "Enfant" => 4,
-        "Membre de la famille" => 5,
-        "Parent isolé" => 6,
-        "Personne isolée" => 7,
-        "Autre" => 8
-    ];
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -33,8 +20,7 @@ class RolePersonType extends AbstractType
                 "required" => false
             ])
             ->add("role", ChoiceType::class, [
-                "label" => "Rôle",
-                "choices" => $this->listRole(),
+                "choices" => $this->getChoices(RolePerson::ROLE),
             ])
             ->add("person", PersonType::class)
         ;
@@ -44,11 +30,7 @@ class RolePersonType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => RolePerson::class,
+            "translation_domain" => "forms",
         ]);
-    }
-
-    public function listRole() 
-    {
-        return self::ROLE;
     }
 }

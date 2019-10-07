@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GroupPeople
 {
     public const FAMILY_TYPOLOGY = [
+        NULL => "",
         1 => "Femme seule",
         2 => "Homme seul",
         3 => "Couple sans enfant",

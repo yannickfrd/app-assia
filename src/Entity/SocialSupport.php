@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SocialSupport
 {
     public const STATUS = [
+        NULL => "",
         1 => "À venir",
         2 => "En cours",
         3 => "En suspens",

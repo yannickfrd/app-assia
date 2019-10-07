@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Security;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -80,12 +81,7 @@ class ListPeopleController extends AbstractController
         if (!$groupPeople) {
             $groupPeople = new groupPeople();
         } else {
-            $this->session->set("groupPeople", $groupPeople);
-            // $this->session->set("groupPeople", [
-            //     "id" => $groupPeople->getId(),
-            //     "getFamilyTypologyType" => $groupPeople->listFamilyTypology(),
-            //     "nbPeople" => $groupPeople->getNbPeople(),
-            // ]);
+            // $this->session->set("groupPeople", $groupPeople);
         }
 
         dump($groupPeople);
@@ -113,6 +109,7 @@ class ListPeopleController extends AbstractController
             }
             $groupPeople->setUpdatedAt(new \DateTime());
             $groupPeople->setUpdatedBy($user->getid());
+
             $this->manager->persist($groupPeople);
             $this->manager->flush();
 
@@ -120,30 +117,47 @@ class ListPeopleController extends AbstractController
         }
 
         return $this->render("app/groupPeopleCard.html.twig", [
-            "form_group_people" => $formGroupPeople->createView(),
-            "edit_mode" => $groupPeople->getId() != NULL,
             "group_people" => $groupPeople,
+            "form" => $formGroupPeople->createView(),
+            "edit_mode" => $groupPeople->getId() != NULL,
             "current_menu" => "new_group"
         ]);
     }
 
-        /**
-     * @Route("/group/remove_person/{id}", name="remove_person")
-     * @return Response
+    /**
+     * @Route("/group/{group_id}/person/remove-{person_id}-role-{role_person_id}", name="remove_person", methods="REMOVE")
+     * @ParamConverter("groupPeople", options={"id" = "group_id"})
+     * @ParamConverter("rolePerson", options={"id" = "role_person_id"})
+     * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function removePerson(GroupPeople $groupPeople = NULL, Request $request, GroupPeopleRepository $repo): Response
+    public function removePerson(GroupPeople $groupPeople, RolePerson $rolePerson, Person $person, Request $request)
     {
-        $this->session->get("groupPeople")->removeRolePerson($rolePerson);
-
-        return $this->redirectToRoute("groupPeopleCard", ["id" => $this->session->get("groupPeople")->getId()]);
+        if ($this->isCsrfTokenValid("remove" . $rolePerson->getId(), $request->get("_token"))) {
+            $groupPeople->removeRolePerson($rolePerson);
+    
+            $this->manager->flush();
+    
+            $this->addFlash(
+                "warning",
+                $person->getFirstname() . " a été retiré".  $this->gender($person->getGender()) . " du ménage."
+            );
+        } else {
+            $this->addFlash(
+                "danger",
+                "Une erreur s'est produite."
+            );
+        }
+        return $this->redirectToRoute("group_people_card", ["id" => $groupPeople->getId()]);
     }
 
     /**
-     * @Route("/person/new", name="create_person")
-     * @Route("/group/person/{slug}-{id}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"})
+     * @Route("/group/{group_id}/person/new", name="create_person", methods="GET|POST")
+     * @Route("/group/{group_id}/person/{person_id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
+     * @ParamConverter("groupPeople", options={"id" = "group_id"})
+     * @ParamConverter("person", options={"id" = "person_id"})
      * @return Response
      */
-    public function formPerson(GroupPeople $groupPeople = NULL, PersonRepository $repo, Person $person = NULL, RolePerson $rolePerson = NULL, Request $request) 
+    public function formPerson(GroupPeople $groupPeople, PersonRepository $repo, Person $person = NULL, RolePerson $rolePerson = NULL, Request $request): Response
     {
         if (!$person) {
             $person = new Person();
@@ -153,8 +167,7 @@ class ListPeopleController extends AbstractController
 
         $form->handleRequest($request);
 
-        $groupPeople = $this->session->get("groupPeople");
-
+        // $groupPeople = $this->session->get("groupPeople");
 
         if($form->isSubmitted() && $form->isValid()) {
             $user = $this->security->getUser();
@@ -175,28 +188,48 @@ class ListPeopleController extends AbstractController
                 
                 $this->addFlash(
                     "success",
-                    "La personne est enregistrée."
+                    $person->getFirstname() . " a été ajouté".  $this->gender($person->getGender()) . " au ménage."
                 );
+
             } else {
-                // $person->removeRolesPerson();
-                $person->setUpdatedAt(new \DateTime());
-                $person->setUpdatedBy($user->getid());
                 $this->addFlash(
                     "success",
                     "Les modifications ont été enregistrées."
                 );
             }
 
+            $person->setUpdatedAt(new \DateTime());
+            $person->setUpdatedBy($user->getid());
+
             $this->manager->persist($person);
             $this->manager->flush();
 
-            return $this->redirectToRoute("person_show", ["id" => $person->getId()]);
+            return $this->redirectToRoute("group_people_card", ["id" => $groupPeople->getId()]);   
+            // return $this->redirectToRoute("person_show", [
+            //     "group_id" => $groupPeople->getId(), 
+            //     "person_id" => $person->getId(),
+            //     "slug" => $person->getSlug()
+            //     ]);
         }
 
         return $this->render("app/personCard.html.twig", [
-            "form_person" => $form->createView(),
-            "edit_mode" => $person->getId() != NULL,
+            "group_people" =>$groupPeople,
             "person" => $person,
+            "form" => $form->createView(),
+            "edit_mode" => $person->getId() != NULL
         ]);
+    }
+
+    /**
+     * Accorde en fonction du sexe de la personne (féminin, masculin)
+     * @return String
+     */
+    function gender($gender): String
+    {
+        if($gender == 1) {
+            return "e";
+        } else {
+            return "";
+        }
     }
 }

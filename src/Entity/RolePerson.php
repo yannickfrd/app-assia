@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RolePerson
 {
     public const ROLE = [
+        NULL => "",
         1 => "Demandeur",
         2 => "Conjoint·e",
         3 => "Époux/se",

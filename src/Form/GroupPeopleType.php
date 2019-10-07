@@ -12,33 +12,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
-
-class GroupPeopleType extends AbstractType
+class GroupPeopleType extends FormType
 {
-    public const FAMILY_TYPOLOGY = [
-        "-- Sélectionner --" => NULL,
-        "Femme seule" => 1,
-        "Homme seul" => 2,
-        "Couple sans enfant" => 3,
-        "Femme seule avec enfant(s)" => 4,
-        "Homme seul avec enfant(s)" => 5,
-        "Couple avec enfant(s)" => 6,
-    ];
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
         ->add("familyTypology", ChoiceType::class, [
-            "label" => "Typologie familiale",
             "attr" => [
                 "class" => "col-md-12"
             ],
-            "choices" => $this->getFamilyTypologyType()
+            "choices" => $this->getchoices(GroupPeople::FAMILY_TYPOLOGY)
             ])
         ->add("nbPeople", NULL, [
-            "label" => "Nombre de personnes",
             "attr" => [
                 "class" => "col-md-4"
             ]
@@ -46,13 +31,9 @@ class GroupPeopleType extends AbstractType
         ->add('rolePerson', CollectionType::class, [
             'entry_type'   => RolePersonType::class,
             'allow_add'    => true,
-            'allow_delete' => false
+            'allow_delete' => true
         ])
-        // ->add('rolePerson', EntityType::class, [
-        //     'class'        => RolePerson::class,
-        //     'choice_label' => 'role',
-        //     'multiple'     => true,
-        // ])
+
         ->add("comment", NULL, [
             "label" => "Commentaire",
             "attr" => [
@@ -66,11 +47,7 @@ class GroupPeopleType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => GroupPeople::class,
+            "translation_domain" => "forms",
         ]);
-    }
-
-    public function getFamilyTypologyType() 
-    {
-        return self::FAMILY_TYPOLOGY;
     }
 }

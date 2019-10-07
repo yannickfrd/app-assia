@@ -1,6 +1,6 @@
 {% extends"base.html.twig" %}
 
-{% form_theme form_group_people "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
 {% block title %}Fiche ménage{% endblock %}
 
@@ -11,14 +11,6 @@
 {% endblock %}
 
 {% block body %}
-
-<script>
-    $(document).ready(function () {
-        $('.js-datepicker').datepicker({
-            format: 'yyyy-mm-dd'
-        });
-    });
-</script>
 
 <div>
     <h1 class="h2 mb-3">Groupe de personnes (ménage)</h1>
@@ -34,8 +26,9 @@
 <hr>
 
 <section id="people-group">
-    {{ form_start(form_group_people) }}
+    {{ form_start(form) }}
 
+    {% if group_people.id is not null %}
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
@@ -54,10 +47,10 @@
                     </thead>
                     <tbody>
 
-                        {% for form_person in form_group_people.rolePerson.children %}
+                        {% for form_person in form.rolePerson.children %}
                         <tr>
                             <th scope="row">
-                                <a href="{{ path('person_show', {'id':form_person.vars.value.person.id, 'slug':form_person.vars.value.person.slug}) }}"
+                                <a href="{{ path('person_show', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'slug':form_person.vars.value.person.slug}) }}"
                                     class="text-primary font-weight-bold"><span class="mt-2 fas fa-user-edit"></span>
                                 </a>
                             </th>
@@ -68,9 +61,14 @@
                             <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                             <td class="px-1">{{ form_widget(form_person.role) }}</td>
                             <td class="px-1">
-                                <a href="{{ path('remove_person', {'id':form_person.vars.value.person.id}) }}"
-                                    name="remove" id="remove" class="btn btn-danger shadow" id="remove"><span
-                                        class=" fas fa-trash"></span></a>
+                                <form method="post"
+                                    action="{{ path('remove_person', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id}) }}"
+                                    onsubmit="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')">
+                                    <input type="hidden" name="_method" value="REMOVE">
+                                    <input type="hidden" name="_token"
+                                        value="{{ csrf_token('remove' ~ form_person.vars.value.id) }}">
+                                    <button class="btn btn-danger shadow"><span class="fas fa-trash"></span></button>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
@@ -99,17 +97,21 @@
         </div>
     </div>
 
-    <a href="{{ path('create_person') }}" class="float-right text-primary"><span class="fas fa-plus-square"></span>
+    <a href="{{ path('create_person', {'group_id':group_people.id}) }}" class="float-right text-primary"><span
+            class="fas fa-plus-square"></span>
         Ajouter une personne</a>
     <br />
+</section>
+{% endif %}
 
+<section>
     <div class="row">
         <div class="col-md-12">
             <div class="mt-4">
-                {{ form_row(form_group_people.familyTypology) }}
-                {{ form_row(form_group_people.nbPeople) }}
-                {{ form_row(form_group_people.comment) }}
-                {{ form_row(form_group_people._token) }}
+                {{ form_row(form.familyTypology) }}
+                {{ form_row(form.nbPeople) }}
+                {{ form_row(form.comment) }}
+                {{ form_row(form._token) }}
 
                 <div class="float-right">
                     <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
@@ -119,12 +121,11 @@
             </div>
         </div>
     </div>
-
-    {{ form_end(form_group_people, {"render_rest": false}) }}
 </section>
-
+{{ form_end(form, {"render_rest": false}) }}
 <hr>
 
+{% if group_people.id is not null %}
 <section id="social-supports">
     <h2 class="h3 my-4">Historique des suivis sociaux</h2>
     <div class="table-responsive">
@@ -189,22 +190,21 @@
         </table>
     </div>
 
-    <a href="{{ path('create_person') }}" class="text-primary"><span class="fas fa-plus-square"></span>
+    <a href="" class="text-primary"><span class="fas fa-plus-square"></span>
         Créer un nouveau suivi</a>
 
     <br />
 </section>
-
 <hr>
+{% endif %}
 
-<script>
+<!-- <script>
     $(document).ready(function () {
         // you may need to change this code if you are not using Bootstrap Datepicker
         $('.js-datepicker').datepicker({
             format: 'yyyy-mm-dd'
         });
     });
-</script>
-
+</script> -->
 
 {% endblock %}

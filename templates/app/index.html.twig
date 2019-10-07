@@ -96,16 +96,18 @@
                         </div>
                     </th>
                     <td>
-                        <a href="{{ path('group_people_card', {'id':rolePerson.groupPeople.id}) }}"
-                            class="text-primary font-weight-bold">{{ person.lastname }}</a>
+                        <a href="{% if rolePerson.groupPeople is not null %}{{ path('group_people_card', {'id':rolePerson.groupPeople.id}) }}
+                        {% endif %}" class="text-primary font-weight-bold">{{ person.lastname }}</a>
                     </td>
                     <td>{{ person.firstname }}</td>
                     <td>{{ person.birthdate | date("d/m/Y") }}</td>
                     <td>{% if person.age > 0 %}{{ person.age }} ans {% endif %}</td>
                     <td>{{ person.getGenderType }}</td>
                     <td>{{ rolePerson.listRole }}</td>
-                    <td>{{ rolePerson.groupPeople.getFamilyTypologyType }}</td>
-                    <td>{{ rolePerson.groupPeople.nbPeople }}</td>
+                    <td>{% if rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.getFamilyTypologyType }}{% endif %}
+                    </td>
+                    <td>{% if  rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.nbPeople }}{% endif %}
+                    </td>
                     <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
                     <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
                 </tr>

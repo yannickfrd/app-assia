@@ -15,12 +15,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Person
 {
     public const GENDER = [
+        NULL => "",
         1 => "Femme",
         2 => "Homme",
         3 => "Non renseigné"
     ];
 
     public const NATIONALITY = [
+        NULL => "",
         1 => "France",
         2 => "Union-Européenne",
         3 => "Hors-UE",
