@@ -3,9 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Person;
+use Doctrine\ORM\Query;
 use App\Entity\GroupPeople;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Person|null find($id, $lockMode = null, $lockVersion = null)
@@ -49,8 +50,17 @@ class PersonRepository extends ServiceEntityRepository
     }
     */
 
-
-    
+    /**
+     * @return Query
+     */
+    // Trouve tous les personnes
+    public function findAllPeopleQuery(): Query
+    {
+        return $this->createQueryBuilder("p")
+                    ->select("p")
+                    ->getQuery();
+    }
+        
     // Trouve tous les personnes du même groupe ménage
     public function findByGroupPeople($groupPeople) {
         

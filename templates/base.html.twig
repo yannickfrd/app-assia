@@ -52,7 +52,12 @@
                         </li>
                         <li class="nav-item
                             {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("app") }}">Suivis</a>
+                            <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>
+                        </li>
+                        <li
+                            class="nav-item
+                            {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("list_groups_people") }}">Suivis</a>
                         </li>
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">

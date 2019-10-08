@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des personnes{% endblock %}
+
+{% block stylesheets %}
+
+<link href="{{ asset("css/table.css") }}" rel="stylesheet" />
+
+{% endblock %}
+
+
+{% block body %}
+
+<section>
+    <h1 class="h2 my-4">Liste des personnes</h1>
+
+    <div class="row">
+        <div class="col-md-4 count align-middle">
+            <p class="align-middle">{{ people.getTotalItemCount }} personnes.</p>
+        </div>
+        <div class="col-md-8">
+            {% set align = "right" %}
+            <div class="navigation">
+                {{ knp_pagination_render(people) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow">
+            <thead class="bg-dark">
+                <tr>
+                    <th scope="col" class="align-middle th-width-20px">
+                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
+                            title="Tout sélectionner">
+                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
+                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
+                                    sélectionner<span></label>
+                        </div>
+                    </th>
+                    <th scope="col" class="align-middle th-width-150px">
+                        <a href="" class="sorting-indicator text-light">Nom
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-120px">
+                        <a href="" class="sorting-indicator text-light">Prénom
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de<br />naissance
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Âge
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-width-80px">
+                        <a href="" class="sorting-indicator text-light">Sexe
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de création
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                    <th scope="col" class="align-middle th-date">
+                        <a href="" class="sorting-indicator text-light">Date de mise à jour
+                            <span class="fas fa-caret-up">
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for person in people %}
+                <tr {% if loop.index is odd %}class="color" {% endif %}>
+                    <th scope="row">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
+                                value="" class="checkbox" />
+                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
+                        </div>
+                    </th>
+                    <td>
+                        <a href="" class="text-primary font-weight-bold">{{ person.lastname }}</a>
+                    </td>
+                    <td>{{ person.firstname }}</td>
+                    <td>{{ person.birthdate | date("d/m/Y") }}</td>
+                    <td>{% if person.age > 0 %}{{ person.age }} ans {% endif %}</td>
+                    <td>{{ person.getGenderType }}</td>
+                    <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
+                    <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="navigation">
+        {{ knp_pagination_render(people) }}
+    </div>
+</section>
+
+
+
+
+
+
+{% endblock %}

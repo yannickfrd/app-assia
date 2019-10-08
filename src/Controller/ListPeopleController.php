@@ -43,21 +43,6 @@ class ListPeopleController extends AbstractController
         $this->session = $session;
         $this->security = $security;
     }
-    /**
-     * @Route("/list/people", name="app")
-     * @return Response
-     */
-    public function index(PersonRepository $repo): Response
-    {
-        // $repo = $this->getDoctrine()->getRepository(Person::class);
-        $people = $repo->findAll();
-
-        return $this->render("app/index.html.twig", [
-            "controller_name" => "ListPeopleController",
-            "people" => $people,
-            "current_menu" => "list_people"
-        ]);
-    }
 
     /**
      * @Route("/", name="home")
@@ -68,6 +53,22 @@ class ListPeopleController extends AbstractController
         return $this->render("app/home.html.twig", [
             "title" => "Bienvenue sur l'application de suivi social d'ESPERER 95",
             "current_menu" => "home"
+        ]);
+    }
+    
+    /**
+     * @Route("/list/groupPeople", name="list_groups_people")
+     * @return Response
+     */
+    public function listGroupsPeople(PersonRepository $repo): Response
+    {
+        // $repo = $this->getDoctrine()->getRepository(Person::class);
+        $people = $repo->findAll();
+
+        return $this->render("app/listGroupsPeople.html.twig", [
+            "controller_name" => "ListPeopleController",
+            "people" => $people,
+            "current_menu" => "list_groups_people"
         ]);
     }
 
@@ -224,7 +225,7 @@ class ListPeopleController extends AbstractController
      * Accorde en fonction du sexe de la personne (féminin, masculin)
      * @return String
      */
-    function gender($gender): String
+    private function gender($gender): String
     {
         if($gender == 1) {
             return "e";

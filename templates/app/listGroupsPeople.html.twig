@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des personnes suivies{% endblock %}
+{% block title %}Liste des ménages suivis{% endblock %}
 
 {% block stylesheets %}
 
@@ -12,7 +12,7 @@
 {% block body %}
 
 <section>
-    <h1 class="h2 my-4">Liste des personnes suivies</h1>
+    <h1 class="h2 my-4">Liste des ménages suivis</h1>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover shadow">
             <thead class="bg-dark">
@@ -86,7 +86,7 @@
             <tbody>
                 {% for person in people %}
                 {% for rolePerson in person.rolesPerson %}
-                {% if rolePerson.head is defined %}
+                {% if rolePerson.head == true %}
                 <tr>
                     <th scope="row">
                         <div class="custom-control custom-checkbox">
