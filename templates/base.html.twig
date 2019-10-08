@@ -47,8 +47,8 @@
                                     class="sr-only">(Accueil)</span></a>
                         </li>
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == "search" %} active {% endif %}">
-                            <a class="nav-link" href="#">Recherche</a>
+                            class="nav-item {% if current_menu is defined and current_menu == "person_search" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("person_search") }}">Recherche</a>
                         </li>
                         <li class="nav-item
                             {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
@@ -112,10 +112,8 @@
             {% endfor %}
             {% endfor %}
             {% endif %}
-
-            {% block body %} {% endblock %}
-
         </div>
+        {% block body %} {% endblock %}
 
     </main>
 

@@ -80,7 +80,7 @@ class ListPeopleController extends AbstractController
     public function formGroupPeople(GroupPeople $groupPeople = NULL, Request $request, GroupPeopleRepository $repo): Response
     {
         if (!$groupPeople) {
-            $groupPeople = new groupPeople();
+            $groupPeople = new GroupPeople();
         } else {
             // $this->session->set("groupPeople", $groupPeople);
         }
@@ -170,10 +170,10 @@ class ListPeopleController extends AbstractController
 
         // $groupPeople = $this->session->get("groupPeople");
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->security->getUser();
 
-            if(!$person->getId()) {
+            if (!$person->getId()) {
                 
                 $person->setCreatedAt(new \DateTime())
                         ->setCreatedBy($user->getid());

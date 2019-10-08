@@ -11,117 +11,115 @@
 
 {% block body %}
 
-<section>
-    <h1 class="h2 my-4">Liste des ménages suivis</h1>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover shadow">
-            <thead class="bg-dark">
-                <tr>
-                    <th scope="col" class="align-middle th-width-20px">
-                        <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
-                            title="Tout sélectionner">
-                            <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
-                            <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
-                                    sélectionner<span></label>
-                        </div>
-                    </th>
-                    {# <th scope="col" class="align-middle th-width-80px">
+<div class="container">
+
+    <section>
+        <h1 class="h2 my-4">Liste des ménages suivis</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover shadow">
+                <thead class="bg-dark">
+                    <tr>
+                        <th scope="col" class="align-middle th-width-20px">
+                            <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
+                                title="Tout sélectionner">
+                                <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
+                                <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
+                                        sélectionner<span></label>
+                            </div>
+                        </th>
+                        {# <th scope="col" class="align-middle th-width-80px">
                         <a href="" class="sorting-indicator text-light">ID ménage
                             <span class="fas fa-caret-up">
                         </a>
                     </th> #}
-                    <th scope="col" class="align-middle th-width-150px">
-                        <a href="" class="sorting-indicator text-light">Nom
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-120px">
-                        <a href="" class="sorting-indicator text-light">Prénom
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-date">
-                        <a href="" class="sorting-indicator text-light">Date de<br />naissance
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-80px">
-                        <a href="" class="sorting-indicator text-light">Âge
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-80px">
-                        <a href="" class="sorting-indicator text-light">Sexe
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Rôle
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Typologie familiale
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Nb de personnes
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-width-100px">
-                        <a href="" class="sorting-indicator text-light">Date de création
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                    <th scope="col" class="align-middle th-date">
-                        <a href="" class="sorting-indicator text-light">Date de mise à jour
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th>
-                </tr>
-            </thead>
+                        <th scope="col" class="align-middle th-width-150px">
+                            <a href="" class="sorting-indicator text-light">Nom
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-120px">
+                            <a href="" class="sorting-indicator text-light">Prénom
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-date">
+                            <a href="" class="sorting-indicator text-light">Date de<br />naissance
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-80px">
+                            <a href="" class="sorting-indicator text-light">Âge
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-80px">
+                            <a href="" class="sorting-indicator text-light">Sexe
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-100px">
+                            <a href="" class="sorting-indicator text-light">Rôle
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-100px">
+                            <a href="" class="sorting-indicator text-light">Typologie familiale
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-100px">
+                            <a href="" class="sorting-indicator text-light">Nb de personnes
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-width-100px">
+                            <a href="" class="sorting-indicator text-light">Date de création
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                        <th scope="col" class="align-middle th-date">
+                            <a href="" class="sorting-indicator text-light">Date de mise à jour
+                                <span class="fas fa-caret-up">
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                {% for person in people %}
-                {% for rolePerson in person.rolesPerson %}
-                {% if rolePerson.head == true %}
-                <tr>
-                    <th scope="row">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]" id=""
-                                value="" class="checkbox" />
-                            <label class="custom-control-label" for=""><span class="sr-only">Sélectionner<span></label>
-                        </div>
-                    </th>
-                    <td>
-                        <a href="{% if rolePerson.groupPeople is not null %}{{ path('group_people_card', {'id':rolePerson.groupPeople.id}) }}
+                <tbody>
+                    {% for person in people %}
+                    {% for rolePerson in person.rolesPerson %}
+                    {% if rolePerson.head == true %}
+                    <tr>
+                        <th scope="row">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]"
+                                    id="" value="" class="checkbox" />
+                                <label class="custom-control-label" for=""><span
+                                        class="sr-only">Sélectionner<span></label>
+                            </div>
+                        </th>
+                        <td>
+                            <a href="{% if rolePerson.groupPeople is not null %}{{ path('group_people_card', {'id':rolePerson.groupPeople.id}) }}
                         {% endif %}" class="text-primary font-weight-bold">{{ person.lastname }}</a>
-                    </td>
-                    <td>{{ person.firstname }}</td>
-                    <td>{{ person.birthdate | date("d/m/Y") }}</td>
-                    <td>{% if person.age > 0 %}{{ person.age }} ans {% endif %}</td>
-                    <td>{{ person.getGenderType }}</td>
-                    <td>{{ rolePerson.listRole }}</td>
-                    <td>{% if rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.getFamilyTypologyType }}{% endif %}
-                    </td>
-                    <td>{% if  rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.nbPeople }}{% endif %}
-                    </td>
-                    <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
-                    <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
-
-
-
-
-
-
+                        </td>
+                        <td>{{ person.firstname }}</td>
+                        <td>{{ person.birthdate | date("d/m/Y") }}</td>
+                        <td>{% if person.age > 0 %}{{ person.age }} ans {% endif %}</td>
+                        <td>{{ person.getGenderType }}</td>
+                        <td>{{ rolePerson.listRole }}</td>
+                        <td>{% if rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.getFamilyTypologyType }}{% endif %}
+                        </td>
+                        <td>{% if  rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.nbPeople }}{% endif %}
+                        </td>
+                        <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
+                        <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 {% endblock %}

@@ -3,16 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Person;
-
 use App\Form\PersonType;
 
+use App\Entity\PersonSearch;
+use App\Form\PersonSearchType;
+
+use App\Form\PersonSearchMinType;
 use App\Repository\PersonRepository;
-
 use Knp\Component\Pager\PaginatorInterface;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\Common\Persistence\ObjectManager;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,7 +26,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -47,10 +48,23 @@ class PersonController extends AbstractController
      * @Route("/list/people", name="list_people")
      * @return Response
      */
-    public function listPeople(PaginatorInterface $paginator, Request $request): Response
+    public function listPeople(PaginatorInterface $paginator, Request $request, PersonSearch $personSearch = NULL): Response
     {
+        $personSearch = new PersonSearch();
+        
+        $form = $this->createForm(PersonSearchMinType::class, $personSearch);
+
+        $form->handleRequest($request);
+        
+        dump($personSearch);
+
+        // if ($form->isSubmitted() && $form->IsValid()) {
+        //     return $this->redirectToRoute("list_people", [
+        //     "personSearch" => $personSearch,
+        //     ]);   
+        // }
         $people =  $paginator->paginate(
-            $this->repo->findAllPeopleQuery(),
+            $this->repo->findAllPeopleQuery($personSearch),
             $request->query->getInt("page", 1), /*page number*/
             20 /*limit per page*/
         );
@@ -58,11 +72,34 @@ class PersonController extends AbstractController
         return $this->render("app/listPeople.html.twig", [
             "controller_name" => "PersonController",
             "people" => $people,
-            "current_menu" => "list_people",
-            "align" => "right",
-        ]);
+            "personSearch" =>$personSearch,
+            "form" => $form->createView(),
+            "current_menu" => "list_people"
+        ]);       
+    }
 
+    /**
+     * @Route("/search/person", name="person_search")
+     */
+    public function personSearch(Request $request, PersonSearch $personSearch = NULL) 
+    {
+        $personSearch = new PersonSearch();
         
+        $form = $this->createForm(PersonSearchType::class, $personSearch);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->IsValid()) {
+            return $this->redirectToRoute("list_people", [
+            "personSearch" => $personSearch,
+            ]);   
+        }
+
+        return $this->render("app/personSearch.html.twig", [
+        "personSearch" =>$personSearch,
+        "form" => $form->createView(),
+        "current_menu" => "person_search"
+        ]);
     }
 
     /**

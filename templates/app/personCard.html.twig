@@ -10,54 +10,55 @@
 
 {% block body %}
 
-<section id="person">
-    <div class="my-3">
-        {#{% dump(app.session.get("groupPeople")) %}#}
-        <a href="{{ path('group_people_card', {'id': group_people.id}) }}" class="text-primary"><span
-                class="fas fa-users"></span> Retour à la fiche du ménage {{ group_people.id }}</a>
-        <span class="small text-secondary">{{ group_people.getFamilyTypologyType }} -
-            {{ group_people.nbPeople }} personne(s)</span>
-        <br />
-    </div>
+<div class="container">
 
-    <div class="row">
-        <div class="col-md-12 mb-4">
-            {% if form is defined %}
-            <div class="col-md-8 mx-auto card shadow">
-                <div class="form-group row">
-                    <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
-                </div>
-                {% if edit_mode %}
-                <div class="small text-secondary">
-                    <p>Créé le {{person.createdAt | date("d/m/Y à H:i") }} (modifié le
-                        {{person.updatedAt | date("d/m/Y à H:i") }}).</p>
-                </div>
-                {% else %}
-                <div class="mb-4"></div>
-                {% endif %}
-
-                {{ form_start(form) }}
-
-                {{ form_row(form.firstname) }}
-                {{ form_row(form.lastname) }}
-                {{ form_row(form.birthdate) }}
-                {{ form_row(form.gender) }}
-                {{ form_row(form.phone1) }}
-                {{ form_row(form.phone2) }}
-                {{ form_row(form.email) }}
-                {{ form_row(form.comment) }}
-                {{ form_row(form.comment) }}
-                {{ form_row(form._token) }}
-
-                <div class="mb-4 float-right">
-                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
-                </div>
-                {{ form_end(form, {"render_rest": false}) }}
-            </div>
-            {% endif %}
+    <section id="person">
+        <div class="my-3">
+            {#{% dump(app.session.get("groupPeople")) %}#}
+            <a href="{{ path('group_people_card', {'id': group_people.id}) }}" class="text-primary"><span
+                    class="fas fa-users"></span> Retour à la fiche du ménage {{ group_people.id }}</a>
+            <span class="small text-secondary">{{ group_people.getFamilyTypologyType }} -
+                {{ group_people.nbPeople }} personne(s)</span>
+            <br />
         </div>
-    </div>
-</section>
 
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                {% if form is defined %}
+                <div class="col-md-8 mx-auto card shadow">
+                    <div class="form-group row">
+                        <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
+                    </div>
+                    {% if edit_mode %}
+                    <div class="small text-secondary">
+                        <p>Créé le {{person.createdAt | date("d/m/Y à H:i") }} (modifié le
+                            {{person.updatedAt | date("d/m/Y à H:i") }}).</p>
+                    </div>
+                    {% else %}
+                    <div class="mb-4"></div>
+                    {% endif %}
+
+                    {{ form_start(form) }}
+
+                    {{ form_row(form.firstname) }}
+                    {{ form_row(form.lastname) }}
+                    {{ form_row(form.birthdate) }}
+                    {{ form_row(form.gender) }}
+                    {{ form_row(form.phone1) }}
+                    {{ form_row(form.phone2) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.comment) }}
+                    {{ form_row(form._token) }}
+
+                    <div class="mb-4 float-right">
+                        <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                            value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                    </div>
+                    {{ form_end(form, {"render_rest": false}) }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
 {% endblock %}

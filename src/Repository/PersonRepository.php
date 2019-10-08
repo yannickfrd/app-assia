@@ -53,12 +53,38 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * @return Query
      */
-    // Trouve tous les personnes
-    public function findAllPeopleQuery(): Query
+    // Trouve toutes les personnes
+    public function findAllPeopleQuery($personSearch): Query
     {
-        return $this->createQueryBuilder("p")
-                    ->select("p")
-                    ->getQuery();
+        $query =  $this->createQueryBuilder("p");
+        $query = $query->select("p");
+        if ($personSearch->getFirstname()) {
+            $query = $query
+                ->andWhere("p.firstname LIKE :firstname")
+                ->setParameter("firstname", $personSearch->getFirstname() . '%');
+        }
+        if ($personSearch->getLastname()) {
+            $query = $query
+                ->andWhere("p.lastname LIKE :lastname")
+                ->setParameter("lastname", $personSearch->getLastname() . '%');
+            }
+      
+        if ($personSearch->getBirthdate()) {
+            $query = $query
+                ->andWhere("p.birthdate = :birthdate")
+                ->setParameter("birthdate", $personSearch->getBirthdate());
+        }
+        if ($personSearch->getGender()) {
+            $query = $query
+                ->andWhere("p.gender = :gender")
+                ->setParameter("gender", $personSearch->getGender());
+        }
+        if ($personSearch->getPhone()) {
+            $query = $query
+                ->andWhere("p.phone1 = :phone OR p.phone2 = :phone")
+                ->setParameter("phone", $personSearch->getPhone());
+        }
+        return $query->getQuery();
     }
         
     // Trouve tous les personnes du même groupe ménage
