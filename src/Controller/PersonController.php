@@ -55,14 +55,7 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonSearchMinType::class, $personSearch);
 
         $form->handleRequest($request);
-        
-        dump($personSearch);
 
-        // if ($form->isSubmitted() && $form->IsValid()) {
-        //     return $this->redirectToRoute("list_people", [
-        //     "personSearch" => $personSearch,
-        //     ]);   
-        // }
         $people =  $paginator->paginate(
             $this->repo->findAllPeopleQuery($personSearch),
             $request->query->getInt("page", 1), /*page number*/

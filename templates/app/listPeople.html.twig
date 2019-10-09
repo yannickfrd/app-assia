@@ -21,25 +21,30 @@
     <div class="container-fluid p-0">
         <div class="jumbotron py-3">
             {{ form_start(form) }}
-            <div class="form-inline justify-content-center">
-                <div class="form-group col-auto my-1 px-1">
-                    {{ form_row(form.firstname) }}
-                </div>
+            <div class="form-inline justify-content-md-center align-items-end">
                 <div class="form-group col-auto my-1 px-1">
                     {{ form_row(form.lastname) }}
                 </div>
-                <div class="form-group col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1 ">
+                    {{ form_row(form.firstname) }}
+                </div>
+                <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                    <div class=""><i class="fas fa-calendar-alt mx-1 text-black-50" data-toggle="tooltip"
+                            data-placement="bottom" title="Date de naissance"></i></div>
                     {{ form_row(form.birthdate) }}
                 </div>
-                <div class="col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                    <div><i class="fas fa-venus-mars mx-1 text-black-50" data-toggle="tooltip" data-placement="bottom"
+                            title="Sexe"></i></div>
                     {{ form_row(form.gender) }}
                 </div>
-                <div class="col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                    <div><i class="fas fa-phone mx-1 text-black-50" data-toggle="tooltip" data-placement="bottom"
+                            title="Téléphone"></i></div>
                     {{ form_row(form.phone) }}
                 </div>
-                {{ form_row(form._token) }}
-
                 <div class="form-group col-auto my-1 px-1">
+
                     <input type="submit" value="Rechercher" id="search" class="btn btn-primary shadow">
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}
@@ -50,7 +55,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Total : {{ people.getTotalItemCount }} personnes.</p>
+                <p class="align-middle"><span class="font-weight-bold">Total : </span>{{ people.getTotalItemCount }}
+                    personnes.</p>
             </div>
             <div class="col-md-8">
                 {% set align = "right" %}

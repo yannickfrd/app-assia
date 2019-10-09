@@ -50,6 +50,13 @@ class PersonSearchType extends FormType
         $resolver->setDefaults([
             "data_class" => PersonSearch::class,
             "translation_domain" => "forms",
+            "method" => "get",
+            "action" => "\list/people",
+            "csrf_protection" => false
         ]);
+    }
+
+    public function getBlockPrefix() {
+        return "";
     }
 }

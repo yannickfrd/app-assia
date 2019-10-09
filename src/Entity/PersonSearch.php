@@ -12,19 +12,37 @@ class PersonSearch
         3 => "Non renseigné"
     ];
 
+    /**
+     * @var string|null
+     */
     private $lastname;
+
+    /**
+     * @var string|null
+     */
     private $firstname;
+
     private $usename;
+
+    /**
+     * @var date|null
+     */
     private $birthdate;
+
+    /**
+     * @var int|null
+     */
     private $gender;
 
     /**
+     * @var string|null
      * @Assert\Regex(pattern="^0[1-9]([-._ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone;
 
     /**
-     * @Assert\Email(message="L'adresse email n'est pas valide.")
+     * @var string|null
+     * @Assert\Email(message="Email invalide.")
      */
     private $email;
 
@@ -32,6 +50,9 @@ class PersonSearch
     {
     }
 
+    /**
+     * @return string|null
+     */
     public function getLastname(): ?string
     {
         return $this->lastname;
@@ -44,6 +65,9 @@ class PersonSearch
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -56,6 +80,9 @@ class PersonSearch
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUsename(): ?string
     {
         return $this->usename;
@@ -68,6 +95,9 @@ class PersonSearch
         return $this;
     }
 
+    /**
+     * @return date|null
+     */
     public function getBirthdate(): ?\DateTimeInterface
     {
         return $this->birthdate;
@@ -80,6 +110,9 @@ class PersonSearch
         return $this;
     }
 
+/**
+     * @return int|null
+     */
     public function getAge(): ?int
     {
         if ($this->birthdate) {
@@ -100,6 +133,9 @@ class PersonSearch
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getGender(): ?int
     {
         return $this->gender;
@@ -117,7 +153,9 @@ class PersonSearch
         return self::GENDER[$this->gender];
     }
     
-
+    /**
+     * @return string|null
+     */
     public function getPhone(): ?string
     {
         return $this->phone;
@@ -130,6 +168,9 @@ class PersonSearch
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;

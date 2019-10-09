@@ -198,16 +198,6 @@ class Person
         }
     }
 
-    public function setAge(int $age): self
-    {
-        $now = new \DateTime();
-        $interval = $now->diff($this->birthdate);
-        $days = $interval->days;
-        $this->age = floor($days / 365.225);
-
-        return $this;
-    }
-
     public function getGender(): ?int
     {
         return $this->gender;

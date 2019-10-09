@@ -22,13 +22,11 @@
 
                 {{ form_start(form) }}
 
-                {{ form_row(form.firstname) }}
                 {{ form_row(form.lastname) }}
+                {{ form_row(form.firstname) }}
                 {{ form_row(form.birthdate) }}
                 {{ form_row(form.gender) }}
                 {{ form_row(form.phone) }}
-
-                {{ form_row(form._token) }}
 
                 <div class="mb-4 float-right">
                     <input type="submit" value="Rechercher" id="search" class="btn btn-primary mb-4 shadow">

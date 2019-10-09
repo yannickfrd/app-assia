@@ -19,20 +19,23 @@ class PersonSearchMinType extends FormType
         ->add("lastname", NULL, [
             "label" => false,
             "attr" => [
-                "placeholder" => "Nom"
+                "placeholder" => "Nom",
+                "class" => "max-w-180"
             ]
         ])
         ->add("firstname", NULL, [
             "label" => false,
             "attr" => [
-                "placeholder" => "Prénom"
+                "placeholder" => "Prénom",
+                "class" => "max-w-140"
+
             ]
         ])
         ->add("birthdate", DateType::class, [
             "label" => false,
             "widget" => "single_text",
             "attr" => [
-                "class" => "col-md-12"
+                "class" => "max-w-180"
             ],
             "required" => false
         ])
@@ -41,11 +44,15 @@ class PersonSearchMinType extends FormType
             "label" => false,
             "required" => false,
             "choices" => $this->getchoices(PersonSearch::GENDER),
+            "attr" => [
+                "class" => "max-w-120"
+            ]
         ])
         ->add("phone", NULL, [
             "label" => false,
             "attr" => [
-                "placeholder" => "Téléphone"
+                "placeholder" => "Téléphone",
+                "class" => "max-w-140"
             ],
         ]);
     }
@@ -54,7 +61,12 @@ class PersonSearchMinType extends FormType
     {
         $resolver->setDefaults([
             "data_class" => PersonSearch::class,
-            "translation_domain" => "forms",
+            "method" => "get",
+            "csrf_protection" => false
         ]);
+    }
+
+    public function getBlockPrefix() {
+        return "";
     }
 }
