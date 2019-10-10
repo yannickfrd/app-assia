@@ -68,7 +68,7 @@ class GroupPeople
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", orphanRemoval=true)
      */
     private $rolePerson;
 

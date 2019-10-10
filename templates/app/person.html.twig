@@ -15,7 +15,7 @@
     <section id="person">
         <div class="my-3">
             {#{% dump(app.session.get("groupPeople")) %}#}
-            <a href="{{ path('group_people_card', {'id': group_people.id}) }}" class="text-primary"><span
+            <a href="{{ path('group_people', {'id': group_people.id}) }}" class="text-primary"><span
                     class="fas fa-users"></span> Retour à la fiche du ménage {{ group_people.id }}</a>
             <span class="small text-secondary">{{ group_people.getFamilyTypologyType }} -
                 {{ group_people.nbPeople }} personne(s)</span>

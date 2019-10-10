@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utils\Phone;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PersonSearch
@@ -9,7 +10,7 @@ class PersonSearch
     public const GENDER = [
         1 => "Femme",
         2 => "Homme",
-        3 => "Non renseigné"
+        3 => "NR"
     ];
 
     /**
@@ -36,7 +37,7 @@ class PersonSearch
 
     /**
      * @var string|null
-     * @Assert\Regex(pattern="^0[1-9]([-._ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
+     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone;
 
@@ -110,7 +111,7 @@ class PersonSearch
         return $this;
     }
 
-/**
+    /**
      * @return int|null
      */
     public function getAge(): ?int
@@ -163,7 +164,8 @@ class PersonSearch
 
     public function setPhone(?string $phone): self
     {
-        $this->phone = $phone;
+
+        $this->phone = Phone::formatPhone($phone);
 
         return $this;
     }

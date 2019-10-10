@@ -28,14 +28,18 @@ class PersonSearchType extends FormType
         ])
         ->add("birthdate", DateType::class, [
             "widget" => "single_text",
+            "html5" => false,
+            "format" => "dd/MM/yyyy",
             "attr" => [
-                "class" => "col-md-12"
+                "class" => "max-w-180 js-datepicker",
+                "placeholder" => "jj/mm/aaaa",
+                "autocomplete" => "off"
             ],
             "required" => false
-            
         ])
         ->add("gender", ChoiceType::class, [
             "required" => false,
+            'placeholder' => "-- Sélectionner --",
             "attr" => [
                 "class" => "col-md-12"
             ],

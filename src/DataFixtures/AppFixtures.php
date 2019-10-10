@@ -15,7 +15,7 @@ class AppFixtures extends Fixture
 
         $faker = \Faker\Factory::create("fr_FR");
 
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 200; $i++) {
             // Définit la typologie familiale
             $familyTypology = mt_rand(1, 6);
             // Définit le nombre de personnes
@@ -129,7 +129,8 @@ class AppFixtures extends Fixture
 
                 $rolePerson->setHead($head)
                         ->setRole($role)
-                        ->setGroupPeople($groupPeople);
+                        ->setGroupPeople($groupPeople)
+                        ->setCreatedAt($createdAt);
 
                 $manager->persist($rolePerson);
 

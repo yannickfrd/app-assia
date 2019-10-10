@@ -1,6 +1,6 @@
 class SelectAllCheckboxes {
     constructor() {
-        this.selectAll = document.getElementById("select-all");
+        this.selectAll = document.getElementById("js-select-all");
         this.checkboxElts = document.querySelectorAll("table .checkbox");
         this.checked = true;
         this.init();

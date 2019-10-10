@@ -1,8 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
 {% form_theme form "bootstrap_4_layout.html.twig" %}
 
-{% block title %}Liste des personnes{% endblock %}
+{% block title %}
+{% if group_people is defined %}Rechercher une personne
+{% else %}Liste despersonnes{% endif %}
+{% endblock %}
 
 {% block stylesheets %}
 
@@ -10,12 +13,12 @@
 
 {% endblock %}
 
-
 {% block body %}
 
 <section>
     <div class="container">
-        <h1 class="h2 my-4">Liste des personnes</h1>
+        <h1 class="h2 my-4">{% if group_people is defined %}Rechercher une personne
+            {% else %}Liste des personnes{% endif %}</h1>
     </div>
 
     <div class="container-fluid p-0">
@@ -33,6 +36,9 @@
                             data-placement="bottom" title="Date de naissance"></i></div>
                     {{ form_row(form.birthdate) }}
                 </div>
+                {#<div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                    {{ form_row(form.age) }} 
+                </div> #}
                 <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
                     <div><i class="fas fa-venus-mars mx-1 text-black-50" data-toggle="tooltip" data-placement="bottom"
                             title="Sexe"></i></div>
@@ -45,24 +51,36 @@
                 </div>
                 <div class="form-group col-auto my-1 px-1">
 
-                    <input type="submit" value="Rechercher" id="search" class="btn btn-primary shadow">
+                    <button type="submit" id="search" class="btn btn-primary shadow"><i
+                            class="fas fa-search"></i></button>
+                    <a href="{{ path("list_people") }}" class="btn btn-secondary ml-2 shadow"><i
+                            class="fas fa-eraser"></i></a>
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}
             </div>
         </div>
     </div>
 
+    {% if people is defined %}
+
     <div class="container">
+
+        {% if group_people is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
+                            class="fas fa-plus-square"></span> Créer une nouvelle personne</a></p>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle"><span class="font-weight-bold">Total : </span>{{ people.getTotalItemCount }}
+                <p class="align-middle">Résultat : {{ people.getTotalItemCount }}
                     personnes.</p>
             </div>
             <div class="col-md-8">
-                {% set align = "right" %}
-                <div class="navigation">
-                    {{ knp_pagination_render(people) }}
-                </div>
+                <div class="navigation">{{ knp_pagination_render(people) }}</div>
             </div>
         </div>
 
@@ -70,69 +88,57 @@
             <table class="table table-bordered table-striped table-hover shadow">
                 <thead class="bg-dark">
                     <tr>
-                        <th scope="col" class="align-middle th-width-20px">
-                            <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top"
-                                title="Tout sélectionner">
-                                <input type="checkbox" name="select-all" id="select-all" class="custom-control-input" />
-                                <label class="custom-control-label" for="select-all"><span class="sr-only">Tout
-                                        sélectionner<span></label>
-                            </div>
+                        <th scope="col" class="align-middle th-width-20px"></th>
+                        <th scope="col" class="align-middle th-width-150px text-light ">
+                            {{ knp_pagination_sortable(people, "Nom", "p.lastname") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-150px">
-                            <a href="" class="sorting-indicator text-light">Nom
-                                <span class="fas fa-caret-up">
-                            </a>
+                        <th scope="col" class="align-middle th-width-120px text-light">
+                            {{ knp_pagination_sortable(people, "Prénom", "p.firstname") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-120px">
-                            <a href="" class="sorting-indicator text-light">Prénom
-                                <span class="fas fa-caret-up">
-                            </a>
+                        <th scope="col" class="align-middle th-date text-light">
+                            {{ knp_pagination_sortable(people, "Date de naissance", "p.birthdate") }}
                         </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de<br />naissance
-                                <span class="fas fa-caret-up">
-                            </a>
+                        <th scope="col" class="align-middle th-width-80px text-light">
+                            {{ knp_pagination_sortable(people, "Âge", "p.birthdate") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-80px">
-                            <a href="" class="sorting-indicator text-light">Âge
-                                <span class="fas fa-caret-up">
-                            </a>
+                        <th scope="col" class="align-middle th-width-80px text-light">
+                            {{ knp_pagination_sortable(people, "Sexe", "p.gender") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-80px">
-                            <a href="" class="sorting-indicator text-light">Sexe
-                                <span class="fas fa-caret-up">
-                            </a>
+                        <th scope="col" class="align-middle th-date text-light">
+                            {{ knp_pagination_sortable(people, "Date de création", "p.createdAt") }}
                         </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de création
-                                <span class="fas fa-caret-up">
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de mise à jour
-                                <span class="fas fa-caret-up">
-                            </a>
+                        <th scope="col" class="align-middle th-date text-light">
+                            {{ knp_pagination_sortable(people, "Date de mise à jour", "p.updatedAt") }}
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
+
                     {% for person in people %}
-                    <tr {% if loop.index is odd %}class="color" {% endif %}>
+                    <tr>
                         <th scope="row">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input checkbox" name="selectedPosts[]"
-                                    id="" value="" class="checkbox" />
-                                <label class="custom-control-label" for=""><span
-                                        class="sr-only">Sélectionner<span></label>
-                            </div>
+                            {% if group_people is defined %}
+                            <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
+                                class="" data-placement="bottom" title="Ajouter la personne au ménage">
+                                <i class="fas fa-plus-square fa-2x"></i>
+                            </a>
+                            {% else %}
+                            <a href="{{ path('person_show', {'id':1, 'person_id':person.id, 'slug':person.slug}) }}"
+                                class="btn btn-primary shadow" data-placement="bottom"
+                                title="Modifier les informations de la personne">
+                                <span class="fas fa-user-edit"></span>
+                            </a>
+                            {% endif %}
                         </th>
                         <td>
-                            <a href="" class="text-primary font-weight-bold">{{ person.lastname }}</a>
+                            <a href="{{ path('person_show', {'id':1, 'person_id':person.id, 'slug':person.slug}) }}"
+                                class="text-primary font-weight-bold">{{ person.lastname }}</a>
                         </td>
                         <td>{{ person.firstname }}</td>
-                        <td>{{ person.birthdate | date("d/m/Y") }}</td>
-                        <td>{% if person.age > 0 %}{{ person.age }} ans {% endif %}</td>
+                        <td>{% if person.birthdate is not null %} {{person.birthdate | date("d/m/Y") }} {% endif %}</td>
+                        <td>{{ person.age }}{% if person.age > 1 %} ans{% elseif person.age is not null %} an{% endif %}
+                        </td>
                         <td>{{ person.getGenderType }}</td>
                         <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
                         <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
@@ -145,6 +151,18 @@
         <div class="navigation">
             {{ knp_pagination_render(people) }}
         </div>
+
+        {% if group_people is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
+                            class="fas fa-plus-square"></span> Créer une nouvelle personne</a></p>
+            </div>
+        </div>
+        {% endif %}
+
 </section>
+{% endif %}
+
 </div>
 {% endblock %}

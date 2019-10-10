@@ -20,39 +20,54 @@ class PersonSearchMinType extends FormType
             "label" => false,
             "attr" => [
                 "placeholder" => "Nom",
-                "class" => "max-w-180"
+                "class" => "max-w-180",
+                "autocomplete" => "off"
             ]
         ])
         ->add("firstname", NULL, [
             "label" => false,
             "attr" => [
                 "placeholder" => "Prénom",
-                "class" => "max-w-140"
-
+                "class" => "max-w-140",
+                "autocomplete" => "off"
             ]
         ])
         ->add("birthdate", DateType::class, [
             "label" => false,
             "widget" => "single_text",
+            // "html5" => false,
+            // "format" => "dd/MM/yyyy",
             "attr" => [
-                "class" => "max-w-180"
+                "class" => "max-w-180",
+                "placeholder" => "jj/mm/aaaa",
+                "autocomplete" => "off"
             ],
             "required" => false
         ])
+        // ->add("age", NULL, [
+        //     "label" => false,
+        //     "attr" => [
+        //         "placeholder" => "Age",
+        //         "class" => "max-w-100",
+        //         "autocomplete" => "off"
+        //     ]
+        // ])
         ->add("gender", ChoiceType::class, [
-            'placeholder' => 'Sexe',
+            'placeholder' => "-- Sexe --",
             "label" => false,
             "required" => false,
             "choices" => $this->getchoices(PersonSearch::GENDER),
             "attr" => [
-                "class" => "max-w-120"
+                "class" => "max-w-120",
+                "autocomplete" => "off"
             ]
         ])
         ->add("phone", NULL, [
             "label" => false,
             "attr" => [
                 "placeholder" => "Téléphone",
-                "class" => "max-w-140"
+                "class" => "max-w-140",
+                "autocomplete" => "off"
             ],
         ]);
     }

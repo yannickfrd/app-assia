@@ -41,14 +41,14 @@ class RegistrationType extends AbstractType
             ->add("password", PasswordType::class, [
                 "label" => "Mot de passe",
                 "attr" => [
-                    "class" => "password",
+                    "class" => "js-password",
                     "placeholder" => "Mot de passe",
                 ]
             ])
             ->add("confirmPassword", PasswordType::class, [
                 "label" => "Confirmation du mot de passe",
                 "attr" => [
-                    "class" => "password",
+                    "class" => "js-password",
                     "placeholder" => "Confirmation du mot de passe",
                 ]
             ])

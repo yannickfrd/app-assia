@@ -29,7 +29,15 @@
 
     <section id="people-group">
         {{ form_start(form) }}
-
+        {% if edit_mode %}
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="float-right">
+                    <button type="submit" name="updateInfo" class="btn btn-primary shadow">Mettre à jour</button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {% if group_people.id is not null %}
         <div class="row">
             <div class="col-md-12">
@@ -52,26 +60,32 @@
                             {% for form_person in form.rolePerson.children %}
                             <tr>
                                 <th scope="row">
-                                    <a href="{{ path('person_show', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'slug':form_person.vars.value.person.slug}) }}"
-                                        class="text-primary font-weight-bold"><span
-                                            class="mt-2 fas fa-user-edit"></span>
+                                    <a href="{{ path("person_show", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "slug":form_person.vars.value.person.slug}) }}"
+                                        class="btn btn-primary shadow" data-placement="bottom"
+                                        title="Modifier les informations de la personne">
+                                        <span class="fas fa-user-edit"></span>
                                     </a>
                                 </th>
                                 <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
-                                <td class="px-1 pt-4"> {{ form_person.vars.value.person.age }} an(s)</td>
+                                <td class="px-1 pt-4"> {% set age = form_person.vars.value.person.age %}
+                                    {{ age }} {% if age > 1 %}ans{% elseif age is not null %} an{% endif %}
                                 <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                 <td class="px-1">
-                                    <a href="{{ path('remove_person', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        class="btn btn-danger shadow"><span class="fas fa-trash"></span></a>
+                                    <a href="{{ path('remove_person', {'id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                        class="btn btn-danger shadow"
+                                        onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')"
+                                        data-placement="bottom" title="Retirer la personne du groupe">
+                                        <span class="fas fa-user-times"></span>
+                                    </a>
                                     {# <form method="post"
-                                    action="{{ path('remove_person', {'group_id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id}) }}"
-                                    onsubmit="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')">
+                                    action="{{ path("remove_person", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "role_person_id":form_person.vars.value.id}) }}"
+                                    onsubmit="return confirm("Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?")">
                                     <input type="hidden" name="_method" value="REMOVE">
                                     <input type="hidden" name="_token"
-                                        value="{{ csrf_token('remove' ~ form_person.vars.value.id) }}">
+                                        value="{{ csrf_token("remove" ~ form_person.vars.value.id) }}">
                                     <button class="btn btn-danger shadow"><span class="fas fa-trash"></span></button>
                                     </form> #}
                                 </td>
@@ -101,18 +115,16 @@
                 </div>
             </div>
         </div>
-
-        <a href="{{ path('create_person', {'group_id':group_people.id}) }}" class="float-right text-primary"><span
-                class="fas fa-plus-square"></span>
-            Ajouter une personne</a>
-        <br />
+        <p><a href="{{ path("group_search_person", {"id":group_people.id}) }}" class="float-right text-primary"><span
+                    class="fas fa-plus-square"></span>
+                Ajouter une personne</a></p><br />
     </section>
     {% endif %}
 
     <section>
         <div class="row">
             <div class="col-md-12">
-                <div class="mt-4">
+                <div class="">
                     {{ form_row(form.familyTypology) }}
                     {{ form_row(form.nbPeople) }}
                     {{ form_row(form.comment) }}
@@ -128,6 +140,7 @@
         </div>
     </section>
     {{ form_end(form, {"render_rest": false}) }}
+
     <hr>
 
     {% if group_people.id is not null %}
@@ -202,15 +215,6 @@
     </section>
     <hr>
     {% endif %}
-
-    <!-- <script>
-    $(document).ready(function () {
-        // you may need to change this code if you are not using Bootstrap Datepicker
-        $('.js-datepicker').datepicker({
-            format: 'yyyy-mm-dd'
-        });
-    });
-</script> -->
 
 </div>
 {% endblock %}
