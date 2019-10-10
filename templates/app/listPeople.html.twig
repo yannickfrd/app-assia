@@ -65,7 +65,9 @@
 
     <div class="container">
 
-        {% if group_people is defined %}
+        {% if people is not null  %}
+
+        {% if group_people is not null  %}
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
@@ -74,7 +76,7 @@
         </div>
         {% endif %}
 
-        <div class="row">
+        <div class="row  align-items-baseline">
             <div class="col-md-4 count align-middle">
                 <p class="align-middle">Résultat : {{ people.getTotalItemCount }}
                     personnes.</p>
@@ -118,7 +120,7 @@
                     {% for person in people %}
                     <tr>
                         <th scope="row">
-                            {% if group_people is defined %}
+                            {% if  group_people is not null %}
                             <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
                                 class="" data-placement="bottom" title="Ajouter la personne au ménage">
                                 <i class="fas fa-plus-square fa-2x"></i>
@@ -152,7 +154,7 @@
             {{ knp_pagination_render(people) }}
         </div>
 
-        {% if group_people is defined %}
+        {% if group_people is not null %}
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
@@ -160,7 +162,7 @@
             </div>
         </div>
         {% endif %}
-
+        {% endif  %}
 </section>
 {% endif %}
 

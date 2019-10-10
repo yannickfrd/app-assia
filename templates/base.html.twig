@@ -46,10 +46,10 @@
                             <a class="nav-link" href="{{ path("home") }}"><span class="fas fa-home"></span> Accueil<span
                                     class="sr-only">(Accueil)</span></a>
                         </li>
-                        <li
+                        {# <li
                             class="nav-item {% if current_menu is defined and current_menu == "person_search" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("person_search") }}">Recherche</a>
-                        </li>
+                        </li> #}
                         <li class="nav-item
                             {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>

@@ -84,6 +84,7 @@ class PersonRepository extends ServiceEntityRepository
                 ->andWhere("p.phone1 = :phone OR p.phone2 = :phone")
                 ->setParameter("phone", $personSearch->getPhone());
         }
+        $query = $query->orderBy("p.lastname", "ASC");
         return $query->getQuery();
     }
         
