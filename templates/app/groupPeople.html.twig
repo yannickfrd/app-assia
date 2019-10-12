@@ -19,8 +19,10 @@
 
         {% if edit_mode %}
         <div class="small text-secondary">
-            <p>Créé le {{group_people.createdAt | date("d/m/Y à H:i") }} (modifié le
-                {{group_people.updatedAt | date("d/m/Y à H:i") }})</p>
+            <p>Créé le {{group_people.createdAt | date("d/m/Y à H:i") }}{% if group_people.createdBy %} par
+                {{ group_people.createdBy.username }}{% endif %} (modifié le
+                {{ group_people.updatedAt | date("d/m/Y à H:i") }}{% if group_people.updatedBy %} par
+                {{ group_people.updatedBy.username }}{% endif %})</p>
         </div>
         {% endif %}
     </div>
@@ -38,7 +40,7 @@
             </div>
         </div>
         {% endif %}
-        {% if group_people.id is not null %}
+        {% if group_people.id %}
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -46,6 +48,8 @@
                         <thead class="bg-dark">
                             <tr>
                                 <th scope="col" class="align-middle th-width-20px"></th>
+                                <th scope="col" class="align-middle text-light th-width-20px" data-placement="bottom"
+                                    title="Demandeur principal">DP</th>
                                 <th scope="col" class="align-middle text-light th-width-150px">Prénom</th>
                                 <th scope="col" class="align-middle text-light th-width-150px">Nom</th>
                                 <th scope="col" class="align-middle text-light th-width-120px">Date de naissance</th>
@@ -60,17 +64,22 @@
                             {% for form_person in form.rolePerson.children %}
                             <tr>
                                 <th scope="row">
-                                    <a href="{{ path("person_show", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "slug":form_person.vars.value.person.slug}) }}"
+                                    <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "slug":form_person.vars.value.person.slug}) }}"
                                         class="btn btn-primary shadow" data-placement="bottom"
                                         title="Modifier les informations de la personne">
                                         <span class="fas fa-user-edit"></span>
                                     </a>
                                 </th>
+                                <td class="px-1">
+                                    <div class="custom-control custom-radio pl-3">
+                                        {{ form_widget(form_person.head) }}
+                                    </div>
+                                </td>
                                 <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
                                 <td class="px-1 pt-4"> {% set age = form_person.vars.value.person.age %}
-                                    {{ age }} {% if age > 1 %}ans{% elseif age is not null %} an{% endif %}
+                                    {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}
                                 <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                 <td class="px-1">
@@ -143,7 +152,7 @@
 
     <hr>
 
-    {% if group_people.id is not null %}
+    {% if group_people.id %}
     <section id="social-supports">
         <h2 class="h3 my-4">Historique des suivis sociaux</h2>
         <div class="table-responsive">
@@ -217,4 +226,10 @@
     {% endif %}
 
 </div>
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="{{ asset("js/selectRadio.js") }}"></script>
+
 {% endblock %}

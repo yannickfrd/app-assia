@@ -3,14 +3,15 @@
 namespace App\Form;
 
 use App\Entity\RolePerson;
+use App\Form\PersonMinType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class RolePersonType extends FormType
+class RolePersonMinType extends FormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -29,7 +30,7 @@ class RolePersonType extends FormType
             ->add("role", ChoiceType::class, [
                 "choices" => $this->getChoices(RolePerson::ROLE),
             ])
-            ->add("person", PersonType::class)
+            ->add("person", PersonMinType::class)
         ;
     }
 

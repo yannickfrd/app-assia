@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form "bootstrap_4_layout.html.twig" %}
+
 {% block title %}Liste des ménages suivis{% endblock %}
 
 {% block stylesheets %}
@@ -8,111 +10,140 @@
 
 {% endblock %}
 
-
 {% block body %}
 
-<div class="container">
+<section>
 
-    <section>
+    <div class="container">
         <h1 class="h2 my-4">Liste des ménages suivis</h1>
+    </div>
+
+    <div class="jumbotron py-3">
+        {{ form_start(form) }}
+        <div class="form-inline justify-content-md-center align-items-end">
+            <div class="form-group col-auto my-1 px-1">
+                {{ form_row(form.lastname) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1 ">
+                {{ form_row(form.firstname) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                <div class=""><i class="fas fa-calendar-alt mx-1 text-black-50 d-none d-sm-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Date de naissance"></i></div>
+                {{ form_row(form.birthdate) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                {{ form_row(form.head) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                {{ form_row(form.familyTypology) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                {{ form_row(form.nbPeople) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                <button type="submit" id="search" class="btn btn-primary shadow"><i class="fas fa-search"
+                        data-placement="bottom" title="Rechercher"></i></button>
+                <a href="{{ path("list_groups_people") }}" class="btn btn-secondary ml-2 shadow"><i
+                        class="fas fa-eraser" data-placement="bottom" title="Effacer"></i></a>
+            </div>
+            {{ form_end(form, {"render_rest": false}) }}
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="row align-items-baseline">
+            <div class="col-md-4 count align-middle">
+                <p class="align-middle">Résultat : {{ role_people.getTotalItemCount }}
+                    personnes.</p>
+            </div>
+            <div class="col-md-8">
+                <div class="navigation">{{ knp_pagination_render(role_people) }}</div>
+            </div>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover shadow">
                 <thead class="bg-dark">
                     <tr>
                         <th scope="col" class="align-middle th-width-20px">
                         </th>
-                        {# <th scope="col" class="align-middle th-width-80px">
-                        <a href="" class="sorting-indicator text-light">ID ménage
-                            <span class="fas fa-caret-up">
-                        </a>
-                    </th> #}
+                        <th scope="col" class="align-middle th-width-80px">
+                            {{ knp_pagination_sortable(role_people, "DP", "g.head") }}
+                        </th>
+                        <th scope="col" class="align-middle th-width-80px" data-placement="bottom"
+                            title="N° d'identification du ménage">
+                            {{ knp_pagination_sortable(role_people, "ID", "g.id") }}
+                        </th>
                         <th scope="col" class="align-middle th-width-150px">
-                            <a href="" class="sorting-indicator text-light">Nom
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Nom", "p.lastname") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px">
-                            <a href="" class="sorting-indicator text-light">Prénom
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Prénom", "p.firstname") }}
                         </th>
                         <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de<br />naissance
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Date de naissance", "p.birthdate") }}
                         </th>
                         <th scope="col" class="align-middle th-width-80px">
-                            <a href="" class="sorting-indicator text-light">Âge
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Âge", "p.birthdate") }}
                         </th>
                         <th scope="col" class="align-middle th-width-80px">
-                            <a href="" class="sorting-indicator text-light">Sexe
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Sexe", "p.gender") }}
                         </th>
                         <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Rôle
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Rôle", "r.role") }}
+                        </th>
+                        <th scope="col" class="align-middle th-width-140px">
+                            {{ knp_pagination_sortable(role_people, "Typologie familiale", "g.familyTypology") }}
                         </th>
                         <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Typologie familiale
-                                <span class="fas fa-caret-up">
-                            </a>
+                            {{ knp_pagination_sortable(role_people, "Nb de pers.", "g.nbPeople") }}
+
                         </th>
-                        <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Nb de personnes
-                                <span class="fas fa-caret-up">
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Date de création
-                                <span class="fas fa-caret-up">
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de mise à jour
-                                <span class="fas fa-caret-up">
-                            </a>
-                        </th>
+                        {# <th scope="col" class="align-middle th-width-100px">
+                            {{ knp_pagination_sortable(role_people, "Date de création", "g.createdAt") }}
+                        </th> #}
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for person in people %}
-                    {% for rolePerson in person.rolesPerson %}
-                    {% if rolePerson.head == true %}
-                    <tr>
+                    {% for person in role_people %}
+                    <tr {% if person.head %}class="font-weight-bold" {% endif %}>
                         <th scope="row">
-                            <a href="{% if rolePerson.groupPeople is not null %}{{ path('group_people', {'id':rolePerson.groupPeople.id}) }}
+                            <a href="{% if person.groupPeople %}{{ path('group_people', {'id':person.groupPeople.id}) }}
                             {% endif %}" class="btn btn-primary shadow" data-placement="bottom"
-                                title="Voir la fiche du ménage">
-                                <span class="fas fa-users"></span>
-                            </a>
+                                title="Voir la fiche du ménage"><span class="fas fa-users"></span></a>
                         </th>
+                        <td>{% if  person.head %}<i class="fas fa-dot-circle text-primary" data-placement="bottom"
+                                title="Chef(fe) de famille"></i>{% endif %}</td>
+                        <td data-placement="bottom" title="N° d'identification du ménage">{{ person.groupPeople.id }}
+                        </td>
                         <td>
-                            <a href="{% if rolePerson.groupPeople is not null %}{{ path('group_people', {'id':rolePerson.groupPeople.id}) }}
-                        {% endif %}" class="text-primary font-weight-bold">{{ person.lastname }}</a>
+                            <a href="{% if person.groupPeople %}{{ path('group_people', {'id':person.groupPeople.id}) }}
+                            {% endif %}" class="text-primary font-weight-bold">{{ person.person.lastname }}</a>
                         </td>
-                        <td>{{ person.firstname }}</td>
-                        <td>{{ person.birthdate | date("d/m/Y") }}</td>
-                        <td>{% if person.age > 0 %}{{ person.age }} ans {% endif %}</td>
-                        <td>{{ person.getGenderType }}</td>
-                        <td>{{ rolePerson.listRole }}</td>
-                        <td>{% if rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.getFamilyTypologyType }}{% endif %}
+                        <td>{{ person.person.firstname }}</td>
+                        <td>{% if person.person.birthdate %}{{ person.person.birthdate | date("d/m/Y") }}{% endif %}
+                        <td>{{ person.person.age }}{% if person.person.age > 1 %}
+                            ans{% elseif person.person.age > 0 %} an{% endif %}</td>
+                        <td>{{ person.person.getGenderType }}</td>
+                        <td>{{ person.listRole }}</td>
+                        <td>{% if person.groupPeople %}{{ person.groupPeople.getFamilyTypologyType }}{% endif %}
                         </td>
-                        <td>{% if  rolePerson.groupPeople is not null %}{{ rolePerson.groupPeople.nbPeople }}{% endif %}
+                        <td>{% if person.groupPeople %}{{ person.groupPeople.nbPeople }}{% endif %}
                         </td>
-                        <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
-                        <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
+                        {# <td>{{ person.person.createdAt | date("d/m/Y H:i") }}</td> #}
                     </tr>
-                    {% endif %}
-                    {% endfor %}
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </section>
+
+        <div class="navigation">
+            {{ knp_pagination_render(role_people) }}
+        </div>
+
+</section>
 </div>
 {% endblock %}

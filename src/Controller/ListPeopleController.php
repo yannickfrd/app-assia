@@ -3,31 +3,35 @@
 namespace App\Controller;
 
 use App\Utils\Agree;
+
 use App\Entity\Person;
 use App\Form\PersonType;
-
 use App\Entity\RolePerson;
+
 use App\Entity\GroupPeople;
-
 use App\Form\GroupPeopleType;
-use App\Repository\PersonRepository;
 
+use App\Entity\GroupPeopleSearch;
+use App\Form\GroupPeopleSearchType;
+
+use App\Repository\PersonRepository;
+use App\Repository\RolePersonRepository;
 use App\Repository\GroupPeopleRepository;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormBuilderInterface;
-
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -58,13 +62,28 @@ class ListPeopleController extends AbstractController
      * @Route("/list/groupPeople", name="list_groups_people")
      * @return Response
      */
-    public function listGroupsPeople(PersonRepository $repo): Response
+    public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = NULL, Request $request, PaginatorInterface $paginator): Response
     {
-        $people = $repo->findAll();
+        // $rolePeople = $repo->findAll();
+
+        $groupPeopleSearch = new GroupPeopleSearch();
+    
+        $form = $this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch);
+        $form->handleRequest($request);
+
+        $rolePeople =  $paginator->paginate(
+            $repo->findAllRolePeopleQuery($groupPeopleSearch),
+            $request->query->getInt("page", 1), // page number
+            20 // limit per page
+        );
+        $rolePeople->setCustomParameters([
+            "align" => "right", // alignement de la pagination
+        ]);
 
         return $this->render("app/listGroupsPeople.html.twig", [
             "controller_name" => "ListPeopleController",
-            "people" => $people,
+            "role_people" => $rolePeople,
+            "form" => $form->createView(),
             "current_menu" => "list_groups_people"
         ]);
     }
@@ -92,27 +111,27 @@ class ListPeopleController extends AbstractController
 
             $user = $this->security->getUser();
 
-            if(!$groupPeople->getId()) {
-                $groupPeople
-                    ->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($user->getid());
-
+            if(!$groupPeople->getId()) 
+            {
+                $groupPeople->setCreatedAt(new \DateTime())
+                            ->setCreatedBy($user);
                 $this->addFlash(
                     "success",
                     "Le ménage a été enregistré."
                 );
-            } else {
+            } 
+            else 
+            {
                 $this->addFlash(
                     "success",
                     "Les modifications ont été enregistrées."
                 );
             }
-            $groupPeople
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user->getid());
+            $groupPeople->setUpdatedAt(new \DateTime())
+                        ->setUpdatedBy($user);
+            $this->manager->persist($groupPeople);
 
             $this->updateNbPeople($groupPeople);
-            $this->manager->persist($groupPeople);
             $this->manager->flush();
 
             return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
@@ -154,7 +173,7 @@ class ListPeopleController extends AbstractController
     }
 
     // Met à jour le le nombre de personnes indiqué dans le ménage
-    public function updateNbPeople(GroupPeople $groupPeople) {
+    protected function updateNbPeople(GroupPeople $groupPeople) {
         $nbPerson = count($groupPeople->getRolePerson());
         $groupPeople->setNbPeople($nbPerson);
     }

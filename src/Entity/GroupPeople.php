@@ -53,7 +53,7 @@ class GroupPeople
     private $createdAt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="groupPeople")
      */
     private $createdBy;
 
@@ -61,11 +61,6 @@ class GroupPeople
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $updatedBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", orphanRemoval=true)
@@ -76,6 +71,11 @@ class GroupPeople
      * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
      */
     private $socialSupports;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="groupPeopleUpdated")
+     */
+    private $updatedBy;
     
     public function __construct()
     {
@@ -143,18 +143,6 @@ class GroupPeople
         return $this;
     }
 
-    public function getCreatedBy(): ?int
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?int $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -166,19 +154,7 @@ class GroupPeople
         
         return $this;
     }    
-    
-    public function getUpdatedBy(): ?int
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?int $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-    
+       
     /**
      * @return Collection|SocialSupport[]
      */
@@ -237,6 +213,30 @@ class GroupPeople
                 $rolePerson->setGroupPeople(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }

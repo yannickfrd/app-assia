@@ -13,26 +13,33 @@
 <div class="container">
 
     <section id="person">
+        {#{% dump(app.session.get("groupPeople")) %}#}
+        {% if group_people is defined %}
         <div class="my-3">
-            {#{% dump(app.session.get("groupPeople")) %}#}
             <a href="{{ path('group_people', {'id': group_people.id}) }}" class="text-primary"><span
                     class="fas fa-users"></span> Retour à la fiche du ménage {{ group_people.id }}</a>
             <span class="small text-secondary">{{ group_people.getFamilyTypologyType }} -
                 {{ group_people.nbPeople }} personne(s)</span>
             <br />
         </div>
+        {% endif %}
 
         <div class="row">
             <div class="col-md-12 mb-4">
                 {% if form is defined %}
+                {% dump(person) %}
+
                 <div class="col-md-8 mx-auto card shadow">
                     <div class="form-group row">
                         <h1 class="card-header col-md-12 h2 bg-dark text-light">Fiche personne</h1>
                     </div>
                     {% if edit_mode %}
                     <div class="small text-secondary">
-                        <p>Créé le {{person.createdAt | date("d/m/Y à H:i") }} (modifié le
-                            {{person.updatedAt | date("d/m/Y à H:i") }}).</p>
+                        <p>Créé le {{person.createdAt | date("d/m/Y à H:i") }}
+                            {% if person.createdBy %} par {{ person.createdBy.username }}{% endif %}
+                            (modifié le
+                            {{person.updatedAt | date("d/m/Y à H:i") }}{% if person.updatedBy %} par
+                            {{ person.updatedBy.username }}{% endif %}).</p>
                     </div>
                     {% else %}
                     <div class="mb-4"></div>

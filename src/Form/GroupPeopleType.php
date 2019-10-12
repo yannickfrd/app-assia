@@ -2,13 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\GroupPeople;
 use App\Entity\RolePerson;
+use App\Entity\GroupPeople;
+
+use App\Form\RolePersonMinType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -29,7 +31,7 @@ class GroupPeopleType extends FormType
             ]
         ])
         ->add('rolePerson', CollectionType::class, [
-            'entry_type'   => RolePersonType::class,
+            'entry_type'   => RolePersonMinType::class,
             'allow_add'    => true,
             'allow_delete' => true
         ])

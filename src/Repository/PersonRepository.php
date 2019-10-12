@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Person;
+
+use App\Entity\RolePerson;
 use Doctrine\ORM\Query;
-use App\Entity\GroupPeople;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -53,7 +54,7 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * @return Query
      */
-    // Trouve toutes les personnes
+    // Retourne toutes les personnes
     public function findAllPeopleQuery($personSearch): Query
     {
         $query =  $this->createQueryBuilder("p");
@@ -87,7 +88,27 @@ class PersonRepository extends ServiceEntityRepository
         $query = $query->orderBy("p.lastname", "ASC");
         return $query->getQuery();
     }
-        
+
+  /**
+     *
+     */
+    // Trouve toutes les personnes
+    public function findAllPeopleWithGroupQuery()
+    {
+        $query =  $this ->createQueryBuilder("p")
+                        ->addselect("p")
+                        ->leftJoin("p.rolesPerson", "r")
+                        ->leftJoin("r.groupPeople", "g")
+                        ->addSelect("r")
+                        ->addSelect("g")
+                        ->orderBy("g.id", "ASC")
+                        ->getQuery()
+                        ->getResult();
+
+        return $query;            
+
+    }    
+
     // Trouve tous les personnes du même groupe ménage
     public function findByGroupPeople($groupPeople) {
         
@@ -100,34 +121,4 @@ class PersonRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult();
     }
-    
-    // Trouve tous les personnes du même groupe ménage
-    public function Test($groupPeople) {
-        
-        return $this->createQueryBuilder("p")
-                    ->leftJoin("p.rolePerson", "r")
-                    ->leftJoin("r.groupPeople", "g")
-                    ->select("p")
-                    ->addSelect("r")
-                    ->addSelect("g")
-                    ->andWhere("g = :g")
-                    ->setParameter("g", $groupPeople)
-                    ->getQuery()
-                    ->getResult();
-    }
-
-
-    // Trouve tous les personnes du même groupe ménage (première version)
-    // public function findByGroupPeopleV1($groupPeople){
-    //     $query = $this->createQueryBuilder('p')
-    //                   ->select('p')
-    //                   ->leftJoin('p.groupPeoples', 'g')
-    //                   ->addSelect('g');
-    //     $query = $query->add('where', $query->expr()->in('g', ':g'))
-    //                   ->setParameter('g', $groupPeople)
-    //                   ->getQuery()
-    //                   ->getResult();
-          
-    //     return $query;
-    // }  
 }

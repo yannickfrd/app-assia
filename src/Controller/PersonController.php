@@ -45,6 +45,7 @@ class PersonController extends AbstractController
     /**
      * @Route("/list/people", name="list_people")
      * @Route("/group/{id}/search/person", name="group_search_person")
+     * @Route("/new_support/search/person", name="new_support_search_person")
      * @return Response
      */
     public function listPeople(PaginatorInterface $paginator, Request $request, PersonSearch $personSearch = NULL, GroupPeople $groupPeople = NULL): Response
@@ -57,6 +58,7 @@ class PersonController extends AbstractController
         return $this->pagination($personSearch, $request, $groupPeople, $form, $paginator);
     }
 
+    // Ajoute une personne dans une groupe ménage
     /**
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
      * @ParamConverter("person", options={"id" = "person_id"})
@@ -111,36 +113,31 @@ class PersonController extends AbstractController
         ]);
     }
 
+    // Crée une personne avec un rôle
     protected function createPerson($person, $groupPeople, $rolePerson)
     {
         $user = $this->security->getUser();
 
-        $person
-            ->setCreatedAt(new \DateTime())
-            ->setCreatedBy($user->getid());
-
         $rolePerson = new RolePerson();
-        $rolePerson
-            ->setHead(FALSE)
-            ->setCreatedAt(new \DateTime())
-            ->setGroupPeople($groupPeople)
-            ->setRole(1);
-        
+        $rolePerson ->setHead(FALSE)
+                    ->setCreatedAt(new \DateTime())
+                    ->setGroupPeople($groupPeople)
+                    ->setRole(1);
         $this->manager->persist($rolePerson);
 
-        $person->addRolesPerson($rolePerson);
-        
+        $person ->setCreatedAt(new \DateTime())
+                ->setCreatedBy($user)
+                ->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($user)
+                ->addRolesPerson($rolePerson);
+        $this->manager->persist($person);
+
+        $this->manager->flush();
+
         $this->addFlash(
             "success",
             $person->getFirstname() . " a été ajouté".  Agree::gender($person->getGender()) . " au ménage."
         );
-
-        $person
-            ->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($user->getid());
-
-        $this->manager->persist($person);
-        $this->manager->flush();
 
         return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);   
         // return $this->redirectToRoute("person_show", [
@@ -150,8 +147,9 @@ class PersonController extends AbstractController
         //     ]);
     }
 
+    // Modifie une personne
     /**
-     * @Route("/group/{id}/person/{person_id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
+     * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      * @return Response
      */
@@ -164,11 +162,14 @@ class PersonController extends AbstractController
         {
             $user = $this->security->getUser();
 
-            $person
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user->getid());
+            // $rolePerson ->setHead(FALSE)
+            //             ->setRole();
+            // $this->manager->persist($rolePerson);
 
+            $person ->setUpdatedAt(new \DateTime())
+                    ->setUpdatedBy($user);
             $this->manager->persist($person);
+
             $this->manager->flush();
 
             $this->addFlash(
@@ -187,6 +188,41 @@ class PersonController extends AbstractController
         ]);
     }
 
+    // Voir la fiche de la personne
+    /**
+     * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
+     * @return Response
+     */
+    public function personShow(Person $person, RolePerson $rolePerson = NULL, Request $request): Response
+    {
+        $form = $this->createForm(PersonType::class, $person);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            $user = $this->security->getUser();
+
+            $person ->setUpdatedAt(new \DateTime())
+                    ->setUpdatedBy($user);
+            $this->manager->persist($person);
+
+            $this->manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Les modifications ont été enregistrées."
+            );
+        }
+
+        return $this->render("app/person.html.twig", [
+            "person" => $person,
+            "form" => $form->createView(),
+            "edit_mode" => true
+        ]);
+    }
+
+
+    // Met en place la pagination du tableau et affiche le rendu
     protected function pagination($personSearch, $request, $groupPeople, $form, $paginator)
     {
         if ($request->query->all()) 

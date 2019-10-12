@@ -103,7 +103,7 @@ class Person
     private $createdAt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
      */
     private $createdBy;
 
@@ -113,7 +113,7 @@ class Person
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
      */
     private $updatedBy;
 
@@ -121,7 +121,6 @@ class Person
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="person", orphanRemoval=true, cascade={"persist"})
      */
     private $rolesPerson;
-
 
     public function __construct()
     {
@@ -293,12 +292,12 @@ class Person
         return $this;
     }
 
-    public function getCreatedBy(): ?string
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?string $createdBy): self
+    public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
 
@@ -317,15 +316,15 @@ class Person
         return $this;
     }
 
-    public function getUpdatedBy(): ?string
+    public function getUpdatedBy(): ?User
     {
         return $this->updatedBy;
     }
 
-    public function setUpdatedBy(?string $updatedBy): self
+    public function setUpdatedBy(?User $updatedBy): self
     {
         $this->updatedBy = $updatedBy;
-        
+
         return $this;
     }
 

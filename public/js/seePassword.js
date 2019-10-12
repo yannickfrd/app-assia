@@ -9,7 +9,6 @@ class SeePassword {
         this.passwordGroupElts.forEach(function (passwordGroupElt) {
             let passwordElt = passwordGroupElt.querySelector(".js-password");
             let showPasswordElt = passwordGroupElt.querySelector(".js-show-password");
-            console.log(passwordElt);
             showPasswordElt.addEventListener("mousedown", this.see.bind(this, passwordElt)); // Affiche du mot de passe au clic sur l'oeil
             document.addEventListener("mouseup", this.hide.bind(this, passwordElt)); // Masque le mot de passe au relachement de la souris
             showPasswordElt.addEventListener("touchstart", this.see.bind(this, passwordElt)); // Affiche du mot de passe au touché tactile sur l'oeil
