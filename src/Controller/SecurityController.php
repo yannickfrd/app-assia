@@ -19,10 +19,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/inscription", name="security_registration") 
      */
-    public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator) 
+    public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
         $user = new User();
-        
+
         $form = $this->createForm(RegistrationType::Class, $user);
 
         $form->handleRequest($request);
@@ -74,7 +74,7 @@ class SecurityController extends AbstractController
             $this->addFlash(
                 "danger",
                 "Identifiant ou mot de passe incorrect."
-            );       
+            );
         }
 
         return $this->render("security/login.html.twig", [
@@ -82,25 +82,23 @@ class SecurityController extends AbstractController
             "error" => $error
         ]);
     }
-  
-    
+
+
     /**
      * @Route("/connexion", name="security_login_valid")
      */
     public function loginValid(AuthenticationUtils $authenticationUtils)
-    {
-    }
+    { }
 
     /**
      * @Route("/deconnexion", name="security_logout")
      */
-    public function logout() {
+    public function logout()
+    {
 
         $this->addFlash(
             "notice",
             "Vous êtes déconnecté."
         );
-
     }
-
 }

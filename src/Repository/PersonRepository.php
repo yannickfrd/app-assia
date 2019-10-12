@@ -55,10 +55,15 @@ class PersonRepository extends ServiceEntityRepository
      * @return Query
      */
     // Retourne toutes les personnes
-    public function findAllPeopleQuery($personSearch): Query
+    public function findAllPeopleQuery($personSearch, $search): Query
     {
         $query =  $this->createQueryBuilder("p");
         $query = $query->select("p");
+        if ($search) {
+            $query = $query
+                ->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search")
+                ->setParameter("search", '%' . $search . '%');
+        }
         if ($personSearch->getFirstname()) {
             $query = $query
                 ->andWhere("p.firstname LIKE :firstname")
@@ -68,8 +73,8 @@ class PersonRepository extends ServiceEntityRepository
             $query = $query
                 ->andWhere("p.lastname LIKE :lastname")
                 ->setParameter("lastname", $personSearch->getLastname() . '%');
-            }
-      
+        }
+
         if ($personSearch->getBirthdate()) {
             $query = $query
                 ->andWhere("p.birthdate = :birthdate")
@@ -89,36 +94,20 @@ class PersonRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-  /**
+    /**
      *
      */
     // Trouve toutes les personnes
-    public function findAllPeopleWithGroupQuery()
+    public function findPeopleByResearch($search)
     {
-        $query =  $this ->createQueryBuilder("p")
-                        ->addselect("p")
-                        ->leftJoin("p.rolesPerson", "r")
-                        ->leftJoin("r.groupPeople", "g")
-                        ->addSelect("r")
-                        ->addSelect("g")
-                        ->orderBy("g.id", "ASC")
-                        ->getQuery()
-                        ->getResult();
-
-        return $query;            
-
-    }    
-
-    // Trouve tous les personnes du même groupe ménage
-    public function findByGroupPeople($groupPeople) {
-        
         return $this->createQueryBuilder("p")
-                    ->select("p")
-                    ->leftJoin("p.groupPeoples", "g")
-                    ->addSelect("g")
-                    ->andWhere("g = :g")
-                    ->setParameter("g", $groupPeople)
-                    ->getQuery()
-                    ->getResult();
+            ->select("p")
+            ->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search OR CONCAT(p.firstname,' ' ,p.lastname) LIKE :search")
+            ->setParameter("search", '%' . $search . '%')
+            ->orderBy("p.lastname, p.firstname", "ASC")
+            ->setMaxResults(10)
+            // ->setFirstResult(10)
+            ->getQuery()
+            ->getResult();
     }
 }

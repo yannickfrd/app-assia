@@ -85,7 +85,7 @@
                                 <td class="px-1">
                                     <a href="{{ path('remove_person', {'id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
                                         class="btn btn-danger shadow"
-                                        onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')"
+                                        onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer {{ form_person.vars.value.person.firstname }} du ménage ?')"
                                         data-placement="bottom" title="Retirer la personne du groupe">
                                         <span class="fas fa-user-times"></span>
                                     </a>

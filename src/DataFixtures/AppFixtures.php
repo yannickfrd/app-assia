@@ -11,11 +11,12 @@ use App\Entity\SocialSupport;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager) {
+    public function load(ObjectManager $manager)
+    {
 
         $faker = \Faker\Factory::create("fr_FR");
 
-        for ($i = 1; $i <= 200; $i++) {
+        for ($i = 1; $i <= 1000; $i++) {
             // Définit la typologie familiale
             $familyTypology = mt_rand(1, 6);
             // Définit le nombre de personnes
@@ -45,22 +46,22 @@ class AppFixtures extends Fixture
                 ->setCreatedAt($createdAt)
                 ->setUpdatedAt($updatedAt);
 
-            $manager->persist($groupPeople); 
+            $manager->persist($groupPeople);
 
-            
+
             // Crée un faux suivi pour le ménage
             $socialSupport = new SocialSupport();
 
-            $comment = "<p>" . join($faker->paragraphs(3),"</p><p>") . "</p>";
+            $comment = "<p>" . join($faker->paragraphs(3), "</p><p>") . "</p>";
 
             $socialSupport->setBeginningDate($createdAt)
-                        ->setStatus(mt_rand(1, 4))
-                        ->setComment($comment)
-                        ->setCreatedAt($createdAt)
-                        ->setUpdatedAt($updatedAt)
-                        ->setGroupPeople($groupPeople);
+                ->setStatus(mt_rand(1, 4))
+                ->setComment($comment)
+                ->setCreatedAt($createdAt)
+                ->setUpdatedAt($updatedAt)
+                ->setGroupPeople($groupPeople);
 
-            $manager->persist($socialSupport); 
+            $manager->persist($socialSupport);
 
             $lastname = $faker->lastName();
 
@@ -115,7 +116,7 @@ class AppFixtures extends Fixture
                     }
                 }
 
-                if (($familyTypology >= 4 && $familyTypology <= 5 && $j >=2) || ($familyTypology == 6 && $j >=3)) {
+                if (($familyTypology >= 4 && $familyTypology <= 5 && $j >= 2) || ($familyTypology == 6 && $j >= 3)) {
                     $birthdate = $this->birthdate("child");
                     $sex = mt_rand(1, 2);
                     $head = false;
@@ -128,9 +129,9 @@ class AppFixtures extends Fixture
                 }
 
                 $rolePerson->setHead($head)
-                        ->setRole($role)
-                        ->setGroupPeople($groupPeople)
-                        ->setCreatedAt($createdAt);
+                    ->setRole($role)
+                    ->setGroupPeople($groupPeople)
+                    ->setCreatedAt($createdAt);
 
                 $manager->persist($rolePerson);
 
@@ -146,15 +147,15 @@ class AppFixtures extends Fixture
                     ->addRolesPerson($rolePerson);
                 // Prépare le manager à faire persister les données dans le temps
                 $manager->persist($person);
-
             }
-        // Envoie la requête SQL
-        $manager->flush();
+            // Envoie la requête SQL
+            $manager->flush();
         }
     }
 
     // Donne une date de naissanc en fonction du role de la personne
-    protected function birthdate($role = "adult") {
+    protected function birthdate($role = "adult")
+    {
 
         $faker = \Faker\Factory::create("fr_FR");
 
@@ -165,5 +166,4 @@ class AppFixtures extends Fixture
         }
         return $birthdate;
     }
-
 }

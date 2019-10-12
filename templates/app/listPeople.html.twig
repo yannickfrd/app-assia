@@ -78,7 +78,7 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Résultat : {{ people.getTotalItemCount }}
+                <p class="align-middle">Résultat : {{ people.getTotalItemCount | number_format(0,'', ' ')}}
                     personnes.</p>
             </div>
             <div class="col-md-8">
@@ -101,9 +101,6 @@
                             {{ knp_pagination_sortable(people, "Date de naissance", "p.birthdate") }}
                         </th>
                         <th scope="col" class="align-middle th-width-80px text-light">
-                            {{ knp_pagination_sortable(people, "Âge", "p.birthdate") }}
-                        </th>
-                        <th scope="col" class="align-middle th-width-80px text-light">
                             {{ knp_pagination_sortable(people, "Sexe", "p.gender") }}
                         </th>
                         <th scope="col" class="align-middle th-date text-light">
@@ -122,7 +119,8 @@
                         <th scope="row">
                             {% if group_people %}
                             <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
-                                class="" data-placement="bottom" title="Ajouter la personne au ménage">
+                                class="" data-placement="bottom" title="Ajouter la personne au ménage"
+                                onclick="return confirm('Êtes-vous vraiment sûr de vouloir ajouter {{ person.firstname }} {{ person.lastname }} au ménage ?')">
                                 <i class="fas fa-plus-square fa-2x"></i>
                             </a>
                             {% else %}
@@ -138,10 +136,14 @@
                                 class="text-primary font-weight-bold">{{ person.lastname }}</a>
                         </td>
                         <td>{{ person.firstname }}</td>
-                        <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }} {% endif %}</td>
-                        <td>{{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %} an{% endif %}
-                        </td>
-                        <td>{{ person.getGenderType }}</td>
+                        <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />
+                            ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
+                            an{% endif %}){% endif %}</td>
+                        <td>{% if person.gender == 1 %}
+                            <i class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></i>
+                            {% elseif person.gender == 2 %}
+                            <i class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></i>
+                            {% endif %} </td>
                         <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
                         <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
                     </tr>

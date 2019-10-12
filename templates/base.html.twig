@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        {% block title %} AppE95 {% endblock %}
+        {% block title %}
+        AppE95
+        {% endblock %}
     </title>
 
     <meta charset="utf-8" />
@@ -16,9 +18,7 @@
     <!-- Bibliothèque Fontawesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link href="{{ asset("css/style.css") }}" rel="stylesheet" />
-
-    {% block stylesheets %} {% endblock %}
+    <link href="{{ asset("css/style.css") }}" rel="stylesheet" /> {% block stylesheets %}{% endblock %}
 
     <link rel="icon" href="" />
     <meta property="og:title" content="AppE95" />
@@ -42,48 +42,49 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav mr-auto">
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == "home" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("home") }}"><span class="fas fa-home"></span> Accueil<span
-                                    class="sr-only">(Accueil)</span></a>
+                            class="nav-item {% if current_menu is defined and current_menu == " home" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("home") }}">
+                                <span class="fas fa-home"></span>
+                                Accueil<span class="sr-only">(Accueil)</span>
+                            </a>
                         </li>
-                        {# <li
-                            class="nav-item {% if current_menu is defined and current_menu == "person_search" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("person_search") }}">Recherche</a>
-                        </li> #}
-                        <li class="nav-item
-                            {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == " list_people" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>
                         </li>
                         <li
-                            class="nav-item
-                            {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
+                            class="nav-item {% if current_menu is defined and current_menu == " list_groups_people" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("list_groups_people") }}">Suivis</a>
                         </li>
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">
+                            class="nav-item {% if current_menu is defined and current_menu == " new_group" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
                         </li>
-                        {# <li class="nav-item">
-                            <a class="nav-link" href="{{ path("create_person") }}">Nouvelle personne</a>
-                        </li> #}
                     </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <label for="search" class="sr-only col-form-label">Recherche</label>
-                        <input id="search" class="form-control mr-sm-2" type="text" placeholder="Recherche">
-                        <button class="btn btn-primary my-2 my-sm-0" type="submit"><span
-                                class="fas fa-search"></span></button></button>
+                    <form action="{{ path("list_people") }}" method="get" class="form-inline my-2 my-lg-0">
+                        <div class="position-relative" style="z-index: 9;">
+                            <label for="search" class="sr-only col-form-label">Recherche</label>
+                            <input name="search" id="search" class="form-control mr-sm-2" type="text"
+                                placeholder="Recherche" autocomplete="off">
+                            <div id="results_search" class="position-absolute w-100">
+                                {# <ul id="results_search" class="mr-2 p-2 bg-light text-dark border border-light rounded d-none"> #}
+                                {# <li class="list-group-item bg-dark p-1">                                                                                                                                                   </li> #}
+                                </ul>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary my-2 my-sm-0" type="submit">
+                            <span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
+                        </button>
                     </form>
 
                     <div class="ml-3 text-light">
                         {% if app.user %}
                         <a class="text-light font-weight-bold" href="{{ path("security_logout") }}"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
-                            title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin | date("d/m/Y H:i") }} <br />Profil : 
-                            {% for role in app.user.roles %}
-                            {{ role }}, 
-                            {% endfor %}
-                            ">
-                            <span class="fas fa-user"></span> {{ app.user.username }}
+                            title="{{ app.user.firstname }} {{ app.user.lastname }}"
+                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />profil :                                                                                                                                                                                                           ">
+                            <span class="fas fa-user"></span>
+                            {{ app.user.username }}
                         </a>
                         <br />
                         <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
@@ -93,19 +94,17 @@
                         <a class="text-light" href="{{ path("security_registration") }}">S'inscrire</a>
                         {% endif %}
                     </div>
-
-                </div>
             </nav>
         </header>
 
         <div class="container">
-
             {# Message en session flash #}
             {% if app.request.hasPreviousSession %}
             {% for label, messages in app.flashes %}
             {% for message in messages %}
             <div id="msg-profil" class="alert alert-{{ label }} alert-dismissible mb-3 fade show" role="alert">
-                {{ message }} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -113,37 +112,38 @@
             {% endfor %}
             {% endif %}
         </div>
-        {% block body %} {% endblock %}
+        {% block body %}{% endblock %}
 
     </main>
 
     <footer class="bg-dark p-4 text-light shadow">
         <p>Ce site web est un projet d'application réalisé dans le cadre d'une formation de développeur Web.</p>
-        <p>© Romain MADELAINE | <a href="https://romain-mad.fr" target="_blank" class="text-blue">romain-mad.fr</a>
+        <p>© Romain MADELAINE |
+            <a href="https://romain-mad.fr" target="_blank" class="text-blue">romain-mad.fr</a>
         </p>
     </footer>
-
-
-    <script src="{{ asset("js/jquery.js") }}"></script>
-    <script src="{{ asset("js/scroll_to.js") }}"></script>
-    <script src="{{ asset("js/app.js") }}"></script>
-    {# <script src="{{ asset("js/seePassword.js") }}"></script> #}
-    <!-- Les fichiers Javascript pour Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
-    <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="{{ asset("js/bootstrap-datepicker.fr.min.js") }}"></script>
-
-    {% block javascripts %} {% endblock %}
-
 </body>
 
 </html>
+</body>
+
+</html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{{ asset("js/jquery.js") }}"></script>
+<script src="{{ asset("js/scroll_to.js") }}"></script>
+<script src="{{ asset("js/search_ajax.js") }}"></script>
+<script src="{{ asset("js/app.js") }}"></script>{# <script src="{{ asset("js/seePassword.js") }}"></script> #}
+<!-- Les fichiers Javascript pour Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+</script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="{{ asset("js/bootstrap-datepicker.fr.min.js") }}"></script>
+{% block javascripts %}{% endblock %}

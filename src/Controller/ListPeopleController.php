@@ -57,7 +57,7 @@ class ListPeopleController extends AbstractController
             "current_menu" => "home"
         ]);
     }
-    
+
     /**
      * @Route("/list/groupPeople", name="list_groups_people")
      * @return Response
@@ -65,9 +65,8 @@ class ListPeopleController extends AbstractController
     public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = NULL, Request $request, PaginatorInterface $paginator): Response
     {
         // $rolePeople = $repo->findAll();
-
         $groupPeopleSearch = new GroupPeopleSearch();
-    
+
         $form = $this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch);
         $form->handleRequest($request);
 
@@ -76,6 +75,7 @@ class ListPeopleController extends AbstractController
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
+        $rolePeople->setPageRange(3);
         $rolePeople->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
@@ -107,28 +107,25 @@ class ListPeopleController extends AbstractController
 
         $formGroupPeople->handleRequest($request);
 
-        if($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
+        if ($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
 
             $user = $this->security->getUser();
 
-            if(!$groupPeople->getId()) 
-            {
+            if (!$groupPeople->getId()) {
                 $groupPeople->setCreatedAt(new \DateTime())
-                            ->setCreatedBy($user);
+                    ->setCreatedBy($user);
                 $this->addFlash(
                     "success",
                     "Le ménage a été enregistré."
                 );
-            } 
-            else 
-            {
+            } else {
                 $this->addFlash(
                     "success",
                     "Les modifications ont été enregistrées."
                 );
             }
             $groupPeople->setUpdatedAt(new \DateTime())
-                        ->setUpdatedBy($user);
+                ->setUpdatedBy($user);
             $this->manager->persist($groupPeople);
 
             $this->updateNbPeople($groupPeople);
@@ -158,10 +155,10 @@ class ListPeopleController extends AbstractController
             $this->updateNbPeople($groupPeople);
             $this->manager->persist($groupPeople);
             $this->manager->flush();
-    
+
             $this->addFlash(
                 "warning",
-                $person->getFirstname() . " a été retiré".  Agree::gender($person->getGender()) . " du ménage."
+                $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage."
             );
         } else {
             $this->addFlash(
@@ -173,7 +170,8 @@ class ListPeopleController extends AbstractController
     }
 
     // Met à jour le le nombre de personnes indiqué dans le ménage
-    protected function updateNbPeople(GroupPeople $groupPeople) {
+    protected function updateNbPeople(GroupPeople $groupPeople)
+    {
         $nbPerson = count($groupPeople->getRolePerson());
         $groupPeople->setNbPeople($nbPerson);
     }

@@ -57,6 +57,8 @@ class Person
      */
     private $usename;
 
+    private $fullname;
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -128,6 +130,11 @@ class Person
         $this->rolesPerson = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->lastname . " " . $this->firstname;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -160,8 +167,20 @@ class Person
     public function getSlug(): string
     {
         $slugify = new Slugify();
-        
-        return $slugify->slugify($this->firstname . "-" . $this->lastname); 
+
+        return $slugify->slugify($this->firstname . "-" . $this->lastname);
+    }
+
+    public function getFullName(): string
+    {
+        return $this->fullname;
+    }
+
+    public function setFullname(): self
+    {
+        $this->fullname = $this->firstname . " " . $this->lastname;
+
+        return $this;
     }
 
     public function getUsename(): ?string
@@ -210,11 +229,11 @@ class Person
         return $this;
     }
 
-    public function getGenderType() 
+    public function getGenderType()
     {
         return self::GENDER[$this->gender];
     }
-    
+
     public function getNationality(): ?int
     {
         return $this->nationality;
@@ -227,7 +246,7 @@ class Person
         return $this;
     }
 
-    public function getNationalityType() 
+    public function getNationalityType()
     {
         return self::NATIONALITY[$this->nationality];
     }
