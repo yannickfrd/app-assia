@@ -149,3 +149,21 @@ ul {
 .font-size-10 {
     font-size: 1rem;
 }
+
+#results_search {
+    position: absolute;
+    top: 35px;
+}
+
+.fade-in {
+    opacity: 1;
+    /* height: 100%; */
+    transition: all 0.2s ease;
+}
+
+.fade-out {
+    /* overflow: hidden; */
+    opacity: 0;
+    /* height: 0%; */
+    transition: all 0.5s ease;
+}

@@ -30,3 +30,5 @@ $(function () {
 $(function () {
     $('[data-toggle="popover"]').popover()
 })
+
+let searchElt = new Search_ajax(2, 500);

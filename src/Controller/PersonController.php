@@ -199,7 +199,7 @@ class PersonController extends AbstractController
      * Voir la fiche de la personne
      * 
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
-     * @Route("/person/{id}", name="person_show",  methods="GET")
+     * @Route("/person/{id}", name="person_show", methods="GET|POST")
      *  @return Response
      */
     public function personShow(Person $person, RolePerson $rolePerson = NULL, Request $request): Response

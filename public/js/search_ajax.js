@@ -1,86 +1,101 @@
-// 
+// Recherche instannée Ajax
 class Search_ajax {
-    constructor() {
+    constructor(lengthSearch, time) {
         this.searchElt = document.getElementById("search");
         this.resultsSearchElt = document.getElementById("results_search");
+        this.lengthSearch = lengthSearch;
+        this.time = time;
         this.countdownID = null;
         this.init();
     }
 
     init() {
-        this.searchElt.addEventListener("keyup", this.count.bind(this));
-        window.addEventListener("click", function (e) {
-            this.resultsSearchElt.innerHTML = "";
+        this.searchElt.addEventListener("keyup", this.timer.bind(this));
+        this.searchElt.addEventListener("click", function () {
+            this.resultsSearchElt.classList.replace("fade-out", "fade-in");
+            setTimeout(this.hideListResults.bind(this), 100);
         }.bind(this));
     }
 
-    count() {
+    // Timer avant de lancer la requête Ajax
+    timer() {
         clearInterval(this.countdownID);
-        this.countdownID = setTimeout(this.ajax.bind(this), 500);
+        this.countdownID = setTimeout(this.count.bind(this), this.time);
     }
 
-    ajax() {
-        let valueSearchElt = this.searchElt.value;
-        let lengthSearchElt = valueSearchElt.length;
-        // console.log(lengthSearchElt);
-        if (lengthSearchElt > 2) {
-            this.resultsSearchElt.innerHTML = "";
-            let ulElt = document.createElement("ul");
-            ulElt.className = "mr-2 p-2 bg-light text-dark border border-light rounded";
-            let url = "/search/person?search=" + valueSearchElt;
-            axios.get(url).then(function (response) {
-                if (response.data.nb_results > 0) {
-                    response.data.results.forEach(person => {
-                        let liElt = document.createElement("li");
-                        let aElt = document.createElement("a");
-                        liElt.className = "bg-light pl-2 py-0";
-                        aElt.textContent = person.lastname + " " + person.firstname;
-                        aElt.href = "/person/" + person.id;
-                        aElt.className = "font-size-10 text-dark";
-                        liElt.appendChild(aElt);
-                        ulElt.appendChild(liElt);
-                    });
-                } else {
-                    let liElt = document.createElement("li");
-                    liElt.className = "bg-light pl-2 py-0";
-                    liElt.textContent = "Aucun résultat.";
-                    ulElt.appendChild(liElt);
-                }
-            }).catch(function (error) {
-                if (error.status === 403) {
-                    // console.log("Non connecté.");
-                } else {
-                    // console.log("Aucun résultat.");
-                }
-            })
-            this.resultsSearchElt.appendChild(ulElt);
+    // Compte le nombre de caratères saisis et lance la requête Ajax<
+    count() {
+        let valueSearch = this.searchElt.value;
+        if (valueSearch.length > this.lengthSearch) {
+            let url = "/search/person?search=" + valueSearch;
+            this.ajax(url);
+            this.hideListResults();
         }
+    }
+
+    // Récupère les résultats de la requête ajax
+    ajax(url) {
+        let ajaxRequest = new XMLHttpRequest();
+        ajaxRequest.open("GET", url);
+        ajaxRequest.onload = this.addResults.bind(this, ajaxRequest);
+        ajaxRequest.send();
+    }
+
+    // Affiche les résultats de la rêquête
+    addResults(ajaxRequest) {
+        let response = JSON.parse(ajaxRequest.responseText);
+        this.resultsSearchElt.innerHTML = "";
+        if (response.nb_results > 0) {
+            this.addItem(response);
+        } else {
+            this.noResult();
+        }
+        this.resultsSearchElt.classList.replace("fade-out", "fade-in");
+    }
+
+    // Ajoute un élément à la liste des résultats
+    addItem(response) {
+        response.results.forEach(person => {
+            let aElt = document.createElement("a");
+            aElt.textContent = person.lastname + " " + person.firstname;
+            aElt.href = "/person/" + person.id;
+            aElt.className = "list-group-item list-group-item-action font-size-10 pl-3 pr-1 py-1";
+            this.resultsSearchElt.appendChild(aElt);
+            aElt.addEventListener("click", function () {
+                aElt.classList.add("active");
+            }.bind(this));
+        });
+    }
+
+    // Affiche 'Aucun résultat'
+    noResult() {
+        let spanElt = document.createElement("p");
+        spanElt.textContent = "Aucun résultat.";
+        spanElt.className = "list-group-item list-group-item-light pl-3 py-2";
+        this.resultsSearchElt.appendChild(spanElt);
+    }
+
+    // Supprime la liste des résultats au click
+    hideListResults() {
+        window.addEventListener("click", function (e) {
+            this.resultsSearchElt.classList.replace("fade-in", "fade-out");
+        }.bind(this), {
+            once: true
+        });
     }
 }
 
-// $(document).ready(function () {
-//     let searchElt = document.getElementById("search");
-//     searchElt.addEventListener("keyup", function () {
-//             let valueSearchElt = searchElt.value;
-//             let lengthSearchElt = valueSearchElt.length;
-//             console.log(lengthSearchElt);
-
-//             if (lengthSearchElt > 2) {
-//                 console.log("search !");
-//                 $.ajax({
-//                     type: "GET",
-//                     url: "result.php",
-//                     data: valueSearchElt,
-//                     success: function (server_response) {
-//                         this.searchElt.html(server_response).show();
-//                     }
-//                 });
-//             }
-//         }
-
-//     )
+// axios.get(url).then(function (response) {
+//     if (response.data.nb_results > 0) {
+//         response.data.results.forEach(person => {
+//         });
+//     } else {
+//     }
+// }).catch(function (error) {
+//     if (error.status === 403) {
+//         // console.log("Non connecté.");
+//     } else {
+//         console.log("Aucun résultat.");
+//     }
 // })
-
-
-
-let searchElt = new Search_ajax();
+// this.resultsSearchElt.appendChild(ulElt);
