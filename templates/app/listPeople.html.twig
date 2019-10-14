@@ -119,10 +119,8 @@
                         <th scope="row">
                             {% if group_people %}
                             <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
-                                class="" data-placement="bottom" title="Ajouter la personne au ménage"
-                                onclick="return confirm('Êtes-vous vraiment sûr de vouloir ajouter {{ person.firstname }} {{ person.lastname }} au ménage ?')">
-                                <i class="fas fa-plus-square fa-2x"></i>
-                            </a>
+                               data-placement="bottom" title="Ajouter la personne au ménage"><i class="fas fa-plus-square fa-2x"></i>
+                            </a> {# class="" data-toggle="modal" data-target="#modal-block" #}
                             {% else %}
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom"
@@ -170,3 +168,9 @@
 
 </div>
 {% endblock %}
+
+{% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cette personne au ménage ?{% endblock %}
+{% block modal_title %}Demande de confirmation{% endblock %}
+{% block modal_confirm %}Ajouter la personne{% endblock %}
+{% block modal_cancel %}Annuler{% endblock %}
+{% block modal_alert %}primary{% endblock %}

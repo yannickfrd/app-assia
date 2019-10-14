@@ -1,19 +1,8 @@
-class NameClass {
-    constructor() {
+// Requête Ajax
+let ajaxRequest = new AjaxRequest();
 
-        this.init();
-    }
-    // Initialise 
-    init() {
-
-    };
-
-    Method() {
-
-    };
-};
-
-let nameClass = new NameClass();
+// Recherche instannée d'une personne via Ajax
+let searchPerson = new SearchPerson(3, 500); // lengthSearch, time
 
 // Masque le loader lorsque le DOM est chargé
 // window.onload = function () {
@@ -30,5 +19,3 @@ $(function () {
 $(function () {
     $('[data-toggle="popover"]').popover()
 })
-
-let searchElt = new Search_ajax(2, 500);

@@ -1,5 +1,6 @@
 // Recherche instannée Ajax
-class Search_ajax {
+class SearchPerson {
+
     constructor(lengthSearch, time) {
         this.searchElt = document.getElementById("search");
         this.resultsSearchElt = document.getElementById("results_search");
@@ -26,30 +27,25 @@ class Search_ajax {
     // Compte le nombre de caratères saisis et lance la requête Ajax<
     count() {
         let valueSearch = this.searchElt.value;
-        if (valueSearch.length > this.lengthSearch) {
+        if (valueSearch.length >= this.lengthSearch) {
             let url = "/search/person?search=" + valueSearch;
-            this.ajax(url);
-            this.hideListResults();
+            ajaxRequest.init("GET", url, true);
+            let response = ajaxRequest.response();
+            response.addEventListener("loadend", function () {
+                this.addResults(JSON.parse(response.response));
+            }.bind(this));
         }
     }
 
-    // Récupère les résultats de la requête ajax
-    ajax(url) {
-        let ajaxRequest = new XMLHttpRequest();
-        ajaxRequest.open("GET", url);
-        ajaxRequest.onload = this.addResults.bind(this, ajaxRequest);
-        ajaxRequest.send();
-    }
-
     // Affiche les résultats de la rêquête
-    addResults(ajaxRequest) {
-        let response = JSON.parse(ajaxRequest.responseText);
+    addResults(response) {
         this.resultsSearchElt.innerHTML = "";
         if (response.nb_results > 0) {
             this.addItem(response);
         } else {
             this.noResult();
         }
+        this.resultsSearchElt.classList.replace("d-none", "d-block");
         this.resultsSearchElt.classList.replace("fade-out", "fade-in");
     }
 
@@ -79,23 +75,9 @@ class Search_ajax {
     hideListResults() {
         window.addEventListener("click", function (e) {
             this.resultsSearchElt.classList.replace("fade-in", "fade-out");
+            this.resultsSearchElt.classList.replace("d-block", "d-none");
         }.bind(this), {
             once: true
         });
     }
 }
-
-// axios.get(url).then(function (response) {
-//     if (response.data.nb_results > 0) {
-//         response.data.results.forEach(person => {
-//         });
-//     } else {
-//     }
-// }).catch(function (error) {
-//     if (error.status === 403) {
-//         // console.log("Non connecté.");
-//     } else {
-//         console.log("Aucun résultat.");
-//     }
-// })
-// this.resultsSearchElt.appendChild(ulElt);

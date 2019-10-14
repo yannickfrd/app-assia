@@ -1,127 +1,170 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>
-            {% block title %}
-                AppE95
-            {% endblock %}
-        </title>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        AppE95
+        {% endblock %}
+    </title>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bibliothèque Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Bibliothèque Fontawesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="{{ asset("css/style.css") }}" rel="stylesheet" /> {% block stylesheets %}{% endblock %}
 
-        <meta charset="utf-8"/>
-        <meta name="robots" content="noindex">
-        <meta
-        name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bibliothèque Bootstrap-->
-        <link
-        rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <!-- Bibliothèque Fontawesome-->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-        <link href="{{ asset("css/style.css") }}" rel="stylesheet"/> {% block stylesheets %}{% endblock %}
+    <link rel="icon" href="" />
+    <meta property="og:title" content="AppE95" />
+    <meta property="og:type" content="application" />
+    <meta property="og:url" content="https://esperer95-app.romain-mad.fr" />
+    <meta property="og:image" content="" />
+    <meta name="description" content="Application de gestion de l'accompagnement social d'ESPERER 95" />
 
-        <link rel="icon" href=""/>
-        <meta property="og:title" content="AppE95"/>
-        <meta property="og:type" content="application"/>
-        <meta property="og:url" content="https://esperer95-app.romain-mad.fr"/>
-        <meta property="og:image" content=""/>
-        <meta name="description" content="Application de gestion de l'accompagnement social d'ESPERER 95"/>
+</head>
 
-    </head>
+<body>
+    <main class="min-vh-100">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+                <a class="navbar-brand" href="{{ path("home") }}">Esperer95-app</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-    <body>
-        <main class="min-vh-100">
-            <header>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
-                    <a class="navbar-brand" href="{{ path("home") }}">Esperer95-app</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarColor01">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item {% if current_menu is defined and current_menu == " home" %} active {% endif %}">
-                                <a class="nav-link" href="{{ path("home") }}">
-                                    <span class="fas fa-home"></span>
-                                    Accueil<span class="sr-only">(Accueil)</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {% if current_menu is defined and current_menu == " list_people" %} active {% endif %}">
-                                <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>
-                            </li>
-                            <li class="nav-item {% if current_menu is defined and current_menu == " list_groups_people" %} active {% endif %}">
-                                <a class="nav-link" href="{{ path("list_groups_people") }}">Suivis</a>
-                            </li>
-                            <li class="nav-item {% if current_menu is defined and current_menu == " new_group" %} active {% endif %}">
-                                <a class="nav-link" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
-                            </li>
-                        </ul>
-                        <form action="{{ path("list_people") }}" method="get" class="form-inline my-2 my-lg-0">
-                            <div class="position-relative" style="z-index: 9;">
-                                <label for="search" class="sr-only col-form-label">Recherche</label>
-                                <input name="search" id="search" class="form-control mr-sm-2" type="text" placeholder="Recherche" autocomplete="off">
-                                <div id="results_search" class="w-100 list-group pr-sm-2 fade-in"></div>
-                            </div>
-                            <button class="btn btn-primary my-2 my-sm-0" type="submit">
-                                <span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
-                            </button>
-                        </form>
-                        <div class="ml-3 text-light">
-                            {% if app.user %}
-                                <a class="text-light font-weight-bold" href="{{ path("security_logout") }}" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true" title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />profil :                                                                                                                                                                                                           ">
-                                    <span class="fas fa-user"></span>
-                                    {{ app.user.username }}
-                                </a>
-                                <br/>
-                                <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
-                            {% else %}
-                                <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
-                                <br/>
-                                <a class="text-light" href="{{ path("security_registration") }}">S'inscrire</a>
-                            {% endif %}
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == " home" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("home") }}">
+                                <span class="fas fa-home"></span>
+                                Accueil<span class="sr-only">(Accueil)</span>
+                            </a>
+                        </li>
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == " list_people" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>
+                        </li>
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == " list_groups_people" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("list_groups_people") }}">Suivis</a>
+                        </li>
+                        <li
+                            class="nav-item {% if current_menu is defined and current_menu == " new_group" %} active {% endif %}">
+                            <a class="nav-link" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
+                        </li>
+                    </ul>
+                    <form action="{{ path("list_people") }}" method="get" class="form-inline my-2 my-lg-0">
+                        <div class="position-relative" style="z-index: 9;">
+                            <label for="search" class="sr-only col-form-label">Recherche d'une personne</label>
+                            <input name="search" id="search" class="form-control mr-sm-2" type="text"
+                                placeholder="Recherche personne" autocomplete="off">
+                            <div id="results_search" class="w-100 list-group pr-sm-2 d-block fade-in"></div>
                         </div>
-                    </nav>
-                </header>
+                        <button class="btn btn-primary my-2 my-sm-0" type="submit">
+                            <span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
+                        </button>
+                    </form>
+                    <div class="ml-3 text-light">
+                        {% if app.user %}
+                        <a class="text-light font-weight-bold" href="{{ path("security_logout") }}"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
+                            title="{{ app.user.firstname }} {{ app.user.lastname }}"
+                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />profil :                                                                                                                                                                                                           ">
+                            <span class="fas fa-user"></span>
+                            {{ app.user.username }}
+                        </a>
+                        <br />
+                        <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
+                        {% else %}
+                        <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
+                        <br />
+                        <a class="text-light" href="{{ path("security_registration") }}">S'inscrire</a>
+                        {% endif %}
+                    </div>
+            </nav>
+        </header>
 
-                <div
-                    class="container">
-                    {# Message en session flash #}
-                    {% if app.request.hasPreviousSession %}
-                        {% for label, messages in app.flashes %}
-                            {% for message in messages %}
-                                <div id="msg-profil" class="alert alert-{{ label }} alert-dismissible mb-3 fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endif %}
+        <div class="container">
+            {# Message en session flash #}
+            {% if app.request.hasPreviousSession %}
+            {% for label, messages in app.flashes %}
+            {% for message in messages %}
+            <div id="msg-profil" class="alert alert-{{ label }} alert-dismissible mb-3 fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% block body %}{% endblock %}
+
+        <!-- Modal -->
+        <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalConfirmation">
+                            {% block modal_title %}Demande de confirmation{% endblock %}
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">{% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="modal-confirm"
+                            class="btn btn-{% block modal_alert %}primary{% endblock %}"
+                            data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
+                        <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}
+                        </button>
+                    </div>
                 </div>
-                {% block body %}{% endblock %}
+            </div>
+        </div>
 
-            </main>
+    </main>
 
-            <footer class="bg-dark p-4 text-light shadow">
-                <p>Ce site web est un projet d'application réalisé dans le cadre d'une formation de développeur Web.</p>
-                <p>© Romain MADELAINE |
-                    <a href="https://romain-mad.fr" target="_blank" class="text-blue">romain-mad.fr</a>
-                </p>
-            </footer>
-        </body>
-    </body>
+    <footer class="bg-dark p-4 text-light shadow">
+        <p>Ce site web est un projet d'application réalisé dans le cadre d'une formation de développeur Web.</p>
+        <p>© Romain MADELAINE |
+            <a href="https://romain-mad.fr" target="_blank" class="text-blue">romain-mad.fr</a>
+        </p>
+    </footer>
+</body>
+
 </html>
 {# <script src="https://unpkg.com/axios/dist/axios.min.js"></script> #}
 <script src="{{ asset("js/jquery.js") }}"></script>
 <script src="{{ asset("js/scroll_to.js") }}"></script>
-<script src="{{ asset("js/search_ajax.js") }}"></script>
+<script src="{{ asset("js/ajaxRequest.js") }}"></script>
+<script src="{{ asset("js/searchPerson.js") }}"></script>
+<script src="{{ asset("js/messageFlash.js") }}"></script>
 <script src="{{ asset("js/app.js") }}"></script>
 {# <script src="{{ asset("js/seePassword.js") }}"></script> #}
 <!-- Les fichiers Javascript pour Bootstrap -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+</script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="{{ asset("js/bootstrap-datepicker.fr.min.js") }}"></script>
 {% block javascripts %}{% endblock %}

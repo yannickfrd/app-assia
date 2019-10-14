@@ -13,7 +13,6 @@
 {% block body %}
 
 <div class="container">
-
     <div>
         <h1 class="h2 mb-3">Groupe de personnes (ménage)</h1>
 
@@ -30,6 +29,8 @@
     <hr>
 
     <section id="people-group">
+        <div id="msg-flash"></div>
+
         {{ form_start(form) }}
         {% if edit_mode %}
         <div class="row">
@@ -62,7 +63,7 @@
                         <tbody>
 
                             {% for form_person in form.rolePerson.children %}
-                            <tr>
+                            <tr id="js-person-{{ form_person.vars.value.person.id }}" class="js-tr-person">
                                 <th scope="row">
                                     <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "slug":form_person.vars.value.person.slug}) }}"
                                         class="btn btn-primary shadow" data-placement="bottom"
@@ -70,7 +71,7 @@
                                         <span class="fas fa-user-edit"></span>
                                     </a>
                                 </th>
-                                <td class="px-1">
+                                <td class="align-middle px-1">
                                     <div class="custom-control custom-radio pl-3">
                                         {{ form_widget(form_person.head) }}
                                     </div>
@@ -78,17 +79,25 @@
                                 <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
-                                <td class="px-1 pt-4"> {% set age = form_person.vars.value.person.age %}
-                                    {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}
+                                <td class="align-middle px-1"> {% set age = form_person.vars.value.person.age %}
+                                    {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                 <td class="px-1">
+                                    <!-- Button trigger modal -->
                                     <a href="{{ path('remove_person', {'id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        class="btn btn-danger shadow"
-                                        onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer {{ form_person.vars.value.person.firstname }} du ménage ?')"
+                                        class="js-remove btn btn-danger shadow" data-toggle="modal"
+                                        data-target="#modal-block" data-placement="bottom"
+                                        title="Retirer la personne du groupe">
+                                        <span class="fas fa-user-times"></span></a>
+
+
+                                    {# <a href="" class="js-remove btn btn-danger shadow"
+                                         onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer {{ form_person.vars.value.person.firstname }} du ménage ?')" 
                                         data-placement="bottom" title="Retirer la personne du groupe">
                                         <span class="fas fa-user-times"></span>
-                                    </a>
+                                    </a> #}
+
                                     {# <form method="post"
                                     action="{{ path("remove_person", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "role_person_id":form_person.vars.value.id}) }}"
                                     onsubmit="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')">
@@ -127,23 +136,31 @@
         <p><a href="{{ path("group_search_person", {"id":group_people.id}) }}" class="float-right text-primary"><span
                     class="fas fa-plus-square"></span>
                 Ajouter une personne</a></p><br />
+
     </section>
     {% endif %}
 
     <section>
         <div class="row">
             <div class="col-md-12">
-                <div class="">
-                    {{ form_row(form.familyTypology) }}
-                    {{ form_row(form.nbPeople) }}
-                    {{ form_row(form.comment) }}
-                    {{ form_row(form._token) }}
-
-                    <div class="float-right">
-                        <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                            value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(form.familyTypology) }}
                     </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.nbPeople) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.comment) }}
+                    </div>
+                </div>
+                {{ form_row(form._token) }}
 
+                <div class="float-right">
+                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
                 </div>
             </div>
         </div>
@@ -216,7 +233,6 @@
                 </tbody>
             </table>
         </div>
-
         <a href="" class="text-primary"><span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
 
@@ -226,10 +242,18 @@
     {% endif %}
 
 </div>
+
 {% endblock %}
+
+{% block modal_body %}Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?{% endblock %}
+{% block modal_title %}Demande de confirmation{% endblock %}
+{% block modal_confirm %}Retirer la personne{% endblock %}
+{% block modal_cancel %}Annuler{% endblock %}
+{% block modal_alert %}danger{% endblock %}
 
 {% block javascripts %}
 
 <script src="{{ asset("js/selectRadio.js") }}"></script>
+<script src="{{ asset("js/removePerson.js") }}"></script>
 
 {% endblock %}

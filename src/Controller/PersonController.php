@@ -13,6 +13,7 @@ use App\Form\PersonType;
 use App\Utils\Agree;
 
 use App\Repository\PersonRepository;
+use App\Repository\RolePersonRepository;
 use Knp\Component\Pager\PaginatorInterface;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -62,28 +63,44 @@ class PersonController extends AbstractController
      * 
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
      * @ParamConverter("person", options={"id" = "person_id"})
+     * @param GroupPeople $groupPeople
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     * @param RolePersonRepository $repo
      * @return Response
      */
-    public function addPersonInGroup(GroupPeople $groupPeople, Person $person, RolePerson $rolePerson = NULL, Request $request): Response
+    public function addPersonInGroup(GroupPeople $groupPeople, Person $person, RolePerson $rolePerson = NULL, RolePersonRepository $repo): Response
     {
-        $rolePerson = new RolePerson;
+        // Vérifie si la personne est déjà associée à ce groupe
+        $personExist = $repo->findOneBy([
+            "person" => $person->getId(),
+            "groupPeople" => $groupPeople->getId()
+        ]);
 
-        $rolePerson
-            ->setHead(FALSE)
-            ->setCreatedAt(new \DateTime())
-            ->setGroupPeople($groupPeople)
-            ->setRole(5);
+        // Si elle n'est pas associée, ajout de la liaison, sinon ne fait rien
+        if (!$personExist) {
+            $rolePerson = new RolePerson;
+            $rolePerson
+                ->setHead(FALSE)
+                ->setCreatedAt(new \DateTime())
+                ->setGroupPeople($groupPeople)
+                ->setRole(5);
 
-        $person->addRolesPerson($rolePerson);
+            $person->addRolesPerson($rolePerson);
 
-        $this->manager->persist($rolePerson);
-        $this->manager->flush();
+            $this->manager->persist($rolePerson);
+            $this->manager->flush();
 
-        $this->addFlash(
-            "success",
-            $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
-        );
-
+            $this->addFlash(
+                "success",
+                $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
+            );
+        } else {
+            $this->addFlash(
+                "warning",
+                $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au ménage."
+            );
+        }
         return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
     }
 
@@ -94,7 +111,7 @@ class PersonController extends AbstractController
      * @ParamConverter("person", options={"id" = "person_id"})
      * @return Response
      */
-    public function newPerson(Person $person = NULL, GroupPeople $groupPeople = NULL, Request $request): Response
+    public function newPerson(Person $person = NULL, GroupPeople $groupPeople = NULL, PersonRepository $repo, Request $request): Response
     {
         $person = new Person();
 
@@ -102,9 +119,23 @@ class PersonController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->createPerson($person, $groupPeople);
+            // Vérifie si la personne existe déjà dans la base de données
+            $personExist = $repo->findOneBy([
+                "lastname" => $person->getLastname(),
+                "firstname" => $person->getFirstname(),
+                "birthdate" => $person->getBirthdate()
+            ]);
+            // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
+            if ($personExist) {
+                $this->addFlash(
+                    "warning",
+                    "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !"
+                );
+                return $this->redirectToRoute("person_show", ["id" => $personExist->getId()]);
+            } else {
+                $this->createPerson($person, $groupPeople);
+            }
         }
-
         return $this->render("app/person.html.twig", [
             "group_people" => $groupPeople,
             "person" => $person,
@@ -129,7 +160,7 @@ class PersonController extends AbstractController
         $rolePerson->setHead(FALSE)
             ->setCreatedAt(new \DateTime())
             ->setGroupPeople($groupPeople)
-            ->setRole(1);
+            ->setRole(4);
         $this->manager->persist($rolePerson);
 
         $person->setCreatedAt(new \DateTime())
@@ -204,8 +235,6 @@ class PersonController extends AbstractController
      */
     public function personShow(Person $person, RolePerson $rolePerson = NULL, Request $request): Response
     {
-        // dump($person);
-
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
@@ -254,8 +283,6 @@ class PersonController extends AbstractController
         } else {
             $people = NULL;
         }
-
-        dump($people);
 
         return $this->render("app/listPeople.html.twig", [
             "controller_name" => "PersonController",

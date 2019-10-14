@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Utils\Agree;
 
 use App\Entity\Person;
-use App\Form\PersonType;
 use App\Entity\RolePerson;
 
 use App\Entity\GroupPeople;
@@ -14,7 +13,6 @@ use App\Form\GroupPeopleType;
 use App\Entity\GroupPeopleSearch;
 use App\Form\GroupPeopleSearchType;
 
-use App\Repository\PersonRepository;
 use App\Repository\RolePersonRepository;
 use App\Repository\GroupPeopleRepository;
 
@@ -26,16 +24,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class ListPeopleController extends AbstractController
+class GroupPeopleController extends AbstractController
 {
     private $manager;
     private $security;
@@ -59,7 +51,7 @@ class ListPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/list/groupPeople", name="list_groups_people")
+     * @Route("/list/group_people", name="list_groups_people")
      * @return Response
      */
     public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = NULL, Request $request, PaginatorInterface $paginator): Response
@@ -143,9 +135,15 @@ class ListPeopleController extends AbstractController
     }
 
     /**
+     * Retire la personne du groupe
+     * 
      * @Route("/group/{id}/person/remove-{person_id}_{role_person_id}_{_token}", name="remove_person", methods="GET")
      * @ParamConverter("rolePerson", options={"id" = "role_person_id"})
      * @ParamConverter("person", options={"id" = "person_id"})
+     * @param GroupPeople $groupPeople
+     * @param RolePerson $rolePerson
+     * @param Request $request
+     * @return Response
      */
     public function removePerson(GroupPeople $groupPeople, RolePerson $rolePerson, Person $person, Request $request)
     {
@@ -156,17 +154,26 @@ class ListPeopleController extends AbstractController
             $this->manager->persist($groupPeople);
             $this->manager->flush();
 
-            $this->addFlash(
-                "warning",
-                $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage."
-            );
+            // $this->addFlash(
+            //     "warning",
+            //     $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage."
+            // );
+
+            return $this->json([
+                "code" => 200,
+                "result" => $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage."
+            ], 200);
         } else {
-            $this->addFlash(
-                "danger",
-                "Une erreur s'est produite."
-            );
+            // $this->addFlash(
+            //     "danger",
+            //     "Une erreur s'est produite."
+            // );
+            return $this->json([
+                "code" => 404,
+                "result" => "Une erreur s'est produite."
+            ], 404);
         }
-        return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+        // return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
     }
 
     // Met à jour le le nombre de personnes indiqué dans le ménage

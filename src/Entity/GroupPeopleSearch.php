@@ -70,8 +70,7 @@ class GroupPeopleSearch
 
 
     public function __construct()
-    {
-    }
+    { }
 
     /**
      * @return string|null
@@ -118,11 +117,11 @@ class GroupPeopleSearch
         return $this;
     }
 
-    public function getGenderType() 
+    public function getGenderType()
     {
         return self::GENDER[$this->gender];
     }
-    
+
     public function getRole(): ?int
     {
         return $this->role;
@@ -135,10 +134,10 @@ class GroupPeopleSearch
         return $this;
     }
 
-    public function listRole() 
+    public function listRole()
     {
         return self::ROLE[$this->role];
-    }    
+    }
 
     public function getHead(): ?bool
     {
@@ -152,10 +151,10 @@ class GroupPeopleSearch
         return $this;
     }
 
-    public function listHead() 
+    public function listHead()
     {
         return self::HEAD[$this->head];
-    }    
+    }
 
     public function getFamilyTypology(): ?int
     {
@@ -172,7 +171,7 @@ class GroupPeopleSearch
         $this->familyTypology = $familyTypology;
 
         return $this;
-    }  
+    }
 
     public function getNbPeople(): ?int
     {
@@ -184,5 +183,5 @@ class GroupPeopleSearch
         $this->nbPeople = $nbPeople;
 
         return $this;
-    }    
+    }
 }

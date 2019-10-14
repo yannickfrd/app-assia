@@ -40,14 +40,22 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)   
-     * @Assert\Length(max=50,maxMessage="Le nom est trop long (50 caractères max.).")
-     */
+     * @Assert\Length(
+     * min=2, 
+     * max=50,
+     * minMessage="Le nom est trop court (2 caractères min).", 
+     * maxMessage="Le nom est trop long (50 caractères max).")      
+     * */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le nom ne peut être vide.")
-     * @Assert\Length(max=50,maxMessage="Le prénom est trop long (50 caractères max).")     
+     * @Assert\Length(
+     * min=2, 
+     * max=50,
+     * minMessage="Le prénom est trop count (2 caractères min).", 
+     * maxMessage="Le prénom est trop long (50 caractères max).")     
      */
     private $firstname;
 
