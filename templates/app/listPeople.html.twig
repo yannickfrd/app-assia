@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% form_theme form "bootstrap_4_layout.html.twig" %}
+{% if form_role_person is defined %}
+{% form_theme form_role_person "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% endif %}
 
 {% block title %}
 {% if group_people is defined %}Rechercher une personne
@@ -67,7 +70,7 @@
 
         {% if people %}
 
-        {% if group_people %}
+        {% if group_people is defined %}
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
@@ -117,10 +120,12 @@
                     {% for person in people %}
                     <tr>
                         <th scope="row">
-                            {% if group_people %}
+                            {% if group_people is defined %}
                             <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
-                               data-placement="bottom" title="Ajouter la personne au ménage"><i class="fas fa-plus-square fa-2x"></i>
-                            </a> {# class="" data-toggle="modal" data-target="#modal-block" #}
+                                class="js-add-person" data-toggle="modal" data-target="#modal-block"
+                                data-placement="bottom" title="Ajouter la personne au ménage">
+                                <i class="fas fa-plus-square fa-2x"></i>
+                            </a>
                             {% else %}
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom"
@@ -154,7 +159,7 @@
             {{ knp_pagination_render(people) }}
         </div>
 
-        {% if group_people %}
+        {% if group_people is defined %}
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
@@ -167,6 +172,33 @@
 {% endif %}
 
 </div>
+
+{% if form_role_person is defined %}
+<div class="modal fade" id="modal-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Demande de confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form_role_person) }}
+            <div class="modal-body">
+                <p>Avant d'ajouter la persone au ménage, merci de préciser son rôle dans le groupe.</p>
+                {{ form_row(form_role_person.role) }}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="js-btn-confirm" class="btn btn-primary">Ajouter la personne</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+            {{ form_end(form_role_person, {"render_rest": false}) }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cette personne au ménage ?{% endblock %}
@@ -174,3 +206,7 @@
 {% block modal_confirm %}Ajouter la personne{% endblock %}
 {% block modal_cancel %}Annuler{% endblock %}
 {% block modal_alert %}primary{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset("js/addPerson.js") }}"></script>
+{% endblock javascripts %}

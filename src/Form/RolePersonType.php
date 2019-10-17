@@ -18,7 +18,7 @@ class RolePersonType extends FormType
             ->add('head', CheckBoxType::class, [
                 "label" => false,
                 "required" => false,
-                'label_attr'=> [
+                'label_attr' => [
                     "class" => "custom-control-label",
                     "name" => ""
                 ],
@@ -29,8 +29,7 @@ class RolePersonType extends FormType
             ->add("role", ChoiceType::class, [
                 "choices" => $this->getChoices(RolePerson::ROLE),
             ])
-            ->add("person", PersonType::class)
-        ;
+            ->add("person", PersonType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

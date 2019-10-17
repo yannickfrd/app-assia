@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
+use DateTime;
+use App\Utils\Agree;
 use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-use App\Entity\PersonSearch;
-
-use App\Form\PersonSearchMinType;
 use App\Form\PersonType;
 
-use App\Utils\Agree;
+use App\Entity\RolePerson;
+use App\Entity\GroupPeople;
 
+use App\Entity\PersonSearch;
+use App\Form\RolePersonType;
+use App\Form\PersonSearchMinType;
 use App\Repository\PersonRepository;
 use App\Repository\RolePersonRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -23,6 +24,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -44,64 +49,93 @@ class PersonController extends AbstractController
      * Permet de rechercher une personne
      * 
      * @Route("/list/people", name="list_people")
-     * @Route("/group/{id}/search/person", name="group_search_person")
      * @Route("/new_support/search/person", name="new_support_search_person")
      * @return Response
      */
-    public function listPeople(PaginatorInterface $paginator, Request $request, PersonSearch $personSearch = NULL, GroupPeople $groupPeople = NULL): Response
+    public function listPeople(Request $request, PersonSearch $personSearch = null, PaginatorInterface $paginator): Response
     {
         $personSearch = new PersonSearch();
 
         $form = $this->createForm(PersonSearchMinType::class, $personSearch);
         $form->handleRequest($request);
 
-        return $this->pagination($personSearch, $request, $groupPeople, $form, $paginator);
+        $search = $request->query->get("search");
+
+        if ($request->query->all()) {
+            $people =  $paginator->paginate(
+                $this->repo->findAllPeopleQuery($personSearch, $search),
+                $request->query->getInt("page", 1), // page number
+                20 // limit per page
+            );
+            $people->setPageRange(5);
+            $people->setCustomParameters([
+                "align" => "right", // alignement de la pagination
+            ]);
+        }
+
+        return $this->render("app/listPeople.html.twig", [
+            // "controller_name" => "PersonController",
+            "people" => $people ?? null,
+            "personSearch" => $personSearch,
+            "form" => $form->createView(),
+            "current_menu" => "list_people"
+        ]);
+        // return $this->pagination($personSearch, $request, $form, $paginator);
     }
 
     /**
-     * Ajoute une personne dans une groupe ménage
+     * Permet de rechercher une personne pour l'ajouter dans un group ménage
      * 
-     * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
-     * @ParamConverter("person", options={"id" = "person_id"})
-     * @param GroupPeople $groupPeople
-     * @param Person $person
-     * @param RolePerson $rolePerson
-     * @param RolePersonRepository $repo
+     * @Route("/group/{id}/search/person", name="group_search_person")
      * @return Response
      */
-    public function addPersonInGroup(GroupPeople $groupPeople, Person $person, RolePerson $rolePerson = NULL, RolePersonRepository $repo): Response
+    public function groupSearchPerson(Request $request, PersonSearch $personSearch = null, GroupPeople $groupPeople = null, RolePerson $rolePerson = null, PaginatorInterface $paginator): Response
     {
-        // Vérifie si la personne est déjà associée à ce groupe
-        $personExist = $repo->findOneBy([
-            "person" => $person->getId(),
-            "groupPeople" => $groupPeople->getId()
-        ]);
+        $personSearch = new PersonSearch();
 
-        // Si elle n'est pas associée, ajout de la liaison, sinon ne fait rien
-        if (!$personExist) {
-            $rolePerson = new RolePerson;
-            $rolePerson
-                ->setHead(FALSE)
-                ->setCreatedAt(new \DateTime())
-                ->setGroupPeople($groupPeople)
-                ->setRole(5);
+        $formRolePerson = null;
 
-            $person->addRolesPerson($rolePerson);
-
-            $this->manager->persist($rolePerson);
-            $this->manager->flush();
-
-            $this->addFlash(
-                "success",
-                $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
-            );
-        } else {
-            $this->addFlash(
-                "warning",
-                $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au ménage."
-            );
+        if ($groupPeople) {
+            $formRolePerson = $this->createFormBuilder($rolePerson)
+                ->add("role", ChoiceType::class, [
+                    "choices" => $this->getChoices(RolePerson::ROLE),
+                ])
+                ->getForm();
         }
-        return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+
+        $form = $this->createForm(PersonSearchMinType::class, $personSearch);
+        $form->handleRequest($request);
+
+        if ($request->query->all()) {
+            $people =  $paginator->paginate(
+                $this->repo->findAllPeopleQuery($personSearch, $search = null),
+                $request->query->getInt("page", 1), // page number
+                20 // limit per page
+            );
+            $people->setPageRange(5);
+            $people->setCustomParameters([
+                "align" => "right", // alignement de la pagination
+            ]);
+        }
+
+        return $this->render("app/listPeople.html.twig", [
+            // "controller_name" => "PersonController",
+            "group_people" => $groupPeople,
+            "people" => $people ?? null,
+            "personSearch" => $personSearch,
+            "form" => $form->createView(),
+            "form_role_person" => $formRolePerson->createView(),
+            "current_menu" => "list_people"
+        ]);
+        // return $this->pagination($personSearch, $request, $groupPeople, $form,  $formRolePerson, $paginator);
+    }
+
+    public function getchoices($const)
+    {
+        foreach ($const as $key => $value) {
+            $output[$value] = $key;
+        }
+        return $output;
     }
 
     /**
@@ -111,7 +145,7 @@ class PersonController extends AbstractController
      * @ParamConverter("person", options={"id" = "person_id"})
      * @return Response
      */
-    public function newPerson(Person $person = NULL, GroupPeople $groupPeople = NULL, PersonRepository $repo, Request $request): Response
+    public function newPerson(Person $person = null, GroupPeople $groupPeople = null, PersonRepository $repo, Request $request): Response
     {
         $person = new Person();
 
@@ -140,7 +174,7 @@ class PersonController extends AbstractController
             "group_people" => $groupPeople,
             "person" => $person,
             "form" => $form->createView(),
-            "edit_mode" => $person->getId() != NULL
+            "edit_mode" => $person->getId() != null
         ]);
     }
 
@@ -152,7 +186,7 @@ class PersonController extends AbstractController
      * @param RolePerson $rolePerson
      * @return Response
      */
-    protected function createPerson(Person $person, GroupPeople $groupPeople, RolePerson $rolePerson = NULL): Response
+    protected function createPerson(Person $person, GroupPeople $groupPeople, RolePerson $rolePerson = null): Response
     {
         $user = $this->security->getUser();
 
@@ -190,32 +224,27 @@ class PersonController extends AbstractController
      * 
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
+     * @param GroupPeople $groupPeople
+     * @param Person $person
+     * @param Request $request
      * @return Response
      */
-    public function editPerson(GroupPeople $groupPeople = NULL, Person $person, RolePerson $rolePerson = NULL, Request $request): Response
+    public function editPerson(GroupPeople $groupPeople, Person $person, Request $request): Response
     {
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->security->getUser();
-
-            // $rolePerson ->setHead(FALSE)
-            //             ->setRole();
-            // $this->manager->persist($rolePerson);
 
             $person->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-            $this->manager->persist($person);
+                ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
-            $this->addFlash(
-                "success",
-                "Les modifications ont été enregistrées."
-            );
+            $this->addFlash("success", "Les modifications ont été enregistrées.");
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
 
-            return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+            $this->addFlash("danger", "Les informations saisies sont invalides.");
         }
 
         return $this->render("app/person.html.twig", [
@@ -227,30 +256,61 @@ class PersonController extends AbstractController
     }
 
     /**
+     * Met à jour les informations d'une personne via Ajax
+     * 
+     * @Route("/person/update-{id}", name="update_person", methods="GET|POST")
+     * @param Person $person
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @return Response
+     */
+    public function updatePerson(Person $person, Request $request, ValidatorInterface $validator): Response
+    {
+        $form = $this->createForm(PersonType::class, $person);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $person->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
+
+            $this->manager->flush();
+
+            $alert = "success";
+            $msg[] = "Les modifications ont été renregistrées.";
+        } else {
+            $alert = "danger";
+            $errors = $validator->validate($form);
+            foreach ($errors as $error) {
+                $msg[] = $error->getMessage();
+            }
+        }
+        return $this->json([
+            "code" => 200,
+            "alert" => $alert,
+            "msg" => $msg,
+        ], 200);
+    }
+
+    /**
      * Voir la fiche de la personne
      * 
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @Route("/person/{id}", name="person_show", methods="GET|POST")
      *  @return Response
      */
-    public function personShow(Person $person, RolePerson $rolePerson = NULL, Request $request): Response
+    public function personShow(Person $person, RolePerson $rolePerson = null, Request $request): Response
     {
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->security->getUser();
 
             $person->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-            $this->manager->persist($person);
+                ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
-            $this->addFlash(
-                "success",
-                "Les modifications ont été enregistrées."
-            );
+            $this->addFlash("success", "Les modifications ont été enregistrées.");
         }
 
         return $this->render("app/person.html.twig", [
@@ -262,43 +322,13 @@ class PersonController extends AbstractController
 
 
     // Met en place la pagination du tableau et affiche le rendu
-    protected function pagination($personSearch, $request, $groupPeople, $form, $paginator)
-    {
-        if ($request->query->get("search")) {
-            $search = $request->query->get("search");
-        } else {
-            $search = NULL;
-        }
-
-        if ($request->query->all()) {
-            $people =  $paginator->paginate(
-                $this->repo->findAllPeopleQuery($personSearch, $search),
-                $request->query->getInt("page", 1), // page number
-                20 // limit per page
-            );
-            $people->setPageRange(3);
-            $people->setCustomParameters([
-                "align" => "right", // alignement de la pagination
-            ]);
-        } else {
-            $people = NULL;
-        }
-
-        return $this->render("app/listPeople.html.twig", [
-            "controller_name" => "PersonController",
-            "group_people" => $groupPeople,
-            "people" => $people,
-            "personSearch" => $personSearch,
-            "form" => $form->createView(),
-            "current_menu" => "list_people"
-        ]);
-    }
+    protected function pagination($personSearch, $request, $groupPeople, $form, $formRolePerson = null, $paginator)
+    { }
 
     /**
      * Permet de trouver les personnes par le mode de recherche instannée
      *
      * @Route("/search/person", name="search_person")
-     * 
      * @param Person $person
      * @param Request $request
      * @param PersonRepository $repo
@@ -309,7 +339,7 @@ class PersonController extends AbstractController
         if ($request->query->get("search")) {
             $search = $request->query->get("search");
         } else {
-            $search = NULL;
+            $search = null;
         }
 
         $people = $this->repo->findPeopleByResearch($search);
@@ -339,7 +369,7 @@ class PersonController extends AbstractController
     // /**
     //  * @Route("/search/person", name="person_search")
     //  */
-    // public function personSearch(PersonSearch $personSearch = NULL, Request $request) 
+    // public function personSearch(PersonSearch $personSearch = null, Request $request) 
     // {
     //     $personSearch = new PersonSearch();
 

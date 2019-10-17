@@ -29,19 +29,16 @@ class SearchPerson {
         let valueSearch = this.searchElt.value;
         if (valueSearch.length >= this.lengthSearch) {
             let url = "/search/person?search=" + valueSearch;
-            ajaxRequest.init("GET", url, true);
-            let response = ajaxRequest.response();
-            response.addEventListener("loadend", function () {
-                this.addResults(JSON.parse(response.response));
-            }.bind(this));
+            ajaxRequest.init("GET", url, this.addResults.bind(this), true);
         }
     }
 
     // Affiche les résultats de la rêquête
-    addResults(response) {
+    addResults(data) {
+        let dataJSON = JSON.parse(data);
         this.resultsSearchElt.innerHTML = "";
-        if (response.nb_results > 0) {
-            this.addItem(response);
+        if (dataJSON.nb_results > 0) {
+            this.addItem(dataJSON);
         } else {
             this.noResult();
         }
@@ -50,8 +47,8 @@ class SearchPerson {
     }
 
     // Ajoute un élément à la liste des résultats
-    addItem(response) {
-        response.results.forEach(person => {
+    addItem(dataJSON) {
+        dataJSON.results.forEach(person => {
             let aElt = document.createElement("a");
             aElt.textContent = person.lastname + " " + person.firstname;
             aElt.href = "/person/" + person.id;

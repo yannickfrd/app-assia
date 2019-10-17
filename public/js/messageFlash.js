@@ -2,7 +2,7 @@
 class MessageFlash {
 
     constructor(alert, message) {
-        this.msgFlashElt = document.getElementById("msg-flash");
+        this.msgFlashContentElt = document.getElementById("js-msg-flash-content");
         this.alert = alert;
         this.message = message;
         this.msg = null;
@@ -12,7 +12,7 @@ class MessageFlash {
     // Initialise le message
     init() {
         this.msg = `
-            <div id="msg-flash" class="alert ${this.alert} alert-dismissible mb-3 fade show" role="alert">
+            <div id="js-msg-flash" class="alert alert-${this.alert} alert-dismissible mb-3 fade show" role="alert">
                 <span>${this.message}</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -24,6 +24,6 @@ class MessageFlash {
 
     // Ajoute le message flash dans la div
     addMsg() {
-        this.msgFlashElt.innerHTML = this.msgFlashElt.innerHTML + this.msg;
+        this.msgFlashContentElt.innerHTML = this.msgFlashContentElt.innerHTML + this.msg;
     }
 }

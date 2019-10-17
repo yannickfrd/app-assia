@@ -8,21 +8,22 @@ use App\Entity\Person;
 use App\Entity\RolePerson;
 
 use App\Entity\GroupPeople;
+use App\Form\RolePersonType;
+
 use App\Form\GroupPeopleType;
-
 use App\Entity\GroupPeopleSearch;
+
 use App\Form\GroupPeopleSearchType;
-
 use App\Repository\RolePersonRepository;
-use App\Repository\GroupPeopleRepository;
 
+use App\Repository\GroupPeopleRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\Security\Core\Security;
-
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -39,22 +40,10 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/", name="home")
-     * @return Response
-     */
-    public function home(): Response
-    {
-        return $this->render("app/home.html.twig", [
-            "title" => "Bienvenue sur l'application de suivi social d'ESPERER 95",
-            "current_menu" => "home"
-        ]);
-    }
-
-    /**
      * @Route("/list/group_people", name="list_groups_people")
      * @return Response
      */
-    public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = NULL, Request $request, PaginatorInterface $paginator): Response
+    public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
         // $rolePeople = $repo->findAll();
         $groupPeopleSearch = new GroupPeopleSearch();
@@ -67,7 +56,7 @@ class GroupPeopleController extends AbstractController
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        $rolePeople->setPageRange(3);
+        $rolePeople->setPageRange(5);
         $rolePeople->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
@@ -85,7 +74,7 @@ class GroupPeopleController extends AbstractController
      * @Route("/group/{id}", name="group_people")
      * @return Response
      */
-    public function formGroupPeople(GroupPeople $groupPeople = NULL, Request $request, GroupPeopleRepository $repo): Response
+    public function formGroupPeople(GroupPeople $groupPeople = null, Request $request, GroupPeopleRepository $repo): Response
     {
         if (!$groupPeople) {
             $groupPeople = new GroupPeople();
@@ -94,8 +83,6 @@ class GroupPeopleController extends AbstractController
         }
 
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
-
-        dump($groupPeople);
 
         $formGroupPeople->handleRequest($request);
 
@@ -119,8 +106,6 @@ class GroupPeopleController extends AbstractController
             $groupPeople->setUpdatedAt(new \DateTime())
                 ->setUpdatedBy($user);
             $this->manager->persist($groupPeople);
-
-            $this->updateNbPeople($groupPeople);
             $this->manager->flush();
 
             return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
@@ -129,9 +114,60 @@ class GroupPeopleController extends AbstractController
         return $this->render("app/groupPeople.html.twig", [
             "group_people" => $groupPeople,
             "form" => $formGroupPeople->createView(),
-            "edit_mode" => $groupPeople->getId() != NULL,
+            "edit_mode" => $groupPeople->getId() != null,
             "current_menu" => "new_group"
         ]);
+    }
+
+    /**
+     * Ajoute une personne dans une groupe ménage
+     * 
+     * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
+     * @ParamConverter("person", options={"id" = "person_id"})
+     * @param GroupPeople $groupPeople
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     * @param RolePersonRepository $repo
+     * @return Response
+     */
+    public function addPersonInGroup(GroupPeople $groupPeople, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repo, Request $request): Response
+    {
+        // Vérifie si la personne est déjà associée à ce groupe
+        $personExist = $repo->findOneBy([
+            "person" => $person->getId(),
+            "groupPeople" => $groupPeople->getId()
+        ]);
+
+        // $formRole = $this->createForm(RolePersonType::class, $rolePerson);
+        // $formRole->handleRequest($request);
+
+        $formRole = $request->get("form");
+
+        // Si la personne n'est pas associée, ajout de la liaison, sinon ne fait rien
+        if (!$personExist) {
+            $rolePerson = new RolePerson;
+            $rolePerson
+                ->setHead(FALSE)
+                ->setCreatedAt(new \DateTime())
+                ->setGroupPeople($groupPeople)
+                ->setRole($formRole["role"]);
+
+            $person->addRolesPerson($rolePerson);
+
+            $this->manager->persist($rolePerson);
+            $this->manager->flush();
+
+            $this->addFlash(
+                "success",
+                $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
+            );
+        } else {
+            $this->addFlash(
+                "warning",
+                $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au ménage."
+            );
+        }
+        return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
     }
 
     /**
@@ -145,41 +181,33 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function removePerson(GroupPeople $groupPeople, RolePerson $rolePerson, Person $person, Request $request)
+    public function removePerson(GroupPeople $groupPeople, RolePerson $rolePerson, Person $person, Request $request): Response
     {
+        // Vérifie si le token est valide avant de retirer la personne du groupe
         if ($this->isCsrfTokenValid("remove" . $rolePerson->getId(), $request->get("_token"))) {
-            $groupPeople->removeRolePerson($rolePerson);
+            // Compte le nombre de personnes dans le ménage
+            $nbPeople = $groupPeople->getRolePerson()->count();
+            // Vérifie que le ménage est composé de plus d'1 personne
+            if ($nbPeople == 1) {
+                return $this->msgFlash(null, "Un ménage doit être composé d'au moins une personne.", null,  200);
+            } else {
+                $groupPeople->removeRolePerson($rolePerson);
+                $groupPeople->setNbPeople($nbPeople - 1);
+                $this->manager->flush();
 
-            $this->updateNbPeople($groupPeople);
-            $this->manager->persist($groupPeople);
-            $this->manager->flush();
-
-            // $this->addFlash(
-            //     "warning",
-            //     $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage."
-            // );
-
-            return $this->json([
-                "code" => 200,
-                "result" => $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage."
-            ], 200);
+                return $this->msgFlash(200, $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage.", $nbPeople - 1, 200);
+            }
         } else {
-            // $this->addFlash(
-            //     "danger",
-            //     "Une erreur s'est produite."
-            // );
-            return $this->json([
-                "code" => 404,
-                "result" => "Une erreur s'est produite."
-            ], 404);
+            return $this->msgFlash(null, "Une erreur s'est produite.", null,  200);
         }
-        // return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
     }
 
-    // Met à jour le le nombre de personnes indiqué dans le ménage
-    protected function updateNbPeople(GroupPeople $groupPeople)
+    public function msgFlash($code, $msg, $data, $status): Response
     {
-        $nbPerson = count($groupPeople->getRolePerson());
-        $groupPeople->setNbPeople($nbPerson);
+        return $this->json([
+            "code" => $code,
+            "msg" => $msg,
+            "data" => $data
+        ], $status);
     }
 }

@@ -1,3 +1,5 @@
+{# {% extends "msgFlash.html.twig" %} #}
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -37,26 +39,25 @@
                     aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav mr-auto">
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == " home" %} active {% endif %}">
+                            class="nav-item {% if current_menu is defined and current_menu == "home" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("home") }}">
                                 <span class="fas fa-home"></span>
                                 Accueil<span class="sr-only">(Accueil)</span>
                             </a>
                         </li>
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == " list_people" %} active {% endif %}">
+                            class="nav-item {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>
                         </li>
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == " list_groups_people" %} active {% endif %}">
+                            class="nav-item {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("list_groups_people") }}">Suivis</a>
                         </li>
                         <li
-                            class="nav-item {% if current_menu is defined and current_menu == " new_group" %} active {% endif %}">
+                            class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">
                             <a class="nav-link" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
                         </li>
                     </ul>
@@ -91,22 +92,10 @@
             </nav>
         </header>
 
-        <div class="container">
-            {# Message en session flash #}
-            {% if app.request.hasPreviousSession %}
-            {% for label, messages in app.flashes %}
-            {% for message in messages %}
-            <div id="msg-profil" class="alert alert-{{ label }} alert-dismissible mb-3 fade show" role="alert">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {% endfor %}
-            {% endfor %}
-            {% endif %}
-        </div>
-        {% block body %}{% endblock %}
+        {% block body %}
+
+
+        {% endblock %}
 
         <!-- Modal -->
         <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation"

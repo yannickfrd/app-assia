@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GroupPeople
 {
     public const FAMILY_TYPOLOGY = [
-        NULL => "",
+        null => "",
         1 => "Femme seule",
         2 => "Homme seul",
         3 => "Couple sans enfant",
@@ -46,7 +46,7 @@ class GroupPeople
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
-    
+
     /**
      * @ORM\Column(type="datetime")
      */
@@ -76,7 +76,7 @@ class GroupPeople
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="groupPeopleUpdated")
      */
     private $updatedBy;
-    
+
     public function __construct()
     {
         $this->socialSupports = new ArrayCollection();
@@ -122,14 +122,14 @@ class GroupPeople
     public function getComment(): ?string
     {
         return $this->comment;
-    }    
+    }
 
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
 
         return $this;
-    }    
+    }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -146,15 +146,15 @@ class GroupPeople
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
-    }    
+    }
 
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-        
+
         return $this;
-    }    
-       
+    }
+
     /**
      * @return Collection|SocialSupport[]
      */

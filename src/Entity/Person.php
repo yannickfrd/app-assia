@@ -54,7 +54,7 @@ class Person
      * @Assert\Length(
      * min=2, 
      * max=50,
-     * minMessage="Le prénom est trop count (2 caractères min).", 
+     * minMessage="Le prénom est trop court (2 caractères min).", 
      * maxMessage="Le prénom est trop long (50 caractères max).")     
      */
     private $firstname;
