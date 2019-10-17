@@ -5,26 +5,26 @@ namespace App\Controller;
 use App\Utils\Agree;
 
 use App\Entity\Person;
-use App\Entity\RolePerson;
 
+use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-use App\Form\RolePersonType;
 
 use App\Form\GroupPeopleType;
+
 use App\Entity\GroupPeopleSearch;
-
 use App\Form\GroupPeopleSearchType;
-use App\Repository\RolePersonRepository;
 
+use App\Repository\RolePersonRepository;
 use App\Repository\GroupPeopleRepository;
 use Knp\Component\Pager\PaginatorInterface;
+
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -78,21 +78,15 @@ class GroupPeopleController extends AbstractController
     {
         if (!$groupPeople) {
             $groupPeople = new GroupPeople();
-        } else {
-            // $this->session->set("groupPeople", $groupPeople);
         }
 
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
-
         $formGroupPeople->handleRequest($request);
 
         if ($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
-
-            $user = $this->security->getUser();
-
             if (!$groupPeople->getId()) {
                 $groupPeople->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($user);
+                    ->setCreatedBy($this->security->getUser());
                 $this->addFlash(
                     "success",
                     "Le ménage a été enregistré."
@@ -104,7 +98,7 @@ class GroupPeopleController extends AbstractController
                 );
             }
             $groupPeople->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
+                ->setUpdatedBy($this->security->getUser());
             $this->manager->persist($groupPeople);
             $this->manager->flush();
 
@@ -138,37 +132,57 @@ class GroupPeopleController extends AbstractController
             "groupPeople" => $groupPeople->getId()
         ]);
 
-        // $formRole = $this->createForm(RolePersonType::class, $rolePerson);
-        // $formRole->handleRequest($request);
+        $rolePerson = new RolePerson;
 
-        $formRole = $request->get("form");
+        $formRolePerson = $this->createFormBuilder($rolePerson)
+            ->add("role", ChoiceType::class, [
+                "choices" => $this->getChoices(RolePerson::ROLE),
+            ])
+            ->getForm();
 
-        // Si la personne n'est pas associée, ajout de la liaison, sinon ne fait rien
-        if (!$personExist) {
-            $rolePerson = new RolePerson;
-            $rolePerson
-                ->setHead(FALSE)
-                ->setCreatedAt(new \DateTime())
-                ->setGroupPeople($groupPeople)
-                ->setRole($formRole["role"]);
+        $formRolePerson->handleRequest($request);
 
-            $person->addRolesPerson($rolePerson);
+        if ($formRolePerson->isSubmitted() && $formRolePerson->isValid()) {
+            // Si la personne n'est pas associée, ajout de la liaison, sinon ne fait rien
+            if (!$personExist) {
+                $rolePerson
+                    ->setHead(false)
+                    ->setGroupPeople($groupPeople)
+                    ->setCreatedAt(new \DateTime());
 
-            $this->manager->persist($rolePerson);
-            $this->manager->flush();
+                $person->addRolesPerson($rolePerson);
 
-            $this->addFlash(
-                "success",
-                $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
-            );
+                $this->manager->persist($rolePerson);
+                $this->manager->flush();
+
+                $this->addFlash(
+                    "success",
+                    $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
+                );
+            } else {
+                $this->addFlash(
+                    "warning",
+                    $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au ménage."
+                );
+            }
         } else {
             $this->addFlash(
-                "warning",
-                $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au ménage."
+                "danger",
+                "Une erreur s'est produite."
             );
         }
         return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
     }
+
+
+    public function getchoices($const)
+    {
+        foreach ($const as $key => $value) {
+            $output[$value] = $key;
+        }
+        return $output;
+    }
+
 
     /**
      * Retire la personne du groupe

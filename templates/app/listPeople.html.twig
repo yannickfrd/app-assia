@@ -188,6 +188,7 @@
             <div class="modal-body">
                 <p>Avant d'ajouter la persone au ménage, merci de préciser son rôle dans le groupe.</p>
                 {{ form_row(form_role_person.role) }}
+                {{ form_row(form_role_person._token) }}
             </div>
             <div class="modal-footer">
                 <button type="submit" id="js-btn-confirm" class="btn btn-primary">Ajouter la personne</button>
