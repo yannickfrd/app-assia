@@ -23,6 +23,7 @@ class RegistrationType extends AbstractType
             ->add("lastname", NULL, [
                 "label" => "Nom",
                 "attr" => [
+                    "class" => "text-uppercase",
                     "placeholder" => "Nom"
                 ]
             ])
@@ -51,8 +52,7 @@ class RegistrationType extends AbstractType
                     "class" => "js-password",
                     "placeholder" => "Confirmation du mot de passe",
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

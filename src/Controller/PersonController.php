@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use DateTime;
 use App\Utils\Agree;
 use App\Entity\Person;
 use App\Form\PersonType;
@@ -15,7 +14,6 @@ use App\Form\RolePersonType;
 use App\Form\PersonSearchMinType;
 use App\Form\RolePersonGroupType;
 use App\Repository\PersonRepository;
-use App\Repository\RolePersonRepository;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +23,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

@@ -96,7 +96,7 @@
                 <thead class="bg-dark">
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
-                        <th scope="col" class="align-middle th-width-150px text-light ">
+                        <th scope="col" class="align-middle th-width-150px text-light text-uppercase">
                             {{ knp_pagination_sortable(people, "Nom", "p.lastname") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
@@ -138,7 +138,7 @@
                         </th>
                         <td>
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
-                                class="text-primary font-weight-bold">{{ person.lastname }}</a>
+                                class="text-primary text-uppercase font-weight-bold">{{ person.lastname }}</a>
                         </td>
                         <td>{{ person.firstname }}</td>
                         <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />

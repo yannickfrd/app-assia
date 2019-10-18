@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\PersonSearch;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,37 +15,38 @@ class PersonSearchType extends FormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add("lastname", NULL, [
-            "attr" => [
-                "placeholder" => "Nom"
-            ]
-        ])
-        ->add("firstname", NULL, [
-            "attr" => [
-                "placeholder" => "Prénom"
-            ]
-        ])
-        ->add("birthdate", DateType::class, [
-            "widget" => "single_text",
-            "html5" => false,
-            "format" => "dd/MM/yyyy",
-            "attr" => [
-                "class" => "max-w-180 js-datepicker",
-                "placeholder" => "jj/mm/aaaa",
-                "autocomplete" => "off"
-            ],
-            "required" => false
-        ])
-        ->add("gender", ChoiceType::class, [
-            "required" => false,
-            'placeholder' => "-- Sélectionner --",
-            "attr" => [
-                "class" => "col-md-12"
-            ],
-            "choices" => $this->getchoices(PersonSearch::GENDER),
-        ])
-        ->add("phone")
-        ->add("email");
+            ->add("lastname", NULL, [
+                "attr" => [
+                    "class" => "text-uppercase",
+                    "placeholder" => "Nom"
+                ]
+            ])
+            ->add("firstname", NULL, [
+                "attr" => [
+                    "placeholder" => "Prénom"
+                ]
+            ])
+            ->add("birthdate", DateType::class, [
+                "widget" => "single_text",
+                "html5" => false,
+                "format" => "dd/MM/yyyy",
+                "attr" => [
+                    "class" => "max-w-180 js-datepicker",
+                    "placeholder" => "jj/mm/aaaa",
+                    "autocomplete" => "off"
+                ],
+                "required" => false
+            ])
+            ->add("gender", ChoiceType::class, [
+                "required" => false,
+                'placeholder' => "-- Sélectionner --",
+                "attr" => [
+                    "class" => "col-md-12"
+                ],
+                "choices" => $this->getchoices(PersonSearch::GENDER),
+            ])
+            ->add("phone")
+            ->add("email");
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -60,7 +60,8 @@ class PersonSearchType extends FormType
         ]);
     }
 
-    public function getBlockPrefix() {
+    public function getBlockPrefix()
+    {
         return "";
     }
 }

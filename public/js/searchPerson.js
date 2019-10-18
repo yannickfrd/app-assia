@@ -50,9 +50,9 @@ class SearchPerson {
     addItem(dataJSON) {
         dataJSON.results.forEach(person => {
             let aElt = document.createElement("a");
-            aElt.textContent = person.lastname + " " + person.firstname;
+            aElt.innerHTML = "<span class='text-uppercase'>" + person.lastname + "</span> " + person.firstname;
             aElt.href = "/person/" + person.id;
-            aElt.className = "list-group-item list-group-item-action font-size-10 pl-3 pr-1 py-1";
+            aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 font-size-10";
             this.resultsSearchElt.appendChild(aElt);
             aElt.addEventListener("click", function () {
                 aElt.classList.add("active");

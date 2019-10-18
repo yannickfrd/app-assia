@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Person;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,6 +18,7 @@ class PersonType extends FormType
             ->add("lastname", NULL, [
                 // "label" => "Nom",
                 "attr" => [
+                    "class" => "text-uppercase",
                     "placeholder" => "Nom"
                 ]
             ])

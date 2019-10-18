@@ -73,7 +73,7 @@
                             title="N° d'identification du ménage">
                             {{ knp_pagination_sortable(role_people, "ID", "g.id") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-150px">
+                        <th scope="col" class="align-middle th-width-150px text-uppercase">
                             {{ knp_pagination_sortable(role_people, "Nom", "p.lastname") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px">
@@ -113,7 +113,8 @@
                         </td>
                         <td>
                             <a href="{% if person.groupPeople %}{{ path('group_people', {'id':person.groupPeople.id}) }}
-                            {% endif %}" class="text-primary font-weight-bold">{{ person.person.lastname }}</a>
+                            {% endif %}"
+                                class="text-primary text-uppercase font-weight-bold">{{ person.person.lastname }}</a>
                         </td>
                         <td>{{ person.person.firstname }} {% if  person.head %}<span
                                 class="badge badge-secondary badge-pill" data-placement="bottom"

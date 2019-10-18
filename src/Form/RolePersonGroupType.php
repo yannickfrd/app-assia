@@ -9,7 +9,6 @@ use App\Form\GroupPeopleType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class RolePersonGroupType extends FormType
 {
