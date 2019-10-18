@@ -135,9 +135,13 @@
                 </div>
             </div>
         </div>
-        <p><a href="{{ path("group_search_person", {"id":group_people.id}) }}" class="float-right text-primary"><span
-                    class="fas fa-plus-square"></span>
-                Ajouter une personne</a></p><br />
+        <p class="float-right"><a href=" {{ path("group_search_person", {"id":group_people.id}) }}"
+                class="text-primary">
+                <span class="fas fa-plus-square"></span> Ajouter une personne</a>
+            <a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="pl-2 text-secondary">
+                <span class="fas fa-plus-square"></span> Créer une nouvelle personne</a>
+        </p>
+        <br />
 
     </section>
     {% endif %}

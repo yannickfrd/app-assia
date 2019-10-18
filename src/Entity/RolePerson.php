@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RolePersonRepository")
+ * @UniqueEntity(
+ *     fields={"person", "groupPeople"},
+ *     errorPath="person",
+ *     message="Cette personne est déjà dans le groupe.")
  */
 class RolePerson
 {
@@ -115,7 +118,7 @@ class RolePerson
         return $this;
     }
 
-    public function listRole() 
+    public function listRole()
     {
         return self::ROLE[$this->role];
     }

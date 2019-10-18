@@ -13,17 +13,18 @@ use App\Entity\GroupPeople;
 use App\Entity\PersonSearch;
 use App\Form\RolePersonType;
 use App\Form\PersonSearchMinType;
+use App\Form\RolePersonGroupType;
 use App\Repository\PersonRepository;
 use App\Repository\RolePersonRepository;
-use Knp\Component\Pager\PaginatorInterface;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
+
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -141,18 +142,102 @@ class PersonController extends AbstractController
     /**
      * Crée une nouvelle personne
      * 
-     * @Route("/group/{id}/person/new", name="create_person", methods="GET|POST")
-     * @ParamConverter("person", options={"id" = "person_id"})
+     * @Route("/person/new", name="person_new", methods="GET|POST")
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     * @param GroupPeople $groupPeople
+     * @param PersonRepository $repo
+     * @param Request $request
      * @return Response
      */
-    public function newPerson(Person $person = null, GroupPeople $groupPeople = null, PersonRepository $repo, Request $request): Response
+    public function newPerson(Person $person = null, RolePerson $rolePerson = null, GroupPeople $groupPeople = null, PersonRepository $repo, Request $request): Response
     {
         $person = new Person();
+        $rolePerson = new RolePerson();
+        $groupPeople = new GroupPeople();
 
-        $form = $this->createForm(PersonType::class, $person);
+        $form = $this->createForm(RolePersonGroupType::class, $rolePerson);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $person = $rolePerson->getPerson();
+            $groupPeople = $rolePerson->getGroupPeople();
+
+            dump($person);
+            dump($rolePerson);
+            dump($groupPeople);
+            // die;
+
+
+            // Vérifie si la personne existe déjà dans la base de données
+            $personExist = $repo->findOneBy([
+                "lastname" => $person->getLastname(),
+                "firstname" => $person->getFirstname(),
+                "birthdate" => $person->getBirthdate()
+            ]);
+            // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
+            if ($personExist) {
+                $this->addFlash(
+                    "warning",
+                    "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !"
+                );
+            } else {
+
+                $groupPeople->setCreatedAt(new \DateTime())
+                    ->setCreatedBy($this->security->getUser())
+                    ->setUpdatedAt(new \DateTime())
+                    ->setUpdatedBy($this->security->getUser());
+                $this->manager->persist($groupPeople);
+
+                $rolePerson->setHead(true)
+                    ->setCreatedAt(new \DateTime())
+                    ->setGroupPeople($groupPeople);
+                $this->manager->persist($rolePerson);
+
+                $person->setCreatedAt(new \DateTime())
+                    ->setCreatedBy($this->security->getUser())
+                    ->setUpdatedAt(new \DateTime())
+                    ->setUpdatedBy($this->security->getUser())
+                    ->addRolesPerson($rolePerson);
+                $this->manager->persist($person);
+
+                $this->manager->flush();
+
+                $this->addFlash(
+                    "success",
+                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe ménage."
+                );
+                return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+            }
+        }
+        return $this->render("app/personTest.html.twig", [
+            "person" => $person,
+            "form" => $form->createView(),
+        ]);
+    }
+
+
+    /**
+     * Crée une nouvelle personne dans un group existant
+     * 
+     * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     * @param GroupPeople $groupPeople
+     * @param PersonRepository $repo
+     * @param Request $request
+     * @return Response
+     */
+    public function newPersonInGroup(Person $person = null, RolePerson $rolePerson = null, GroupPeople $groupPeople, PersonRepository $repo, Request $request): Response
+    {
+        $person = new Person();
+        $rolePerson = new RolePerson();
+
+        $form = $this->createForm(RolePersonType::class, $rolePerson);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $person = $rolePerson->getPerson();
             // Vérifie si la personne existe déjà dans la base de données
             $personExist = $repo->findOneBy([
                 "lastname" => $person->getLastname(),
@@ -167,15 +252,16 @@ class PersonController extends AbstractController
                 );
                 return $this->redirectToRoute("person_show", ["id" => $personExist->getId()]);
             } else {
-                $this->createPerson($person, $groupPeople);
+                $this->createPerson($person, $groupPeople, $rolePerson);
+                return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
             }
+        } else {
+            return $this->render("app/personTest.html.twig", [
+                "group_people" => $groupPeople,
+                "person" => $person,
+                "form" => $form->createView(),
+            ]);
         }
-        return $this->render("app/person.html.twig", [
-            "group_people" => $groupPeople,
-            "person" => $person,
-            "form" => $form->createView(),
-            "edit_mode" => $person->getId() != null
-        ]);
     }
 
     /**
@@ -184,25 +270,23 @@ class PersonController extends AbstractController
      * @param Person $person
      * @param GroupPeople $groupPeople
      * @param RolePerson $rolePerson
-     * @return Response
      */
-    protected function createPerson(Person $person, GroupPeople $groupPeople, RolePerson $rolePerson = null): Response
+    protected function createPerson(Person $person, GroupPeople $groupPeople, RolePerson $rolePerson = null)
     {
-        $user = $this->security->getUser();
-
-        $rolePerson = new RolePerson();
-        $rolePerson->setHead(FALSE)
+        $rolePerson->setHead(false)
             ->setCreatedAt(new \DateTime())
-            ->setGroupPeople($groupPeople)
-            ->setRole(4);
+            ->setGroupPeople($groupPeople);
         $this->manager->persist($rolePerson);
 
         $person->setCreatedAt(new \DateTime())
-            ->setCreatedBy($user)
+            ->setCreatedBy($this->security->getUser())
             ->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($user)
+            ->setUpdatedBy($this->security->getUser())
             ->addRolesPerson($rolePerson);
         $this->manager->persist($person);
+
+        $nbPeople = $groupPeople->getRolePerson()->count();
+        $groupPeople->setNbPeople($nbPeople + 1);
 
         $this->manager->flush();
 
@@ -210,13 +294,6 @@ class PersonController extends AbstractController
             "success",
             $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au ménage."
         );
-
-        return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
-        // return $this->redirectToRoute("person_show", [
-        //     "id" => $groupPeople->getId(), 
-        //     "person_id" => $person->getId(),
-        //     "slug" => $person->getSlug()
-        //     ]);
     }
 
     /**

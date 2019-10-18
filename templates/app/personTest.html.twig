@@ -1,0 +1,106 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+
+{% block title %}Création d'une personne{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1 class="h2 mb-3">Création d'une personne</h1>
+    <div class="mb-4"></div>
+
+    {% if group_people is defined %}
+    <div class="my-3">
+        <a href="{{ path('group_people', {'id': group_people.id}) }}" class="text-primary">
+            <span class="fas fa-users"></span>
+            Retour à la fiche du ménage</a>
+        <span class="small text-secondary">{{ group_people.getFamilyTypologyType }}
+            {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }} personnes){% endif %}
+        </span>
+        <br />
+    </div>
+    {% endif %}
+
+    <hr>
+
+    <section id="person">
+
+        {% include 'msgFlash.html.twig' %}
+        <div id="js-msg-flash-content"></div>
+
+        {{ form_start(form) }}
+        <div class="form-group row">
+            <div class="col-md-6">
+                {{ form_row(form.person.firstname) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.person.lastname) }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                {{ form_row(form.person.birthdate) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.person.gender) }}
+            </div>
+        </div>
+
+        {% if group_people is not defined %}
+        <div class="form-group row">
+            <div class="col-md-6">
+                {{ form_row(form.groupPeople.familyTypology) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.groupPeople.nbPeople) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group row">
+            <div class="col-md-6">
+                {{ form_row(form.role) }}
+            </div>
+        </div>
+
+        <br>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.person.phone1) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.person.phone2) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.person.email) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            {{ form_label(form.person.comment) }}
+            <div class="col-md-12">{{ form_widget(form.person.comment) }}</div>
+        </div>
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12">
+                <div class="mb-4 float-right">
+                    <input type="submit" id="send" name="send" id="send" class="btn btn-primary shadow"
+                        value="Enregistrer">
+                </div>
+            </div>
+        </div>
+        {{ form_end(form, {"render_rest": false}) }}
+    </section>
+</div>
+{% endblock %}

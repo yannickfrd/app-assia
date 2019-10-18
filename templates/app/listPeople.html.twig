@@ -7,7 +7,7 @@
 
 {% block title %}
 {% if group_people is defined %}Rechercher une personne
-{% else %}Liste despersonnes{% endif %}
+{% else %}Liste des personnes{% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -64,20 +64,22 @@
         </div>
     </div>
 
-    {% if people is defined %}
-
     <div class="container">
 
-        {% if people %}
-
-        {% if group_people is defined %}
-        <div class="row">
-            <div class="col-md-12">
-                <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
-                            class="fas fa-plus-square"></span> Créer une nouvelle personne</a></p>
-            </div>
-        </div>
+        {% if app.request.attributes.get("_route") == "new_support_search_person" %}
+        <p><a href="{{ path("person_new") }}" class="text-primary"><span class="fas fa-plus-square"></span> Créer une
+                nouvelle personne</a></p>
         {% endif %}
+
+        {% if people is defined %}
+
+        {% if people %}
+        {% if group_people is defined %}
+        <p><a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="text-primary"><span
+                    class="fas fa-plus-square"></span> Créer une nouvelle personne</a></p>
+        {% endif %}
+
+
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
@@ -162,7 +164,7 @@
         {% if group_people is defined %}
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path("create_person", {"id":group_people.id}) }}" class="text-primary"><span
+                <p><a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="text-primary"><span
                             class="fas fa-plus-square"></span> Créer une nouvelle personne</a></p>
             </div>
         </div>

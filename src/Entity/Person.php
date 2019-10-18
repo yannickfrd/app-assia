@@ -9,9 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ * @UniqueEntity(
+ *     fields={"firstname", "lastname", "birthdate"},
+ *     errorPath="firstname",
+ *     message="Attention, cette personne existe déjà !")
  */
 class Person
 {
