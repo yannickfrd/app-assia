@@ -104,3 +104,12 @@
     </section>
 </div>
 {% endblock %}
+
+
+{% if group_people is not defined  %}
+
+{% block javascripts %}
+<script src="{{ asset("js/newGroupPeople.js") }}"></script>
+{% endblock javascripts %}
+
+{% endif %}
