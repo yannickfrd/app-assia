@@ -17,6 +17,8 @@ class RolePersonGroupType extends FormType
         $builder
             ->add("role", ChoiceType::class, [
                 "choices" => $this->getChoices(RolePerson::ROLE),
+                "placeholder" => "-- Select --",
+                "required" => true
             ])
             ->add("person", PersonType::class)
             ->add("groupPeople", GroupPeopleType::class);

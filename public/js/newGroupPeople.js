@@ -1,6 +1,7 @@
 //
 class NewGroupPeople {
     constructor() {
+        this.birthdateElt = document.getElementById("role_person_group_person_birthdate");
         this.genderElt = document.getElementById("role_person_group_person_gender");
         this.typoElt = document.getElementById("role_person_group_groupPeople_familyTypology");
         this.nbPeopleElt = document.getElementById("role_person_group_groupPeople_nbPeople");
@@ -12,9 +13,21 @@ class NewGroupPeople {
     }
 
     init() {
+        this.birthdateElt.addEventListener("focusout", this.getBirthdate.bind(this));
         this.genderElt.addEventListener("input", this.getGender.bind(this));
         this.typoElt.addEventListener("input", this.editTypo.bind(this));
         this.nbPeopleElt.addEventListener("input", this.editNbPeople.bind(this));
+    }
+
+    getBirthdate() {
+        var birthdate = new Date(this.birthdateElt.value);
+        var now = new Date();
+        let age = Math.round((now - birthdate) / (24 * 3600 * 1000 * 365.225));
+        if (birthdate < now && age < 90) {
+            console.log("Date de naissance correct");
+        } else {
+            console.error("Date de naissance incorrect ! (" + age + " ans)");
+        }
     }
 
     getValues() {

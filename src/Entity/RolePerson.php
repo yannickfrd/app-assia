@@ -2,8 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Person;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RolePersonRepository")
@@ -15,15 +20,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class RolePerson
 {
     public const ROLE = [
-        NULL => "",
-        1 => "Demandeur",
-        2 => "Conjoint·e",
-        3 => "Époux/se",
-        4 => "Enfant",
-        5 => "Membre de la famille",
-        6 => "Parent isolé",
-        7 => "Personne isolée",
-        8 => "Autre"
+        1 => "Conjoint·e",
+        2 => "Époux/se",
+        3 => "Enfant",
+        4 => "Parent isolé",
+        5 => "Personne isolée",
+        6 => "Autre membre de la famille",
+        7 => "Autre"
     ];
 
     /**
@@ -40,18 +43,28 @@ class RolePerson
 
     /**
      * @ORM\Column(type="smallint")
+     * @Assert\NotNull(message="Le rôle ne doit pas être vide.")
+     * @Assert\Range(min = 1, max = 7, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
      */
     private $role;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson", cascade={"persist"})
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     * @Assert\Valid
      */
     private $person;
+
+    //  * @Assert\All(constraints={
+    //  *      @Assert\NotBlank(),
+    //  *      @Assert\NotNull,
+    //  *      @Assert\Length(min=2, max=50),
+    //  * })
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePerson", cascade={"persist"})
      * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
+     * @Assert\Valid
      */
     private $groupPeople;
 

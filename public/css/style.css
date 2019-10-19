@@ -62,6 +62,7 @@ section {
     transition: all 0.5s ease;
 }
 
+
 /* Gestion de dépassement des articles sur la page Blog */
 .post_content,
 .comment-content {
@@ -118,25 +119,34 @@ section {
     overflow-x: auto;
 }
 
-.max-w-100 {
+.w-max-100 {
     max-width: 100px;
 }
 
-.max-w-120 {
+.w-max-120 {
     max-width: 120px;
 }
 
-.max-w-140 {
+.w-max-140 {
     max-width: 140px;
 }
 
-.max-w-160 {
+.w-max-160 {
     max-width: 160px;
 }
 
-.max-w-180 {
+.w-max-180 {
     max-width: 180px;
 }
+
+.w-min-100 {
+    min-width: 100px;
+}
+
+.w-min-150 {
+    min-width: 150px;
+}
+
 
 ul {
     list-style-type: none;

@@ -155,15 +155,10 @@ class PersonController extends AbstractController
         $form = $this->createForm(RolePersonGroupType::class, $rolePerson);
         $form->handleRequest($request);
 
+        $person = $rolePerson->getPerson();
+        $groupPeople = $rolePerson->getGroupPeople();
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $person = $rolePerson->getPerson();
-            $groupPeople = $rolePerson->getGroupPeople();
-
-            dump($person);
-            dump($rolePerson);
-            dump($groupPeople);
-            // die;
-
 
             // Vérifie si la personne existe déjà dans la base de données
             $personExist = $repo->findOneBy([
@@ -178,7 +173,6 @@ class PersonController extends AbstractController
                     "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !"
                 );
             } else {
-
                 $groupPeople->setCreatedAt(new \DateTime())
                     ->setCreatedBy($this->security->getUser())
                     ->setUpdatedAt(new \DateTime())
@@ -206,7 +200,7 @@ class PersonController extends AbstractController
                 return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
             }
         }
-        return $this->render("app/personTest.html.twig", [
+        return $this->render("app/personNew.html.twig", [
             "person" => $person,
             "form" => $form->createView(),
         ]);
@@ -232,8 +226,9 @@ class PersonController extends AbstractController
         $form = $this->createForm(RolePersonType::class, $rolePerson);
         $form->handleRequest($request);
 
+        $person = $rolePerson->getPerson();
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $person = $rolePerson->getPerson();
             // Vérifie si la personne existe déjà dans la base de données
             $personExist = $repo->findOneBy([
                 "lastname" => $person->getLastname(),
@@ -252,7 +247,7 @@ class PersonController extends AbstractController
                 return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
             }
         } else {
-            return $this->render("app/personTest.html.twig", [
+            return $this->render("app/personNew.html.twig", [
                 "group_people" => $groupPeople,
                 "person" => $person,
                 "form" => $form->createView(),

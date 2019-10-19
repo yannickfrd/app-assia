@@ -15,7 +15,7 @@
 
     {% if group_people is defined %}
     <div class="my-3">
-        <a href="{{ path('group_people', {'id': group_people.id}) }}" class="text-primary">
+        <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-primary">
             <span class="fas fa-users"></span>
             Retour à la fiche du ménage</a>
         <span class="small text-secondary">{{ group_people.getFamilyTypologyType }}
@@ -42,9 +42,12 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">
+            <div class="col-md-6 position-relative">
                 {{ form_row(form.person.birthdate) }}
             </div>
+            {# <div class="col-md-6">
+                <span>XX</span> ans
+            </div> #}
             <div class="col-md-6">
                 {{ form_row(form.person.gender) }}
             </div>

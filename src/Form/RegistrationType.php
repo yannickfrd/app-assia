@@ -14,43 +14,37 @@ class RegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("firstname", NULL, [
-                "label" => "Prénom",
+            ->add("firstname", null, [
                 "attr" => [
-                    "placeholder" => "Prénom"
+                    "placeholder" => "Firstname"
                 ]
             ])
-            ->add("lastname", NULL, [
-                "label" => "Nom",
+            ->add("lastname", null, [
                 "attr" => [
                     "class" => "text-uppercase",
-                    "placeholder" => "Nom"
+                    "placeholder" => "Lastname"
                 ]
             ])
-            ->add("username", NULL, [
-                "label" => "Nom d'utilisateur",
+            ->add("username", null, [
                 "attr" => [
-                    "placeholder" => "Nom d'utilisateur"
+                    "placeholder" => "Username"
                 ]
             ])
-            ->add("email", NULL, [
-                "label" => "Adresse email",
+            ->add("email", null, [
                 "attr" => [
-                    "placeholder" => "Adresse email"
+                    "placeholder" => "Email"
                 ]
             ])
             ->add("password", PasswordType::class, [
-                "label" => "Mot de passe",
                 "attr" => [
                     "class" => "js-password",
-                    "placeholder" => "Mot de passe",
+                    "placeholder" => "Password",
                 ]
             ])
             ->add("confirmPassword", PasswordType::class, [
-                "label" => "Confirmation du mot de passe",
                 "attr" => [
                     "class" => "js-password",
-                    "placeholder" => "Confirmation du mot de passe",
+                    "placeholder" => "ConfirmPassword",
                 ]
             ]);
     }

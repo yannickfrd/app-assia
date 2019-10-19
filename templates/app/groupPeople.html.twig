@@ -14,16 +14,14 @@
 
 <div class="container">
     <div>
-        <h1 class="h2 mb-3">Groupe de personnes (ménage)</h1>
+        <h1 class="h2 mb-3">Fiche du ménage</h1>
 
-        {% if edit_mode %}
         <div class="small text-secondary">
-            <p>Créé le {{group_people.createdAt | date("d/m/Y à H:i") }}{% if group_people.createdBy %} par
-                {{ group_people.createdBy.username }}{% endif %} (modifié le
-                {{ group_people.updatedAt | date("d/m/Y à H:i") }}{% if group_people.updatedBy %} par
-                {{ group_people.updatedBy.username }}{% endif %})</p>
+            <p>Créé le {{form.vars.value.createdAt | date("d/m/Y à H:i") }}{% if form.vars.value.createdBy %} par
+                {{ form.vars.value.createdBy.username }}{% endif %} (modifié le
+                {{ form.vars.value.updatedAt | date("d/m/Y à H:i") }}{% if form.vars.value.updatedBy %} par
+                {{ form.vars.value.updatedBy.username }}{% endif %})</p>
         </div>
-        {% endif %}
     </div>
 
     <hr>
@@ -34,7 +32,6 @@
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
-        {% if edit_mode %}
         <div class="row">
             <div class="col-md-12 mb-3">
                 <div class="float-right">
@@ -42,8 +39,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
-        {% if group_people.id %}
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -51,14 +46,21 @@
                         <thead class="bg-dark">
                             <tr>
                                 <th scope="col" class="align-middle th-width-20px"></th>
-                                <th scope="col" class="align-middle text-light th-width-20px" data-placement="bottom"
-                                    title="Demandeur principal">DP</th>
-                                <th scope="col" class="align-middle text-light th-width-150px">Prénom</th>
-                                <th scope="col" class="align-middle text-light th-width-150px">Nom</th>
+                                <th scope="col" class="align-middle text-light th-width-20px d-none d-sm-table-cell"
+                                    data-placement="bottom" title="Demandeur principal">DP</th>
+                                <th scope="col"
+                                    class="align-middle text-light th-width-150px d-table-row d-sm-table-cell">Prénom
+                                </th>
+                                <th scope="col"
+                                    class="align-middle text-light th-width-150px d-table-row d-sm-table-cell">Nom</th>
                                 <th scope="col" class="align-middle text-light th-width-120px">Date de naissance</th>
-                                <th scope="col" class="align-middle text-light th-width-50px">Âge</th>
-                                <th scope="col" class="align-middle text-light th-width-100px">Sexe</th>
-                                <th scope="col" class="align-middle text-light th-width-150px">Rôle</th>
+                                <th scope="col" class="align-middle text-light th-width-50px d-none d-sm-table-cell">
+                                    Âge
+                                </th>
+                                <th scope="col"
+                                    class="align-middle text-light th-width-100px d-table-row d-sm-table-cell">Sexe</th>
+                                <th scope="col"
+                                    class="align-middle text-light th-width-150px d-table-row d-sm-table-cell">Rôle</th>
                                 <th scope="col" class="align-middle th-width-50px"></th>
                             </tr>
                         </thead>
@@ -67,84 +69,59 @@
                             {% for form_person in form.rolePerson.children %}
                             <tr id="js-person-{{ form_person.vars.value.person.id }}" class="js-tr-person">
                                 <th scope="row">
-                                    <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "slug":form_person.vars.value.person.slug}) }}"
+                                    <a href="{{ path("group_person_show", {"id":form.vars.value.id, "person_id":form_person.vars.value.person.id, "slug":form_person.vars.value.person.slug}) }}"
                                         class="btn btn-primary shadow" data-placement="bottom"
                                         title="Modifier les informations de la personne">
                                         <span class="fas fa-user-edit"></span>
                                     </a>
                                 </th>
-                                <td class="align-middle px-1">
+                                <td class="align-middle px-1 d-none d-sm-table-cell">
                                     <div class="custom-control custom-radio pl-3">
                                         {{ form_widget(form_person.head) }}
                                     </div>
                                 </td>
-                                <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
-                                <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
-                                <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
-                                <td class="align-middle px-1"> {% set age = form_person.vars.value.person.age %}
-                                    {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
-                                <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
-                                <td class="px-1">{{ form_widget(form_person.role) }}</td>
+                                <td class="px-1 d-table-row d-sm-table-cell">
+                                    {{ form_widget(form_person.person.firstname) }}</td>
+                                <td class="px-1 d-table-row d-sm-table-cell">
+                                    {{ form_widget(form_person.person.lastname) }}</td>
+                                {% set age = form_person.vars.value.person.age %}
                                 <td class="px-1">
-                                    <!-- Button trigger modal -->
-                                    <a href="{{ path('remove_person', {'id':group_people.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        class="js-remove btn btn-danger shadow" data-toggle="modal"
-                                        data-target="#modal-block" data-placement="bottom"
+                                    {{ form_widget(form_person.person.birthdate) }}
+                                    <span class="d-inline d-sm-none px-1 text-center">{{ age }}
+                                        {% if age > 1 %}ans{% elseif age %}
+                                        an{% endif %}</span>
+                                </td>
+                                <td class="align-middle text-center px-1 d-none d-sm-block">
+                                    {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
+                                <td class="px-1 d-table-row d-sm-table-cell">
+                                    {{ form_widget(form_person.person.gender) }}</td>
+                                <td class="px-1 d-table-row d-sm-table-cell">{{ form_widget(form_person.role) }}</td>
+                                <td class="px-1">
+                                    <button class="js-remove btn btn-danger shadow"
+                                        data-url="{{ path('remove_person', {'id':form.vars.value.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                        data-toggle="modal" data-target="#modal-block" data-placement="bottom"
                                         title="Retirer la personne du groupe">
-                                        <span class="fas fa-user-times"></span></a>
-
-
+                                        <span class="fas fa-user-times"></span></button>
                                     {# <a href="" class="js-remove btn btn-danger shadow"
                                          onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer {{ form_person.vars.value.person.firstname }} du ménage ?')" 
                                         data-placement="bottom" title="Retirer la personne du groupe">
                                         <span class="fas fa-user-times"></span>
                                     </a> #}
-
-                                    {# <form method="post"
-                                    action="{{ path("remove_person", {"id":group_people.id, "person_id":form_person.vars.value.person.id, "role_person_id":form_person.vars.value.id}) }}"
-                                    onsubmit="return confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?')">
-                                    <input type="hidden" name="_method" value="REMOVE">
-                                    <input type="hidden" name="_token"
-                                        value="{{ csrf_token("remove" ~ form_person.vars.value.id) }}">
-                                    <button class="btn btn-danger shadow"><span class="fas fa-trash"></span></button>
-                                    </form> #}
                                 </td>
                             </tr>
                             {% endfor %}
-                            {# <form action="">
-                            <tr>
-                                <th scope="row">
-                                    <a href="" class="text-primary font-weight-bold"><span
-                                            class="mt-2 fas fa-user-edit"></span>
-                                    </a>
-                                </th>
-                                <td class="px-1"></td>
-                                <td class="px-1"></td>
-                                <td class="px-1"></td>
-                                <td class="px-1"></td>
-                                <td class="px-1"></td>
-                                <td class="px-1"></td>
-                                <td class="px-1">
-                                    <a href="" name="remove" id="remove" class="btn btn-primary shadow"
-                                        id="remove"><span class=" fas fa-save"></span></a>
-                                </td>
-                            </tr>
-                        </form> #}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <p class="float-right"><a href=" {{ path("group_search_person", {"id":group_people.id}) }}"
+        <p class="float-right"><a href=" {{ path("group_search_person", {"id":form.vars.value.id}) }}"
                 class="text-primary">
                 <span class="fas fa-plus-square"></span> Ajouter une personne</a>
-            <a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="pl-2 text-secondary">
+            <a href="{{ path("group_create_person", {"id":form.vars.value.id}) }}" class="pl-2 text-secondary">
                 <span class="fas fa-plus-square"></span> Créer une nouvelle personne</a>
         </p>
-        <br />
-
     </section>
-    {% endif %}
 
     <section>
         <div class="form-group row">
@@ -159,7 +136,7 @@
             <div class="col-md-12">
                 <div class="float-right">
                     <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
-                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}" id="save">
+                        value="Mettre à jour" id="save">
                 </div>
             </div>
         </div>
@@ -168,7 +145,6 @@
 
     <hr>
 
-    {% if group_people.id %}
     <section id="social-supports">
         <h2 class="h3 my-4">Historique des suivis sociaux</h2>
         <div class="table-responsive">
@@ -206,7 +182,7 @@
 
                 <tbody>
 
-                    {% for socialSupport in group_people.socialSupports %}
+                    {% for socialSupport in form.vars.value.socialSupports %}
                     <tr>
                         <th scope="row">
                         </th>
@@ -228,12 +204,9 @@
         </div>
         <a href="" class="m-3 text-primary"><span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
-
         <br />
     </section>
     <hr>
-    {% endif %}
-
 </div>
 
 {% endblock %}

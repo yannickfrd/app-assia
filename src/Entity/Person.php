@@ -16,19 +16,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(
  *     fields={"firstname", "lastname", "birthdate"},
  *     errorPath="firstname",
- *     message="Attention, cette personne existe déjà !")
+ *     message="Cette personne existe déjà !")
  */
 class Person
 {
     public const GENDER = [
-        NULL => "",
         1 => "Femme",
         2 => "Homme",
         3 => "Non renseigné"
     ];
 
     public const NATIONALITY = [
-        NULL => "",
         1 => "France",
         2 => "Union-Européenne",
         3 => "Hors-UE",
@@ -45,6 +43,7 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)   
+     * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      * @Assert\Length(
      * min=2, 
      * max=50,
@@ -55,7 +54,7 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message = "Le nom ne peut être vide.")
+     * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      * @Assert\Length(
      * min=2, 
      * max=50,
@@ -73,19 +72,31 @@ class Person
     private $fullname;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
+     * @Assert\NotNull(message="La date de naissance ne doit pas être vide.")
      */
     private $birthdate;
 
+    /**
+     * @Assert\Range(
+     * min = 0, 
+     * max = 90,
+     * minMessage = "La date de naissance est incorrect.",
+     * maxMessage = "La date de naissance est incorrect.")
+     * @var int
+     */
     private $age;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=false)
+     * @Assert\NotNull(message="Ne peut pas être vide.")
+     * @Assert\Range(min = 1, max = 3, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
      */
     private $gender;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\Range(min = 0, max = 5, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
      */
     private $nationality;
 
@@ -216,18 +227,28 @@ class Person
     public function setBirthdate(?\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
-
+        if ($birthdate) {
+            $this->age = $birthdate->diff(new \DateTime())->y;
+        }
         return $this;
     }
 
     public function getAge(): ?int
     {
         if ($this->birthdate) {
-            $now   = new \DateTime();
-            return $this->birthdate->diff($now)->y;
+            return $this->birthdate->diff(new \DateTime())->y;
         } else {
-            return NULL;
+            return null;
         }
+    }
+
+    public function setAge(?\DateTimeInterface $birthdate): self
+    {
+        if ($birthdate) {
+            $now = new \DateTime();
+            $this->age = $birthdate->diff($now)->y;
+        }
+        return $this;
     }
 
     public function getGender(): ?int

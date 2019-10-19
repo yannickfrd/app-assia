@@ -48,8 +48,7 @@ class PersonSearch
     private $email;
 
     public function __construct()
-    {
-    }
+    { }
 
     /**
      * @return string|null
@@ -120,7 +119,7 @@ class PersonSearch
             $now   = new \DateTime();
             return $this->birthdate->diff($now)->y;
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -149,11 +148,11 @@ class PersonSearch
         return $this;
     }
 
-    public function getGenderType() 
+    public function getGenderType()
     {
         return self::GENDER[$this->gender];
     }
-    
+
     /**
      * @return string|null
      */
@@ -183,5 +182,5 @@ class PersonSearch
         $this->email = $email;
 
         return $this;
-    } 
+    }
 }

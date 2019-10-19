@@ -15,18 +15,18 @@ class PersonSearchMinType extends FormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("lastname", NULL, [
+            ->add("lastname", null, [
                 "label" => false,
                 "attr" => [
-                    "class" => "max-w-140 text-uppercase",
+                    "class" => "w-max-140 text-uppercase",
                     "placeholder" => "Nom",
                     "autocomplete" => "off"
                 ]
             ])
-            ->add("firstname", NULL, [
+            ->add("firstname", null, [
                 "label" => false,
                 "attr" => [
-                    "class" => "max-w-140",
+                    "class" => "w-max-140",
                     "placeholder" => "Prénom",
                     "autocomplete" => "off"
                 ]
@@ -37,35 +37,35 @@ class PersonSearchMinType extends FormType
                 // "html5" => false,
                 // "format" => "dd/MM/yyyy",
                 "attr" => [
-                    "class" => "max-w-180",
+                    "class" => "w-max-180",
                     "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],
                 "required" => false
             ])
-            // ->add("age", NULL, [
+            // ->add("age", null, [
             //     "label" => false,
             //     "attr" => [
             //         "placeholder" => "Age",
-            //         "class" => "max-w-100",
+            //         "class" => "w-max-100",
             //         "autocomplete" => "off"
             //     ]
             // ])
             ->add("gender", ChoiceType::class, [
-                'placeholder' => "-- Sexe --",
+                'placeholder' => "-- Gender --",
                 "label" => false,
                 "required" => false,
                 "choices" => $this->getchoices(PersonSearch::GENDER),
                 "attr" => [
-                    "class" => "max-w-120",
+                    "class" => "w-max-120",
                     "autocomplete" => "off"
                 ]
             ])
-            ->add("phone", NULL, [
+            ->add("phone", null, [
                 "label" => false,
                 "attr" => [
-                    "placeholder" => "Téléphone",
-                    "class" => "max-w-140",
+                    "placeholder" => "Phone",
+                    "class" => "w-max-140",
                     "autocomplete" => "off"
                 ],
             ]);
@@ -76,6 +76,7 @@ class PersonSearchMinType extends FormType
         $resolver->setDefaults([
             "data_class" => PersonSearch::class,
             "method" => "get",
+            "translation_domain" => "forms",
             "csrf_protection" => false
         ]);
     }

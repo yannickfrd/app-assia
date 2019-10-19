@@ -7,9 +7,16 @@ Firstname: Prénom
 Gender: Sexe
 Lastname: Nom
 Nb people: Nombre de personnes
+NbPeople: Nb pers.
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1
 Phone2: Téléphone 2
 Role: Rôle dans le groupe
+Write a comment about the group: Saisir un commentaire sur le ménage
+Write a comment abour the person: Saisir un commentaire sur la personne
+Select: Sélectionner
 Username: Nom d'utilisateur
+-- Family Typology --: -- Typologie familiale --
+-- Gender --: -- Sexe --
+-- Select --: -- Sélectionner --

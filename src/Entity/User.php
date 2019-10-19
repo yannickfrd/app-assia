@@ -32,7 +32,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message = "L'email ne peut être vide.")
+     * @Assert\NotBlank(message = "L'email ne doit pas être vide.")
      * @Assert\Email(message="L'adresse email n'est pas valide.")
      */
     private $email;
@@ -50,13 +50,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message = "Le nom ne peut être vide.")
+     * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message = "Le prénom ne peut être vide.")
+     * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      */
     private $firstname;
 
@@ -189,186 +189,188 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials() {}
+    public function eraseCredentials()
+    { }
 
-    public function getSalt() {}
+    public function getSalt()
+    { }
 
-        public function getRoles(): array
-        {
-            $roles = $this->roles;
-            $roles[] = 'ROLE_USER';
-        
-            return array_unique($roles);
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function getLoginCount(): ?int
+    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    public function getFailureLoginCount(): ?int
+    {
+        return $this->failureLoginCount;
+    }
+
+    public function setFailureLoginCount(?int $failureLoginCount): self
+    {
+        $this->failureLoginCount = $failureLoginCount;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+    /**
+     * @return Collection|Person[]
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
+    }
+
+    public function addPerson(Person $person): self
+    {
+        if (!$this->people->contains($person)) {
+            $this->people[] = $person;
+            $person->setCreatedBy($this);
         }
 
-        public function getLoginCount(): ?int
-        {
-            return $this->loginCount;
-        }
+        return $this;
+    }
 
-        public function setLoginCount(int $loginCount): self
-        {
-            $this->loginCount = $loginCount;
-
-            return $this;
-        }
-
-        public function getLastLogin(): ?\DateTimeInterface
-        {
-            return $this->lastLogin;
-        }
-
-        public function setLastLogin(?\DateTimeInterface $lastLogin): self
-        {
-            $this->lastLogin = $lastLogin;
-
-            return $this;
-        }
-
-        public function getFailureLoginCount(): ?int
-        {
-            return $this->failureLoginCount;
-        }
-
-        public function setFailureLoginCount(?int $failureLoginCount): self
-        {
-            $this->failureLoginCount = $failureLoginCount;
-
-            return $this;
-        }
-
-        public function getCreatedAt(): ?\DateTimeInterface
-        {
-            return $this->createdAt;
-        }
-    
-        public function setCreatedAt(\DateTimeInterface $createdAt): self
-        {
-            $this->createdAt = $createdAt;
-    
-            return $this;
-        }
-        /**
-         * @return Collection|Person[]
-         */
-        public function getPeople(): Collection
-        {
-            return $this->people;
-        }
-
-        public function addPerson(Person $person): self
-        {
-            if (!$this->people->contains($person)) {
-                $this->people[] = $person;
-                $person->setCreatedBy($this);
+    public function removePerson(Person $person): self
+    {
+        if ($this->people->contains($person)) {
+            $this->people->removeElement($person);
+            // set the owning side to null (unless already changed)
+            if ($person->getCreatedBy() === $this) {
+                $person->setCreatedBy(null);
             }
-
-            return $this;
         }
 
-        public function removePerson(Person $person): self
-        {
-            if ($this->people->contains($person)) {
-                $this->people->removeElement($person);
-                // set the owning side to null (unless already changed)
-                if ($person->getCreatedBy() === $this) {
-                    $person->setCreatedBy(null);
-                }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Person[]
+     */
+    public function getPeopleUpdated(): Collection
+    {
+        return $this->peopleUpdated;
+    }
+
+    public function addPeopleUpdated(Person $peopleUpdated): self
+    {
+        if (!$this->peopleUpdated->contains($peopleUpdated)) {
+            $this->peopleUpdated[] = $peopleUpdated;
+            $peopleUpdated->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePeopleUpdated(Person $peopleUpdated): self
+    {
+        if ($this->peopleUpdated->contains($peopleUpdated)) {
+            $this->peopleUpdated->removeElement($peopleUpdated);
+            // set the owning side to null (unless already changed)
+            if ($peopleUpdated->getUpdatedBy() === $this) {
+                $peopleUpdated->setUpdatedBy(null);
             }
-
-            return $this;
         }
 
-        /**
-         * @return Collection|Person[]
-         */
-        public function getPeopleUpdated(): Collection
-        {
-            return $this->peopleUpdated;
+        return $this;
+    }
+
+    /**
+     * @return Collection|GroupPeople[]
+     */
+    public function getGroupPeople(): Collection
+    {
+        return $this->groupPeople;
+    }
+
+    public function addGroupPerson(GroupPeople $groupPerson): self
+    {
+        if (!$this->groupPeople->contains($groupPerson)) {
+            $this->groupPeople[] = $groupPerson;
+            $groupPerson->setCreatedBy($this);
         }
 
-        public function addPeopleUpdated(Person $peopleUpdated): self
-        {
-            if (!$this->peopleUpdated->contains($peopleUpdated)) {
-                $this->peopleUpdated[] = $peopleUpdated;
-                $peopleUpdated->setUpdatedBy($this);
+        return $this;
+    }
+
+    public function removeGroupPerson(GroupPeople $groupPerson): self
+    {
+        if ($this->groupPeople->contains($groupPerson)) {
+            $this->groupPeople->removeElement($groupPerson);
+            // set the owning side to null (unless already changed)
+            if ($groupPerson->getCreatedBy() === $this) {
+                $groupPerson->setCreatedBy(null);
             }
-
-            return $this;
         }
 
-        public function removePeopleUpdated(Person $peopleUpdated): self
-        {
-            if ($this->peopleUpdated->contains($peopleUpdated)) {
-                $this->peopleUpdated->removeElement($peopleUpdated);
-                // set the owning side to null (unless already changed)
-                if ($peopleUpdated->getUpdatedBy() === $this) {
-                    $peopleUpdated->setUpdatedBy(null);
-                }
+        return $this;
+    }
+
+    /**
+     * @return Collection|GroupPeople[]
+     */
+    public function getGroupPeopleUpdated(): Collection
+    {
+        return $this->groupPeopleUpdated;
+    }
+
+    public function addGroupPeopleUpdated(GroupPeople $groupPeopleUpdated): self
+    {
+        if (!$this->groupPeopleUpdated->contains($groupPeopleUpdated)) {
+            $this->groupPeopleUpdated[] = $groupPeopleUpdated;
+            $groupPeopleUpdated->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupPeopleUpdated(GroupPeople $groupPeopleUpdated): self
+    {
+        if ($this->groupPeopleUpdated->contains($groupPeopleUpdated)) {
+            $this->groupPeopleUpdated->removeElement($groupPeopleUpdated);
+            // set the owning side to null (unless already changed)
+            if ($groupPeopleUpdated->getUpdatedBy() === $this) {
+                $groupPeopleUpdated->setUpdatedBy(null);
             }
-
-            return $this;
-        }
-                
-        /**
-         * @return Collection|GroupPeople[]
-         */
-        public function getGroupPeople(): Collection
-        {
-            return $this->groupPeople;
         }
 
-        public function addGroupPerson(GroupPeople $groupPerson): self
-        {
-            if (!$this->groupPeople->contains($groupPerson)) {
-                $this->groupPeople[] = $groupPerson;
-                $groupPerson->setCreatedBy($this);
-            }
-
-            return $this;
-        }
-
-        public function removeGroupPerson(GroupPeople $groupPerson): self
-        {
-            if ($this->groupPeople->contains($groupPerson)) {
-                $this->groupPeople->removeElement($groupPerson);
-                // set the owning side to null (unless already changed)
-                if ($groupPerson->getCreatedBy() === $this) {
-                    $groupPerson->setCreatedBy(null);
-                }
-            }
-
-            return $this;
-        }
-
-        /**
-         * @return Collection|GroupPeople[]
-         */
-        public function getGroupPeopleUpdated(): Collection
-        {
-            return $this->groupPeopleUpdated;
-        }
-
-        public function addGroupPeopleUpdated(GroupPeople $groupPeopleUpdated): self
-        {
-            if (!$this->groupPeopleUpdated->contains($groupPeopleUpdated)) {
-                $this->groupPeopleUpdated[] = $groupPeopleUpdated;
-                $groupPeopleUpdated->setUpdatedBy($this);
-            }
-
-            return $this;
-        }
-
-        public function removeGroupPeopleUpdated(GroupPeople $groupPeopleUpdated): self
-        {
-            if ($this->groupPeopleUpdated->contains($groupPeopleUpdated)) {
-                $this->groupPeopleUpdated->removeElement($groupPeopleUpdated);
-                // set the owning side to null (unless already changed)
-                if ($groupPeopleUpdated->getUpdatedBy() === $this) {
-                    $groupPeopleUpdated->setUpdatedBy(null);
-                }
-            }
-
-            return $this;
-        }
+        return $this;
+    }
 }

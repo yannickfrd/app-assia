@@ -15,15 +15,15 @@ class PersonSearchType extends FormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("lastname", NULL, [
+            ->add("lastname", null, [
                 "attr" => [
                     "class" => "text-uppercase",
-                    "placeholder" => "Nom"
+                    "placeholder" => "Lastname"
                 ]
             ])
-            ->add("firstname", NULL, [
+            ->add("firstname", null, [
                 "attr" => [
-                    "placeholder" => "Prénom"
+                    "placeholder" => "Firstname"
                 ]
             ])
             ->add("birthdate", DateType::class, [
@@ -31,19 +31,19 @@ class PersonSearchType extends FormType
                 "html5" => false,
                 "format" => "dd/MM/yyyy",
                 "attr" => [
-                    "class" => "max-w-180 js-datepicker",
+                    "class" => "w-max-180 js-datepicker",
                     "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],
                 "required" => false
             ])
             ->add("gender", ChoiceType::class, [
-                "required" => false,
-                'placeholder' => "-- Sélectionner --",
                 "attr" => [
                     "class" => "col-md-12"
                 ],
                 "choices" => $this->getchoices(PersonSearch::GENDER),
+                "required" => false,
+                'placeholder' => "-- Select --"
             ])
             ->add("phone")
             ->add("email");

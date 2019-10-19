@@ -70,46 +70,28 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/group/new", name="create_group_people")
-     * @Route("/group/{id}", name="group_people")
+     * Voir la fiche d'un ménage
+     * 
+     * @Route("/group/{id}", name="group_people_show")
+     * @param GroupPeople $groupPeople
+     * @param Request $request
      * @return Response
      */
-    public function formGroupPeople(GroupPeople $groupPeople = null, Request $request, GroupPeopleRepository $repo): Response
+    public function showGroupPeople(GroupPeople $groupPeople, Request $request): Response
     {
-        if (!$groupPeople) {
-            $groupPeople = new GroupPeople();
-        }
-
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
         $formGroupPeople->handleRequest($request);
 
         if ($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
-            if (!$groupPeople->getId()) {
-                $groupPeople->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($this->security->getUser());
-                $this->addFlash(
-                    "success",
-                    "Le ménage a été enregistré."
-                );
-            } else {
-                $this->addFlash(
-                    "success",
-                    "Les modifications ont été enregistrées."
-                );
-            }
+
             $groupPeople->setUpdatedAt(new \DateTime())
                 ->setUpdatedBy($this->security->getUser());
-            $this->manager->persist($groupPeople);
             $this->manager->flush();
 
-            return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+            $this->addFlash("success", "Les modifications ont été enregistrées.");
         }
-
         return $this->render("app/groupPeople.html.twig", [
-            "group_people" => $groupPeople,
             "form" => $formGroupPeople->createView(),
-            "edit_mode" => $groupPeople->getId() != null,
-            "current_menu" => "new_group"
         ]);
     }
 
@@ -153,6 +135,11 @@ class GroupPeopleController extends AbstractController
                 $person->addRolesPerson($rolePerson);
 
                 $this->manager->persist($rolePerson);
+
+                // Compte le nombre de personnes dans le ménage
+                $nbPeople = $groupPeople->getRolePerson()->count();
+                $groupPeople->setNbPeople($nbPeople + 1);
+
                 $this->manager->flush();
 
                 $this->addFlash(

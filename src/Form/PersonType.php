@@ -15,16 +15,15 @@ class PersonType extends FormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("lastname", NULL, [
-                // "label" => "Nom",
+            ->add("lastname", null, [
                 "attr" => [
                     "class" => "text-uppercase",
-                    "placeholder" => "Nom"
+                    "placeholder" => "Lastname"
                 ]
             ])
-            ->add("firstname", NULL, [
+            ->add("firstname", null, [
                 "attr" => [
-                    "placeholder" => "Prénom"
+                    "placeholder" => "Firstname"
                 ]
             ])
             ->add("birthdate", DateType::class, [
@@ -32,7 +31,7 @@ class PersonType extends FormType
                 "attr" => [
                     "class" => "col-md-12"
                 ],
-                "required" => false
+                "required" => true
 
             ])
             ->add("gender", ChoiceType::class, [
@@ -40,14 +39,16 @@ class PersonType extends FormType
                     "class" => "col-md-12"
                 ],
                 "choices" => $this->getchoices(Person::GENDER),
+                "placeholder" => "-- Select --",
+                "required" => true
             ])
             ->add("phone1")
             ->add("phone2")
             ->add("email")
-            ->add("comment", NULL, [
+            ->add("comment", null, [
                 "attr" => [
                     "rows" => 5,
-                    "placeholder" => "Saisir un commentaire sur la personne"
+                    "placeholder" => "Write a comment abour the person"
                 ]
             ]);
     }
@@ -56,7 +57,7 @@ class PersonType extends FormType
     {
         $resolver->setDefaults([
             "data_class" => Person::class,
-            "translation_domain" => "forms",
+            "translation_domain" => "forms"
         ]);
     }
 }

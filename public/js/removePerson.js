@@ -11,10 +11,10 @@ class RemovePerson {
 
     init() {
         this.trPersonElts.forEach(trPersonElt => {
-            let aRemoveElt = trPersonElt.querySelector("a.js-remove");
-            aRemoveElt.addEventListener("click", function (e) {
+            let btnRemoveElt = trPersonElt.querySelector("button.js-remove");
+            btnRemoveElt.addEventListener("click", function (e) {
                 e.preventDefault();
-                this.modalConfirmElt.addEventListener("click", this.removePerson.bind(this, aRemoveElt, trPersonElt), {
+                this.modalConfirmElt.addEventListener("click", this.removePerson.bind(this, btnRemoveElt, trPersonElt), {
                     once: true
                 });
             }.bind(this));
@@ -22,9 +22,10 @@ class RemovePerson {
     }
 
     // Envoie la requête Ajax après confirmation de l'action
-    removePerson(aRemoveElt, trPersonElt) {
+    removePerson(btnRemoveElt, trPersonElt) {
+        console.log("remove !");
         this.trPersonElt = trPersonElt;
-        ajaxRequest.init("GET", aRemoveElt.href, this.response.bind(this), true), {
+        ajaxRequest.init("GET", btnRemoveElt.getAttribute("data-url"), this.response.bind(this), true), {
             once: true
         };
     }

@@ -16,12 +16,11 @@ class RolePersonMinType extends FormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('head', CheckBoxType::class, [
+            ->add("head", CheckBoxType::class, [
                 "label" => false,
                 "required" => false,
-                'label_attr'=> [
+                "label_attr" => [
                     "class" => "custom-control-label",
-                    "name" => ""
                 ],
                 "attr" => [
                     "class" => "custom-control-input checkbox"
@@ -29,15 +28,16 @@ class RolePersonMinType extends FormType
             ])
             ->add("role", ChoiceType::class, [
                 "choices" => $this->getChoices(RolePerson::ROLE),
+                "placeholder" => "-- Select --",
+                "required" => true
             ])
-            ->add("person", PersonMinType::class)
-        ;
+            ->add("person", PersonMinType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => RolePerson::class,
+            "data_class" => RolePerson::class,
             "translation_domain" => "forms",
         ]);
     }

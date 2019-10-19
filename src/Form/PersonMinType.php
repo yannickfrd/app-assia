@@ -15,32 +15,36 @@ class PersonMinType extends FormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("lastname", NULL, [
+            ->add("lastname", null, [
                 "attr" => [
-                    "class" => "text-uppercase",
-                    "placeholder" => "Nom"
+                    "class" => "w-min-150 text-uppercase",
+                    "placeholder" => "Lastname",
+                    "required" => true
                 ]
             ])
-            ->add("firstname", NULL, [
+            ->add("firstname", null, [
                 "attr" => [
-                    "placeholder" => "Prénom"
+                    "placeholder" => "Firstname",
+                    "required" => true
                 ]
             ])
             ->add("birthdate", DateType::class, [
                 "widget" => "single_text",
                 "attr" => [
-                    "class" => "max-w-180",
+                    "class" => "w-max-180",
                     "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],
-                "required" => false
+                "required" => true
 
             ])
             ->add("gender", ChoiceType::class, [
                 "attr" => [
-                    "class" => "col-md-12"
+                    "class" => "w-min-150"
                 ],
                 "choices" => $this->getchoices(Person::GENDER),
+                "placeholder" => "-- Select --",
+                "required" => true
             ]);
     }
 
@@ -48,7 +52,7 @@ class PersonMinType extends FormType
     {
         $resolver->setDefaults([
             "data_class" => Person::class,
-            "translation_domain" => "forms",
+            "translation_domain" => "forms"
         ]);
     }
 }

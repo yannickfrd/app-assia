@@ -21,24 +21,27 @@ class GroupPeopleType extends FormType
                 "attr" => [
                     "class" => "col-md-12"
                 ],
-                "choices" => $this->getchoices(GroupPeople::FAMILY_TYPOLOGY)
+                "choices" => $this->getchoices(GroupPeople::FAMILY_TYPOLOGY),
+                "placeholder" => "-- Select --",
+                "required" => true
             ])
-            ->add("nbPeople", NULL, [
+            ->add("nbPeople", null, [
                 "attr" => [
                     "class" => "col-md-6"
-                ]
+                ],
+                "required" => true
             ])
             ->add('rolePerson', CollectionType::class, [
                 'entry_type'   => RolePersonMinType::class,
-                'allow_add'    => true,
-                'allow_delete' => true
+                'allow_add'    => false,
+                'allow_delete' => false,
+                "required" => true
             ])
 
-            ->add("comment", NULL, [
-                "label" => "Commentaire",
+            ->add("comment", null, [
                 "attr" => [
                     "rows" => 4,
-                    "placeholder" => "Saisir un commentaire sur le ménage"
+                    "placeholder" => "Write a comment about the group"
                 ]
             ]);
     }

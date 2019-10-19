@@ -55,6 +55,7 @@ table .th-width-140px {
 
 table .th-width-150px {
     width: 150px;
+    min-width: 150px;
 }
 
 .input-date {

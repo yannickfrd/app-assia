@@ -14,14 +14,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GroupPeople
 {
     public const FAMILY_TYPOLOGY = [
-        null => "",
         1 => "Femme seule",
         2 => "Homme seul",
         3 => "Couple sans enfant",
         4 => "Femme seule avec enfant(s)",
         5 => "Homme seul avec enfant(s)",
         6 => "Couple avec enfant(s)",
-        7 => "Autre"
+        7 => "Groupe d'adultes sans enfant",
+        8 => "Groupe d'adultes avec enfant(s)",
+        9 => "Autre"
     ];
 
     /**
@@ -32,13 +33,14 @@ class GroupPeople
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="smallint")
+     * @Assert\NotNull(message="La typologie ne doit pas être vide.")
+     * @Assert\Range(min = 1, max = 9, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
      */
     private $familyTypology;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\Range(min = 1, max = 9)
+     * @ORM\Column(type="smallint")
      */
     private $nbPeople;
 
@@ -64,11 +66,17 @@ class GroupPeople
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", orphanRemoval=true)
+     * @Assert\All(constraints={
+     *      @Assert\NotBlank(),
+     *      @Assert\NotNull,
+     * })  
+     * @Assert\Valid
      */
     private $rolePerson;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
+     * @Assert\Valid
      */
     private $socialSupports;
 
