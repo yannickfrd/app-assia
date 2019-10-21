@@ -9,11 +9,23 @@ class UpdatePerson {
     }
 
     init() {
+        let validationPerson = new ValidationPerson(
+            "person_lastname",
+            "person_firstname",
+            "person_birthdate",
+            "person_gender",
+            "person_email"
+        );
+
         this.updatePersonBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            let formData = new FormData(this.personElt);
-            let formToString = new URLSearchParams(formData).toString();
-            ajaxRequest.init("POST", this.url, this.response.bind(this), true, formToString);
+            if (!validationPerson.getNbErrors()) {
+                let formData = new FormData(this.personElt);
+                let formToString = new URLSearchParams(formData).toString();
+                ajaxRequest.init("POST", this.url, this.response.bind(this), true, formToString);
+            } else {
+                new MessageFlash("danger", "Veuillez corriger les erreurs avant de mettre à jour.");
+            }
         }.bind(this));
     }
 

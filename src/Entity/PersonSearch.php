@@ -128,7 +128,7 @@ class PersonSearch
         $now = new \DateTime();
         $interval = $now->diff($this->birthdate);
         $days = $interval->days;
-        $this->age = floor($days / 365.225);
+        $this->age = floor($days / 365.25);
 
         return $this;
     }
