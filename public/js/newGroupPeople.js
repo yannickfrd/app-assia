@@ -1,33 +1,44 @@
 //
 class NewGroupPeople {
     constructor() {
-        this.birthdateElt = document.getElementById("role_person_group_person_birthdate");
-        this.genderElt = document.getElementById("role_person_group_person_gender");
-        this.typoElt = document.getElementById("role_person_group_groupPeople_familyTypology");
-        this.nbPeopleElt = document.getElementById("role_person_group_groupPeople_nbPeople");
-        this.roleElt = document.getElementById("role_person_group_role");
-
+        this.birthdateInputElt = document.getElementById("role_person_group_person_birthdate");
+        this.genderInputElt = document.getElementById("role_person_group_person_gender");
+        this.typoInputElt = document.getElementById("role_person_group_groupPeople_familyTypology");
+        this.nbPeopleInputElt = document.getElementById("role_person_group_groupPeople_nbPeople");
+        this.roleInputElt = document.getElementById("role_person_group_role");
+        // this.emailInputElt = document.getElementById("role_person_group_person_email");
+        // this.phone1InputElt = document.getElementById("role_person_group_person_phone1");
         this.genderValue = null, this.typoValue = null, this.nbPeopleValue = null, this.roleValue = null;
-
         this.init();
     }
 
     init() {
-        this.birthdateElt.addEventListener("focusout", this.getBirthdate.bind(this));
-        this.genderElt.addEventListener("input", this.getGender.bind(this));
-        this.typoElt.addEventListener("input", this.editTypo.bind(this));
-        this.nbPeopleElt.addEventListener("input", this.editNbPeople.bind(this));
-    }
+        this.birthdateInputElt.addEventListener("focusout", this.getAge.bind(this));
+        this.genderInputElt.addEventListener("input", this.getGender.bind(this));
+        this.typoInputElt.addEventListener("input", this.editTypo.bind(this));
+        this.nbPeopleInputElt.addEventListener("input", this.editNbPeople.bind(this));
+        // this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
+        // this.phone1InputElt.addEventListener("input", this.phone.bind(this));
+        let validationPerson = new ValidationPerson(
+            "role_person_group_person_lastname",
+            "role_person_group_person_firstname",
+            "role_person_group_person_birthdate",
+            "role_person_group_person_gender",
+            "role_person_group_person_email",
+            "role_person_group_role",
+            "role_person_group_groupPeople_familyTypology",
+            "role_person_group_groupPeople_nbPeople"
+        );
 
-    getBirthdate() {
-        var birthdate = new Date(this.birthdateElt.value);
-        var now = new Date();
-        let age = Math.round((now - birthdate) / (24 * 3600 * 1000 * 365.225));
-        if (birthdate < now && age < 90) {
-            console.log("Date de naissance correct");
-        } else {
-            console.error("Date de naissance incorrect ! (" + age + " ans)");
-        }
+        document.getElementById("send").addEventListener("click", function (e) {
+            if (validationPerson.getNbErrors()) {
+                e.preventDefault(), {
+                    once: true
+                };
+                new MessageFlash("danger", "Veuillez corriger les erreurs avant d'enregistrer.");
+            }
+        }.bind(this));
+
     }
 
     getValues() {
@@ -37,8 +48,18 @@ class NewGroupPeople {
         this.getRole();
     }
 
+    getAge() {
+        let birthdate = new Date(this.birthdateInputElt.value);
+        let now = new Date();
+        let age = Math.round((now - birthdate) / (24 * 3600 * 1000 * 365.25));
+        if (age < 18) {
+            this.nbPeopleValue = 3;
+            this.setOption(this.roleInputElt, this.nbPeopleValue);
+        }
+    }
+
     getGender() {
-        this.genderElt.querySelectorAll("option").forEach(option => {
+        this.genderInputElt.querySelectorAll("option").forEach(option => {
             if (option.selected === true) {
                 this.genderValue = parseInt(option.value);
             }
@@ -46,7 +67,7 @@ class NewGroupPeople {
     }
 
     getTypo() {
-        this.typoElt.querySelectorAll("option").forEach(option => {
+        this.typoInputElt.querySelectorAll("option").forEach(option => {
             if (option.selected === true) {
                 this.typoValue = parseInt(option.value);
             }
@@ -54,7 +75,7 @@ class NewGroupPeople {
     }
 
     setTypo(value) {
-        this.typoElt.querySelectorAll("option").forEach(option => {
+        this.typoInputElt.querySelectorAll("option").forEach(option => {
             if (parseInt(option.value) === value) {
                 option.selected = true;
             } else {
@@ -64,11 +85,11 @@ class NewGroupPeople {
     }
 
     getNbPeople() {
-        this.nbPeopleValue = parseInt(this.nbPeopleElt.value);
+        this.nbPeopleValue = parseInt(this.nbPeopleInputElt.value);
     }
 
     getRole() {
-        this.roleElt.querySelectorAll("option").forEach(option => {
+        this.roleInputElt.querySelectorAll("option").forEach(option => {
             if (option.selected === true) {
                 this.roleValue = parseInt(option.value);
             }
@@ -115,9 +136,9 @@ class NewGroupPeople {
                 break;
         }
 
-        this.nbPeopleElt.value = this.nbPeopleValue;
+        this.nbPeopleInputElt.value = this.nbPeopleValue;
 
-        this.roleElt.querySelectorAll("option").forEach(option => {
+        this.roleInputElt.querySelectorAll("option").forEach(option => {
             if (parseInt(option.value) === this.roleValue) {
                 option.selected = true;
             } else {
@@ -125,11 +146,10 @@ class NewGroupPeople {
             }
         });
 
-        this.setOption(this.genderElt, this.genderValue);
+        this.setOption(this.genderInputElt, this.genderValue);
     }
 
     editNbPeople() {
-        this.getValues();
         if (this.nbPeopleValue === 1 && this.genderValue === 1) {
             this.typoValue = 1;
             this.roleValue = 5;
@@ -139,7 +159,7 @@ class NewGroupPeople {
         }
 
         if (this.nbPeopleValue === 1 | this.typoValue <= 2) {
-            this.setOption(this.typoElt, this.typoValue);
+            this.setOption(this.typoInputElt, this.typoValue);
         }
     }
 }
