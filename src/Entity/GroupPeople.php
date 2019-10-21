@@ -34,13 +34,14 @@ class GroupPeople
 
     /**
      * @ORM\Column(type="smallint")
-     * @Assert\NotNull(message="La typologie ne doit pas être vide.")
-     * @Assert\Range(min = 1, max = 9, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
+     * @Assert\NotNull(message="La typologie familiale doit être renseignée.")
+     * @Assert\Range(min = 1, max = 9, minMessage="La typologie familiale doit être renseignée.",  maxMessage="La typologie familiale doit être renseignée.")
      */
     private $familyTypology;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Assert\Range(min = 1, max = 10, minMessage="Le nombre de personnes doit être renseigné.",  maxMessage="Le nombre de personnes doit être renseigné.")
      */
     private $nbPeople;
 

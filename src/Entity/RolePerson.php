@@ -44,13 +44,13 @@ class RolePerson
     /**
      * @ORM\Column(type="smallint")
      * @Assert\NotNull(message="Le rôle ne doit pas être vide.")
-     * @Assert\Range(min = 1, max = 7, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
+     * @Assert\Range(min = 1, max = 7, minMessage="Ne doit pas être vide.",  maxMessage="Le rôle ne doit pas être vide.")
      */
     private $role;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson", cascade={"persist"})
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)   
      * @Assert\Valid
      */
     private $person;

@@ -85,34 +85,33 @@ class NewGroupPeople {
         });
     }
 
-
     editTypo() {
         this.getValues();
         switch (this.typoValue) {
             case 1:
-                this.roleValue = 7;
+                this.roleValue = 5;
                 this.nbPeopleValue = 1;
                 this.genderValue = 1;
                 break;
             case 2:
-                this.roleValue = 7;
+                this.roleValue = 5;
                 this.nbPeopleValue = 1;
                 this.genderValue = 2;
                 break;
             case 3:
-                this.roleValue = 2;
+                this.roleValue = 1;
                 this.nbPeopleValue = 2;
                 break;
             case 4:
-                this.roleValue = 6;
+                this.roleValue = 4;
                 this.genderValue = 1;
                 break;
             case 5:
-                this.roleValue = 6;
+                this.roleValue = 4;
                 this.genderValue = 2;
                 break;
             case 6:
-                this.roleValue = 2;
+                this.roleValue = 1;
                 break;
         }
 
@@ -133,10 +132,10 @@ class NewGroupPeople {
         this.getValues();
         if (this.nbPeopleValue === 1 && this.genderValue === 1) {
             this.typoValue = 1;
-            this.roleValue = 7;
+            this.roleValue = 5;
         } else if (this.nbPeopleValue === 1 && this.genderValue === 2) {
             this.typoValue = 2;
-            this.roleValue = 7;
+            this.roleValue = 5;
         }
 
         if (this.nbPeopleValue === 1 | this.typoValue <= 2) {

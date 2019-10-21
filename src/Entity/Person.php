@@ -43,17 +43,19 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)   
+     * @Assert\NotNull(message="Le nom ne doit pas être vide.")
      * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      * @Assert\Length(
      * min=2, 
      * max=50,
      * minMessage="Le nom est trop court (2 caractères min).", 
-     * maxMessage="Le nom est trop long (50 caractères max).")      
-     * */
+     * maxMessage="Le nom est trop long (50 caractères max).")
+     */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotNull(message="Le prénom ne doit pas être vide.")
      * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      * @Assert\Length(
      * min=2, 
@@ -72,7 +74,7 @@ class Person
     private $fullname;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=true)
      * @Assert\NotNull(message="La date de naissance ne doit pas être vide.")
      */
     private $birthdate;
@@ -89,14 +91,13 @@ class Person
 
     /**
      * @ORM\Column(type="smallint", nullable=false)
-     * @Assert\NotNull(message="Ne peut pas être vide.")
-     * @Assert\Range(min = 1, max = 3, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
+     * @Assert\NotNull(message="Le sexe doit être renseigné.")
+     * @Assert\Range(min = 1, max = 3, minMessage="Le sexe doit être renseigné.",  maxMessage="Le sexe doit être renseigné.")
      */
     private $gender;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Assert\Range(min = 0, max = 5, minMessage="Ne doit pas être vide.",  maxMessage="Ne doit pas être vide.")
      */
     private $nationality;
 

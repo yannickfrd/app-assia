@@ -15,16 +15,13 @@
     {% if edit_mode %}
     <div class="small text-secondary">
         <p>
-            <span id="js-info-created-person">
-                Créé le {{person.createdAt | date("d/m/Y à H:i") }}
-                {% if person.createdBy %}
-                par {{ person.createdBy.username }}
-            </span>
+            Créé le {{person.createdAt | date("d/m/Y à H:i") }}
+            {% if person.createdBy %}
+            par {{ person.createdBy.username }}
             {% endif %}
-            <span id="js-info-update-person">
+            <span id="js-person-updated">
                 (modifié le {{ person.updatedAt | date("d/m/Y à H:i") }}
-                {% if person.updatedBy %}
-                par {{ person.updatedBy.username }}{% endif %})
+                {% if person.updatedBy %} par {{ person.updatedBy.username }}{% endif %})
             </span>
         </p>
     </div>
@@ -53,7 +50,6 @@
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
-        {# {% dump(form) %} #}
         <div class="form-group row">
             <div class="col-md-6">
                 {{ form_row(form.firstname) }}
@@ -70,19 +66,6 @@
                 {{ form_row(form.gender) }}
             </div>
         </div>
-
-        {% if edit_mode == true %}
-        {# <div class="form-group row">
-            <div class="col-md-6">
-                <div class="row">
-                    <label for="role" class="col-md-4 col-form-label">Role de la personne dans le groupe</label>
-                    <div class="col-md-8">
-                        <input type="text" name="role" id="role" class="form-control mb-4" required>
-                    </div>
-                </div>
-            </div>
-        </div> #}
-        {% endif %}
 
         <br>
         <div class="form-group row">
@@ -114,13 +97,9 @@
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
-                    {% if edit_mode %}
                     <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-primary shadow"
                         data-url="{{ path('update_person', {'id':person.id}) }}">Mettre à jour</button>
-                    {% else %}
-                    <input type="submit" id="send" name="send" id="send" class="btn btn-primary shadow"
-                        value="Enregistrer">
-                    {% endif %}
+                    <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
                 </div>
 
             </div>

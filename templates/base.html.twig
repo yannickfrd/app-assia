@@ -33,7 +33,7 @@
 <body>
     <main class="min-vh-100">
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+            <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
                 <a class="navbar-brand" href="{{ path("home") }}">Esperer95-app</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
                     aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,10 +92,12 @@
             </nav>
         </header>
 
-        {% block body %}
+        <div class="position-fixed container-fluid fixed-bottom">
+            <div id="js-notif-container" class="container" aria-live="polite" aria-atomic="true">
+            </div>
+        </div>
 
-
-        {% endblock %}
+        {% block body %}{% endblock %}
 
         <!-- Modal -->
         <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation"
@@ -141,6 +143,7 @@
 <script src="{{ asset("js/ajaxRequest.js") }}"></script>
 <script src="{{ asset("js/searchPerson.js") }}"></script>
 <script src="{{ asset("js/messageFlash.js") }}"></script>
+<script src="{{ asset("js/notification.js") }}"></script>
 <script src="{{ asset("js/app.js") }}"></script>
 {# <script src="{{ asset("js/seePassword.js") }}"></script> #}
 <!-- Les fichiers Javascript pour Bootstrap -->

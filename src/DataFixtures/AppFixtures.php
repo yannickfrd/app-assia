@@ -77,13 +77,13 @@ class AppFixtures extends Fixture
                     $birthdate = $this->birthdate("adult");
                     $sex = 1;
                     $head = true;
-                    $role = 1;
+                    $role = 5;
                 } elseif ($familyTypology == 2) {
                     $firstname = $faker->firstName($gender = "male");
                     $birthdate = $this->birthdate("adult");
                     $sex = 2;
                     $head = true;
-                    $role = 1;
+                    $role = 5;
                 } elseif ($familyTypology == 3 || $familyTypology == 6) {
                     if ($j == 1) {
                         $firstname = $faker->firstName($gender = "female");
@@ -96,7 +96,7 @@ class AppFixtures extends Fixture
                         $birthdate = $this->birthdate("adult");
                         $sex = 2;
                         $head = false;
-                        $role = 2;
+                        $role = 1;
                     }
                 } elseif ($familyTypology == 4) {
                     if ($j == 1) {
@@ -104,7 +104,7 @@ class AppFixtures extends Fixture
                         $birthdate = $this->birthdate("adult");
                         $sex = 1;
                         $head = true;
-                        $role = 1;
+                        $role = 4;
                     }
                 } elseif ($familyTypology == 5) {
                     if ($j == 1) {
@@ -112,7 +112,7 @@ class AppFixtures extends Fixture
                         $birthdate = $this->birthdate("adult");
                         $sex = 2;
                         $head = true;
-                        $role = 1;
+                        $role = 4;
                     }
                 }
 
@@ -120,7 +120,7 @@ class AppFixtures extends Fixture
                     $birthdate = $this->birthdate("child");
                     $sex = mt_rand(1, 2);
                     $head = false;
-                    $role = 4;
+                    $role = 3;
                     if ($sex == 1) {
                         $firstname = $faker->firstName($gender = "female");
                     } else {

@@ -177,3 +177,18 @@ ul {
     /* height: 0%; */
     transition: all 0.5s ease;
 }
+
+
+.position-fixed {
+    z-index: 1000;
+}
+
+.js-msg-content {
+    backdrop-filter: blur(4px);
+}
+
+/* Notifications */
+.msg-flash {
+    min-height: 80px;
+    opacity: 0.9;
+}

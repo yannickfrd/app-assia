@@ -297,10 +297,13 @@ class PersonController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function editPerson(GroupPeople $groupPeople, Person $person, Request $request): Response
+    public function editPerson(GroupPeople $groupPeople, Person $person, Request $request, ValidatorInterface $validator): Response
     {
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
+
+        $nbErrors = count($validator->validate($form));
+        dump($nbErrors);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -337,14 +340,16 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
+        $now = new \DateTime();
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $person->setUpdatedAt(new \DateTime())
+            $person->setUpdatedAt($now)
                 ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
             $alert = "success";
-            $msg[] = "Les modifications ont été renregistrées.";
+            $msg[] = "Les modifications ont été enregistrées.";
         } else {
             $alert = "danger";
             $errors = $validator->validate($form);
@@ -356,6 +361,8 @@ class PersonController extends AbstractController
             "code" => 200,
             "alert" => $alert,
             "msg" => $msg,
+            "user" => $this->getUser()->getUsername(),
+            "date" => date_format($now, "d/m/Y à H:i")
         ], 200);
     }
 

@@ -26,19 +26,19 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank(message = "L'email ne doit pas être vide.")
      * @Assert\Email(message="L'adresse email n'est pas valide.")
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
      */
     private $password;
@@ -49,13 +49,13 @@ class User implements UserInterface
     private $confirmPassword;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      */
     private $firstname;

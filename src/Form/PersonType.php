@@ -48,7 +48,7 @@ class PersonType extends FormType
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 5,
-                    "placeholder" => "Write a comment abour the person"
+                    "placeholder" => "Write a comment about the person"
                 ]
             ]);
     }

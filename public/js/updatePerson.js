@@ -22,6 +22,9 @@ class UpdatePerson {
         if (dataJSON.code === 200) {
             dataJSON.msg.forEach(msg => {
                 new MessageFlash(dataJSON.alert, msg);
+                if (dataJSON.alert === "success") {
+                    document.getElementById("js-person-updated").textContent = "(modifié le " + dataJSON.date + " par " + dataJSON.user + ")";
+                }
             });
         }
     }
@@ -29,7 +32,20 @@ class UpdatePerson {
 
 let updatePerson = new UpdatePerson();
 
-// let form = new FormData(personElt);
+// let now = new Date();
+// now = now.getDate() + "/" + (now.getMonth() + 1) + "/" + now.getFullYear() + " à " + now.getHours() + ":" + now.getMinutes();
+// new Notification(dataJSON.alert, now, date);
+// $(function () {
+//     $(".toast").toast({
+//         autohide: false,
+//     })
+// })
+// $(function () {
+//     $(".toast").toast("show");
+// });
+
+
+
 // let inputsElt = document.person.querySelectorAll("input, textarea");
 // inputsElt.forEach(input => {
 //     if (input.type != "submit") {
@@ -39,4 +55,3 @@ let updatePerson = new UpdatePerson();
 //     }
 // });
 // let form2 = $("form[name=person]").serialize();
-// console.log(form2);
