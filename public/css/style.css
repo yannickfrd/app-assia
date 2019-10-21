@@ -4,6 +4,7 @@
 }
 
 body {
+    padding-top: 88px;
     background-color: #f5f5f5;
 }
 
@@ -191,4 +192,23 @@ ul {
 .msg-flash {
     min-height: 80px;
     opacity: 0.9;
+}
+
+
+@media (max-width: 992px) {
+    body {
+        padding-top: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-top: 80px;
+    }
 }
