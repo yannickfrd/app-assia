@@ -100,7 +100,7 @@ class ValidationPerson {
 
     checkEmail() {
         let regex = this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}");
-        if (regex | this.emailInputElt.value === "") {
+        if (regex || this.emailInputElt.value === "") {
             this.valid("email", this.emailInputElt);
         } else {
             this.invalid("email", this.emailLabelElt, this.emailInputElt, "L'adresse email est incorrecte.");
@@ -153,8 +153,8 @@ class ValidationPerson {
 
     // Met le champ en invalide et met un message d'erreur
     invalid(field, label, input, msg) {
-        if (document.querySelector("label.invalid-" + field)) {
-            document.querySelector(".invalid-" + field).remove();
+        if (document.querySelector("label>span.invalid-" + field)) {
+            document.querySelector("span.invalid-" + field).remove();
         }
         if (!input.classList.contains("is-invalid")) {
             input.classList.add("is-invalid");

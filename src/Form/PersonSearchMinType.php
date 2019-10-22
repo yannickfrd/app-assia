@@ -26,7 +26,7 @@ class PersonSearchMinType extends FormType
             ->add("firstname", null, [
                 "label" => false,
                 "attr" => [
-                    "class" => "w-max-140",
+                    "class" => "w-max-140 text-capitalize",
                     "placeholder" => "Prénom",
                     "autocomplete" => "off"
                 ]
@@ -77,7 +77,7 @@ class PersonSearchMinType extends FormType
             "data_class" => PersonSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
-            "csrf_protection" => false
+            "csrf_protection" => true
         ]);
     }
 

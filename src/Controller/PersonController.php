@@ -197,7 +197,7 @@ class PersonController extends AbstractController
                     "success",
                     $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe ménage."
                 );
-                return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+                return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         }
         return $this->render("app/personNew.html.twig", [
@@ -244,7 +244,7 @@ class PersonController extends AbstractController
                 return $this->redirectToRoute("person_show", ["id" => $personExist->getId()]);
             } else {
                 $this->createPerson($person, $groupPeople, $rolePerson);
-                return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+                return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         } else {
             return $this->render("app/personNew.html.twig", [

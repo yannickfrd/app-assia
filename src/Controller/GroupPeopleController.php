@@ -158,7 +158,7 @@ class GroupPeopleController extends AbstractController
                 "Une erreur s'est produite."
             );
         }
-        return $this->redirectToRoute("group_people", ["id" => $groupPeople->getId()]);
+        return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
     }
 
 

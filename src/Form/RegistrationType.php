@@ -16,6 +16,7 @@ class RegistrationType extends AbstractType
         $builder
             ->add("firstname", null, [
                 "attr" => [
+                    "class" => "text-capitalize",
                     "placeholder" => "Firstname"
                 ]
             ])

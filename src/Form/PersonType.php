@@ -23,6 +23,7 @@ class PersonType extends FormType
             ])
             ->add("firstname", null, [
                 "attr" => [
+                    "class" => "text-capitalize",
                     "placeholder" => "Firstname"
                 ]
             ])

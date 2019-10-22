@@ -24,6 +24,7 @@ class PersonMinType extends FormType
             ])
             ->add("firstname", null, [
                 "attr" => [
+                    "class" => "text-capitalize",
                     "placeholder" => "Firstname",
                     "required" => true
                 ]

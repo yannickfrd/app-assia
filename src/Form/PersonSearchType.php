@@ -23,6 +23,7 @@ class PersonSearchType extends FormType
             ])
             ->add("firstname", null, [
                 "attr" => [
+                    "class" => "text-capitalize",
                     "placeholder" => "Firstname"
                 ]
             ])
@@ -55,6 +56,7 @@ class PersonSearchType extends FormType
             "data_class" => PersonSearch::class,
             "translation_domain" => "forms",
             "method" => "get",
+            "id" => "search-person-form",
             "action" => "\list/people",
             "csrf_protection" => false
         ]);

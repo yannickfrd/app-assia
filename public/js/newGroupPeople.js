@@ -1,13 +1,16 @@
 //
 class NewGroupPeople {
     constructor() {
+        this.lastnameInputElt = document.getElementById("role_person_group_person_lastname");
+        this.firstnameInputElt = document.getElementById("role_person_group_person_firstname");
+        this.birthdateInputElt = document.getElementById("role_person_group_person_birthdate");
         this.birthdateInputElt = document.getElementById("role_person_group_person_birthdate");
         this.genderInputElt = document.getElementById("role_person_group_person_gender");
         this.typoInputElt = document.getElementById("role_person_group_groupPeople_familyTypology");
         this.nbPeopleInputElt = document.getElementById("role_person_group_groupPeople_nbPeople");
         this.roleInputElt = document.getElementById("role_person_group_role");
         // this.emailInputElt = document.getElementById("role_person_group_person_email");
-        // this.phone1InputElt = document.getElementById("role_person_group_person_phone1");
+        this.phone1InputElt = document.getElementById("role_person_group_person_phone1");
         this.genderValue = null, this.typoValue = null, this.nbPeopleValue = null, this.roleValue = null;
         this.init();
     }
@@ -39,7 +42,25 @@ class NewGroupPeople {
             }
         }.bind(this));
 
+        let searchParams = new URLSearchParams(window.location.search);
+        for (let param of searchParams) {
+            switch (param[0]) {
+                case "lastname":
+                    this.lastnameInputElt.value = param[1];
+                    break;
+                case "firstname":
+                    this.firstnameInputElt.value = param[1];
+                    break;
+                case "birthdate":
+                    this.birthdateInputElt.value = param[1];
+                    break;
+                case "phone":
+                    this.phone1InputElt.value = param[1];
+                    break;
+            }
+        }
     }
+
 
     getValues() {
         this.getGender();
