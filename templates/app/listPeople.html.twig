@@ -142,8 +142,8 @@
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
                                 class="text-primary text-uppercase font-weight-bold">{{ person.lastname }}</a>
                         </td>
-                        <td>{{ person.firstname }}</td>
-                        <td class="text-capitalize">{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />
+                        <td class="text-capitalize">{{ person.firstname }}</td>
+                        <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />
                             ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
                             an{% endif %}){% endif %}</td>
                         <td>{% if person.gender == 1 %}
