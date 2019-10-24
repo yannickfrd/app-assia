@@ -145,7 +145,7 @@ class ValidationPerson {
     valid(field, input) {
         if (input.classList.contains("is-invalid")) {
             input.classList.replace("is-invalid", "is-valid");
-            document.querySelector(".invalid-" + field).remove();
+            document.querySelector(".js-invalid-" + field).remove();
         } else {
             input.classList.add("is-valid");
         }
@@ -153,14 +153,14 @@ class ValidationPerson {
 
     // Met le champ en invalide et met un message d'erreur
     invalid(field, label, input, msg) {
-        if (document.querySelector("label>span.invalid-" + field)) {
-            document.querySelector("span.invalid-" + field).remove();
+        if (document.querySelector("label>span.js-invalid-" + field)) {
+            document.querySelector("span.js-invalid-" + field).remove();
         }
         if (!input.classList.contains("is-invalid")) {
             input.classList.add("is-invalid");
         }
         let invalidFeedbackElt = document.createElement("span");
-        invalidFeedbackElt.className = "invalid-feedback d-block invalid-" + field;
+        invalidFeedbackElt.className = "invalid-feedback d-block js-invalid js-invalid-" + field;
         invalidFeedbackElt.innerHTML = `
                 <span class="form-error-icon badge badge-danger text-uppercase">Erreur</span> 
                 <span class="form-error-message">${msg}</span>
@@ -170,7 +170,7 @@ class ValidationPerson {
 
     // Renvoie le nombre de champs invalides
     getNbErrors() {
-        let nbErrors = document.querySelectorAll(".is-invalid").length + document.querySelectorAll("select.is-invalid").length;
+        let nbErrors = document.querySelectorAll(".js-invalid").length;
         return nbErrors;
     }
 }

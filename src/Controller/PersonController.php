@@ -58,6 +58,7 @@ class PersonController extends AbstractController
 
         $search = $request->query->get("search");
 
+
         if ($request->query->all()) {
             $people =  $paginator->paginate(
                 $this->repo->findAllPeopleQuery($personSearch, $search),

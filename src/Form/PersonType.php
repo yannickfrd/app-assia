@@ -33,7 +33,6 @@ class PersonType extends FormType
                     "class" => "col-md-12"
                 ],
                 "required" => true
-
             ])
             ->add("gender", ChoiceType::class, [
                 "attr" => [
