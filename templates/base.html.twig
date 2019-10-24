@@ -33,8 +33,8 @@
 <body>
     <main class="min-vh-100">
         <header>
-            <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
-                <a class="navbar-brand" href="{{ path("home") }}">Esperer95-app</a>
+            <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white mb-4 shadow">
+                <a class="navbar-brand text-dark" href="{{ path("home") }}">Esperer95-app</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
                     aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -43,22 +43,22 @@
                     <ul class="navbar-nav mr-auto">
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "home" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("home") }}">
+                            <a class="nav-link text-dark " href="{{ path("home") }}">
                                 <span class="fas fa-home"></span>
                                 Accueil<span class="sr-only">(Accueil)</span>
                             </a>
                         </li>
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("list_people") }}">Personnes</a>
+                            <a class="nav-link text-dark " href="{{ path("list_people") }}">Personnes</a>
                         </li>
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("list_groups_people") }}">Suivis</a>
+                            <a class="nav-link text-dark " href="{{ path("list_groups_people") }}">Suivis</a>
                         </li>
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">
-                            <a class="nav-link" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
+                            <a class="nav-link text-dark zz" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
                         </li>
                     </ul>
                     <form action="{{ path("list_people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
@@ -72,9 +72,9 @@
                             <span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
                         </button>
                     </form>
-                    <div class="text-light">
+                    <div class="text-dark">
                         {% if app.user %}
-                        <a class="text-light font-weight-bold" href="{{ path("security_logout") }}"
+                        <a class="text-dark font-weight-bold" href="{{ path("security_logout") }}"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
                             title="{{ app.user.firstname }} {{ app.user.lastname }}"
                             data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />profil :                                                                                                                                                                                                           ">
@@ -82,11 +82,11 @@
                             {{ app.user.username }}
                         </a>
                         <br />
-                        <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
+                        <a class="text-dark" href="{{ path("security_logout") }}">Se déconnecter</a>
                         {% else %}
-                        <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
+                        <a class="text-dark" href="{{ path("security_login") }}">Se connecter</a>
                         <br />
-                        <a class="text-light" href="{{ path("security_registration") }}">S'inscrire</a>
+                        <a class="text-dark" href="{{ path("security_registration") }}">S'inscrire</a>
                         {% endif %}
                     </div>
             </nav>

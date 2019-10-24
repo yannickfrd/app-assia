@@ -50,7 +50,7 @@ class SearchPerson {
     addItem(dataJSON) {
         dataJSON.results.forEach(person => {
             let aElt = document.createElement("a");
-            aElt.innerHTML = "<span class='text-uppercase'>" + person.lastname + "</span> " + person.firstname;
+            aElt.innerHTML = "<span class='text-uppercase'>" + person.lastname + "</span> " + "<span class='text-capitalize'>" + person.firstname + "</span> ";
             aElt.href = "/person/" + person.id;
             aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 font-size-10";
             this.resultsSearchElt.appendChild(aElt);

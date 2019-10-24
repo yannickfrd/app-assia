@@ -7,7 +7,7 @@
 
 {% block title %}
 {% if group_people is defined %}Rechercher une personne
-{% else %}Liste des personnes{% endif %}
+{% else %}Rechercher une personne{% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -21,7 +21,7 @@
 <section class="my-0">
     <div class="container">
         <h1 class="h2 mb-4">{% if group_people is defined %}Rechercher une personne
-            {% else %}Liste des personnes{% endif %}</h1>
+            {% else %}Rechercher une personne{% endif %}</h1>
     </div>
 
     <div class="container-fluid p-0">
@@ -67,7 +67,8 @@
     <div class="container">
 
         {% if app.request.attributes.get("_route") == "new_support_search_person" %}
-        <p><a href="{{ path("person_new") }}" class="text-primary"><span class="fas fa-plus-square"></span> Créer une
+        <p><a href="{{ path("person_new") }}" class="js-create-person text-primary"><span
+                    class="fas fa-plus-square"></span> Créer une
                 nouvelle personne</a></p>
         {% endif %}
 
@@ -75,8 +76,9 @@
 
         {% if people %}
         {% if group_people is defined %}
-        <p><a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="text-primary"><span
-                    class="fas fa-plus-square"></span> Créer une nouvelle personne</a></p>
+        <p><a href="{{ path("group_create_person", {"id":group_people.id}) }}"
+                class="js-create-person text-primary"><span class="fas fa-plus-square"></span> Créer une nouvelle
+                personne</a></p>
         {% endif %}
 
 
@@ -99,7 +101,7 @@
                         <th scope="col" class="align-middle th-width-150px text-light text-uppercase">
                             {{ knp_pagination_sortable(people, "Nom", "p.lastname") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-120px text-light">
+                        <th scope="col" class="align-middle th-width-120px text-light text-capitalize">
                             {{ knp_pagination_sortable(people, "Prénom", "p.firstname") }}
                         </th>
                         <th scope="col" class="align-middle th-date text-light">
@@ -140,7 +142,7 @@
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
                                 class="text-primary text-uppercase font-weight-bold">{{ person.lastname }}</a>
                         </td>
-                        <td>{{ person.firstname }}</td>
+                        <td class="text-capitalize">{{ person.firstname }}</td>
                         <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />
                             ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
                             an{% endif %}){% endif %}</td>

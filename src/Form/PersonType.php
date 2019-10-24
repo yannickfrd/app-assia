@@ -23,6 +23,7 @@ class PersonType extends FormType
             ])
             ->add("firstname", null, [
                 "attr" => [
+                    "class" => "text-capitalize",
                     "placeholder" => "Firstname"
                 ]
             ])
@@ -32,7 +33,6 @@ class PersonType extends FormType
                     "class" => "col-md-12"
                 ],
                 "required" => true
-
             ])
             ->add("gender", ChoiceType::class, [
                 "attr" => [

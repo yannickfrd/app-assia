@@ -88,7 +88,7 @@ class RolePerson
         return $this->head;
     }
 
-    public function setHead(bool $head): self
+    public function setHead(?bool $head): self
     {
         $this->head = $head;
 
@@ -100,7 +100,7 @@ class RolePerson
         return $this->role;
     }
 
-    public function setRole(int $role): self
+    public function setRole(?int $role): self
     {
         $this->role = $role;
 

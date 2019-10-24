@@ -14,17 +14,17 @@ class UserFixtures extends Fixture
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
-         $this->passwordEncoder = $passwordEncoder;
-     }
+        $this->passwordEncoder = $passwordEncoder;
+    }
 
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create("fr_FR");
 
-        for ($i = 1; $i <= 20; $i++) {
-            
+        for ($i = 1; $i <= 10; $i++) {
+
             $user = new User();
-    
+
             // Définit la date de création
             $createdAt = $faker->dateTimeBetween($startDate = "-12 months", $endDate = "now", $timezone = null);
             $now = new \DateTime();
@@ -38,8 +38,8 @@ class UserFixtures extends Fixture
 
             $user->setUsername($firstname)
                 ->setFirstName($firstname)
-                ->setLastName($faker->lastName())            
-                ->setPassword($this->passwordEncoder->encodePassword($user,"test123"))
+                ->setLastName($faker->lastName())
+                ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
                 ->setEmail($faker->freeEmail())
                 ->setCreatedAt($createdAt)
                 ->setLoginCount(mt_rand(0, 99))
@@ -47,6 +47,17 @@ class UserFixtures extends Fixture
 
             $manager->persist($user);
         }
+
+        $user->setUsername("Romain")
+            ->setFirstName("Romain")
+            ->setLastName("Madelaine")
+            ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
+            ->setEmail("romain.madelaine@gmail.com")
+            ->setCreatedAt(new \DateTime())
+            ->setLoginCount(0)
+            ->setLastLogin(new \DateTime());
+
+        $manager->persist($user);
 
         $manager->flush();
     }

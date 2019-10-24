@@ -45,6 +45,10 @@ section {
     right: 10px;
 }
 
+.fa-phone {
+    transform: rotate(160deg);
+}
+
 .js-password-group {
     position: relative;
 }

@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocialSupportRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SocialSupportGroupRepository")
  */
-class SocialSupport
+class SocialSupportGroup
 {
     public const STATUS = [
         1 => "À venir",
@@ -29,7 +29,7 @@ class SocialSupport
     /**
      * @ORM\Column(type="date")
      */
-    private $beginningDate;
+    private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -62,19 +62,29 @@ class SocialSupport
      */
     private $groupPeople;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGroupCreated")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGroupUpdated")
+     */
+    private $updatedBy;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBeginningDate(): ?\DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->beginningDate;
+        return $this->startDate;
     }
 
-    public function setBeginningDate(\DateTimeInterface $beginningDate): self
+    public function setStartDate(\DateTimeInterface $startDate): self
     {
-        $this->beginningDate = $beginningDate;
+        $this->startDate = $startDate;
 
         return $this;
     }
@@ -86,8 +96,9 @@ class SocialSupport
 
     public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        $this->endDate = $endDate;
-
+        if ($endDate) {
+            $this->endDate = $endDate;
+        }
         return $this;
     }
 
@@ -154,5 +165,29 @@ class SocialSupport
     public function listStatus()
     {
         return self::STATUS[$this->status];
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
     }
 }

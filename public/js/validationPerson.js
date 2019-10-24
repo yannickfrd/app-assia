@@ -100,7 +100,11 @@ class ValidationPerson {
 
     checkEmail() {
         let regex = this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}");
+<<<<<<< HEAD
         if (regex | this.emailInputElt.value === "") {
+=======
+        if (regex || this.emailInputElt.value === "") {
+>>>>>>> test
             this.valid("email", this.emailInputElt);
         } else {
             this.invalid("email", this.emailLabelElt, this.emailInputElt, "L'adresse email est incorrecte.");
@@ -145,7 +149,11 @@ class ValidationPerson {
     valid(field, input) {
         if (input.classList.contains("is-invalid")) {
             input.classList.replace("is-invalid", "is-valid");
+<<<<<<< HEAD
             document.querySelector(".invalid-" + field).remove();
+=======
+            document.querySelector(".js-invalid-" + field).remove();
+>>>>>>> test
         } else {
             input.classList.add("is-valid");
         }
@@ -153,14 +161,23 @@ class ValidationPerson {
 
     // Met le champ en invalide et met un message d'erreur
     invalid(field, label, input, msg) {
+<<<<<<< HEAD
         if (document.querySelector("label.invalid-" + field)) {
             document.querySelector(".invalid-" + field).remove();
+=======
+        if (document.querySelector("label>span.js-invalid-" + field)) {
+            document.querySelector("span.js-invalid-" + field).remove();
+>>>>>>> test
         }
         if (!input.classList.contains("is-invalid")) {
             input.classList.add("is-invalid");
         }
         let invalidFeedbackElt = document.createElement("span");
+<<<<<<< HEAD
         invalidFeedbackElt.className = "invalid-feedback d-block invalid-" + field;
+=======
+        invalidFeedbackElt.className = "invalid-feedback d-block js-invalid js-invalid-" + field;
+>>>>>>> test
         invalidFeedbackElt.innerHTML = `
                 <span class="form-error-icon badge badge-danger text-uppercase">Erreur</span> 
                 <span class="form-error-message">${msg}</span>
@@ -170,7 +187,11 @@ class ValidationPerson {
 
     // Renvoie le nombre de champs invalides
     getNbErrors() {
+<<<<<<< HEAD
         let nbErrors = document.querySelectorAll(".is-invalid").length + document.querySelectorAll("select.is-invalid").length;
+=======
+        let nbErrors = document.querySelectorAll(".js-invalid").length;
+>>>>>>> test
         return nbErrors;
     }
 }

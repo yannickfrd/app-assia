@@ -55,15 +55,3 @@ let updatePerson = new UpdatePerson();
 // $(function () {
 //     $(".toast").toast("show");
 // });
-
-
-
-// let inputsElt = document.person.querySelectorAll("input, textarea");
-// inputsElt.forEach(input => {
-//     if (input.type != "submit") {
-//         let key = input.id.replace("person_", "");
-//         this.data += key + "=" + input.value + "&";
-//         form.append(key, input.value);
-//     }
-// });
-// let form2 = $("form[name=person]").serialize();

@@ -20,7 +20,7 @@ class GroupPeopleSearchType extends FormType
                 "label" => false,
                 "attr" => [
                     "placeholder" => "Lastname",
-                    "class" => "w-max-180",
+                    "class" => "w-max-180 text-uppercase",
                     "autocomplete" => "off"
                 ]
             ])
@@ -28,7 +28,7 @@ class GroupPeopleSearchType extends FormType
                 "label" => false,
                 "attr" => [
                     "placeholder" => "Firstname",
-                    "class" => "w-max-140",
+                    "class" => "w-max-140 text-capitalize",
                     "autocomplete" => "off"
                 ]
             ])

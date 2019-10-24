@@ -38,7 +38,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
      */
     private $password;
@@ -105,12 +105,24 @@ class User implements UserInterface
      */
     private $groupPeopleUpdated;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="createdBy")
+     */
+    private $socialSupportsGroupCreated;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="updatedBy")
+     */
+    private $socialSupportsGroupUpdated;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
         $this->peopleUpdated = new ArrayCollection();
         $this->groupPeople = new ArrayCollection();
         $this->groupPeopleUpdated = new ArrayCollection();
+        $this->socialSupportsGroupCreated = new ArrayCollection();
+        $this->socialSupportsGroupUpdated = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -368,6 +380,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($groupPeopleUpdated->getUpdatedBy() === $this) {
                 $groupPeopleUpdated->setUpdatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SocialSupportGroup[]
+     */
+    public function getSocialSupportGroupCreated(): Collection
+    {
+        return $this->socialSupportGroupCreated;
+    }
+
+    public function addSocialSupportGroupCreated(SocialSupportGroup $socialSupportGroupCreated): self
+    {
+        if (!$this->socialSupportGroupCreated->contains($socialSupportGroupCreated)) {
+            $this->socialSupportGroupCreated[] = $socialSupportGroupCreated;
+            $socialSupportGroupCreated->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSocialSupportGroupCreated(SocialSupportGroup $socialSupportGroupCreated): self
+    {
+        if ($this->socialSupportGroupCreated->contains($socialSupportGroupCreated)) {
+            $this->socialSupportGroupCreated->removeElement($socialSupportGroupCreated);
+            // set the owning side to null (unless already changed)
+            if ($socialSupportGroupCreated->getCreatedBy() === $this) {
+                $socialSupportGroupCreated->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SocialSupportGroup[]
+     */
+    public function getSocialSupportsGroupUpdated(): Collection
+    {
+        return $this->socialSupportsGroupUpdated;
+    }
+
+    public function addSocialSupportsGroupUpdated(SocialSupportGroup $socialSupportsGroupUpdated): self
+    {
+        if (!$this->socialSupportsGroupUpdated->contains($socialSupportsGroupUpdated)) {
+            $this->socialSupportsGroupUpdated[] = $socialSupportsGroupUpdated;
+            $socialSupportsGroupUpdated->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSocialSupportsGroupUpdated(SocialSupportGroup $socialSupportsGroupUpdated): self
+    {
+        if ($this->socialSupportsGroupUpdated->contains($socialSupportsGroupUpdated)) {
+            $this->socialSupportsGroupUpdated->removeElement($socialSupportsGroupUpdated);
+            // set the owning side to null (unless already changed)
+            if ($socialSupportsGroupUpdated->getUpdatedBy() === $this) {
+                $socialSupportsGroupUpdated->setUpdatedBy(null);
             }
         }
 

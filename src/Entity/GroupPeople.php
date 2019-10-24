@@ -76,7 +76,7 @@ class GroupPeople
     private $rolePerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupport", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="groupPeople")
      * @Assert\Valid
      */
     private $socialSupports;
@@ -109,7 +109,7 @@ class GroupPeople
         return self::FAMILY_TYPOLOGY[$this->familyTypology];
     }
 
-    public function setFamilyTypology(int $familyTypology): self
+    public function setFamilyTypology(?int $familyTypology): self
     {
         $this->familyTypology = $familyTypology;
 
@@ -121,7 +121,7 @@ class GroupPeople
         return $this->nbPeople;
     }
 
-    public function setNbPeople(int $nbPeople): self
+    public function setNbPeople(?int $nbPeople): self
     {
         $this->nbPeople = $nbPeople;
 
@@ -152,6 +152,18 @@ class GroupPeople
         return $this;
     }
 
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -164,15 +176,27 @@ class GroupPeople
         return $this;
     }
 
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
     /**
-     * @return Collection|SocialSupport[]
+     * @return Collection|SocialSupports[]
      */
     public function getSocialSupports(): Collection
     {
         return $this->socialSupports;
     }
 
-    public function addSocialSupport(SocialSupport $socialSupport): self
+    public function addSocialSupport(SocialSupportGroup $socialSupport): self
     {
         if (!$this->socialSupports->contains($socialSupport)) {
             $this->socialSupports[] = $socialSupport;
@@ -182,7 +206,7 @@ class GroupPeople
         return $this;
     }
 
-    public function removeSocialSupport(SocialSupport $socialSupport): self
+    public function removeSocialSupport(SocialSupportGroup $socialSupport): self
     {
         if ($this->socialSupports->contains($socialSupport)) {
             $this->socialSupports->removeElement($socialSupport);
@@ -222,30 +246,6 @@ class GroupPeople
                 $rolePerson->setGroupPeople(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }
