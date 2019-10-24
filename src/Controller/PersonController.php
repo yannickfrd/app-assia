@@ -11,7 +11,7 @@ use App\Entity\GroupPeople;
 
 use App\Entity\PersonSearch;
 use App\Form\RolePersonType;
-use App\Form\PersonSearchMinType;
+use App\Form\PersonSearchType;
 use App\Form\RolePersonGroupType;
 use App\Repository\PersonRepository;
 
@@ -53,7 +53,7 @@ class PersonController extends AbstractController
     {
         $personSearch = new PersonSearch();
 
-        $form = $this->createForm(PersonSearchMinType::class, $personSearch);
+        $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
         $search = $request->query->get("search");
@@ -101,7 +101,7 @@ class PersonController extends AbstractController
                 ->getForm();
         }
 
-        $form = $this->createForm(PersonSearchMinType::class, $personSearch);
+        $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
         if ($request->query->all()) {
