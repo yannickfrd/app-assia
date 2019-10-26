@@ -40,9 +40,9 @@ class Department
     private $pole;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="department")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="department")
      */
-    private $socialSupportGroup;
+    private $socialSupportGrp;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -91,7 +91,7 @@ class Department
     public function __construct()
     {
         $this->roleUsers = new ArrayCollection();
-        $this->socialSupportGroup = new ArrayCollection();
+        $this->socialSupportGrp = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,30 +167,30 @@ class Department
     }
 
     /**
-     * @return Collection|SocialSupportGroup[]
+     * @return Collection|SocialSupportGrp[]
      */
-    public function getSocialSupportGroup(): Collection
+    public function getSocialSupportGrp(): Collection
     {
-        return $this->socialSupportGroup;
+        return $this->socialSupportGrp;
     }
 
-    public function addSocialSupportGroup(SocialSupportGroup $socialSupportGroup): self
+    public function addSocialSupportGrp(SocialSupportGrp $socialSupportGrp): self
     {
-        if (!$this->socialSupportGroup->contains($socialSupportGroup)) {
-            $this->socialSupportGroup[] = $socialSupportGroup;
-            $socialSupportGroup->setDepartment($this);
+        if (!$this->socialSupportGrp->contains($socialSupportGrp)) {
+            $this->socialSupportGrp[] = $socialSupportGrp;
+            $socialSupportGrp->setDepartment($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportGroup(SocialSupportGroup $socialSupportGroup): self
+    public function removeSocialSupportGrp(SocialSupportGrp $socialSupportGrp): self
     {
-        if ($this->socialSupportGroup->contains($socialSupportGroup)) {
-            $this->socialSupportGroup->removeElement($socialSupportGroup);
+        if ($this->socialSupportGrp->contains($socialSupportGrp)) {
+            $this->socialSupportGrp->removeElement($socialSupportGrp);
             // set the owning side to null (unless already changed)
-            if ($socialSupportGroup->getDepartment() === $this) {
-                $socialSupportGroup->setDepartment(null);
+            if ($socialSupportGrp->getDepartment() === $this) {
+                $socialSupportGrp->setDepartment(null);
             }
         }
 

@@ -1,0 +1,153 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+
+{% block title %}Suivi social{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    {% set social_support = form.vars.value %}
+
+    <h1 class="h2 mb-3">{% if edit_mode %}Suivi social{% else %}Nouveau suivi social{% endif %}</h1>
+    {% if edit_mode %}
+    <div class="small text-secondary">
+        <p> Créé le {{social_support.createdAt | date("d/m/Y à H:i") }}
+            {% if social_support.createdBy %}par {{ social_support.createdBy.username }}{% endif %}
+            <span id="js-social-support-updated"> (modifié le {{ social_support.updatedAt | date("d/m/Y à H:i") }}
+                {% if social_support.updatedBy %}par {{ social_support.updatedBy.username }}{% endif %})
+            </span>
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-4"></div>
+    {% endif %}
+
+    {% if group_people is defined %}
+    <div class="my-3">
+        <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-primary">
+            <span class="fas fa-users"></span>
+            Retour à la fiche du groupe</a>
+        <span class="small text-secondary">{{ group_people.getFamilyTypologyType }}
+            {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }}
+            personnes)
+            {% endif %}
+        </span>
+        <br />
+    </div>
+    {% endif %}
+
+    <hr>
+
+    {{ form_start(form) }}
+
+    <section id="social-support">
+
+        {% include 'msgFlash.html.twig' %}
+        <div id="js-msg-flash-content"></div>
+
+
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.startDate) }}</div>
+            <div class="col-md-6">{{ form_row(form.status) }}</div>
+        </div>
+
+
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.department) }}</div>
+            {% if edit_mode %}
+            <div class="col-md-6">{{ form_row(form.endDate) }}</div>
+            {% endif %}
+        </div>
+
+
+
+        <div class="form-group row">{{ form_label(form.comment) }}
+            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+        </div>
+
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12">
+                <div class="mb-4 float-right">
+                    {% if edit_mode %}
+                    <button type="submit" id="update" name="update" class="btn btn-primary shadow"
+                        data-url="{{ path('update_person', {'id':social_support.id}) }}">Mettre à jour</button>
+                    <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
+                    {% else %}
+                    <input type="submit" id="send" name="send" id="send" class="btn btn-primary shadow"
+                        value="Enregistrer">
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {% if edit_mode %}
+
+    <hr>
+
+    <section>
+        <h2 class="h3 my-4">Personnes rattachées au suivi social</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover shadow">
+                        <thead class="bg-dark">
+                            <tr>
+                                <th scope="col" class="align-middle th-width-20px"></th>
+                                <th scope="col" class="align-middle text-light th-width-150px">Prénom
+                                </th>
+                                <th scope="col" class="align-middle text-light th-width-150px">Nom</th>
+                                <th scope="col" class="align-middle text-light th-width-100px">Date de
+                                    début</th>
+                                <th scope="col" class="align-middle text-light th-width-100px">Date de
+                                    fin</th>
+                                <th scope="col" class="align-middle text-light th-width-100px">Statut
+                                </th>
+                                <th scope="col" class="align-middle text-light th-width-150px">
+                                    Commentaire</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form_support_pers in form.socialSupportPers.children %}
+                            {% set person = form_support_pers.vars.data.person %}
+                            <tr>
+                                <th scope="row">
+                                    <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
+                                        class="btn btn-primary shadow" data-placement="bottom"
+                                        title="Modifier les informations de la personne">
+                                        <span class="fas fa-user-edit"></span>
+                                    </a>
+                                </th>
+                                <td class="px-1 align-middle">{{ person.firstname }}</td>
+                                <td class="px-1 align-middle">{{ person.lastname }}</td>
+                                <td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
+                                <td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
+                                <td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
+                                <td class="px-1">{{ form_widget(form_support_pers.comment) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    {% endif %}
+
+    {{ form_end(form, {"render_rest": false}) }}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset("js/validationPerson.js") }}"></script>
+{% endblock javascripts %}

@@ -19,7 +19,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
         parent::__construct($registry, GroupPeople::class);
     }
 
-    
+
     // /**
     //  * @return GroupPeople[] Returns an array of GroupPeople objects
     //  */
@@ -48,31 +48,29 @@ class GroupPeopleRepository extends ServiceEntityRepository
         ;
     }
     */
-        // Trouve tous les personnes du même groupe ménage
-    public function findPeopleFromGroup($groupPeople) {
-        
+    // Trouve tous les personnes du même groupe groupe
+    public function findPeopleFromGroup($groupPeople)
+    {
+
         return $this->createQueryBuilder("grp")
-                    ->leftJoin("grp.rolePerson", "role")
-                    ->leftJoin("role.person", "pers")
-                    ->select("grp", "role", "pers")
-                    ->andWhere("grp = :grp")
-                    ->setParameter("grp", $groupPeople)
-                    ->getQuery()
-                    ->getResult();
+            ->leftJoin("grp.rolePerson", "role")
+            ->leftJoin("role.person", "pers")
+            ->select("grp", "role", "pers")
+            ->andWhere("grp = :grp")
+            ->setParameter("grp", $groupPeople)
+            ->getQuery()
+            ->getResult();
     }
 
-        // Trouve tous les personnes du même groupe ménage
-        public function findPeopleFromGroupV2($groupPeople) {
-        
-            $q = Doctrine_Query::create()
+    // Trouve tous les personnes du même groupe groupe
+    public function findPeopleFromGroupV2($groupPeople)
+    {
+
+        $q = Doctrine_Query::create()
             ->from('GroupPeople g')
             ->leftJoin('g.rolePerson r')
             ->leftJoin('r.person p')
             ->where('g.id = ?', 1);
-          $user = $q->fetchOne();
-        }
-    
-
-
-
+        $user = $q->fetchOne();
+    }
 }

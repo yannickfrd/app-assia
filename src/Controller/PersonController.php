@@ -82,7 +82,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Permet de rechercher une personne pour l'ajouter dans un group ménage
+     * Permet de rechercher une personne pour l'ajouter dans un group groupe
      * 
      * @Route("/group/{id}/search/person", name="group_search_person")
      * @return Response
@@ -196,7 +196,7 @@ class PersonController extends AbstractController
 
                 $this->addFlash(
                     "success",
-                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe ménage."
+                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe groupe."
                 );
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
@@ -284,7 +284,7 @@ class PersonController extends AbstractController
 
         $this->addFlash(
             "success",
-            $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au ménage."
+            $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au groupe."
         );
     }
 
@@ -368,7 +368,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Voir la fiche de la personne
+     * Voir la fiche individuelle
      * 
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @Route("/person/{id}", name="person_show", methods="GET|POST")

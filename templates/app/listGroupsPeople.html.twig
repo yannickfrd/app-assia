@@ -70,7 +70,7 @@
                         <th scope="col" class="align-middle th-width-20px">
                         </th>
                         <th scope="col" class="align-middle th-width-80px" data-placement="bottom"
-                            title="N° d'identification du ménage">
+                            title="N° d'identification du groupe">
                             {{ knp_pagination_sortable(role_people, "ID", "g.id") }}
                         </th>
                         <th scope="col" class="align-middle th-width-150px text-uppercase">
@@ -105,19 +105,25 @@
                     {% for person in role_people %}
                     <tr {% if person.head %}class="font-weight-bold" {% endif %}>
                         <th scope="row">
+                            {% if person.groupPeople.nbPeople > 1 %}
                             <a href="{% if person.groupPeople %}{{ path('group_people_show', {'id':person.groupPeople.id}) }}
-                            {% endif %}" class="btn btn-primary shadow" data-placement="bottom"
-                                title="Voir la fiche du ménage"><span class="fas fa-users"></span></a>
+                                {% endif %}" class="btn btn-primary shadow" data-placement="bottom"
+                                title="Voir la fiche du groupe"><span class="fas fa-users"></span></a>
+                            {% else %}
+                            <a href="{{ path('group_person_show', {'id':person.groupPeople.id, 'person_id':person.person.id, 'slug':person.person.slug}) }}"
+                                class="btn btn-primary shadow" data-placement="bottom"
+                                title="Voir la fiche individuelle"> <span class="fas fa-user"></span></a>
+                            {% endif %}
                         </th>
-                        <td data-placement="bottom" title="N° d'identification du ménage">{{ person.groupPeople.id }}
+                        <td data-placement="bottom" title="N° d'identification du groupe">{{ person.groupPeople.id }}
                         </td>
                         <td>
-                            <a href="{% if person.groupPeople %}{{ path('group_people_show', {'id':person.groupPeople.id}) }}
-                            {% endif %}"
-                                class="text-primary text-uppercase font-weight-bold">{{ person.person.lastname }}</a>
+                            <a href="{{ path('group_person_show', {'id':person.groupPeople.id, 'person_id':person.person.id, 'slug':person.person.slug}) }}"
+                                class="text-primary text-uppercase font-weight-bold" data-placement="bottom"
+                                title="Voir la fiche individuelle">{{ person.person.lastname }}</a>
                         </td>
-                        <td class="text-capitalize">{{ person.person.firstname }}{% if  person.head %}<span data-placement="bottom"
-                                title="Demandeur/euse principal·e">*</span>{% endif %}</td>
+                        <td class="text-capitalize">{{ person.person.firstname }}{% if  person.head %}<span
+                                data-placement="bottom" title="Demandeur/euse principal·e">*</span>{% endif %}</td>
                         <td>{% if person.person.birthdate %}{{ person.person.birthdate | date("d/m/Y") }}<br />
                             ({{ person.person.age }}{% if person.person.age > 1 %}
                             ans{% elseif person.person.age > 0 %} an{% endif %}){% endif %}

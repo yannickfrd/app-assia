@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocialSupportPersonRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SocialSupportPersRepository")
  */
-class SocialSupportPerson
+class SocialSupportPers
 {
     public const STATUS = [
         1 => "À venir",
@@ -28,6 +28,7 @@ class SocialSupportPerson
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull(message="La date de début ne doit pas être vide.")
      */
     private $startDate;
 
@@ -38,6 +39,8 @@ class SocialSupportPerson
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotNull(message="Le statut doit être renseigné.")
+     * @Assert\Range(min = 1, max = 5, minMessage="Le statut doit être renseigné.",  maxMessage="Le statut doit être renseigné.")
      */
     private $status;
 
@@ -63,10 +66,10 @@ class SocialSupportPerson
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SocialSupportGroup", inversedBy="socialSupportPerson")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SocialSupportGrp", inversedBy="socialSupportPers")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $socialSupportGroup;
+    private $socialSupportGrp;
 
     public function getId(): ?int
     {
@@ -78,7 +81,7 @@ class SocialSupportPerson
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
@@ -102,7 +105,7 @@ class SocialSupportPerson
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(?int $status): self
     {
         $this->status = $status;
 
@@ -162,14 +165,14 @@ class SocialSupportPerson
         return $this;
     }
 
-    public function getSocialSupportGroup(): ?SocialSupportGroup
+    public function getSocialSupportGrp(): ?SocialSupportGrp
     {
-        return $this->socialSupportGroup;
+        return $this->socialSupportGrp;
     }
 
-    public function setSocialSupportGroup(?SocialSupportGroup $socialSupportGroup): self
+    public function setSocialSupportGrp(?SocialSupportGrp $socialSupportGrp): self
     {
-        $this->socialSupportGroup = $socialSupportGroup;
+        $this->socialSupportGrp = $socialSupportGrp;
 
         return $this;
     }

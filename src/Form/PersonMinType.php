@@ -37,7 +37,6 @@ class PersonMinType extends FormType
                     "autocomplete" => "off"
                 ],
                 "required" => true
-
             ])
             ->add("gender", ChoiceType::class, [
                 "attr" => [

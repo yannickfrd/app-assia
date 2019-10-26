@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
-{% block title %}Fiche ménage{% endblock %}
+{% block title %}Fiche de groupe{% endblock %}
 
 {% block stylesheets %}
 <link href="{{ asset("css/table.css") }}" rel="stylesheet" />{% endblock %}
@@ -13,7 +13,7 @@
 
 <div class="container">
     <div>
-        <h1 class="h2 mb-3">Fiche du ménage</h1>
+        <h1 class="h2 mb-3">Fiche de groupe</h1>
 
         <div class="small text-secondary">
             <p>Créé le
@@ -189,35 +189,32 @@
 
                 <tbody>
 
-                    {% for socialSupport in group_people.socialSupports %}
+                    {% for social_support in group_people.socialSupports %}
                     <tr>
                         <th scope="row">
-                            <a href="" class="btn btn-primary shadow" data-placement="bottom"
-                                title="Voir le suivi social">
+                            <a href="{{ path('social_support_show', {'id':group_people.id, 'social_support_id':social_support.id}) }}"
+                                class="
+                                btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ socialSupport.getStatusType }}</td>
-                        <td>
-                            <a href="" class="text-primary font-weight-bold">
-                                {{ socialSupport.startDate | date("d/m/Y") }}
-                            </a>
-                            <a class="text-blue" href=""></a>
+                        <td>{{ social_support.getStatusType }}</td>
+                        <td>{{ social_support.startDate | date("d/m/Y") }}
                         </td>
-                        <td>{% if socialSupport.endDate %}{{ socialSupport.endDate | date("d/m/Y") }}{% endif %}
+                        <td>{% if social_support.endDate %}{{ social_support.endDate | date("d/m/Y") }}{% endif %}
                         </td>
-                        <td>{{ socialSupport.createdBy.firstname }} {{ socialSupport.createdBy.lastname }}
+                        <td>{{ social_support.createdBy.firstname }} {{ social_support.createdBy.lastname }}
                         </td>
-                        <td>{{ socialSupport.department.name }}
+                        <td>{% if social_support.department %}{{ social_support.department.name }}{% endif %}
                         </td>
-                        <td>{{ socialSupport.department.pole.name }}
+                        <td>{% if social_support.department %}{{ social_support.department.pole.name }}{% endif %}
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <a href="" class="m-3 text-primary">
+        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-primary">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
         <br />
@@ -227,7 +224,7 @@
 
 {% endblock %}
 
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir retirer cette personne du ménage ?
+{% block modal_body %}Êtes-vous vraiment sûr de vouloir retirer cette personne du groupe ?
 {% endblock %}
 {% block modal_title %}Demande de confirmation
 {% endblock %}

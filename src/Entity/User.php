@@ -106,12 +106,12 @@ class User implements UserInterface
     private $groupPeopleUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="createdBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="createdBy")
      */
     private $socialSupportsGroupCreated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="updatedBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="updatedBy")
      */
     private $socialSupportsGroupUpdated;
 
@@ -393,30 +393,30 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SocialSupportGroup[]
+     * @return Collection|SocialSupportGrp[]
      */
-    public function getSocialSupportGroupCreated(): Collection
+    public function getSocialSupportGrpCreated(): Collection
     {
-        return $this->socialSupportGroupCreated;
+        return $this->socialSupportGrpCreated;
     }
 
-    public function addSocialSupportGroupCreated(SocialSupportGroup $socialSupportGroupCreated): self
+    public function addSocialSupportGrpCreated(SocialSupportGrp $socialSupportGrpCreated): self
     {
-        if (!$this->socialSupportGroupCreated->contains($socialSupportGroupCreated)) {
-            $this->socialSupportGroupCreated[] = $socialSupportGroupCreated;
-            $socialSupportGroupCreated->setCreatedBy($this);
+        if (!$this->socialSupportGrpCreated->contains($socialSupportGrpCreated)) {
+            $this->socialSupportGrpCreated[] = $socialSupportGrpCreated;
+            $socialSupportGrpCreated->setCreatedBy($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportGroupCreated(SocialSupportGroup $socialSupportGroupCreated): self
+    public function removeSocialSupportGrpCreated(SocialSupportGrp $socialSupportGrpCreated): self
     {
-        if ($this->socialSupportGroupCreated->contains($socialSupportGroupCreated)) {
-            $this->socialSupportGroupCreated->removeElement($socialSupportGroupCreated);
+        if ($this->socialSupportGrpCreated->contains($socialSupportGrpCreated)) {
+            $this->socialSupportGrpCreated->removeElement($socialSupportGrpCreated);
             // set the owning side to null (unless already changed)
-            if ($socialSupportGroupCreated->getCreatedBy() === $this) {
-                $socialSupportGroupCreated->setCreatedBy(null);
+            if ($socialSupportGrpCreated->getCreatedBy() === $this) {
+                $socialSupportGrpCreated->setCreatedBy(null);
             }
         }
 
@@ -424,14 +424,14 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SocialSupportGroup[]
+     * @return Collection|SocialSupportGrp[]
      */
     public function getSocialSupportsGroupUpdated(): Collection
     {
         return $this->socialSupportsGroupUpdated;
     }
 
-    public function addSocialSupportsGroupUpdated(SocialSupportGroup $socialSupportsGroupUpdated): self
+    public function addSocialSupportsGroupUpdated(SocialSupportGrp $socialSupportsGroupUpdated): self
     {
         if (!$this->socialSupportsGroupUpdated->contains($socialSupportsGroupUpdated)) {
             $this->socialSupportsGroupUpdated[] = $socialSupportsGroupUpdated;
@@ -441,7 +441,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeSocialSupportsGroupUpdated(SocialSupportGroup $socialSupportsGroupUpdated): self
+    public function removeSocialSupportsGroupUpdated(SocialSupportGrp $socialSupportsGroupUpdated): self
     {
         if ($this->socialSupportsGroupUpdated->contains($socialSupportsGroupUpdated)) {
             $this->socialSupportsGroupUpdated->removeElement($socialSupportsGroupUpdated);

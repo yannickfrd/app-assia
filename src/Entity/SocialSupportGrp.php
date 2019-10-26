@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocialSupportGroupRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SocialSupportGrpRepository")
  */
-class SocialSupportGroup
+class SocialSupportGrp
 {
     public const STATUS = [
         1 => "À venir",
@@ -30,6 +30,7 @@ class SocialSupportGroup
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull(message="La date de début ne doit pas être vide.")
      */
     private $startDate;
 
@@ -40,6 +41,8 @@ class SocialSupportGroup
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotNull(message="Le statut doit être renseigné.")
+     * @Assert\Range(min = 1, max = 5, minMessage="Le statut doit être renseigné.",  maxMessage="Le statut doit être renseigné.")
      */
     private $status;
 
@@ -75,18 +78,18 @@ class SocialSupportGroup
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPerson", mappedBy="socialSupportGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPers", mappedBy="socialSupportGrp", orphanRemoval=true)
      */
-    private $socialSupportPerson;
+    private $socialSupportPers;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="socialSupportGroup")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="socialSupportGrp")
      */
     private $department;
 
     public function __construct()
     {
-        $this->socialSupportPerson = new ArrayCollection();
+        $this->socialSupportPers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,7 +102,7 @@ class SocialSupportGroup
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
@@ -129,7 +132,7 @@ class SocialSupportGroup
         return self::STATUS[$this->status];
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(?int $status): self
     {
         $this->status = $status;
 
@@ -209,30 +212,30 @@ class SocialSupportGroup
     }
 
     /**
-     * @return Collection|SocialSupportPerson[]
+     * @return Collection|SocialSupportPers[]
      */
-    public function getSocialSupportPerson(): Collection
+    public function getSocialSupportPers(): Collection
     {
-        return $this->socialSupportPerson;
+        return $this->socialSupportPers;
     }
 
-    public function addSocialSupportPerson(SocialSupportPerson $socialSupportPerson): self
+    public function addSocialSupportPers(SocialSupportPers $socialSupportPers): self
     {
-        if (!$this->socialSupportPerson->contains($socialSupportPerson)) {
-            $this->socialSupportPerson[] = $socialSupportPerson;
-            $socialSupportPerson->setSocialSupportGroup($this);
+        if (!$this->socialSupportPers->contains($socialSupportPers)) {
+            $this->socialSupportPers[] = $socialSupportPers;
+            $socialSupportPers->setSocialSupportGrp($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportPerson(SocialSupportPerson $socialSupportPerson): self
+    public function removeSocialSupportPers(SocialSupportPers $socialSupportPers): self
     {
-        if ($this->socialSupportPerson->contains($socialSupportPerson)) {
-            $this->socialSupportPerson->removeElement($socialSupportPerson);
+        if ($this->socialSupportPers->contains($socialSupportPers)) {
+            $this->socialSupportPers->removeElement($socialSupportPers);
             // set the owning side to null (unless already changed)
-            if ($socialSupportPerson->getSocialSupportGroup() === $this) {
-                $socialSupportPerson->setSocialSupportGroup(null);
+            if ($socialSupportPers->getSocialSupportGrp() === $this) {
+                $socialSupportPers->setSocialSupportGrp(null);
             }
         }
 

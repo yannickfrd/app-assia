@@ -150,7 +150,7 @@ class Person
     private $rolesPerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPerson", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPers", mappedBy="person")
      */
     private $socialSupports;
 
@@ -419,14 +419,14 @@ class Person
     }
 
     /**
-     * @return Collection|SocialSupportPerson[]
+     * @return Collection|SocialSupportPers[]
      */
     public function getSocialSupports(): Collection
     {
         return $this->socialSupports;
     }
 
-    public function addSocialSupport(SocialSupportPerson $socialSupport): self
+    public function addSocialSupport(SocialSupportPers $socialSupport): self
     {
         if (!$this->socialSupports->contains($socialSupport)) {
             $this->socialSupports[] = $socialSupport;
@@ -436,7 +436,7 @@ class Person
         return $this;
     }
 
-    public function removeSocialSupport(SocialSupportPerson $socialSupport): self
+    public function removeSocialSupport(SocialSupportPers $socialSupport): self
     {
         if ($this->socialSupports->contains($socialSupport)) {
             $this->socialSupports->removeElement($socialSupport);

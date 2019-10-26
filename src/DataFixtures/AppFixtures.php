@@ -9,8 +9,8 @@ use App\Entity\RoleUser;
 use App\Entity\Department;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-use App\Entity\SocialSupportGroup;
-use App\Entity\SocialSupportPerson;
+use App\Entity\SocialSupportGrp;
+use App\Entity\SocialSupportPers;
 use App\Repository\RolePersonRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
     private $groupPeople, $familyTypology, $nbPeople, $groupCreatedAt, $groupUpdatedAt;
     private $rolePerson, $head, $role;
     private $person, $lastname, $firstname, $birthdate, $sex;
-    private $socialSupportGroup, $nbSocialSupports, $startDate, $endDate, $status;
+    private $socialSupportGrp, $nbSocialSupports, $startDate, $endDate, $status;
 
     public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -55,21 +55,21 @@ class AppFixtures extends Fixture
                     for ($i = 1; $i <= mt_rand(3, 6); $i++) {
                         $this->addRoleUser();
                         $this->addUser();
-                        // Crée des faux ménages
+                        // Crée des faux groupes
                         for ($j = 1; $j <= mt_rand(15, 20); $j++) {
                             $this->setTypology();
                             $this->addGroupPeople();
                             //Crée des faux suivis sociaux 
                             $this->nbSocialSupports = mt_rand(1, 2);
                             for ($k = 1; $k <= $this->nbSocialSupports; $k++) {
-                                $this->addSocialSupportGroup($k);
+                                $this->addSocialSupportGrp($k);
                             }
-                            // Crée des fausses personnes pour le ménage
+                            // Crée des fausses personnes pour le groupe
                             for ($l = 1; $l <= $this->nbPeople; $l++) {
                                 $this->familyTypology($l);
                                 $this->addRolePerson();
                                 $this->addPerson();
-                                $this->addSocialSupportPerson();
+                                $this->addSocialSupportPers();
                             }
                             $this->manager->flush();
                         }
@@ -150,7 +150,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    // Crée le groupe ménage
+    // Crée le groupe groupe
     public function addGroupPeople()
     {
         // Définit la date de création et de mise à jour
@@ -180,9 +180,9 @@ class AppFixtures extends Fixture
     }
 
     // Crée le suivi social du groupe
-    public function addSocialSupportGroup($k)
+    public function addSocialSupportGrp($k)
     {
-        $this->socialSupportGroup = new SocialSupportGroup();
+        $this->socialSupportGrp = new SocialSupportGrp();
 
         $comment = "<p>" . join($this->faker->paragraphs(3), "</p><p>") . "</p>";
 
@@ -204,7 +204,7 @@ class AppFixtures extends Fixture
             }
         }
 
-        $this->socialSupportGroup->setStartDate($this->startDate)
+        $this->socialSupportGrp->setStartDate($this->startDate)
             ->setEndDate($this->endDate ?? null)
             ->setStatus($this->status)
             ->setComment($comment)
@@ -215,16 +215,16 @@ class AppFixtures extends Fixture
             ->setGroupPeople($this->groupPeople)
             ->setDepartment($this->department);
 
-        $this->manager->persist($this->socialSupportGroup);
+        $this->manager->persist($this->socialSupportGrp);
     }
     // Crée le suivi social du groupe
-    public function addSocialSupportPerson()
+    public function addSocialSupportPers()
     {
-        $socialSupportPerson = new SocialSupportPerson();
+        $socialSupportPers = new SocialSupportPers();
 
         $comment = "<p>" . join($this->faker->paragraphs(3), "</p><p>") . "</p>";
 
-        $socialSupportPerson->setStartDate($this->startDate)
+        $socialSupportPers->setStartDate($this->startDate)
             ->setEndDate($this->endDate ?? null)
             ->setStatus($this->status)
             ->setComment($comment)
@@ -233,9 +233,9 @@ class AppFixtures extends Fixture
             // ->setCreatedBy($this->user)
             // ->setUpdatedBy($this->user)
             ->setPerson($this->person)
-            ->setSocialSupportGroup($this->socialSupportGroup);
+            ->setSocialSupportGrp($this->socialSupportGrp);
 
-        $this->manager->persist($socialSupportPerson);
+        $this->manager->persist($socialSupportPers);
     }
 
     protected function getDateTimeBeetwen($startEnd, $endDate = "now")

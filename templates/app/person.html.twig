@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
-{% block title %}Fiche personne{% endblock %}
+{% block title %}Fiche individuelle{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -12,7 +12,7 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Fiche de la personne {% else %}Création d'une personne{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}Fiche individuelle{% else %}Création d'une personne{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{person.createdAt | date("d/m/Y à H:i") }}
@@ -26,11 +26,11 @@
     <div class="mb-4"></div>
     {% endif %}
 
-    {% if group_people is defined %}
+    {% if group_people is defined and group_people.rolePerson|length > 1 %}
     <div class="my-3">
         <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-primary">
             <span class="fas fa-users"></span>
-            Retour à la fiche du ménage</a>
+            Retour à la fiche du groupe</a>
         <span class="small text-secondary">{{ group_people.getFamilyTypologyType }}
             {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }}
             personnes)
@@ -129,11 +129,11 @@
                             </a>
                         </th>
                         <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de<br />début
+                            <a href="" class="sorting-indicator text-light">Date de début
                             </a>
                         </th>
                         <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de<br />fin
+                            <a href="" class="sorting-indicator text-light">Date de fin
                             </a>
                         </th>
                         <th scope="col" class="align-middle th-width-150px">
@@ -152,53 +152,50 @@
                 </thead>
 
                 <tbody>
-                    {% for socialSupport in person.socialSupports %}
+                    {% for social_support in person.socialSupports %}
                     <tr>
                         <th scope="row">
-                            <a href="" class="btn btn-primary shadow" data-placement="bottom"
-                                title="Voir le suivi social">
+                            <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.id}) }}"
+                                class="btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ socialSupport.getStatusType }}</td>
-                        <td>
-                            <a href="" class="text-primary font-weight-bold">
-                                {{ socialSupport.startDate | date("d/m/Y") }}
-                            </a>
-                            <a class="text-blue" href=""></a>
-                        </td>
-                        <td>{{ socialSupport.endDate | date("d/m/Y") }}</td>
-                        <td>{{ socialSupport.socialSupportGroup.createdBy.firstname }}
-                            {{ socialSupport.socialSupportGroup.createdBy.lastname }}
-                        </td>
-                        <td>{{ socialSupport.socialSupportGroup.department.name }}
-                        </td>
-                        <td>{{ socialSupport.socialSupportGroup.department.pole.name }}
-                        </td>
+                        <td>{{ social_support.getStatusType }}</td>
+                        <td>{{ social_support.startDate | date("d/m/Y") }}</td>
+                        <td>{{ social_support.endDate | date("d/m/Y") }}</td>
+                        <td>{{ social_support.socialSupportGrp.createdBy.firstname }}
+                            {{ social_support.socialSupportGrp.createdBy.lastname }}</td>
+                        <td>{{ social_support.socialSupportGrp.department.name }}</td>
+                        <td>{{ social_support.socialSupportGrp.department.pole.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <a href="" class="m-3 text-primary">
+
+        {% if group_people is defined %}
+        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-primary"
+            class="m-3 text-primary">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
-        <br />
+        {% endif %}
+
     </section>
 
     <hr>
 
+    {% if person.rolesPerson %}
+
     <section id="groups-people">
         <h2 class="h3 my-4">Groupes d'appartenance</h2>
 
-        {% if person.rolesPerson %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover shadow">
                 <thead class="bg-dark text-light">
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-80px d-none d-sm-table-cell"
-                            data-placement="bottom" title="N° d'identification du ménage">ID groupe</th>
+                            data-placement="bottom" title="N° d'identification du groupe">ID groupe</th>
                         <th scope="col" class="align-middle th-width-140px">Typologie familiale</th>
                         <th scope="col" class="align-middle th-width-100px d-none d-sm-table-cell">Nb de personnes</th>
                         <th scope="col" class="align-middle th-width-150px">Rôle dans le groupe</th>
@@ -214,11 +211,11 @@
                     <tr {% if role.head %} class="font-weight-bold" {% endif %}>
                         <th scope="row">
                             <a href="{{ path('group_people_show', {'id':role.groupPeople.id}) }}"
-                                class="btn btn-primary shadow" data-placement="bottom" title="Voir la fiche du ménage">
+                                class="btn btn-primary shadow" data-placement="bottom" title="Voir la fiche du groupe">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td data-placement="bottom" title="N° d'identification du ménage"
+                        <td data-placement="bottom" title="N° d'identification du groupe"
                             class="d-none d-sm-table-cell">
                             {{ role.groupPeople.id }}</td>
                         <td class="d-table-row d-sm-table-cell">
