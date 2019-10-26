@@ -56,6 +56,18 @@ class SocialSupportPerson
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="socialSupports")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $person;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SocialSupportGroup", inversedBy="socialSupportPerson")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $socialSupportGroup;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,8 +145,32 @@ class SocialSupportPerson
         return $this;
     }
 
-    public function listStatus()
+    public function getStatusType()
     {
         return self::STATUS[$this->status];
+    }
+
+    public function getPerson(): ?Person
+    {
+        return $this->person;
+    }
+
+    public function setPerson(?Person $person): self
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    public function getSocialSupportGroup(): ?SocialSupportGroup
+    {
+        return $this->socialSupportGroup;
+    }
+
+    public function setSocialSupportGroup(?SocialSupportGroup $socialSupportGroup): self
+    {
+        $this->socialSupportGroup = $socialSupportGroup;
+
+        return $this;
     }
 }

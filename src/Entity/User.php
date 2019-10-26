@@ -115,6 +115,11 @@ class User implements UserInterface
      */
     private $socialSupportsGroupUpdated;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", orphanRemoval=true)
+     */
+    private $roleUsers;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
@@ -123,6 +128,7 @@ class User implements UserInterface
         $this->groupPeopleUpdated = new ArrayCollection();
         $this->socialSupportsGroupCreated = new ArrayCollection();
         $this->socialSupportsGroupUpdated = new ArrayCollection();
+        $this->roleUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -442,6 +448,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($socialSupportsGroupUpdated->getUpdatedBy() === $this) {
                 $socialSupportsGroupUpdated->setUpdatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RoleUser[]
+     */
+    public function getRoleUsers(): Collection
+    {
+        return $this->roleUsers;
+    }
+
+    public function addRoleUser(RoleUser $roleUser): self
+    {
+        if (!$this->roleUsers->contains($roleUser)) {
+            $this->roleUsers[] = $roleUser;
+            $roleUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoleUser(RoleUser $roleUser): self
+    {
+        if ($this->roleUsers->contains($roleUser)) {
+            $this->roleUsers->removeElement($roleUser);
+            // set the owning side to null (unless already changed)
+            if ($roleUser->getUser() === $this) {
+                $roleUser->setUser(null);
             }
         }
 

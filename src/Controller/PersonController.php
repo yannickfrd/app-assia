@@ -201,9 +201,9 @@ class PersonController extends AbstractController
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         }
-        return $this->render("app/personNew.html.twig", [
-            "person" => $person,
+        return $this->render("app/person.html.twig", [
             "form" => $form->createView(),
+            "edit_mode" => false
         ]);
     }
 
@@ -248,10 +248,10 @@ class PersonController extends AbstractController
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         } else {
-            return $this->render("app/personNew.html.twig", [
+            return $this->render("app/person.html.twig", [
                 "group_people" => $groupPeople,
-                "person" => $person,
                 "form" => $form->createView(),
+                "edit_mode" => false
             ]);
         }
     }
@@ -300,11 +300,12 @@ class PersonController extends AbstractController
      */
     public function editPerson(GroupPeople $groupPeople, Person $person, Request $request, ValidatorInterface $validator): Response
     {
+        $socialSupports = $person->getSocialSupports();
+
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        $nbErrors = count($validator->validate($form));
-        dump($nbErrors);
+        // $nbErrors = count($validator->validate($form));
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -321,7 +322,6 @@ class PersonController extends AbstractController
 
         return $this->render("app/person.html.twig", [
             "group_people" => $groupPeople,
-            "person" => $person,
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
@@ -390,7 +390,6 @@ class PersonController extends AbstractController
         }
 
         return $this->render("app/person.html.twig", [
-            "person" => $person,
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

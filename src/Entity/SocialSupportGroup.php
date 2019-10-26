@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -72,6 +74,21 @@ class SocialSupportGroup
      */
     private $updatedBy;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPerson", mappedBy="socialSupportGroup", orphanRemoval=true)
+     */
+    private $socialSupportPerson;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="socialSupportGroup")
+     */
+    private $department;
+
+    public function __construct()
+    {
+        $this->socialSupportPerson = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +122,11 @@ class SocialSupportGroup
     public function getStatus(): ?int
     {
         return $this->status;
+    }
+
+    public function getStatusType()
+    {
+        return self::STATUS[$this->status];
     }
 
     public function setStatus(int $status): self
@@ -162,11 +184,6 @@ class SocialSupportGroup
         return $this;
     }
 
-    public function listStatus()
-    {
-        return self::STATUS[$this->status];
-    }
-
     public function getCreatedBy(): ?User
     {
         return $this->createdBy;
@@ -187,6 +204,49 @@ class SocialSupportGroup
     public function setUpdatedBy(?User $updatedBy): self
     {
         $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SocialSupportPerson[]
+     */
+    public function getSocialSupportPerson(): Collection
+    {
+        return $this->socialSupportPerson;
+    }
+
+    public function addSocialSupportPerson(SocialSupportPerson $socialSupportPerson): self
+    {
+        if (!$this->socialSupportPerson->contains($socialSupportPerson)) {
+            $this->socialSupportPerson[] = $socialSupportPerson;
+            $socialSupportPerson->setSocialSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSocialSupportPerson(SocialSupportPerson $socialSupportPerson): self
+    {
+        if ($this->socialSupportPerson->contains($socialSupportPerson)) {
+            $this->socialSupportPerson->removeElement($socialSupportPerson);
+            // set the owning side to null (unless already changed)
+            if ($socialSupportPerson->getSocialSupportGroup() === $this) {
+                $socialSupportPerson->setSocialSupportGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
 
         return $this;
     }

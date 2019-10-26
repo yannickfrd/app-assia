@@ -189,8 +189,9 @@ class GroupPeopleController extends AbstractController
             // Compte le nombre de personnes dans le ménage
             $nbPeople = $groupPeople->getRolePerson()->count();
             // Vérifie que le ménage est composé de plus d'1 personne
-            if ($nbPeople == 1) {
-                return $this->msgFlash(null, "Un ménage doit être composé d'au moins une personne.", null,  200);
+
+            if ($rolePerson->getHead()) {
+                return $this->msgFlash(null, "Le/la demandeur/euse principal·e ne peut pas être retiré du ménage.", null,  200);
             } else {
                 $groupPeople->removeRolePerson($rolePerson);
                 $groupPeople->setNbPeople($nbPeople - 1);
