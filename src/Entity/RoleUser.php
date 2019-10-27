@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class RoleUser
 {
     public const ROLE = [
-        1 => "Travailleur/euse social·e",
+        1 => "Travailleur social",
         2 => "Chef·fe de service",
         3 => "Directeur/trice",
         4 => "Administratif",
@@ -30,6 +30,11 @@ class RoleUser
      * @ORM\Column(type="integer")
      */
     private $role;
+
+    /**
+     * @var string 
+     */
+    private $roleType;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUsers")
@@ -59,6 +64,11 @@ class RoleUser
         return $this;
     }
 
+    public function getRoleType()
+    {
+        return self::ROLE[$this->role];
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -70,6 +80,7 @@ class RoleUser
 
         return $this;
     }
+
 
     public function getDepartment(): ?Department
     {

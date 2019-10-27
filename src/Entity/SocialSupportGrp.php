@@ -16,7 +16,7 @@ class SocialSupportGrp
     public const STATUS = [
         1 => "À venir",
         2 => "En cours",
-        3 => "En suspens",
+        3 => "Suspendu",
         4 => "Terminé",
         5 => "Autre"
     ];

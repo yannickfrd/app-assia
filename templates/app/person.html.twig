@@ -54,38 +54,24 @@
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form_person.firstname) }}</div>
             <div class="col-md-6">{{ form_row(form_person.lastname) }}</div>
-        </div>
-        <div class="form-group row">
             <div class="col-md-6">{{ form_row(form_person.birthdate) }}</div>
             <div class="col-md-6"> {{ form_row(form_person.gender) }}</div>
         </div>
 
-        {% if edit_mode == false and group_people is not defined %}
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.groupPeople.familyTypology) }}</div>
-            <div class="col-md-6">{{ form_row(form.groupPeople.nbPeople) }}</div>
-        </div>
-        {% endif %}
-
         {% if edit_mode == false %}
         <div class="form-group row">
+            {% if group_people is not defined %}
+            <div class="col-md-6">{{ form_row(form.groupPeople.familyTypology) }}</div>
+            <div class="col-md-6">{{ form_row(form.groupPeople.nbPeople) }}</div>
+            {% endif %}
             <div class="col-md-6">{{ form_row(form.role) }}</div>
         </div>
         {% endif %}
 
-        <br>
         <div class="form-group row">
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-md-12">{{ form_row(form_person.phone1) }}</div>
-                    <div class="col-md-12">{{ form_row(form_person.phone2) }}</div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-md-12">{{ form_row(form_person.email) }}</div>
-                </div>
-            </div>
+            <div class="col-md-6">{{ form_row(form_person.phone1) }}</div>
+            <div class="col-md-6">{{ form_row(form_person.phone2) }}</div>
+            <div class="col-md-6">{{ form_row(form_person.email) }}</div>
         </div>
         <div class="form-group row">{{ form_label(form_person.comment) }}
             <div class="col-md-12">{{ form_widget(form_person.comment) }}</div>
@@ -155,10 +141,12 @@
                     {% for social_support in person.socialSupports %}
                     <tr>
                         <th scope="row">
+                            {% if social_support.socialSupportGrp.department.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.id}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
+                            {% endif %}
                         </th>
                         <td>{{ social_support.getStatusType }}</td>
                         <td>{{ social_support.startDate | date("d/m/Y") }}</td>
@@ -174,21 +162,19 @@
         </div>
 
         {% if group_people is defined %}
-        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-primary"
-            class="m-3 text-primary">
-            <span class="fas fa-plus-square"></span>
-            Créer un nouveau suivi</a>
+        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-primary">
+            <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</a>
         {% endif %}
 
     </section>
 
     <hr>
 
-    {% if person.rolesPerson %}
 
     <section id="groups-people">
         <h2 class="h3 my-4">Groupes d'appartenance</h2>
 
+        {% if person.rolesPerson %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover shadow">
                 <thead class="bg-dark text-light">
@@ -206,7 +192,6 @@
                 </thead>
 
                 <tbody>
-
                     {% for role in person.rolesPerson %}
                     <tr {% if role.head %} class="font-weight-bold" {% endif %}>
                         <th scope="row">
@@ -222,9 +207,8 @@
                             {{ role.groupPeople.getFamilyTypologyType }}
                         </td>
                         <td class="d-table-row d-sm-table-cell">
-                            {{ role.groupPeople.nbPeople }}
-                            <span class="d-inline d-sm-none">
-                                personne(s)</span>
+                            {% if role.groupPeople.nbPeople > 1 %}<span
+                                class="d-inline d-sm-none">{{ role.groupPeople.nbPeople }}personnes</span>{% endif %}
                         </td>
                         <td>{{ role.listRole }}</td>
                         <td class="d-none d-sm-table-cell">{{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
@@ -235,7 +219,7 @@
             </table>
         </div>
         {% endif %}
-
+        <a href="" class="m-3 text-primary"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</a>
     </section>
 
     {% endif %}

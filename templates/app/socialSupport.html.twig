@@ -2,6 +2,8 @@
 
 {% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
+
+
 {% block title %}Suivi social{% endblock %}
 
 {% block stylesheets %}{% endblock %}
@@ -25,9 +27,15 @@
     {% else %}
     <div class="mb-4"></div>
     {% endif %}
-
     {% if group_people is defined %}
     <div class="my-3">
+        <div>
+            {% for form_support_pers in form.socialSupportPers.children %}
+            {% set person = form_support_pers.vars.data.person %}
+            <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
+                class="btn btn-outline-secondary btn-sm mb-2"> {{ person.firstname }} {{ person.lastname }}</a>
+            {% endfor %}
+        </div>
         <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-primary">
             <span class="fas fa-users"></span>
             Retour à la fiche du groupe</a>
@@ -36,7 +44,6 @@
             personnes)
             {% endif %}
         </span>
-        <br />
     </div>
     {% endif %}
 
@@ -52,18 +59,12 @@
 
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.startDate) }}</div>
-            <div class="col-md-6">{{ form_row(form.status) }}</div>
-        </div>
-
-
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.department) }}</div>
             {% if edit_mode %}
             <div class="col-md-6">{{ form_row(form.endDate) }}</div>
             {% endif %}
+            <div class="col-md-6">{{ form_row(form.status) }}</div>
+            <div class="col-md-6">{{ form_row(form.department) }}</div>
         </div>
-
-
 
         <div class="form-group row">{{ form_label(form.comment) }}
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
@@ -92,7 +93,7 @@
 
     <hr>
 
-    <section>
+    <section class="{% if form.socialSupportPers.children|length == 1 %}d-none{% endif %}">
         <h2 class="h3 my-4">Personnes rattachées au suivi social</h2>
         <div class="row">
             <div class="col-md-12">
@@ -101,17 +102,12 @@
                         <thead class="bg-dark">
                             <tr>
                                 <th scope="col" class="align-middle th-width-20px"></th>
-                                <th scope="col" class="align-middle text-light th-width-150px">Prénom
-                                </th>
+                                <th scope="col" class="align-middle text-light th-width-150px">Prénom</th>
                                 <th scope="col" class="align-middle text-light th-width-150px">Nom</th>
-                                <th scope="col" class="align-middle text-light th-width-100px">Date de
-                                    début</th>
-                                <th scope="col" class="align-middle text-light th-width-100px">Date de
-                                    fin</th>
-                                <th scope="col" class="align-middle text-light th-width-100px">Statut
-                                </th>
-                                <th scope="col" class="align-middle text-light th-width-150px">
-                                    Commentaire</th>
+                                <th scope="col" class="align-middle text-light th-width-100px">Date de début</th>
+                                <th scope="col" class="align-middle text-light th-width-100px">Date de fin</th>
+                                <th scope="col" class="align-middle text-light th-width-100px">Statut</th>
+                                <th scope="col" class="align-middle text-light th-width-150px">Commentaire</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,5 +145,5 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset("js/validationPerson.js") }}"></script>
+<script src="{{ asset("js/validationSocialSupport.js") }}"></script>
 {% endblock javascripts %}
