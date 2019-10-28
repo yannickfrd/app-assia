@@ -1,0 +1,107 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+
+{% block title %}Fiche du service{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% set department = form.vars.value %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1 class="h2 mb-3">{% if edit_mode %}Service {{ department.name }}{% else %}Création d'un service{% endif %}</h1>
+    {% if edit_mode %}
+    {% else %}
+    <div class="mb-4"></div>
+    {% endif %}
+
+    <hr>
+
+    <section id="department">
+
+        {% include 'msgFlash.html.twig' %}
+        <div id="js-msg-flash-content"></div>
+
+        {{ form_start(form) }}
+
+        {% if edit_mode %} {% set form_department = form %} {% else %} {% set form_department = form.department %}
+        {% endif %}
+
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form_department.name) }}</div>
+            <div class="col-md-6">{{ form_row(form_department.pole) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form_department.phone) }}</div>
+            <div class="col-md-6">{{ form_row(form_department.email) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form_department.address) }}</div>
+            <div class="col-md-6">{{ form_row(form_department.city) }}</div>
+            <div class="col-md-6">{{ form_row(form_department.zipCode) }}</div>
+        </div>
+
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12">
+                <div class="mb-4 float-right">
+                    <input type="submit" id="send" name="send" id="send" class="btn btn-primary shadow"
+                        value="Enregistrer">
+                </div>
+            </div>
+        </div>
+
+        {{ form_end(form, {"render_rest": false}) }}
+    </section>
+
+    <hr>
+
+    <section id="groups-people">
+        <h2 class="h3 my-4">Utilisateurs rattachés</h2>
+
+        {% if department.roleUser %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover shadow">
+                <thead class="bg-dark text-light">
+                    <tr>
+                        <th scope="col" class="align-middle th-width-20px"></th>
+                        <th scope="col" class="align-middle th-width-150px">Prénom</th>
+                        <th scope="col" class="align-middle th-width-140px">Nom</th>
+                        <th scope="col" class="align-middle th-width-140px">Fonction</th>
+                        <th scope="col" class="align-middle th-width-140px">Téléphone</th>
+                        <th scope="col" class="align-middle th-width-140px">Email</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for role in department.roleUser %}
+                    <tr>
+                        <th scope="row">
+                            <a href="{{ path('user_show', {'id':role.user.id}) }}" class="btn btn-primary shadow"
+                                data-placement="bottom" title="Voir la fiche du service">
+                                <span class="fas fa-eye"></span>
+                            </a>
+                        </th>
+                        <td>{{ role.user.firstname }}</td>
+                        <td>{{ role.user.lastname }}</td>
+                        <td>{{ role.getRoleType }}</td>
+                        <td>{{ role.user.phone }}</td>
+                        <td>{{ role.user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        <a href="" class="m-3 text-primary"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau service</a>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

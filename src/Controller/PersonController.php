@@ -96,7 +96,7 @@ class PersonController extends AbstractController
         if ($groupPeople) {
             $formRolePerson = $this->createFormBuilder($rolePerson)
                 ->add("role", ChoiceType::class, [
-                    "choices" => $this->getChoices(RolePerson::ROLE),
+                    "choices" => Choices::getChoices(RolePerson::ROLE),
                 ])
                 ->getForm();
         }

@@ -2,19 +2,20 @@
 
 namespace App\Form;
 
+use App\Entity\Pole;
 use App\Utils\Choices;
 
-use App\Entity\GroupPeople;
-use App\Entity\GroupPeopleSearch;
-
+use App\Entity\RoleUser;
+use App\Entity\Department;
+use App\Entity\UserSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class GroupPeopleSearchType extends AbstractType
+class UserSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -22,64 +23,63 @@ class GroupPeopleSearchType extends AbstractType
             ->add("lastname", null, [
                 "label" => false,
                 "attr" => [
-                    "placeholder" => "Lastname",
-                    "class" => "w-max-180 text-uppercase",
+                    "class" => "w-max-140 text-uppercase",
+                    "placeholder" => "Nom",
                     "autocomplete" => "off"
                 ]
             ])
             ->add("firstname", null, [
                 "label" => false,
                 "attr" => [
-                    "placeholder" => "Firstname",
                     "class" => "w-max-140 text-capitalize",
+                    "placeholder" => "Prénom",
                     "autocomplete" => "off"
                 ]
             ])
-            ->add("birthdate", DateType::class, [
-                "label" => false,
-                "widget" => "single_text",
-                "attr" => [
-                    "class" => "w-max-180",
-                    "placeholder" => "jj/mm/aaaa",
-                    "autocomplete" => "off"
-                ],
-                "required" => false
-            ])
-
-            ->add("head", CheckBoxType::class, [
-                "label" => "DP",
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
-                ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
-            ])
-            ->add("familyTypology", ChoiceType::class, [
-                "placeholder" => "-- Family Typology --",
+            ->add("roleUser", ChoiceType::class, [
+                'placeholder' => "-- Rôle --",
                 "label" => false,
                 "required" => false,
-                "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
+                "choices" => Choices::getChoices(RoleUser::ROLE),
                 "attr" => [
-                    "class" => "w-max-200",
+                    "class" => "w-max-120",
                     "autocomplete" => "off"
                 ]
             ])
-            ->add("nbPeople", null, [
+            ->add("phone", null, [
                 "label" => false,
                 "attr" => [
-                    "placeholder" => "NbPeople",
-                    "class" => "w-max-100",
+                    "placeholder" => "Phone",
+                    "class" => "w-max-140",
                     "autocomplete" => "off"
+                ],
+            ])
+            ->add("department", EntityType::class, [
+                "class" => Department::class,
+                "choice_label" => "name",
+                "multiple" => true,
+                // "checkboxes", true,
+                "label" => false,
+                "placeholder" => "-- Department --",
+                "required" => false,
+                "attr" => [
+                    "class" => "h-max-38"
                 ]
+            ])
+            ->add("pole", EntityType::class, [
+                "class" => Pole::class,
+                "choice_label" => "name",
+                // "multiple" => true,
+                "label" => false,
+                "placeholder" => "-- Pole --",
+                "required" => false,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => GroupPeopleSearch::class,
+            "data_class" => UserSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
             "csrf_protection" => false

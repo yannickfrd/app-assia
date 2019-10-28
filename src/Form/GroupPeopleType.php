@@ -2,17 +2,19 @@
 
 namespace App\Form;
 
+use App\Utils\Choices;
+
 use App\Entity\GroupPeople;
 
 use App\Form\RolePersonMinType;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class GroupPeopleType extends FormType
+class GroupPeopleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -21,7 +23,7 @@ class GroupPeopleType extends FormType
                 "attr" => [
                     "class" => "col-md-12"
                 ],
-                "choices" => $this->getchoices(GroupPeople::FAMILY_TYPOLOGY),
+                "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 "placeholder" => "-- Select --",
                 "required" => true
             ])

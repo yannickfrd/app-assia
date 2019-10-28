@@ -32,7 +32,7 @@ class Department
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="department")
      */
-    private $roleUsers;
+    private $roleUser;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="departments")
@@ -86,11 +86,9 @@ class Department
      */
     private $createdAt;
 
-
-
     public function __construct()
     {
-        $this->roleUsers = new ArrayCollection();
+        $this->roleUser = new ArrayCollection();
         $this->socialSupportGrp = new ArrayCollection();
     }
 
@@ -126,15 +124,15 @@ class Department
     /**
      * @return Collection|RoleUser[]
      */
-    public function getRoleUsers(): Collection
+    public function getroleUser(): Collection
     {
-        return $this->roleUsers;
+        return $this->roleUser;
     }
 
     public function addRoleUser(RoleUser $roleUser): self
     {
-        if (!$this->roleUsers->contains($roleUser)) {
-            $this->roleUsers[] = $roleUser;
+        if (!$this->roleUser->contains($roleUser)) {
+            $this->roleUser[] = $roleUser;
             $roleUser->setDepartment($this);
         }
 
@@ -143,8 +141,8 @@ class Department
 
     public function removeRoleUser(RoleUser $roleUser): self
     {
-        if ($this->roleUsers->contains($roleUser)) {
-            $this->roleUsers->removeElement($roleUser);
+        if ($this->roleUser->contains($roleUser)) {
+            $this->roleUser->removeElement($roleUser);
             // set the owning side to null (unless already changed)
             if ($roleUser->getDepartment() === $this) {
                 $roleUser->setDepartment(null);

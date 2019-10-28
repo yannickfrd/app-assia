@@ -2,15 +2,18 @@
 
 namespace App\Form;
 
+use App\Entity\Person;
+
+use App\Utils\Choices;
 use App\Entity\PersonSearch;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class PersonSearchType extends FormType
+class PersonSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -55,7 +58,7 @@ class PersonSearchType extends FormType
                 'placeholder' => "-- Gender --",
                 "label" => false,
                 "required" => false,
-                "choices" => $this->getchoices(PersonSearch::GENDER),
+                "choices" => Choices::getChoices(Person::GENDER),
                 "attr" => [
                     "class" => "w-max-120",
                     "autocomplete" => "off"
@@ -77,7 +80,7 @@ class PersonSearchType extends FormType
             "data_class" => PersonSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
-            "csrf_protection" => true
+            "csrf_protection" => false
         ]);
     }
 

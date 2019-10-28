@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Utils\Choices;
 use App\Entity\SocialSupportPers;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -9,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SocialSupportPersType extends FormType
+class SocialSupportPersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -31,7 +32,7 @@ class SocialSupportPersType extends FormType
                 "required" => false
             ])
             ->add("status", ChoiceType::class, [
-                "choices" => $this->getchoices(SocialSupportPers::STATUS),
+                "choices" => Choices::getChoices(SocialSupportPers::STATUS),
                 "placeholder" => "-- Select --",
                 "required" => true
             ])

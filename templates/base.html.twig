@@ -62,9 +62,21 @@
                         </li>
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">
-                            <a class="nav-link text-dark zz" href="{{ path("new_support_search_person") }}">Nouveau
+                            <a class="nav-link text-dark" href="{{ path("new_support_search_person") }}">Nouveau
                                 suivi</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink"
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
+                                <a class="dropdown-item" href="{{ path("list_departments") }}">Services</a>
+                                <a class="dropdown-item" href="#">Pôles</a>
+                            </div>
+                        </li>
+
                     </ul>
                     <form action="{{ path("list_people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
                         <div class="position-relative" style="z-index: 9;">
@@ -81,15 +93,15 @@
                         {% if app.user %}
 
                         {% set rolesUser = [] %}
-                        {% for role in app.user.roleusers %}
+                        {% for role in app.user.roleUser %}
                         {% set rolesUser = rolesUser|merge([role.department.id]) %}
                         {% endfor %}
 
-                        <a class="text-dark font-weight-bold" href="{{ path("security_logout") }}" data-toggle="popover"
-                            data-trigger="hover" data-placement="bottom" data-html="true"
+                        <a class="text-dark font-weight-bold" href="{{ path('user_show', {'id':app.user.id}) }}"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
                             title="{{ app.user.firstname }} {{ app.user.lastname }}"
                             data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />Services rattachés :
-                            {% for role in app.user.roleusers %}<br> - {{ role.getRoleType }} à {{ role.department.name }}{% endfor %}">
+                            {% for role in app.user.roleUser %}<br> - {{ role.getRoleType }} à {{ role.department.name }}{% endfor %}">
                             <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
                         </a>
                         <br />

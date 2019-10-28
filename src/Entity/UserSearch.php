@@ -2,33 +2,30 @@
 
 namespace App\Entity;
 
+use App\Entity\Pole;
 use App\Utils\Phone;
-use App\Entity\Person;
+use App\Entity\Department;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PersonSearch
+class UserSearch
 {
-    /**
-     * @var string|null
-     */
-    private $lastname;
-
     /**
      * @var string|null
      */
     private $firstname;
 
-    private $usename;
-
     /**
-     * @var date|null
+     * @var string|null
      */
-    private $birthdate;
+    private $lastname;
+
+    private $username;
 
     /**
      * @var int|null
      */
-    private $gender;
+    private $roleUser;
 
     /**
      * @var string|null
@@ -42,22 +39,19 @@ class PersonSearch
      */
     private $email;
 
-    public function __construct()
-    { }
+    /**
+     * @var ArrayCollection
+     */
+    private $department;
 
     /**
-     * @return string|null
+     * @var int|null
      */
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
+    private $pole;
 
-    public function setLastname(string $lastname): self
+    public function __construct()
     {
-        $this->lastname = $lastname;
-
-        return $this;
+        $this->department = new ArrayCollection();
     }
 
     /**
@@ -78,52 +72,29 @@ class PersonSearch
     /**
      * @return string|null
      */
-    public function getUsename(): ?string
+    public function getLastname(): ?string
     {
-        return $this->usename;
+        return $this->lastname;
     }
 
-    public function setUsename(string $usename): self
+    public function setLastname(string $lastname): self
     {
-        $this->usename = $usename;
+        $this->lastname = $lastname;
 
         return $this;
     }
 
     /**
-     * @return date|null
+     * @return string|null
      */
-    public function getBirthdate(): ?\DateTimeInterface
+    public function getUsername(): ?string
     {
-        return $this->birthdate;
+        return $this->username;
     }
 
-    public function setBirthdate(?\DateTimeInterface $birthdate): self
+    public function setUsername(string $username): self
     {
-        $this->birthdate = $birthdate;
-
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getAge(): ?int
-    {
-        if ($this->birthdate) {
-            $now   = new \DateTime();
-            return $this->birthdate->diff($now)->y;
-        } else {
-            return null;
-        }
-    }
-
-    public function setAge(int $age): self
-    {
-        $now = new \DateTime();
-        $interval = $now->diff($this->birthdate);
-        $days = $interval->days;
-        $this->age = floor($days / 365.25);
+        $this->username = $username;
 
         return $this;
     }
@@ -131,22 +102,23 @@ class PersonSearch
     /**
      * @return int|null
      */
-    public function getGender(): ?int
+    public function getRoleUser(): ?int
     {
-        return $this->gender;
+        return $this->roleUser;
     }
 
-    public function setGender(?int $gender): self
+    public function setRoleUser(?int $roleUser): self
     {
-        $this->gender = $gender;
+        $this->roleUser = $roleUser;
 
         return $this;
     }
 
-    public function getGenderType()
+    public function getRoleUserType()
     {
-        return Person::GENDER[$this->gender];
+        return self::GENDER[$this->roleUser];
     }
+
 
     /**
      * @return string|null
@@ -175,6 +147,36 @@ class PersonSearch
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDepartment(): ?ArrayCollection
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?ArrayCollection $department): self
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPole(): ?Pole
+    {
+        return $this->pole;
+    }
+
+    public function setPole(?Pole $pole): self
+    {
+        $this->pole = $pole;
 
         return $this;
     }

@@ -107,6 +107,12 @@ class RolePerson
         return $this;
     }
 
+
+    public function getRoleType()
+    {
+        return self::ROLE[$this->role];
+    }
+
     public function getPerson(): ?Person
     {
         return $this->person;
@@ -129,11 +135,6 @@ class RolePerson
         $this->groupPeople = $groupPeople;
 
         return $this;
-    }
-
-    public function listRole()
-    {
-        return self::ROLE[$this->role];
     }
 
     public function getCreatedAt(): ?\DateTimeInterface

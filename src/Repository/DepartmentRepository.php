@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query;
 use App\Entity\Department;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Department|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +19,36 @@ class DepartmentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Department::class);
     }
+
+    /**
+     * Retourne toutes les personnes
+     * @return Query
+     */
+    public function findAllDepartmentsQuery($departmentSearch): Query
+    {
+        $query =  $this->createQueryBuilder("d");
+        $query = $query->select("d")
+            ->leftJoin("d.pole", "p")
+            ->addselect("p");
+        if ($departmentSearch->getName()) {
+            $query = $query
+                ->andWhere("d.name LIKE :name")
+                ->setParameter("name", $departmentSearch->getName() . '%');
+        }
+        if ($departmentSearch->getPhone()) {
+            $query = $query
+                ->andWhere("d.phone = :phone")
+                ->setParameter("phone", $departmentSearch->getPhone());
+        }
+        if ($departmentSearch->getPole()) {
+            $query = $query
+                ->andWhere("p.id = :pole_id")
+                ->setParameter("pole_id", $departmentSearch->getPole());
+        }
+        $query = $query->orderBy("d.name", "ASC");
+        return $query->getQuery();
+    }
+
 
     // /**
     //  * @return Department[] Returns an array of Department objects

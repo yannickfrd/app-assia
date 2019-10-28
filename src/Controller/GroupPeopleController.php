@@ -118,7 +118,7 @@ class GroupPeopleController extends AbstractController
 
         $formRolePerson = $this->createFormBuilder($rolePerson)
             ->add("role", ChoiceType::class, [
-                "choices" => $this->getChoices(RolePerson::ROLE),
+                "choices" => Choices::getChoices(RolePerson::ROLE),
             ])
             ->getForm();
 

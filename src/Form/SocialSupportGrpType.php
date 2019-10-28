@@ -2,22 +2,23 @@
 
 namespace App\Form;
 
+use App\Utils\Choices;
 use App\Entity\Department;
 use App\Entity\SocialSupportGrp;
 use App\Form\SocialSupportPersType;
 use App\Repository\DepartmentRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-use Symfony\Component\Security\Core\Security;
 
-
-class SocialSupportGrpType extends FormType
+class SocialSupportGrpType extends AbstractType
 {
     private $security;
     private $departments;
@@ -27,7 +28,7 @@ class SocialSupportGrpType extends FormType
         $this->security = $security;
 
         $user = $this->security->getUser();
-        foreach ($user->getRoleUsers() as $role) {
+        foreach ($user->getroleUser() as $role) {
             $this->departments[] = $role->getDepartment()->getId();
         };
     }
@@ -41,7 +42,7 @@ class SocialSupportGrpType extends FormType
             ])
             ->add("status", ChoiceType::class, [
 
-                "choices" => $this->getchoices(SocialSupportGrp::STATUS),
+                "choices" => Choices::getChoices(SocialSupportGrp::STATUS),
                 "placeholder" => "-- Select --",
             ])
             ->add("department", EntityType::class, [

@@ -38,6 +38,11 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $phone;
+
+    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
      */
@@ -118,7 +123,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", orphanRemoval=true)
      */
-    private $roleUsers;
+    private $roleUser;
 
     public function __construct()
     {
@@ -128,7 +133,7 @@ class User implements UserInterface
         $this->groupPeopleUpdated = new ArrayCollection();
         $this->socialSupportsGroupCreated = new ArrayCollection();
         $this->socialSupportsGroupUpdated = new ArrayCollection();
-        $this->roleUsers = new ArrayCollection();
+        $this->roleUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,6 +161,18 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }
@@ -457,15 +474,15 @@ class User implements UserInterface
     /**
      * @return Collection|RoleUser[]
      */
-    public function getRoleUsers(): Collection
+    public function getRoleUser(): Collection
     {
-        return $this->roleUsers;
+        return $this->roleUser;
     }
 
     public function addRoleUser(RoleUser $roleUser): self
     {
-        if (!$this->roleUsers->contains($roleUser)) {
-            $this->roleUsers[] = $roleUser;
+        if (!$this->roleUser->contains($roleUser)) {
+            $this->roleUser[] = $roleUser;
             $roleUser->setUser($this);
         }
 
@@ -474,8 +491,8 @@ class User implements UserInterface
 
     public function removeRoleUser(RoleUser $roleUser): self
     {
-        if ($this->roleUsers->contains($roleUser)) {
-            $this->roleUsers->removeElement($roleUser);
+        if ($this->roleUser->contains($roleUser)) {
+            $this->roleUser->removeElement($roleUser);
             // set the owning side to null (unless already changed)
             if ($roleUser->getUser() === $this) {
                 $roleUser->setUser(null);

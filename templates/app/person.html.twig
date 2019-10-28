@@ -142,7 +142,7 @@
                     <tr>
                         <th scope="row">
                             {% if social_support.socialSupportGrp.department.id in rolesUser %}
-                            <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.id}) }}"
+                            <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.socialSupportGrp.id}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
@@ -210,7 +210,7 @@
                             {% if role.groupPeople.nbPeople > 1 %}<span
                                 class="d-inline d-sm-none">{{ role.groupPeople.nbPeople }}personnes</span>{% endif %}
                         </td>
-                        <td>{{ role.listRole }}</td>
+                        <td>{{ role.getRoleType }}</td>
                         <td class="d-none d-sm-table-cell">{{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
                         <td class="d-none d-sm-table-cell">{{ role.groupPeople.updatedAt | date("d/m/Y H:i") }}</td>
                     </tr>

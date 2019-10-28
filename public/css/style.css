@@ -152,6 +152,10 @@ section {
     min-width: 150px;
 }
 
+.h-max-38 {
+    max-height: 38px;
+    ;
+}
 
 ul {
     list-style-type: none;

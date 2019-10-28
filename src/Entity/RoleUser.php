@@ -32,18 +32,13 @@ class RoleUser
     private $role;
 
     /**
-     * @var string 
-     */
-    private $roleType;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUsers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUser")
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="roleUsers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="roleUser")
      */
     private $department;
 
@@ -80,7 +75,6 @@ class RoleUser
 
         return $this;
     }
-
 
     public function getDepartment(): ?Department
     {
