@@ -139,6 +139,23 @@
 
                 <tbody>
                     {% for social_support in person.socialSupports %}
+
+                    {% set contact_user %}
+                    <div class='text-left p-2'>
+                        <b>Coordonnées :</b>
+                        <br>Téléphone : {{social_support.socialSupportGrp.createdBy.phone }}
+                        <br>Email : {{ social_support.socialSupportGrp.createdBy.email }}
+                    </div>
+                    {% endset %}
+
+                    {% set contact_service %}
+                    <div class='text-left p-2'>
+                        <b>Coordonnées du service: </b>
+                        <br>Téléphone : {{ social_support.socialSupportGrp.department.phone }}
+                        <br>Email : {{ social_support.socialSupportGrp.department.email }}
+                    </div>
+                    {% endset %}
+
                     <tr>
                         <th scope="row">
                             {% if social_support.socialSupportGrp.department.id in rolesUser %}
@@ -151,26 +168,12 @@
                         <td>{{ social_support.getStatusType }}</td>
                         <td>{{ social_support.startDate | date("d/m/Y") }}</td>
                         <td>{{ social_support.endDate | date("d/m/Y") }}</td>
-                        <td><a href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="
-                            <div class='p-2 text-left'>
-                                <h6>Coordonnées :</h6>
-                                <ul class='p-0'>
-                                    <li>Téléphone : {{ social_support.socialSupportGrp.createdBy.phone }}</li>
-                                    <li>Email : {{ social_support.socialSupportGrp.createdBy.email }}</li>
-                                </ul>
-                            </div>
-                            ">{{ social_support.socialSupportGrp.createdBy.firstname }}
+                        <td><a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
+                                title="{{ contact_user }}">{{ social_support.socialSupportGrp.createdBy.firstname }}
                                 {{  social_support.socialSupportGrp.createdBy.lastname }}</a></td>
                         <td>{% if social_support.socialSupportGrp.department %}
-                            <a href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="
-                                <div class='p-2 text-left'>
-                                    <h6>Coordonnées du service:</h6>
-                                    <ul class='p-0'>
-                                        <li>Téléphone : {{ social_support.socialSupportGrp.department.phone }}</li>
-                                        <li>Email : {{ social_support.socialSupportGrp.department.email }}</li>
-                                    </ul>
-                                </div>
-                            ">{{ social_support.socialSupportGrp.department.name }}</a>{% endif %}
+                            <a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
+                                title="{{ contact_service }}">{{ social_support.socialSupportGrp.department.name }}</a>{% endif %}
                         </td>
                         <td>{{ social_support.socialSupportGrp.department.pole.name }}</td>
                     </tr>

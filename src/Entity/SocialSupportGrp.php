@@ -68,12 +68,12 @@ class SocialSupportGrp
     private $groupPeople;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGroupCreated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGrpCreated")
      */
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGroupUpdated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGrpUpdated")
      */
     private $updatedBy;
 

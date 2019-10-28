@@ -3,15 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\Pole;
+use App\Entity\Department;
 use App\Entity\User;
 use App\Entity\Person;
 use App\Entity\RoleUser;
-use App\Entity\Department;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Entity\SocialSupportGrp;
 use App\Entity\SocialSupportPers;
-use App\Repository\RolePersonRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -20,10 +19,34 @@ class AppFixtures extends Fixture
 {
     private $manager;
 
-    public const DEPARTMENTS = [
+    public const DEPARTMENTS_HABITAT = [
         1 => "ALTHO",
         2 => "ASSLT - ASLLT",
-        3 => "10 000 logements accompagnés"
+        3 => "10 000 logements"
+    ];
+
+    public const DEPARTMENTS_HEB = [
+        1 => "CHU les Carrières",
+        2 => "CHRS Etape",
+        3 => "DHUA",
+        4 => "L'Ensemble - Accueil de jour",
+        5 => "L'Ensemble - Accueil de nuit",
+        6 => "L'Ensemble - CHRS",
+        7 => "L'Ensemble - Maison Relais",
+        8 => "L'Ensemble - Taxi social",
+        9 => "Maison Milada",
+        10 => "Maison Lucien",
+        11 => "MHU Oasis"
+    ];
+
+    public const DEPARTMENTS_SOCIO = [
+        1 => "CHRS Hermitage",
+        2 => "Consultations psychologiques",
+        3 => "DAVC",
+        4 => "DLSAP",
+        5 => "PE 78",
+        6 => "PE 95",
+        7 => "Pré-sentenciel"
     ];
 
     private $pole;
@@ -47,37 +70,48 @@ class AppFixtures extends Fixture
         //Crée les pôles d'activité
         foreach (Pole::POLES as $key => $value) {
             $this->addPoles($value);
-            if ($key == 3) {
-                //Créee les services d'activité
-                foreach ($this::DEPARTMENTS as $key => $value) {
-                    $this->addDepartment($value);
-                    // Crée des faux utilisateurs
-                    for ($i = 1; $i <= mt_rand(3, 6); $i++) {
-                        $this->addRoleUser();
-                        $this->addUser();
-                        // Crée des faux groupes
-                        for ($j = 1; $j <= mt_rand(15, 20); $j++) {
-                            $this->setTypology();
-                            $this->addGroupPeople();
-                            //Crée des faux suivis sociaux 
-                            $this->nbSocialSupports = mt_rand(1, 2);
-                            for ($k = 1; $k <= $this->nbSocialSupports; $k++) {
-                                $this->addSocialSupportGrp($k);
-                            }
-                            // Crée des fausses personnes pour le groupe
-                            for ($l = 1; $l <= $this->nbPeople; $l++) {
-                                $this->familyTypology($l);
-                                $this->addRolePerson();
-                                $this->addPerson();
-                                $this->addSocialSupportPers();
-                            }
-                            $this->manager->flush();
-                        }
+            switch ($key) {
+                case 3:
+                    $this->addData($this::DEPARTMENTS_HABITAT);
+                    break;
+                case 4:
+                    $this->addData($this::DEPARTMENTS_HEB);
+                    break;
+            }
+        }
+    }
+
+    public function addData($departments)
+    {
+        //Créee les services d'activité
+        foreach ($departments as $key => $value) {
+            $this->addDepartment($value);
+            // Crée des faux utilisateurs
+            for ($i = 1; $i <= mt_rand(3, 6); $i++) {
+                $this->addRoleUser();
+                $this->addUser();
+                // Crée des faux groupes
+                for ($j = 1; $j <= mt_rand(10, 25); $j++) {
+                    $this->setTypology();
+                    $this->addGroupPeople();
+                    //Crée des faux suivis sociaux 
+                    $this->nbSocialSupports = mt_rand(1, 2);
+                    for ($k = 1; $k <= $this->nbSocialSupports; $k++) {
+                        $this->addSocialSupportGrp($k);
                     }
+                    // Crée des fausses personnes pour le groupe
+                    for ($l = 1; $l <= $this->nbPeople; $l++) {
+                        $this->familyTypology($l);
+                        $this->addRolePerson();
+                        $this->addPerson();
+                        $this->addSocialSupportPers();
+                    }
+                    $this->manager->flush();
                 }
             }
         }
     }
+
 
     public function addPoles($value)
     {
@@ -119,13 +153,18 @@ class AppFixtures extends Fixture
         $lastLogin = $this->getDateTimeBeetwen("-2 months", "now");
 
         $firstname = $this->faker->firstName();
+        $phone = $this->faker->mobileNumber();
+        $phone = strtr($phone, "+33 ", "0");
+        $phone = strtr($phone, "+3 3", "0");
+        $phone = strtr($phone, "033 ", "0");
+        $phone = strtr($phone, "033 (0)", "0");
 
         $this->user->setUsername($firstname)
             ->setFirstName($firstname)
             ->setLastName($this->faker->lastName())
             ->setPassword($this->passwordEncoder->encodePassword($this->user, "test123"))
             ->setEmail($this->faker->freeEmail())
-            ->setphone(str_replace($this->faker->mobileNumber(), "+33 ", "0"))
+            ->setphone($phone)
             ->setCreatedAt($createdAt)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin)
@@ -299,13 +338,19 @@ class AppFixtures extends Fixture
     public function addPerson()
     {
         $this->person = new Person();
+        $this->firstname = $this->faker->firstName();
+        $phone = $this->faker->mobileNumber();
+        $phone = strtr($phone, "+33 ", "0");
+        $phone = strtr($phone, "+3 3", "0");
+        $phone = strtr($phone, "033 ", "0");
+        $phone = strtr($phone, "033 (0)", "0");
 
         $this->person->setFirstName($this->firstname)
             ->setLastName($this->lastname)
             ->setBirthdate($this->birthdate)
             ->setGender($this->sex)
             ->setEmail($this->faker->freeEmail())
-            ->setphone1(str_replace($this->faker->mobileNumber(), "+33 ", ""))
+            ->setphone1($phone)
             ->setComment($this->faker->paragraph())
             ->setCreatedAt($this->groupCreatedAt)
             ->setUpdatedAt($this->groupUpdatedAt)

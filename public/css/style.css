@@ -203,6 +203,7 @@ ul {
 }
 
 .tooltip-inner {
+    /* white-space: pre-line; */
     max-width: 300px;
     width: 250px;
 }
