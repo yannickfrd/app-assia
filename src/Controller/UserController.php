@@ -309,8 +309,8 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
+            // $user->setUpdatedAt(new \DateTime())
+            //     ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
@@ -344,8 +344,8 @@ class UserController extends AbstractController
         $now = new \DateTime();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setUpdatedAt($now)
-                ->setUpdatedBy($this->security->getUser());
+            // $user->setUpdatedAt($now)
+            //     ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
@@ -380,8 +380,8 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
+            // $user->setUpdatedAt(new \DateTime())
+            //     ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
