@@ -34,38 +34,31 @@ class RolePersonRepository extends ServiceEntityRepository
             ->addselect("p")
             ->addselect("g");
         if ($groupPeopleSearch->getFirstname()) {
-            $query = $query
-                ->andWhere("p.firstname LIKE :firstname")
+            $query->andWhere("p.firstname LIKE :firstname")
                 ->setParameter("firstname", $groupPeopleSearch->getFirstname() . '%');
         }
         if ($groupPeopleSearch->getLastname()) {
-            $query = $query
-                ->andWhere("p.lastname LIKE :lastname")
+            $query->andWhere("p.lastname LIKE :lastname")
                 ->setParameter("lastname", $groupPeopleSearch->getLastname() . '%');
         }
         if ($groupPeopleSearch->getBirthdate()) {
-            $query = $query
-                ->andWhere("p.birthdate = :birthdate")
+            $query->andWhere("p.birthdate = :birthdate")
                 ->setParameter("birthdate", $groupPeopleSearch->getBirthdate());
         }
         if ($groupPeopleSearch->getHead()) {
-            $query = $query
-                ->andWhere("r.head = :head")
+            $query->andWhere("r.head = :head")
                 ->setParameter("head", $groupPeopleSearch->getHead());
         }
         if ($groupPeopleSearch->getFamilyTypology()) {
-            $query = $query
-                ->andWhere("g.familyTypology = :familyTypology")
+            $query->andWhere("g.familyTypology = :familyTypology")
                 ->setParameter("familyTypology", $groupPeopleSearch->getFamilyTypology());
         }
         if ($groupPeopleSearch->getNbPeople()) {
-            $query = $query
-                ->andWhere("g.nbPeople = :nbPeople")
+            $query->andWhere("g.nbPeople = :nbPeople")
                 ->setParameter("nbPeople", $groupPeopleSearch->getNbPeople());
         }
-        $query->orderBy("g.id", "ASC")
-            ->orderBy("g.id", "ASC");
-        return $query->getQuery();
+        return $query->orderBy("g.id", "ASC")
+            ->getQuery();
     }
     /**
      * @return Query
@@ -83,33 +76,27 @@ class RolePersonRepository extends ServiceEntityRepository
             ->addselect("s")
             ->andWhere("r.head = TRUE");
         if ($groupPeopleSearch->getFirstname()) {
-            $query = $query
-                ->andWhere("p.firstname LIKE :firstname")
+            $query->andWhere("p.firstname LIKE :firstname")
                 ->setParameter("firstname", $groupPeopleSearch->getFirstname() . '%');
         }
         if ($groupPeopleSearch->getLastname()) {
-            $query = $query
-                ->andWhere("p.lastname LIKE :lastname")
+            $query->andWhere("p.lastname LIKE :lastname")
                 ->setParameter("lastname", $groupPeopleSearch->getLastname() . '%');
         }
         if ($groupPeopleSearch->getBirthdate()) {
-            $query = $query
-                ->andWhere("p.birthdate = :birthdate")
+            $query->andWhere("p.birthdate = :birthdate")
                 ->setParameter("birthdate", $groupPeopleSearch->getBirthdate());
         }
         if ($groupPeopleSearch->getFamilyTypology()) {
-            $query = $query
-                ->andWhere("g.familyTypology = :familyTypology")
+            $query->andWhere("g.familyTypology = :familyTypology")
                 ->setParameter("familyTypology", $groupPeopleSearch->getFamilyTypology());
         }
         if ($groupPeopleSearch->getNbPeople()) {
-            $query = $query
-                ->andWhere("g.nbPeople = :nbPeople")
+            $query->andWhere("g.nbPeople = :nbPeople")
                 ->setParameter("nbPeople", $groupPeopleSearch->getNbPeople());
         }
-        $query->orderBy("g.id", "ASC")
-            ->orderBy("g.id", "ASC");
-        return $query->getQuery();
+        return $query->orderBy("g.id", "ASC")
+            ->getQuery();
     }
 
     // /**

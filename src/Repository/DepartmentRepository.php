@@ -26,27 +26,24 @@ class DepartmentRepository extends ServiceEntityRepository
      */
     public function findAllDepartmentsQuery($departmentSearch): Query
     {
-        $query =  $this->createQueryBuilder("d");
-        $query = $query->select("d")
+        $query =  $this->createQueryBuilder("d")
+            ->select("d")
             ->leftJoin("d.pole", "p")
             ->addselect("p");
         if ($departmentSearch->getName()) {
-            $query = $query
-                ->andWhere("d.name LIKE :name")
+            $query->andWhere("d.name LIKE :name")
                 ->setParameter("name", $departmentSearch->getName() . '%');
         }
         if ($departmentSearch->getPhone()) {
-            $query = $query
-                ->andWhere("d.phone = :phone")
+            $query->andWhere("d.phone = :phone")
                 ->setParameter("phone", $departmentSearch->getPhone());
         }
         if ($departmentSearch->getPole()) {
-            $query = $query
-                ->andWhere("p.id = :pole_id")
+            $query = $query->andWhere("p.id = :pole_id")
                 ->setParameter("pole_id", $departmentSearch->getPole());
         }
-        $query = $query->orderBy("d.name", "ASC");
-        return $query->getQuery();
+        return $query->orderBy("d.name", "ASC")
+            ->getQuery();
     }
 
 

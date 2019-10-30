@@ -34,41 +34,35 @@ class UserRepository extends ServiceEntityRepository
             ->addselect("r")
             ->addselect("d")
             ->addselect("p");
-        if ($userSearch->getDepartment()) {
-            foreach ($userSearch->getDepartment() as $key => $department) {
-                $query = $query
-                    ->orWhere("d.id = :department_$key")
-                    ->setParameter("department_$key", $department);
-            }
-        }
         if ($userSearch->getPole()) {
-            $query = $query
-                ->andWhere("p.id = :pole_id")
+            $query->andWhere("p.id = :pole_id")
                 ->setParameter("pole_id", $userSearch->getPole());
         }
-        // if ($userSearch->getDepartment()) {
-        //     $key = 0;
-        //     foreach ($userSearch->getDepartment() as $department) {
-        //         $key++;
-        //         $query = $query
-        //             ->andWhere(":department_$key MEMBER OF r.department")
-        //             ->setParameter("department_$key", $department);
-        //     }
-        // }
         if ($userSearch->getFirstname()) {
-            $query = $query
-                ->andWhere("u.firstname LIKE :firstname")
+            $query->andWhere("u.firstname LIKE :firstname")
                 ->setParameter("firstname", $userSearch->getFirstname() . '%');
         }
         if ($userSearch->getLastname()) {
-            $query = $query
-                ->andWhere("u.lastname LIKE :lastname")
+            $query->andWhere("u.lastname LIKE :lastname")
                 ->setParameter("lastname", $userSearch->getLastname() . '%');
         }
         if ($userSearch->getPhone()) {
-            $query = $query
-                ->andWhere("u.phone1 = :phone OR u.phone2 = :phone")
+            $query->andWhere("u.phone = :phone")
                 ->setParameter("phone", $userSearch->getPhone());
+        }
+        // if ($userSearch->getDepartment()) {
+        //     foreach ($userSearch->getDepartment() as $key => $department) {
+        //         $query->orWhere("d.id = :department_$key")
+        //             ->setParameter("department_$key", $department);
+        //     }
+        // }
+        if ($userSearch->getDepartment()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($userSearch->getDepartment() as $department) {
+                $orX->add($expr->eq("d.id", $department));
+            }
+            $query->andWhere($orX);
         }
         $query = $query->orderBy("u.lastname", "ASC");
         return $query->getQuery();
