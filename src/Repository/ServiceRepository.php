@@ -3,44 +3,44 @@
 namespace App\Repository;
 
 use Doctrine\ORM\Query;
-use App\Entity\Department;
+use App\Entity\Service;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
- * @method Department|null find($id, $lockMode = null, $lockVersion = null)
- * @method Department|null findOneBy(array $criteria, array $orderBy = null)
- * @method Department[]    findAll()
- * @method Department[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Service|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Service|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Service[]    findAll()
+ * @method Service[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DepartmentRepository extends ServiceEntityRepository
+class ServiceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Department::class);
+        parent::__construct($registry, Service::class);
     }
 
     /**
      * Retourne toutes les personnes
      * @return Query
      */
-    public function findAllDepartmentsQuery($departmentSearch): Query
+    public function findAllServicesQuery($serviceSearch): Query
     {
         $query =  $this->createQueryBuilder("d")
             ->select("d")
             ->leftJoin("d.pole", "p")
             ->addselect("p");
-        if ($departmentSearch->getName()) {
+        if ($serviceSearch->getName()) {
             $query->andWhere("d.name LIKE :name")
-                ->setParameter("name", $departmentSearch->getName() . '%');
+                ->setParameter("name", $serviceSearch->getName() . '%');
         }
-        if ($departmentSearch->getPhone()) {
+        if ($serviceSearch->getPhone()) {
             $query->andWhere("d.phone = :phone")
-                ->setParameter("phone", $departmentSearch->getPhone());
+                ->setParameter("phone", $serviceSearch->getPhone());
         }
-        if ($departmentSearch->getPole()) {
+        if ($serviceSearch->getPole()) {
             $query = $query->andWhere("p.id = :pole_id")
-                ->setParameter("pole_id", $departmentSearch->getPole());
+                ->setParameter("pole_id", $serviceSearch->getPole());
         }
         return $query->orderBy("d.name", "ASC")
             ->getQuery();
@@ -48,7 +48,7 @@ class DepartmentRepository extends ServiceEntityRepository
 
 
     // /**
-    //  * @return Department[] Returns an array of Department objects
+    //  * @return Service[] Returns an array of Service objects
     //  */
     /*
     public function findByExampleField($value)
@@ -65,7 +65,7 @@ class DepartmentRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Department
+    public function findOneBySomeField($value): ?Service
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.exampleField = :val')

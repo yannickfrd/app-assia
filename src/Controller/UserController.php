@@ -7,7 +7,7 @@ use App\Entity\User;
 use App\Form\UserType;
 
 use App\Entity\RoleUser;
-use App\Entity\Department;
+use App\Entity\Service;
 
 use App\Entity\UserSearch;
 use App\Form\RoleUserType;
@@ -84,16 +84,16 @@ class UserController extends AbstractController
     /**
      * Permet de rechercher un utilisateur pour l'ajouter dans un service
      * 
-     * @Route("/department/{id}/search/user", name="department_search_user")
+     * @Route("/service/{id}/search/user", name="service_search_user")
      * @return Response
      */
-    public function departmentSearchUser(Request $request, UserSearch $userSearch = null, Department $department = null, RoleUser $roleUser = null, PaginatorInterface $paginator): Response
+    public function serviceSearchUser(Request $request, UserSearch $userSearch = null, Service $service = null, RoleUser $roleUser = null, PaginatorInterface $paginator): Response
     {
         $userSearch = new UserSearch();
 
         $formRoleUser = null;
 
-        if ($department) {
+        if ($service) {
             $formRoleUser = $this->createFormBuilder($roleUser)
                 ->add("role", ChoiceType::class, [
                     "choices" => Choices::getChoices(RoleUser::ROLE),
@@ -118,14 +118,14 @@ class UserController extends AbstractController
 
         return $this->render("app/listUsers.html.twig", [
             // "controller_name" => "UserController",
-            "department" => $department,
+            "service" => $service,
             "users" => $users ?? null,
             "userSearch" => $userSearch,
             "form" => $form->createView(),
             "form_role_user" => $formRoleUser->createView(),
             "current_menu" => "list_users"
         ]);
-        // return $this->pagination($userSearch, $request, $department, $form,  $formRoleUser, $paginator);
+        // return $this->pagination($userSearch, $request, $service, $form,  $formRoleUser, $paginator);
     }
 
     public function getchoices($const)
@@ -142,22 +142,22 @@ class UserController extends AbstractController
      * @Route("/user/new", name="user_new", methods="GET|POST")
      * @param User $user
      * @param RoleUser $roleUser
-     * @param Department $department
+     * @param Service $service
      * @param UserRepository $repo
      * @param Request $request
      * @return Response
      */
-    public function newUser(User $user = null, RoleUser $roleUser = null, Department $department = null, UserRepository $repo, Request $request): Response
+    public function newUser(User $user = null, RoleUser $roleUser = null, Service $service = null, UserRepository $repo, Request $request): Response
     {
         $user = new User();
         $roleUser = new RoleUser();
-        $department = new Department();
+        $service = new Service();
 
         $form = $this->createForm(RoleUserGroupType::class, $roleUser);
         $form->handleRequest($request);
 
         $user = $roleUser->getUser();
-        $department = $roleUser->getDepartment();
+        $service = $roleUser->getService();
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -174,15 +174,15 @@ class UserController extends AbstractController
                     "Attention : " . $user->getFirstname() . " " . $user->getLastname() . " existe déjà !"
                 );
             } else {
-                $department->setCreatedAt(new \DateTime())
+                $service->setCreatedAt(new \DateTime())
                     ->setCreatedBy($this->security->getUser())
                     ->setUpdatedAt(new \DateTime())
                     ->setUpdatedBy($this->security->getUser());
-                $this->manager->persist($department);
+                $this->manager->persist($service);
 
                 $roleUser->setHead(true)
                     ->setCreatedAt(new \DateTime())
-                    ->setDepartment($department);
+                    ->setService($service);
                 $this->manager->persist($roleUser);
 
                 $user->setCreatedAt(new \DateTime())
@@ -198,7 +198,7 @@ class UserController extends AbstractController
                     "success",
                     $user->getFirstname() . " a été créé" .  Agree::gender($user->getGender()) . ", ainsi que son service."
                 );
-                return $this->redirectToRoute("department_show", ["id" => $department->getId()]);
+                return $this->redirectToRoute("service_show", ["id" => $service->getId()]);
             }
         }
         return $this->render("app/user.html.twig", [
@@ -209,17 +209,17 @@ class UserController extends AbstractController
 
 
     /**
-     * Crée un nouvel utilisateur dans un department existant
+     * Crée un nouvel utilisateur dans un service existant
      * 
-     * @Route("/department/{id}/user/new", name="department_create_user", methods="GET|POST")
+     * @Route("/service/{id}/user/new", name="service_create_user", methods="GET|POST")
      * @param User $user
      * @param RoleUser $roleUser
-     * @param Department $department
+     * @param Service $service
      * @param UserRepository $repo
      * @param Request $request
      * @return Response
      */
-    public function newUserInGroup(User $user = null, RoleUser $roleUser = null, Department $department, UserRepository $repo, Request $request): Response
+    public function newUserInGroup(User $user = null, RoleUser $roleUser = null, Service $service, UserRepository $repo, Request $request): Response
     {
         $user = new User();
         $roleUser = new RoleUser();
@@ -244,12 +244,12 @@ class UserController extends AbstractController
                 );
                 return $this->redirectToRoute("user_show", ["id" => $userExist->getId()]);
             } else {
-                $this->createUser($user, $department, $roleUser);
-                return $this->redirectToRoute("department_show", ["id" => $department->getId()]);
+                $this->createUser($user, $service, $roleUser);
+                return $this->redirectToRoute("service_show", ["id" => $service->getId()]);
             }
         } else {
             return $this->render("app/user.html.twig", [
-                "department" => $department,
+                "service" => $service,
                 "form" => $form->createView(),
                 "edit_mode" => false
             ]);
@@ -260,14 +260,14 @@ class UserController extends AbstractController
      * Crée un utilisateur avec son rôle²
      *
      * @param User $user
-     * @param Department $department
+     * @param Service $service
      * @param RoleUser $roleUser
      */
-    protected function createUser(User $user, Department $department, RoleUser $roleUser = null)
+    protected function createUser(User $user, Service $service, RoleUser $roleUser = null)
     {
         $roleUser->setHead(false)
             ->setCreatedAt(new \DateTime())
-            ->setDepartment($department);
+            ->setService($service);
         $this->manager->persist($roleUser);
 
         $user->setCreatedAt(new \DateTime())
@@ -277,8 +277,8 @@ class UserController extends AbstractController
             ->addRolesUser($roleUser);
         $this->manager->persist($user);
 
-        $nbPeople = $department->getRoleUser()->count();
-        $department->setNbPeople($nbPeople + 1);
+        $nbPeople = $service->getRoleUser()->count();
+        $service->setNbPeople($nbPeople + 1);
 
         $this->manager->flush();
 
@@ -291,14 +291,14 @@ class UserController extends AbstractController
     /**
      * Modifie un utilisateur
      * 
-     * @Route("/department/{id}/user/{user_id}", name="department_user_show", methods="GET|POST")
+     * @Route("/service/{id}/user/{user_id}", name="service_user_show", methods="GET|POST")
      * @ParamConverter("user", options={"id" = "user_id"})
-     * @param Department $department
+     * @param Service $service
      * @param User $user
      * @param Request $request
      * @return Response
      */
-    public function editUser(Department $department, User $user, Request $request, ValidatorInterface $validator): Response
+    public function editUser(Service $service, User $user, Request $request, ValidatorInterface $validator): Response
     {
         $socialSupports = $user->getSocialSupports();
 
@@ -321,7 +321,7 @@ class UserController extends AbstractController
         }
 
         return $this->render("app/user.html.twig", [
-            "department" => $department,
+            "service" => $service,
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
@@ -396,7 +396,7 @@ class UserController extends AbstractController
 
 
     // Met en place la pagination du tableau et affiche le rendu
-    protected function pagination($userSearch, $request, $department, $form, $formRoleUser = null, $paginator)
+    protected function pagination($userSearch, $request, $service, $form, $formRoleUser = null, $paginator)
     { }
 
     /**

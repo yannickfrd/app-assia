@@ -6,7 +6,7 @@ use App\Entity\Pole;
 use App\Utils\Choices;
 
 use App\Entity\RoleUser;
-use App\Entity\Department;
+use App\Entity\Service;
 use App\Entity\UserSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,13 +54,13 @@ class UserSearchType extends AbstractType
                     "autocomplete" => "off"
                 ],
             ])
-            ->add("department", EntityType::class, [
-                "class" => Department::class,
+            ->add("service", EntityType::class, [
+                "class" => Service::class,
                 "choice_label" => "name",
                 "multiple" => true,
                 // "checkboxes", true,
                 "label" => false,
-                "placeholder" => "-- Department --",
+                "placeholder" => "-- Service --",
                 "required" => false,
                 "attr" => [
                     "class" => "multi-select h-max-38"

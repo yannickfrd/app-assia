@@ -123,7 +123,7 @@
 
     <hr>
 
-    <section id="departments">
+    <section id="services">
         <h2 class="h3 my-4">Services rattachés</h2>
 
         {% if user.roleuser %}
@@ -144,15 +144,15 @@
                     {% for role in user.roleuser %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('department_show', {'id':role.department.id}) }}"
+                            <a href="{{ path('service_show', {'id':role.service.id}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom" title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
                         <td>{{ role.getRoleType }}</td>
-                        <td>{{ role.department.name }}</td>
-                        <td>{{ role.department.phone }}</td>
-                        <td>{{ role.department.pole.name }}</td>
+                        <td>{{ role.service.name }}</td>
+                        <td>{{ role.service.phone }}</td>
+                        <td>{{ role.service.pole.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

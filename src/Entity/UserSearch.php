@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Pole;
 use App\Utils\Phone;
-use App\Entity\Department;
+use App\Entity\Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,7 +42,7 @@ class UserSearch
     /**
      * @var ArrayCollection
      */
-    private $department;
+    private $service;
 
     /**
      * @var int|null
@@ -51,7 +51,7 @@ class UserSearch
 
     public function __construct()
     {
-        $this->department = new ArrayCollection();
+        $this->service = new ArrayCollection();
     }
 
     /**
@@ -154,14 +154,14 @@ class UserSearch
     /**
      * @return int|null
      */
-    public function getDepartment(): ?ArrayCollection
+    public function getService(): ?ArrayCollection
     {
-        return $this->department;
+        return $this->service;
     }
 
-    public function setDepartment(?ArrayCollection $department): self
+    public function setService(?ArrayCollection $service): self
     {
-        $this->department = $department;
+        $this->service = $service;
 
         return $this;
     }

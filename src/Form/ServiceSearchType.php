@@ -6,7 +6,7 @@ use App\Entity\Pole;
 use App\Utils\Choices;
 
 use App\Entity\RoleUser;
-use App\Entity\DepartmentSearch;
+use App\Entity\ServiceSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class DepartmentSearchType extends AbstractType
+class ServiceSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,7 +23,7 @@ class DepartmentSearchType extends AbstractType
                 "label" => false,
                 "attr" => [
                     "class" => "w-max-200",
-                    "placeholder" => "Department name",
+                    "placeholder" => "Service name",
                     "autocomplete" => "off"
                 ]
             ])
@@ -55,7 +55,7 @@ class DepartmentSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => DepartmentSearch::class,
+            "data_class" => ServiceSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
             "csrf_protection" => false

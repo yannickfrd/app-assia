@@ -28,24 +28,24 @@
         <div class="jumbotron py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
-                <div class="form-department col-auto my-1 px-1 ">
+                <div class="form-service col-auto my-1 px-1 ">
                     {{ form_row(form.lastname) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1">
+                <div class="form-service col-auto my-1 px-1">
                     {{ form_row(form.firstname) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                <div class="form-service col-auto my-1 px-1 d-inline-flex align-items-baseline">
                     <div><i class="fas fa-phone mx-1 text-black-50 d-none d-sm-block" data-toggle="tooltip"
                             data-placement="bottom" title="Téléphone"></i></div>
                     {{ form_row(form.phone) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1 ">
-                    {{ form_row(form.department) }}
+                <div class="form-service col-auto my-1 px-1 ">
+                    {{ form_row(form.service) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1 ">
+                <div class="form-service col-auto my-1 px-1 ">
                     {{ form_row(form.pole) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1">
+                <div class="form-service col-auto my-1 px-1">
                     <button type="submit" id="search" class="btn btn-primary shadow"><i
                             class="fas fa-search"></i></button>
                     <a href="{{ path("list_users") }}" class="btn btn-secondary ml-2 shadow"><i
@@ -67,8 +67,8 @@
         {% if users is defined %}
 
         {% if users %}
-        {% if department_users is defined %}
-        <p><a href="{{ path("department_create_user", {"id":department_users.id}) }}"
+        {% if service_users is defined %}
+        <p><a href="{{ path("service_create_user", {"id":service_users.id}) }}"
                 class="js-create-user text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel
                 utilisateur</a></p>
         {% endif %}
@@ -119,8 +119,8 @@
                     {% for user in users %}
                     <tr>
                         <th scope="row">
-                            {% if department_users is defined %}
-                            <a href="{{ path('department_add_user', {'id':department_users.id, 'user_id': user.id}) }}"
+                            {% if service_users is defined %}
+                            <a href="{{ path('service_add_user', {'id':service_users.id, 'user_id': user.id}) }}"
                                 class="js-add-user" data-toggle="modal" data-target="#modal-block"
                                 data-placement="bottom" title="Ajouter l'tilisateur au service">
                                 <i class="fas fa-plus-square fa-2x"></i>
@@ -141,11 +141,11 @@
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
                         <td>{% for role in user.roleUser %}
-                            {{ role.department.name }}<br>
+                            {{ role.service.name }}<br>
                             {% endfor %}
                         </td>
                         <td>{% for role in user.roleUser %}
-                            {{ role.department.pole.name }}<br>
+                            {{ role.service.pole.name }}<br>
                             {% endfor %}
                         </td>
                     </tr>
@@ -158,10 +158,10 @@
             {{ knp_pagination_render(users) }}
         </div>
 
-        {% if department_users is defined %}
+        {% if service_users is defined %}
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path("department_create_user", {"id":department_users.id}) }}" class="text-primary"><span
+                <p><a href="{{ path("service_create_user", {"id":service_users.id}) }}" class="text-primary"><span
                             class="fas fa-plus-square"></span> Créer un nouvel utilisateur</a></p>
             </div>
         </div>

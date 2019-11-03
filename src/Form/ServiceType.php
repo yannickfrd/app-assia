@@ -3,20 +3,20 @@
 namespace App\Form;
 
 use App\Entity\Pole;
-use App\Entity\Department;
+use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DepartmentType extends AbstractType
+class ServiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add("name", null, [
                 "attr" => [
-                    "placeholder" => "Department name"
+                    "placeholder" => "Service name"
                 ]
             ])
             ->add("pole", EntityType::class, [
@@ -39,7 +39,7 @@ class DepartmentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => Department::class,
+            "data_class" => Service::class,
             "translation_domain" => "forms",
         ]);
     }

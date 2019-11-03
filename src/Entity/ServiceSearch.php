@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Utils\Phone;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DepartmentSearch
+class ServiceSearch
 {
     /**
      * @var string|null

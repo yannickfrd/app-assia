@@ -3,10 +3,10 @@
 namespace App\Form;
 
 use App\Utils\Choices;
-use App\Entity\Department;
+use App\Entity\Service;
 use App\Entity\SocialSupportGrp;
 use App\Form\SocialSupportPersType;
-use App\Repository\DepartmentRepository;
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 class SocialSupportGrpType extends AbstractType
 {
     private $security;
-    private $departments;
+    private $services;
 
     public function __construct(Security $security)
     {
@@ -29,7 +29,7 @@ class SocialSupportGrpType extends AbstractType
 
         $user = $this->security->getUser();
         foreach ($user->getroleUser() as $role) {
-            $this->departments[] = $role->getDepartment()->getId();
+            $this->services[] = $role->getService()->getId();
         };
     }
 
@@ -45,13 +45,13 @@ class SocialSupportGrpType extends AbstractType
                 "choices" => Choices::getChoices(SocialSupportGrp::STATUS),
                 "placeholder" => "-- Select --",
             ])
-            ->add("department", EntityType::class, [
-                "class" => Department::class,
+            ->add("service", EntityType::class, [
+                "class" => Service::class,
                 "choice_label" => "name",
-                "query_builder" => function (DepartmentRepository $repo) {
+                "query_builder" => function (ServiceRepository $repo) {
                     return $repo->createQueryBuilder("d")
-                        ->where("d.id IN (:departments)")
-                        ->setParameter("departments", $this->departments)
+                        ->where("d.id IN (:services)")
+                        ->setParameter("services", $this->services)
                         ->orderBy("d.name", "ASC");
                 },
                 "placeholder" => "-- Select --",

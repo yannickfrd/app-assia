@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Pole;
-use App\Entity\Department;
+use App\Entity\Service;
 use App\Entity\User;
 use App\Entity\Person;
 use App\Entity\RoleUser;
@@ -19,13 +19,13 @@ class AppFixtures extends Fixture
 {
     private $manager;
 
-    public const DEPARTMENTS_HABITAT = [
+    public const SERVICES_HABITAT = [
         1 => "ALTHO",
         2 => "ASSLT - ASLLT",
         3 => "10 000 logements"
     ];
 
-    public const DEPARTMENTS_HEB = [
+    public const SERVICES_HEB = [
         1 => "CHU les Carrières",
         2 => "CHRS Etape",
         3 => "DHUA",
@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
         11 => "MHU Oasis"
     ];
 
-    public const DEPARTMENTS_SOCIO = [
+    public const SERVICES_SOCIO = [
         1 => "CHRS Hermitage",
         2 => "Consultations psychologiques",
         3 => "DAVC",
@@ -50,7 +50,7 @@ class AppFixtures extends Fixture
     ];
 
     private $pole;
-    private $department;
+    private $service;
     private $roleUser;
     private $user, $passwordEncoder;
     private $groupPeople, $familyTypology, $nbPeople, $groupCreatedAt, $groupUpdatedAt;
@@ -72,20 +72,20 @@ class AppFixtures extends Fixture
             $this->addPoles($value);
             switch ($key) {
                 case 3:
-                    $this->addData($this::DEPARTMENTS_HABITAT);
+                    $this->addData($this::SERVICES_HABITAT);
                     break;
                 case 4:
-                    $this->addData($this::DEPARTMENTS_HEB);
+                    $this->addData($this::SERVICES_HEB);
                     break;
             }
         }
     }
 
-    public function addData($departments)
+    public function addData($services)
     {
         //Créee les services d'activité
-        foreach ($departments as $key => $value) {
-            $this->addDepartment($value);
+        foreach ($services as $key => $value) {
+            $this->addService($value);
             // Crée des faux utilisateurs
             for ($i = 1; $i <= mt_rand(3, 6); $i++) {
                 $this->addRoleUser();
@@ -123,15 +123,15 @@ class AppFixtures extends Fixture
         $this->manager->persist($this->pole);
     }
 
-    public function addDepartment($value)
+    public function addService($value)
     {
-        $this->department = new Department();
+        $this->service = new Service();
 
-        $this->department->setName($value)
+        $this->service->setName($value)
             ->setPole($this->pole)
             ->setCreatedAt(new \DateTime());
 
-        $this->manager->persist($this->department);
+        $this->manager->persist($this->service);
     }
 
     public function addRoleUser()
@@ -139,7 +139,7 @@ class AppFixtures extends Fixture
         $this->roleUser = new RoleUser();
 
         $this->roleUser->setRole(1)
-            ->setDepartment($this->department);
+            ->setService($this->service);
 
         $this->manager->persist($this->roleUser);
     }
@@ -253,7 +253,7 @@ class AppFixtures extends Fixture
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user)
             ->setGroupPeople($this->groupPeople)
-            ->setDepartment($this->department);
+            ->setService($this->service);
 
         $this->manager->persist($this->socialSupportGrp);
     }

@@ -95,7 +95,7 @@ class SocialSupportController extends AbstractController
             $activeSocialSupport = $repo->findBy([
                 "groupPeople" => $groupPeople,
                 "status" => 2,
-                "department" => $socialSupportGrp->getDepartment()
+                "service" => $socialSupportGrp->getService()
             ]);
 
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
@@ -104,7 +104,7 @@ class SocialSupportController extends AbstractController
                 $user = $this->security->getUser();
 
                 $socialSupportGrp->setGroupPeople($groupPeople)
-                    // ->setDepartment($department)
+                    // ->setService($service)
                     ->setCreatedAt(new \DateTime())
                     ->setCreatedBy($user)
                     ->setUpdatedAt(new \DateTime())

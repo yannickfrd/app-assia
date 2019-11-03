@@ -33,9 +33,9 @@ class Pole
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Department", mappedBy="pole")
+     * @ORM\OneToMany(targetEntity="App\Entity\Service", mappedBy="pole")
      */
-    private $departments;
+    private $services;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -79,7 +79,7 @@ class Pole
 
     public function __construct()
     {
-        $this->departments = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,30 +112,30 @@ class Pole
     }
 
     /**
-     * @return Collection|Department[]
+     * @return Collection|Service[]
      */
-    public function getDepartments(): Collection
+    public function getServices(): Collection
     {
-        return $this->departments;
+        return $this->services;
     }
 
-    public function addDepartment(Department $department): self
+    public function addService(Service $service): self
     {
-        if (!$this->departments->contains($department)) {
-            $this->departments[] = $department;
-            $department->setPole($this);
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->setPole($this);
         }
 
         return $this;
     }
 
-    public function removeDepartment(Department $department): self
+    public function removeService(Service $service): self
     {
-        if ($this->departments->contains($department)) {
-            $this->departments->removeElement($department);
+        if ($this->services->contains($service)) {
+            $this->services->removeElement($service);
             // set the owning side to null (unless already changed)
-            if ($department->getPole() === $this) {
-                $department->setPole(null);
+            if ($service->getPole() === $this) {
+                $service->setPole(null);
             }
         }
 

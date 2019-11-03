@@ -12,9 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\DepartmentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
  */
-class Department
+class Service
 {
     /**
      * @ORM\Id()
@@ -30,17 +30,17 @@ class Department
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="department")
+     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="service")
      */
     private $roleUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="departments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="services")
      */
     private $pole;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="department")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="service")
      */
     private $socialSupportGrp;
 
@@ -138,7 +138,7 @@ class Department
     {
         if (!$this->roleUser->contains($roleUser)) {
             $this->roleUser[] = $roleUser;
-            $roleUser->setDepartment($this);
+            $roleUser->setService($this);
         }
 
         return $this;
@@ -149,8 +149,8 @@ class Department
         if ($this->roleUser->contains($roleUser)) {
             $this->roleUser->removeElement($roleUser);
             // set the owning side to null (unless already changed)
-            if ($roleUser->getDepartment() === $this) {
-                $roleUser->setDepartment(null);
+            if ($roleUser->getService() === $this) {
+                $roleUser->setService(null);
             }
         }
 
@@ -181,7 +181,7 @@ class Department
     {
         if (!$this->socialSupportGrp->contains($socialSupportGrp)) {
             $this->socialSupportGrp[] = $socialSupportGrp;
-            $socialSupportGrp->setDepartment($this);
+            $socialSupportGrp->setService($this);
         }
 
         return $this;
@@ -192,8 +192,8 @@ class Department
         if ($this->socialSupportGrp->contains($socialSupportGrp)) {
             $this->socialSupportGrp->removeElement($socialSupportGrp);
             // set the owning side to null (unless already changed)
-            if ($socialSupportGrp->getDepartment() === $this) {
-                $socialSupportGrp->setDepartment(null);
+            if ($socialSupportGrp->getService() === $this) {
+                $socialSupportGrp->setService(null);
             }
         }
 

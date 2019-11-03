@@ -38,9 +38,9 @@ class RoleUser
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="roleUser")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="roleUser")
      */
-    private $department;
+    private $service;
 
     public function getId(): ?int
     {
@@ -76,14 +76,14 @@ class RoleUser
         return $this;
     }
 
-    public function getDepartment(): ?Department
+    public function getService(): ?Service
     {
-        return $this->department;
+        return $this->service;
     }
 
-    public function setDepartment(?Department $department): self
+    public function setService(?Service $service): self
     {
-        $this->department = $department;
+        $this->service = $service;
 
         return $this;
     }

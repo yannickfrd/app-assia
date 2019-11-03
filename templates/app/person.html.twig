@@ -151,14 +151,14 @@
                     {% set contact_service %}
                     <div class='text-left p-2'>
                         <b>Coordonnées du service: </b>
-                        <br>Téléphone : {{ social_support.socialSupportGrp.department.phone }}
-                        <br>Email : {{ social_support.socialSupportGrp.department.email }}
+                        <br>Téléphone : {{ social_support.socialSupportGrp.service.phone }}
+                        <br>Email : {{ social_support.socialSupportGrp.service.email }}
                     </div>
                     {% endset %}
 
                     <tr>
                         <th scope="row">
-                            {% if social_support.socialSupportGrp.department.id in rolesUser %}
+                            {% if social_support.socialSupportGrp.service.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.socialSupportGrp.id}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
@@ -171,11 +171,11 @@
                         <td><a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
                                 title="{{ contact_user }}">{{ social_support.socialSupportGrp.createdBy.firstname }}
                                 {{  social_support.socialSupportGrp.createdBy.lastname }}</a></td>
-                        <td>{% if social_support.socialSupportGrp.department %}
+                        <td>{% if social_support.socialSupportGrp.service %}
                             <a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
-                                title="{{ contact_service }}">{{ social_support.socialSupportGrp.department.name }}</a>{% endif %}
+                                title="{{ contact_service }}">{{ social_support.socialSupportGrp.service.name }}</a>{% endif %}
                         </td>
-                        <td>{{ social_support.socialSupportGrp.department.pole.name }}</td>
+                        <td>{{ social_support.socialSupportGrp.service.pole.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

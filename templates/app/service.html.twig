@@ -6,13 +6,13 @@
 
 {% block stylesheets %}{% endblock %}
 
-{% set department = form.vars.value %}
+{% set service = form.vars.value %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Service {{ department.name }}{% else %}Création d'un service{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}Service {{ service.name }}{% else %}Création d'un service{% endif %}</h1>
     {% if edit_mode %}
     {% else %}
     <div class="mb-4"></div>
@@ -20,28 +20,28 @@
 
     <hr>
 
-    <section id="department">
+    <section id="service">
 
         {% include 'msgFlash.html.twig' %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
 
-        {% if edit_mode %} {% set form_department = form %} {% else %} {% set form_department = form.department %}
+        {% if edit_mode %} {% set form_service = form %} {% else %} {% set form_service = form.service %}
         {% endif %}
 
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_department.name) }}</div>
-            <div class="col-md-6">{{ form_row(form_department.pole) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.name) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.pole) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_department.phone) }}</div>
-            <div class="col-md-6">{{ form_row(form_department.email) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.phone) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.email) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_department.address) }}</div>
-            <div class="col-md-6">{{ form_row(form_department.city) }}</div>
-            <div class="col-md-6">{{ form_row(form_department.zipCode) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.address) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.city) }}</div>
+            <div class="col-md-6">{{ form_row(form_service.zipCode) }}</div>
         </div>
 
         {{ form_row(form._token) }}
@@ -62,7 +62,7 @@
     <section id="groups-people">
         <h2 class="h3 my-4">Utilisateurs rattachés</h2>
 
-        {% if department.roleUser %}
+        {% if service.roleUser %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover shadow">
                 <thead class="bg-dark text-light">
@@ -78,7 +78,7 @@
                 </thead>
 
                 <tbody>
-                    {% for role in department.roleUser %}
+                    {% for role in service.roleUser %}
                     <tr>
                         <th scope="row">
                             <a href="{{ path('user_show', {'id':role.user.id}) }}" class="btn btn-primary shadow"

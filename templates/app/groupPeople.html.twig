@@ -201,14 +201,14 @@
                     {% set contact_service %}
                     <div class='text-left p-2'>
                         <b>Coordonnées du service :</b>
-                        <br>Téléphone : {{ social_support.department.phone }}
-                        <br>Email : {{ social_support.department.email }}
+                        <br>Téléphone : {{ social_support.service.phone }}
+                        <br>Email : {{ social_support.service.email }}
                     </div>
                     {% endset %}
 
                     <tr>
                         <th scope="row">
-                            {% if social_support.department.id in rolesUser %}
+                            {% if social_support.service.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':group_people.id, 'social_support_id':social_support.id}) }}"
                                 class="
                                 btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
@@ -223,12 +223,12 @@
                                 title="{{ contact_user }}">{{ social_support.createdBy.firstname }}
                                 {{ social_support.createdBy.lastname }}</a>
                         </td>
-                        <td>{% if social_support.department %}
+                        <td>{% if social_support.service %}
                             <a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
-                                title="{{ contact_service }}">{{ social_support.department.name }}</a>
+                                title="{{ contact_service }}">{{ social_support.service.name }}</a>
                             {% endif %}
                         </td>
-                        <td>{% if social_support.department %}{{ social_support.department.pole.name }}{% endif %}</td>
+                        <td>{% if social_support.service %}{{ social_support.service.pole.name }}{% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

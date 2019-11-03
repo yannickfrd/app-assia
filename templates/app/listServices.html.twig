@@ -1,8 +1,8 @@
 {% extends "base.html.twig" %}
 
 {% form_theme form "bootstrap_4_layout.html.twig" %}
-{% if form_role_department is defined %}
-{% form_theme form_role_department "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% if form_role_service is defined %}
+{% form_theme form_role_service "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 {% endif %}
 
 {% block title %}Services{% endblock %}
@@ -25,24 +25,24 @@
         <div class="jumbotron py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
-                <div class="form-department col-auto my-1 px-1">
+                <div class="form-service col-auto my-1 px-1">
                     {{ form_row(form.name) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1">
+                <div class="form-service col-auto my-1 px-1">
                     {{ form_row(form.city) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                <div class="form-service col-auto my-1 px-1 d-inline-flex align-items-baseline">
                     <div><i class="fas fa-phone mx-1 text-black-50 d-none d-sm-block" data-toggle="tooltip"
                             data-placement="bottom" title="Téléphone"></i></div>
                     {{ form_row(form.phone) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1">
+                <div class="form-service col-auto my-1 px-1">
                     {{ form_row(form.pole) }}
                 </div>
-                <div class="form-department col-auto my-1 px-1">
+                <div class="form-service col-auto my-1 px-1">
                     <button type="submit" id="search" class="btn btn-primary shadow"><i
                             class="fas fa-search"></i></button>
-                    <a href="{{ path("list_departments") }}" class="btn btn-secondary ml-2 shadow"><i
+                    <a href="{{ path("list_services") }}" class="btn btn-secondary ml-2 shadow"><i
                             class="fas fa-eraser"></i></a>
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}
@@ -52,19 +52,19 @@
 
     <div class="container">
 
-        {% if app.request.attributes.get("_route") == "new_support_search_department" %}
-        <p><a href="{{ path("department_new") }}" class="js-create-department text-primary"><span
+        {% if app.request.attributes.get("_route") == "new_support_search_service" %}
+        <p><a href="{{ path("service_new") }}" class="js-create-service text-primary"><span
                     class="fas fa-plus-square"></span>
                 Créer un
                 nouvel service</a></p>
         {% endif %}
 
-        {% if departments is defined %}
+        {% if services is defined %}
 
-        {% if departments %}
-        {% if department_departments is defined %}
-        <p><a href="{{ path("department_create_department", {"id":department_departments.id}) }}"
-                class="js-create-department text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel
+        {% if services %}
+        {% if service_services is defined %}
+        <p><a href="{{ path("service_create_service", {"id":service_services.id}) }}"
+                class="js-create-service text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel
                 service</a></p>
         {% endif %}
 
@@ -72,11 +72,11 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Résultat : {{ departments.getTotalItemCount | number_format(0,'', ' ')}}
+                <p class="align-middle">Résultat : {{ services.getTotalItemCount | number_format(0,'', ' ')}}
                     services.</p>
             </div>
             <div class="col-md-8">
-                <div class="navigation">{{ knp_pagination_render(departments) }}</div>
+                <div class="navigation">{{ knp_pagination_render(services) }}</div>
             </div>
         </div>
 
@@ -86,10 +86,10 @@
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(departments, "Nom du service", "d.name") }}
+                            {{ knp_pagination_sortable(services, "Nom du service", "d.name") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(departments, "Pôle", "p.name") }}
+                            {{ knp_pagination_sortable(services, "Pôle", "p.name") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
                             Téléphone
@@ -98,30 +98,30 @@
                             Email
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(departments, "Adresse", "p.address") }}
+                            {{ knp_pagination_sortable(services, "Adresse", "p.address") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(departments, "Ville", "p.city") }}
+                            {{ knp_pagination_sortable(services, "Ville", "p.city") }}
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    {% for department in departments %}
+                    {% for service in services %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('department_show', {'id':department.id}) }}" class="btn btn-primary shadow"
+                            <a href="{{ path('service_show', {'id':service.id}) }}" class="btn btn-primary shadow"
                                 data-placement="bottom" title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ department.name }}</td>
-                        <td>{{ department.pole.name }}</td>
-                        <td>{{ department.phone }}</td>
-                        <td>{{ department.email }}</td>
-                        <td>{{ department.address }}</td>
-                        <td>{{ department.city }}</td>
+                        <td>{{ service.name }}</td>
+                        <td>{{ service.pole.name }}</td>
+                        <td>{{ service.phone }}</td>
+                        <td>{{ service.email }}</td>
+                        <td>{{ service.address }}</td>
+                        <td>{{ service.city }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -129,13 +129,13 @@
         </div>
 
         <div class="navigation">
-            {{ knp_pagination_render(departments) }}
+            {{ knp_pagination_render(services) }}
         </div>
 
-        {% if department_departments is defined %}
+        {% if service_services is defined %}
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path("department_create_department", {"id":department_departments.id}) }}"
+                <p><a href="{{ path("service_create_service", {"id":service_services.id}) }}"
                         class="text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel service</a></p>
             </div>
         </div>
@@ -146,7 +146,7 @@
 
 </div>
 
-{% if form_role_department is defined %}
+{% if form_role_service is defined %}
 <div class="modal fade" id="modal-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -157,17 +157,17 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {{ form_start(form_role_department) }}
+            {{ form_start(form_role_service) }}
             <div class="modal-body">
-                <p>Avant d'ajouter la departmente au service, merci de préciser son rôle dans le service.</p>
-                {{ form_row(form_role_department.role) }}
-                {{ form_row(form_role_department._token) }}
+                <p>Avant d'ajouter la servicee au service, merci de préciser son rôle dans le service.</p>
+                {{ form_row(form_role_service.role) }}
+                {{ form_row(form_role_service._token) }}
             </div>
             <div class="modal-footer">
                 <button type="submit" id="js-btn-confirm" class="btn btn-primary">Ajouter l'tilisateur</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
             </div>
-            {{ form_end(form_role_department, {"render_rest": false}) }}
+            {{ form_end(form_role_service, {"render_rest": false}) }}
         </div>
     </div>
 </div>

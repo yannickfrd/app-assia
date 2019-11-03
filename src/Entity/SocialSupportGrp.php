@@ -83,9 +83,9 @@ class SocialSupportGrp
     private $socialSupportPers;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="socialSupportGrp")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="socialSupportGrp")
      */
-    private $department;
+    private $service;
 
     public function __construct()
     {
@@ -242,14 +242,14 @@ class SocialSupportGrp
         return $this;
     }
 
-    public function getDepartment(): ?Department
+    public function getService(): ?Service
     {
-        return $this->department;
+        return $this->service;
     }
 
-    public function setDepartment(?Department $department): self
+    public function setService(?Service $service): self
     {
-        $this->department = $department;
+        $this->service = $service;
 
         return $this;
     }
