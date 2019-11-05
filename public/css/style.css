@@ -1,6 +1,13 @@
 :root {
-    --primary: #F39C12;
-    --secondary: #95a5a6;
+    --e95: #e4322b;
+    --siege: #00adee;
+    --habitat: #ae5843;
+    --hebergement: #ef8230;
+    --insertion: #489e3e;
+    --medico: #a77e4a;
+    --migrants: #e63553;
+    --siao: #6f5290;
+    --socio: #79c1b7;
 }
 
 body {

@@ -26,23 +26,23 @@ class ServiceRepository extends ServiceEntityRepository
      */
     public function findAllServicesQuery($serviceSearch): Query
     {
-        $query =  $this->createQueryBuilder("d")
-            ->select("d")
-            ->leftJoin("d.pole", "p")
+        $query =  $this->createQueryBuilder("s")
+            ->select("s")
+            ->leftJoin("s.pole", "p")
             ->addselect("p");
         if ($serviceSearch->getName()) {
-            $query->andWhere("d.name LIKE :name")
+            $query->andWhere("s.name LIKE :name")
                 ->setParameter("name", $serviceSearch->getName() . '%');
         }
         if ($serviceSearch->getPhone()) {
-            $query->andWhere("d.phone = :phone")
+            $query->andWhere("s.phone = :phone")
                 ->setParameter("phone", $serviceSearch->getPhone());
         }
         if ($serviceSearch->getPole()) {
             $query = $query->andWhere("p.id = :pole_id")
                 ->setParameter("pole_id", $serviceSearch->getPole());
         }
-        return $query->orderBy("d.name", "ASC")
+        return $query->orderBy("s.name", "ASC")
             ->getQuery();
     }
 
@@ -54,9 +54,9 @@ class ServiceRepository extends ServiceEntityRepository
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -68,7 +68,7 @@ class ServiceRepository extends ServiceEntityRepository
     public function findOneBySomeField($value): ?Service
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

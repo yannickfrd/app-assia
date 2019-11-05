@@ -29,10 +29,10 @@ class UserRepository extends ServiceEntityRepository
         $query =  $this->createQueryBuilder("u");
         $query = $query->select("u")
             ->leftJoin("u.roleUser", "r")
-            ->leftJoin("r.service", "d")
-            ->leftJoin("d.pole", "p")
+            ->leftJoin("r.service", "s")
+            ->leftJoin("s.pole", "p")
             ->addselect("r")
-            ->addselect("d")
+            ->addselect("s")
             ->addselect("p");
         if ($userSearch->getPole()) {
             $query->andWhere("p.id = :pole_id")
@@ -52,7 +52,7 @@ class UserRepository extends ServiceEntityRepository
         }
         // if ($userSearch->getService()) {
         //     foreach ($userSearch->getService() as $key => $service) {
-        //         $query->orWhere("d.id = :service_$key")
+        //         $query->orWhere("s.id = :service_$key")
         //             ->setParameter("service_$key", $service);
         //     }
         // }
@@ -60,7 +60,7 @@ class UserRepository extends ServiceEntityRepository
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($userSearch->getService() as $service) {
-                $orX->add($expr->eq("d.id", $service));
+                $orX->add($expr->eq("s.id", $service));
             }
             $query->andWhere($orX);
         }

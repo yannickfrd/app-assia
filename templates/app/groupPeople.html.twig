@@ -219,13 +219,13 @@
                         <td>{{ social_support.getStatusType }}</td>
                         <td>{{ social_support.startDate | date("d/m/Y") }}</td>
                         <td>{% if social_support.endDate %}{{ social_support.endDate | date("d/m/Y") }}{% endif %}</td>
-                        <td><a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
-                                title="{{ contact_user }}">{{ social_support.createdBy.firstname }}
+                        <td><a href="#" class="text-primary" data-toggle="tooltip" data-placement="right"
+                                data-html="true" title="{{ contact_user }}">{{ social_support.createdBy.firstname }}
                                 {{ social_support.createdBy.lastname }}</a>
                         </td>
                         <td>{% if social_support.service %}
-                            <a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
-                                title="{{ contact_service }}">{{ social_support.service.name }}</a>
+                            <a href="#" class="text-primary" data-toggle="tooltip" data-placement="right"
+                                data-html="true" title="{{ contact_service }}">{{ social_support.service.name }}</a>
                             {% endif %}
                         </td>
                         <td>{% if social_support.service %}{{ social_support.service.pole.name }}{% endif %}</td>

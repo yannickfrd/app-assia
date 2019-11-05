@@ -168,11 +168,13 @@
                         <td>{{ social_support.getStatusType }}</td>
                         <td>{{ social_support.startDate | date("d/m/Y") }}</td>
                         <td>{{ social_support.endDate | date("d/m/Y") }}</td>
-                        <td><a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
+                        <td><a href="#" class="text-primary" data-toggle="tooltip" data-placement="right"
+                                data-html="true"
                                 title="{{ contact_user }}">{{ social_support.socialSupportGrp.createdBy.firstname }}
                                 {{  social_support.socialSupportGrp.createdBy.lastname }}</a></td>
                         <td>{% if social_support.socialSupportGrp.service %}
-                            <a href="#" data-toggle="tooltip" data-placement="right" data-html="true"
+                            <a href="#" class="text-primary" data-toggle="tooltip" data-placement="right"
+                                data-html="true"
                                 title="{{ contact_service }}">{{ social_support.socialSupportGrp.service.name }}</a>{% endif %}
                         </td>
                         <td>{{ social_support.socialSupportGrp.service.pole.name }}</td>
