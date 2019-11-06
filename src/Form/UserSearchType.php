@@ -63,7 +63,7 @@ class UserSearchType extends AbstractType
                 "placeholder" => "-- Service --",
                 "required" => false,
                 "attr" => [
-                    "class" => "multi-select h-max-38"
+                    "class" => "multi-select"
                 ]
             ])
             ->add("pole", EntityType::class, [
