@@ -27,45 +27,76 @@ class RolePersonRepository extends ServiceEntityRepository
     // Donne tous les roles de toutes les personnes
     public function findAllRolePeopleQuery($groupPeopleSearch): Query
     {
-        $query =  $this ->createQueryBuilder("r")
-                        ->select("r")
-                        ->leftJoin("r.person", "p")
-                        ->leftJoin("r.groupPeople", "g")
-                        ->addselect("p")
-                        ->addselect("g");
+        $query =  $this->createQueryBuilder("r")
+            ->select("r")
+            ->leftJoin("r.person", "p")
+            ->leftJoin("r.groupPeople", "g")
+            ->addselect("p")
+            ->addselect("g");
         if ($groupPeopleSearch->getFirstname()) {
-            $query = $query
-                ->andWhere("p.firstname LIKE :firstname")
+            $query->andWhere("p.firstname LIKE :firstname")
                 ->setParameter("firstname", $groupPeopleSearch->getFirstname() . '%');
         }
         if ($groupPeopleSearch->getLastname()) {
-            $query = $query
-                ->andWhere("p.lastname LIKE :lastname")
+            $query->andWhere("p.lastname LIKE :lastname")
                 ->setParameter("lastname", $groupPeopleSearch->getLastname() . '%');
-            }
+        }
         if ($groupPeopleSearch->getBirthdate()) {
-            $query = $query
-                ->andWhere("p.birthdate = :birthdate")
+            $query->andWhere("p.birthdate = :birthdate")
                 ->setParameter("birthdate", $groupPeopleSearch->getBirthdate());
         }
         if ($groupPeopleSearch->getHead()) {
-            $query = $query
-                ->andWhere("r.head = :head")
+            $query->andWhere("r.head = :head")
                 ->setParameter("head", $groupPeopleSearch->getHead());
         }
         if ($groupPeopleSearch->getFamilyTypology()) {
-            $query = $query
-                ->andWhere("g.familyTypology = :familyTypology")
+            $query->andWhere("g.familyTypology = :familyTypology")
                 ->setParameter("familyTypology", $groupPeopleSearch->getFamilyTypology());
         }
         if ($groupPeopleSearch->getNbPeople()) {
-            $query = $query
-                ->andWhere("g.nbPeople = :nbPeople")
+            $query->andWhere("g.nbPeople = :nbPeople")
                 ->setParameter("nbPeople", $groupPeopleSearch->getNbPeople());
         }
-        $query  ->orderBy("g.id", "ASC")
-                ->orderBy("g.id", "ASC");
-        return $query->getQuery();
+        return $query->orderBy("g.id", "ASC")
+            ->getQuery();
+    }
+    /**
+     * @return Query
+     */
+    // Donne tous les roles de toutes les personnes
+    public function findAllSocialSupports($groupPeopleSearch): Query
+    {
+        $query =  $this->createQueryBuilder("r")
+            ->select("r")
+            ->leftJoin("r.person", "p")
+            ->leftJoin("r.groupPeople", "g")
+            ->leftJoin("g.socialSupports", "s")
+            ->addselect("p")
+            ->addselect("g")
+            ->addselect("s")
+            ->andWhere("r.head = TRUE");
+        if ($groupPeopleSearch->getFirstname()) {
+            $query->andWhere("p.firstname LIKE :firstname")
+                ->setParameter("firstname", $groupPeopleSearch->getFirstname() . '%');
+        }
+        if ($groupPeopleSearch->getLastname()) {
+            $query->andWhere("p.lastname LIKE :lastname")
+                ->setParameter("lastname", $groupPeopleSearch->getLastname() . '%');
+        }
+        if ($groupPeopleSearch->getBirthdate()) {
+            $query->andWhere("p.birthdate = :birthdate")
+                ->setParameter("birthdate", $groupPeopleSearch->getBirthdate());
+        }
+        if ($groupPeopleSearch->getFamilyTypology()) {
+            $query->andWhere("g.familyTypology = :familyTypology")
+                ->setParameter("familyTypology", $groupPeopleSearch->getFamilyTypology());
+        }
+        if ($groupPeopleSearch->getNbPeople()) {
+            $query->andWhere("g.nbPeople = :nbPeople")
+                ->setParameter("nbPeople", $groupPeopleSearch->getNbPeople());
+        }
+        return $query->orderBy("g.id", "ASC")
+            ->getQuery();
     }
 
     // /**

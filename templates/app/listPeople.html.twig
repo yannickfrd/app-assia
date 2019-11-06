@@ -20,6 +20,7 @@
 
 <section class="my-0">
     <div class="container">
+        {% include 'msgFlash.html.twig' %}
         <h1 class="h2 mb-4">{% if group_people is defined %}Rechercher une personne
             {% else %}Rechercher une personne{% endif %}</h1>
     </div>
@@ -127,14 +128,14 @@
                             {% if group_people is defined %}
                             <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
                                 class="js-add-person" data-toggle="modal" data-target="#modal-block"
-                                data-placement="bottom" title="Ajouter la personne au ménage">
+                                data-placement="bottom" title="Ajouter la personne au groupe">
                                 <i class="fas fa-plus-square fa-2x"></i>
                             </a>
                             {% else %}
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
                                 class="btn btn-primary shadow" data-placement="bottom"
-                                title="Voir la fiche de la personne">
-                                <span class="fas fa-user-edit"></span>
+                                title="Voir la fiche individuelle">
+                                <span class="fas fa-user"></span>
                             </a>
                             {% endif %}
                         </th>
@@ -190,7 +191,7 @@
             </div>
             {{ form_start(form_role_person) }}
             <div class="modal-body">
-                <p>Avant d'ajouter la persone au ménage, merci de préciser son rôle dans le groupe.</p>
+                <p>Avant d'ajouter la persone au groupe, merci de préciser son rôle dans le groupe.</p>
                 {{ form_row(form_role_person.role) }}
                 {{ form_row(form_role_person._token) }}
             </div>
@@ -206,7 +207,7 @@
 
 {% endblock %}
 
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cette personne au ménage ?{% endblock %}
+{% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cette personne au groupe ?{% endblock %}
 {% block modal_title %}Demande de confirmation{% endblock %}
 {% block modal_confirm %}Ajouter la personne{% endblock %}
 {% block modal_cancel %}Annuler{% endblock %}

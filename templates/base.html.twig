@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <title>
         {% block title %}
-        AppE95
+        E95-app
         {% endblock %}
     </title>
     <meta charset="utf-8" />
@@ -19,7 +19,10 @@
     <!-- Bibliothèque Fontawesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link href="{{ asset("css/style.css") }}" rel="stylesheet" /> {% block stylesheets %}{% endblock %}
+    {#<link href="{{ asset("css/style.css") }}" rel="stylesheet" />#}
+    {{ encore_entry_link_tags('app') }}
+
+    {% block stylesheets %}{% endblock %}
 
     <link rel="icon" href="" />
     <meta property="og:title" content="AppE95" />
@@ -54,11 +57,30 @@
                         </li>
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
-                            <a class="nav-link text-dark " href="{{ path("list_groups_people") }}">Suivis</a>
+                            <a class="nav-link text-dark " href="{{ path("list_groups_people") }}">Ménages</a>
                         </li>
-                        <li
-                            class="nav-item {% if current_menu is defined and current_menu == "new_group" %} active {% endif %}">
-                            <a class="nav-link text-dark zz" href="{{ path("new_support_search_person") }}">Nouveau suivi</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuAdmin"
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Suivis
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
+                                <a class="dropdown-item" href="{{ path("list_social_supports") }}">Voir tous les
+                                    suivis</a>
+                                <a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau
+                                    suivi</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuAdmin"
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
+                                <a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
+                                <a class="dropdown-item" href="{{ path("list_services") }}">Services</a>
+                                <a class="dropdown-item" href="#">Pôles</a>
+                            </div>
                         </li>
                     </ul>
                     <form action="{{ path("list_people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
@@ -74,12 +96,18 @@
                     </form>
                     <div class="text-dark">
                         {% if app.user %}
-                        <a class="text-dark font-weight-bold" href="{{ path("security_logout") }}"
+
+                        {% set rolesUser = [] %}
+                        {% for role in app.user.roleUser %}
+                        {% set rolesUser = rolesUser|merge([role.service.id]) %}
+                        {% endfor %}
+
+                        <a class="text-dark font-weight-bold" href="{{ path('user_show', {'id':app.user.id}) }}"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
                             title="{{ app.user.firstname }} {{ app.user.lastname }}"
-                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />profil :                                                                                                                                                                                                           ">
-                            <span class="fas fa-user"></span>
-                            {{ app.user.username }}
+                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />Services rattachés :
+                            {% for role in app.user.roleUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }}{% endfor %}">
+                            <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
                         </a>
                         <br />
                         <a class="text-dark" href="{{ path("security_logout") }}">Se déconnecter</a>
@@ -138,13 +166,15 @@
 
 </html>
 {# <script src="https://unpkg.com/axios/dist/axios.min.js"></script> #}
-<script src="{{ asset("js/jquery.js") }}"></script>
-<script src="{{ asset("js/scroll_to.js") }}"></script>
+{# <script src="{{ asset("js/jquery.js") }}"></script> #}
+{# <script src="{{ asset("js/scroll_to.js") }}"></script> #}
 <script src="{{ asset("js/ajaxRequest.js") }}"></script>
 <script src="{{ asset("js/searchPerson.js") }}"></script>
-<script src="{{ asset("js/messageFlash.js") }}"></script>
+<script src="{{ asset("js/messageFlash.js") }}"></script><
 <script src="{{ asset("js/notification.js") }}"></script>
-<script src="{{ asset("js/app.js") }}"></script>
+{# <script src="{{ asset("js/app.js") }}"></script> #}
+{{ encore_entry_script_tags("app") }}
+
 {# <script src="{{ asset("js/seePassword.js") }}"></script> #}
 <!-- Les fichiers Javascript pour Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

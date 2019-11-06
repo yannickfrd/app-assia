@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Person;
 
-use App\Entity\RolePerson;
 use Doctrine\ORM\Query;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -57,41 +56,35 @@ class PersonRepository extends ServiceEntityRepository
     // Retourne toutes les personnes
     public function findAllPeopleQuery($personSearch, $search): Query
     {
-        $query =  $this->createQueryBuilder("p");
-        $query = $query->select("p");
+        $query =  $this->createQueryBuilder("p")
+            ->select("p");
         if ($search) {
-            $query = $query
-                ->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search")
+            $query->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search")
                 ->setParameter("search", '%' . $search . '%');
         }
         if ($personSearch->getFirstname()) {
-            $query = $query
-                ->andWhere("p.firstname LIKE :firstname")
+            $query->andWhere("p.firstname LIKE :firstname")
                 ->setParameter("firstname", $personSearch->getFirstname() . '%');
         }
         if ($personSearch->getLastname()) {
-            $query = $query
-                ->andWhere("p.lastname LIKE :lastname")
+            $query->andWhere("p.lastname LIKE :lastname")
                 ->setParameter("lastname", $personSearch->getLastname() . '%');
         }
 
         if ($personSearch->getBirthdate()) {
-            $query = $query
-                ->andWhere("p.birthdate = :birthdate")
+            $query->andWhere("p.birthdate = :birthdate")
                 ->setParameter("birthdate", $personSearch->getBirthdate());
         }
         if ($personSearch->getGender()) {
-            $query = $query
-                ->andWhere("p.gender = :gender")
+            $query->andWhere("p.gender = :gender")
                 ->setParameter("gender", $personSearch->getGender());
         }
         if ($personSearch->getPhone()) {
-            $query = $query
-                ->andWhere("p.phone1 = :phone OR p.phone2 = :phone")
+            $query->andWhere("p.phone1 = :phone OR p.phone2 = :phone")
                 ->setParameter("phone", $personSearch->getPhone());
         }
-        $query = $query->orderBy("p.lastname", "ASC");
-        return $query->getQuery();
+        return $query->orderBy("p.lastname", "ASC")
+            ->getQuery();
     }
 
     /**
@@ -106,7 +99,6 @@ class PersonRepository extends ServiceEntityRepository
             ->setParameter("search", '%' . $search . '%')
             ->orderBy("p.lastname, p.firstname", "ASC")
             ->setMaxResults(10)
-            // ->setFirstResult(10)
             ->getQuery()
             ->getResult();
     }

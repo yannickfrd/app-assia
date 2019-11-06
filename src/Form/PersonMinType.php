@@ -4,13 +4,15 @@ namespace App\Form;
 
 use App\Entity\Person;
 
+use App\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class PersonMinType extends FormType
+class PersonMinType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -37,13 +39,12 @@ class PersonMinType extends FormType
                     "autocomplete" => "off"
                 ],
                 "required" => true
-
             ])
             ->add("gender", ChoiceType::class, [
                 "attr" => [
                     "class" => "w-min-150"
                 ],
-                "choices" => $this->getchoices(Person::GENDER),
+                "choices" => Choices::getChoices(Person::GENDER),
                 "placeholder" => "-- Select --",
                 "required" => true
             ]);

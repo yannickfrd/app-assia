@@ -1,54 +1,30 @@
 :root {
-    --primary: #F39C12;
-    --secondary: #95a5a6;
+    --e95: #e4322b;
+    --siege: #00adee;
+    --habitat: #ae5843;
+    --hebergement: #ef8230;
+    --insertion: #489e3e;
+    --medico: #a77e4a;
+    --migrants: #e63553;
+    --siao: #6f5290;
+    --socio: #79c1b7;
 }
 
 body {
     padding-top: 88px;
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
 }
-
-section {
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
-
-/* Retour à la ligne pour le titre du blog */
-.navbar-brand {
-    white-space: normal;
-}
-
 
 .min-vh-80 {
     min-height: 80vh;
 }
 
-.card {
-    margin-bottom: 20px;
-}
-
-.a-edit-post {
-    position: absolute;
-    top: 2px;
-    right: 4px;
-}
-
-.report-comment {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.fas.fa-times {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
 
 .fa-phone {
     transform: rotate(160deg);
 }
 
+/* Affichage de l'oeil pour voir le mot de passe */
 .js-password-group {
     position: relative;
 }
@@ -67,63 +43,7 @@ section {
     transition: all 0.5s ease;
 }
 
-
-/* Gestion de dépassement des articles sur la page Blog */
-.post_content,
-.comment-content {
-    position: relative;
-    max-height: 300px;
-    overflow: hidden;
-}
-
-/* Effet fade out pour le contenu des articles et des commentaires  */
-.post-fadeout,
-.comment-fadeout {
-    content: "";
-    position: absolute;
-    top: 60%;
-    left: 0;
-    height: 40%;
-    width: 100%;
-    background: linear-gradient(rgba(255, 255, 255, 0), white);
-}
-
-.page-item.active a {
-    color: #fff !important;
-}
-
-#scroll-top {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    width: 50px;
-    height: 40px;
-    line-height: 35px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    z-index: 100;
-}
-
-#scroll-top .fa.fa-chevron-up {
-    position: absolute;
-    right: 50%;
-    top: 50%;
-    transform: translate(50%, -50%);
-    font-size: 30px;
-    color: #fff;
-}
-
-#scroll-top:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-    transition: all 0.5s ease;
-}
-
-#post-content {
-    overflow-x: auto;
-}
-
+/* Largeur maximale */
 .w-max-100 {
     max-width: 100px;
 }
@@ -144,6 +64,7 @@ section {
     max-width: 180px;
 }
 
+/* Largeur minimale */
 .w-min-100 {
     min-width: 100px;
 }
@@ -152,13 +73,9 @@ section {
     min-width: 150px;
 }
 
-
-ul {
-    list-style-type: none;
-}
-
-.font-size-09 {
-    font-size: 0.9rem;
+/* Hauteur maximale */
+.h-max-38 {
+    max-height: 38px;
 }
 
 .font-size-10 {
@@ -177,7 +94,6 @@ ul {
 }
 
 .fade-out {
-    /* overflow: hidden; */
     opacity: 0;
     /* height: 0%; */
     transition: all 0.5s ease;
@@ -185,7 +101,7 @@ ul {
 
 
 .position-fixed {
-    z-index: 1000;
+    z-index: 999;
 }
 
 .js-msg-content {
@@ -198,6 +114,11 @@ ul {
     opacity: 0.9;
 }
 
+.tooltip-inner {
+    /* white-space: pre-line; */
+    max-width: 300px;
+    width: 250px;
+}
 
 @media (max-width: 992px) {
     body {
@@ -205,14 +126,6 @@ ul {
     }
 }
 
-@media (max-width: 768px) {
-    body {
-        padding-top: 80px;
-    }
-}
+@media (max-width: 768px) {}
 
-@media (max-width: 576px) {
-    body {
-        padding-top: 80px;
-    }
-}
+@media (max-width: 576px) {}

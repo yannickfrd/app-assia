@@ -1,23 +1,36 @@
+Address: Adresse
 Birthdate: Date de naissance
+City: Ville
 Comment: Commentaire 
 ConfirmPassword: Confirmation du mot de passe
+Department: Service
+Department name: Nom du service
 Email: Adresse email
+End date: Date de fin
 Error: Erreur
 Family typology: Typologie familiale
 Firstname: Prénom
 Gender: Sexe
 Lastname: Nom
+Name: Nom
 Nb people: Nombre de personnes
 NbPeople: Nb pers.
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1
 Phone2: Téléphone 2
+Pole: Pôle
 Role: Rôle dans le groupe
-Write a comment about the group: Ecrire un commentaire sur le ménage
-Write a comment about the person: Ecrire un commentaire sur la personne
 Select: Sélectionner
+Start date: Date de début
+Status: Statut
 Username: Nom d'utilisateur
+Write a comment about the group: Ecrire un commentaire sur le groupe
+Write a comment about the person: Ecrire un commentaire sur la personne
+Write a comment about the social support: Ecrire un commentaire sur le suivi social
+Zip code: Code postal
+-- Department --: -- Service --
 -- Family Typology --: -- Typologie familiale --
+-- Pole --: -- Pôle --
 -- Gender --: -- Sexe --
 -- Select --: -- Sélectionner --

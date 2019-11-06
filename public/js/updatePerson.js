@@ -1,4 +1,4 @@
-// Requête Ajax pour mettre à jour les informations de la personne
+// Requête Ajax pour mettre à jour les informations individuelles
 class UpdatePerson {
 
     constructor() {

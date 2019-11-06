@@ -7,14 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocialSupportGroupRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SocialSupportPersRepository")
  */
-class SocialSupportGroup
+class SocialSupportPers
 {
     public const STATUS = [
         1 => "À venir",
         2 => "En cours",
-        3 => "En suspens",
+        3 => "Suspendu",
         4 => "Terminé",
         5 => "Autre"
     ];
@@ -28,6 +28,7 @@ class SocialSupportGroup
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull(message="La date de début ne doit pas être vide.")
      */
     private $startDate;
 
@@ -38,6 +39,8 @@ class SocialSupportGroup
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotNull(message="Le statut doit être renseigné.")
+     * @Assert\Range(min = 1, max = 5, minMessage="Le statut doit être renseigné.",  maxMessage="Le statut doit être renseigné.")
      */
     private $status;
 
@@ -57,20 +60,16 @@ class SocialSupportGroup
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="socialSupports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="socialSupports")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $groupPeople;
+    private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGroupCreated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SocialSupportGrp", inversedBy="socialSupportPers")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGroupUpdated")
-     */
-    private $updatedBy;
+    private $socialSupportGrp;
 
     public function getId(): ?int
     {
@@ -82,7 +81,7 @@ class SocialSupportGroup
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
@@ -96,9 +95,8 @@ class SocialSupportGroup
 
     public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        if ($endDate) {
-            $this->endDate = $endDate;
-        }
+        $this->endDate = $endDate;
+
         return $this;
     }
 
@@ -107,7 +105,7 @@ class SocialSupportGroup
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(?int $status): self
     {
         $this->status = $status;
 
@@ -150,43 +148,31 @@ class SocialSupportGroup
         return $this;
     }
 
-    public function getGroupPeople(): ?GroupPeople
-    {
-        return $this->groupPeople;
-    }
-
-    public function setGroupPeople(?GroupPeople $groupPeople): self
-    {
-        $this->groupPeople = $groupPeople;
-
-        return $this;
-    }
-
-    public function listStatus()
+    public function getStatusType()
     {
         return self::STATUS[$this->status];
     }
 
-    public function getCreatedBy(): ?User
+    public function getPerson(): ?Person
     {
-        return $this->createdBy;
+        return $this->person;
     }
 
-    public function setCreatedBy(?User $createdBy): self
+    public function setPerson(?Person $person): self
     {
-        $this->createdBy = $createdBy;
+        $this->person = $person;
 
         return $this;
     }
 
-    public function getUpdatedBy(): ?User
+    public function getSocialSupportGrp(): ?SocialSupportGrp
     {
-        return $this->updatedBy;
+        return $this->socialSupportGrp;
     }
 
-    public function setUpdatedBy(?User $updatedBy): self
+    public function setSocialSupportGrp(?SocialSupportGrp $socialSupportGrp): self
     {
-        $this->updatedBy = $updatedBy;
+        $this->socialSupportGrp = $socialSupportGrp;
 
         return $this;
     }

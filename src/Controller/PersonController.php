@@ -11,7 +11,7 @@ use App\Entity\GroupPeople;
 
 use App\Entity\PersonSearch;
 use App\Form\RolePersonType;
-use App\Form\PersonSearchMinType;
+use App\Form\PersonSearchType;
 use App\Form\RolePersonGroupType;
 use App\Repository\PersonRepository;
 
@@ -53,7 +53,7 @@ class PersonController extends AbstractController
     {
         $personSearch = new PersonSearch();
 
-        $form = $this->createForm(PersonSearchMinType::class, $personSearch);
+        $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
         $search = $request->query->get("search");
@@ -82,7 +82,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Permet de rechercher une personne pour l'ajouter dans un group ménage
+     * Permet de rechercher une personne pour l'ajouter dans un group groupe
      * 
      * @Route("/group/{id}/search/person", name="group_search_person")
      * @return Response
@@ -96,12 +96,12 @@ class PersonController extends AbstractController
         if ($groupPeople) {
             $formRolePerson = $this->createFormBuilder($rolePerson)
                 ->add("role", ChoiceType::class, [
-                    "choices" => $this->getChoices(RolePerson::ROLE),
+                    "choices" => Choices::getChoices(RolePerson::ROLE),
                 ])
                 ->getForm();
         }
 
-        $form = $this->createForm(PersonSearchMinType::class, $personSearch);
+        $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
         if ($request->query->all()) {
@@ -196,14 +196,14 @@ class PersonController extends AbstractController
 
                 $this->addFlash(
                     "success",
-                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe ménage."
+                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe groupe."
                 );
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         }
-        return $this->render("app/personNew.html.twig", [
-            "person" => $person,
+        return $this->render("app/person.html.twig", [
             "form" => $form->createView(),
+            "edit_mode" => false
         ]);
     }
 
@@ -248,10 +248,10 @@ class PersonController extends AbstractController
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         } else {
-            return $this->render("app/personNew.html.twig", [
+            return $this->render("app/person.html.twig", [
                 "group_people" => $groupPeople,
-                "person" => $person,
                 "form" => $form->createView(),
+                "edit_mode" => false
             ]);
         }
     }
@@ -284,7 +284,7 @@ class PersonController extends AbstractController
 
         $this->addFlash(
             "success",
-            $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au ménage."
+            $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au groupe."
         );
     }
 
@@ -300,11 +300,12 @@ class PersonController extends AbstractController
      */
     public function editPerson(GroupPeople $groupPeople, Person $person, Request $request, ValidatorInterface $validator): Response
     {
+        $socialSupports = $person->getSocialSupports();
+
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        $nbErrors = count($validator->validate($form));
-        dump($nbErrors);
+        // $nbErrors = count($validator->validate($form));
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -321,7 +322,6 @@ class PersonController extends AbstractController
 
         return $this->render("app/person.html.twig", [
             "group_people" => $groupPeople,
-            "person" => $person,
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
@@ -368,7 +368,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Voir la fiche de la personne
+     * Voir la fiche individuelle
      * 
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @Route("/person/{id}", name="person_show", methods="GET|POST")
@@ -390,7 +390,6 @@ class PersonController extends AbstractController
         }
 
         return $this->render("app/person.html.twig", [
-            "person" => $person,
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

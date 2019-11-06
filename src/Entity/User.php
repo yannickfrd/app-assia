@@ -38,6 +38,11 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $phone;
+
+    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
      */
@@ -106,14 +111,19 @@ class User implements UserInterface
     private $groupPeopleUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="createdBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="createdBy")
      */
-    private $socialSupportsGroupCreated;
+    private $socialSupportsGrpCreated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="updatedBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="updatedBy")
      */
-    private $socialSupportsGroupUpdated;
+    private $socialSupportsGrpUpdated;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", orphanRemoval=true)
+     */
+    private $roleUser;
 
     public function __construct()
     {
@@ -121,8 +131,9 @@ class User implements UserInterface
         $this->peopleUpdated = new ArrayCollection();
         $this->groupPeople = new ArrayCollection();
         $this->groupPeopleUpdated = new ArrayCollection();
-        $this->socialSupportsGroupCreated = new ArrayCollection();
-        $this->socialSupportsGroupUpdated = new ArrayCollection();
+        $this->socialSupportsGrpCreated = new ArrayCollection();
+        $this->socialSupportsGrpUpdated = new ArrayCollection();
+        $this->roleUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,6 +161,18 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }
@@ -387,30 +410,30 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SocialSupportGroup[]
+     * @return Collection|SocialSupportGrp[]
      */
-    public function getSocialSupportGroupCreated(): Collection
+    public function getsocialSupportsGrpCreated(): Collection
     {
-        return $this->socialSupportGroupCreated;
+        return $this->socialSupportsGrpCreated;
     }
 
-    public function addSocialSupportGroupCreated(SocialSupportGroup $socialSupportGroupCreated): self
+    public function addsocialSupportsGrpCreated(SocialSupportGrp $socialSupportsGrpCreated): self
     {
-        if (!$this->socialSupportGroupCreated->contains($socialSupportGroupCreated)) {
-            $this->socialSupportGroupCreated[] = $socialSupportGroupCreated;
-            $socialSupportGroupCreated->setCreatedBy($this);
+        if (!$this->socialSupportsGrpCreated->contains($socialSupportsGrpCreated)) {
+            $this->socialSupportsGrpCreated[] = $socialSupportsGrpCreated;
+            $socialSupportsGrpCreated->setCreatedBy($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportGroupCreated(SocialSupportGroup $socialSupportGroupCreated): self
+    public function removesocialSupportsGrpCreated(SocialSupportGrp $socialSupportsGrpCreated): self
     {
-        if ($this->socialSupportGroupCreated->contains($socialSupportGroupCreated)) {
-            $this->socialSupportGroupCreated->removeElement($socialSupportGroupCreated);
+        if ($this->socialSupportsGrpCreated->contains($socialSupportsGrpCreated)) {
+            $this->socialSupportsGrpCreated->removeElement($socialSupportsGrpCreated);
             // set the owning side to null (unless already changed)
-            if ($socialSupportGroupCreated->getCreatedBy() === $this) {
-                $socialSupportGroupCreated->setCreatedBy(null);
+            if ($socialSupportsGrpCreated->getCreatedBy() === $this) {
+                $socialSupportsGrpCreated->setCreatedBy(null);
             }
         }
 
@@ -418,30 +441,61 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SocialSupportGroup[]
+     * @return Collection|SocialSupportGrp[]
      */
-    public function getSocialSupportsGroupUpdated(): Collection
+    public function getsocialSupportsGrpUpdated(): Collection
     {
-        return $this->socialSupportsGroupUpdated;
+        return $this->socialSupportsGrpUpdated;
     }
 
-    public function addSocialSupportsGroupUpdated(SocialSupportGroup $socialSupportsGroupUpdated): self
+    public function addsocialSupportsGrpUpdated(SocialSupportGrp $socialSupportsGrpUpdated): self
     {
-        if (!$this->socialSupportsGroupUpdated->contains($socialSupportsGroupUpdated)) {
-            $this->socialSupportsGroupUpdated[] = $socialSupportsGroupUpdated;
-            $socialSupportsGroupUpdated->setUpdatedBy($this);
+        if (!$this->socialSupportsGrpUpdated->contains($socialSupportsGrpUpdated)) {
+            $this->socialSupportsGrpUpdated[] = $socialSupportsGrpUpdated;
+            $socialSupportsGrpUpdated->setUpdatedBy($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportsGroupUpdated(SocialSupportGroup $socialSupportsGroupUpdated): self
+    public function removesocialSupportsGrpUpdated(SocialSupportGrp $socialSupportsGrpUpdated): self
     {
-        if ($this->socialSupportsGroupUpdated->contains($socialSupportsGroupUpdated)) {
-            $this->socialSupportsGroupUpdated->removeElement($socialSupportsGroupUpdated);
+        if ($this->socialSupportsGrpUpdated->contains($socialSupportsGrpUpdated)) {
+            $this->socialSupportsGrpUpdated->removeElement($socialSupportsGrpUpdated);
             // set the owning side to null (unless already changed)
-            if ($socialSupportsGroupUpdated->getUpdatedBy() === $this) {
-                $socialSupportsGroupUpdated->setUpdatedBy(null);
+            if ($socialSupportsGrpUpdated->getUpdatedBy() === $this) {
+                $socialSupportsGrpUpdated->setUpdatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RoleUser[]
+     */
+    public function getRoleUser(): Collection
+    {
+        return $this->roleUser;
+    }
+
+    public function addRoleUser(RoleUser $roleUser): self
+    {
+        if (!$this->roleUser->contains($roleUser)) {
+            $this->roleUser[] = $roleUser;
+            $roleUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoleUser(RoleUser $roleUser): self
+    {
+        if ($this->roleUser->contains($roleUser)) {
+            $this->roleUser->removeElement($roleUser);
+            // set the owning side to null (unless already changed)
+            if ($roleUser->getUser() === $this) {
+                $roleUser->setUser(null);
             }
         }
 

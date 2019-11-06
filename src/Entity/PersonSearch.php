@@ -3,16 +3,11 @@
 namespace App\Entity;
 
 use App\Utils\Phone;
+use App\Entity\Person;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PersonSearch
 {
-    public const GENDER = [
-        1 => "Femme",
-        2 => "Homme",
-        3 => "NR"
-    ];
-
     /**
      * @var string|null
      */
@@ -150,7 +145,7 @@ class PersonSearch
 
     public function getGenderType()
     {
-        return self::GENDER[$this->gender];
+        return Person::GENDER[$this->gender];
     }
 
     /**

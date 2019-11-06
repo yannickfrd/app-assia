@@ -149,10 +149,16 @@ class Person
      */
     private $rolesPerson;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPers", mappedBy="person")
+     */
+    private $socialSupports;
+
     public function __construct()
     {
         $this->updatedAt = new \DateTime();
         $this->rolesPerson = new ArrayCollection();
+        $this->socialSupports = new ArrayCollection();
     }
 
     public function __toString()
@@ -409,6 +415,37 @@ class Person
                 $rolesPerson->setPerson(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection|SocialSupportPers[]
+     */
+    public function getSocialSupports(): Collection
+    {
+        return $this->socialSupports;
+    }
+
+    public function addSocialSupport(SocialSupportPers $socialSupport): self
+    {
+        if (!$this->socialSupports->contains($socialSupport)) {
+            $this->socialSupports[] = $socialSupport;
+            $socialSupport->setPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSocialSupport(SocialSupportPers $socialSupport): self
+    {
+        if ($this->socialSupports->contains($socialSupport)) {
+            $this->socialSupports->removeElement($socialSupport);
+            // set the owning side to null (unless already changed)
+            if ($socialSupport->getPerson() === $this) {
+                $socialSupport->setPerson(null);
+            }
+        }
+
         return $this;
     }
 }

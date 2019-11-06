@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Form;
+namespace App\Utils;
 
-use Symfony\Component\Form\AbstractType;
-
-class FormType extends AbstractType
+class Choices
 {
-    public function getchoices($const)
+    public static function getchoices($const)
     {
         foreach ($const as $key => $value) {
             $output[$value] = $key;

@@ -70,7 +70,7 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * Voir la fiche d'un ménage
+     * Voir la fiche d'un groupe
      * 
      * @Route("/group/{id}", name="group_people_show")
      * @param GroupPeople $groupPeople
@@ -96,7 +96,7 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * Ajoute une personne dans une groupe ménage
+     * Ajoute une personne dans une groupe groupe
      * 
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
      * @ParamConverter("person", options={"id" = "person_id"})
@@ -118,7 +118,7 @@ class GroupPeopleController extends AbstractController
 
         $formRolePerson = $this->createFormBuilder($rolePerson)
             ->add("role", ChoiceType::class, [
-                "choices" => $this->getChoices(RolePerson::ROLE),
+                "choices" => Choices::getChoices(RolePerson::ROLE),
             ])
             ->getForm();
 
@@ -136,7 +136,7 @@ class GroupPeopleController extends AbstractController
 
                 $this->manager->persist($rolePerson);
 
-                // Compte le nombre de personnes dans le ménage
+                // Compte le nombre de personnes dans le groupe
                 $nbPeople = $groupPeople->getRolePerson()->count();
                 $groupPeople->setNbPeople($nbPeople + 1);
 
@@ -144,12 +144,12 @@ class GroupPeopleController extends AbstractController
 
                 $this->addFlash(
                     "success",
-                    $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au ménage."
+                    $person->getFirstname() . " a été ajouté" . Agree::gender($person->getGender()) . " au groupe."
                 );
             } else {
                 $this->addFlash(
                     "warning",
-                    $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au ménage."
+                    $person->getFirstname() . " est déjà associé" . Agree::gender($person->getGender()) . " au groupe."
                 );
             }
         } else {
@@ -186,17 +186,18 @@ class GroupPeopleController extends AbstractController
     {
         // Vérifie si le token est valide avant de retirer la personne du groupe
         if ($this->isCsrfTokenValid("remove" . $rolePerson->getId(), $request->get("_token"))) {
-            // Compte le nombre de personnes dans le ménage
+            // Compte le nombre de personnes dans le groupe
             $nbPeople = $groupPeople->getRolePerson()->count();
-            // Vérifie que le ménage est composé de plus d'1 personne
-            if ($nbPeople == 1) {
-                return $this->msgFlash(null, "Un ménage doit être composé d'au moins une personne.", null,  200);
+            // Vérifie que le groupe est composé de plus d'1 personne
+
+            if ($rolePerson->getHead()) {
+                return $this->msgFlash(null, "Le/la demandeur/euse principal·e ne peut pas être retiré du groupe.", null,  200);
             } else {
                 $groupPeople->removeRolePerson($rolePerson);
                 $groupPeople->setNbPeople($nbPeople - 1);
                 $this->manager->flush();
 
-                return $this->msgFlash(200, $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du ménage.", $nbPeople - 1, 200);
+                return $this->msgFlash(200, $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du groupe.", $nbPeople - 1, 200);
             }
         } else {
             return $this->msgFlash(null, "Une erreur s'est produite.", null,  200);

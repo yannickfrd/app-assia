@@ -13,13 +13,12 @@ let searchPerson = new SearchPerson(3, 500); // lengthSearch, time
 // Active Toolips Bootstrap
 $(function () {
     $("[data-toggle='tooltip']").tooltip()
-})
+});
 
 // Active Popover Bootstrap
 $(function () {
     $("[data-toggle='popover']").popover()
-})
-
+});
 
 // $(function () {
 //     $(".toast").toast({

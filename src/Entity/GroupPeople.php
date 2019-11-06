@@ -76,7 +76,7 @@ class GroupPeople
     private $rolePerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGroup", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="groupPeople")
      * @Assert\Valid
      */
     private $socialSupports;
@@ -196,7 +196,7 @@ class GroupPeople
         return $this->socialSupports;
     }
 
-    public function addSocialSupport(SocialSupportGroup $socialSupport): self
+    public function addSocialSupport(SocialSupportGrp $socialSupport): self
     {
         if (!$this->socialSupports->contains($socialSupport)) {
             $this->socialSupports[] = $socialSupport;
@@ -206,7 +206,7 @@ class GroupPeople
         return $this;
     }
 
-    public function removeSocialSupport(SocialSupportGroup $socialSupport): self
+    public function removeSocialSupport(SocialSupportGrp $socialSupport): self
     {
         if ($this->socialSupports->contains($socialSupport)) {
             $this->socialSupports->removeElement($socialSupport);

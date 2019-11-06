@@ -4,13 +4,15 @@ namespace App\Form;
 
 use App\Entity\Person;
 
+use App\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class PersonType extends FormType
+class PersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -38,7 +40,7 @@ class PersonType extends FormType
                 "attr" => [
                     "class" => "col-md-12"
                 ],
-                "choices" => $this->getchoices(Person::GENDER),
+                "choices" => Choices::getchoices(Person::GENDER),
                 "placeholder" => "-- Select --",
                 "required" => true
             ])

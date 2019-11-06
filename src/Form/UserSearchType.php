@@ -2,15 +2,20 @@
 
 namespace App\Form;
 
-use App\Entity\PersonSearch;
+use App\Entity\Pole;
+use App\Utils\Choices;
 
+use App\Entity\RoleUser;
+use App\Entity\Service;
+use App\Entity\UserSearch;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class PersonSearchMinType extends FormType
+class UserSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -31,31 +36,11 @@ class PersonSearchMinType extends FormType
                     "autocomplete" => "off"
                 ]
             ])
-            ->add("birthdate", DateType::class, [
-                "label" => false,
-                "widget" => "single_text",
-                // "html5" => false,
-                // "format" => "dd/MM/yyyy",
-                "attr" => [
-                    "class" => "w-max-180",
-                    "placeholder" => "jj/mm/aaaa",
-                    "autocomplete" => "off"
-                ],
-                "required" => false
-            ])
-            // ->add("age", null, [
-            //     "label" => false,
-            //     "attr" => [
-            //         "placeholder" => "Age",
-            //         "class" => "w-max-100",
-            //         "autocomplete" => "off"
-            //     ]
-            // ])
-            ->add("gender", ChoiceType::class, [
-                'placeholder' => "-- Gender --",
+            ->add("roleUser", ChoiceType::class, [
+                'placeholder' => "-- Rôle --",
                 "label" => false,
                 "required" => false,
-                "choices" => $this->getchoices(PersonSearch::GENDER),
+                "choices" => Choices::getChoices(RoleUser::ROLE),
                 "attr" => [
                     "class" => "w-max-120",
                     "autocomplete" => "off"
@@ -68,16 +53,36 @@ class PersonSearchMinType extends FormType
                     "class" => "w-max-140",
                     "autocomplete" => "off"
                 ],
+            ])
+            ->add("service", EntityType::class, [
+                "class" => Service::class,
+                "choice_label" => "name",
+                "multiple" => true,
+                // "checkboxes", true,
+                "label" => false,
+                "placeholder" => "-- Service --",
+                "required" => false,
+                "attr" => [
+                    "class" => "multi-select"
+                ]
+            ])
+            ->add("pole", EntityType::class, [
+                "class" => Pole::class,
+                "choice_label" => "name",
+                // "multiple" => true,
+                "label" => false,
+                "placeholder" => "-- Pole --",
+                "required" => false,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => PersonSearch::class,
+            "data_class" => UserSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
-            "csrf_protection" => true
+            "csrf_protection" => false
         ]);
     }
 

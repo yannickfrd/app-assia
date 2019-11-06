@@ -2,21 +2,23 @@
 
 namespace App\Form;
 
+use App\Utils\Choices;
 use App\Form\PersonType;
 use App\Entity\RolePerson;
-use App\Form\GroupPeopleType;
 
+use App\Form\GroupPeopleType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class RolePersonGroupType extends FormType
+class RolePersonGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add("role", ChoiceType::class, [
-                "choices" => $this->getChoices(RolePerson::ROLE),
+                "choices" => Choices::getChoices(RolePerson::ROLE),
                 "placeholder" => "-- Select --",
                 "required" => true
             ])

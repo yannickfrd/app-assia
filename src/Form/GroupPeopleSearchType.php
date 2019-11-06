@@ -2,16 +2,19 @@
 
 namespace App\Form;
 
+use App\Utils\Choices;
+
+use App\Entity\GroupPeople;
 use App\Entity\GroupPeopleSearch;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class GroupPeopleSearchType extends FormType
+class GroupPeopleSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -43,21 +46,21 @@ class GroupPeopleSearchType extends FormType
                 "required" => false
             ])
 
-            ->add("head", ChoiceType::class, [
-                "placeholder" => "-- DP --",
-                "label" => false,
+            ->add("head", CheckBoxType::class, [
+                "label" => "DP",
                 "required" => false,
-                "choices" => $this->getchoices(GroupPeopleSearch::HEAD),
+                "label_attr" => [
+                    "class" => "custom-control-label",
+                ],
                 "attr" => [
-                    "class" => "w-max-100",
-                    "autocomplete" => "off"
+                    "class" => "custom-control-input checkbox"
                 ]
             ])
             ->add("familyTypology", ChoiceType::class, [
                 "placeholder" => "-- Family Typology --",
                 "label" => false,
                 "required" => false,
-                "choices" => $this->getchoices(GroupPeopleSearch::FAMILY_TYPOLOGY),
+                "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 "attr" => [
                     "class" => "w-max-200",
                     "autocomplete" => "off"

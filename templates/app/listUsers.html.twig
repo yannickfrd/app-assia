@@ -1,0 +1,220 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "bootstrap_4_layout.html.twig" %}
+{% if form_role_user is defined %}
+{% form_theme form_role_user "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% endif %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block stylesheets %}
+
+<link href="{{ asset("css/table.css") }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
+
+{% endblock %}
+
+{% block body %}
+
+<section class="my-0">
+    <div class="container">
+        {% include 'msgFlash.html.twig' %}
+        <h1 class="h2 mb-4">Utilisateurs</h1>
+    </div>
+
+    <div class="container-fluid p-0">
+        <div class="jumbotron py-3">
+            {{ form_start(form) }}
+            <div class="form-inline justify-content-md-center align-items-end">
+                <div class="form-service col-auto my-1 px-1 ">
+                    {{ form_row(form.lastname) }}
+                </div>
+                <div class="form-service col-auto my-1 px-1">
+                    {{ form_row(form.firstname) }}
+                </div>
+                <div class="form-service col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                    <div><i class="fas fa-phone mx-1 text-black-50 d-none d-sm-block" data-toggle="tooltip"
+                            data-placement="bottom" title="Téléphone"></i></div>
+                    {{ form_row(form.phone) }}
+                </div>
+                <div class="form-service col-auto my-1 px-1 ">
+                    {{ form_row(form.service) }}
+                </div>
+                <div class="form-service col-auto my-1 px-1 ">
+                    {{ form_row(form.pole) }}
+                </div>
+                <div class="form-service col-auto my-1 px-1">
+                    <button type="submit" id="search" class="btn btn-primary shadow"><i
+                            class="fas fa-search"></i></button>
+                    <a href="{{ path("list_users") }}" class="btn btn-secondary ml-2 shadow"><i
+                            class="fas fa-eraser"></i></a>
+                </div>
+                {{ form_end(form, {"render_rest": false}) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        {% if app.request.attributes.get("_route") == "new_support_search_user" %}
+        <p><a href="{{ path("user_new") }}" class="js-create-user text-primary"><span class="fas fa-plus-square"></span>
+                Créer un
+                nouvel utilisateur</a></p>
+        {% endif %}
+
+        {% if users is defined %}
+
+        {% if users %}
+        {% if service_users is defined %}
+        <p><a href="{{ path("service_create_user", {"id":service_users.id}) }}"
+                class="js-create-user text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel
+                utilisateur</a></p>
+        {% endif %}
+
+
+
+        <div class="row align-items-baseline">
+            <div class="col-md-4 count align-middle">
+                <p class="align-middle">Résultat : {{ users.getTotalItemCount | number_format(0,'', ' ')}}
+                    utilisateurs.</p>
+            </div>
+            <div class="col-md-8">
+                <div class="navigation">{{ knp_pagination_render(users) }}</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover shadow">
+                <thead class="bg-dark">
+                    <tr>
+                        <th scope="col" class="align-middle th-width-20px"></th>
+                        <th scope="col" class="align-middle th-width-120px text-light">
+                            {{ knp_pagination_sortable(users, "Nom", "u.lastname") }}
+                        </th>
+                        <th scope="col" class="align-middle th-width-120px text-light">
+                            {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}
+                        </th>
+                        <th scope="col" class="align-middle th-width-120px text-light">
+                            Fonction
+                        </th>
+                        <th scope="col" class="align-middle th-width-120px text-light">
+                            Téléphone
+                        </th>
+                        <th scope="col" class="align-middle th-width-150px text-light">
+                            Email
+                        </th>
+                        <th scope="col" class="align-middle th-width-150px text-light">
+                            Service
+                        </th>
+                        <th scope="col" class="align-middle th-width-150px text-light">
+                            Pôle
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+                    <tr>
+                        <th scope="row">
+                            {% if service_users is defined %}
+                            <a href="{{ path('service_add_user', {'id':service_users.id, 'user_id': user.id}) }}"
+                                class="js-add-user" data-toggle="modal" data-target="#modal-block"
+                                data-placement="bottom" title="Ajouter l'tilisateur au service">
+                                <i class="fas fa-plus-square fa-2x"></i>
+                            </a>
+                            {% else %}
+                            <a href="{{ path('user_show', {'id':user.id}) }}" class="btn btn-primary shadow"
+                                data-placement="bottom" title="Voir la fiche individuelle">
+                                <span class="fas fa-user"></span>
+                            </a>
+                            {% endif %}
+                        </th>
+                        <td class="text-uppercase">{{ user.lastname }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{% for role in user.roleUser %}
+                            {{ role.getRoleType }}<br>
+                            {% endfor %}
+                        </td>
+                        <td>{{ user.phone }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% for role in user.roleUser %}
+                            {{ role.service.name }}<br>
+                            {% endfor %}
+                        </td>
+                        <td>{% for role in user.roleUser %}
+                            {{ role.service.pole.name }}<br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="navigation">
+            {{ knp_pagination_render(users) }}
+        </div>
+
+        {% if service_users is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="{{ path("service_create_user", {"id":service_users.id}) }}" class="text-primary"><span
+                            class="fas fa-plus-square"></span> Créer un nouvel utilisateur</a></p>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+</section>
+{% endif %}
+
+</div>
+
+{% if form_role_user is defined %}
+<div class="modal fade" id="modal-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Demande de confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form_role_user) }}
+            <div class="modal-body">
+                <p>Avant d'ajouter la usere au service, merci de préciser son rôle dans le service.</p>
+                {{ form_row(form_role_user.role) }}
+                {{ form_row(form_role_user._token) }}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="js-btn-confirm" class="btn btn-primary">Ajouter l'tilisateur</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+            {{ form_end(form_role_user, {"render_rest": false}) }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cet utilisateur au service ?{% endblock %}
+{% block modal_title %}Demande de confirmation{% endblock %}
+{% block modal_confirm %}Ajouter l'tilisateur{% endblock %}
+{% block modal_cancel %}Annuler{% endblock %}
+{% block modal_alert %}primary{% endblock %}
+
+{% block javascripts %}
+
+{# <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> #}
+<script>
+    {# $("select.multi-select").select2({
+        theme: "bootstrap",
+        placeholder: "-- Services --",
+    }); #}
+</script>
+
+{% endblock javascripts %}
