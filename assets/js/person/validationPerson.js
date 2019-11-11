@@ -1,5 +1,5 @@
 // Validation des données de la fiche personne
-class ValidationPerson {
+export default class ValidationPerson {
     constructor(lastname, firstname, birthdate, gender, email, role, typo, nbPeople) {
         this.lastname = lastname;
         this.lastnameInputElt = document.getElementById(this.lastname);

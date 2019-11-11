@@ -50,7 +50,7 @@ class UserSearchType extends AbstractType
                 "label" => false,
                 "attr" => [
                     "placeholder" => "Phone",
-                    "class" => "w-max-140",
+                    "class" => "js-phone w-max-140",
                     "autocomplete" => "off"
                 ],
             ])

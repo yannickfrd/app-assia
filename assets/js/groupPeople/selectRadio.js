@@ -1,5 +1,5 @@
-//
-class SelectRadioJS {
+// Sélection d'un bouton Radio
+export default class SelectRadioJS {
     constructor() {
         this.checkboxElts = document.querySelectorAll("table .checkbox.form-check-input");
         this.init();
@@ -18,5 +18,3 @@ class SelectRadioJS {
         checkboxSelected.checked = true;
     }
 }
-
-let selectRadioJS = new SelectRadioJS();

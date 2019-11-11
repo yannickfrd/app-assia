@@ -1,5 +1,7 @@
+import MessageFlash from "../utils/messageFlash";
+
 //
-class AddPerson {
+export default class AddPerson {
 
     constructor() {
         this.addPersonElts = document.querySelectorAll(".js-add-person");
@@ -19,7 +21,9 @@ class AddPerson {
             }.bind(this));
         });
 
-        this.aCreatePersonElt.addEventListener("click", this.setParams.bind(this));
+        if (this.aCreatePersonElt) {
+            this.aCreatePersonElt.addEventListener("click", this.setParams.bind(this));
+        }
     }
 
     // Crée les paramètres en GET dans l'URL
@@ -58,5 +62,3 @@ class AddPerson {
         this.trPersonElt.remove();
     }
 }
-
-let addPerson = new AddPerson();

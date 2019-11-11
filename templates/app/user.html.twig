@@ -49,11 +49,11 @@
             <div class="col-md-12">
                 <div class="mb-4 float-right">
                     {% if edit_mode %}
-                    <button type="submit" id="updateuser" name="updateuser" class="btn btn-primary shadow"
+                    <button type="submit" id="updateuser" name="updateuser" class="btn btn-{{ theme_color }} shadow"
                         data-url="{{ path('update_user', {'id':user.id}) }}">Mettre à jour</button>
                     <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
                     {% else %}
-                    <input type="submit" id="send" name="send" id="send" class="btn btn-primary shadow"
+                    <input type="submit" id="send" name="send" id="send" class="btn btn-{{ theme_color }} shadow"
                         value="Enregistrer">
                     {% endif %}
 
@@ -90,7 +90,7 @@
                         <th scope="row">
                             <a href="{{ path('social_support_show', {'id':social_support.groupPeople.id, 'social_support_id':social_support.id}) }}"
                                 class="
-                                btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
+                                btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
@@ -115,7 +115,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ path('new_support_search_person') }}" class="m-3 text-primary">
+        <a href="{{ path('new_support_search_person') }}" class="m-3 text-{{ theme_color }}">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
         <br />
@@ -145,7 +145,7 @@
                     <tr>
                         <th scope="row">
                             <a href="{{ path('service_show', {'id':role.service.id}) }}"
-                                class="btn btn-primary shadow" data-placement="bottom" title="Voir la fiche du service">
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>

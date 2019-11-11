@@ -24,7 +24,11 @@ class ServiceType extends AbstractType
                 "choice_label" => "name",
                 "placeholder" => "-- Select --",
             ])
-            ->add("phone")
+            ->add("phone", null, [
+                "attr" => [
+                    "class" => "js-phone ",
+                ]
+            ])
             ->add("email", null, [
                 "attr" => [
                     "placeholder" => "Email"
@@ -32,7 +36,11 @@ class ServiceType extends AbstractType
             ])
             ->add("address")
             ->add("city")
-            ->add("zipCode")
+            ->add("zipCode", null, [
+                "attr" => [
+                    "class" => "js-zip-code ",
+                ]
+            ])
             ->add("comment");
     }
 

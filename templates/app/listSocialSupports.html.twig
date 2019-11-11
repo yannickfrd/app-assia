@@ -5,11 +5,7 @@
 {% block title %}Les suivis
 {% endblock %}
 
-{% block stylesheets %}
-
-<link href="{{ asset("css/table.css") }}" rel="stylesheet" />
-
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
@@ -42,7 +38,7 @@
                 {{ form_row(form.nbPeople) }}
             </div>
             <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <button type="submit" id="search" class="btn btn-primary shadow">
+                <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow">
                     <i class="fas fa-search" data-placement="bottom" title="Rechercher"></i>
                 </button>
                 <a href="{{ path("list_groups_people") }}" class="btn btn-secondary ml-2 shadow">
@@ -96,13 +92,13 @@
                     <tr>
                         <th scope="row">
                             <a href="{% if person.groupPeople %}{{ path('group_people_show', {'id':person.groupPeople.id}) }} {% endif %}"
-                                class="btn btn-primary shadow" data-placement="bottom" title="Voir la fiche du groupe">
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir la fiche du groupe">
                                 <span class="fas fa-users"></span>
                             </a>
                         </th>
                         <td>
                             <a href="{% if person.groupPeople %}{{ path('group_people_show', {'id':person.groupPeople.id}) }} {% endif %}"
-                                class="text-primary">
+                                class="text-{{ theme_color }}">
                                 <span
                                     class="text-uppercase font-weight-bold">{{ person.person.lastname }}</span><br />{{ person.person.firstname }}</a>
                         </td>
@@ -145,4 +141,5 @@
             {{ knp_pagination_render(role_people) }}
         </div>
 </section>
-</div>{% endblock %}
+</div>
+{% endblock %}

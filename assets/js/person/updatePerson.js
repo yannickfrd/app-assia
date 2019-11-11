@@ -1,7 +1,11 @@
-// Requête Ajax pour mettre à jour les informations individuelles
-class UpdatePerson {
+import ValidationPerson from "./validationPerson";
+import MessageFlash from "../utils/messageFlash";
 
-    constructor() {
+// Requête Ajax pour mettre à jour les informations individuelles
+export default class UpdatePerson {
+
+    constructor(ajaxRequest) {
+        this.ajaxRequest = ajaxRequest;
         this.personElt = document.querySelector('form[name=person]');
         this.updatePersonBtn = document.getElementById("updatePerson");
         this.url = this.updatePersonBtn.getAttribute("data-url");
@@ -22,7 +26,7 @@ class UpdatePerson {
             if (!validationPerson.getNbErrors()) {
                 let formData = new FormData(this.personElt);
                 let formToString = new URLSearchParams(formData).toString();
-                ajaxRequest.init("POST", this.url, this.response.bind(this), true, formToString);
+                this.ajaxRequest.init("POST", this.url, this.response.bind(this), true, formToString);
             } else {
                 new MessageFlash("danger", "Veuillez corriger les erreurs avant de mettre à jour.");
             }
@@ -41,8 +45,6 @@ class UpdatePerson {
         }
     }
 }
-
-let updatePerson = new UpdatePerson();
 
 // let now = new Date();
 // now = now.getDate() + "/" + (now.getMonth() + 1) + "/" + now.getFullYear() + " à " + now.getHours() + ":" + now.getMinutes();

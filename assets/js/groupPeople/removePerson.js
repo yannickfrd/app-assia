@@ -1,7 +1,10 @@
-// Requête Ajax pour retirer une personne d'un groupe
-class RemovePerson {
+import MessageFlash from "../utils/messageFlash";
 
-    constructor() {
+// Requête Ajax pour retirer une personne d'un groupe
+export default class RemovePerson {
+
+    constructor(ajaxRequest) {
+        this.ajaxRequest = ajaxRequest;
         this.trPersonElts = document.querySelectorAll(".js-tr-person");
         this.inputNbPeople = document.getElementById("group_people_nbPeople");
         this.modalConfirmElt = document.getElementById("modal-confirm");
@@ -25,7 +28,7 @@ class RemovePerson {
     removePerson(btnRemoveElt, trPersonElt) {
         console.log("remove !");
         this.trPersonElt = trPersonElt;
-        ajaxRequest.init("GET", btnRemoveElt.getAttribute("data-url"), this.response.bind(this), true), {
+        this.ajaxRequest.init("GET", btnRemoveElt.getAttribute("data-url"), this.response.bind(this), true), {
             once: true
         };
     }
@@ -47,5 +50,3 @@ class RemovePerson {
         this.trPersonElt.remove();
     }
 }
-
-let removePerson = new RemovePerson();

@@ -1,5 +1,7 @@
+import MessageFlash from "../utils/messageFlash";
+
 // Validation des données de la fiche personne
-class ValidationSocialSupport {
+export default class ValidationSocialSupport {
 
     constructor() {
         this.startDate = "social_support_grp_startDate";
@@ -130,5 +132,3 @@ class ValidationSocialSupport {
         return nbErrors;
     }
 }
-
-let validationSocialSupport = new ValidationSocialSupport();

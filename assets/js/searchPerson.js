@@ -1,7 +1,8 @@
 // Recherche instannée Ajax
-class SearchPerson {
+export default class SearchPerson {
 
-    constructor(lengthSearch, time) {
+    constructor(ajaxRequest, lengthSearch, time) {
+        this.ajaxRequest = ajaxRequest;
         this.searchElt = document.getElementById("search");
         this.resultsSearchElt = document.getElementById("results_search");
         this.lengthSearch = lengthSearch;
@@ -29,7 +30,7 @@ class SearchPerson {
         let valueSearch = this.searchElt.value;
         if (valueSearch.length >= this.lengthSearch) {
             let url = "/search/person?search=" + valueSearch;
-            ajaxRequest.init("GET", url, this.addResults.bind(this), true);
+            this.ajaxRequest.init("GET", url, this.addResults.bind(this), true);
         }
     }
 

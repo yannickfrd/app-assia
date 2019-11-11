@@ -1,5 +1,4 @@
-// Requête AJAX
-class AjaxRequest {
+export default class AjaxRequest {
 
     constructor() {
         this.xhr = new XMLHttpRequest();

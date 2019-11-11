@@ -3,7 +3,12 @@ table {
 }
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-    background-color: #00aeef;
+    /* background-color: #00aeef; */
+    border-radius: 4px;
+}
+
+.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after {
+    background-color: var(--brown);
     border-radius: 4px;
 }
 

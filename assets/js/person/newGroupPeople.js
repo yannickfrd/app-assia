@@ -1,5 +1,7 @@
+import ValidationPerson from "./validationPerson";
+
 //
-class NewGroupPeople {
+export default class NewGroupPeople {
     constructor() {
 <<<<<<< HEAD
 =======
@@ -194,5 +196,3 @@ class NewGroupPeople {
         }
     }
 }
-
-let newGroupPeople = new NewGroupPeople();

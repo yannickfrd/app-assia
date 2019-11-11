@@ -3,9 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Pole;
+use App\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class PoleType extends AbstractType
 {
@@ -14,13 +16,24 @@ class PoleType extends AbstractType
         $builder
             ->add("name")
             ->add("email")
-            ->add("phone")
+            ->add("phone", null, [
+                "attr" => [
+                    "class" => "js-phone",
+                ]
+            ])
             ->add("address")
             ->add("city")
-            ->add("zipCode")
+            ->add("zipCode", null, [
+                "attr" => [
+                    "class" => "js-zip-code ",
+                ]
+            ])
             ->add("director")
             ->add("comment")
-            ->add("createdAt");
+            ->add("color", ChoiceType::class, [
+                "choices" => Choices::getChoices(Pole::COLOR),
+                "placeholder" => "-- Select --",
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

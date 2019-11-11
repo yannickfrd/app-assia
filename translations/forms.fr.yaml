@@ -1,6 +1,7 @@
 Address: Adresse
 Birthdate: Date de naissance
 City: Ville
+Color: Couleur
 Comment: Commentaire 
 ConfirmPassword: Confirmation du mot de passe
 Department: Service
@@ -20,8 +21,10 @@ Phone: Téléphone
 Phone1: Téléphone 1
 Phone2: Téléphone 2
 Pole: Pôle
+Pole name: Nom du pôle
 Role: Rôle dans le groupe
 Select: Sélectionner
+Service name: Nom du service
 Start date: Date de début
 Status: Statut
 Username: Nom d'utilisateur

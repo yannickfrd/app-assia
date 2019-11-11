@@ -36,7 +36,7 @@
         class="btn btn-outline-secondary btn-sm mb-2"> {{ person.firstname }} {{ person.lastname }}</a>
       {% endfor %}
     </div>
-    <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-primary">
+    <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-{{ theme_color }}">
       <span class="fas fa-users"></span>
       Retour à la fiche du groupe</a>
     <span class="small text-secondary">{{ group_people.getFamilyTypologyType }}
@@ -144,11 +144,11 @@
       <div class="col-md-12">
         <div class="mb-4 float-right">
           {% if edit_mode %}
-          <button type="submit" id="update" name="update" class="btn btn-primary shadow"
+          <button type="submit" id="update" name="update" class="btn btn-{{ theme_color }} shadow"
             data-url="{{ path('update_person', {'id':social_support.id}) }}">Mettre à jour</button>
           <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
           {% else %}
-          <input type="submit" id="send" name="send" id="send" class="btn btn-primary shadow" value="Enregistrer">
+          <input type="submit" id="send" name="send" id="send" class="btn btn-{{ theme_color }} shadow" value="Enregistrer">
           {% endif %}
 
         </div>
@@ -184,7 +184,7 @@
               <tr>
                 <th scope="row">
                   <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-                    class="btn btn-primary shadow" data-placement="bottom"
+                    class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
                     title="Modifier les informations de la personne">
                     <span class="fas fa-user-edit"></span>
                   </a>
@@ -213,5 +213,6 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset("js/validationSocialSupport.js") }}"></script>
+{# <script src="{{ asset("js/validationSocialSupport.js") }}"></script> #}
+{{ encore_entry_script_tags("socialSupport") }}
 {% endblock javascripts %}

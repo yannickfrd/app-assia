@@ -1,5 +1,5 @@
 // Message flash
-class MessageFlash {
+export default class MessageFlash {
 
     constructor(alert, message) {
         this.msgFlashContentElt = document.getElementById("js-notif-container");

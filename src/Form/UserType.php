@@ -14,7 +14,11 @@ class UserType extends AbstractType
         $builder
             ->add("username")
             ->add("email")
-            ->add("phone")
+            ->add("phone", null, [
+                "attr" => [
+                    "class" => "js-phone ",
+                ]
+            ])
             ->add("lastname")
             ->add("firstname");
     }
