@@ -15,16 +15,10 @@ import "select2-bootstrap4-theme/dist/select2-bootstrap4.min.css";
 const $ = require("jquery");
 
 require("bootstrap");
-require("select2");
 
 // import MessageFlash from "./utils/messageFlash";
 import AjaxRequest from "./utils/ajaxRequest";
 import SearchPerson from "./searchPerson";
-
-$("select.multi-select").select2({
-    // theme: "bootstrap4",
-    placeholder: "-- Services --",
-});
 
 $(function () {
     $("[data-toggle='tooltip']").tooltip()

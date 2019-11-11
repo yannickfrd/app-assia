@@ -44,9 +44,16 @@ class PersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => true
             ])
-            ->add("phone1")
-            ->add("phone2")
-            ->add("email")
+            ->add("phone1", null, [
+                "attr" => [
+                    "class" => "js-phone ",
+                ]
+            ])
+            ->add("phone2", null, [
+                "attr" => [
+                    "class" => "js-phone ",
+                ]
+            ])->add("email")
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 5,

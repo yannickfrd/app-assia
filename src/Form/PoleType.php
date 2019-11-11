@@ -16,10 +16,18 @@ class PoleType extends AbstractType
         $builder
             ->add("name")
             ->add("email")
-            ->add("phone")
+            ->add("phone", null, [
+                "attr" => [
+                    "class" => "js-phone",
+                ]
+            ])
             ->add("address")
             ->add("city")
-            ->add("zipCode")
+            ->add("zipCode", null, [
+                "attr" => [
+                    "class" => "js-zip-code ",
+                ]
+            ])
             ->add("director")
             ->add("comment")
             ->add("color", ChoiceType::class, [

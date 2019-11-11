@@ -5,6 +5,8 @@ import AjaxRequest from "../utils/ajaxRequest";
 import UpdatePerson from "./updatePerson";
 import NewGroupPeople from "./newGroupPeople";
 
+import "../utils/maskPhone";
+
 let ajaxRequest = new AjaxRequest();
 
 document.addEventListener("DOMContentLoaded", function () {
