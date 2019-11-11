@@ -1,13 +1,8 @@
 {% extends "base.html.twig" %}
 
 {% form_theme form "bootstrap_4_layout.html.twig" %}
-{% if form_role_service is defined %}
-{% form_theme form_role_service "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
-{% endif %}
 
 {% block title %}Services{% endblock %}
-
-{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
@@ -36,7 +31,7 @@
                     {{ form_row(form.pole) }}
                 </div>
                 <div class="form-service col-auto my-1 px-1">
-                    <button type="submit" id="search" class="btn btn-primary shadow"><i
+                    <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
                             class="fas fa-search"></i></button>
                     <a href="{{ path("list_services") }}" class="btn btn-secondary ml-2 shadow"><i
                             class="fas fa-eraser"></i></a>
@@ -46,26 +41,8 @@
         </div>
     </div>
 
+    {% if services %}
     <div class="container">
-
-        {% if app.request.attributes.get("_route") == "new_support_search_service" %}
-        <p><a href="{{ path("service_new") }}" class="js-create-service text-primary"><span
-                    class="fas fa-plus-square"></span>
-                Créer un
-                nouvel service</a></p>
-        {% endif %}
-
-        {% if services is defined %}
-
-        {% if services %}
-        {% if service_services is defined %}
-        <p><a href="{{ path("service_create_service", {"id":service_services.id}) }}"
-                class="js-create-service text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel
-                service</a></p>
-        {% endif %}
-
-
-
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
                 <p class="align-middle">Résultat : {{ services.getTotalItemCount | number_format(0,'', ' ')}}
@@ -82,10 +59,10 @@
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(services, "Nom du service", "d.name") }}
+                            {{ knp_pagination_sortable(services, "Nom du service", "s.name") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(services, "Pôle", "p.name") }}
+                            {{ knp_pagination_sortable(services, "Pôle", "s.name") }}
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
                             Téléphone
@@ -94,10 +71,10 @@
                             Email
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(services, "Adresse", "p.address") }}
+                            Adresse
                         </th>
                         <th scope="col" class="align-middle th-width-120px text-light">
-                            {{ knp_pagination_sortable(services, "Ville", "p.city") }}
+                            {{ knp_pagination_sortable(services, "Ville", "s.city") }}
                         </th>
                     </tr>
                 </thead>
@@ -107,13 +84,16 @@
                     {% for service in services %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('service_show', {'id':service.id}) }}" class="btn btn-primary shadow"
-                                data-placement="bottom" title="Voir la fiche du service">
+                            <a href="{{ path('service_show', {'id':service.id}) }}"
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
                         <td>{{ service.name }}</td>
-                        <td>{{ service.pole.name }}</td>
+                        <td><a href="{{ path('pole_show', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">
+                                {{ service.pole.name }}</a>
+                        </td>
                         <td>{{ service.phone }}</td>
                         <td>{{ service.email }}</td>
                         <td>{{ service.address }}</td>
@@ -128,54 +108,15 @@
             {{ knp_pagination_render(services) }}
         </div>
 
-        {% if service_services is defined %}
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path("service_create_service", {"id":service_services.id}) }}"
-                        class="text-primary"><span class="fas fa-plus-square"></span> Créer un nouvel service</a></p>
+                <p><a href="#" class="text-{{ theme_color }}"><span class="fas fa-plus-square"></span> Créer un nouveau
+                        service</a></p>
             </div>
-        </div>
-        {% endif %}
-        {% endif %}
-</section>
-{% endif %}
-
-</div>
-
-{% if form_role_service is defined %}
-<div class="modal fade" id="modal-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Demande de confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {{ form_start(form_role_service) }}
-            <div class="modal-body">
-                <p>Avant d'ajouter la servicee au service, merci de préciser son rôle dans le service.</p>
-                {{ form_row(form_role_service.role) }}
-                {{ form_row(form_role_service._token) }}
-            </div>
-            <div class="modal-footer">
-                <button type="submit" id="js-btn-confirm" class="btn btn-primary">Ajouter l'tilisateur</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            </div>
-            {{ form_end(form_role_service, {"render_rest": false}) }}
         </div>
     </div>
+    {% endif %}
+</section>
 </div>
-{% endif %}
 
 {% endblock %}
-
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cet service au service ?{% endblock %}
-{% block modal_title %}Demande de confirmation{% endblock %}
-{% block modal_confirm %}Ajouter l'tilisateur{% endblock %}
-{% block modal_cancel %}Annuler{% endblock %}
-{% block modal_alert %}primary{% endblock %}
-
-{% block javascripts %}
-{% endblock javascripts %}

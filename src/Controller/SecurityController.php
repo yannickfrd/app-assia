@@ -68,8 +68,6 @@ class SecurityController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        dump($error);
-
         if ($error) {
             $this->addFlash(
                 "danger",
@@ -82,7 +80,6 @@ class SecurityController extends AbstractController
             "error" => $error
         ]);
     }
-
 
     /**
      * @Route("/connexion", name="security_login_valid")

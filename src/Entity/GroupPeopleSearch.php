@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\GroupPeople;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class GroupPeopleSearch
@@ -19,6 +18,7 @@ class GroupPeopleSearch
 
     /**
      * @var date|null
+     * @Assert\Date(message="Date de naissance invalide.")
      */
     private $birthdate;
 

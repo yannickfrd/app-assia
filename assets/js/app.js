@@ -7,27 +7,6 @@
 
 // any CSS you require will output into a single css file (app.css in this case)
 
-// import "bootstrap/dist/css/bootstrap.min.css";
-
-document.addEventListener("DOMContentLoaded", function () {
-    var userElt = document.querySelector(".js-user");
-    if (userElt) {
-        var poleName = userElt.dataset.poleName;
-        var primaryColor = "";
-        switch (poleName) {
-            case "Hébergement Social":
-                primaryColor = "hebergement";
-                break;
-            case "Habitat":
-                primaryColor = "habitat";
-                break;
-            default:
-                break;
-        }
-        require("../css/pole/" + primaryColor + ".scss");
-    }
-});
-
 require("../css/app.scss");
 require("../css/table.css");
 import "select2/dist/css/select2.min.css";

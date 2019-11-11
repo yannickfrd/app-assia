@@ -2,17 +2,17 @@
 
 {% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
 
-{% block title %}Fiche du service{% endblock %}
+{% block title %}Fiche du pole{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
-{% set service = form.vars.value %}
+{% set pole = form.vars.value %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Service {{ service.name }}{% else %}Création d'un service{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}Pôle {{ pole.name }}{% else %}Création d'un pôle{% endif %}</h1>
     {% if edit_mode %}
     {% else %}
     <div class="mb-4"></div>
@@ -20,28 +20,28 @@
 
     <hr>
 
-    <section id="service">
+    <section id="pole">
 
         {% include 'msgFlash.html.twig' %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
 
-        {% if edit_mode %} {% set form_service = form %} {% else %} {% set form_service = form.service %}
+        {% if edit_mode %} {% set form_pole = form %} {% else %} {% set form_pole = form.pole %}
         {% endif %}
 
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_service.name) }}</div>
-            <div class="col-md-6">{{ form_row(form_service.pole) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.name) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_service.phone) }}</div>
-            <div class="col-md-6">{{ form_row(form_service.email) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.phone) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.email) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_service.address) }}</div>
-            <div class="col-md-6">{{ form_row(form_service.city) }}</div>
-            <div class="col-md-6">{{ form_row(form_service.zipCode) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.address) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.city) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.zipCode) }}</div>
+            <div class="col-md-6">{{ form_row(form_pole.color) }}</div>
         </div>
 
         {{ form_row(form._token) }}
@@ -60,46 +60,43 @@
     <hr>
 
     <section id="groups-people">
-        <h2 class="h3 my-4">Utilisateurs rattachés</h2>
+        <h2 class="h3 my-4">Services rattachés</h2>
 
-        {% if service.roleUser %}
+        {% if pole.services %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover shadow">
                 <thead class="bg-dark text-light">
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
-                        <th scope="col" class="align-middle th-width-150px">Prénom</th>
-                        <th scope="col" class="align-middle th-width-140px">Nom</th>
-                        <th scope="col" class="align-middle th-width-140px">Fonction</th>
+                        <th scope="col" class="align-middle th-width-150px">Nom</th>
                         <th scope="col" class="align-middle th-width-140px">Téléphone</th>
                         <th scope="col" class="align-middle th-width-140px">Email</th>
-
+                        <th scope="col" class="align-middle th-width-140px">Adresse</th>
+                        <th scope="col" class="align-middle th-width-140px">Ville</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for role in service.roleUser %}
+                    {% for service in pole.services %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('user_show', {'id':role.user.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
-                                title="Voir la fiche du service">
+                            <a href="{{ path('service_show', {'id':service.id}) }}" class="btn btn-{{ theme_color }} shadow"
+                                data-placement="bottom" title="Voir la fiche du pole">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ role.user.firstname }}</td>
-                        <td>{{ role.user.lastname }}</td>
-                        <td>{{ role.getRoleType }}</td>
-                        <td>{{ role.user.phone }}</td>
-                        <td>{{ role.user.email }}</td>
+                        <td>{{ service.name }}</td>
+                        <td>{{ service.phone }}</td>
+                        <td>{{ service.email }}</td>
+                        <td>{{ service.address }}</td>
+                        <td>{{ service.city }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         {% endif %}
-        <a href="#" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Ajouter un nouvel
-            utilisateur</a>
+        <a href="" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau service</a>
     </section>
 
 </div>

@@ -34,7 +34,8 @@
         <div class="row">
             <div class="col-md-12 mb-3">
                 <div class="float-right">
-                    <button type="submit" name="updateInfo" class="btn btn-primary shadow">Mettre à jour</button>
+                    <button type="submit" name="updateInfo" class="btn btn-{{ theme_color }} shadow">Mettre à
+                        jour</button>
                 </div>
             </div>
         </div>
@@ -70,13 +71,13 @@
                             <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                 <th scope="row">
                                     <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-                                        class="btn btn-primary shadow" data-placement="bottom"
+                                        class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
                                         title="Modifier les informations de la personne">
                                         <span class="fas fa-user"></span>
                                     </a>
                                 </th>
                                 <td class="align-middle px-1 d-none d-sm-table-cell">
-                                    <div class="custom-control custom-radio pl-3">
+                                    <div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
                                         {{ form_widget(form_person.head) }}
                                     </div>
                                 </td>
@@ -120,7 +121,7 @@
             </div>
         </div>
         <p class="ml-3">
-            <a href="{{ path("group_search_person", {"id":group_people.id}) }}" class="text-primary">
+            <a href="{{ path("group_search_person", {"id":group_people.id}) }}" class="text-{{ theme_color }}">
                 <span class="fas fa-plus-square"></span>
                 Ajouter une personne</a>
             <a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="pl-2 text-secondary">
@@ -141,7 +142,7 @@
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="float-right">
-                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-primary shadow"
+                    <input type="submit" name="updateInfo" id="updateInfo" class="btn btn-{{ theme_color }} shadow"
                         value="Mettre à jour" id="save">
                 </div>
             </div>
@@ -210,7 +211,7 @@
                             {% if social_support.service.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':group_people.id, 'social_support_id':social_support.id}) }}"
                                 class="
-                                btn btn-primary shadow" data-placement="bottom" title="Voir le suivi social">
+                                btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
                             {% endif %}
@@ -218,12 +219,12 @@
                         <td>{{ social_support.getStatusType }}</td>
                         <td>{{ social_support.startDate | date("d/m/Y") }}</td>
                         <td>{% if social_support.endDate %}{{ social_support.endDate | date("d/m/Y") }}{% endif %}</td>
-                        <td><a href="#" class="text-primary" data-toggle="tooltip" data-placement="right"
+                        <td><a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
                                 data-html="true" title="{{ contact_user }}">{{ social_support.createdBy.firstname }}
                                 {{ social_support.createdBy.lastname }}</a>
                         </td>
                         <td>{% if social_support.service %}
-                            <a href="#" class="text-primary" data-toggle="tooltip" data-placement="right"
+                            <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
                                 data-html="true" title="{{ contact_service }}">{{ social_support.service.name }}</a>
                             {% endif %}
                         </td>
@@ -233,7 +234,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-primary">
+        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-{{ theme_color }}">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
         <br />

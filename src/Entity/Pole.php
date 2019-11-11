@@ -20,6 +20,16 @@ class Pole
         6 => "Socio-judiciaire"
     ];
 
+    public const COLOR = [
+        "primary" => "Blue",
+        "purple" => "Violet",
+        "orange2" => "Orange",
+        "brown" => "Marron",
+        "beige" => "Beige",
+        "green2" => "Vert",
+        "cyan2" => "Cyan"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -73,9 +83,15 @@ class Pole
     private $comment;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $color;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
 
     public function __construct()
     {
@@ -95,49 +111,6 @@ class Pole
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Service[]
-     */
-    public function getServices(): Collection
-    {
-        return $this->services;
-    }
-
-    public function addService(Service $service): self
-    {
-        if (!$this->services->contains($service)) {
-            $this->services[] = $service;
-            $service->setPole($this);
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): self
-    {
-        if ($this->services->contains($service)) {
-            $this->services->removeElement($service);
-            // set the owning side to null (unless already changed)
-            if ($service->getPole() === $this) {
-                $service->setPole(null);
-            }
-        }
 
         return $this;
     }
@@ -222,6 +195,63 @@ class Pole
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|Service[]
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->setPole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): self
+    {
+        if ($this->services->contains($service)) {
+            $this->services->removeElement($service);
+            // set the owning side to null (unless already changed)
+            if ($service->getPole() === $this) {
+                $service->setPole(null);
+            }
+        }
 
         return $this;
     }

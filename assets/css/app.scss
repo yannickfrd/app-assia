@@ -1,18 +1,4 @@
-:root {
-    --e95: #e4322b;
-    --siege: #00adee;
-    --habitat: #ae5843;
-    --hebergement: #ef8230;
-    --insertion: #489e3e;
-    --medico: #a77e4a;
-    --migrants: #e63553;
-    --siao: #6f5290;
-    --socio: #79c1b7;
-}
-
-$primary: #00adee;
-
-@import "bootstrap";
+@import "./bootstrap-custom";
 
 body {
     padding-top: 88px;
@@ -26,7 +12,6 @@ body {
 section {
     margin: 16px 0 24px 0;
 }
-
 
 .fa-phone {
     transform: rotate(160deg);

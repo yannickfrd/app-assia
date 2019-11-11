@@ -14,7 +14,7 @@
             <div class="modal-body">{% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
             </div>
             <div class="modal-footer">
-                <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}primary{% endblock %}"
+                <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}{{ theme_color }}{% endblock %}"
                     data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
                 <button type="button" class="btn btn-secondary"
                     data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}
