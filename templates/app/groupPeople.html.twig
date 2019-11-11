@@ -4,8 +4,7 @@
 
 {% block title %}Fiche de groupe{% endblock %}
 
-{% block stylesheets %}
-<link href="{{ asset("css/table.css") }}" rel="stylesheet" />{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% set group_people = form.vars.value %}
 
@@ -256,8 +255,7 @@
 {% endblock %}
 
 {% block javascripts %}
-
-<script src="{{ asset("js/selectRadio.js") }}"></script>
-<script src="{{ asset("js/removePerson.js") }}"></script>
-
+{{ encore_entry_script_tags("groupPeople") }}
+{# <script src="{{ asset("js/selectRadio.js") }}"></script>
+<script src="{{ asset("js/removePerson.js") }}"></script> #}
 {% endblock %}

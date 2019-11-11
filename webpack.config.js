@@ -24,6 +24,11 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('groupPeople', './assets/js/groupPeople/groupPeople.js')
+    .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
+    .addEntry('login', './assets/js/login/login.js')
+    .addEntry('person', './assets/js/person/person.js')
+    .addEntry('socialSupport', './assets/js/socialSupport/socialSupport.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -53,18 +58,18 @@ Encore
         corejs: 3
     })
 
-// enables Sass/SCSS support
-//.enableSassLoader()
+    // enables Sass/SCSS support
+    .enableSassLoader()
 
-// uncomment if you use TypeScript
-//.enableTypeScriptLoader()
+    // uncomment if you use TypeScript
+    //.enableTypeScriptLoader()
 
-// uncomment to get integrity="..." attributes on your script & link tags
-// requires WebpackEncoreBundle 1.4 or higher
-//.enableIntegrityHashes(Encore.isProduction())
+    // uncomment to get integrity="..." attributes on your script & link tags
+    // requires WebpackEncoreBundle 1.4 or higher
+    //.enableIntegrityHashes(Encore.isProduction())
 
-// uncomment if you're having problems with a jQuery plugin
-//.autoProvidejQuery()
+    // uncomment if you're having problems with a jQuery plugin
+    .autoProvidejQuery()
 
 // uncomment if you use API Platform Admin (composer req api-admin)
 //.enableReactPreset()

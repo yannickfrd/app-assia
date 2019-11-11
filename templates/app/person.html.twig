@@ -42,7 +42,7 @@
 
     <hr>
 
-    <section id="person">
+    <section id="person" data-is-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
 
         {% include 'msgFlash.html.twig' %}
         <div id="js-msg-flash-content"></div>
@@ -251,10 +251,11 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset("js/validationPerson.js") }}"></script>
+{{ encore_entry_script_tags("person") }}
+{# <script src="{{ asset("js/validationPerson.js") }}"></script>
 {% if group_people is defined  %}
 <script src="{{ asset("js/updatePerson.js") }}"></script>
 {% else %}
 <script src="{{ asset("js/newGroupPeople.js") }}"></script>
-{% endif %}
+{% endif %} #}
 {% endblock javascripts %}

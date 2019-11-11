@@ -213,5 +213,6 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset("js/validationSocialSupport.js") }}"></script>
+{# <script src="{{ asset("js/validationSocialSupport.js") }}"></script> #}
+{{ encore_entry_script_tags("socialSupport") }}
 {% endblock javascripts %}

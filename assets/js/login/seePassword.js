@@ -1,5 +1,5 @@
 // Class pour démasquer le mot de passe
-class SeePassword {
+export default class SeePassword {
     constructor() {
         this.passwordGroupElts = document.querySelectorAll(".js-password-group");
         this.init();
@@ -24,5 +24,3 @@ class SeePassword {
         passwordElt.type = "password";
     }
 }
-
-let seePassword = new SeePassword();

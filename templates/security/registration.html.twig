@@ -44,7 +44,6 @@
 {% endblock %}
 
 {% block javascripts %}
-
-<script src="{{ asset("js/seePassword.js") }}"></script>
-
+{# <script src="{{ asset("js/seePassword.js") }}"></script> #}
+{{ encore_entry_script_tags("login") }}
 {% endblock %}

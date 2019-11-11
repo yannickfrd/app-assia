@@ -1,5 +1,7 @@
+import ValidationPerson from "./validationPerson";
+
 //
-class NewGroupPeople {
+export default class NewGroupPeople {
     constructor() {
         this.lastnameInputElt = document.getElementById("role_person_group_person_lastname");
         this.firstnameInputElt = document.getElementById("role_person_group_person_firstname");
@@ -184,5 +186,3 @@ class NewGroupPeople {
         }
     }
 }
-
-let newGroupPeople = new NewGroupPeople();

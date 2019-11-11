@@ -4,24 +4,25 @@ namespace App\Controller;
 
 use App\Utils\Agree;
 use App\Entity\Person;
+use App\Utils\Choices;
+
 use App\Form\PersonType;
-
 use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
 
+use App\Entity\GroupPeople;
 use App\Entity\PersonSearch;
 use App\Form\RolePersonType;
 use App\Form\PersonSearchType;
 use App\Form\RolePersonGroupType;
-use App\Repository\PersonRepository;
 
+use App\Repository\PersonRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\Security\Core\Security;
-
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

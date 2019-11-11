@@ -10,11 +10,7 @@
 {% else %}Rechercher une personne{% endif %}
 {% endblock %}
 
-{% block stylesheets %}
-
-<link href="{{ asset("css/table.css") }}" rel="stylesheet" />
-
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
@@ -214,5 +210,6 @@
 {% block modal_alert %}primary{% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset("js/addPerson.js") }}"></script>
+{# <script src="{{ asset("js/addPerson.js") }}"></script> #}
+{{ encore_entry_script_tags("listPeople") }}
 {% endblock javascripts %}

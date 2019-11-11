@@ -5,11 +5,7 @@
 {% block title %}Les suivis
 {% endblock %}
 
-{% block stylesheets %}
-
-<link href="{{ asset("css/table.css") }}" rel="stylesheet" />
-
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
@@ -145,4 +141,5 @@
             {{ knp_pagination_render(role_people) }}
         </div>
 </section>
-</div>{% endblock %}
+</div>
+{% endblock %}
