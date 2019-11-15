@@ -97,11 +97,6 @@ class Person
     private $gender;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $nationality;
-
-    /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
@@ -273,23 +268,6 @@ class Person
     public function getGenderType()
     {
         return self::GENDER[$this->gender];
-    }
-
-    public function getNationality(): ?int
-    {
-        return $this->nationality;
-    }
-
-    public function setNationality(?int $nationality): self
-    {
-        $this->nationality = $nationality;
-
-        return $this;
-    }
-
-    public function getNationalityType()
-    {
-        return self::NATIONALITY[$this->nationality];
     }
 
     public function getPhone1(): ?string

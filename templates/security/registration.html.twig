@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "bootstrap_4_layout.html.twig" %}
 
 {% block title %}Inscription{% endblock %}
 
@@ -8,38 +8,56 @@
 
 {% block body %}
 
-<section id="inscription">
+<div class="container">
+    <section id="inscription">
 
-    <div class="row">
-        <div class="col-md-8 mx-auto">
+        <div class="row">
+            <div class="col-md-8 col-lg-6 mx-auto">
 
-            <h1>Inscription</h1>
+                <h1 class="h2 mb-3">Inscription</h1>
 
-            {{ message }}
-
-            {{ form_start(form)}}
-
-            {{ form_row(form.firstname) }}
-            {{ form_row(form.lastname) }}
-            {{ form_row(form.username) }}
-            {{ form_row(form.email) }}
-            <div class="js-password-group">
-                {{ form_row(form.password) }}
-                <span class="js-show-password fas fa-eye"></span>
+                <hr>
+                {{ form_start(form)}}
+                {{ form_row(form.firstname) }}
+                {{ form_row(form.lastname) }}
+                {{ form_row(form.username) }}
+                {{ form_row(form.email) }}
+                <div class="form-group">
+                    {{ form_label(form.password) }}
+                    <div class="js-password-group">
+                        {{ form_widget(form.password) }}
+                        <span class="js-show-password fas fa-eye"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.confirmPassword) }}
+                    <div class="js-password-group">
+                        {{ form_widget(form.confirmPassword) }}
+                        <span class="js-show-password fas fa-eye"></span>
+                    </div>
+                </div>
+                {{ form_row(form._token) }}
+                <button type="submit" class="btn btn-{{ theme_color }}">Inscription</button>
+                {{ form_end(form, {"render_rest": false}) }}
+                <div class="row">
+                    <div class="col-md-12 my-3">
+                        <div class="text-muted small text-left">Le mot de passe doit respecter les critères
+                            suivants :
+                            <ul>
+                                <li>entre 6 et 20 caractères</li>
+                                <li>au moins 1 lettre minuscule</li>
+                                <li>au moins 1 lettre majuscule</li>
+                                <li>au moins 1 chiffre</li>
+                                <li>au moins 1 caractère spécial (?!* ( ) { } [ ]-+=&<>$)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="js-password-group">
-                {{ form_row(form.confirmPassword) }}
-                <span class="js-show-password fas fa-eye"></span>
-            </div>
-            {{ form_row(form._token) }}
-            <button type="submit" class="btn btn-{{ theme_color }}">Inscription</button>
-
-            {{ form_end(form, {"render_rest": false}) }}
-
         </div>
-    </div>
 
-</section>
+    </section>
+</div>
 
 {% endblock %}
 

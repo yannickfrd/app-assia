@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Pole;
 use App\Utils\Phone;
-use App\Entity\Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 

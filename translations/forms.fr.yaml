@@ -3,7 +3,9 @@ Birthdate: Date de naissance
 City: Ville
 Color: Couleur
 Comment: Commentaire 
+Confirm password: Confirmation du mot de passe
 ConfirmPassword: Confirmation du mot de passe
+Confirm new password: Confirmation nouveau mot de passe
 Department: Service
 Department name: Nom du service
 Email: Adresse email
@@ -16,6 +18,7 @@ Lastname: Nom
 Name: Nom
 Nb people: Nombre de personnes
 NbPeople: Nb pers.
+New password: Nouveau mot de passe
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1

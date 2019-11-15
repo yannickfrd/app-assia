@@ -28,7 +28,7 @@ class RegistrationType extends AbstractType
             ])
             ->add("username", null, [
                 "attr" => [
-                    "placeholder" => "Username"
+                    "placeholder" => "Login"
                 ]
             ])
             ->add("email", null, [

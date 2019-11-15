@@ -29,7 +29,7 @@ $(function () {
 });
 
 // Requête Ajax
-var ajaxRequest = new AjaxRequest();
+let ajaxRequest = new AjaxRequest();
 
 // Recherche instannée d'une personne via Ajax
 let searchPerson = new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time

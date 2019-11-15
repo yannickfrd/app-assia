@@ -24,7 +24,7 @@
 
     {% block stylesheets %}{% endblock %}
 
-    <link rel="icon" href="" />
+    <link rel="icon" href="{{ asset("images/logo_e95.ico") }}" />
     <meta property="og:title" content="AppE95" />
     <meta property="og:type" content="application" />
     <meta property="og:url" content="https://esperer95-app.romain-mad.fr" />
@@ -48,7 +48,9 @@
     <main class="min-vh-100">
         <header>
             <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-4 shadow">
-                <a class="navbar-brand text-light" href="{{ path("home") }}">Esperer95-app</a>
+                <a class="navbar-brand text-light" href="{{ path("home") }}">
+                    <img id="logo-mail" src="{{ asset("images/logo_e95.png") }}" alt="Esperer95-app"></a>
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
                     aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -118,8 +120,6 @@
                         <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
                         {% else %}
                         <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
-                        <br />
-                        <a class="text-light" href="{{ path("security_registration") }}">S'inscrire</a>
                         {% endif %}
                     </div>
             </nav>
