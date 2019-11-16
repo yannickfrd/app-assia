@@ -24,7 +24,7 @@
 
     {% block stylesheets %}{% endblock %}
 
-    <link rel="icon" href="{{ asset("images/logo_e95.ico") }}" />
+    <link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
     <meta property="og:title" content="AppE95" />
     <meta property="og:type" content="application" />
     <meta property="og:url" content="https://esperer95-app.romain-mad.fr" />
@@ -49,7 +49,7 @@
         <header>
             <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-4 shadow">
                 <a class="navbar-brand text-light" href="{{ path("home") }}">
-                    <img id="logo-mail" src="{{ asset("images/logo_e95.png") }}" alt="Esperer95-app"></a>
+                    <img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app"></a>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
                     aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,6 +90,9 @@
                                 Admin
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
+                                <a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel
+                                    utilisateur</a>
+                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
                                 <a class="dropdown-item" href="{{ path("list_services") }}">Services</a>
                                 <a class="dropdown-item" href="{{ path("list_poles") }}">Pôles</a>

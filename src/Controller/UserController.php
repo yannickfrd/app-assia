@@ -137,6 +137,24 @@ class UserController extends AbstractController
     }
 
     /**
+     * Vérifie si le login est déjà utilisé
+     * @Route("/user/check_username", name="user_check_username", methods="GET")
+     * @param Request $request
+     * @return Response
+     */
+    public function checkUsername(Request $request): Response
+    {
+        $user = $this->repo->findOneBy(["username" => $request->query->get("value")]);
+
+        if ($user) {
+            $exists = true;
+        } else {
+            $exists = false;
+        }
+        return $this->json(["response" => $exists], 200);
+    }
+
+    /**
      * Crée un nouvel utilisateur
      * 
      * @Route("/user/new", name="user_new", methods="GET|POST")
@@ -257,7 +275,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Crée un utilisateur avec son rôle²
+     * Crée un utilisateur avec son rôle
      *
      * @param User $user
      * @param Service $service

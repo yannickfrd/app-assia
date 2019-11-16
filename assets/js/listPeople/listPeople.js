@@ -1,6 +1,6 @@
 import AjaxRequest from "../utils/ajaxRequest";
 
-import AddPerson from "./addPerson.js";
+import AddPerson from "./addPerson";
 
 import "../utils/maskPhone";
 

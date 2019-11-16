@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\RoleUser;
 use App\Entity\UserResetPass;
 use App\Form\RegistrationType;
 use App\Form\ForgotPasswordType;
 use App\Form\ReinitPasswordType;
+use App\Form\RegistrationUserType;
 use App\Repository\UserRepository;
 use App\Notification\MailNotification;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,14 +42,17 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
 
+        dump($form);
+
+
         // Vérifie et compte les erreurs de validation
         $errors = $validator->validate($user);
         $nbErrors = count($errors);
 
-        if ($nbErrors > 0) {
-            $errorsString = (string) $errors;
-            $message = $nbErrors . " Erreur(s).";
-        }
+        // if ($nbErrors > 0) {
+        //     $errorsString = (string) $errors;
+        //     $message = $nbErrors . " Erreur(s).";
+        // }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setLoginCount(0);
@@ -69,7 +74,7 @@ class SecurityController extends AbstractController
 
         return $this->render("security/registration.html.twig", [
             "form" => $form->createView(),
-            "message" => $message,
+            // "message" => $message,
         ]);
     }
 

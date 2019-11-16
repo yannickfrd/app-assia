@@ -45,9 +45,9 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
-     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{6,20}$^", match=true, message="Le mot de passe est invalide.")
      */
     private $password;
+    //  @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{6,20}$^", match=true, message="Le mot de passe est invalide.")
 
     /**
      * @Assert\EqualTo(propertyPath="password", message="Mot de passe différent de la confirmation.")

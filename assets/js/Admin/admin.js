@@ -1,6 +1,6 @@
 import "select2";
-import "../utils/maskPhone";
 import "../utils/maskZipCode";
+import "../utils/maskPhone";
 
 $("select.multi-select").select2({
     // theme: "bootstrap4",
