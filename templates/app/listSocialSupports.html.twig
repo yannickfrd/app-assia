@@ -25,11 +25,15 @@
                 {{ form_row(form.firstname) }}
             </div>
             <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <div class="">
-                    <i class="fas fa-calendar-alt mx-1 text-black-50 d-none d-sm-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Date de naissance"></i>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
+                            title="Date de naissance">
+                            <i class=" fas fa-calendar-alt text-dark"></i>
+                        </div>
+                    </div>
+                    {{ form_row(form.birthdate) }}
                 </div>
-                {{ form_row(form.birthdate) }}
             </div>
             <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
                 {{ form_row(form.familyTypology) }}
@@ -63,8 +67,8 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-150px">
@@ -76,15 +80,9 @@
                         <th scope="col" class="align-middle th-width-140px">
                             {{ knp_pagination_sortable(role_people, "Typologie familiale", "g.familyTypology") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-80px text-light">
-                            Date de début de suivi
-                        </th>
-                        <th scope="col" class="align-middle th-width-80px text-light">
-                            Date de fin de suivi
-                        </th>
-                        <th scope="col" class="align-middle th-width-80px text-light">
-                            Statut du suivi
-                        </th>
+                        <th scope="col" class="align-middle th-width-80px">Date de début de suivi</th>
+                        <th scope="col" class="align-middle th-width-80px">Date de fin de suivi</th>
+                        <th scope="col" class="align-middle th-width-80px">Statut du suivi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,7 +90,8 @@
                     <tr>
                         <th scope="row">
                             <a href="{% if person.groupPeople %}{{ path('group_people_show', {'id':person.groupPeople.id}) }} {% endif %}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir la fiche du groupe">
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                title="Voir la fiche du groupe">
                                 <span class="fas fa-users"></span>
                             </a>
                         </th>
@@ -131,15 +130,12 @@
                             {% endfor %}
                         </td>
                     </tr>
-                </tbody>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
-
         <div class="navigation">
             {{ knp_pagination_render(role_people) }}
         </div>
 </section>
-</div>
 {% endblock %}

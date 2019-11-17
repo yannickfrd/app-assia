@@ -44,9 +44,10 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
      */
     private $password;
+    //  @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
+    //  @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{6,20}$^", match=true, message="Le mot de passe est invalide.")
 
     /**
      * @Assert\EqualTo(propertyPath="password", message="Mot de passe différent de la confirmation.")
@@ -55,15 +56,15 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      */
     private $lastname;
+    //* @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      */
     private $firstname;
+    //* @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
 
     /**
      * @ORM\Column(type="json")
@@ -121,9 +122,24 @@ class User implements UserInterface
     private $socialSupportsGrpUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", cascade={"persist"})
      */
     private $roleUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserConnection", mappedBy="user", orphanRemoval=true)
+     */
+    private $userConnections;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenCreatedAt;
 
     public function __construct()
     {
@@ -134,6 +150,7 @@ class User implements UserInterface
         $this->socialSupportsGrpCreated = new ArrayCollection();
         $this->socialSupportsGrpUpdated = new ArrayCollection();
         $this->roleUser = new ArrayCollection();
+        $this->userConnections = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +217,7 @@ class User implements UserInterface
 
         return $this;
     }
+
     public function getLastname(): ?string
     {
         return $this->lastname;
@@ -479,11 +497,16 @@ class User implements UserInterface
         return $this->roleUser;
     }
 
+    /**
+     * @param RoleUser $roleUser
+     * @return self
+     */
     public function addRoleUser(RoleUser $roleUser): self
     {
         if (!$this->roleUser->contains($roleUser)) {
             $this->roleUser[] = $roleUser;
             $roleUser->setUser($this);
+            // $this->roleUser->add($roleUser);
         }
 
         return $this;
@@ -498,6 +521,61 @@ class User implements UserInterface
                 $roleUser->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserConnection[]
+     */
+    public function getUserConnections(): Collection
+    {
+        return $this->userConnections;
+    }
+
+    public function addUserConnection(UserConnection $userConnection): self
+    {
+        if (!$this->userConnections->contains($userConnection)) {
+            $this->userConnections[] = $userConnection;
+            $userConnection->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserConnection(UserConnection $userConnection): self
+    {
+        if ($this->userConnections->contains($userConnection)) {
+            $this->userConnections->removeElement($userConnection);
+            // set the owning side to null (unless already changed)
+            if ($userConnection->getUser() === $this) {
+                $userConnection->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getTokenCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->tokenCreatedAt;
+    }
+
+    public function setTokenCreatedAt(?\DateTimeInterface $tokenCreatedAt): self
+    {
+        $this->tokenCreatedAt = $tokenCreatedAt;
 
         return $this;
     }

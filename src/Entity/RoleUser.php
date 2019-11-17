@@ -33,7 +33,6 @@ class RoleUser
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUser")
-     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
@@ -41,6 +40,12 @@ class RoleUser
      * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="roleUser")
      */
     private $service;
+
+
+    // public function __toString()
+    // {
+    //     return $this->id;
+    // }
 
     public function getId(): ?int
     {

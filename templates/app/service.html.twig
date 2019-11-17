@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% block title %}Fiche du service{% endblock %}
 
@@ -60,12 +60,12 @@
     <hr>
 
     <section id="groups-people">
-        <h2 class="h3 my-4">Utilisateurs rattachés</h2>
+        <h2 class="h4 my-4">Utilisateurs rattachés</h2>
 
         {% if service.roleUser %}
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark text-light">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-150px">Prénom</th>

@@ -402,9 +402,9 @@ class PersonController extends AbstractController
     { }
 
     /**
-     * Permet de trouver les personnes par le mode de recherche instannée
+     * Permet de trouver les personnes par le mode de recherche instannée AJAX
      *
-     * @Route("/search/person", name="search_person")
+     * @Route("/search/person", name="search_person", methods="GET")
      * @param Person $person
      * @param Request $request
      * @param PersonRepository $repo
