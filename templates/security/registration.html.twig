@@ -1,8 +1,9 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "bootstrap_4_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Création d'un compte utilisateur | Esperer95-app{% endblock %}
+{% block title %}Création d'un compte utilisateur | Esperer95-app
+{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -12,7 +13,7 @@
     <section id="inscription">
 
         <div class="row">
-            <div class="col-md-12 col-lg-10 mx-auto">
+            <div class="col-md-12 mx-auto">
 
                 <h1 class="h2 mb-3">Création d'un compte utilisateur</h1>
                 <hr>
@@ -23,40 +24,87 @@
                     <div class="col-md-6">{{ form_row(form.email) }}</div>
                     <div class="col-md-6">{{ form_row(form.username) }}</div>
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <div class="form-group row">
                             {{ form_label(form.password) }}
-                            <div class="js-password-group">
-                                {{ form_widget(form.password) }}
-                                <span class="js-show-password fas fa-eye"></span>
+                            <div class="col-md-8">
+                                <div class="input-group js-password-group">
+                                    {{ form_widget(form.password) }}
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><span
+                                                class="fa fa-eye js-show-password"></span></span>
+                                    </div>
+                                    {{ form_help(form.password) }}
+                                </div>
                             </div>
-                            {{ form_help(form.password) }}
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <div class="form-group row">
                             {{ form_label(form.confirmPassword) }}
-                            <div class="js-password-group">
-                                {{ form_widget(form.confirmPassword) }}
-                                <span class="js-show-password fas fa-eye"></span>
+                            <div class="col-md-8">
+                                <div class="input-group js-password-group">
+                                    {{ form_widget(form.confirmPassword) }}
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><span
+                                                class="fa fa-eye js-show-password"></span></span>
+                                    </div>
+                                    {{ form_help(form.confirmPassword) }}
+                                </div>
                             </div>
-                            {{ form_help(form.confirmPassword) }}
                         </div>
                     </div>
                 </div>
 
                 <hr>
 
-                <h2 class="h4 mb-3">Profil et service rattaché</h2>
-                <div class="row">
-                    <div class="col-md-6">{{ form_row(form.roleUser) }}</div>
+                <h2 class="h4 mb-3">Profils et services rattachés</h2>
+                <div id="roleUser-fields-list" data-prototype="{{ form_widget(form.roleUser.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
+                    data-widget-counter="{{ form.roleUser|length }}">
+                    <div class="table-responsive">
+                        <table id="function-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="align-middle th-width-150px">
+                                        Fonction
+                                    </th>
+                                    <th scope="col" class="align-middle th-width-150px">
+                                        Service
+                                    </th>
+                                    <th scope="col" class="align-middle th-width-120px">
+                                        Pôle
+                                    </th>
+                                    <th scope="col" class="align-middle th-width-20px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for role in form.roleUser %}
+                                <tr id="{{ role.vars.id }}">
+                                    <th scope="row">{{ form_widget(role.role) }}
+                                    </th>
+                                    <td>{{ form_widget(role.service) }}</td>
+                                    <td class="align-middle">{{ role.vars.value.service.pole.name }}</td>
+                                    <td class="align-middle"><button class="btn btn-danger js-remove">
+                                            <i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="my-2">
+                    <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                        data-list-selector="#roleUser-fields-list">Ajouter une fonction</button>
+                </div>
+                <div class="float-right my-2">
+                    <button type="submit" class="btn btn-{{ theme_color }}">Enregistrer</button>
                 </div>
 
                 {{ form_row(form._token) }}
-                <button type="submit" class="btn btn-{{ theme_color }}">Inscription</button>
                 {{ form_end(form, {"render_rest": false}) }}
             </div>
         </div>
-
     </section>
 </div>
 

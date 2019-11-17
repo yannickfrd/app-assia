@@ -30,7 +30,7 @@ class Service
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="service")
+     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="service", cascade={"persist"})
      */
     private $roleUser;
 

@@ -9,14 +9,26 @@
         <form action="{{ path("security_login") }}" method="post" class="form-signin m-auto text-center">
             {% include 'msgFlash.html.twig' %}
             <h1 class="h3 mb-4 font-weight-normal">Merci de vous connecter</h1>
-            <label for="_username" class="sr-only">Login</label>
-            <input type="text" name="_username" id="username" class="form-control mb-2 shadow-sm" placeholder="Login"
-                value="{{ last_username }}" required autofocus>
-            <label for="_password" class="sr-only">Mot de passe</label>
-            <div class="js-password-group">
-                <input type="password" name="_password" id="password" class="form-control mb-3 shadow-sm js-password"
-                    placeholder="Mot de passe" required>
-                <span class="js-show-password fas fa-eye"></span>
+
+            <div class="my-2">
+                <label class="sr-only" for="_username">Login</label>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><span class="fa fa-user"></span></div>
+                    </div>
+                    <input type="text" name="_username" id="username" class="form-control shadow-sm" placeholder="Login"
+                        value="{{ last_username }}" required autofocus>
+                </div>
+            </div>
+            <div class="my-3">
+                <label for="_password" class="sr-only">Mot de passe</label>
+                <div class="input-group js-password-group">
+                    <input type="password" name="_password" id="password" class="form-control shadow-sm js-password"
+                        data-toggle="password" placeholder="Mot de passe" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><span class="js-show-password fa fa-eye"></span></span>
+                    </div>
+                </div>
             </div>
             <div class="custom-control custom-checkbox mb-4">
                 <input type="checkbox" id="remember" name="remember"

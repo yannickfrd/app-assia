@@ -30,15 +30,7 @@ th.required:after {
 }
 
 /* Affichage de l'oeil pour voir le mot de passe */
-.js-password-group {
-    position: relative;
-}
-
 .js-show-password {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
     opacity: 0.5;
 }
 
@@ -116,8 +108,8 @@ th.required:after {
 
 .tooltip-inner {
     /* white-space: pre-line; */
-    max-width: 300px;
-    width: 250px;
+    // max-width: 300px;
+    // width: 250px;
 }
 
 @media (max-width: 992px) {
@@ -125,7 +117,3 @@ th.required:after {
         padding-top: 80px;
     }
 }
-
-@media (max-width: 768px) {}
-
-@media (max-width: 576px) {}

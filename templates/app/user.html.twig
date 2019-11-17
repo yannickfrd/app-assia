@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% block title %}Fiche utilisateur{% endblock %}
 
@@ -68,11 +68,11 @@
     <hr>
 
     <section id="social-supports">
-        <h2 class="h3 my-4">Suivis sociaux en cours</h2>
+        <h2 class="h4 my-4">Suivis sociaux en cours</h2>
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark">
-                    <tr class="text-light">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
+                    <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-150px">Nom</th>
                         <th scope="col" class="align-middle th-width-100px">Prénom</th>
@@ -124,12 +124,12 @@
     <hr>
 
     <section id="services">
-        <h2 class="h3 my-4">Services rattachés</h2>
+        <h2 class="h4 my-4">Services rattachés</h2>
 
         {% if user.roleuser %}
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark text-light">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-150px">Rôle dans le service</th>
@@ -145,7 +145,8 @@
                     <tr>
                         <th scope="row">
                             <a href="{{ path('service_show', {'id':role.service.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir la fiche du service">
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>

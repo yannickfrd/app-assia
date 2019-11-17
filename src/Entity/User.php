@@ -44,9 +44,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
      */
     private $password;
+    //  @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
     //  @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{6,20}$^", match=true, message="Le mot de passe est invalide.")
 
     /**
@@ -56,15 +56,15 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      */
     private $lastname;
+    //* @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      */
     private $firstname;
+    //* @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
 
     /**
      * @ORM\Column(type="json")
@@ -122,7 +122,7 @@ class User implements UserInterface
     private $socialSupportsGrpUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", cascade={"persist"})
      */
     private $roleUser;
 
@@ -497,11 +497,16 @@ class User implements UserInterface
         return $this->roleUser;
     }
 
+    /**
+     * @param RoleUser $roleUser
+     * @return self
+     */
     public function addRoleUser(RoleUser $roleUser): self
     {
         if (!$this->roleUser->contains($roleUser)) {
             $this->roleUser[] = $roleUser;
             $roleUser->setUser($this);
+            // $this->roleUser->add($roleUser);
         }
 
         return $this;

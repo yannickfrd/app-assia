@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% block title %}Fiche de groupe{% endblock %}
 
@@ -42,30 +42,27 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover shadow">
-                        <thead class="bg-dark">
+                    <table class="table table-striped table-hover text-dark">
+                        <thead>
                             <tr>
                                 <th scope="col" class="align-middle th-width-20px"></th>
-                                <th scope="col" class="align-middle text-light th-width-20px d-none d-sm-table-cell"
+                                <th scope="col" class="align-middle th-width-20px d-none d-sm-table-cell"
                                     data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
-                                <th scope="col"
-                                    class="align-middle text-light th-width-150px d-table-row d-sm-table-cell">Prénom
+                                <th scope="col" class="align-middle th-width-150px d-table-row d-sm-table-cell">Prénom
                                 </th>
-                                <th scope="col"
-                                    class="align-middle text-light th-width-150px d-table-row d-sm-table-cell">Nom</th>
-                                <th scope="col" class="align-middle text-light th-width-120px">Date de naissance</th>
-                                <th scope="col" class="align-middle text-light th-width-50px d-none d-sm-table-cell">
+                                <th scope="col" class="align-middle th-width-150px d-table-row d-sm-table-cell">Nom</th>
+                                <th scope="col" class="align-middle th-width-120px">Date de naissance</th>
+                                <th scope="col" class="align-middle th-width-50px d-none d-sm-table-cell">
                                     Âge
                                 </th>
-                                <th scope="col"
-                                    class="align-middle text-light th-width-100px d-table-row d-sm-table-cell">Sexe</th>
-                                <th scope="col"
-                                    class="align-middle text-light th-width-150px d-table-row d-sm-table-cell">Rôle</th>
+                                <th scope="col" class="align-middle th-width-100px d-table-row d-sm-table-cell">Sexe
+                                </th>
+                                <th scope="col" class="align-middle th-width-150px d-table-row d-sm-table-cell">Rôle
+                                </th>
                                 <th scope="col" class="align-middle th-width-50px"></th>
                             </tr>
                         </thead>
                         <tbody>
-
                             {% for form_person in form.rolePerson.children|sort ((a, b) => a.person.birthdate <=> b.person.birthdate) %}
                             {% set person = form_person.vars.value.person %}
                             <tr id="js-person-{{ person.id }}" class="js-tr-person">
@@ -153,36 +150,18 @@
     <hr>
 
     <section>
-        <h2 class="h3 my-4">Historique des suivis sociaux</h2>
+        <h2 class="h4 my-4">Historique des suivis sociaux</h2>
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
-                        <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Statut
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de<br />début
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de<br />fin
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-150px">
-                            <a href="" class="sorting-indicator text-light">Travailleur/se social·e
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-150px">
-                            <a href="" class="sorting-indicator text-light">Service
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Pôle
-                            </a>
-                        </th>
+                        <th scope="col" class="align-middle th-width-100px">Statut</th>
+                        <th scope="col" class="align-middle th-date">Date de début</th>
+                        <th scope="col" class="align-middle th-date">Date de fin</th>
+                        <th scope="col" class="align-middle th-width-150px">Travailleur/se social·e</th>
+                        <th scope="col" class="align-middle th-width-150px">Service</th>
+                        <th scope="col" class="align-middle th-width-100px">Pôle</th>
                     </tr>
                 </thead>
 
@@ -257,6 +236,4 @@
 
 {% block javascripts %}
 {{ encore_entry_script_tags("groupPeople") }}
-{# <script src="{{ asset("js/selectRadio.js") }}"></script>
-<script src="{{ asset("js/removePerson.js") }}"></script> #}
 {% endblock %}

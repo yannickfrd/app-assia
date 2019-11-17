@@ -17,23 +17,23 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
-                        <th scope="col" class="align-middle th-width-120px text-light">
+                        <th scope="col" class="align-middle th-width-120px">
                             {{ knp_pagination_sortable(poles, "Nom du pôle", "p.name") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-120px text-light">
+                        <th scope="col" class="align-middle th-width-120px">
                             Téléphone
                         </th>
-                        <th scope="col" class="align-middle th-width-150px text-light">
+                        <th scope="col" class="align-middle th-width-150px">
                             Email
                         </th>
-                        <th scope="col" class="align-middle th-width-120px text-light">
+                        <th scope="col" class="align-middle th-width-120px">
                             Adresse
                         </th>
-                        <th scope="col" class="align-middle th-width-120px text-light">
+                        <th scope="col" class="align-middle th-width-120px">
                             {{ knp_pagination_sortable(poles, "Ville", "p.city") }}
                         </th>
                     </tr>

@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal_v2_layout.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% block title %}Fiche individuelle{% endblock %}
 
@@ -103,37 +103,19 @@
     {% if edit_mode %}
 
     <section id="social-supports">
-        <h2 class="h3 my-4">Historique des suivis sociaux</h2>
+        <h2 class="h4 my-4">Historique des suivis sociaux</h2>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
-                        <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Statut
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de début
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-date">
-                            <a href="" class="sorting-indicator text-light">Date de fin
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-150px">
-                            <a href="" class="sorting-indicator text-light">Travailleur/se social·e
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-150px">
-                            <a href="" class="sorting-indicator text-light">Service
-                            </a>
-                        </th>
-                        <th scope="col" class="align-middle th-width-100px">
-                            <a href="" class="sorting-indicator text-light">Pôle
-                            </a>
-                        </th>
+                        <th scope="col" class="align-middle th-width-100px">Statut</th>
+                        <th scope="col" class="align-middle th-date">Date de début</th>
+                        <th scope="col" class="align-middle th-date">Date de fin</th>
+                        <th scope="col" class="align-middle th-width-150px">Travailleur/se social·e</th>
+                        <th scope="col" class="align-middle th-width-150px">Service</th>
+                        <th scope="col" class="align-middle th-width-100px">Pôle</th>
                     </tr>
                 </thead>
 
@@ -160,7 +142,8 @@
                         <th scope="row">
                             {% if social_support.socialSupportGrp.service.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.socialSupportGrp.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir le suivi social">
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
                             {% endif %}
@@ -195,12 +178,12 @@
 
 
     <section id="groups-people">
-        <h2 class="h3 my-4">Groupes d'appartenance</h2>
+        <h2 class="h4 my-4">Groupes d'appartenance</h2>
 
         {% if person.rolesPerson %}
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark text-light">
+            <table class="table table-striped table-hover text-dark">
+                <thead class="">
                     <tr>
                         <th scope="col" class="align-middle th-width-20px"></th>
                         <th scope="col" class="align-middle th-width-80px d-none d-sm-table-cell"
@@ -216,10 +199,11 @@
 
                 <tbody>
                     {% for role in person.rolesPerson %}
-                    <tr {% if role.head %} class="font-weight-bold" {% endif %}>
+                    <tr>
                         <th scope="row">
                             <a href="{{ path('group_people_show', {'id':role.groupPeople.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir la fiche du groupe">
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                title="Voir la fiche du groupe">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
@@ -233,7 +217,7 @@
                             {% if role.groupPeople.nbPeople > 1 %}<span
                                 class="d-inline d-sm-none">{{ role.groupPeople.nbPeople }}personnes</span>{% endif %}
                         </td>
-                        <td>{{ role.getRoleType }}</td>
+                        <td>{{ role.getRoleType }} {% if role.head %} (DP){% endif %}</td>
                         <td class="d-none d-sm-table-cell">{{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
                         <td class="d-none d-sm-table-cell">{{ role.groupPeople.updatedAt | date("d/m/Y H:i") }}</td>
                     </tr>
@@ -242,7 +226,8 @@
             </table>
         </div>
         {% endif %}
-        <a href="" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</a>
+        <a href="" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau
+            groupe</a>
     </section>
 
     {% endif %}
@@ -252,10 +237,4 @@
 
 {% block javascripts %}
 {{ encore_entry_script_tags("person") }}
-{# <script src="{{ asset("js/validationPerson.js") }}"></script>
-{% if group_people is defined  %}
-<script src="{{ asset("js/updatePerson.js") }}"></script>
-{% else %}
-<script src="{{ asset("js/newGroupPeople.js") }}"></script>
-{% endif %} #}
 {% endblock javascripts %}

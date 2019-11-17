@@ -11,6 +11,7 @@ use App\Form\ReinitPasswordType;
 use App\Form\RegistrationUserType;
 use App\Repository\UserRepository;
 use App\Notification\MailNotification;
+use App\Repository\RoleUserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/inscription", name="security_registration") 
      */
-    public function registration(Request $request, ValidatorInterface $validator)
+    public function registration(Request $request)
     {
         $user = new User();
 
@@ -42,39 +43,34 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
 
-        dump($form);
-
-
         // Vérifie et compte les erreurs de validation
-        $errors = $validator->validate($user);
-        $nbErrors = count($errors);
-
+        // $errors = $validator->validate($user);
+        // $nbErrors = count($errors);
         // if ($nbErrors > 0) {
         //     $errorsString = (string) $errors;
-        //     $message = $nbErrors . " Erreur(s).";
         // }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setLoginCount(0);
-            $this->addFlash(
-                "success",
-                "Votre compte a été créé !"
-            );
 
             $hashPassword = $this->encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hashPassword);
+            $user->setPassword($hashPassword)
+                ->setCreatedAt(new \DateTime());
 
-            $user->setCreatedAt(new \DateTime());
+            foreach ($user->getRoleUser() as $roleUser) {
+                $roleUser->setUser($user);
+            }
 
             $this->manager->persist($user);
             $this->manager->flush();
+
+            $this->addFlash("success", "Votre compte a été créé !");
 
             return $this->redirectToRoute("security_login");
         }
 
         return $this->render("security/registration.html.twig", [
             "form" => $form->createView(),
-            // "message" => $message,
         ]);
     }
 

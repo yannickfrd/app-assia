@@ -7,7 +7,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class ReinitPasswordType extends AbstractType
 {
@@ -30,7 +29,8 @@ class ReinitPasswordType extends AbstractType
                 "attr" => [
                     "class" => "js-password",
                     "placeholder" => "New password",
-                ]
+                ],
+                "help" => "6 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)",
             ])
             ->add("confirmPassword", PasswordType::class, [
                 "attr" => [
@@ -38,25 +38,6 @@ class ReinitPasswordType extends AbstractType
                     "placeholder" => "Confirm new password",
                 ]
             ]);
-            // ->add("password", RepeatedType::class, [
-            //     "type" => PasswordType::class,
-            //     "invalid_message" => "Le mot de passe et la confirmation sont différents.",
-            //     "options" => ["attr" => ["class" => "password-field"]],
-            //     "required" => true,
-            //     "first_options"  => [
-            //         "label" => false,
-            //         "attr" => [
-            //             "placeholder" => "Nouveau mot de passe"
-            //         ]
-            //     ],
-            //     "second_options" => [
-            //         "label" => false,
-            //         "attr" => [
-            //             "placeholder" => "Confirmation nouveau mot de passe"
-            //         ]
-            //     ],
-            // ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

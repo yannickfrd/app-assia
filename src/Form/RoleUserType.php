@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Utils\Choices;
 use App\Entity\Service;
 use App\Entity\RoleUser;
@@ -19,25 +18,21 @@ class RoleUserType extends AbstractType
     {
         $builder
             ->add("role", ChoiceType::class, [
+                "label" => "Fonction",
                 'placeholder' => "-- Select --",
-                "required" => false,
                 "choices" => Choices::getChoices(RoleUser::ROLE),
                 "attr" => [
-                    "class" => "",
+                    "class" => "col-auto my-1",
                 ]
             ])
             ->add("service", EntityType::class, [
                 "class" => Service::class,
                 "choice_label" => "name",
-                "placeholder" => "-- Select --"
+                "placeholder" => "-- Select --",
+                "attr" => [
+                    "class" => "col-auto my-1",
+                ]
             ]);
-
-        // ->add("roleUser", EntityType::class, [
-        //     "class" => RoleUser::class,
-        //     "choice_label" => "role",
-        //     "placeholder" => "-- Select --",
-        //     "required" => false,
-        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

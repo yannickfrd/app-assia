@@ -24,9 +24,15 @@
                 {{ form_row(form.firstname) }}
             </div>
             <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <div class=""><i class="fas fa-calendar-alt mx-1 text-black-50 d-none d-sm-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Date de naissance"></i></div>
-                {{ form_row(form.birthdate) }}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
+                            title="Date de naissance">
+                            <i class=" fas fa-calendar-alt text-black-50"></i>
+                        </div>
+                    </div>
+                    {{ form_row(form.birthdate) }}
+                </div>
             </div>
             <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
@@ -63,8 +69,8 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover shadow">
-                <thead class="bg-dark">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
                     <tr>
                         <th scope="col" class="align-middle th-width-20px">
                         </th>
@@ -92,17 +98,13 @@
                         </th>
                         <th scope="col" class="align-middle th-width-100px">
                             {{ knp_pagination_sortable(role_people, "Nb de pers.", "g.nbPeople") }}
-
                         </th>
-                        {# <th scope="col" class="align-middle th-width-100px">
-                            {{ knp_pagination_sortable(role_people, "Date de création", "g.createdAt") }}
-                        </th> #}
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for person in role_people %}
-                    <tr {% if person.head %}class="font-weight-bold" {% endif %}>
+                    <tr>
                         <th scope="row">
                             {% if person.groupPeople.nbPeople > 1 %}
                             <a href="{% if person.groupPeople %}{{ path('group_people_show', {'id':person.groupPeople.id}) }}
@@ -131,12 +133,11 @@
                             {% elseif person.person.gender == 2 %}
                             <i class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></i>
                             {% endif %} </td>
-                        <td>{{ person.getRoleType }}</td>
+                        <td>{{ person.getRoleType }}{% if person.head %} (DP){% endif %}</td>
                         <td>{% if person.groupPeople %}{{ person.groupPeople.getFamilyTypologyType }}{% endif %}
                         </td>
                         <td>{% if person.groupPeople %}{{ person.groupPeople.nbPeople }}{% endif %}
                         </td>
-                        {# <td>{{ person.person.createdAt | date("d/m/Y H:i") }}</td> #}
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -146,7 +147,6 @@
         <div class="navigation">
             {{ knp_pagination_render(role_people) }}
         </div>
-
+    </div>
 </section>
-</div>
 {% endblock %}
