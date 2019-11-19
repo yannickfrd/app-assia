@@ -13,6 +13,16 @@ section {
     margin: 16px 0 24px 0;
 }
 
+// Pagination
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.page-link {
+    color: var(--primary);
+}
+
 #logo-mail {
     max-width: 200px;
 }

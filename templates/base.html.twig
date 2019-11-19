@@ -16,6 +16,9 @@
     <!-- Bibliothèque Bootstrap-->
     {# <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> #}
+    <!-- Bootstrap Date-Picker Plugin -->
+    <!-- <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" /> -->
     <!-- Bibliothèque Fontawesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -33,15 +36,15 @@
 
 </head>
 
+{% set theme_color = "dark" %}
+
 {% if app.user.roleUser is defined %}
 {% set rolesUser = [] %}
-{% set theme_color = "" %}
+{% set theme_color = "dark" %}
 {% for role in app.user.roleUser %}
 {% set rolesUser = rolesUser|merge([role.service.id]) %}
 {% set theme_color = role.service.pole.color %}
 {% endfor %}
-{% else %}
-{% set theme_color = "primary" %}
 {% endif %}
 
 <body>
@@ -57,6 +60,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav mr-auto">
+                        {% if is_granted("ROLE_USER") %}
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "home" %} active {% endif %}">
                             <a class="nav-link text-light " href="{{ path("home") }}">
@@ -73,7 +77,7 @@
                             <a class="nav-link text-light" href="{{ path("list_groups_people") }}">Ménages</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuAdmin"
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuSupports"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Suivis
                             </a>
@@ -84,6 +88,7 @@
                                     suivi</a>
                             </div>
                         </li>
+                        {% if is_granted("ROLE_ADMIN") %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuAdmin"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -98,6 +103,7 @@
                                 <a class="dropdown-item" href="{{ path("list_poles") }}">Pôles</a>
                             </div>
                         </li>
+                        {% endif %}
                     </ul>
                     <form action="{{ path("list_people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
                         <div class="position-relative" style="z-index: 9;">
@@ -115,7 +121,7 @@
                         <a class="text-light font-weight-bold" href="{{ path('user_show', {'id':app.user.id}) }}"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
                             title="{{ app.user.firstname }} {{ app.user.lastname }}"
-                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y h:i") }} <br />Services rattachés :
+                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y H:i") }} <br />Services rattachés :
                             {% for role in app.user.roleUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
                             <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
                         </a>
@@ -125,6 +131,7 @@
                         <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
                         {% endif %}
                     </div>
+                    {% endif %}
             </nav>
         </header>
 

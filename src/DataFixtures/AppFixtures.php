@@ -3,15 +3,16 @@
 namespace App\DataFixtures;
 
 use App\Entity\Pole;
-use App\Entity\Service;
 use App\Entity\User;
 use App\Entity\Person;
+use App\Entity\Service;
 use App\Entity\RoleUser;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Entity\SocialSupportGrp;
 use App\Entity\SocialSupportPers;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -50,7 +51,9 @@ class AppFixtures extends Fixture
     ];
 
     private $pole;
+    public $poles = [];
     private $service;
+    public $services = [];
     private $roleUser;
     private $user, $passwordEncoder;
     private $groupPeople, $familyTypology, $nbPeople, $groupCreatedAt, $groupUpdatedAt;
@@ -65,11 +68,21 @@ class AppFixtures extends Fixture
         $this->passwordEncoder = $passwordEncoder;
     }
 
+    /**
+     * @return Collection|Service[]
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+
+
     public function load(ObjectManager $manager)
     {
         //Crée les pôles d'activité
         foreach (Pole::POLES as $key => $value) {
-            $this->addPoles($value);
+            $this->addPoles($key, $value);
             switch ($key) {
                 case 3:
                     $this->addData($this::SERVICES_HABITAT);
@@ -87,15 +100,15 @@ class AppFixtures extends Fixture
         foreach ($services as $key => $value) {
             $this->addService($value);
             // Crée des faux utilisateurs
-            for ($i = 1; $i <= mt_rand(3, 6); $i++) {
+            for ($i = 1; $i <= mt_rand(1, 2); $i++) {
                 $this->addRoleUser();
                 $this->addUser();
                 // Crée des faux groupes
-                for ($j = 1; $j <= mt_rand(10, 25); $j++) {
+                for ($j = 1; $j <= mt_rand(1, 5); $j++) {
                     $this->setTypology();
                     $this->addGroupPeople();
                     //Crée des faux suivis sociaux 
-                    $this->nbSocialSupports = mt_rand(1, 2);
+                    $this->nbSocialSupports = mt_rand(1, 1);
                     for ($k = 1; $k <= $this->nbSocialSupports; $k++) {
                         $this->addSocialSupportGrp($k);
                     }
@@ -113,11 +126,22 @@ class AppFixtures extends Fixture
     }
 
 
-    public function addPoles($value)
+    public function addPoles($key, $value)
     {
         $this->pole = new Pole();
 
+        switch ($key) {
+            case 3:
+                $color = "brown";
+                break;
+            case 4:
+                $color = "orange2";
+                break;
+            default:
+                $color = "blue";
+        }
         $this->pole->setName($value)
+            ->setColor($color)
             ->setCreatedAt(new \DateTime());
 
         $this->manager->persist($this->pole);
@@ -130,6 +154,8 @@ class AppFixtures extends Fixture
         $this->service->setName($value)
             ->setPole($this->pole)
             ->setCreatedAt(new \DateTime());
+
+        $this->services[] = $this->service;
 
         $this->manager->persist($this->service);
     }

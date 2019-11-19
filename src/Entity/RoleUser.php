@@ -32,12 +32,12 @@ class RoleUser
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUser")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUser", cascade={"persist"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="roleUser")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="roleUser", cascade={"persist"})
      */
     private $service;
 

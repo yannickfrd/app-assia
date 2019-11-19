@@ -1,5 +1,5 @@
 // Retirer une ligne d'un tableau
-export default class RemoveTr {
+export default class DeleteTr {
 
     constructor(tableId) {
         this.trElts = document.querySelectorAll("#" + tableId + ">tbody>tr");

@@ -45,7 +45,7 @@ class UserController extends AbstractController
     /**
      * Permet de rechercher un utilisateur
      * 
-     * @Route("/list/users", name="list_users")
+     * @Route("admin/list/users", name="list_users")
      * @Route("/new_support/search/user", name="new_support_search_user")
      * @return Response
      */

@@ -82,7 +82,8 @@
             <div class="col-md-12">
                 <div class="mb-4 float-right">
                     {% if edit_mode %}
-                    <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-{{ theme_color }} shadow"
+                    <button type="submit" id="updatePerson" name="updatePerson"
+                        class="btn btn-{{ theme_color }} btn-smshadow"
                         data-url="{{ path('update_person', {'id':person.id}) }}">Mettre à jour</button>
                     <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
                     {% else %}
@@ -142,7 +143,7 @@
                         <th scope="row">
                             {% if social_support.socialSupportGrp.service.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.socialSupportGrp.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
@@ -168,7 +169,7 @@
         </div>
 
         {% if group_people is defined %}
-        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-{{ theme_color }}">
+        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
             <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</a>
         {% endif %}
 
@@ -226,8 +227,8 @@
             </table>
         </div>
         {% endif %}
-        <a href="" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau
-            groupe</a>
+        <a href="" class="m-3 btn btn-{{ theme_color }} btn-sm"><span class="fas fa-plus-square pr-2"></span>Créer un
+            nouveau groupe</a>
     </section>
 
     {% endif %}

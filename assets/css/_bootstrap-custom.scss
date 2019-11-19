@@ -1,5 +1,5 @@
 // $e95 : #e4322b !default;
-$blue: #00adee !default; // E95
+$blue: #343a40 !default; // E95
 $purple: #6f5290 !default; // Migrants
 $pink2: #e63553 !default; // SIAO
 $orange2: #e26b11 !default; // Hébergement
@@ -12,7 +12,10 @@ $cyan2: #79c1b7 !default; // Socio-judiciaire
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
 
+// $theme-colors: (primary: #343a40);
+
 $theme-colors: map-merge(( //
+        // "dark2": $dark,
         "purple": $purple,
         "orange2": $orange2,
         "brown": $brown,

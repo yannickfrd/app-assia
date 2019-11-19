@@ -33,7 +33,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/inscription", name="security_registration") 
+     * @Route("/admin/registration", name="security_registration") 
      */
     public function registration(Request $request)
     {
@@ -75,7 +75,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/connexion", name="security_login")
+     * @Route("/login", name="security_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -97,7 +97,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/forgot_password", name="security_forgot_password")
+     * @Route("/login/forgot_password", name="security_forgot_password")
      */
     public function forgotPassword(Request $request, UserResetPass $user = null, UserRepository $repo, MailNotification $notification): Response
     {
@@ -148,7 +148,7 @@ class SecurityController extends AbstractController
     /**
      * Réinitialise le mot de passe de l'utilisateur
      * 
-     * @Route("/reinit_password", name="security_reinit_password")
+     * @Route("/login/reinit_password", name="security_reinit_password")
      * @param Request $request
      * @param UserResetPass $user
      * @param UserRepository $repo

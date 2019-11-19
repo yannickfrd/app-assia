@@ -117,14 +117,17 @@
                 </div>
             </div>
         </div>
-        <p class="ml-3">
-            <a href="{{ path("group_search_person", {"id":group_people.id}) }}" class="text-{{ theme_color }}">
-                <span class="fas fa-plus-square"></span>
-                Ajouter une personne</a>
-            <a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="pl-2 text-secondary">
-                <span class="fas fa-plus-square"></span>
-                Créer une nouvelle personne</a>
-        </p>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ path("group_search_person", {"id":group_people.id}) }}"
+                    class="btn btn-{{ theme_color }} btn-sm">
+                    <span class="fas fa-plus-square"></span> Ajouter une personne</a>
+                {# <a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="btn btn-secondary pl-2">
+                        <span class="fas fa-plus-square"></span>
+                        Créer une nouvelle personne</a> #}
+            </div>
+        </div>
+
     </section>
 
     <section>
@@ -190,7 +193,8 @@
                             {% if social_support.service.id in rolesUser %}
                             <a href="{{ path('social_support_show', {'id':group_people.id, 'social_support_id':social_support.id}) }}"
                                 class="
-                                btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir le suivi social">
+                                btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Voir le suivi
+                                social">
                                 <span class="fas fa-eye"></span>
                             </a>
                             {% endif %}
@@ -213,7 +217,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 text-{{ theme_color }}">
+        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
         <br />

@@ -49,10 +49,10 @@ class SocialSupportGrpType extends AbstractType
                 "class" => Service::class,
                 "choice_label" => "name",
                 "query_builder" => function (ServiceRepository $repo) {
-                    return $repo->createQueryBuilder("d")
-                        ->where("d.id IN (:services)")
+                    return $repo->createQueryBuilder("s")
+                        ->where("s.id IN (:services)")
                         ->setParameter("services", $this->services)
-                        ->orderBy("d.name", "ASC");
+                        ->orderBy("s.name", "ASC");
                 },
                 "placeholder" => "-- Select --",
                 // "attr" => ["class" => ""],

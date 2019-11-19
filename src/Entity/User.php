@@ -18,6 +18,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface
 {
+    public const ROLES = [
+        "ROLE_USER" => "Utilisateur",
+        "ROLE_ADMIN" => "Administrateur",
+        "ROLE_SUPER_ADMIN" => "Super administreur",
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -254,6 +259,13 @@ class User implements UserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public function setRoles(string $role): self
+    {
+        $this->roles[] = $role;
+
+        return $this;
     }
 
     public function getLoginCount(): ?int

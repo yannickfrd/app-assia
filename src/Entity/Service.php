@@ -35,7 +35,7 @@ class Service
     private $roleUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="services")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="services", cascade={"persist"})
      */
     private $pole;
 

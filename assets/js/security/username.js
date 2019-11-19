@@ -52,10 +52,8 @@ export default class Username {
     updateUsername() {
         if (this.firstnameInputElt.value.length > 2 && this.lastnameInputElt.value.length > 2) {
             let autoUsername = this.firstnameInputElt.value.toLowerCase().charAt(0) + "." + this.lastnameInputElt.value.toLowerCase();
-            if (this.usernameInputElt.value === "") {
-                this.usernameInputElt.value = autoUsername;
-                this.sendAjaxRequest();
-            }
+            this.usernameInputElt.value = autoUsername;
+            this.sendAjaxRequest();
         }
     }
 
