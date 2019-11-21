@@ -27,7 +27,7 @@
 
     <section>
 
-        {% include 'msgFlash.html.twig' %}
+        {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
@@ -170,54 +170,53 @@
 
                 <tbody>
 
-                    {% for social_support in group_people.socialSupports|reverse %}
+                    {% for support in group_people.supports|reverse %}
 
                     {% set contact_user %}
                     <div class='text-left p-2'>
                         <b>Coordonnées :</b>
-                        <br>Téléphone : {{ social_support.createdBy.phone }}
-                        <br>Email : {{ social_support.createdBy.email }}
+                        <br>Téléphone : {{ support.createdBy.phone }}
+                        <br>Email : {{ support.createdBy.email }}
                     </div>
                     {% endset %}
 
                     {% set contact_service %}
                     <div class='text-left p-2'>
                         <b>Coordonnées du service :</b>
-                        <br>Téléphone : {{ social_support.service.phone }}
-                        <br>Email : {{ social_support.service.email }}
+                        <br>Téléphone : {{ support.service.phone }}
+                        <br>Email : {{ support.service.email }}
                     </div>
                     {% endset %}
 
                     <tr>
                         <th scope="row">
-                            {% if social_support.service.id in rolesUser %}
-                            <a href="{{ path('social_support_show', {'id':group_people.id, 'social_support_id':social_support.id}) }}"
-                                class="
+                            {% if support.service.id in rolesUser or is_granted("ROLE_ADMIN") %}
+                            <a href="{{ path('support_show', {'id':group_people.id, 'support_id':support.id}) }}" class="
                                 btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Voir le suivi
                                 social">
                                 <span class="fas fa-eye"></span>
                             </a>
                             {% endif %}
                         </th>
-                        <td>{{ social_support.getStatusType }}</td>
-                        <td>{{ social_support.startDate | date("d/m/Y") }}</td>
-                        <td>{% if social_support.endDate %}{{ social_support.endDate | date("d/m/Y") }}{% endif %}</td>
+                        <td>{{ support.getStatusType }}</td>
+                        <td>{{ support.startDate | date("d/m/Y") }}</td>
+                        <td>{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}</td>
                         <td><a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true" title="{{ contact_user }}">{{ social_support.createdBy.firstname }}
-                                {{ social_support.createdBy.lastname }}</a>
+                                data-html="true" title="{{ contact_user }}">{{ support.createdBy.firstname }}
+                                {{ support.createdBy.lastname }}</a>
                         </td>
-                        <td>{% if social_support.service %}
+                        <td>{% if support.service %}
                             <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true" title="{{ contact_service }}">{{ social_support.service.name }}</a>
+                                data-html="true" title="{{ contact_service }}">{{ support.service.name }}</a>
                             {% endif %}
                         </td>
-                        <td>{% if social_support.service %}{{ social_support.service.pole.name }}{% endif %}</td>
+                        <td>{% if support.service %}{{ support.service.pole.name }}{% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
+        <a href="{{ path('support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
         <br />

@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Utils\Choices;
+use App\Form\Utils\Choices;;
 
 use App\Entity\GroupPeople;
 
@@ -20,19 +20,10 @@ class GroupPeopleType extends AbstractType
     {
         $builder
             ->add("familyTypology", ChoiceType::class, [
-                "attr" => [
-                    "class" => "col-md-12"
-                ],
                 "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 "placeholder" => "-- Select --",
-                "required" => true
             ])
-            ->add("nbPeople", null, [
-                "attr" => [
-                    "class" => "col-md-6"
-                ],
-                "required" => true
-            ])
+            ->add("nbPeople")
             ->add('rolePerson', CollectionType::class, [
                 'entry_type'   => RolePersonMinType::class,
                 'allow_add'    => false,

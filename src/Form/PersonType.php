@@ -4,7 +4,8 @@ namespace App\Form;
 
 use App\Entity\Person;
 
-use App\Utils\Choices;
+use App\Form\Utils\Choices;;
+
 use Symfony\Component\Form\AbstractType;
 
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,6 +28,12 @@ class PersonType extends AbstractType
                 "attr" => [
                     "class" => "text-capitalize",
                     "placeholder" => "Firstname"
+                ]
+            ])
+            ->add("usename", null, [
+                "label" => "Usename or maiden name",
+                "attr" => [
+                    "class" => "text-capitalize",
                 ]
             ])
             ->add("birthdate", DateType::class, [

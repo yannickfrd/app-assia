@@ -30,7 +30,7 @@ Encore
     .addEntry('login', './assets/js/security/login.js')
     .addEntry('registration', './assets/js/security/registration.js')
     .addEntry('person', './assets/js/person/person.js')
-    .addEntry('socialSupport', './assets/js/socialSupport/socialSupport.js')
+    .addEntry('support', './assets/js/support/support.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 

@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\SocialSupportPers;
+use App\Entity\SupportPers;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method SocialSupportPers|null find($id, $lockMode = null, $lockVersion = null)
- * @method SocialSupportPers|null findOneBy(array $criteria, array $orderBy = null)
- * @method SocialSupportPers[]    findAll()
- * @method SocialSupportPers[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SupportPers|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SupportPers|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SupportPers[]    findAll()
+ * @method SupportPers[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SocialSupportPersRepository extends ServiceEntityRepository
+class SupportPersRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SocialSupportPers::class);
+        parent::__construct($registry, SupportPers::class);
     }
 
     // /**
-    //  * @return SocialSupportPers[] Returns an array of SocialSupportPers objects
+    //  * @return SupportPers[] Returns an array of SupportPers objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class SocialSupportPersRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?SocialSupportPers
+    public function findOneBySomeField($value): ?SupportPers
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')

@@ -318,7 +318,7 @@ class UserController extends AbstractController
      */
     public function editUser(Service $service, User $user, Request $request, ValidatorInterface $validator): Response
     {
-        $socialSupports = $user->getSocialSupports();
+        $supports = $user->getSupports();
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);

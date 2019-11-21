@@ -6,7 +6,8 @@ use App\Utils\Agree;
 
 use App\Entity\Person;
 
-use App\Utils\Choices;
+use App\Form\Utils\Choices;;
+
 use App\Entity\RolePerson;
 
 use App\Entity\GroupPeople;
@@ -90,7 +91,6 @@ class GroupPeopleController extends AbstractController
 
             $this->addFlash("success", "Les modifications ont été enregistrées.");
         }
-        dump($formGroupPeople);
 
         return $this->render("app/groupPeople.html.twig", [
             "form" => $formGroupPeople->createView(),

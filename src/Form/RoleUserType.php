@@ -2,7 +2,8 @@
 
 namespace App\Form;
 
-use App\Utils\Choices;
+use App\Form\Utils\Choices;;
+
 use App\Entity\Service;
 use App\Entity\RoleUser;
 
@@ -45,7 +46,7 @@ class RoleUserType extends AbstractType
                 "class" => Service::class,
                 "choice_label" => "name",
                 "query_builder" => function (ServiceRepository $repo) {
-                    if (in_array("ROLE_ADMIN", $this->user->getRoles())) {
+                    if (in_array("ROLE_SUPER_ADMIN", $this->user->getRoles())) {
                         return $repo->createQueryBuilder("s")
                             ->orderBy("s.name", "ASC");
                     } else {

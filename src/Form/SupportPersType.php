@@ -2,15 +2,18 @@
 
 namespace App\Form;
 
-use App\Utils\Choices;
-use App\Entity\SocialSupportPers;
+use App\Form\SitProfType;
+
+use App\Entity\SupportPers;
+use App\Form\Utils\Choices;;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SocialSupportPersType extends AbstractType
+class SupportPersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,10 +35,11 @@ class SocialSupportPersType extends AbstractType
                 "required" => false
             ])
             ->add("status", ChoiceType::class, [
-                "choices" => Choices::getChoices(SocialSupportPers::STATUS),
+                "choices" => Choices::getChoices(SupportPers::STATUS),
                 "placeholder" => "-- Select --",
                 "required" => true
             ])
+            ->add("sitProf", SitProfType::class)
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 1,
@@ -46,7 +50,7 @@ class SocialSupportPersType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SocialSupportPers::class,
+            "data_class" => SupportPers::class,
             "translation_domain" => "forms",
         ]);
     }

@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\SocialSupportGrp;
+use App\Entity\SitProf;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method SocialSupportGrp|null find($id, $lockMode = null, $lockVersion = null)
- * @method SocialSupportGrp|null findOneBy(array $criteria, array $orderBy = null)
- * @method SocialSupportGrp[]    findAll()
- * @method SocialSupportGrp[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SitProf|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SitProf|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SitProf[]    findAll()
+ * @method SitProf[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SocialSupportGrpRepository extends ServiceEntityRepository
+class SitProfRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SocialSupportGrp::class);
+        parent::__construct($registry, SitProf::class);
     }
 
     // /**
-    //  * @return SocialSupportGrp[] Returns an array of SocialSupportGrp objects
+    //  * @return SitProf[] Returns an array of SitProf objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class SocialSupportGrpRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?SocialSupportGrp
+    public function findOneBySomeField($value): ?SitProf
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')

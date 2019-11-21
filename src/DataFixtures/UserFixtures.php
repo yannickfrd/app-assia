@@ -18,7 +18,7 @@ class UserFixtures extends Fixture
     public function __construct(UserPasswordEncoderInterface $passwordEncoder, ServiceRepository $repoService)
     {
         $this->passwordEncoder = $passwordEncoder;
-        $this->repoService = $repoService;
+        // $this->repoService = $repoService;
     }
 
     public function load(ObjectManager $manager)
@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
 
         $manager->persist($user);
 
-        $services = $this->repoService->findAll();
+        // $services = $this->repoService->findAll();
 
         // foreach ($services as $service) {
         //     $roleUser = new RoleUser();

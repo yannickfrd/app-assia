@@ -7,9 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocialSupportPersRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SupportPersRepository")
  */
-class SocialSupportPers
+class SupportPers
 {
     public const STATUS = [
         1 => "À venir",
@@ -60,16 +60,26 @@ class SocialSupportPers
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="socialSupports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="supports")
      * @ORM\JoinColumn(nullable=false)
      */
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SocialSupportGrp", inversedBy="socialSupportPers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGrp", inversedBy="supportPers")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $socialSupportGrp;
+    private $supportGrp;
+
+    // /**
+    //  * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPers", mappedBy="supportPers", cascade={"persist", "remove"})
+    //  */
+    // private $sitFamilyPers;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPers", cascade={"persist", "remove"})
+     */
+    private $sitProf;
 
     public function getId(): ?int
     {
@@ -165,14 +175,48 @@ class SocialSupportPers
         return $this;
     }
 
-    public function getSocialSupportGrp(): ?SocialSupportGrp
+    public function getSupportGrp(): ?SupportGrp
     {
-        return $this->socialSupportGrp;
+        return $this->supportGrp;
     }
 
-    public function setSocialSupportGrp(?SocialSupportGrp $socialSupportGrp): self
+    public function setSupportGrp(?SupportGrp $supportGrp): self
     {
-        $this->socialSupportGrp = $socialSupportGrp;
+        $this->supportGrp = $supportGrp;
+
+        return $this;
+    }
+
+    // public function getSitFamilyPers(): ?SitFamilyPers
+    // {
+    //     return $this->sitFamilyPers;
+    // }
+
+    // public function setSitFamilyPers(SitFamilyPers $sitFamilyPers): self
+    // {
+    //     $this->sitFamilyPers = $sitFamilyPers;
+
+    //     // set the owning side of the relation if necessary
+    //     if ($this !== $sitFamilyPers->getSupportPers()) {
+    //         $sitFamilyPers->setSupportPers($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    public function getSitProf(): ?SitProf
+    {
+        return $this->sitProf;
+    }
+
+    public function setSitProf(SitProf $sitProf): self
+    {
+        $this->sitProf = $sitProf;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitProf->getSupportPers()) {
+            $sitProf->setSupportPers($this);
+        }
 
         return $this;
     }

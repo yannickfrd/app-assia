@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SocialSupportGrpRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SupportGrpRepository")
  */
-class SocialSupportGrp
+class SupportGrp
 {
     public const STATUS = [
         1 => "À venir",
@@ -62,34 +62,44 @@ class SocialSupportGrp
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="socialSupports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="supports")
      * @ORM\JoinColumn(nullable=false)
      */
     private $groupPeople;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGrpCreated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGrpCreated")
      */
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="socialSupportsGrpUpdated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGrpUpdated")
      */
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPers", mappedBy="socialSupportGrp", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportPers", mappedBy="supportGrp", orphanRemoval=true)
      */
-    private $socialSupportPers;
+    private $supportPers;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="socialSupportGrp")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="supportGrp")
      */
     private $service;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitSocial", mappedBy="supportGrp", cascade={"persist", "remove"})
+     */
+    private $sitSocial;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGrp", mappedBy="supportGrp", cascade={"persist", "remove"})
+     */
+    private $sitFamilyGrp;
+
     public function __construct()
     {
-        $this->socialSupportPers = new ArrayCollection();
+        $this->supportPers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,30 +222,30 @@ class SocialSupportGrp
     }
 
     /**
-     * @return Collection|SocialSupportPers[]
+     * @return Collection|SupportPers[]
      */
-    public function getSocialSupportPers(): Collection
+    public function getSupportPers(): Collection
     {
-        return $this->socialSupportPers;
+        return $this->supportPers;
     }
 
-    public function addSocialSupportPers(SocialSupportPers $socialSupportPers): self
+    public function addSupportPers(SupportPers $supportPers): self
     {
-        if (!$this->socialSupportPers->contains($socialSupportPers)) {
-            $this->socialSupportPers[] = $socialSupportPers;
-            $socialSupportPers->setSocialSupportGrp($this);
+        if (!$this->supportPers->contains($supportPers)) {
+            $this->supportPers[] = $supportPers;
+            $supportPers->setSupportGrp($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportPers(SocialSupportPers $socialSupportPers): self
+    public function removeSupportPers(SupportPers $supportPers): self
     {
-        if ($this->socialSupportPers->contains($socialSupportPers)) {
-            $this->socialSupportPers->removeElement($socialSupportPers);
+        if ($this->supportPers->contains($supportPers)) {
+            $this->supportPers->removeElement($supportPers);
             // set the owning side to null (unless already changed)
-            if ($socialSupportPers->getSocialSupportGrp() === $this) {
-                $socialSupportPers->setSocialSupportGrp(null);
+            if ($supportPers->getSupportGrp() === $this) {
+                $supportPers->setSupportGrp(null);
             }
         }
 
@@ -250,6 +260,40 @@ class SocialSupportGrp
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getSitSocial(): ?SitSocial
+    {
+        return $this->sitSocial;
+    }
+
+    public function setSitSocial(SitSocial $sitSocial): self
+    {
+        $this->sitSocial = $sitSocial;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitSocial->getSupportGrp()) {
+            $sitSocial->setSupportGrp($this);
+        }
+
+        return $this;
+    }
+
+    public function getsitFamilyGrp(): ?sitFamilyGrp
+    {
+        return $this->sitFamilyGrp;
+    }
+
+    public function setsitFamilyGrp(sitFamilyGrp $sitFamilyGrp): self
+    {
+        $this->sitFamilyGrp = $sitFamilyGrp;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitFamilyGrp->getSupportGrp()) {
+            $sitFamilyGrp->setSupportGrp($this);
+        }
 
         return $this;
     }

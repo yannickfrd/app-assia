@@ -2,11 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\SocialSupportGrp;
+use App\Entity\SupportGrp;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class SocialSupportGrpFixtures extends Fixture
+class SupportGrpFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     { }

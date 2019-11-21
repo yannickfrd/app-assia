@@ -1,18 +1,18 @@
 import MessageFlash from "../utils/messageFlash";
 
 // Validation des données de la fiche personne
-export default class ValidationSocialSupport {
+export default class ValidationSupport {
 
     constructor() {
-        this.startDate = "social_support_grp_startDate";
+        this.startDate = "support_grp_startDate";
         this.startDateInputElt = document.getElementById(this.startDate);
         this.startDateLabelElt = document.querySelector("label[for=" + this.startDate + "]");
 
-        this.endDate = "social_support_grp_endDate";
+        this.endDate = "support_grp_endDate";
         this.endDateInputElt = document.getElementById(this.endDate);
         this.endDateLabelElt = document.querySelector("label[for=" + this.endDate + "]");
 
-        this.status = "social_support_grp_status";
+        this.status = "support_grp_status";
         this.statusInputElt = document.getElementById(this.status);
         this.statusLabelElt = document.querySelector("label[for=" + this.status + "]");
 

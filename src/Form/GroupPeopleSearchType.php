@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Utils\Choices;
+use App\Form\Utils\Choices;;
 
 use App\Entity\GroupPeople;
 use App\Entity\GroupPeopleSearch;

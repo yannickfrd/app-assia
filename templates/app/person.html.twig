@@ -44,7 +44,7 @@
 
     <section id="person" data-is-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
 
-        {% include 'msgFlash.html.twig' %}
+        {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
@@ -54,6 +54,10 @@
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form_person.firstname) }}</div>
             <div class="col-md-6">{{ form_row(form_person.lastname) }}</div>
+            <div class="col-md-6">{{ form_row(form_person.usename) }}</div>
+        </div>
+
+        <div class="form-group row">
             <div class="col-md-6">{{ form_row(form_person.birthdate) }}</div>
             <div class="col-md-6"> {{ form_row(form_person.gender) }}</div>
         </div>
@@ -121,47 +125,46 @@
                 </thead>
 
                 <tbody>
-                    {% for social_support in person.socialSupports %}
+                    {% for support in person.supports %}
 
                     {% set contact_user %}
                     <div class='text-left p-2'>
                         <b>Coordonnées :</b>
-                        <br>Téléphone : {{social_support.socialSupportGrp.createdBy.phone }}
-                        <br>Email : {{ social_support.socialSupportGrp.createdBy.email }}
+                        <br>Téléphone : {{support.supportGrp.createdBy.phone }}
+                        <br>Email : {{ support.supportGrp.createdBy.email }}
                     </div>
                     {% endset %}
 
                     {% set contact_service %}
                     <div class='text-left p-2'>
                         <b>Coordonnées du service: </b>
-                        <br>Téléphone : {{ social_support.socialSupportGrp.service.phone }}
-                        <br>Email : {{ social_support.socialSupportGrp.service.email }}
+                        <br>Téléphone : {{ support.supportGrp.service.phone }}
+                        <br>Email : {{ support.supportGrp.service.email }}
                     </div>
                     {% endset %}
 
                     <tr>
                         <th scope="row">
-                            {% if social_support.socialSupportGrp.service.id in rolesUser %}
-                            <a href="{{ path('social_support_show', {'id':social_support.socialSupportGrp.groupPeople.id , 'social_support_id':social_support.socialSupportGrp.id}) }}"
+                            {% if support.supportGrp.service.id in rolesUser %}
+                            <a href="{{ path('support_show', {'id':support.supportGrp.groupPeople.id , 'support_id':support.supportGrp.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le suivi social">
                                 <span class="fas fa-eye"></span>
                             </a>
                             {% endif %}
                         </th>
-                        <td>{{ social_support.getStatusType }}</td>
-                        <td>{{ social_support.startDate | date("d/m/Y") }}</td>
-                        <td>{{ social_support.endDate | date("d/m/Y") }}</td>
+                        <td>{{ support.getStatusType }}</td>
+                        <td>{{ support.startDate | date("d/m/Y") }}</td>
+                        <td>{{ support.endDate | date("d/m/Y") }}</td>
                         <td><a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true"
-                                title="{{ contact_user }}">{{ social_support.socialSupportGrp.createdBy.firstname }}
-                                {{  social_support.socialSupportGrp.createdBy.lastname }}</a></td>
-                        <td>{% if social_support.socialSupportGrp.service %}
+                                data-html="true" title="{{ contact_user }}">{{ support.supportGrp.createdBy.firstname }}
+                                {{  support.supportGrp.createdBy.lastname }}</a></td>
+                        <td>{% if support.supportGrp.service %}
                             <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
                                 data-html="true"
-                                title="{{ contact_service }}">{{ social_support.socialSupportGrp.service.name }}</a>{% endif %}
+                                title="{{ contact_service }}">{{ support.supportGrp.service.name }}</a>{% endif %}
                         </td>
-                        <td>{{ social_support.socialSupportGrp.service.pole.name }}</td>
+                        <td>{{ support.supportGrp.service.pole.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -169,7 +172,7 @@
         </div>
 
         {% if group_people is defined %}
-        <a href="{{ path('social_support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
+        <a href="{{ path('support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
             <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</a>
         {% endif %}
 

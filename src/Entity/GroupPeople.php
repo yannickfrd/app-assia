@@ -76,10 +76,10 @@ class GroupPeople
     private $rolePerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="groupPeople")
      * @Assert\Valid
      */
-    private $socialSupports;
+    private $supports;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="groupPeopleUpdated")
@@ -88,7 +88,7 @@ class GroupPeople
 
     public function __construct()
     {
-        $this->socialSupports = new ArrayCollection();
+        $this->supports = new ArrayCollection();
         $this->rolePerson = new ArrayCollection();
         $this->createdAt = new \Datetime();
         $this->updatedAt = new \Datetime();
@@ -189,30 +189,30 @@ class GroupPeople
     }
 
     /**
-     * @return Collection|SocialSupports[]
+     * @return Collection|Supports[]
      */
-    public function getSocialSupports(): Collection
+    public function getSupports(): Collection
     {
-        return $this->socialSupports;
+        return $this->supports;
     }
 
-    public function addSocialSupport(SocialSupportGrp $socialSupport): self
+    public function addSupport(SupportGrp $support): self
     {
-        if (!$this->socialSupports->contains($socialSupport)) {
-            $this->socialSupports[] = $socialSupport;
-            $socialSupport->setGroupPeople($this);
+        if (!$this->supports->contains($support)) {
+            $this->supports[] = $support;
+            $support->setGroupPeople($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupport(SocialSupportGrp $socialSupport): self
+    public function removeSupport(SupportGrp $support): self
     {
-        if ($this->socialSupports->contains($socialSupport)) {
-            $this->socialSupports->removeElement($socialSupport);
+        if ($this->supports->contains($support)) {
+            $this->supports->removeElement($support);
             // set the owning side to null (unless already changed)
-            if ($socialSupport->getGroupPeople() === $this) {
-                $socialSupport->setGroupPeople(null);
+            if ($support->getGroupPeople() === $this) {
+                $support->setGroupPeople(null);
             }
         }
 

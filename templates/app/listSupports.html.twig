@@ -10,7 +10,7 @@
 {% block body %}
 
 <section class="my-0">
-    {% include 'msgFlash.html.twig' %}
+    {% include "model/msgFlash.html.twig" %}
     <div class="container">
         <h1 class="h2 mb-4">Les suivis</h1>
     </div>
@@ -115,18 +115,18 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% for socialSupport in person.groupPeople.socialSupports %}
-                            {{ socialSupport.startDate | date("d/m/Y") }}<br />
+                            {% for support in person.groupPeople.supports %}
+                            {{ support.startDate | date("d/m/Y") }}<br />
                             {% endfor %}
                         </td>
                         <td>
-                            {% for socialSupport in person.groupPeople.socialSupports %}
-                            {{ socialSupport.endDate | date("d/m/Y") }}<br />
+                            {% for support in person.groupPeople.supports %}
+                            {{ support.endDate | date("d/m/Y") }}<br />
                             {% endfor %}
                         </td>
                         <td>
-                            {% for socialSupport in person.groupPeople.socialSupports %}
-                            {{ socialSupport.getStatusType  }}<br />
+                            {% for support in person.groupPeople.supports %}
+                            {{ support.getStatusType  }}<br />
                             {% endfor %}
                         </td>
                     </tr>

@@ -40,9 +40,9 @@ class Service
     private $pole;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="service")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="service")
      */
-    private $socialSupportGrp;
+    private $supportGrp;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -89,7 +89,7 @@ class Service
     public function __construct()
     {
         $this->roleUser = new ArrayCollection();
-        $this->socialSupportGrp = new ArrayCollection();
+        $this->supportGrp = new ArrayCollection();
     }
 
     public function __toString()
@@ -170,30 +170,30 @@ class Service
     }
 
     /**
-     * @return Collection|SocialSupportGrp[]
+     * @return Collection|SupportGrp[]
      */
-    public function getSocialSupportGrp(): Collection
+    public function getSupportGrp(): Collection
     {
-        return $this->socialSupportGrp;
+        return $this->supportGrp;
     }
 
-    public function addSocialSupportGrp(SocialSupportGrp $socialSupportGrp): self
+    public function addSupportGrp(SupportGrp $supportGrp): self
     {
-        if (!$this->socialSupportGrp->contains($socialSupportGrp)) {
-            $this->socialSupportGrp[] = $socialSupportGrp;
-            $socialSupportGrp->setService($this);
+        if (!$this->supportGrp->contains($supportGrp)) {
+            $this->supportGrp[] = $supportGrp;
+            $supportGrp->setService($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupportGrp(SocialSupportGrp $socialSupportGrp): self
+    public function removeSupportGrp(SupportGrp $supportGrp): self
     {
-        if ($this->socialSupportGrp->contains($socialSupportGrp)) {
-            $this->socialSupportGrp->removeElement($socialSupportGrp);
+        if ($this->supportGrp->contains($supportGrp)) {
+            $this->supportGrp->removeElement($supportGrp);
             // set the owning side to null (unless already changed)
-            if ($socialSupportGrp->getService() === $this) {
-                $socialSupportGrp->setService(null);
+            if ($supportGrp->getService() === $this) {
+                $supportGrp->setService(null);
             }
         }
 

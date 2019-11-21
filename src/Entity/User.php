@@ -117,14 +117,14 @@ class User implements UserInterface
     private $groupPeopleUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="createdBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="createdBy")
      */
-    private $socialSupportsGrpCreated;
+    private $supportsGrpCreated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportGrp", mappedBy="updatedBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="updatedBy")
      */
-    private $socialSupportsGrpUpdated;
+    private $supportsGrpUpdated;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", cascade={"persist"})
@@ -152,8 +152,8 @@ class User implements UserInterface
         $this->peopleUpdated = new ArrayCollection();
         $this->groupPeople = new ArrayCollection();
         $this->groupPeopleUpdated = new ArrayCollection();
-        $this->socialSupportsGrpCreated = new ArrayCollection();
-        $this->socialSupportsGrpUpdated = new ArrayCollection();
+        $this->supportsGrpCreated = new ArrayCollection();
+        $this->supportsGrpUpdated = new ArrayCollection();
         $this->roleUser = new ArrayCollection();
         $this->userConnections = new ArrayCollection();
     }
@@ -440,30 +440,30 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SocialSupportGrp[]
+     * @return Collection|SupportGrp[]
      */
-    public function getsocialSupportsGrpCreated(): Collection
+    public function getsupportsGrpCreated(): Collection
     {
-        return $this->socialSupportsGrpCreated;
+        return $this->supportsGrpCreated;
     }
 
-    public function addsocialSupportsGrpCreated(SocialSupportGrp $socialSupportsGrpCreated): self
+    public function addsupportsGrpCreated(SupportGrp $supportsGrpCreated): self
     {
-        if (!$this->socialSupportsGrpCreated->contains($socialSupportsGrpCreated)) {
-            $this->socialSupportsGrpCreated[] = $socialSupportsGrpCreated;
-            $socialSupportsGrpCreated->setCreatedBy($this);
+        if (!$this->supportsGrpCreated->contains($supportsGrpCreated)) {
+            $this->supportsGrpCreated[] = $supportsGrpCreated;
+            $supportsGrpCreated->setCreatedBy($this);
         }
 
         return $this;
     }
 
-    public function removesocialSupportsGrpCreated(SocialSupportGrp $socialSupportsGrpCreated): self
+    public function removesupportsGrpCreated(SupportGrp $supportsGrpCreated): self
     {
-        if ($this->socialSupportsGrpCreated->contains($socialSupportsGrpCreated)) {
-            $this->socialSupportsGrpCreated->removeElement($socialSupportsGrpCreated);
+        if ($this->supportsGrpCreated->contains($supportsGrpCreated)) {
+            $this->supportsGrpCreated->removeElement($supportsGrpCreated);
             // set the owning side to null (unless already changed)
-            if ($socialSupportsGrpCreated->getCreatedBy() === $this) {
-                $socialSupportsGrpCreated->setCreatedBy(null);
+            if ($supportsGrpCreated->getCreatedBy() === $this) {
+                $supportsGrpCreated->setCreatedBy(null);
             }
         }
 
@@ -471,30 +471,30 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SocialSupportGrp[]
+     * @return Collection|SupportGrp[]
      */
-    public function getsocialSupportsGrpUpdated(): Collection
+    public function getsupportsGrpUpdated(): Collection
     {
-        return $this->socialSupportsGrpUpdated;
+        return $this->supportsGrpUpdated;
     }
 
-    public function addsocialSupportsGrpUpdated(SocialSupportGrp $socialSupportsGrpUpdated): self
+    public function addsupportsGrpUpdated(SupportGrp $supportsGrpUpdated): self
     {
-        if (!$this->socialSupportsGrpUpdated->contains($socialSupportsGrpUpdated)) {
-            $this->socialSupportsGrpUpdated[] = $socialSupportsGrpUpdated;
-            $socialSupportsGrpUpdated->setUpdatedBy($this);
+        if (!$this->supportsGrpUpdated->contains($supportsGrpUpdated)) {
+            $this->supportsGrpUpdated[] = $supportsGrpUpdated;
+            $supportsGrpUpdated->setUpdatedBy($this);
         }
 
         return $this;
     }
 
-    public function removesocialSupportsGrpUpdated(SocialSupportGrp $socialSupportsGrpUpdated): self
+    public function removesupportsGrpUpdated(SupportGrp $supportsGrpUpdated): self
     {
-        if ($this->socialSupportsGrpUpdated->contains($socialSupportsGrpUpdated)) {
-            $this->socialSupportsGrpUpdated->removeElement($socialSupportsGrpUpdated);
+        if ($this->supportsGrpUpdated->contains($supportsGrpUpdated)) {
+            $this->supportsGrpUpdated->removeElement($supportsGrpUpdated);
             // set the owning side to null (unless already changed)
-            if ($socialSupportsGrpUpdated->getUpdatedBy() === $this) {
-                $socialSupportsGrpUpdated->setUpdatedBy(null);
+            if ($supportsGrpUpdated->getUpdatedBy() === $this) {
+                $supportsGrpUpdated->setUpdatedBy(null);
             }
         }
 

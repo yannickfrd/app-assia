@@ -1,0 +1,16 @@
+<div id="card-{{ id }}" class="card mb-0">
+    <div class="card-header py-1" id="heading-{{ id }}">
+        <h2 class="mb-0">
+            <button class="btn btn-link font-weight-bold text-{{ theme_color }} collapsed" type="button"
+                data-toggle="collapse" data-target="#collapse-{{ id }}" aria-expanded="false"
+                aria-controls="collapse-{{ id }}">
+                {% block collapse_card_title %}{% endblock %}
+            </button>
+        </h2>
+    </div>
+    <div id="collapse-{{ id }}" class="collapse" aria-labelledby="heading-{{ id }}" data-parent="#{{ accordion_id }}">
+        <div class="card-body bg-light">
+            {% block collapse_card_body %}{% endblock %}
+        </div>
+    </div>
+</div>
