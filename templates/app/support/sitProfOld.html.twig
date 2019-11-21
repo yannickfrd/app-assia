@@ -1,0 +1,63 @@
+{# {% extends "model/collapseCard.html.twig" %} #}
+
+{% set id = "sit-prof" %}
+
+{% block collapse_card_title %}Situation professionnelle{% endblock %}
+
+{% block collapse_card_body %}
+
+<div class="row">
+    <div class="accordion mb-4" id="accordion-sit-prof">
+        {% for supportPers  in form.supportPers %}
+        {% set person = supportPers.vars.value.person %}
+        {% if person.age >= 18 %}
+        <button class="btn btn-{{ theme_color }} ml-2" type="button" data-toggle="collapse"
+            data-target="#collapse-sit-prof{{ person.id}}" aria-expanded="false"
+            aria-controls="collapse-sit-prof{{ person.id}}"> {{ person.firstname}} {{ person.lastname}}
+        </button>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% for supportPers  in form.supportPers %}
+        {% if supportPers.vars.value.person.age >= 18 %}
+        <div class="collapse" id="collapse-sit-prof{{ supportPers.vars.value.person.id}}"
+            data-parent="#accordion-sit-prof">
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.schoolLevel) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.profStatus) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.jobType) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.contractStartDate) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.contractEndDate) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.nbWorkingHours) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.workingHours) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.workPlace) }}</div>
+                <div class="col-md-6 js-profStatus d-block">{{ form_row(supportPers.sitProf.employerName) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.transportMeans) }}</div>
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.rqth) }}</div>
+            </div>
+            <div class="form-group row">
+                {# {{ form_label(supportPers.sitProf.commentSitProf) }} #}
+                <div class="col-md-12">{{ form_widget(supportPers.sitProf.commentSitProf) }}</div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="col-md-6">
+    {# {{ form_row(form.sitProf) }} #}
+</div>
+<div class="col-md-6">
+</div>
+
+{% endblock %}

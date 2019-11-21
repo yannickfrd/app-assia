@@ -45,7 +45,7 @@ class UserController extends AbstractController
     /**
      * Permet de rechercher un utilisateur
      * 
-     * @Route("/list/users", name="list_users")
+     * @Route("admin/list/users", name="list_users")
      * @Route("/new_support/search/user", name="new_support_search_user")
      * @return Response
      */
@@ -318,7 +318,7 @@ class UserController extends AbstractController
      */
     public function editUser(Service $service, User $user, Request $request, ValidatorInterface $validator): Response
     {
-        $socialSupports = $user->getSocialSupports();
+        $supports = $user->getSupports();
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);

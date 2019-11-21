@@ -64,13 +64,13 @@ class RolePersonRepository extends ServiceEntityRepository
      * @return Query
      */
     // Donne tous les roles de toutes les personnes
-    public function findAllSocialSupports($groupPeopleSearch): Query
+    public function findAllSupports($groupPeopleSearch): Query
     {
         $query =  $this->createQueryBuilder("r")
             ->select("r")
             ->leftJoin("r.person", "p")
             ->leftJoin("r.groupPeople", "g")
-            ->leftJoin("g.socialSupports", "s")
+            ->leftJoin("g.supports", "s")
             ->addselect("p")
             ->addselect("g")
             ->addselect("s")

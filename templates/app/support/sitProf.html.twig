@@ -1,0 +1,73 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sit-prof" %}
+
+{% block collapse_card_title %}Situation professionnelle{% endblock %}
+
+{% block collapse_card_body %}
+
+<div class="row">
+    <div class="col-md-12 accordion" id="accordion-sit-prof">
+        <div class="mb-4">
+            {% for supportPers  in form.supportPers %}
+            {% set person = supportPers.vars.value.person %}
+            {% if person.age >= 18 %}
+
+            <button type="button" id="heading-{{  person.id }}"
+                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}" data-toggle="collapse"
+                data-target="#collapse-sit-prof-{{  person.id }}" aria-expanded="false"
+                aria-controls="collapse-sit-prof-{{  person.id }}">
+                {{ person.firstname}} {{ person.lastname}}
+            </button>
+
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        {% for supportPers  in form.supportPers %}
+
+        {% set person = supportPers.vars.value.person %}
+        {% if person.age >= 18 %}
+
+        <div id="collapse-sit-prof-{{  person.id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+            aria-labelledby="heading-{{  person.id }}" data-parent="#accordion-sit-prof">
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.schoolLevel) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.profStatus) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.jobType) }}
+                </div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.contractStartDate) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.contractEndDate) }}
+                </div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.nbWorkingHours) }}
+                </div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.workingHours) }}
+                </div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.workPlace) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPers.sitProf.employerName) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.transportMeans) }}</div>
+                <div class="col-md-6">{{ form_row(supportPers.sitProf.rqth) }}</div>
+            </div>
+            <div class="form-group row">
+                {# {{ form_label(supportPers.sitProf.commentSitProf) }} #}
+                <div class="col-md-12">{{ form_widget(supportPers.sitProf.commentSitProf) }}</div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

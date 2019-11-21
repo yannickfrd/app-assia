@@ -1,0 +1,30 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sit-family" %}
+
+{% block collapse_card_title %}Situation familiale{% endblock %}
+
+{% block collapse_card_body %}
+
+{% if typo not in [2, 5] %}
+<div class="form-group row">
+    {# <div class="col-md-6">{{ form_row(form.sitFamilyGrp.nbDependentChildren) }}</div> #}
+    <div class="col-md-6">{{ form_row(form.sitFamilyGrp.unbornChild) }}</div>
+    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.sitFamilyGrp.expDateChildbirth) }}</div>
+    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.sitFamilyGrp.pregnancyType) }}</div>
+</div>
+{% endif %}
+
+<div class="form-group row">
+    <div class="col-md-6">{{ form_row(form.sitFamilyGrp.famlReunification) }}</div>
+    <div class="col-md-6 js-famlReunification d-block">{{ form_row(form.sitFamilyGrp.nbPeopleReunification) }}</div>
+    {% if typo not in [1, 2] %}
+    <div class="col-md-6">{{ form_row(form.sitFamilyGrp.cafId) }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group row">
+    {# {{ form_label(form.sitFamilyGrp.commentSitFamilyGrp) }} #}
+    <div class="col-md-12">{{ form_widget(form.sitFamilyGrp.commentSitFamilyGrp) }}</div>
+</div>
+{% endblock %}

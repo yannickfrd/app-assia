@@ -1,10 +1,10 @@
 import Username from "./username";
 import SeePassword from "./seePassword";
-import RemoveTr from "../utils/removeTr";
+import DeleteTr from "../utils/deleteTr";
 
 let username = new Username();
 let seePassword = new SeePassword();
-let removeTr = new RemoveTr("function-table");
+let deleteTr = new DeleteTr("function-table");
 
 // add-collection-widget.js
 $(document).ready(function () {

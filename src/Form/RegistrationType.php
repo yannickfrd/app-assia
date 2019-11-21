@@ -3,11 +3,13 @@
 namespace App\Form;
 
 use App\Entity\User;
-use App\Form\RoleUserType;
+use App\Form\Utils\Choices;;
 
+use App\Form\RoleUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -41,6 +43,12 @@ class RegistrationType extends AbstractType
                 "attr" => [
                     "placeholder" => "Email"
                 ]
+            ])
+            ->add("roles", ChoiceType::class, [
+                "label" => "Rôle",
+                "data" => false,
+                'placeholder' => "-- Select --",
+                "choices" => Choices::getChoices(User::ROLES)
             ])
             ->add("password", PasswordType::class, [
                 "attr" => [

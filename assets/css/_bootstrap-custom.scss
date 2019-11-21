@@ -12,7 +12,10 @@ $cyan2: #79c1b7 !default; // Socio-judiciaire
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
 
+// $theme-colors: (primary: #343a40);
+
 $theme-colors: map-merge(( //
+        // "dark2": $dark,
         "purple": $purple,
         "orange2": $orange2,
         "brown": $brown,

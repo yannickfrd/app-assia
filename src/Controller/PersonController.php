@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Utils\Agree;
 use App\Entity\Person;
-use App\Utils\Choices;
+use App\Form\Utils\Choices;;
 
 use App\Form\PersonType;
 use App\Entity\RolePerson;
@@ -301,7 +301,7 @@ class PersonController extends AbstractController
      */
     public function editPerson(GroupPeople $groupPeople, Person $person, Request $request, ValidatorInterface $validator): Response
     {
-        $socialSupports = $person->getSocialSupports();
+        $supports = $person->getSupports();
 
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);

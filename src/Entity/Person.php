@@ -66,6 +66,10 @@ class Person
     private $firstname;
 
     /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $maidenName;
+    /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères max).")     
      */
@@ -145,15 +149,15 @@ class Person
     private $rolesPerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SocialSupportPers", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportPers", mappedBy="person")
      */
-    private $socialSupports;
+    private $supports;
 
     public function __construct()
     {
         $this->updatedAt = new \DateTime();
         $this->rolesPerson = new ArrayCollection();
-        $this->socialSupports = new ArrayCollection();
+        $this->supports = new ArrayCollection();
     }
 
     public function __toString()
@@ -205,6 +209,18 @@ class Person
     public function setFullname(): self
     {
         $this->fullname = $this->firstname . " " . $this->lastname;
+
+        return $this;
+    }
+
+    public function getMaidenName(): ?string
+    {
+        return $this->maidenName;
+    }
+
+    public function setMaidenName(?string $maidenName): self
+    {
+        $this->maidenName = $maidenName;
 
         return $this;
     }
@@ -397,30 +413,30 @@ class Person
     }
 
     /**
-     * @return Collection|SocialSupportPers[]
+     * @return Collection|SupportPers[]
      */
-    public function getSocialSupports(): Collection
+    public function getSupports(): Collection
     {
-        return $this->socialSupports;
+        return $this->supports;
     }
 
-    public function addSocialSupport(SocialSupportPers $socialSupport): self
+    public function addSupport(SupportPers $support): self
     {
-        if (!$this->socialSupports->contains($socialSupport)) {
-            $this->socialSupports[] = $socialSupport;
-            $socialSupport->setPerson($this);
+        if (!$this->supports->contains($support)) {
+            $this->supports[] = $support;
+            $support->setPerson($this);
         }
 
         return $this;
     }
 
-    public function removeSocialSupport(SocialSupportPers $socialSupport): self
+    public function removeSupport(SupportPers $support): self
     {
-        if ($this->socialSupports->contains($socialSupport)) {
-            $this->socialSupports->removeElement($socialSupport);
+        if ($this->supports->contains($support)) {
+            $this->supports->removeElement($support);
             // set the owning side to null (unless already changed)
-            if ($socialSupport->getPerson() === $this) {
-                $socialSupport->setPerson(null);
+            if ($support->getPerson() === $this) {
+                $support->setPerson(null);
             }
         }
 
