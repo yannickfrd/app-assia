@@ -518,7 +518,6 @@ class User implements UserInterface
         if (!$this->roleUser->contains($roleUser)) {
             $this->roleUser[] = $roleUser;
             $roleUser->setUser($this);
-            // $this->roleUser->add($roleUser);
         }
 
         return $this;

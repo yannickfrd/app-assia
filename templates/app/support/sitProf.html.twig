@@ -1,36 +1,28 @@
 {% extends "model/collapseCard.html.twig" %}
 
-{% set id = "sit-prof" %}
+{% set id = "sit_prof" %}
 
 {% block collapse_card_title %}Situation professionnelle{% endblock %}
 
 {% block collapse_card_body %}
 
 <div class="row">
-    <div class="col-md-12 accordion" id="accordion-sit-prof">
+    <div class="col-md-12 accordion" id="accordion-sit_prof">
         <div class="mb-4">
-            {% for supportPers  in form.supportPers %}
+            {% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
             {% set person = supportPers.vars.value.person %}
-            {% if person.age >= 18 %}
-
-            <button type="button" id="heading-{{  person.id }}"
-                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}" data-toggle="collapse"
-                data-target="#collapse-sit-prof-{{  person.id }}" aria-expanded="false"
-                aria-controls="collapse-sit-prof-{{  person.id }}">
+            <button type="button" id="heading-sit_prof-{{ loop.index0 }}"
+                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} js-person"
+                data-toggle="collapse" data-target="#collapse-sit_prof-{{ loop.index0 }}" aria-expanded="false"
+                aria-controls="collapse-sit_prof-{{ loop.index0 }}">
                 {{ person.firstname}} {{ person.lastname}}
             </button>
-
-            {% endif %}
             {% endfor %}
         </div>
 
-        {% for supportPers  in form.supportPers %}
-
-        {% set person = supportPers.vars.value.person %}
-        {% if person.age >= 18 %}
-
-        <div id="collapse-sit-prof-{{  person.id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-{{  person.id }}" data-parent="#accordion-sit-prof">
+        {% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
+        <div id="collapse-sit_prof-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+            aria-labelledby="heading-sit_prof-{{ loop.index0 }}" data-parent="#accordion-sit_prof">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(supportPers.sitProf.schoolLevel) }}</div>
             </div>
@@ -65,7 +57,6 @@
                 <div class="col-md-12">{{ form_widget(supportPers.sitProf.commentSitProf) }}</div>
             </div>
         </div>
-        {% endif %}
         {% endfor %}
     </div>
 </div>

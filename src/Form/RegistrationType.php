@@ -72,7 +72,7 @@ class RegistrationType extends AbstractType
                 "allow_delete" => true,
                 "delete_empty" => true,
                 "prototype" => true,
-                "by_reference" => true,
+                "by_reference" => false,
                 "entry_options" => [
                     "attr" => ["class" => "form-inline"],
                 ]

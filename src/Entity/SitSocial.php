@@ -104,7 +104,7 @@ class SitSocial
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $speAseSupport;
+    private $speASE;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -243,14 +243,14 @@ class SitSocial
         return $this;
     }
 
-    public function getSpeAseSupport(): ?bool
+    public function getSpeASE(): ?bool
     {
-        return $this->speAseSupport;
+        return $this->speASE;
     }
 
-    public function setSpeAseSupport(?bool $speAseSupport): self
+    public function setSpeASE(?bool $speASE): self
     {
-        $this->speAseSupport = $speAseSupport;
+        $this->speASE = $speASE;
 
         return $this;
     }

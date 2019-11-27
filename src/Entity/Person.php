@@ -26,14 +26,6 @@ class Person
         3 => "Non renseigné"
     ];
 
-    public const NATIONALITY = [
-        1 => "France",
-        2 => "Union-Européenne",
-        3 => "Hors-UE",
-        4 => "Apatride",
-        5 => "Non renseignée"
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

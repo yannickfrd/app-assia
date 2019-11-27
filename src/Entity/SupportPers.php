@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -80,6 +79,17 @@ class SupportPers
      * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPers", cascade={"persist", "remove"})
      */
     private $sitProf;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPers", cascade={"persist", "remove"})
+     */
+    private $sitAdm;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPers", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $sitBudget;
 
     public function getId(): ?int
     {
@@ -216,6 +226,57 @@ class SupportPers
         // set the owning side of the relation if necessary
         if ($this !== $sitProf->getSupportPers()) {
             $sitProf->setSupportPers($this);
+        }
+
+        return $this;
+    }
+
+    public function getSitBudget2(): ?SitBudget2
+    {
+        return $this->sitBudget2;
+    }
+
+    public function setSitBudget2(SitBudget2 $sitBudget2): self
+    {
+        $this->sitBudget2 = $sitBudget2;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitBudget2->getSupportPers()) {
+            $sitBudget2->setSupportPers($this);
+        }
+
+        return $this;
+    }
+
+    public function getSitAdm(): ?SitAdm
+    {
+        return $this->sitAdm;
+    }
+
+    public function setSitAdm(SitAdm $sitAdm): self
+    {
+        $this->sitAdm = $sitAdm;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitAdm->getSupportPers()) {
+            $sitAdm->setSupportPers($this);
+        }
+
+        return $this;
+    }
+
+    public function getSitBudget(): ?SitBudget
+    {
+        return $this->sitBudget;
+    }
+
+    public function setSitBudget(SitBudget $sitBudget): self
+    {
+        $this->sitBudget = $sitBudget;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitBudget->getSupportPers()) {
+            $sitBudget->setSupportPers($this);
         }
 
         return $this;

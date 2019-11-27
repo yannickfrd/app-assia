@@ -31,7 +31,7 @@ class SitSocialType extends AbstractType
             ->add("speReducedMobility")
             ->add("speViolenceVictim")
             ->add("speDomViolenceVictim")
-            ->add("speAseSupport")
+            ->add("speASE")
             ->add("speOther")
             ->add("speOtherPrecision")
             ->add("speComment")

@@ -58,8 +58,8 @@ class SitProfType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add('commentSitProf', null, [
-                'label_attr' => ['class' => 'col-sm-12'],
+            ->add("commentSitProf", null, [
+                "label_attr" => ["class" => "col-sm-12"],
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the professional situation"

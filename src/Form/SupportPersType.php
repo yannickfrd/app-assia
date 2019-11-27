@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Form\SitProfType;
 
 use App\Entity\SupportPers;
+use App\Form\SitBudgetType;
+
 use App\Form\Utils\Choices;;
 
 use Symfony\Component\Form\AbstractType;
@@ -39,7 +41,9 @@ class SupportPersType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => true
             ])
+            ->add("sitAdm", SitAdmType::class)
             ->add("sitProf", SitProfType::class)
+            ->add("sitBudget", SitBudgetType::class)
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 1,

@@ -1,18 +1,91 @@
 {% extends "model/collapseCard.html.twig" %}
 
-{% set id = "sit-admn" %}
+{% set id = "sit_adm" %}
 
 {% block collapse_card_title %}Situation administrative{% endblock %}
 
 {% block collapse_card_body %}
 
-<div class="form-group row">
+<div class="row">
+    <div class="col-md-12 accordion" id="accordion-sit_adm">
+        <div class="mb-4">
+            {% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
+            {% set person = supportPers.vars.value.person %}
+            <button type="button" id="heading-sit_adm-{{ loop.index0 }}"
+                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} js-person"
+                data-toggle="collapse" data-target="#collapse-sit_adm-{{ loop.index0 }}" aria-expanded="false"
+                aria-controls="collapse-sit_adm-{{ loop.index0 }}">
+                {{ person.firstname}} {{ person.lastname}}
+            </button>
+            {% endfor %}
+        </div>
 
-    <div class="col-md-6">
+        {% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
+        <div id="collapse-sit_adm-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+            aria-labelledby="heading-sit_adm-{{ loop.index0 }}" data-parent="#accordion-sit_adm">
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitAdm.nationality) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    {{ form_row(supportPers.sitAdm.country) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitAdm.paper) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_paper d-block">
+                    {{ form_row(supportPers.sitAdm.paperType) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    {{ form_row(supportPers.sitAdm.rightReside) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    {{ form_row(supportPers.sitAdm.applResidPermit) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    {{ form_row(supportPers.sitAdm.endDateValidPermit) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    {{ form_row(supportPers.sitAdm.renewalDatePermit) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    {{ form_row(supportPers.sitAdm.nbRenewals) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_nationality d-block">
+                    <div class="row">
+                        <div class="col-form-label col-sm-4">Droits ouverts</div>
+                        <div class="col-sm-8">
+                            <select id="js-{{ loop.index0 }}_sitAdm_open_rights" name="open_rights"
+                                class="form-control">
+                                <option class="default" value="">-- Sélectionner --</option>
+                                <option value="1">Aucun droit ouvert</option>
+                                <option value="2">Autorisation de travail</option>
+                                <option value="3">Droit aux prestations sociales et familiales</option>
+                                <option value="4">Aide au logement</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div id="js-{{ loop.index0 }}_sitAdm_open_rights-1"
+                    class="col-md-2 js-{{ loop.index0 }}_sitAdm_open_rights d-block">
+                    {{ form_widget(supportPers.sitAdm.noRightsOpen) }}</div>
+                <div id="js-{{ loop.index0 }}_sitAdm_open_rights-2"
+                    class="col-md-2 js-{{ loop.index0 }}_sitAdm_open_rights d-block">
+                    {{ form_widget(supportPers.sitAdm.rightWork) }}</div>
+                <div id="js-{{ loop.index0 }}_sitAdm_open_rights-3"
+                    class="col-md-2 js-{{ loop.index0 }}_sitAdm_open_rights d-block">
+                    {{ form_widget(supportPers.sitAdm.rightSocialBenf) }}</div>
+                <div id="js-{{ loop.index0 }}_sitAdm_open_rights-4"
+                    class="col-md-2 js-{{ loop.index0 }}_sitAdm_open_rights d-block">
+                    {{ form_widget(supportPers.sitAdm.housingAlw) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(supportPers.sitAdm.rightSocialSecu) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_rightSocialSecu d-block">
+                    {{ form_row(supportPers.sitAdm.socialSecu) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitAdm_rightSocialSecu d-block">
+                    {{ form_row(supportPers.sitAdm.socialSecuOffice) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_widget(supportPers.sitAdm.commentSitAdm) }}</div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    <div class="col-md-6">
-    </div>
-
 </div>
-
 {% endblock %}
