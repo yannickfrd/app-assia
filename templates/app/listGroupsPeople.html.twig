@@ -72,31 +72,31 @@
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
                     <tr>
-                        <th scope="col" class="align-middle th-width-20px">
+                        <th scope="col" class="align-middle th-w-20">
                         </th>
-                        <th scope="col" class="align-middle th-width-80px" data-placement="bottom"
+                        <th scope="col" class="align-middle th-w-80" data-placement="bottom"
                             title="N° d'identification du groupe">
                             {{ knp_pagination_sortable(role_people, "ID", "g.id") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-150px text-uppercase">
+                        <th scope="col" class="align-middle th-w-150 text-uppercase">
                             {{ knp_pagination_sortable(role_people, "Nom", "p.lastname") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-120px text-capitalize">
+                        <th scope="col" class="align-middle th-w-120 text-capitalize">
                             {{ knp_pagination_sortable(role_people, "Prénom", "p.firstname") }}
                         </th>
                         <th scope="col" class="align-middle th-date">
                             {{ knp_pagination_sortable(role_people, "Date de naissance", "p.birthdate") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-80px">
+                        <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(role_people, "Sexe", "p.gender") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-100px">
+                        <th scope="col" class="align-middle th-w-100">
                             {{ knp_pagination_sortable(role_people, "Rôle", "r.role") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-140px">
+                        <th scope="col" class="align-middle th-w-140">
                             {{ knp_pagination_sortable(role_people, "Typologie familiale", "g.familyTypology") }}
                         </th>
-                        <th scope="col" class="align-middle th-width-100px">
+                        <th scope="col" class="align-middle th-w-100">
                             {{ knp_pagination_sortable(role_people, "Nb de pers.", "g.nbPeople") }}
                         </th>
                     </tr>

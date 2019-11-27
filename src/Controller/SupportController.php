@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\MakerBundle\Validator;
 
 class SupportController extends AbstractController
 {
@@ -173,8 +174,10 @@ class SupportController extends AbstractController
                 ->setUpdatedAt(new \DateTime())
                 ->setUpdatedBy($this->security->getUser());
 
-            $this->manager->persist($supportGrp);
-
+            $ressourcesGrpAmt = 0;
+            $chargesGrpAmt = 0;
+            $debtsGrpAmt = 0;
+            $monthlyRepaymentAmt = 0;
             // Met à jour le suivi social individuel pour chaque personne du groupe
             foreach ($supportGrp->getSupportPers() as $supportPers) {
 
@@ -186,8 +189,23 @@ class SupportController extends AbstractController
                 }
                 $supportPers->setUpdatedAt(new \DateTime());
 
+                $ressourcesGrpAmt += $supportPers->getSitBudget()->getRessourcesAmt();
+                $chargesGrpAmt += $supportPers->getSitBudget()->getChargesAmt();
+                $debtsGrpAmt += $supportPers->getSitBudget()->getDebtsAmt();
+                $monthlyRepaymentAmt += $supportPers->getSitBudget()->getMonthlyRepaymentAmt();
+
                 $this->manager->persist($supportPers);
             };
+
+            $budgetBalanceAmt = $ressourcesGrpAmt - $chargesGrpAmt - $monthlyRepaymentAmt;
+
+            $supportGrp->getSitBudgetGrp()->setRessourcesGrpAmt($ressourcesGrpAmt);
+            $supportGrp->getSitBudgetGrp()->setChargesGrpAmt($chargesGrpAmt);
+            $supportGrp->getSitBudgetGrp()->setDebtsGrpAmt($debtsGrpAmt);
+            $supportGrp->getSitBudgetGrp()->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
+            $supportGrp->getSitBudgetGrp()->setBudgetBalanceAmt($budgetBalanceAmt);
+
+            $this->manager->persist($supportGrp);
 
             $this->manager->flush();
 
@@ -196,6 +214,20 @@ class SupportController extends AbstractController
                 "Le suivi social a été modifié."
             );
         }
+
+        // Si erreur de validation
+        if ($form->isSubmitted() && !$form->isValid()) {
+
+            $errors = $form->getErrors(true);
+            foreach ($errors as $error) {
+                $errorOrigin = $error->getOrigin();
+                $this->addFlash(
+                    "danger",
+                    $errorOrigin->getName() . " : " . $error->getMessage()
+                );
+            }
+        }
+
         return $this->render("app/support.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),

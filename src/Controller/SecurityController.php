@@ -25,7 +25,6 @@ class SecurityController extends AbstractController
 {
     private $manager;
 
-
     public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder)
     {
         $this->manager = $manager;
@@ -56,10 +55,6 @@ class SecurityController extends AbstractController
             $hashPassword = $this->encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashPassword)
                 ->setCreatedAt(new \DateTime());
-
-            foreach ($user->getRoleUser() as $roleUser) {
-                $roleUser->setUser($user);
-            }
 
             $this->manager->persist($user);
             $this->manager->flush();

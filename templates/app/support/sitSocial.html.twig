@@ -19,8 +19,8 @@
                 <div class="row">
                     <div class="col-form-label col-sm-4">Spécificités</div>
                     <div class="col-sm-8">
-                        <select id="js-specifities" name="specifities" class="form-control">
-                            <option value="1">-- Sélectionner --</option>
+                        <select id="js-sitSocial_specifity" name="sitSocial_specifity" class="form-control">
+                            <option class="default" value="">-- Sélectionner --</option>
                             <option value="1">Présence d'un animal</option>
                             <option value="2">Personne en fauteuil roulant</option>
                             <option value="3">Personne à mobilité réduite</option>
@@ -40,19 +40,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group row">
-                    <div id="js-spe-1" class="col-md-2 js-spe d-block">
+                    <div id="js-sitSocial_specifity-1" class="col-md-2 js-sitSocial_specifity d-block">
                         {{ form_widget(form.sitSocial.speAnimal) }}</div>
-                    <div id="js-spe-2" class="col-md-2 js-spe d-block">
+                    <div id="js-sitSocial_specifity-2" class="col-md-2 js-sitSocial_specifity d-block">
                         {{ form_widget(form.sitSocial.speWheelchair) }}</div>
-                    <div id="js-spe-3" class="col-md-2 js-spe d-block">
+                    <div id="js-sitSocial_specifity-3" class="col-md-2 js-sitSocial_specifity d-block">
                         {{ form_widget(form.sitSocial.speReducedMobility) }}</div>
-                    <div id="js-spe-4" class="col-md-2 js-spe d-block">
+                    <div id="js-sitSocial_specifity-4" class="col-md-2 js-sitSocial_specifity d-block">
                         {{ form_widget(form.sitSocial.speViolenceVictim) }}</div>
-                    <div id="js-spe-5" class="col-md-2 js-spe d-block">
+                    <div id="js-sitSocial_specifity-5" class="col-md-2 js-sitSocial_specifity d-block">
                         {{ form_widget(form.sitSocial.speDomViolenceVictim) }}</div>
-                    <div id="js-spe-6" class="col-md-2 js-spe d-block">
-                        {{ form_widget(form.sitSocial.speAseSupport) }}</div>
-                    <div id="js-spe-98" class="col-md-2 js-spe d-block">
+                    <div id="js-sitSocial_specifity-6" class="col-md-2 js-sitSocial_specifity d-block">
+                        {{ form_widget(form.sitSocial.speASE) }}</div>
+                    <div id="js-sitSocial_specifity-98" class="col-md-2 js-sitSocial_specifity d-block">
                         {{ form_widget(form.sitSocial.speOther) }}</div>
                 </div>
             </div>

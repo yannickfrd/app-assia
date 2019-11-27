@@ -1,14 +1,10 @@
-{# {% extends "msgFlash.html.twig" %} #}
-
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <title>
-        {% block title %}
-        E95-app
-        {% endblock %}
+        {% block title %}E95-app{% endblock %}
     </title>
     <meta charset="utf-8" />
     <meta name="robots" content="noindex">
@@ -36,11 +32,11 @@
 
 </head>
 
+
+{% set rolesUser = [] %}
 {% set theme_color = "dark" %}
 
 {% if app.user.roleUser is defined %}
-{% set rolesUser = [] %}
-{% set theme_color = "dark" %}
 {% for role in app.user.roleUser %}
 {% set rolesUser = rolesUser|merge([role.service.id]) %}
 {% set theme_color = role.service.pole.color %}
@@ -172,10 +168,10 @@
     </main>
 
     <footer class="bg-dark p-4 text-light shadow">
-        <p>Ce site web est un projet d'application réalisé dans le cadre d'une formation de développeur Web.</p>
+        {# <p>Ce site web est un projet d'application réalisé dans le cadre d'une formation de développeur Web.</p>
         <p>© Romain MADELAINE |
             <a href="https://romain-mad.fr" target="_blank" class="text-blue">romain-mad.fr</a>
-        </p>
+        </p> #}
     </footer>
 </body>
 

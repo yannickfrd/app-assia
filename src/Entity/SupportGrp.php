@@ -97,6 +97,16 @@ class SupportGrp
      */
     private $sitFamilyGrp;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitHousing", mappedBy="supportGrp", cascade={"persist", "remove"})
+     */
+    private $sitHousing;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGrp", mappedBy="supportGrp", cascade={"persist", "remove"})
+     */
+    private $sitBudgetGrp;
+
     public function __construct()
     {
         $this->supportPers = new ArrayCollection();
@@ -293,6 +303,40 @@ class SupportGrp
         // set the owning side of the relation if necessary
         if ($this !== $sitFamilyGrp->getSupportGrp()) {
             $sitFamilyGrp->setSupportGrp($this);
+        }
+
+        return $this;
+    }
+
+    public function getSitHousing(): ?SitHousing
+    {
+        return $this->sitHousing;
+    }
+
+    public function setSitHousing(SitHousing $sitHousing): self
+    {
+        $this->sitHousing = $sitHousing;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitHousing->getSupportGrp()) {
+            $sitHousing->setSupportGrp($this);
+        }
+
+        return $this;
+    }
+
+    public function getSitBudgetGrp(): ?SitBudgetGrp
+    {
+        return $this->sitBudgetGrp;
+    }
+
+    public function setSitBudgetGrp(SitBudgetGrp $sitBudgetGrp): self
+    {
+        $this->sitBudgetGrp = $sitBudgetGrp;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $sitBudgetGrp->getSupportGrp()) {
+            $sitBudgetGrp->setSupportGrp($this);
         }
 
         return $this;

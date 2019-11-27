@@ -29,6 +29,7 @@
         "symfony/web-link": "4.3.*",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "4.3.*",
+        "twig/intl-extra": "^3.0",
         "twig/twig": "2.12"
     },
     "require-dev": {
