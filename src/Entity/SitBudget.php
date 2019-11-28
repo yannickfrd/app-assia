@@ -9,6 +9,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SitBudget
 {
+    public const OVER_INDEBT_RECCORD = [
+        1 => "Oui",
+        2 => "Non",
+        3 => "En cours",
+        99 => "Non renseigné"
+    ];
+
+    public const SETTLEMENT_PLAN = [
+        1 => "Proposé",
+        2 => "Accepté",
+        3 => "Refusé",
+        4 => "En cours",
+        99 => "Non renseigné"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -399,7 +414,7 @@ class SitBudget
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $settlementplan;
+    private $settlementPlan;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -1322,6 +1337,11 @@ class SitBudget
         return $this;
     }
 
+    public function getOverIndebtRecordList()
+    {
+        return self::OVER_INDEBT_RECCORD[$this->overIndebtRecord];
+    }
+
     public function getOverIndebtRecordDate(): ?\DateTimeInterface
     {
         return $this->overIndebtRecordDate;
@@ -1334,16 +1354,21 @@ class SitBudget
         return $this;
     }
 
-    public function getSettlementplan(): ?float
+    public function getSettlementPlan(): ?float
     {
-        return $this->settlementplan;
+        return $this->settlementPlan;
     }
 
-    public function setSettlementplan(?float $settlementplan): self
+    public function setSettlementPlan(?float $settlementPlan): self
     {
-        $this->settlementplan = $settlementplan;
+        $this->settlementPlan = $settlementPlan;
 
         return $this;
+    }
+
+    public function getSettlementPlanList()
+    {
+        return self::SETTLEMENT_PLAN[$this->settlementPlan];
     }
 
     public function getMoratorium(): ?float

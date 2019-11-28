@@ -19,28 +19,32 @@
 				<tr>
 					<td>Total ressources</td>
 					<td class="pr-3 text-right">
-						<span id="ressourcesGrpAmt">{{ support.sitBudgetGrp.ressourcesGrpAmt }} </span> €</td>
+						<span id="ressourcesGrpAmt">{% if support.sitBudgetGrp %}
+							{{ support.sitBudgetGrp.ressourcesGrpAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total charges</td>
 					<td class="pr-3 text-right">
-						<span id="chargesGrpAmt">{{ support.sitBudgetGrp.chargesGrpAmt }}</span> €</td>
+						<span id="chargesGrpAmt">{% if support.sitBudgetGrp %}
+							{{ support.sitBudgetGrp.chargesGrpAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total remboursement mensuel</td>
 					<td class="pr-3 text-right">
-						<span id="repaymentGrpAmt">{{ support.sitBudgetGrp.monthlyRepaymentAmt }}</span> €</td>
+						<span id="repaymentGrpAmt">{% if support.sitBudgetGrp %}
+							{{ support.sitBudgetGrp.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
-				<tr class="table-dark font-weight-bold">
+				<tr class="table-dark text-dark font-weight-bold">
 					<td>Reste à vivre</td>
 					<td class="pr-3 text-right">
-						<span id="budgetBalanceGrpAmt">{{ support.sitBudgetGrp.budgetBalanceAmt }}</span> €</td>
+						<span id="budgetBalanceGrpAmt">{% if support.sitBudgetGrp %}
+							{{ support.sitBudgetGrp.budgetBalanceAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total dettes</td>
 					<td class="pr-3 text-right">
-						<span id="debtsGrpAmt">{{ support.sitBudgetGrp.debtsGrpAmt }}</span> €
-					</td>
+						<span id="debtsGrpAmt">{% if support.sitBudgetGrp %}
+							{{ support.sitBudgetGrp.debtsGrpAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 			</tbody>
 		</table>
@@ -75,7 +79,7 @@
 								<div class="col-sm-8">
 									<select id="js-{{ loop.index0 }}_sitBudget_ressources_type"
 										name="js-{{ loop.index0 }}_sitBudget_ressources_type" class="form-control">
-										<option class="default" value="">-- Sélectionner --</option>
+										<option class="default" value="">-- Ajouter --</option>
 										<option value="1">Allocation adulte handicapé</option>
 										<option value="2">Allocation d'éducation de l'enfant handicapé (AEEH)</option>
 										<option value="3">Allocation chômage (ARE)</option>
@@ -312,7 +316,7 @@
 								<div class="col-sm-8">
 									<select id="js-{{ loop.index0 }}_sitBudget_charges_type"
 										name="js-{{ loop.index0 }}_sitBudget_charges_type" class="form-control">
-										<option class="default" value="">-- Sélectionner --</option>
+										<option class="default" value="">-- Ajouter --</option>
 										<option value="1">Loyer</option>
 										<option value="2">Electricité / Gaz</option>
 										<option value="3">Eau</option>
@@ -488,7 +492,7 @@
 						<div class="col-sm-8">
 							<select id="js-{{ loop.index0 }}_sitBudget_debts_type"
 								name="js-{{ loop.index0 }}_sitBudget_debts_type" class="form-control">
-								<option class="default" value="">-- Sélectionner --</option>
+								<option class="default" value="">-- Ajouter --</option>
 								<option value="1">Dettes locatives</option>
 								<option value="2">Dette de crédits à la consommation</option>
 								<option value="3">Dettes de crédits immobiliers</option>
@@ -539,7 +543,7 @@
 					<div class="col-md-6">{{ form_row(supportPers.sitBudget.overIndebtRecord) }}</div>
 					<div class="col-md-6 js-{{ loop.index0 }}_sitBudget_overIndebtRecord d-block">
 						{{ form_row(supportPers.sitBudget.overIndebtRecordDate) }}</div>
-					<div class="col-md-6">{{ form_row(supportPers.sitBudget.settlementplan) }}</div>
+					<div class="col-md-6">{{ form_row(supportPers.sitBudget.settlementPlan) }}</div>
 					<div class="col-md-6">{{ form_row(supportPers.sitBudget.moratorium) }}</div>
 				</div>
 			</div>
