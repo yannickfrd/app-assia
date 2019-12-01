@@ -23,17 +23,18 @@ class SitProfType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+
             ->add("schoolLevel", ChoiceType::class, [
                 "choices" => Choices::getChoices(SitProf::SCHOOL_LEVEL),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("jobType")
             ->add("contractType", ChoiceType::class, [
                 "choices" => Choices::getChoices(SitProf::CONTRACT_TYPE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("jobType")
             ->add("contractStartDate", DateType::class, [
                 "widget" => "single_text",
                 "attr" => [

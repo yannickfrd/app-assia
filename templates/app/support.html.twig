@@ -69,11 +69,12 @@
       {% endif %}
       <div class="col-md-6">{{ form_row(form.status) }}</div>
       <div class="col-md-6">{{ form_row(form.service) }}</div>
+
+      <div class="col-md-12">
+        <a href="{{ path('group_people_show', {'id': group_people.id}) }}">Modifier les dates individuelles de suivi</a>
+      </div>
+
     </div>
-
-    {# <div class="form-group row">{{ form_label(form.comment) }}<div class="col-md-12">{{ form_widget(form.comment) }}</div></div> #}
-
-    {{ form_row(form._token) }}
 
     <div class="accordion mb-4" id="accordion-support">
       {% set accordion_id = "accordion-support" %}
@@ -103,54 +104,7 @@
 
   </section>
 
-  {% if edit_mode %}
-
-  <hr>
-
-  <section class="{% if form.supportPers.children|length == 1 %}d-none{% endif %}">
-    <h2 class="h4 my-4">Personnes rattachées au suivi social</h2>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="table-responsive">
-          <table class="table table-striped table-hover text-dark shadow-sm">
-            <thead>
-              <tr>
-                <th scope="col" class="align-middle th-w-20"></th>
-                <th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
-                <th scope="col" class="align-middle th-w-100">Date de début</th>
-                <th scope="col" class="align-middle th-w-100">Date de fin</th>
-                <th scope="col" class="align-middle th-w-100">Statut</th>
-                <th scope="col" class="align-middle th-w-150">Commentaire</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for form_support_pers in form.supportPers.children %}
-              {% set person = form_support_pers.vars.data.person %}
-              <tr>
-                <th scope="row">
-                  <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-                    class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
-                    title="Modifier les informations de la personne">
-                    <span class="fas fa-user-edit"></span>
-                  </a>
-                </th>
-                <td class="px-1 align-middle">{{ person.firstname }} {{ person.lastname }}</td>
-                <td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
-                <td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
-                <td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
-                <td class="px-1">{{ form_widget(form_support_pers.comment) }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  {% endif %}
-
+  {{ form_row(form._token) }}
   {{ form_end(form, {"render_rest": false}) }}
 
 </div>

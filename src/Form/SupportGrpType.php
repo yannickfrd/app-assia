@@ -4,18 +4,18 @@ namespace App\Form;
 
 use App\Entity\Service;
 use App\Entity\SupportGrp;
-use App\Form\SitSocialType;
 
-use App\Form\SitHousingType;
-
-use App\Form\Utils\Choices;;
-
-use App\Form\SupportPersType;
 use App\Form\SitBudgetGrpType;
 use App\Form\SitFamilyGrpType;
-use App\Utils\CurrentUserService;
-use App\Repository\ServiceRepository;
+use App\Form\SitHousingType;
+use App\Form\SitSocialType;
+use App\Form\SupportSitType;
 
+use App\Form\Utils\Choices;
+
+use App\Utils\CurrentUserService;
+
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -71,10 +71,10 @@ class SupportGrpType extends AbstractType
             ->add("sitBudgetGrp", SitBudgetGrpType::class)
             ->add("sitHousing", SitHousingType::class)
             ->add("supportPers", CollectionType::class, [
-                "entry_type"   => SupportPersType::class,
+                "entry_type"   => SupportSitType::class,
                 "allow_add"    => false,
                 "allow_delete" => false,
-                "required" => true
+                "required" => false
             ])
             ->add("comment", null, [
                 "attr" => [

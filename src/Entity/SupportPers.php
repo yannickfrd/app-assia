@@ -70,10 +70,10 @@ class SupportPers
      */
     private $supportGrp;
 
-    // /**
-    //  * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPers", mappedBy="supportPers", cascade={"persist", "remove"})
-    //  */
-    // private $sitFamilyPers;
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPers", mappedBy="supportPers", cascade={"persist", "remove"})
+     */
+    private $sitFamilyPers;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPers", cascade={"persist", "remove"})
@@ -197,22 +197,22 @@ class SupportPers
         return $this;
     }
 
-    // public function getSitFamilyPers(): ?SitFamilyPers
-    // {
-    //     return $this->sitFamilyPers;
-    // }
+    public function getSitFamilyPers(): ?SitFamilyPers
+    {
+        return $this->sitFamilyPers;
+    }
 
-    // public function setSitFamilyPers(SitFamilyPers $sitFamilyPers): self
-    // {
-    //     $this->sitFamilyPers = $sitFamilyPers;
+    public function setSitFamilyPers(SitFamilyPers $sitFamilyPers): self
+    {
+        $this->sitFamilyPers = $sitFamilyPers;
 
-    //     // set the owning side of the relation if necessary
-    //     if ($this !== $sitFamilyPers->getSupportPers()) {
-    //         $sitFamilyPers->setSupportPers($this);
-    //     }
+        // set the owning side of the relation if necessary
+        if ($this !== $sitFamilyPers->getSupportPers()) {
+            $sitFamilyPers->setSupportPers($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getSitProf(): ?SitProf
     {
@@ -226,23 +226,6 @@ class SupportPers
         // set the owning side of the relation if necessary
         if ($this !== $sitProf->getSupportPers()) {
             $sitProf->setSupportPers($this);
-        }
-
-        return $this;
-    }
-
-    public function getSitBudget2(): ?SitBudget2
-    {
-        return $this->sitBudget2;
-    }
-
-    public function setSitBudget2(SitBudget2 $sitBudget2): self
-    {
-        $this->sitBudget2 = $sitBudget2;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitBudget2->getSupportPers()) {
-            $sitBudget2->setSupportPers($this);
         }
 
         return $this;

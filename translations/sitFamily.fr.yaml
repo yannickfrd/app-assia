@@ -1,10 +1,15 @@
-Nb dependent children : Nombre d'enfants à charge
-Unborn child: Enfant à naître
-Exp date childbirth: Date prév. de l'accouchement
-Pregnancy type: Type de grossesse
-Faml reunification: Regroupement familial
-Nb people reunification: Nombre de pers. concernées par le regroupement
-Caf id: Numéro CAF
-Comment sit family grp: Commentaire relatif à la situation familiale
-Write a comment about the family situation: Ecrire un commentaire relatif à la situation familiale
 -- Select --: -- Sélectionner --
+Caf id: Numéro CAF
+Child dependance: A charge / Situation enfant
+Child to host : A héberger 
+Childcare school location: Lieu de garde/scolarité
+Childcare school: Garde ou scolarité
+Comment sit family grp: Commentaire relatif à la situation familiale
+Exp date childbirth: Date prév. de l'accouchement
+Faml reunification: Regroupement familial
+Marital status: Situation matrimoniale
+Nb dependent children : Nombre d'enfants à charge
+Nb people reunification: Nombre de pers. concernées par le regroupement
+Pregnancy type: Type de grossesse
+Unborn child: Enfant à naître
+Write a comment about the family situation: Ecrire un commentaire relatif à la situation familiale
