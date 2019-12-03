@@ -17,6 +17,7 @@ class RolePersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add("person", PersonType::class)
             ->add("role", ChoiceType::class, [
                 "choices" => Choices::getChoices(RolePerson::ROLE),
                 "placeholder" => "-- Select --",

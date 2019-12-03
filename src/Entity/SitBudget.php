@@ -427,8 +427,8 @@ class SitBudget
     private $commentSitBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Supportpers", inversedBy="sitBudget", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPers", inversedBy="sitBudget", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $supportPers;
 

@@ -38,7 +38,7 @@
   <div class="my-3">
     <div>
       <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
-        <span class="fas fa-users"></span>Fiche groupe</a>
+        <span class="fas fa-users"></span> Fiche groupe</a>
       {% for form_support_pers in form.supportPers.children %}
       {% set person = form_support_pers.vars.data.person %}
       <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
@@ -48,7 +48,6 @@
       {% endfor %}
 
     </div>
-
 
   </div>
   {% endif %}
@@ -70,12 +69,6 @@
       <div class="col-md-6">{{ form_row(form.status) }}</div>
       <div class="col-md-6">{{ form_row(form.service) }}</div>
 
-      {% if edit_mode %}
-      <div class="col-md-12">
-        <a href="{{ path('support_pers_edit', {'id':group_people.id, 'support_id':support.id}) }}">Modifier les dates individuelles de suivi</a>
-      </div>
-      {% endif %}
-
     </div>
 
     {% if edit_mode %}
@@ -89,17 +82,22 @@
       {% include "app/support/sitBudget.html.twig" %}
       {% include "app/support/sitHousing.html.twig" %}
     </div>
+    {% if edit_mode %}
+    <div class="col-md-12">
+      <a class="text-{{ theme_color }}"
+        href="{{ path('support_pers_edit', {'id':group_people.id, 'support_id':support.id}) }}">Voir les
+        personnes rattachées au suivi</a>
+    </div>
+    {% endif %}
     {% endif %}
 
     <div class="form-group row">
       <div class="col-md-12">
         <div class="mb-4 float-right">
           {% if edit_mode %}
-          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
-            value="Mettre à jour">
+          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Mettre à jour">
           {% else %}
-          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
-            value="Enregistrer">
+          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Enregistrer">
           {% endif %}
         </div>
       </div>

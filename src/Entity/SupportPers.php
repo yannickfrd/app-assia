@@ -87,7 +87,6 @@ class SupportPers
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPers", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true)
      */
     private $sitBudget;
 

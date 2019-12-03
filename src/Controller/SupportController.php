@@ -2,34 +2,37 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+
 use App\Utils\Agree;
 
 use App\Entity\Person;
-
 use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-
-use App\Form\GroupPeopleType;
 
 use App\Entity\SupportGrp;
-use App\Entity\GroupPeopleSearch;
 
+use App\Entity\GroupPeople;
 use App\Entity\SupportPers;
+
 use App\Form\SupportGrpType;
+use App\Form\GroupPeopleType;
+use App\Form\SupportGrpType2;
+
+use App\Entity\GroupPeopleSearch;
 use App\Form\GroupPeopleSearchType;
 
 use App\Repository\RolePersonRepository;
+use App\Repository\SupportGrpRepository;
+use App\Repository\SupportPersRepository;
+use Symfony\Bundle\MakerBundle\Validator;
 use Knp\Component\Pager\PaginatorInterface;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use App\Repository\SupportGrpRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\MakerBundle\Validator;
 
 class SupportController extends AbstractController
 {
@@ -247,8 +250,10 @@ class SupportController extends AbstractController
      */
     public function EditSupportPers(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
     {
-        $form = $this->createForm(SupportGrpType::class, $supportGrp);
+
+        $form = $this->createForm(SupportGrpType2::class, $supportGrp);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -271,5 +276,87 @@ class SupportController extends AbstractController
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
+    }
+
+
+    /**
+     * Voir les dates individuelles du suivi social
+     * 
+     * @Route("/group/{id}/support/{support_id}/add_people", name="support_add_people", methods="GET|POST")
+     * @ParamConverter("supportGrp", options={"id" = "support_id"})
+     * @param GroupPeople $groupPeople
+     * @param SupportGrp $supportGrp
+     * @param SupportPers $supportPers
+     */
+    public function addPeopleInSupport(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPersRepository $repo): Response
+    {
+        $people = [];
+
+        foreach ($supportGrp->getSupportPers() as $supportPers) {
+            $people[] = $supportPers->getPerson()->getId();
+        }
+
+        foreach ($groupPeople->getrolePerson() as $role) {
+
+            $personId = $role->getPerson()->getId();
+
+            if (!in_array($personId, $people)) {
+
+                $user = $this->security->getUser();
+
+                $supportGrp->setUpdatedAt(new \DateTime())
+                    ->setUpdatedBy($user);
+
+                $this->manager->persist($supportGrp);
+
+                // Crée un suivi social individuel
+                $supportPers = new SupportPers();
+
+                $supportPers->setSupportGrp($supportGrp)
+                    ->setPerson($role->getPerson())
+                    ->setStartDate(new \DateTime())
+                    ->setEndDate($supportGrp->getEndDate())
+                    ->setStatus($supportGrp->getStatus())
+                    ->setCreatedAt(new \DateTime())
+                    ->setUpdatedAt(new \DateTime());
+
+                $this->manager->persist($supportPers);
+            }
+
+            $this->manager->flush();
+        }
+        return $this->redirectToRoute("support_pers_edit", [
+            "id" => $groupPeople->getId(),
+            "support_id" => $supportGrp->getId()
+        ]);
+    }
+
+    /**
+     * Retire la personne du suivi social
+     * @Route("/supportGrp/{id}/remove-{support_pers_id}_{_token}", name="remove_support_pers", methods="GET")
+     * @ParamConverter("supportPers", options={"id" = "support_pers_id"})
+     * @param Request $request
+     * @return Response
+     */
+    public function removeSupportPers(SupportGrp $supportGrp, SupportPers $supportPers, Request $request): Response
+    {
+        // Vérifie si le token est valide avant de retirer la personne du suivi social
+        if ($this->isCsrfTokenValid("remove" . $supportPers->getId(), $request->get("_token"))) {
+
+            $supportGrp->removeSupportPers($supportPers);
+
+            $this->manager->flush();
+
+            return $this->json([
+                "code" => 200,
+                "msg" => "La personne a été retirée du suivi social.",
+                "data" => null
+            ], 200);
+        }
+        return $this->json([
+            "code" => 403,
+            "msg" => "Une erreur s'est produite.",
+            "data" => null
+        ], 200);
     }
 }

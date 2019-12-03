@@ -6,7 +6,7 @@ use App\Utils\Agree;
 
 use App\Entity\Person;
 
-use App\Form\Utils\Choices;;
+use App\Form\Utils\Choices;
 
 use App\Entity\RolePerson;
 

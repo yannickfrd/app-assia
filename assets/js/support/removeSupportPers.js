@@ -1,12 +1,11 @@
 import MessageFlash from "../utils/messageFlash";
 
-// Requête Ajax pour retirer une personne d'un groupe
-export default class RemovePerson {
+// Retire une personne du suivi du social du groupe
+export default class RemoveSupportPers {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
-        this.trElts = document.querySelectorAll(".js-tr-person");
-        this.inputNbPeople = document.getElementById("group_people_nbPeople");
+        this.trElts = document.querySelectorAll(".js-tr-support_pers");
         this.modalConfirmElt = document.getElementById("modal-confirm");
         this.trElt = null;
         this.init();
@@ -37,7 +36,6 @@ export default class RemovePerson {
         let dataJSON = JSON.parse(data);
         if (dataJSON.code === 200) {
             this.deleteTr(this.trElt);
-            this.inputNbPeople.value = dataJSON.data;
             new MessageFlash("warning", dataJSON.msg);
         } else {
             new MessageFlash("danger", dataJSON.msg);
