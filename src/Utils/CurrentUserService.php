@@ -13,6 +13,12 @@ class CurrentUserService
         $this->user = $security->getUser();
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+
     public function getServices()
     {
         $services = [];

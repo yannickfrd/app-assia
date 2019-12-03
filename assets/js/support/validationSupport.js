@@ -46,8 +46,6 @@ export default class ValidationSupport {
     }
 
     checkStartDate() {
-        console.log(this.startDateInputElt.value);
-
         let startDate = new Date(this.startDateInputElt.value);
         let interval = Math.round((this.now - startDate) / (24 * 3600 * 1000));
 

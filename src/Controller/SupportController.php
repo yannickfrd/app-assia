@@ -108,6 +108,7 @@ class SupportController extends AbstractController
                 $user = $this->security->getUser();
 
                 $supportGrp->setGroupPeople($groupPeople)
+                    ->setReferent($user)
                     // ->setService($service)
                     ->setCreatedAt(new \DateTime())
                     ->setCreatedBy($user)

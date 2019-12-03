@@ -7,7 +7,11 @@ import "../utils/maskDeptCode";
 import "../utils/maskPhone";
 
 let validationSupport = new ValidationSupport();
-let evaluation = new Evaluation();
+
+if (document.getElementById("support_grp_endDate")) {
+    let evaluation = new Evaluation();
+}
+
 let removeSupportPers = new RemoveSupportPers();
 
 $("select.multi-select").select2({

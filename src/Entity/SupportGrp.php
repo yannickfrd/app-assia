@@ -47,6 +47,16 @@ class SupportGrp
     private $status;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="referentSupport")
+     */
+    private $referent;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="referent2Support")
+     */
+    private $referent2;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -155,6 +165,31 @@ class SupportGrp
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+
+    public function getReferent(): ?User
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(?User $referent): self
+    {
+        $this->referent = $referent;
+
+        return $this;
+    }
+
+    public function getReferent2(): ?User
+    {
+        return $this->referent2;
+    }
+
+    public function setReferent2(?User $referent2): self
+    {
+        $this->referent2 = $referent2;
 
         return $this;
     }

@@ -130,6 +130,8 @@ class AppFixtures extends Fixture
     {
         $this->pole = new Pole();
 
+        $color = "blue";
+
         switch ($key) {
             case 3:
                 $color = "brown";
@@ -273,6 +275,7 @@ class AppFixtures extends Fixture
         $this->supportGrp->setStartDate($this->startDate)
             ->setEndDate($this->endDate ?? null)
             ->setStatus($this->status)
+            ->setReferent($this->user)
             ->setComment($comment)
             ->setCreatedAt($this->startDate)
             ->setUpdatedAt($this->groupUpdatedAt)

@@ -2,19 +2,21 @@
 
 namespace App\Form;
 
+use App\Entity\User;
 use App\Entity\Service;
-use App\Entity\SupportGrp;
 
-use App\Form\SitBudgetGrpType;
-use App\Form\SitFamilyGrpType;
-use App\Form\SitHousingType;
+use App\Entity\SupportGrp;
 use App\Form\SitSocialType;
+use App\Form\Utils\Choices;
+use App\Form\SitHousingType;
 use App\Form\SupportSitType;
 
-use App\Form\Utils\Choices;
+use App\Form\SitBudgetGrpType;
+
+use App\Form\SitFamilyGrpType;
 
 use App\Utils\CurrentUserService;
-
+use App\Repository\UserRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,9 +60,53 @@ class SupportGrpType extends AbstractType
                         ->where("s.id IN (:services)")
                         ->setParameter("services", $this->currentUser->getServices())
                         ->orderBy("s.name", "ASC");
+                }
+            ])
+            ->add("referent", EntityType::class, [
+                "class" => User::class,
+                "choice_label" => "fullname",
+                "query_builder" => function (UserRepository $repo) {
+                    if ($this->currentUser->isAdmin("ROLE_SUPER_ADMIN")) {
+                        return $repo->createQueryBuilder("u")
+                            ->orderBy("u.lastname", "ASC");
+                    } else if ($this->currentUser->isAdmin("ROLE_ADMIN")) {
+                        return $repo->createQueryBuilder("u")
+                            ->select("u")
+                            ->leftJoin("u.roleUser", "r")
+                            ->where("r.service IN (:services)")
+                            ->setParameter("services", $this->currentUser->getServices())
+                            ->orderBy("u.lastname", "ASC");
+                    }
+                    return $repo->createQueryBuilder("u")
+                        ->select("u")
+                        ->where("u.id = :user")
+                        ->setParameter("user", $this->currentUser->getUser())
+                        ->orderBy("u.lastname", "ASC");
+                },
+            ])
+            ->add("referent2", EntityType::class, [
+                "class" => User::class,
+                "choice_label" => "fullname",
+                "query_builder" => function (UserRepository $repo) {
+                    if ($this->currentUser->isAdmin("ROLE_SUPER_ADMIN")) {
+                        return $repo->createQueryBuilder("u")
+                            ->orderBy("u.lastname", "ASC");
+                    } else if ($this->currentUser->isAdmin("ROLE_ADMIN")) {
+                        return $repo->createQueryBuilder("u")
+                            ->select("u")
+                            ->leftJoin("u.roleUser", "r")
+                            ->where("r.service IN (:services)")
+                            ->setParameter("services", $this->currentUser->getServices())
+                            ->orderBy("u.lastname", "ASC");
+                    }
+                    return $repo->createQueryBuilder("u")
+                        ->select("u")
+                        ->where("u.id = :user")
+                        ->setParameter("user", $this->currentUser->getUser())
+                        ->orderBy("u.lastname", "ASC");
                 },
                 "placeholder" => "-- Select --",
-                // "attr" => ["class" => ""],
+                "required" => false
             ])
             ->add("endDate", DateType::class, [
                 "widget" => "single_text",

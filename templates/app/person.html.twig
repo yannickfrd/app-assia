@@ -131,13 +131,15 @@
                 <tbody>
                     {% for support in person.supports %}
 
+                    {% if support.supportGrp.referent %}
                     {% set contact_user %}
                     <div class='text-left p-2'>
                         <b>Coordonnées :</b>
-                        <br>Téléphone : {{support.supportGrp.createdBy.phone }}
-                        <br>Email : {{ support.supportGrp.createdBy.email }}
+                        <br>Téléphone : {{support.supportGrp.referent.phone }}
+                        <br>Email : {{ support.supportGrp.referent.email }}
                     </div>
                     {% endset %}
+                    {% endif %}
 
                     {% set contact_service %}
                     <div class='text-left p-2'>
@@ -160,9 +162,15 @@
                         <td>{{ support.getStatusType }}</td>
                         <td>{{ support.startDate | date("d/m/Y") }}</td>
                         <td>{{ support.endDate | date("d/m/Y") }}</td>
-                        <td><a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true" title="{{ contact_user }}">{{ support.supportGrp.createdBy.firstname }}
-                                {{  support.supportGrp.createdBy.lastname }}</a></td>
+                        <td>
+                            {% if support.supportGrp.referent %}
+                            <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
+                                data-html="true" title="{{ contact_user }}">{{ support.supportGrp.referent.firstname }}
+                                {{  support.supportGrp.referent.lastname }}</a>
+                            {% else %}
+                            Non défini
+                            {% endif %}
+                        </td>
                         <td>{% if support.supportGrp.service %}
                             <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
                                 data-html="true"

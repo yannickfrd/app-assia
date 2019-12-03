@@ -174,13 +174,15 @@
 
                     {% for support in group_people.supports|reverse %}
 
+                    {% if support.referent %}
                     {% set contact_user %}
                     <div class='text-left p-2'>
                         <b>Coordonnées :</b>
-                        <br>Téléphone : {{ support.createdBy.phone }}
-                        <br>Email : {{ support.createdBy.email }}
+                        <br>Téléphone : {{ support.referent.phone }}
+                        <br>Email : {{ support.referent.email }}
                     </div>
                     {% endset %}
+                    {% endif %}
 
                     {% set contact_service %}
                     <div class='text-left p-2'>
@@ -203,9 +205,14 @@
                         <td>{{ support.getStatusType }}</td>
                         <td>{{ support.startDate | date("d/m/Y") }}</td>
                         <td>{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}</td>
-                        <td><a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true" title="{{ contact_user }}">{{ support.createdBy.firstname }}
-                                {{ support.createdBy.lastname }}</a>
+                        <td>
+                            {% if support.referent %}
+                            <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
+                                data-html="true" title="{{ contact_user }}">{{ support.referent.firstname }}
+                                {{ support.referent.lastname }}</a>
+                            {% else %}
+                            Non défini
+                            {% endif %}
                         </td>
                         <td>{% if support.service %}
                             <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
