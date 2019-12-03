@@ -10,7 +10,6 @@ export default class DisplayInputs {
     }
 
     init() {
-        // console.log(this.inputElt);
         if (this.inputElt) {
             switch (this.typeInput) {
                 case "select":

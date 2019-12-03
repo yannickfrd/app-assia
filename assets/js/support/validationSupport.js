@@ -22,8 +22,8 @@ export default class ValidationSupport {
     }
 
     init() {
-        if (!this.startDateInputElt.value) {
-            this.startDateInputElt.value = this.now.getFullYear() + "-" + (this.now.getMonth() + 1) + "-" + this.now.getDate();
+        if (!this.endDateInputElt) {
+            this.startDateInputElt.value = this.getDateNow();
             this.setOption(this.statusInputElt, 2);
         }
 
@@ -46,6 +46,8 @@ export default class ValidationSupport {
     }
 
     checkStartDate() {
+        console.log(this.startDateInputElt.value);
+
         let startDate = new Date(this.startDateInputElt.value);
         let interval = Math.round((this.now - startDate) / (24 * 3600 * 1000));
 
@@ -98,6 +100,18 @@ export default class ValidationSupport {
         });
     }
 
+    // Donne la date actuelle
+    getDateNow() {
+        let month = this.now.getMonth() + 1;
+        if (this.now.getMonth() < 10) {
+            month = "0" + month;
+        }
+        let day = this.now.getDate();
+        if (this.now.getDate() < 10) {
+            day = "0" + day;
+        }
+        return this.now.getFullYear() + "-" + month + "-" + day;
+    }
 
     // Met le champ en valide 
     valid(field, input) {

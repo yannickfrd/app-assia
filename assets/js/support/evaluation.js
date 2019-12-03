@@ -145,7 +145,7 @@ export default class evaluation {
         });
         // Replace le select sur l'option par défaut
         window.setTimeout(function () {
-            selectElt.querySelector(".default").selected = "selected";
+            selectElt.querySelector("option").selected = "selected";
             if (display === "d-table-row") {
                 this.selectedOptionElt.querySelector("input[type='text']").focus();
             }

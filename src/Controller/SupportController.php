@@ -159,7 +159,6 @@ class SupportController extends AbstractController
      * @param GroupPeople $groupPeople
      * @param SupportGrp $supportGrp
      * @param SupportPers $supportPers
-     * @param SupportGrpRepository $repo
      * @param Request $request
      * @return Response
      */
@@ -229,6 +228,45 @@ class SupportController extends AbstractController
         }
 
         return $this->render("app/support.html.twig", [
+            "group_people" => $groupPeople,
+            "form" => $form->createView(),
+            "edit_mode" => true
+        ]);
+    }
+
+    /**
+     * Voir les dates individuelles du suivi social
+     * 
+     * @Route("/group/{id}/support/{support_id}/individuals", name="support_pers_edit", methods="GET|POST")
+     * @ParamConverter("supportGrp", options={"id" = "support_id"})
+     * @param GroupPeople $groupPeople
+     * @param SupportGrp $supportGrp
+     * @param SupportPers $supportPers
+     * @param Request $request
+     * @return Response
+     */
+    public function EditSupportPers(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
+    {
+        $form = $this->createForm(SupportGrpType::class, $supportGrp);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $supportGrp
+                ->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
+
+            $this->manager->persist($supportGrp);
+
+            $this->manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Le suivi social a été modifié."
+            );
+        }
+
+        return $this->render("app/support/supportPers.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),
             "edit_mode" => true

@@ -14,7 +14,7 @@
         <h1 class="h2 mb-4">Les suivis</h1>
     </div>
 
-    <div class="jumbotron py-3">
+    <div id="form-search" class="jumbotron py-3">
         {{ form_start(form) }}
         <div class="form-inline justify-content-md-center align-items-end">
             <div class="form-group col-auto my-1 px-1">
@@ -44,9 +44,7 @@
                 <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow">
                     <i class="fas fa-search" data-placement="bottom" title="Rechercher"></i>
                 </button>
-                <a href="{{ path("list_groups_people") }}" class="btn btn-secondary ml-2 shadow">
-                    <i class="fas fa-eraser" data-placement="bottom" title="Effacer"></i>
-                </a>
+                <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i class="fas fa-eraser"></i></button>
             </div>
             {{ form_end(form, {"render_rest": false}) }}
         </div>
@@ -138,3 +136,7 @@
         </div>
 </section>
 {% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

@@ -6,6 +6,7 @@ import "../utils/maskDeptCode";
 import "../utils/maskPhone";
 
 let validationSupport = new ValidationSupport();
+
 let evaluation = new Evaluation();
 
 $("select.multi-select").select2({

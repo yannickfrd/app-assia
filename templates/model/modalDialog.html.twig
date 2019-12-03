@@ -11,14 +11,18 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">{% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
+            <div class="modal-body">
+                {% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
             </div>
             <div class="modal-footer">
-                <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}{{ theme_color }}{% endblock %}"
+                {% block modal_footer %}
+                <button type="button" id="modal-confirm"
+                    class="btn btn-{% block modal_alert %}{{ theme_color }}{% endblock %}"
                     data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
                 <button type="button" class="btn btn-secondary"
                     data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}
                 </button>
+                {% endblock %}
             </div>
         </div>
     </div>

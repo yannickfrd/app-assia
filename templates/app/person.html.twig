@@ -2,6 +2,10 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
+{% if edit_mode == true %}
+{% form_theme form_new_group "form/bootstrap_4_horizontal.html.twig" %}
+{% endif %}
+
 {% block title %}Fiche individuelle | Esperer95-app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
@@ -230,13 +234,18 @@
             </table>
         </div>
         {% endif %}
-        <a href="" class="m-3 btn btn-{{ theme_color }} btn-sm"><span class="fas fa-plus-square pr-2"></span>Créer un
-            nouveau groupe</a>
+        <button class="m-3 btn btn-{{ theme_color }} btn-sm" data-toggle="modal" data-target="#modal-block"><span
+                class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</button>
     </section>
 
     {% endif %}
 
 </div>
+
+{% if edit_mode == true %}
+{% include "modalDialog/newGroupPeople.html.twig" %}
+{% endif %}
+
 {% endblock %}
 
 {% block javascripts %}

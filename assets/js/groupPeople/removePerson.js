@@ -26,7 +26,6 @@ export default class RemovePerson {
 
     // Envoie la requête Ajax après confirmation de l'action
     removePerson(btnRemoveElt, trPersonElt) {
-        console.log("remove !");
         this.trPersonElt = trPersonElt;
         this.ajaxRequest.init("GET", btnRemoveElt.getAttribute("data-url"), this.response.bind(this), true), {
             once: true

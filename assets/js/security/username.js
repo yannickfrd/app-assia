@@ -64,7 +64,6 @@ export default class Username {
 
     response(data) {
         let dataJSON = JSON.parse(data);
-        console.log(dataJSON);
         if (dataJSON.response === true) {
             this.validationInput.invalid("username", this.usernameLabelElt, this.usernameInputElt, "Ce login est déjà pris !");
         } else {

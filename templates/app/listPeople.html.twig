@@ -22,7 +22,7 @@
     </div>
 
     <div class="container-fluid p-0">
-        <div class="jumbotron py-3">
+        <div id="form-search" class="jumbotron py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
                 <div class="form-group col-auto my-1 px-1">
@@ -71,8 +71,8 @@
 
                     <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
                             class="fas fa-search"></i></button>
-                    <a href="{{ path("list_people") }}" class="btn btn-secondary ml-2 shadow"><i
-                            class="fas fa-eraser"></i></a>
+                    <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
+                            class="fas fa-eraser"></i></button>
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}
             </div>
@@ -192,40 +192,12 @@
 </div>
 
 {% if form_role_person is defined %}
-<div class="modal fade" id="modal-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Demande de confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {{ form_start(form_role_person) }}
-            <div class="modal-body">
-                <p>Avant d'ajouter la persone au groupe, merci de préciser son rôle dans le groupe.</p>
-                {{ form_row(form_role_person.role) }}
-                {{ form_row(form_role_person._token) }}
-            </div>
-            <div class="modal-footer">
-                <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Ajouter la personne</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            </div>
-            {{ form_end(form_role_person, {"render_rest": false}) }}
-        </div>
-    </div>
-</div>
+{% include "modalDialog/addPerson.html.twig" %}
 {% endif %}
 
 {% endblock %}
 
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir ajouter cette personne au groupe ?{% endblock %}
-{% block modal_title %}Demande de confirmation{% endblock %}
-{% block modal_confirm %}Ajouter la personne{% endblock %}
-{% block modal_cancel %}Annuler{% endblock %}
-{% block modal_alert %}{{ theme_color }}{% endblock %}
-
 {% block javascripts %}
+{{ encore_entry_script_tags("search") }}
 {{ encore_entry_script_tags("listPeople") }}
 {% endblock javascripts %}

@@ -221,22 +221,12 @@
         <a href="{{ path('support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
             <span class="fas fa-plus-square"></span>
             Créer un nouveau suivi</a>
-        <br />
     </section>
 
 </div>
 
-{% endblock %}
+{% include "modalDialog/removePerson.html.twig" %}
 
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir retirer cette personne du groupe ?
-{% endblock %}
-{% block modal_title %}Demande de confirmation
-{% endblock %}
-{% block modal_confirm %}Retirer la personne
-{% endblock %}
-{% block modal_cancel %}Annuler
-{% endblock %}
-{% block modal_alert %}danger
 {% endblock %}
 
 {% block javascripts %}

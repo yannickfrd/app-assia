@@ -4,24 +4,27 @@ namespace App\Controller;
 
 use App\Utils\Agree;
 use App\Entity\Person;
-use App\Form\Utils\Choices;;
-
 use App\Form\PersonType;
-use App\Entity\RolePerson;
 
+use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
+
 use App\Entity\PersonSearch;
 use App\Form\RolePersonType;
-use App\Form\PersonSearchType;
-use App\Form\RolePersonGroupType;
+use App\Form\Utils\Choices;;
 
+use App\Form\GroupPeopleType;
+use App\Form\PersonSearchType;
+
+use App\Form\PersonNewGroupType;
+use App\Form\RolePersonGroupType;
 use App\Repository\PersonRepository;
+
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Security\Core\Security;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -33,7 +36,6 @@ class PersonController extends AbstractController
 {
     private $manager;
     private $repo;
-    private $request;
     private $security;
 
     public function __construct(ObjectManager $manager, PersonRepository $repo, Security $security)
@@ -95,9 +97,11 @@ class PersonController extends AbstractController
         $formRolePerson = null;
 
         if ($groupPeople) {
+            $rolePerson = new RolePerson();
             $formRolePerson = $this->createFormBuilder($rolePerson)
                 ->add("role", ChoiceType::class, [
                     "choices" => Choices::getChoices(RolePerson::ROLE),
+                    "placeholder" => "-- Sélectionner --",
                 ])
                 ->getForm();
         }
@@ -290,7 +294,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Modifie une personne
+     * Edit a person in group people
      * 
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
@@ -299,14 +303,16 @@ class PersonController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function editPerson(GroupPeople $groupPeople, Person $person, Request $request, ValidatorInterface $validator): Response
+    public function editPerson(GroupPeople $groupPeople, Person $person, Request $request): Response
     {
-        $supports = $person->getSupports();
-
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        // $nbErrors = count($validator->validate($form));
+        // Form to create a new groupPeople
+        $rolePerson = new RolePerson();
+        $formNewGroup = $this->createForm(PersonNewGroupType::class, $rolePerson, [
+            "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
+        ]);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -324,6 +330,7 @@ class PersonController extends AbstractController
         return $this->render("app/person.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),
+            "form_new_group" => $formNewGroup->createView(),
             "edit_mode" => true
         ]);
     }
@@ -380,6 +387,12 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
+        // Form to create a new groupPeople
+        $rolePerson = new RolePerson();
+        $formNewGroup = $this->createForm(PersonNewGroupType::class, $rolePerson, [
+            "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
+        ]);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $person->setUpdatedAt(new \DateTime())
@@ -392,8 +405,53 @@ class PersonController extends AbstractController
 
         return $this->render("app/person.html.twig", [
             "form" => $form->createView(),
+            "form_new_group" => $formNewGroup->createView(),
             "edit_mode" => true
         ]);
+    }
+
+    /**
+     *Add a new GroupPeople to Person
+     * 
+     * @Route("/person/{id}/new_group", name="person_new_group", methods="GET|POST")
+     */
+    public function addNewGroupToPerson(Person $person, RolePerson $rolePerson, Request $request)
+    {
+        $rolePerson = new RolePerson;
+        $groupPeople = new GroupPeople;
+
+        // Form to create a new groupPeople
+        $form = $this->createForm(PersonNewGroupType::class, $rolePerson);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $groupPeople = $rolePerson->getGroupPeople();
+
+            $groupPeople->setCreatedAt(new \DateTime())
+                ->setCreatedBy($this->security->getUser())
+                ->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
+            $this->manager->persist($groupPeople);
+
+            $rolePerson->setHead(true)
+                ->setCreatedAt(new \DateTime())
+                ->setGroupPeople($groupPeople);
+            $this->manager->persist($rolePerson);
+
+            $person->addRolesPerson($rolePerson)
+                ->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
+            $this->manager->persist($person);
+
+            $this->manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Le nouveau groupe a créé."
+            );
+            return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+        }
     }
 
 

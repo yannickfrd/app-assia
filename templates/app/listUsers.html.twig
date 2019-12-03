@@ -19,7 +19,7 @@
     </div>
 
     <div class="container-fluid p-0">
-        <div class="jumbotron py-3">
+        <div id="form-search" class="jumbotron py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
                 <div class="form-service col-auto my-1 px-1 ">
@@ -48,8 +48,8 @@
                 <div class="form-service col-auto my-1 px-1">
                     <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
                             class="fas fa-search"></i></button>
-                    <a href="{{ path("list_users") }}" class="btn btn-secondary ml-2 shadow"><i
-                            class="fas fa-eraser"></i></a>
+                    <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
+                            class="fas fa-eraser"></i></button>
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}
             </div>
@@ -158,6 +158,6 @@
 {% endblock %}
 
 {% block javascripts %}
-{# <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> #}
 {{ encore_entry_script_tags("admin") }}
+{{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}
