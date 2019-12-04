@@ -68,7 +68,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for form_support_pers in form.supportPers.children %}
+              {% for form_support_pers in form.supportPerson.children %}
               {% set person = form_support_pers.vars.data.person %}
               <tr class="js-tr-support_pers">
                 <th scope="row">
@@ -116,7 +116,7 @@
   </section>
 </div>
 
-{% include "modalDialog/removeSupportPers.html.twig" %}
+{% include "modalDialog/removeSupportPerson.html.twig" %}
 
 {% endblock %}
 

@@ -1,7 +1,7 @@
 import MessageFlash from "../utils/messageFlash";
 
 // Retire une personne du suivi du social du groupe
-export default class RemoveSupportPers {
+export default class RemoveSupportPerson {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;

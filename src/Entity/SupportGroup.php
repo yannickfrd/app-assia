@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SupportGrpRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SupportGroupRepository")
  */
-class SupportGrp
+class SupportGroup
 {
     public const STATUS = [
         1 => "À venir",
@@ -78,48 +78,48 @@ class SupportGrp
     private $groupPeople;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGrpCreated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGroupCreated")
      */
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGrpUpdated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGroupUpdated")
      */
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportPers", mappedBy="supportGrp", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="supportGroup", orphanRemoval=true)
      */
-    private $supportPers;
+    private $supportPerson;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="supportGrp")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="supportGroup")
      */
     private $service;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitSocial", mappedBy="supportGrp", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitSocial", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $sitSocial;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGrp", mappedBy="supportGrp", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
-    private $sitFamilyGrp;
+    private $sitFamilyGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitHousing", mappedBy="supportGrp", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitHousing", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $sitHousing;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGrp", mappedBy="supportGrp", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
-    private $sitBudgetGrp;
+    private $sitBudgetGroup;
 
     public function __construct()
     {
-        $this->supportPers = new ArrayCollection();
+        $this->supportPerson = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,30 +267,30 @@ class SupportGrp
     }
 
     /**
-     * @return Collection|SupportPers[]
+     * @return Collection|SupportPerson[]
      */
-    public function getSupportPers(): Collection
+    public function getSupportPerson(): Collection
     {
-        return $this->supportPers;
+        return $this->supportPerson;
     }
 
-    public function addSupportPers(SupportPers $supportPers): self
+    public function addSupportPerson(SupportPerson $supportPerson): self
     {
-        if (!$this->supportPers->contains($supportPers)) {
-            $this->supportPers[] = $supportPers;
-            $supportPers->setSupportGrp($this);
+        if (!$this->supportPerson->contains($supportPerson)) {
+            $this->supportPerson[] = $supportPerson;
+            $supportPerson->setSupportGroup($this);
         }
 
         return $this;
     }
 
-    public function removeSupportPers(SupportPers $supportPers): self
+    public function removeSupportPerson(SupportPerson $supportPerson): self
     {
-        if ($this->supportPers->contains($supportPers)) {
-            $this->supportPers->removeElement($supportPers);
+        if ($this->supportPerson->contains($supportPerson)) {
+            $this->supportPerson->removeElement($supportPerson);
             // set the owning side to null (unless already changed)
-            if ($supportPers->getSupportGrp() === $this) {
-                $supportPers->setSupportGrp(null);
+            if ($supportPerson->getSupportGroup() === $this) {
+                $supportPerson->setSupportGroup(null);
             }
         }
 
@@ -319,25 +319,25 @@ class SupportGrp
         $this->sitSocial = $sitSocial;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitSocial->getSupportGrp()) {
-            $sitSocial->setSupportGrp($this);
+        if ($this !== $sitSocial->getSupportGroup()) {
+            $sitSocial->setSupportGroup($this);
         }
 
         return $this;
     }
 
-    public function getsitFamilyGrp(): ?sitFamilyGrp
+    public function getsitFamilyGroup(): ?sitFamilyGroup
     {
-        return $this->sitFamilyGrp;
+        return $this->sitFamilyGroup;
     }
 
-    public function setsitFamilyGrp(sitFamilyGrp $sitFamilyGrp): self
+    public function setsitFamilyGroup(sitFamilyGroup $sitFamilyGroup): self
     {
-        $this->sitFamilyGrp = $sitFamilyGrp;
+        $this->sitFamilyGroup = $sitFamilyGroup;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitFamilyGrp->getSupportGrp()) {
-            $sitFamilyGrp->setSupportGrp($this);
+        if ($this !== $sitFamilyGroup->getSupportGroup()) {
+            $sitFamilyGroup->setSupportGroup($this);
         }
 
         return $this;
@@ -353,25 +353,25 @@ class SupportGrp
         $this->sitHousing = $sitHousing;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitHousing->getSupportGrp()) {
-            $sitHousing->setSupportGrp($this);
+        if ($this !== $sitHousing->getSupportGroup()) {
+            $sitHousing->setSupportGroup($this);
         }
 
         return $this;
     }
 
-    public function getSitBudgetGrp(): ?SitBudgetGrp
+    public function getSitBudgetGroup(): ?SitBudgetGroup
     {
-        return $this->sitBudgetGrp;
+        return $this->sitBudgetGroup;
     }
 
-    public function setSitBudgetGrp(SitBudgetGrp $sitBudgetGrp): self
+    public function setSitBudgetGroup(SitBudgetGroup $sitBudgetGroup): self
     {
-        $this->sitBudgetGrp = $sitBudgetGrp;
+        $this->sitBudgetGroup = $sitBudgetGroup;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitBudgetGrp->getSupportGrp()) {
-            $sitBudgetGrp->setSupportGrp($this);
+        if ($this !== $sitBudgetGroup->getSupportGroup()) {
+            $sitBudgetGroup->setSupportGroup($this);
         }
 
         return $this;

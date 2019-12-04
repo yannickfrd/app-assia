@@ -2,10 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\SupportPers;
+use App\Entity\SupportPerson;
 
 use App\Form\SitBudgetType;
-use App\Form\SitFamilyPersType;
+use App\Form\SitFamilyPersonType;
 use App\Form\SitProfType;
 
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +18,7 @@ class SupportSitType extends AbstractType
     {
         $builder
             ->add("sitAdm", SitAdmType::class)
-            ->add("sitFamilyPers", SitFamilyPersType::class)
+            ->add("sitFamilyPerson", SitFamilyPersonType::class)
             ->add("sitProf", SitProfType::class)
             ->add("sitBudget", SitBudgetType::class);
     }
@@ -26,7 +26,7 @@ class SupportSitType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SupportPers::class,
+            "data_class" => SupportPerson::class,
         ]);
     }
 }

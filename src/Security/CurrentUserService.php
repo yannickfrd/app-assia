@@ -23,7 +23,7 @@ class CurrentUserService
     {
         $services = [];
 
-        foreach ($this->user->getroleUser() as $role) {
+        foreach ($this->user->getserviceUser() as $role) {
             $services[] = $role->getService()->getId();
         };
 

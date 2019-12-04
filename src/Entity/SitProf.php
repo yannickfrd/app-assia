@@ -119,10 +119,10 @@ class SitProf
     private $commentSitProf;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPers", inversedBy="sitProf", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitProf", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $supportPers;
+    private $supportPerson;
 
     public function getId(): ?int
     {
@@ -301,14 +301,14 @@ class SitProf
         return $this;
     }
 
-    public function getSupportPers(): ?SupportPers
+    public function getSupportPerson(): ?SupportPerson
     {
-        return $this->supportPers;
+        return $this->supportPerson;
     }
 
-    public function setSupportPers(SupportPers $supportPers): self
+    public function setSupportPerson(SupportPerson $supportPerson): self
     {
-        $this->supportPers = $supportPers;
+        $this->supportPerson = $supportPerson;
 
         return $this;
     }

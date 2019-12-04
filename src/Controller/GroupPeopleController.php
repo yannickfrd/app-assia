@@ -98,7 +98,7 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * Ajoute une personne dans une groupe groupe
+     * Ajoute une personne dans une groupe
      * 
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
      * @ParamConverter("person", options={"id" = "person_id"})
@@ -186,6 +186,14 @@ class GroupPeopleController extends AbstractController
      */
     public function removePerson(GroupPeople $groupPeople, RolePerson $rolePerson, Person $person, Request $request): Response
     {
+        if (!$this->isGranted("ROLE_ADMIN")) {
+            return $this->json([
+                "code" => 403,
+                "msg" => "Vous n'avez pas les droits faire cette action. Demandez à un administrateur de votre service.",
+                "data" => null
+            ], 200);
+        }
+
         // Vérifie si le token est valide avant de retirer la personne du groupe
         if ($this->isCsrfTokenValid("remove" . $rolePerson->getId(), $request->get("_token"))) {
             // Compte le nombre de personnes dans le groupe
@@ -193,25 +201,27 @@ class GroupPeopleController extends AbstractController
             // Vérifie que le groupe est composé de plus d'1 personne
 
             if ($rolePerson->getHead()) {
-                return $this->msgFlash(null, "Le/la demandeur/euse principal·e ne peut pas être retiré du groupe.", null,  200);
-            } else {
-                $groupPeople->removeRolePerson($rolePerson);
-                $groupPeople->setNbPeople($nbPeople - 1);
-                $this->manager->flush();
-
-                return $this->msgFlash(200, $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du groupe.", $nbPeople - 1, 200);
+                return $this->json([
+                    "code" => null,
+                    "msg" => "Le/la demandeur/euse principal·e ne peut pas être retiré du groupe.",
+                    "data" => null
+                ], 200);
             }
-        } else {
-            return $this->msgFlash(null, "Une erreur s'est produite.", null,  200);
-        }
-    }
+            $groupPeople->removeRolePerson($rolePerson);
+            $groupPeople->setNbPeople($nbPeople - 1);
+            $this->manager->flush();
 
-    public function msgFlash($code, $msg, $data, $status): Response
-    {
+            return $this->json([
+                "code" => 200,
+                "msg" => $person->getFirstname() . " a été retiré" .  Agree::gender($person->getGender()) . " du groupe.",
+                "data" => $nbPeople - 1
+            ], 200);
+        }
+
         return $this->json([
-            "code" => $code,
-            "msg" => $msg,
-            "data" => $data
-        ], $status);
+            "code" => null,
+            "msg" => "Une erreur s'est produite.",
+            "data" => $nbPeople - 1
+        ], 200);
     }
 }

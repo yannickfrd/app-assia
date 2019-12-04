@@ -5,15 +5,15 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Service;
 
-use App\Entity\SupportGrp;
+use App\Entity\SupportGroup;
 use App\Form\SitSocialType;
 use App\Form\Utils\Choices;
 use App\Form\SitHousingType;
 use App\Form\SupportSitType;
 
-use App\Form\SitBudgetGrpType;
+use App\Form\SitBudgetGroupType;
 
-use App\Form\SitFamilyGrpType;
+use App\Form\SitFamilyGroupType;
 
 use App\Security\CurrentUserService;
 use App\Repository\UserRepository;
@@ -27,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 
-class SupportGrpType extends AbstractType
+class SupportGroupType extends AbstractType
 {
     private $currentUser;
 
@@ -45,7 +45,7 @@ class SupportGrpType extends AbstractType
             ])
             ->add("status", ChoiceType::class, [
 
-                "choices" => Choices::getChoices(SupportGrp::STATUS),
+                "choices" => Choices::getChoices(SupportGroup::STATUS),
                 "placeholder" => "-- Select --",
             ])
             ->add("service", EntityType::class, [
@@ -72,7 +72,7 @@ class SupportGrpType extends AbstractType
                     } else if ($this->currentUser->isAdmin("ROLE_ADMIN")) {
                         return $repo->createQueryBuilder("u")
                             ->select("u")
-                            ->leftJoin("u.roleUser", "r")
+                            ->leftJoin("u.serviceUser", "r")
                             ->where("r.service IN (:services)")
                             ->setParameter("services", $this->currentUser->getServices())
                             ->orderBy("u.lastname", "ASC");
@@ -94,7 +94,7 @@ class SupportGrpType extends AbstractType
                     } else if ($this->currentUser->isAdmin("ROLE_ADMIN")) {
                         return $repo->createQueryBuilder("u")
                             ->select("u")
-                            ->leftJoin("u.roleUser", "r")
+                            ->leftJoin("u.serviceUser", "r")
                             ->where("r.service IN (:services)")
                             ->setParameter("services", $this->currentUser->getServices())
                             ->orderBy("u.lastname", "ASC");
@@ -113,10 +113,10 @@ class SupportGrpType extends AbstractType
                 "required" => false
             ])
             ->add("sitSocial", SitSocialType::class)
-            ->add("sitFamilyGrp", SitFamilyGrpType::class)
-            ->add("sitBudgetGrp", SitBudgetGrpType::class)
+            ->add("sitFamilyGroup", SitFamilyGroupType::class)
+            ->add("sitBudgetGroup", SitBudgetGroupType::class)
             ->add("sitHousing", SitHousingType::class)
-            ->add("supportPers", CollectionType::class, [
+            ->add("supportPerson", CollectionType::class, [
                 "entry_type"   => SupportSitType::class,
                 "allow_add"    => false,
                 "allow_delete" => false,
@@ -133,7 +133,7 @@ class SupportGrpType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SupportGrp::class,
+            "data_class" => SupportGroup::class,
             "translation_domain" => "forms"
         ]);
     }

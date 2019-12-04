@@ -14,15 +14,15 @@ export default class evaluation {
     init() {
         let prefix;
         // Situation sociale
-        prefix = "support_grp_sitSocial_";
+        prefix = "support_group_sitSocial_";
         new DisplayInputs(prefix, "speAnimal", "checkbox");
         new DisplayInputs(prefix, "speOther", "checkbox");
         this.editElt("", "sitSocial_specifity", "d-block");
         // Situation familiale
-        prefix = "support_grp_sitFamilyGrp_";
+        prefix = "support_group_sitFamilyGroup_";
         new DisplayInputs(prefix, "unbornChild", "select", [1]);
         new DisplayInputs(prefix, "famlReunification", "select", [1, 3, 4, 5]);
-        prefix = "support_grp_sitHousing_";
+        prefix = "support_group_sitHousing_";
         // Situation liée au logement
         new DisplayInputs(prefix, "dls", "select", [1]);
         new DisplayInputs(prefix, "syplo", "select", [1]);
@@ -47,7 +47,7 @@ export default class evaluation {
         let cardSitProfElt = document.getElementById("accordion-sit_adm");
         let bthElts = cardSitProfElt.querySelectorAll("button.js-person");
         bthElts.forEach(btnElt => {
-            prefix = "support_grp_supportPers_";
+            prefix = "support_group_supportPerson_";
             // Situation administrative
             new DisplayInputs(prefix, i + "_sitAdm_nationality", "select", [2, 3, 4]);
             new DisplayInputs(prefix, i + "_sitAdm_paper", "select", [1]);
@@ -136,10 +136,10 @@ export default class evaluation {
                 this.selectedOptionElt.querySelector("input").checked = "checked";
                 this.selectedOptionElt.classList.replace("d-none", display);
                 if (this.selectedOptionElt.id === "js-sitSocial_specifity-1") {
-                    new DisplayInputs("support_grp_sitSocial_", "speAnimal", "checkbox");
+                    new DisplayInputs("support_group_sitSocial_", "speAnimal", "checkbox");
                 }
                 if (this.selectedOptionElt.id === "js-sitSocial_specifity-98") {
-                    new DisplayInputs("support_grp_sitSocial_", "speOther", "checkbox");
+                    new DisplayInputs("support_group_sitSocial_", "speOther", "checkbox");
                 }
             }
         });
@@ -186,7 +186,7 @@ export default class evaluation {
         inputElts.forEach(inputElt => {
             inputElt.addEventListener("input", function () {
                 document.getElementById(prefix + i + "_sitBudget_" + type + "Amt").value = this.getSumAmts(inputElts);
-                this.updateAmtGrp(type);
+                this.updateAmtGroup(type);
             }.bind(this));
         });
     }
@@ -206,33 +206,33 @@ export default class evaluation {
     // Met à jour la somme des montants de la personne
     updateSumAmt(i, type) {
         let inputElts = document.getElementById("collapse-sit_budget-" + i).querySelectorAll("input.js-" + type);
-        document.getElementById("support_grp_supportPers_" + i + "_sitBudget_" + type + "Amt").value = this.getSumAmts(inputElts);
+        document.getElementById("support_group_supportPerson_" + i + "_sitBudget_" + type + "Amt").value = this.getSumAmts(inputElts);
     }
 
     // Met à jour le montant total du groupe lorsque modification des montants individuels
     editAmtPers(type) {
         let amountElts = document.querySelectorAll(".js-" + type + "Amt");
         amountElts.forEach(amountElt => {
-            amountElt.addEventListener("input", this.updateAmtGrp.bind(this, type));
+            amountElt.addEventListener("input", this.updateAmtGroup.bind(this, type));
         });
     }
 
     // Met à jour le montant total du groupe (ressources, charges ou dettes)
-    updateAmtGrp(type) {
-        let amountGrp = 0;
+    updateAmtGroup(type) {
+        let amountGroup = 0;
         let amountElts = document.querySelectorAll(".js-" + type + "Amt");
         amountElts.forEach(amountElt => {
             let amountInt = parseInt(amountElt.value);
             if (amountInt > 0) {
-                amountGrp += amountInt;
+                amountGroup += amountInt;
             }
         });
-        document.getElementById(type + "GrpAmt").textContent = amountGrp;
+        document.getElementById(type + "GroupAmt").textContent = amountGroup;
 
-        let ressourcesGrpAmt = parseInt(document.getElementById("ressourcesGrpAmt").textContent);
-        let chargesGrpAmt = parseInt(document.getElementById("chargesGrpAmt").textContent);
-        let repaymentGrpAmt = parseInt(document.getElementById("repaymentGrpAmt").textContent);
-        let budgetBalanceGrpAmt = ressourcesGrpAmt - chargesGrpAmt - repaymentGrpAmt;
-        document.getElementById("budgetBalanceGrpAmt").textContent = budgetBalanceGrpAmt;
+        let ressourcesGroupAmt = parseInt(document.getElementById("ressourcesGroupAmt").textContent);
+        let chargesGroupAmt = parseInt(document.getElementById("chargesGroupAmt").textContent);
+        let repaymentGroupAmt = parseInt(document.getElementById("repaymentGroupAmt").textContent);
+        let budgetBalanceGroupAmt = ressourcesGroupAmt - chargesGroupAmt - repaymentGroupAmt;
+        document.getElementById("budgetBalanceGroupAmt").textContent = budgetBalanceGroupAmt;
     }
 }

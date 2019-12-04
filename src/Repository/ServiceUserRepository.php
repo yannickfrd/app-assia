@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\RoleUser;
+use App\Entity\ServiceUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method RoleUser|null find($id, $lockMode = null, $lockVersion = null)
- * @method RoleUser|null findOneBy(array $criteria, array $orderBy = null)
- * @method RoleUser[]    findAll()
- * @method RoleUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ServiceUser|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ServiceUser|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ServiceUser[]    findAll()
+ * @method ServiceUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RoleUserRepository extends ServiceEntityRepository
+class ServiceUserRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, RoleUser::class);
+        parent::__construct($registry, ServiceUser::class);
     }
 
     // /**
-    //  * @return RoleUser[] Returns an array of RoleUser objects
+    //  * @return ServiceUser[] Returns an array of ServiceUser objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class RoleUserRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?RoleUser
+    public function findOneBySomeField($value): ?ServiceUser
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.exampleField = :val')

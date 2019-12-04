@@ -3,15 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\RoleUser;
 use App\Entity\UserResetPass;
 use App\Form\RegistrationType;
 use App\Form\ForgotPasswordType;
 use App\Form\ReinitPasswordType;
-use App\Form\RegistrationUserType;
 use App\Repository\UserRepository;
 use App\Notification\MailNotification;
-use App\Repository\RoleUserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +35,7 @@ class SecurityController extends AbstractController
     {
         $user = new User();
 
-        $form = $this->createForm(RegistrationType::Class, $user);
+        $form = $this->createForm(RegistrationType::class, $user);
 
         $form->handleRequest($request);
 

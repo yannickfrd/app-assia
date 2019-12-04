@@ -18,12 +18,12 @@
                 <tbody>
                     {% for support in person.supports %}
 
-                    {% if support.supportGrp.referent %}
+                    {% if support.supportGroup.referent %}
                     {% set contact_user %}
                     <div class='text-left p-2'>
                         <b>Coordonnées :</b>
-                        <br>Téléphone : {{support.supportGrp.referent.phone }}
-                        <br>Email : {{ support.supportGrp.referent.email }}
+                        <br>Téléphone : {{support.supportGroup.referent.phone }}
+                        <br>Email : {{ support.supportGroup.referent.email }}
                     </div>
                     {% endset %}
                     {% endif %}
@@ -31,15 +31,15 @@
                     {% set contact_service %}
                     <div class='text-left p-2'>
                         <b>Coordonnées du service: </b>
-                        <br>Téléphone : {{ support.supportGrp.service.phone }}
-                        <br>Email : {{ support.supportGrp.service.email }}
+                        <br>Téléphone : {{ support.supportGroup.service.phone }}
+                        <br>Email : {{ support.supportGroup.service.email }}
                     </div>
                     {% endset %}
 
                     <tr>
                         <th scope="row">
-                            {% if is_granted("VIEW", support.supportGrp) %}
-                            <a href="{{ path('support_edit', {'id':support.supportGrp.groupPeople.id , 'support_id':support.supportGrp.id}) }}"
+                            {% if is_granted("VIEW", support.supportGroup) %}
+                            <a href="{{ path('support_edit', {'id':support.supportGroup.groupPeople.id , 'support_id':support.supportGroup.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le suivi social"><span class="fas fa-eye"></span>
                             </a>
@@ -48,8 +48,8 @@
                                 title="Accès non autorisé"><span class="fas fa-ban"></span>
                             </span>
                             {% endif %}
-                            {% if is_granted("EDIT", support.supportGrp) %}
-                            <a href="{{ path('support_edit', {'id':support.supportGrp.groupPeople.id , 'support_id':support.supportGrp.id}) }}"
+                            {% if is_granted("EDIT", support.supportGroup) %}
+                            <a href="{{ path('support_edit', {'id':support.supportGroup.groupPeople.id , 'support_id':support.supportGroup.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Editer le suivi social"><span class="fas fa-edit"></span>
                             </a>
@@ -60,21 +60,21 @@
                         <td>{{ support.startDate | date("d/m/Y") }}</td>
                         <td>{{ support.endDate | date("d/m/Y") }}</td>
                         <td>
-                            {% if support.supportGrp.referent %}
+                            {% if support.supportGroup.referent %}
                             <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true" title="{{ contact_user }}">{{ support.supportGrp.referent.firstname }}
-                                {{  support.supportGrp.referent.lastname }}</a>
+                                data-html="true" title="{{ contact_user }}">{{ support.supportGroup.referent.firstname }}
+                                {{  support.supportGroup.referent.lastname }}</a>
                             {% else %}
                             Non défini
                             {% endif %}
                         </td>
                         <td>
-                            {% if support.supportGrp.service %}
+                            {% if support.supportGroup.service %}
                             <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true" title="{{ contact_service }}">{{ support.supportGrp.service.name }}</a>
+                                data-html="true" title="{{ contact_service }}">{{ support.supportGroup.service.name }}</a>
                             {% endif %}
                         </td>
-                        <td>{{ support.supportGrp.service.pole.name }}</td>
+                        <td>{{ support.supportGroup.service.pole.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -141,7 +141,7 @@ class Person
     private $rolesPerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportPers", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="person")
      */
     private $supports;
 
@@ -405,14 +405,14 @@ class Person
     }
 
     /**
-     * @return Collection|SupportPers[]
+     * @return Collection|SupportPerson[]
      */
     public function getSupports(): Collection
     {
         return $this->supports;
     }
 
-    public function addSupport(SupportPers $support): self
+    public function addSupport(SupportPerson $support): self
     {
         if (!$this->supports->contains($support)) {
             $this->supports[] = $support;
@@ -422,7 +422,7 @@ class Person
         return $this;
     }
 
-    public function removeSupport(SupportPers $support): self
+    public function removeSupport(SupportPerson $support): self
     {
         if ($this->supports->contains($support)) {
             $this->supports->removeElement($support);

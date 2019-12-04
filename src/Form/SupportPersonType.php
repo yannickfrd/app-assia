@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\SupportPers;
+use App\Entity\SupportPerson;
 
 use App\Form\Utils\Choices;;
 
@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SupportPersType extends AbstractType
+class SupportPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -34,7 +34,7 @@ class SupportPersType extends AbstractType
                 "required" => false
             ])
             ->add("status", ChoiceType::class, [
-                "choices" => Choices::getChoices(SupportPers::STATUS),
+                "choices" => Choices::getChoices(SupportPerson::STATUS),
                 "placeholder" => "-- Select --",
                 "required" => true
             ])
@@ -48,7 +48,7 @@ class SupportPersType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SupportPers::class,
+            "data_class" => SupportPerson::class,
             "translation_domain" => "forms",
         ]);
     }

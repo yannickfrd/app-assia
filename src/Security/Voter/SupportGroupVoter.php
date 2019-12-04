@@ -7,12 +7,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class SupportGrpVoter extends Voter
+class SupportGroupVoter extends Voter
 {
     private $security;
     protected $user;
     protected $userId;
-    protected $supportGrp;
+    protected $supportGroup;
 
     public function __construct(Security $security)
     {
@@ -22,14 +22,14 @@ class SupportGrpVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ["VIEW", "EDIT", "DELETE"])
-            && $subject instanceof \App\Entity\SupportGrp;
+            && $subject instanceof \App\Entity\SupportGroup;
     }
 
-    protected function voteOnAttribute($attribute, $supportGrp, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token)
     {
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        $this->supportGrp = $supportGrp;
+        $this->supportGroup = $supportGroup;
 
         if (!$this->user) {
             return false;
@@ -55,8 +55,8 @@ class SupportGrpVoter extends Voter
             return true;
         }
 
-        foreach ($this->user->getRoleUser() as $role) {
-            if ($this->supportGrp->getService()->getId() == $role->getService()->getId()) {
+        foreach ($this->user->getServiceUser() as $role) {
+            if ($this->supportGroup->getService()->getId() == $role->getService()->getId()) {
                 return true;
             }
         }
@@ -69,9 +69,9 @@ class SupportGrpVoter extends Voter
             return true;
         }
 
-        if (($this->supportGrp->getReferent() && $this->supportGrp->getReferent()->getId() == $this->userId)
-            || ($this->supportGrp->getReferent2() && $this->supportGrp->getReferent2()->getId() == $this->userId)
-            || ($this->supportGrp->getCreatedBy()->getId() == $this->userId)
+        if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() == $this->userId)
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() == $this->userId)
+            || ($this->supportGroup->getCreatedBy()->getId() == $this->userId)
         ) {
             return true;
         }
@@ -90,8 +90,8 @@ class SupportGrpVoter extends Voter
     protected function isAdminService()
     {
         if ($this->security->isGranted("ROLE_ADMIN")) {
-            foreach ($this->user->getRoleUser() as $role) {
-                if ($this->supportGrp->getService()->getId() == $role->getService()->getId()) {
+            foreach ($this->user->getServiceUser() as $role) {
+                if ($this->supportGroup->getService()->getId() == $role->getService()->getId()) {
                     return true;
                 }
             }

@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\Pole;
 use App\Form\Utils\Choices;;
 
-use App\Entity\RoleUser;
+use App\Entity\ServiceUser;
 use App\Entity\ServiceSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

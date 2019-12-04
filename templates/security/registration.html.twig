@@ -54,9 +54,9 @@
         <hr>
 
         <h2 class="h4 mb-3">Profils et services rattachés</h2>
-        <div id="roleUser-fields-list" data-prototype="{{ form_widget(form.roleUser.vars.prototype)|e }}"
+        <div id="serviceUser-fields-list" data-prototype="{{ form_widget(form.serviceUser.vars.prototype)|e }}"
             data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
-            data-widget-counter="{{ form.roleUser|length }}">
+            data-widget-counter="{{ form.serviceUser|length }}">
             <div class="table-responsive">
                 <table id="function-table" class="table">
                     <thead>
@@ -68,7 +68,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for role in form.roleUser %}
+                        {% for role in form.serviceUser %}
                         <tr id="{{ role.vars.id }}">
                             <th scope="row">{{ form_widget(role.role) }}
                             </th>
@@ -85,7 +85,7 @@
         </div>
         <div class="my-2">
             <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                data-list-selector="#roleUser-fields-list"><span class="fas fa-plus-square"></span> Ajouter une
+                data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square"></span> Ajouter une
                 fonction</button>
         </div>
         <div class="row">

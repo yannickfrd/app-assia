@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SupportPersRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SupportPersonRepository")
  */
-class SupportPers
+class SupportPerson
 {
     public const STATUS = [
         1 => "À venir",
@@ -65,28 +65,28 @@ class SupportPers
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGrp", inversedBy="supportPers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="supportPerson")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $supportGrp;
+    private $supportGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPers", mappedBy="supportPers", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPerson", mappedBy="supportPerson", cascade={"persist", "remove"})
      */
-    private $sitFamilyPers;
+    private $sitFamilyPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPers", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $sitProf;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPers", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $sitAdm;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPers", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $sitBudget;
 
@@ -184,30 +184,30 @@ class SupportPers
         return $this;
     }
 
-    public function getSupportGrp(): ?SupportGrp
+    public function getSupportGroup(): ?SupportGroup
     {
-        return $this->supportGrp;
+        return $this->supportGroup;
     }
 
-    public function setSupportGrp(?SupportGrp $supportGrp): self
+    public function setSupportGroup(?SupportGroup $supportGroup): self
     {
-        $this->supportGrp = $supportGrp;
+        $this->supportGroup = $supportGroup;
 
         return $this;
     }
 
-    public function getSitFamilyPers(): ?SitFamilyPers
+    public function getSitFamilyPerson(): ?SitFamilyPerson
     {
-        return $this->sitFamilyPers;
+        return $this->sitFamilyPerson;
     }
 
-    public function setSitFamilyPers(SitFamilyPers $sitFamilyPers): self
+    public function setSitFamilyPerson(SitFamilyPerson $sitFamilyPerson): self
     {
-        $this->sitFamilyPers = $sitFamilyPers;
+        $this->sitFamilyPerson = $sitFamilyPerson;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitFamilyPers->getSupportPers()) {
-            $sitFamilyPers->setSupportPers($this);
+        if ($this !== $sitFamilyPerson->getSupportPerson()) {
+            $sitFamilyPerson->setSupportPerson($this);
         }
 
         return $this;
@@ -223,8 +223,8 @@ class SupportPers
         $this->sitProf = $sitProf;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitProf->getSupportPers()) {
-            $sitProf->setSupportPers($this);
+        if ($this !== $sitProf->getSupportPerson()) {
+            $sitProf->setSupportPerson($this);
         }
 
         return $this;
@@ -240,8 +240,8 @@ class SupportPers
         $this->sitAdm = $sitAdm;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitAdm->getSupportPers()) {
-            $sitAdm->setSupportPers($this);
+        if ($this !== $sitAdm->getSupportPerson()) {
+            $sitAdm->setSupportPerson($this);
         }
 
         return $this;
@@ -257,8 +257,8 @@ class SupportPers
         $this->sitBudget = $sitBudget;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitBudget->getSupportPers()) {
-            $sitBudget->setSupportPers($this);
+        if ($this !== $sitBudget->getSupportPerson()) {
+            $sitBudget->setSupportPerson($this);
         }
 
         return $this;

@@ -201,7 +201,7 @@ class PersonController extends AbstractController
 
                 $this->addFlash(
                     "success",
-                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe groupe."
+                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe."
                 );
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }

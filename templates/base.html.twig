@@ -36,8 +36,8 @@
 {% set rolesUser = [] %}
 {% set theme_color = "dark" %}
 
-{% if app.user.roleUser is defined %}
-{% for role in app.user.roleUser %}
+{% if app.user.serviceUser is defined %}
+{% for role in app.user.serviceUser %}
 {% set rolesUser = rolesUser|merge([role.service.id]) %}
 {% set theme_color = role.service.pole.color %}
 {% endfor %}
@@ -118,7 +118,7 @@
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
                             title="{{ app.user.firstname }} {{ app.user.lastname }}"
                             data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y H:i") }} <br />Services rattachés :
-                            {% for role in app.user.roleUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
+                            {% for role in app.user.serviceUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
                             <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
                         </a>
                         <br />

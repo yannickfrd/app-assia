@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Form\Utils\Choices;
-use App\Entity\SitFamilyGrp;
+use App\Entity\SitFamilyGroup;
 use App\Form\Utils\SelectList;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SitFamilyGrpType extends AbstractType
+class SitFamilyGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,18 +27,18 @@ class SitFamilyGrpType extends AbstractType
                 "required" => false
             ])
             ->add("pregnancyType", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitFamilyGrp::PREGNANCY_TYPE),
+                "choices" => Choices::getChoices(SitFamilyGroup::PREGNANCY_TYPE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("famlReunification", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitFamilyGrp::FAML_REUNIFICATION),
+                "choices" => Choices::getChoices(SitFamilyGroup::FAML_REUNIFICATION),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("nbPeopleReunification")
             ->add("cafId")
-            ->add("commentSitFamilyGrp", null, [
+            ->add("commentSitFamilyGroup", null, [
                 "label_attr" => ["class" => "col-sm-12"],
                 "attr" => [
                     "rows" => 5,
@@ -50,7 +50,7 @@ class SitFamilyGrpType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitFamilyGrp::class,
+            "data_class" => SitFamilyGroup::class,
             "translation_domain" => "sitFamily"
         ]);
     }

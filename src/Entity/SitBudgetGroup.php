@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitBudgetGrpRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitBudgetGroupRepository")
  */
-class SitBudgetGrp
+class SitBudgetGroup
 {
     /**
      * @ORM\Id()
@@ -19,17 +19,17 @@ class SitBudgetGrp
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $ressourcesGrpAmt;
+    private $ressourcesGroupAmt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $chargesGrpAmt;
+    private $chargesGroupAmt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $debtsGrpAmt;
+    private $debtsGroupAmt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -57,48 +57,48 @@ class SitBudgetGrp
     private $commentSitBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportGrp", inversedBy="sitBudgetGrp", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitBudgetGroup", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $supportGrp;
+    private $supportGroup;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getRessourcesGrpAmt(): ?int
+    public function getRessourcesGroupAmt(): ?int
     {
-        return $this->ressourcesGrpAmt;
+        return $this->ressourcesGroupAmt;
     }
 
-    public function setRessourcesGrpAmt(?int $ressourcesGrpAmt): self
+    public function setRessourcesGroupAmt(?int $ressourcesGroupAmt): self
     {
-        $this->ressourcesGrpAmt = $ressourcesGrpAmt;
+        $this->ressourcesGroupAmt = $ressourcesGroupAmt;
 
         return $this;
     }
 
-    public function getChargesGrpAmt(): ?int
+    public function getChargesGroupAmt(): ?int
     {
-        return $this->chargesGrpAmt;
+        return $this->chargesGroupAmt;
     }
 
-    public function setChargesGrpAmt(?int $chargesGrpAmt): self
+    public function setChargesGroupAmt(?int $chargesGroupAmt): self
     {
-        $this->chargesGrpAmt = $chargesGrpAmt;
+        $this->chargesGroupAmt = $chargesGroupAmt;
 
         return $this;
     }
 
-    public function getDebtsGrpAmt(): ?int
+    public function getDebtsGroupAmt(): ?int
     {
-        return $this->debtsGrpAmt;
+        return $this->debtsGroupAmt;
     }
 
-    public function setDebtsGrpAmt(?int $debtsGrpAmt): self
+    public function setDebtsGroupAmt(?int $debtsGroupAmt): self
     {
-        $this->debtsGrpAmt = $debtsGrpAmt;
+        $this->debtsGroupAmt = $debtsGroupAmt;
 
         return $this;
     }
@@ -163,14 +163,14 @@ class SitBudgetGrp
         return $this;
     }
 
-    public function getSupportGrp(): ?SupportGrp
+    public function getSupportGroup(): ?SupportGroup
     {
-        return $this->supportGrp;
+        return $this->supportGroup;
     }
 
-    public function setSupportGrp(SupportGrp $supportGrp): self
+    public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGrp = $supportGrp;
+        $this->supportGroup = $supportGroup;
 
         return $this;
     }

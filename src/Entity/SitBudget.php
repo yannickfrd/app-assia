@@ -427,10 +427,10 @@ class SitBudget
     private $commentSitBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPers", inversedBy="sitBudget", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitBudget", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $supportPers;
+    private $supportPerson;
 
     public function getId(): ?int
     {
@@ -1395,14 +1395,14 @@ class SitBudget
         return $this;
     }
 
-    public function getSupportPers(): ?Supportpers
+    public function getSupportPerson(): ?Supportpers
     {
-        return $this->supportPers;
+        return $this->supportPerson;
     }
 
-    public function setSupportPers(Supportpers $supportPers): self
+    public function setSupportPerson(Supportperson $supportPerson): self
     {
-        $this->supportPers = $supportPers;
+        $this->supportPerson = $supportPerson;
 
         return $this;
     }

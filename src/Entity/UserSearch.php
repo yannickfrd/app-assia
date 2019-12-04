@@ -24,7 +24,7 @@ class UserSearch
     /**
      * @var int|null
      */
-    private $roleUser;
+    private $serviceUser;
 
     /**
      * @var string|null
@@ -101,21 +101,21 @@ class UserSearch
     /**
      * @return int|null
      */
-    public function getRoleUser(): ?int
+    public function getServiceUser(): ?int
     {
-        return $this->roleUser;
+        return $this->serviceUser;
     }
 
-    public function setRoleUser(?int $roleUser): self
+    public function setServiceUser(?int $serviceUser): self
     {
-        $this->roleUser = $roleUser;
+        $this->serviceUser = $serviceUser;
 
         return $this;
     }
 
-    public function getRoleUserType()
+    public function getServiceUserType()
     {
-        return self::GENDER[$this->roleUser];
+        return self::GENDER[$this->serviceUser];
     }
 
 

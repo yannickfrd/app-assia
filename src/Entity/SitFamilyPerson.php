@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitFamilyPersRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitFamilyPersonRepository")
  */
-class SitFamilyPers
+class SitFamilyPerson
 {
     public const MARITAL_STATUS = [
         1 => "Célibataire",
@@ -85,10 +85,10 @@ class SitFamilyPers
     private $childDependance;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPers", inversedBy="sitFamilyPers", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitFamilyPerson", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $supportPers;
+    private $supportPerson;
 
     public function getId(): ?int
     {
@@ -177,14 +177,14 @@ class SitFamilyPers
         return self::CHILD_DEPENDANCE[$this->childDependance];
     }
 
-    public function getSupportPers(): ?Supportpers
+    public function getSupportPerson(): ?Supportpers
     {
-        return $this->supportPers;
+        return $this->supportPerson;
     }
 
-    public function setSupportPers(Supportpers $supportPers): self
+    public function setSupportPerson(Supportperson $supportPerson): self
     {
-        $this->supportPers = $supportPers;
+        $this->supportPerson = $supportPerson;
 
         return $this;
     }

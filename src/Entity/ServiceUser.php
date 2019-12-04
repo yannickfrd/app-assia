@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RoleUserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ServiceUserRepository")
  */
-class RoleUser
+class ServiceUser
 {
     public const ROLE = [
         1 => "Travailleur social",
@@ -33,12 +33,12 @@ class RoleUser
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="roleUser", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="serviceUser", cascade={"persist"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="roleUser", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="serviceUser", cascade={"persist"})
      */
     private $service;
 

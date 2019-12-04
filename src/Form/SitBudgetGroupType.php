@@ -2,26 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\SitBudgetGrp;
+use App\Entity\SitBudgetGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
-class SitBudgetGrpType extends AbstractType
+class SitBudgetGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // ->add("ressourcesGrpAmt", MoneyType::class, [
+            // ->add("ressourcesGroupAmt", MoneyType::class, [
             //     "attr" => ["class" => "text-right"],
             //     "required" => false
             // ])
-            // ->add("chargesGrpAmt", MoneyType::class, [
+            // ->add("chargesGroupAmt", MoneyType::class, [
             //     "attr" => ["class" => "text-right"],
             //     "required" => false
             // ])
-            // ->add("debtsGrpAmt", MoneyType::class, [
+            // ->add("debtsGroupAmt", MoneyType::class, [
             //     "attr" => ["class" => "text-right"],
             //     "required" => false
             // ])
@@ -43,7 +43,7 @@ class SitBudgetGrpType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitBudgetGrp::class,
+            "data_class" => SitBudgetGroup::class,
             "translation_domain" => "sitBudget"
         ]);
     }

@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitFamilyGrpRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitFamilyGroupRepository")
  */
-class SitFamilyGrp
+class SitFamilyGroup
 {
     public const PREGNANCY_TYPE = [
         1 => "Simple",
@@ -70,13 +70,13 @@ class SitFamilyGrp
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $commentSitFamilyGrp;
+    private $commentSitFamilyGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportGrp", inversedBy="sitFamilyGrp")
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitFamilyGroup")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $supportGrp;
+    private $supportGroup;
 
     public function getId(): ?int
     {
@@ -177,26 +177,26 @@ class SitFamilyGrp
         return $this;
     }
 
-    public function getCommentSitFamilyGrp(): ?string
+    public function getCommentSitFamilyGroup(): ?string
     {
-        return $this->commentSitFamilyGrp;
+        return $this->commentSitFamilyGroup;
     }
 
-    public function setCommentSitFamilyGrp(?string $commentSitFamilyGrp): self
+    public function setCommentSitFamilyGroup(?string $commentSitFamilyGroup): self
     {
-        $this->commentSitFamilyGrp = $commentSitFamilyGrp;
+        $this->commentSitFamilyGroup = $commentSitFamilyGroup;
 
         return $this;
     }
 
-    public function getSupportGrp(): ?SupportGrp
+    public function getSupportGroup(): ?SupportGroup
     {
-        return $this->supportGrp;
+        return $this->supportGroup;
     }
 
-    public function setSupportGrp(SupportGrp $supportGrp): self
+    public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGrp = $supportGrp;
+        $this->supportGroup = $supportGroup;
 
         return $this;
     }

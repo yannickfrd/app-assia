@@ -122,11 +122,11 @@
         <div class="row">
             <div class="col-md-12">
                 <a href="{{ path("group_search_person", {"id":group_people.id}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm">
-                    <span class="fas fa-plus-square"></span> Ajouter une personne</a>
-                {# <a href="{{ path("group_create_person", {"id":group_people.id}) }}" class="btn btn-secondary pl-2">
-                        <span class="fas fa-plus-square"></span>
-                        Créer une nouvelle personne</a> #}
+                    class="btn btn-{{ theme_color }} btn-sm my-2">
+                    <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
+                <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
+                    class="btn btn-secondary btn-sm my-2">
+                    <span class="fas fa-plus-square mr-2"></span>Enregistrer une naissance</a>
             </div>
         </div>
 

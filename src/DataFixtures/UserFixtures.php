@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\Entity\RoleUser;
+use App\Entity\ServiceUser;
 use App\Repository\ServiceRepository;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -40,13 +40,13 @@ class UserFixtures extends Fixture
         // $services = $this->repoService->findAll();
 
         // foreach ($services as $service) {
-        //     $roleUser = new RoleUser();
+        //     $serviceUser = new ServiceUser();
 
-        //     $roleUser->setUser($user)
+        //     $serviceUser->setUser($user)
         //         ->setRole(5)
         //         ->setService($service);
 
-        //     $manager->persist($roleUser);
+        //     $manager->persist($serviceUser);
         // }
 
         $manager->flush();

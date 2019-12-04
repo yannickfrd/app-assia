@@ -48,21 +48,21 @@ class GroupPeopleRepository extends ServiceEntityRepository
         ;
     }
     */
-    // Trouve tous les personnes du même groupe groupe
+    // Trouve tous les personnes du même groupe
     public function findPeopleFromGroup($groupPeople)
     {
 
-        return $this->createQueryBuilder("grp")
-            ->leftJoin("grp.rolePerson", "role")
+        return $this->createQueryBuilder("group")
+            ->leftJoin("group.rolePerson", "role")
             ->leftJoin("role.person", "pers")
-            ->select("grp", "role", "pers")
-            ->andWhere("grp = :grp")
-            ->setParameter("grp", $groupPeople)
+            ->select("group", "role", "pers")
+            ->andWhere("group = :group")
+            ->setParameter("group", $groupPeople)
             ->getQuery()
             ->getResult();
     }
 
-    // Trouve tous les personnes du même groupe groupe
+    // Trouve tous les personnes du même groupe
     public function findPeopleFromGroupV2($groupPeople)
     {
 

@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Service;
 
-use App\Entity\RoleUser;
+use App\Entity\ServiceUser;
 
 use App\Form\Utils\Choices;;
 
@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class RoleUserType extends AbstractType
+class ServiceUserType extends AbstractType
 {
     private $currentUser;
 
@@ -31,7 +31,7 @@ class RoleUserType extends AbstractType
             ->add("role", ChoiceType::class, [
                 "label" => "Fonction",
                 'placeholder' => "-- Select --",
-                "choices" => Choices::getChoices(RoleUser::ROLE),
+                "choices" => Choices::getChoices(ServiceUser::ROLE),
                 "attr" => [
                     "class" => "col-auto my-1",
                 ]
@@ -59,7 +59,7 @@ class RoleUserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => RoleUSer::class,
+            "data_class" => ServiceUser::class,
             "translation_domain" => "forms",
         ]);
     }

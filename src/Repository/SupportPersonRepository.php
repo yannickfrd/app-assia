@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\SupportGrp;
+use App\Entity\SupportPerson;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method SupportGrp|null find($id, $lockMode = null, $lockVersion = null)
- * @method SupportGrp|null findOneBy(array $criteria, array $orderBy = null)
- * @method SupportGrp[]    findAll()
- * @method SupportGrp[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SupportPerson|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SupportPerson|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SupportPerson[]    findAll()
+ * @method SupportPerson[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SupportGrpRepository extends ServiceEntityRepository
+class SupportPersonRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SupportGrp::class);
+        parent::__construct($registry, SupportPerson::class);
     }
 
     // /**
-    //  * @return SupportGrp[] Returns an array of SupportGrp objects
+    //  * @return SupportPerson[] Returns an array of SupportPerson objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class SupportGrpRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?SupportGrp
+    public function findOneBySomeField($value): ?SupportPerson
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')
