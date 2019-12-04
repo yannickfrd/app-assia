@@ -88,8 +88,12 @@
                 data-list-selector="#roleUser-fields-list"><span class="fas fa-plus-square"></span> Ajouter une
                 fonction</button>
         </div>
-        <div class="float-right my-2">
-            <button type="submit" class="btn btn-{{ theme_color }}">Enregistrer</button>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-right mb-2">
+                    <button type="submit" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
         </div>
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}

@@ -10,10 +10,7 @@ class Agree
      */
     public static function gender($gender): String
     {
-        if ($gender == 1) {
-            return "e";
-        }
-        return "";
+        return $gender == 1 ? "e" : "";
     }
 
     /**
@@ -22,9 +19,6 @@ class Agree
      */
     public static function plural($plural): String
     {
-        if ($plural > 1) {
-            return "s";
-        } 
-        return "";
+        return $plural == 1 ? "s" : "";
     }
 }

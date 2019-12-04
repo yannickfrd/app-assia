@@ -137,7 +137,7 @@ class SupportController extends AbstractController
                     "success",
                     "Le suivi social a été créé."
                 );
-                return $this->redirectToRoute("support_show", [
+                return $this->redirectToRoute("support_edit", [
                     "id" => $groupPeople->getId(),
                     "support_id" => $supportGrp->getId()
                 ]);
@@ -158,7 +158,7 @@ class SupportController extends AbstractController
     /**
      * Voir un suvi social
      * 
-     * @Route("/group/{id}/support/{support_id}", name="support_show", methods="GET|POST")
+     * @Route("/group/{id}/support/{support_id}", name="support_edit", methods="GET|POST")
      * @ParamConverter("supportGrp", options={"id" = "support_id"})
      * @param GroupPeople $groupPeople
      * @param SupportGrp $supportGrp
@@ -166,8 +166,10 @@ class SupportController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function showSupport(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
+    public function editSupport(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("EDIT", $supportGrp);
+
         $form = $this->createForm(SupportGrpType::class, $supportGrp);
         $form->handleRequest($request);
 
@@ -249,12 +251,12 @@ class SupportController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function EditSupportPers(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
+    public function editSupportPers(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("EDIT", $supportGrp);
 
         $form = $this->createForm(SupportGrpType2::class, $supportGrp);
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
 

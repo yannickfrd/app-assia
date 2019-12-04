@@ -11,12 +11,13 @@ class RoleUser
 {
     public const ROLE = [
         1 => "Travailleur social",
-        2 => "Chef·fe de service",
-        3 => "Directeur/trice",
-        4 => "Administratif",
-        5 => "Chargé de mission",
-        6 => "Stagiaire",
-        7 => "Autre",
+        2 => "Coordinatrice/teur",
+        3 => "Chef·fe de service",
+        4 => "Directrice/teur",
+        5 => "Administratif",
+        6 => "Chargé·e de mission",
+        7 => "Stagiaire",
+        98 => "Autre",
     ];
 
     /**

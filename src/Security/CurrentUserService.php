@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Security;
 
 use Symfony\Component\Security\Core\Security;
 

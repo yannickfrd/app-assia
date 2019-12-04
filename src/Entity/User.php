@@ -21,7 +21,7 @@ class User implements UserInterface
     public const ROLES = [
         "ROLE_USER" => "Utilisateur",
         "ROLE_ADMIN" => "Administrateur",
-        "ROLE_SUPER_ADMIN" => "Super administreur",
+        "ROLE_SUPER_ADMIN" => "Administreur général",
     ];
     /**
      * @ORM\Id()

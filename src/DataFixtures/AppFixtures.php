@@ -23,7 +23,8 @@ class AppFixtures extends Fixture
     public const SERVICES_HABITAT = [
         1 => "ALTHO",
         2 => "ASSLT - ASLLT",
-        3 => "10 000 logements"
+        3 => "10 000 logements",
+        4 => "SAVL"
     ];
 
     public const SERVICES_HEB = [
