@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\Pole;
 use App\Form\Utils\Choices;;
 
-use App\Entity\RoleUser;
+use App\Entity\ServiceUser;
 use App\Entity\Service;
 use App\Entity\UserSearch;
 use Symfony\Component\Form\AbstractType;
@@ -36,11 +36,11 @@ class UserSearchType extends AbstractType
                     "autocomplete" => "off"
                 ]
             ])
-            ->add("roleUser", ChoiceType::class, [
+            ->add("serviceUser", ChoiceType::class, [
                 'placeholder' => "-- Rôle --",
                 "label" => false,
                 "required" => false,
-                "choices" => Choices::getChoices(RoleUser::ROLE),
+                "choices" => Choices::getChoices(ServiceUser::ROLE),
                 "attr" => [
                     "class" => "w-max-120",
                     "autocomplete" => "off"

@@ -5,19 +5,19 @@ export default class RemovePerson {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
-        this.trPersonElts = document.querySelectorAll(".js-tr-person");
+        this.trElts = document.querySelectorAll(".js-tr-person");
         this.inputNbPeople = document.getElementById("group_people_nbPeople");
         this.modalConfirmElt = document.getElementById("modal-confirm");
-        this.trPersonElt = null;
+        this.trElt = null;
         this.init();
     }
 
     init() {
-        this.trPersonElts.forEach(trPersonElt => {
-            let btnRemoveElt = trPersonElt.querySelector("button.js-remove");
-            btnRemoveElt.addEventListener("click", function (e) {
+        this.trElts.forEach(trElt => {
+            let btnElt = trElt.querySelector("button.js-remove");
+            btnElt.addEventListener("click", function (e) {
                 e.preventDefault();
-                this.modalConfirmElt.addEventListener("click", this.removePerson.bind(this, btnRemoveElt, trPersonElt), {
+                this.modalConfirmElt.addEventListener("click", this.validate.bind(this, btnElt, trElt), {
                     once: true
                 });
             }.bind(this));
@@ -25,10 +25,9 @@ export default class RemovePerson {
     }
 
     // Envoie la requête Ajax après confirmation de l'action
-    removePerson(btnRemoveElt, trPersonElt) {
-        console.log("remove !");
-        this.trPersonElt = trPersonElt;
-        this.ajaxRequest.init("GET", btnRemoveElt.getAttribute("data-url"), this.response.bind(this), true), {
+    validate(btnElt, trElt) {
+        this.trElt = trElt;
+        this.ajaxRequest.init("GET", btnElt.getAttribute("data-url"), this.response.bind(this), true), {
             once: true
         };
     }
@@ -37,7 +36,7 @@ export default class RemovePerson {
     response(data) {
         let dataJSON = JSON.parse(data);
         if (dataJSON.code === 200) {
-            this.deleteTr(this.trPersonElt);
+            this.deleteTr(this.trElt);
             this.inputNbPeople.value = dataJSON.data;
             new MessageFlash("warning", dataJSON.msg);
         } else {
@@ -47,6 +46,6 @@ export default class RemovePerson {
 
     // Supprime la ligne correspondant à la personne dans le tableau
     deleteTr() {
-        this.trPersonElt.remove();
+        this.trElt.remove();
     }
 }

@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Fiche utilisateur{% endblock %}
+{% block title %}Fiche utilisateur | Esperer95-app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -85,10 +85,10 @@
 
                 <tbody>
 
-                    {% for support in form.vars.value.supportsGrpCreated|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                    {% for support in form.vars.value.supportsGroupCreated|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('support_show', {'id':support.groupPeople.id, 'support_id':support.id}) }}"
+                            <a href="{{ path('support_edit', {'id':support.groupPeople.id, 'support_id':support.id}) }}"
                                 class="
                                 btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Voir le suivi
                                 social">
@@ -127,7 +127,7 @@
     <section id="services">
         <h2 class="h4 my-4">Services rattachés</h2>
 
-        {% if user.roleuser %}
+        {% if user.serviceUser %}
         <div class="table-responsive">
             <table class="table table-striped table-hover text-dark">
                 <thead>
@@ -142,7 +142,7 @@
                 </thead>
 
                 <tbody>
-                    {% for role in user.roleuser %}
+                    {% for role in user.serviceUser %}
                     <tr>
                         <th scope="row">
                             <a href="{{ path('service_show', {'id':role.service.id}) }}"

@@ -4,15 +4,15 @@ import MessageFlash from "../utils/messageFlash";
 export default class ValidationSupport {
 
     constructor() {
-        this.startDate = "support_grp_startDate";
+        this.startDate = "support_group_startDate";
         this.startDateInputElt = document.getElementById(this.startDate);
         this.startDateLabelElt = document.querySelector("label[for=" + this.startDate + "]");
 
-        this.endDate = "support_grp_endDate";
+        this.endDate = "support_group_endDate";
         this.endDateInputElt = document.getElementById(this.endDate);
         this.endDateLabelElt = document.querySelector("label[for=" + this.endDate + "]");
 
-        this.status = "support_grp_status";
+        this.status = "support_group_status";
         this.statusInputElt = document.getElementById(this.status);
         this.statusLabelElt = document.querySelector("label[for=" + this.status + "]");
 
@@ -22,8 +22,8 @@ export default class ValidationSupport {
     }
 
     init() {
-        if (!this.startDateInputElt.value) {
-            this.startDateInputElt.value = this.now.getFullYear() + "-" + (this.now.getMonth() + 1) + "-" + this.now.getDate();
+        if (!this.endDateInputElt) {
+            this.startDateInputElt.value = this.getDateNow();
             this.setOption(this.statusInputElt, 2);
         }
 
@@ -98,6 +98,18 @@ export default class ValidationSupport {
         });
     }
 
+    // Donne la date actuelle
+    getDateNow() {
+        let month = this.now.getMonth() + 1;
+        if (this.now.getMonth() < 10) {
+            month = "0" + month;
+        }
+        let day = this.now.getDate();
+        if (this.now.getDate() < 10) {
+            day = "0" + day;
+        }
+        return this.now.getFullYear() + "-" + month + "-" + day;
+    }
 
     // Met le champ en valide 
     valid(field, input) {

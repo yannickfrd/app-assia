@@ -246,10 +246,10 @@ class SitHousing
     private $domiciliationDept;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportGrp", inversedBy="sitHousing", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitHousing", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $supportGrp;
+    private $supportGroup;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -736,14 +736,14 @@ class SitHousing
         return $this;
     }
 
-    public function getSupportGrp(): ?SupportGrp
+    public function getSupportGroup(): ?SupportGroup
     {
-        return $this->supportGrp;
+        return $this->supportGroup;
     }
 
-    public function setSupportGrp(SupportGrp $supportGrp): self
+    public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGrp = $supportGrp;
+        $this->supportGroup = $supportGroup;
 
         return $this;
     }

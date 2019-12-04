@@ -6,13 +6,13 @@ use App\Utils\Agree;
 use App\Entity\User;
 use App\Form\UserType;
 
-use App\Entity\RoleUser;
+use App\Entity\ServiceUser;
 use App\Entity\Service;
 
 use App\Entity\UserSearch;
-use App\Form\RoleUserType;
+use App\Form\ServiceUserType;
 use App\Form\UserSearchType;
-use App\Form\RoleUserGroupType;
+use App\Form\ServiceUserGroupType;
 use App\Repository\UserRepository;
 
 use Knp\Component\Pager\PaginatorInterface;
@@ -87,16 +87,16 @@ class UserController extends AbstractController
      * @Route("/service/{id}/search/user", name="service_search_user")
      * @return Response
      */
-    public function serviceSearchUser(Request $request, UserSearch $userSearch = null, Service $service = null, RoleUser $roleUser = null, PaginatorInterface $paginator): Response
+    public function serviceSearchUser(Request $request, UserSearch $userSearch = null, Service $service = null, ServiceUser $serviceUser = null, PaginatorInterface $paginator): Response
     {
         $userSearch = new UserSearch();
 
-        $formRoleUser = null;
+        $formServiceUser = null;
 
         if ($service) {
-            $formRoleUser = $this->createFormBuilder($roleUser)
+            $formServiceUser = $this->createFormBuilder($serviceUser)
                 ->add("role", ChoiceType::class, [
-                    "choices" => Choices::getChoices(RoleUser::ROLE),
+                    "choices" => Choices::getChoices(ServiceUser::ROLE),
                 ])
                 ->getForm();
         }
@@ -122,10 +122,10 @@ class UserController extends AbstractController
             "users" => $users ?? null,
             "userSearch" => $userSearch,
             "form" => $form->createView(),
-            "form_role_user" => $formRoleUser->createView(),
+            "form_role_user" => $formServiceUser->createView(),
             "current_menu" => "list_users"
         ]);
-        // return $this->pagination($userSearch, $request, $service, $form,  $formRoleUser, $paginator);
+        // return $this->pagination($userSearch, $request, $service, $form,  $formServiceUser, $paginator);
     }
 
     public function getchoices($const)
@@ -159,23 +159,23 @@ class UserController extends AbstractController
      * 
      * @Route("/user/new", name="user_new", methods="GET|POST")
      * @param User $user
-     * @param RoleUser $roleUser
+     * @param ServiceUser $serviceUser
      * @param Service $service
      * @param UserRepository $repo
      * @param Request $request
      * @return Response
      */
-    public function newUser(User $user = null, RoleUser $roleUser = null, Service $service = null, UserRepository $repo, Request $request): Response
+    public function newUser(User $user = null, ServiceUser $serviceUser = null, Service $service = null, UserRepository $repo, Request $request): Response
     {
         $user = new User();
-        $roleUser = new RoleUser();
+        $serviceUser = new ServiceUser();
         $service = new Service();
 
-        $form = $this->createForm(RoleUserGroupType::class, $roleUser);
+        $form = $this->createForm(ServiceUserGroupType::class, $serviceUser);
         $form->handleRequest($request);
 
-        $user = $roleUser->getUser();
-        $service = $roleUser->getService();
+        $user = $serviceUser->getUser();
+        $service = $serviceUser->getService();
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -198,16 +198,16 @@ class UserController extends AbstractController
                     ->setUpdatedBy($this->security->getUser());
                 $this->manager->persist($service);
 
-                $roleUser->setHead(true)
+                $serviceUser->setHead(true)
                     ->setCreatedAt(new \DateTime())
                     ->setService($service);
-                $this->manager->persist($roleUser);
+                $this->manager->persist($serviceUser);
 
                 $user->setCreatedAt(new \DateTime())
                     ->setCreatedBy($this->security->getUser())
                     ->setUpdatedAt(new \DateTime())
                     ->setUpdatedBy($this->security->getUser())
-                    ->addRolesUser($roleUser);
+                    ->addRolesUser($serviceUser);
                 $this->manager->persist($user);
 
                 $this->manager->flush();
@@ -231,21 +231,21 @@ class UserController extends AbstractController
      * 
      * @Route("/service/{id}/user/new", name="service_create_user", methods="GET|POST")
      * @param User $user
-     * @param RoleUser $roleUser
+     * @param ServiceUser $serviceUser
      * @param Service $service
      * @param UserRepository $repo
      * @param Request $request
      * @return Response
      */
-    public function newUserInGroup(User $user = null, RoleUser $roleUser = null, Service $service, UserRepository $repo, Request $request): Response
+    public function newUserInGroup(User $user = null, ServiceUser $serviceUser = null, Service $service, UserRepository $repo, Request $request): Response
     {
         $user = new User();
-        $roleUser = new RoleUser();
+        $serviceUser = new ServiceUser();
 
-        $form = $this->createForm(RoleUserType::class, $roleUser);
+        $form = $this->createForm(ServiceUserType::class, $serviceUser);
         $form->handleRequest($request);
 
-        $user = $roleUser->getUser();
+        $user = $serviceUser->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si l'utilisateur existe déjà dans la base de données
@@ -262,7 +262,7 @@ class UserController extends AbstractController
                 );
                 return $this->redirectToRoute("user_show", ["id" => $userExist->getId()]);
             } else {
-                $this->createUser($user, $service, $roleUser);
+                $this->createUser($user, $service, $serviceUser);
                 return $this->redirectToRoute("service_show", ["id" => $service->getId()]);
             }
         } else {
@@ -279,23 +279,23 @@ class UserController extends AbstractController
      *
      * @param User $user
      * @param Service $service
-     * @param RoleUser $roleUser
+     * @param ServiceUser $serviceUser
      */
-    protected function createUser(User $user, Service $service, RoleUser $roleUser = null)
+    protected function createUser(User $user, Service $service, ServiceUser $serviceUser = null)
     {
-        $roleUser->setHead(false)
+        $serviceUser->setHead(false)
             ->setCreatedAt(new \DateTime())
             ->setService($service);
-        $this->manager->persist($roleUser);
+        $this->manager->persist($serviceUser);
 
         $user->setCreatedAt(new \DateTime())
             ->setCreatedBy($this->security->getUser())
             ->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->security->getUser())
-            ->addRolesUser($roleUser);
+            ->addRolesUser($serviceUser);
         $this->manager->persist($user);
 
-        $nbPeople = $service->getRoleUser()->count();
+        $nbPeople = $service->getServiceUser()->count();
         $service->setNbPeople($nbPeople + 1);
 
         $this->manager->flush();
@@ -391,7 +391,7 @@ class UserController extends AbstractController
      * @Route("/user/{id}", name="user_show", methods="GET|POST")
      *  @return Response
      */
-    public function userShow(User $user, RoleUser $roleUser = null, Request $request): Response
+    public function userShow(User $user, ServiceUser $serviceUser = null, Request $request): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -414,7 +414,7 @@ class UserController extends AbstractController
 
 
     // Met en place la pagination du tableau et affiche le rendu
-    protected function pagination($userSearch, $request, $service, $form, $formRoleUser = null, $paginator)
+    protected function pagination($userSearch, $request, $service, $form, $formServiceUser = null, $paginator)
     { }
 
     /**

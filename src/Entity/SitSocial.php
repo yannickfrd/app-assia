@@ -122,10 +122,10 @@ class SitSocial
     private $speComment;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportGrp", inversedBy="sitSocial", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitSocial", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $supportGrp;
+    private $supportGroup;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -291,14 +291,14 @@ class SitSocial
         return $this;
     }
 
-    public function getSupportGrp(): ?SupportGrp
+    public function getSupportGroup(): ?SupportGroup
     {
-        return $this->supportGrp;
+        return $this->supportGroup;
     }
 
-    public function setSupportGrp(SupportGrp $supportGrp): self
+    public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGrp = $supportGrp;
+        $this->supportGroup = $supportGroup;
 
         return $this;
     }

@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use App\Form\Utils\Choices;;
 
-use App\Form\RoleUserType;
+use App\Form\ServiceUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -65,8 +65,8 @@ class RegistrationType extends AbstractType
                 ],
                 "help" => "Veuillez re-saisir le mot de passe pour confirmation",
             ])
-            ->add("roleUser", CollectionType::class, [
-                "entry_type" => RoleUserType::class,
+            ->add("serviceUser", CollectionType::class, [
+                "entry_type" => ServiceUserType::class,
                 "label" => false,
                 "allow_add" => true,
                 "allow_delete" => true,

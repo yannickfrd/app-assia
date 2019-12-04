@@ -6,26 +6,62 @@
 
 {% block collapse_card_body %}
 
+
+{% if typo in [4, 5, 6, 8] %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-80">Prénom et Nom</th>
+                        <th scope="col" class="align-middle th-w-100">Garde ou scolarité</th>
+                        <th scope="col" class="align-middle th-w-100">Lieu de garde/scolarité</th>
+                        <th scope="col" class="align-middle th-w-100">À héberger </th>
+                        <th scope="col" class="align-middle th-w-100">À charge / Situation enfant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for supportPerson in form.supportPerson|filter(supportPerson => supportPerson.vars.value.person.age < 18) %}
+                    {% set person = supportPerson.vars.data.person %}
+                    <tr>
+                        <th scope="row"></th>
+                        <td class="px-1 align-middle">{{ person.firstname }} {{ person.lastname }}</td>
+                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childcareSchool) }}</td>
+                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childcareSchoolLocation) }}</td>
+                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childToHost) }}</td>
+                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childDependance) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% if typo not in [2, 5] %}
 <div class="form-group row">
-    {# <div class="col-md-6">{{ form_row(form.sitFamilyGrp.nbDependentChildren) }}</div> #}
-    <div class="col-md-6">{{ form_row(form.sitFamilyGrp.unbornChild) }}</div>
-    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.sitFamilyGrp.expDateChildbirth) }}</div>
-    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.sitFamilyGrp.pregnancyType) }}</div>
+    {# <div class="col-md-6">{{ form_row(form.sitFamilyGroup.nbDependentChildren) }}</div> #}
+    <div class="col-md-6">{{ form_row(form.sitFamilyGroup.unbornChild) }}</div>
+    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.sitFamilyGroup.expDateChildbirth) }}</div>
+    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.sitFamilyGroup.pregnancyType) }}</div>
 </div>
 {% endif %}
 
 <div class="form-group row">
     <div class="col-md-6 js-0_sitAdm_nationality d-block">
-        {{ form_row(form.sitFamilyGrp.famlReunification) }}</div>
-    <div class="col-md-6 js-famlReunification d-block">{{ form_row(form.sitFamilyGrp.nbPeopleReunification) }}</div>
+        {{ form_row(form.sitFamilyGroup.famlReunification) }}</div>
+    <div class="col-md-6 js-famlReunification d-block">{{ form_row(form.sitFamilyGroup.nbPeopleReunification) }}</div>
     {% if typo not in [1, 2] %}
-    <div class="col-md-6">{{ form_row(form.sitFamilyGrp.cafId) }}</div>
+    <div class="col-md-6">{{ form_row(form.sitFamilyGroup.cafId) }}</div>
     {% endif %}
 </div>
 
 <div class="form-group row">
-    {# {{ form_label(form.sitFamilyGrp.commentSitFamilyGrp) }} #}
-    <div class="col-md-12">{{ form_widget(form.sitFamilyGrp.commentSitFamilyGrp) }}</div>
+    {# {{ form_label(form.sitFamilyGroup.commentSitFamilyGroup) }} #}
+    <div class="col-md-12">{{ form_widget(form.sitFamilyGroup.commentSitFamilyGroup) }}</div>
 </div>
+
 {% endblock %}

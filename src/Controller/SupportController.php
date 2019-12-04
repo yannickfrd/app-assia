@@ -2,34 +2,37 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+
 use App\Utils\Agree;
 
 use App\Entity\Person;
-
 use App\Entity\RolePerson;
+
+use App\Entity\SupportGroup;
+
 use App\Entity\GroupPeople;
+use App\Entity\SupportPerson;
 
+use App\Form\SupportGroupType;
 use App\Form\GroupPeopleType;
+use App\Form\SupportGroupType2;
 
-use App\Entity\SupportGrp;
 use App\Entity\GroupPeopleSearch;
-
-use App\Entity\SupportPers;
-use App\Form\SupportGrpType;
 use App\Form\GroupPeopleSearchType;
 
 use App\Repository\RolePersonRepository;
+use App\Repository\SupportGroupRepository;
+use App\Repository\SupportPersonRepository;
+use Symfony\Bundle\MakerBundle\Validator;
 use Knp\Component\Pager\PaginatorInterface;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use App\Repository\SupportGrpRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\MakerBundle\Validator;
 
 class SupportController extends AbstractController
 {
@@ -80,15 +83,15 @@ class SupportController extends AbstractController
      * 
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      * @param GroupPeople $groupPeople
-     * @param SupportGrpRepository $repo
+     * @param SupportGroupRepository $repo
      * @param Request $request
      * @return Response
      */
-    public function newSupport(GroupPeople $groupPeople, SupportGrpRepository $repo, Request $request): Response
+    public function newSupport(GroupPeople $groupPeople, SupportGroupRepository $repo, Request $request): Response
     {
-        $supportGrp = new SupportGrp();
+        $supportGroup = new SupportGroup();
 
-        $form = $this->createForm(SupportGrpType::class, $supportGrp);
+        $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -96,7 +99,7 @@ class SupportController extends AbstractController
             $activeSupport = $repo->findBy([
                 "groupPeople" => $groupPeople,
                 "status" => 2,
-                "service" => $supportGrp->getService()
+                "service" => $supportGroup->getService()
             ]);
 
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
@@ -104,27 +107,28 @@ class SupportController extends AbstractController
 
                 $user = $this->security->getUser();
 
-                $supportGrp->setGroupPeople($groupPeople)
+                $supportGroup->setGroupPeople($groupPeople)
+                    ->setReferent($user)
                     // ->setService($service)
                     ->setCreatedAt(new \DateTime())
                     ->setCreatedBy($user)
                     ->setUpdatedAt(new \DateTime())
                     ->setUpdatedBy($user);
 
-                $this->manager->persist($supportGrp);
+                $this->manager->persist($supportGroup);
 
                 // Créé un suivi social individuel pour chaque personne du groupe
                 foreach ($groupPeople->getRolePerson() as $rolePerson) {
-                    $supportPers = new SupportPers();
+                    $supportPerson = new SupportPerson();
 
-                    $supportPers->setSupportGrp($supportGrp)
+                    $supportPerson->setSupportGroup($supportGroup)
                         ->setPerson($rolePerson->getPerson())
-                        ->setStartDate($supportGrp->getStartDate())
-                        ->setEndDate($supportGrp->getEndDate())
-                        ->setStatus($supportGrp->getStatus())
+                        ->setStartDate($supportGroup->getStartDate())
+                        ->setEndDate($supportGroup->getEndDate())
+                        ->setStatus($supportGroup->getStatus())
                         ->setCreatedAt(new \DateTime())
                         ->setUpdatedAt(new \DateTime());
-                    $this->manager->persist($supportPers);
+                    $this->manager->persist($supportPerson);
                 };
 
                 $this->manager->flush();
@@ -133,9 +137,9 @@ class SupportController extends AbstractController
                     "success",
                     "Le suivi social a été créé."
                 );
-                return $this->redirectToRoute("support_show", [
+                return $this->redirectToRoute("support_edit", [
                     "id" => $groupPeople->getId(),
-                    "support_id" => $supportGrp->getId()
+                    "support_id" => $supportGroup->getId()
                 ]);
             } else {
                 $this->addFlash(
@@ -154,58 +158,59 @@ class SupportController extends AbstractController
     /**
      * Voir un suvi social
      * 
-     * @Route("/group/{id}/support/{support_id}", name="support_show", methods="GET|POST")
-     * @ParamConverter("supportGrp", options={"id" = "support_id"})
+     * @Route("/group/{id}/support/{support_id}", name="support_edit", methods="GET|POST")
+     * @ParamConverter("supportGroup", options={"id" = "support_id"})
      * @param GroupPeople $groupPeople
-     * @param SupportGrp $supportGrp
-     * @param SupportPers $supportPers
-     * @param SupportGrpRepository $repo
+     * @param SupportGroup $supportGroup
+     * @param SupportPerson $supportPerson
      * @param Request $request
      * @return Response
      */
-    public function showSupport(GroupPeople $groupPeople, SupportGrp $supportGrp, SupportPers $supportPers = null, Request $request): Response
+    public function editSupport(GroupPeople $groupPeople, SupportGroup $supportGroup, SupportPerson $supportPerson = null, Request $request): Response
     {
-        $form = $this->createForm(SupportGrpType::class, $supportGrp);
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+
+        $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $supportGrp
+            $supportGroup
                 ->setUpdatedAt(new \DateTime())
                 ->setUpdatedBy($this->security->getUser());
 
-            $ressourcesGrpAmt = 0;
-            $chargesGrpAmt = 0;
-            $debtsGrpAmt = 0;
+            $ressourcesGroupAmt = 0;
+            $chargesGroupAmt = 0;
+            $debtsGroupAmt = 0;
             $monthlyRepaymentAmt = 0;
             // Met à jour le suivi social individuel pour chaque personne du groupe
-            foreach ($supportGrp->getSupportPers() as $supportPers) {
+            foreach ($supportGroup->getSupportPerson() as $supportPerson) {
 
-                if ($supportPers->getEndDate() == null) {
-                    $supportPers->setEndDate($supportGrp->getEndDate());
+                if ($supportPerson->getEndDate() == null) {
+                    $supportPerson->setEndDate($supportGroup->getEndDate());
                 }
-                if ($supportPers->getStatus() == 2) {
-                    $supportPers->setStatus($supportGrp->getStatus());
+                if ($supportPerson->getStatus() == 2) {
+                    $supportPerson->setStatus($supportGroup->getStatus());
                 }
-                $supportPers->setUpdatedAt(new \DateTime());
+                $supportPerson->setUpdatedAt(new \DateTime());
 
-                $ressourcesGrpAmt += $supportPers->getSitBudget()->getRessourcesAmt();
-                $chargesGrpAmt += $supportPers->getSitBudget()->getChargesAmt();
-                $debtsGrpAmt += $supportPers->getSitBudget()->getDebtsAmt();
-                $monthlyRepaymentAmt += $supportPers->getSitBudget()->getMonthlyRepaymentAmt();
+                $ressourcesGroupAmt += $supportPerson->getSitBudget()->getRessourcesAmt();
+                $chargesGroupAmt += $supportPerson->getSitBudget()->getChargesAmt();
+                $debtsGroupAmt += $supportPerson->getSitBudget()->getDebtsAmt();
+                $monthlyRepaymentAmt += $supportPerson->getSitBudget()->getMonthlyRepaymentAmt();
 
-                $this->manager->persist($supportPers);
+                $this->manager->persist($supportPerson);
             };
 
-            $budgetBalanceAmt = $ressourcesGrpAmt - $chargesGrpAmt - $monthlyRepaymentAmt;
+            $budgetBalanceAmt = $ressourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt;
 
-            $supportGrp->getSitBudgetGrp()->setRessourcesGrpAmt($ressourcesGrpAmt);
-            $supportGrp->getSitBudgetGrp()->setChargesGrpAmt($chargesGrpAmt);
-            $supportGrp->getSitBudgetGrp()->setDebtsGrpAmt($debtsGrpAmt);
-            $supportGrp->getSitBudgetGrp()->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
-            $supportGrp->getSitBudgetGrp()->setBudgetBalanceAmt($budgetBalanceAmt);
+            $supportGroup->getSitBudgetGroup()->setRessourcesGroupAmt($ressourcesGroupAmt);
+            $supportGroup->getSitBudgetGroup()->setChargesGroupAmt($chargesGroupAmt);
+            $supportGroup->getSitBudgetGroup()->setDebtsGroupAmt($debtsGroupAmt);
+            $supportGroup->getSitBudgetGroup()->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
+            $supportGroup->getSitBudgetGroup()->setBudgetBalanceAmt($budgetBalanceAmt);
 
-            $this->manager->persist($supportGrp);
+            $this->manager->persist($supportGroup);
 
             $this->manager->flush();
 
@@ -233,5 +238,128 @@ class SupportController extends AbstractController
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
+    }
+
+    /**
+     * Voir les dates individuelles du suivi social
+     * 
+     * @Route("/group/{id}/support/{support_id}/individuals", name="support_pers_edit", methods="GET|POST")
+     * @ParamConverter("supportGroup", options={"id" = "support_id"})
+     * @param GroupPeople $groupPeople
+     * @param SupportGroup $supportGroup
+     * @param SupportPerson $supportPerson
+     * @param Request $request
+     * @return Response
+     */
+    public function editSupportPerson(GroupPeople $groupPeople, SupportGroup $supportGroup, SupportPerson $supportPerson = null, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+
+        $form = $this->createForm(SupportGroupType2::class, $supportGroup);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $supportGroup
+                ->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
+
+            $this->manager->persist($supportGroup);
+
+            $this->manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Le suivi social a été modifié."
+            );
+        }
+
+        return $this->render("app/support/supportPerson.html.twig", [
+            "group_people" => $groupPeople,
+            "form" => $form->createView(),
+            "edit_mode" => true
+        ]);
+    }
+
+
+    /**
+     * Voir les dates individuelles du suivi social
+     * 
+     * @Route("/group/{id}/support/{support_id}/add_people", name="support_add_people", methods="GET|POST")
+     * @ParamConverter("supportGroup", options={"id" = "support_id"})
+     * @param GroupPeople $groupPeople
+     * @param SupportGroup $supportGroup
+     * @param SupportPerson $supportPerson
+     */
+    public function addPeopleInSupport(GroupPeople $groupPeople, SupportGroup $supportGroup, SupportPersonRepository $repo): Response
+    {
+        $people = [];
+
+        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+            $people[] = $supportPerson->getPerson()->getId();
+        }
+
+        foreach ($groupPeople->getrolePerson() as $role) {
+
+            $personId = $role->getPerson()->getId();
+
+            if (!in_array($personId, $people)) {
+
+                $user = $this->security->getUser();
+
+                $supportGroup->setUpdatedAt(new \DateTime())
+                    ->setUpdatedBy($user);
+
+                $this->manager->persist($supportGroup);
+
+                // Crée un suivi social individuel
+                $supportPerson = new SupportPerson();
+
+                $supportPerson->setSupportGroup($supportGroup)
+                    ->setPerson($role->getPerson())
+                    ->setStartDate(new \DateTime())
+                    ->setEndDate($supportGroup->getEndDate())
+                    ->setStatus($supportGroup->getStatus())
+                    ->setCreatedAt(new \DateTime())
+                    ->setUpdatedAt(new \DateTime());
+
+                $this->manager->persist($supportPerson);
+            }
+
+            $this->manager->flush();
+        }
+        return $this->redirectToRoute("support_pers_edit", [
+            "id" => $groupPeople->getId(),
+            "support_id" => $supportGroup->getId()
+        ]);
+    }
+
+    /**
+     * Retire la personne du suivi social
+     * @Route("/supportGroup/{id}/remove-{support_pers_id}_{_token}", name="remove_support_pers", methods="GET")
+     * @ParamConverter("supportPerson", options={"id" = "support_pers_id"})
+     * @param Request $request
+     * @return Response
+     */
+    public function removeSupportPerson(SupportGroup $supportGroup, SupportPerson $supportPerson, Request $request): Response
+    {
+        // Vérifie si le token est valide avant de retirer la personne du suivi social
+        if ($this->isCsrfTokenValid("remove" . $supportPerson->getId(), $request->get("_token"))) {
+
+            $supportGroup->removeSupportPerson($supportPerson);
+
+            $this->manager->flush();
+
+            return $this->json([
+                "code" => 200,
+                "msg" => "La personne a été retirée du suivi social.",
+                "data" => null
+            ], 200);
+        }
+        return $this->json([
+            "code" => 403,
+            "msg" => "Une erreur s'est produite.",
+            "data" => null
+        ], 200);
     }
 }

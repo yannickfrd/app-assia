@@ -21,7 +21,7 @@ class User implements UserInterface
     public const ROLES = [
         "ROLE_USER" => "Utilisateur",
         "ROLE_ADMIN" => "Administrateur",
-        "ROLE_SUPER_ADMIN" => "Super administreur",
+        "ROLE_SUPER_ADMIN" => "Administreur général",
     ];
     /**
      * @ORM\Id()
@@ -117,19 +117,19 @@ class User implements UserInterface
     private $groupPeopleUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="createdBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="createdBy")
      */
-    private $supportsGrpCreated;
+    private $supportsGroupCreated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="updatedBy")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="updatedBy")
      */
-    private $supportsGrpUpdated;
+    private $supportsGroupUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="user", cascade={"persist"})
      */
-    private $roleUser;
+    private $serviceUser;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserConnection", mappedBy="user", orphanRemoval=true)
@@ -146,16 +146,25 @@ class User implements UserInterface
      */
     private $tokenCreatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="referent")
+     */
+    private $referentSupport;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="referent2")
+     */
+    private $referent2Support;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
-        $this->peopleUpdated = new ArrayCollection();
         $this->groupPeople = new ArrayCollection();
-        $this->groupPeopleUpdated = new ArrayCollection();
-        $this->supportsGrpCreated = new ArrayCollection();
-        $this->supportsGrpUpdated = new ArrayCollection();
-        $this->roleUser = new ArrayCollection();
+        $this->supportsGroupCreated = new ArrayCollection();
+        $this->serviceUser = new ArrayCollection();
         $this->userConnections = new ArrayCollection();
+        $this->referentSupport = new ArrayCollection();
+        $this->referent2Support = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,6 +254,11 @@ class User implements UserInterface
         $this->firstname = $firstname;
 
         return $this;
+    }
+
+    public function getFullname(): ?string
+    {
+        return $this->firstname . " " . $this->lastname;
     }
 
     public function eraseCredentials()
@@ -347,37 +361,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Person[]
-     */
-    public function getPeopleUpdated(): Collection
-    {
-        return $this->peopleUpdated;
-    }
-
-    public function addPeopleUpdated(Person $peopleUpdated): self
-    {
-        if (!$this->peopleUpdated->contains($peopleUpdated)) {
-            $this->peopleUpdated[] = $peopleUpdated;
-            $peopleUpdated->setUpdatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removePeopleUpdated(Person $peopleUpdated): self
-    {
-        if ($this->peopleUpdated->contains($peopleUpdated)) {
-            $this->peopleUpdated->removeElement($peopleUpdated);
-            // set the owning side to null (unless already changed)
-            if ($peopleUpdated->getUpdatedBy() === $this) {
-                $peopleUpdated->setUpdatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|GroupPeople[]
      */
     public function getGroupPeople(): Collection
@@ -409,30 +392,30 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|GroupPeople[]
+     * @return Collection|SupportGroup[]
      */
-    public function getGroupPeopleUpdated(): Collection
+    public function getsupportsGroupCreated(): Collection
     {
-        return $this->groupPeopleUpdated;
+        return $this->supportsGroupCreated;
     }
 
-    public function addGroupPeopleUpdated(GroupPeople $groupPeopleUpdated): self
+    public function addsupportsGroupCreated(SupportGroup $supportsGroupCreated): self
     {
-        if (!$this->groupPeopleUpdated->contains($groupPeopleUpdated)) {
-            $this->groupPeopleUpdated[] = $groupPeopleUpdated;
-            $groupPeopleUpdated->setUpdatedBy($this);
+        if (!$this->supportsGroupCreated->contains($supportsGroupCreated)) {
+            $this->supportsGroupCreated[] = $supportsGroupCreated;
+            $supportsGroupCreated->setCreatedBy($this);
         }
 
         return $this;
     }
 
-    public function removeGroupPeopleUpdated(GroupPeople $groupPeopleUpdated): self
+    public function removesupportsGroupCreated(SupportGroup $supportsGroupCreated): self
     {
-        if ($this->groupPeopleUpdated->contains($groupPeopleUpdated)) {
-            $this->groupPeopleUpdated->removeElement($groupPeopleUpdated);
+        if ($this->supportsGroupCreated->contains($supportsGroupCreated)) {
+            $this->supportsGroupCreated->removeElement($supportsGroupCreated);
             // set the owning side to null (unless already changed)
-            if ($groupPeopleUpdated->getUpdatedBy() === $this) {
-                $groupPeopleUpdated->setUpdatedBy(null);
+            if ($supportsGroupCreated->getCreatedBy() === $this) {
+                $supportsGroupCreated->setCreatedBy(null);
             }
         }
 
@@ -440,96 +423,34 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SupportGrp[]
+     * @return Collection|ServiceUser[]
      */
-    public function getsupportsGrpCreated(): Collection
+    public function getServiceUser(): Collection
     {
-        return $this->supportsGrpCreated;
-    }
-
-    public function addsupportsGrpCreated(SupportGrp $supportsGrpCreated): self
-    {
-        if (!$this->supportsGrpCreated->contains($supportsGrpCreated)) {
-            $this->supportsGrpCreated[] = $supportsGrpCreated;
-            $supportsGrpCreated->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removesupportsGrpCreated(SupportGrp $supportsGrpCreated): self
-    {
-        if ($this->supportsGrpCreated->contains($supportsGrpCreated)) {
-            $this->supportsGrpCreated->removeElement($supportsGrpCreated);
-            // set the owning side to null (unless already changed)
-            if ($supportsGrpCreated->getCreatedBy() === $this) {
-                $supportsGrpCreated->setCreatedBy(null);
-            }
-        }
-
-        return $this;
+        return $this->serviceUser;
     }
 
     /**
-     * @return Collection|SupportGrp[]
-     */
-    public function getsupportsGrpUpdated(): Collection
-    {
-        return $this->supportsGrpUpdated;
-    }
-
-    public function addsupportsGrpUpdated(SupportGrp $supportsGrpUpdated): self
-    {
-        if (!$this->supportsGrpUpdated->contains($supportsGrpUpdated)) {
-            $this->supportsGrpUpdated[] = $supportsGrpUpdated;
-            $supportsGrpUpdated->setUpdatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removesupportsGrpUpdated(SupportGrp $supportsGrpUpdated): self
-    {
-        if ($this->supportsGrpUpdated->contains($supportsGrpUpdated)) {
-            $this->supportsGrpUpdated->removeElement($supportsGrpUpdated);
-            // set the owning side to null (unless already changed)
-            if ($supportsGrpUpdated->getUpdatedBy() === $this) {
-                $supportsGrpUpdated->setUpdatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|RoleUser[]
-     */
-    public function getRoleUser(): Collection
-    {
-        return $this->roleUser;
-    }
-
-    /**
-     * @param RoleUser $roleUser
+     * @param ServiceUser $serviceUser
      * @return self
      */
-    public function addRoleUser(RoleUser $roleUser): self
+    public function addServiceUser(ServiceUser $serviceUser): self
     {
-        if (!$this->roleUser->contains($roleUser)) {
-            $this->roleUser[] = $roleUser;
-            $roleUser->setUser($this);
+        if (!$this->serviceUser->contains($serviceUser)) {
+            $this->serviceUser[] = $serviceUser;
+            $serviceUser->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeRoleUser(RoleUser $roleUser): self
+    public function removeServiceUser(ServiceUser $serviceUser): self
     {
-        if ($this->roleUser->contains($roleUser)) {
-            $this->roleUser->removeElement($roleUser);
+        if ($this->serviceUser->contains($serviceUser)) {
+            $this->serviceUser->removeElement($serviceUser);
             // set the owning side to null (unless already changed)
-            if ($roleUser->getUser() === $this) {
-                $roleUser->setUser(null);
+            if ($serviceUser->getUser() === $this) {
+                $serviceUser->setUser(null);
             }
         }
 
@@ -587,6 +508,68 @@ class User implements UserInterface
     public function setTokenCreatedAt(?\DateTimeInterface $tokenCreatedAt): self
     {
         $this->tokenCreatedAt = $tokenCreatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReferentSupport[]
+     */
+    public function getReferentSupport(): Collection
+    {
+        return $this->referentSupport;
+    }
+
+    public function addReferentSupport(SupportGroup $referentSupport): self
+    {
+        if (!$this->referentSupport->contains($referentSupport)) {
+            $this->referentSupport[] = $referentSupport;
+            $referentSupport->setReferent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferentSupport(SupportGroup $referentSupport): self
+    {
+        if ($this->referentSupport->contains($referentSupport)) {
+            $this->referentSupport->removeElement($referentSupport);
+            // set the owning side to null (unless already changed)
+            if ($referentSupport->getReferent() === $this) {
+                $referentSupport->setReferent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SupportGroup[]
+     */
+    public function getReferent2Support(): Collection
+    {
+        return $this->referent2Support;
+    }
+
+    public function addReferent2Support(SupportGroup $referent2Support): self
+    {
+        if (!$this->referent2Support->contains($referent2Support)) {
+            $this->referent2Support[] = $referent2Support;
+            $referent2Support->setReferent2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferent2Support(SupportGroup $referent2Support): self
+    {
+        if ($this->referent2Support->contains($referent2Support)) {
+            $this->referent2Support->removeElement($referent2Support);
+            // set the owning side to null (unless already changed)
+            if ($referent2Support->getReferent2() === $this) {
+                $referent2Support->setReferent2(null);
+            }
+        }
 
         return $this;
     }

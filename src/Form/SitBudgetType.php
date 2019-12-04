@@ -202,7 +202,7 @@ class SitBudgetType extends AbstractType
                 "required" => false
             ])
             ->add("overIndebtRecord", ChoiceType::class, [
-                "choices" => Choices::getChoices(SelectList::YES_NO),
+                "choices" => Choices::getChoices(SitBudget::OVER_INDEBT_RECCORD),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -210,8 +210,8 @@ class SitBudgetType extends AbstractType
                 "widget" => "single_text",
                 "required" => false
             ])
-            ->add("settlementplan", ChoiceType::class, [
-                "choices" => Choices::getChoices(SelectList::YES_NO),
+            ->add("settlementPlan", ChoiceType::class, [
+                "choices" => Choices::getChoices(SitBudget::SETTLEMENT_PLAN),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

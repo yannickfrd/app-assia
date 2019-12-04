@@ -19,28 +19,32 @@
 				<tr>
 					<td>Total ressources</td>
 					<td class="pr-3 text-right">
-						<span id="ressourcesGrpAmt">{{ support.sitBudgetGrp.ressourcesGrpAmt }} </span> €</td>
+						<span id="ressourcesGroupAmt">{% if support.sitBudgetGroup.ressourcesGroupAmt is defined %}
+							{{ support.sitBudgetGroup.ressourcesGroupAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total charges</td>
 					<td class="pr-3 text-right">
-						<span id="chargesGrpAmt">{{ support.sitBudgetGrp.chargesGrpAmt }}</span> €</td>
+						<span id="chargesGroupAmt">{% if support.sitBudgetGroup.chargesGroupAmt is defined %}
+							{{ support.sitBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total remboursement mensuel</td>
 					<td class="pr-3 text-right">
-						<span id="repaymentGrpAmt">{{ support.sitBudgetGrp.monthlyRepaymentAmt }}</span> €</td>
+						<span id="repaymentGroupAmt">{% if support.sitBudgetGroup.monthlyRepaymentAmt is defined %}
+							{{ support.sitBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
-				<tr class="table-dark font-weight-bold">
+				<tr class="table-dark text-dark font-weight-bold">
 					<td>Reste à vivre</td>
 					<td class="pr-3 text-right">
-						<span id="budgetBalanceGrpAmt">{{ support.sitBudgetGrp.budgetBalanceAmt }}</span> €</td>
+						<span id="budgetBalanceGroupAmt">{% if support.sitBudgetGroup.budgetBalanceAmt is defined %}
+							{{ support.sitBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total dettes</td>
 					<td class="pr-3 text-right">
-						<span id="debtsGrpAmt">{{ support.sitBudgetGrp.debtsGrpAmt }}</span> €
-					</td>
+						<span id="debtsGroupAmt">{% if support.sitBudgetGroup.debtsGroupAmt is defined %}
+							{{ support.sitBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 			</tbody>
 		</table>
@@ -50,8 +54,8 @@
 <div class="row">
 	<div class="col-md-12 accordion" id="accordion-sit_budget">
 		<div class="mb-4">
-			{% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
-			{% set person = supportPers.vars.value.person %}
+			{% for supportPerson in form.supportPerson|filter(supportPerson => supportPerson.vars.value.person.age >= 18) %}
+			{% set person = supportPerson.vars.value.person %}
 			<button type="button" id="heading-sit_budget-{{ loop.index0 }}"
 				class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} js-person"
 				data-toggle="collapse" data-target="#collapse-sit_budget-{{ loop.index0 }}" aria-expanded="false"
@@ -60,7 +64,7 @@
 			{% endfor %}
 		</div>
 
-		{% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
+		{% for supportPerson in form.supportPerson|filter(supportPerson => supportPerson.vars.value.person.age >= 18) %}
 
 		<div id="collapse-sit_budget-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
 			aria-labelledby="heading-sit_budget-{{ loop.index0 }}" data-parent="#accordion-sit_budget">
@@ -68,14 +72,14 @@
 				{# Ressources #}
 				<div class="col-md-6">
 					<div class="form-group row">
-						<div class="col-md-12">{{ form_row(supportPers.sitBudget.ressources) }}</div>
+						<div class="col-md-12">{{ form_row(supportPerson.sitBudget.ressources) }}</div>
 						<div class="col-md-12 js-{{ loop.index0 }}_sitBudget_ressources d-block">
 							<div class="row">
 								<div class="col-form-label col-sm-4 js-ressources d-block">Type de ressources</div>
 								<div class="col-sm-8">
 									<select id="js-{{ loop.index0 }}_sitBudget_ressources_type"
 										name="js-{{ loop.index0 }}_sitBudget_ressources_type" class="form-control">
-										<option class="default" value="">-- Sélectionner --</option>
+										<option class="default" value="">-- Ajouter --</option>
 										<option value="1">Allocation adulte handicapé</option>
 										<option value="2">Allocation d'éducation de l'enfant handicapé (AEEH)</option>
 										<option value="3">Allocation chômage (ARE)</option>
@@ -110,9 +114,9 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-1"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span class="sr-only">
-													{{ form_widget(supportPers.sitBudget.disAdultAlw) }}</span></th>
+													{{ form_widget(supportPerson.sitBudget.disAdultAlw) }}</span></th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.disAdultAlwAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.disAdultAlwAmt) }}</td>
 											<td><button class="btn btn-danger js-remove"><i
 														class="fas fa-trash-alt"></i></button>
 											</td>
@@ -120,10 +124,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-2"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span class="sr-only">
-													{{ form_widget(supportPers.sitBudget.disChildAlw) }}</span></th>
+													{{ form_widget(supportPerson.sitBudget.disChildAlw) }}</span></th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.disChildAlwAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.disChildAlwAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -131,10 +135,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-3"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span class="sr-only">
-													{{ form_widget(supportPers.sitBudget.unemplBenf) }}</span></th>
+													{{ form_widget(supportPerson.sitBudget.unemplBenf) }}</span></th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.unemplBenfAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.unemplBenfAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -142,11 +146,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-4"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.asylumSeekerAlw) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.asylumSeekerAlw) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.asylumSeekerAlwAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.asylumSeekerAlwAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -154,11 +158,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-5"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.tempWaitingAlw) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.tempWaitingAlw) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.tempWaitingAlwAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.tempWaitingAlwAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -166,11 +170,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-6"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.familyAlw) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.familyAlw) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.familyAlwAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.familyAlwAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -178,11 +182,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-7"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.solidarityAlw) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.solidarityAlw) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.solidarityAlwAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.solidarityAlwAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -190,11 +194,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-8"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.paidTraining) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.paidTraining) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.paidTrainingAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.paidTrainingAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -202,11 +206,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-9"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.youthGuarantee) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.youthGuarantee) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.youthGuaranteeAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.youthGuaranteeAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -214,11 +218,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-10"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.maintenance) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.maintenance) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.maintenanceAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.maintenanceAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -226,11 +230,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-11"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.activityBonus) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.activityBonus) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.activityBonusAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.activityBonusAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -238,11 +242,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-12"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.pensionBenf) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.pensionBenf) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.pensionBenfAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.pensionBenfAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -250,11 +254,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-13"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.minIncome) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.minIncome) }}</span>
 											</th>
 											<td class="align-middle"></td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.minIncomeAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.minIncomeAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -262,10 +266,11 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-14"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.salary) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.salary) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td class="align-middle">{{ form_widget(supportPers.sitBudget.salaryAmt) }}
+											<td class="align-middle">
+												{{ form_widget(supportPerson.sitBudget.salaryAmt) }}
 											</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
@@ -274,13 +279,13 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_ressources_type-98"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.ressourceOther) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.ressourceOther) }}</span>
 											</th>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.ressourceOtherPrecision) }}
+												{{ form_widget(supportPerson.sitBudget.ressourceOtherPrecision) }}
 											</td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.ressourceOtherAmt) }}
+												{{ form_widget(supportPerson.sitBudget.ressourceOtherAmt) }}
 											</td>
 											<td class="align-middle"><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
@@ -292,7 +297,7 @@
 											<th scope="row"></th>
 											<td class="align-middle">Total des ressources</td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.ressourcesAmt) }}</td>
+												{{ form_widget(supportPerson.sitBudget.ressourcesAmt) }}</td>
 											<td>
 										</tr>
 									</tfoot>
@@ -305,14 +310,14 @@
 				{# Charges #}
 				<div class="col-md-6">
 					<div class="form-group row">
-						<div class="col-md-12">{{ form_row(supportPers.sitBudget.charges) }}</div>
+						<div class="col-md-12">{{ form_row(supportPerson.sitBudget.charges) }}</div>
 						<div class="col-md-12  js-{{ loop.index0 }}_sitBudget_charges d-block">
 							<div class="row">
 								<div class="col-form-label col-sm-4">Type de charges</div>
 								<div class="col-sm-8">
 									<select id="js-{{ loop.index0 }}_sitBudget_charges_type"
 										name="js-{{ loop.index0 }}_sitBudget_charges_type" class="form-control">
-										<option class="default" value="">-- Sélectionner --</option>
+										<option class="default" value="">-- Ajouter --</option>
 										<option value="1">Loyer</option>
 										<option value="2">Electricité / Gaz</option>
 										<option value="3">Eau</option>
@@ -343,10 +348,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-1"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.rent) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.rent) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.rentAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.rentAmt) }}</td>
 											<td><button class="btn btn-danger js-remove"><i
 														class="fas fa-trash-alt"></i></button>
 											</td>
@@ -354,10 +359,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-2"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.electricityGas) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.electricityGas) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.electricityGasAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.electricityGasAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -365,10 +370,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-3"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.water) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.water) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.waterAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.waterAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -376,30 +381,30 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-4"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.insurance) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.insurance) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.insuranceAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.insuranceAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-5"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.mutual) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.mutual) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.mutualAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.mutualAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-6"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.taxes) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.taxes) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.taxesAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.taxesAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -407,10 +412,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-7"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.transport) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.transport) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.transportAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.transportAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -418,10 +423,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-8"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.childcare) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.childcare) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.childcareAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.childcareAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -429,10 +434,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-9"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.alimony) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.alimony) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.alimonyAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.alimonyAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -440,10 +445,10 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-10"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.phone) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.phone) }}</span>
 											</th>
 											<td class="align-middle"></td>
-											<td>{{ form_widget(supportPers.sitBudget.phoneAmt) }}</td>
+											<td>{{ form_widget(supportPerson.sitBudget.phoneAmt) }}</td>
 											<td><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button>
 											</td>
@@ -451,12 +456,12 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_charges_type-98"
 											class="js-{{ loop.index0 }}_sitBudget_ressources_type d-table-row">
 											<th scope="row"><span
-													class="sr-only">{{ form_widget(supportPers.sitBudget.chargeOther) }}</span>
+													class="sr-only">{{ form_widget(supportPerson.sitBudget.chargeOther) }}</span>
 											</th>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.chargeOtherPrecision) }}</td>
+												{{ form_widget(supportPerson.sitBudget.chargeOtherPrecision) }}</td>
 											<td class="align-middle">
-												{{ form_widget(supportPers.sitBudget.chargeOtherAmt) }}
+												{{ form_widget(supportPerson.sitBudget.chargeOtherAmt) }}
 											</td>
 											<td class="align-middle"><button class="btn btn-danger js-remove">
 													<i class="fas fa-trash-alt"></i></button></td>
@@ -466,7 +471,8 @@
 										<tr id="js-{{ loop.index0 }}_sitBudget_chargesAmt" class="font-weight-bold">
 											<th scope="row"></th>
 											<td class="align-middle">Total des charges</td>
-											<td class="align-middle">{{ form_widget(supportPers.sitBudget.chargesAmt) }}
+											<td class="align-middle">
+												{{ form_widget(supportPerson.sitBudget.chargesAmt) }}
 											</td>
 											<td></td>
 										</tr>
@@ -480,15 +486,15 @@
 			<hr>
 
 			<div class="form-group row">
-				<div class="col-md-6">{{ form_row(supportPers.sitBudget.debts) }}</div>
-				<div class="col-md-6">{{ form_row(supportPers.sitBudget.debtsAmt) }}</div>
+				<div class="col-md-6">{{ form_row(supportPerson.sitBudget.debts) }}</div>
+				<div class="col-md-6">{{ form_row(supportPerson.sitBudget.debtsAmt) }}</div>
 				<div class="col-md-6 js-{{ loop.index0 }}_sitBudget_debts d-block">
 					<div class="row">
 						<div class="col-form-label col-sm-4">Type de dettes</div>
 						<div class="col-sm-8">
 							<select id="js-{{ loop.index0 }}_sitBudget_debts_type"
 								name="js-{{ loop.index0 }}_sitBudget_debts_type" class="form-control">
-								<option class="default" value="">-- Sélectionner --</option>
+								<option class="default" value="">-- Ajouter --</option>
 								<option value="1">Dettes locatives</option>
 								<option value="2">Dette de crédits à la consommation</option>
 								<option value="3">Dettes de crédits immobiliers</option>
@@ -502,25 +508,25 @@
 				</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-1"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtRental) }}</div>
+					{{ form_widget(supportPerson.sitBudget.debtRental) }}</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-2"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtConsrCredit) }}</div>
+					{{ form_widget(supportPerson.sitBudget.debtConsrCredit) }}</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-3"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtMortgage) }}</div>
+					{{ form_widget(supportPerson.sitBudget.debtMortgage) }}</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-4"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtFines) }}</div>
+					{{ form_widget(supportPerson.sitBudget.debtFines) }}</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-5"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtTaxDelays) }}</div>
+					{{ form_widget(supportPerson.sitBudget.debtTaxDelays) }}</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-6"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtBankOverdrafts) }}</div>
+					{{ form_widget(supportPerson.sitBudget.debtBankOverdrafts) }}</div>
 				<div id="js-{{ loop.index0 }}_sitBudget_debts_type-98"
 					class="col-md-2 js-{{ loop.index0 }}_sitBudget_debts_type d-block">
-					{{ form_widget(supportPers.sitBudget.debtOther) }}
+					{{ form_widget(supportPerson.sitBudget.debtOther) }}
 				</div>
 			</div>
 			<div class="js-{{ loop.index0 }}_sitBudget_debts d-block">
@@ -530,22 +536,22 @@
 			</div>
 			<div class="js-{{ loop.index0 }}_sitBudget_debts d-block">
 				<div class="row">
-					<div class="col-md-6">{{ form_row(supportPers.sitBudget.monthlyRepaymentAmt) }}</div>
-					<div class="col-md-6">{{ form_row(supportPers.sitBudget.debtComment) }}</div>
+					<div class="col-md-6">{{ form_row(supportPerson.sitBudget.monthlyRepaymentAmt) }}</div>
+					<div class="col-md-6">{{ form_row(supportPerson.sitBudget.debtComment) }}</div>
 				</div>
 				<div class="form-group row">
 				</div>
 				<div class="form-group row">
-					<div class="col-md-6">{{ form_row(supportPers.sitBudget.overIndebtRecord) }}</div>
+					<div class="col-md-6">{{ form_row(supportPerson.sitBudget.overIndebtRecord) }}</div>
 					<div class="col-md-6 js-{{ loop.index0 }}_sitBudget_overIndebtRecord d-block">
-						{{ form_row(supportPers.sitBudget.overIndebtRecordDate) }}</div>
-					<div class="col-md-6">{{ form_row(supportPers.sitBudget.settlementplan) }}</div>
-					<div class="col-md-6">{{ form_row(supportPers.sitBudget.moratorium) }}</div>
+						{{ form_row(supportPerson.sitBudget.overIndebtRecordDate) }}</div>
+					<div class="col-md-6">{{ form_row(supportPerson.sitBudget.settlementPlan) }}</div>
+					<div class="col-md-6">{{ form_row(supportPerson.sitBudget.moratorium) }}</div>
 				</div>
 			</div>
 
 			<div class="form-group row">
-				<div class="col-md-12">{{ form_widget(supportPers.sitBudget.commentSitBudget) }}</div>
+				<div class="col-md-12">{{ form_widget(supportPerson.sitBudget.commentSitBudget) }}</div>
 			</div>
 
 		</div>

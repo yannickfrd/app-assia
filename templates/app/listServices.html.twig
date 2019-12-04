@@ -2,7 +2,7 @@
 
 {% form_theme form "bootstrap_4_layout.html.twig" %}
 
-{% block title %}Services{% endblock %}
+{% block title %}Services | Esperer95-app{% endblock %}
 
 {% block body %}
 
@@ -13,7 +13,7 @@
     </div>
 
     <div class="container-fluid p-0">
-        <div class="jumbotron py-3">
+        <div id="form-seach" class="jumbotron py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
                 <div class="form-service col-auto my-1 px-1">
@@ -39,8 +39,8 @@
                 <div class="form-service col-auto my-1 px-1">
                     <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
                             class="fas fa-search"></i></button>
-                    <a href="{{ path("list_services") }}" class="btn btn-secondary ml-2 shadow"><i
-                            class="fas fa-eraser"></i></a>
+                    <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
+                            class="fas fa-eraser"></i></button>
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}
             </div>
@@ -129,4 +129,5 @@
 
 {% block javascripts %}
 {{ encore_entry_script_tags("admin") }}
+{{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

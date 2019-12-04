@@ -9,8 +9,8 @@
 <div class="row">
     <div class="col-md-12 accordion" id="accordion-sit_prof">
         <div class="mb-4">
-            {% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
-            {% set person = supportPers.vars.value.person %}
+            {% for supportPerson in form.supportPerson|filter(supportPerson => supportPerson.vars.value.person.age >= 18) %}
+            {% set person = supportPerson.vars.value.person %}
             <button type="button" id="heading-sit_prof-{{ loop.index0 }}"
                 class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} js-person"
                 data-toggle="collapse" data-target="#collapse-sit_prof-{{ loop.index0 }}" aria-expanded="false"
@@ -20,41 +20,46 @@
             {% endfor %}
         </div>
 
-        {% for supportPers  in form.supportPers|filter(supportPers => supportPers.vars.value.person.age >= 18) %}
+        {% for supportPerson in form.supportPerson|filter(supportPerson => supportPerson.vars.value.person.age >= 18) %}
         <div id="collapse-sit_prof-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
             aria-labelledby="heading-sit_prof-{{ loop.index0 }}" data-parent="#accordion-sit_prof">
             <div class="form-group row">
-                <div class="col-md-6">{{ form_row(supportPers.sitProf.schoolLevel) }}</div>
+                <div class="col-md-6">{{ form_row(supportPerson.sitProf.schoolLevel) }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">{{ form_row(supportPerson.sitProf.profStatus) }}</div>
             </div>
             <div class="form-group row">
-                <div class="col-md-6">{{ form_row(supportPers.sitProf.profStatus) }}</div>
                 <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.jobType) }}
+                    {{ form_row(supportPerson.sitProf.contractType) }}
                 </div>
                 <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.contractStartDate) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.contractEndDate) }}
+                    {{ form_row(supportPerson.sitProf.jobType) }}
                 </div>
                 <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.nbWorkingHours) }}
+                    {{ form_row(supportPerson.sitProf.contractStartDate) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPerson.sitProf.contractEndDate) }}
                 </div>
                 <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.workingHours) }}
+                    {{ form_row(supportPerson.sitProf.nbWorkingHours) }}
                 </div>
                 <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.workPlace) }}</div>
+                    {{ form_row(supportPerson.sitProf.workingHours) }}
+                </div>
                 <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
-                    {{ form_row(supportPers.sitProf.employerName) }}
+                    {{ form_row(supportPerson.sitProf.workPlace) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_sitProf_profStatus d-block">
+                    {{ form_row(supportPerson.sitProf.employerName) }}
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-md-6">{{ form_row(supportPers.sitProf.transportMeans) }}</div>
-                <div class="col-md-6">{{ form_row(supportPers.sitProf.rqth) }}</div>
+                <div class="col-md-6">{{ form_row(supportPerson.sitProf.transportMeans) }}</div>
+                <div class="col-md-6">{{ form_row(supportPerson.sitProf.rqth) }}</div>
             </div>
             <div class="form-group row">
-                {# {{ form_label(supportPers.sitProf.commentSitProf) }} #}
-                <div class="col-md-12">{{ form_widget(supportPers.sitProf.commentSitProf) }}</div>
+                {# {{ form_label(supportPerson.sitProf.commentSitProf) }} #}
+                <div class="col-md-12">{{ form_widget(supportPerson.sitProf.commentSitProf) }}</div>
             </div>
         </div>
         {% endfor %}

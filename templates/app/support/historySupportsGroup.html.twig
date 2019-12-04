@@ -1,0 +1,88 @@
+<section>
+    <h2 class="h4 my-4">Historique des suivis sociaux</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-dark">
+            <thead>
+                <tr>
+                    <th scope="col" class="align-middle th-w-80"></th>
+                    <th scope="col" class="align-middle th-w-100">Statut</th>
+                    <th scope="col" class="align-middle th-date">Date de début</th>
+                    <th scope="col" class="align-middle th-date">Date de fin</th>
+                    <th scope="col" class="align-middle th-w-150">Travailleur/se social·e</th>
+                    <th scope="col" class="align-middle th-w-150">Service</th>
+                    <th scope="col" class="align-middle th-w-100">Pôle</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for support in group_people.supports|reverse %}
+
+                {% if support.referent %}
+                {% set contact_user %}
+                <div class='text-left p-2'>
+                    <b>Coordonnées :</b>
+                    <br>Téléphone : {{ support.referent.phone }}
+                    <br>Email : {{ support.referent.email }}
+                </div>
+                {% endset %}
+                {% endif %}
+
+                {% set contact_service %}
+                <div class='text-left p-2'>
+                    <b>Coordonnées du service :</b>
+                    <br>Téléphone : {{ support.service.phone }}
+                    <br>Email : {{ support.service.email }}
+                </div>
+                {% endset %}
+
+                <tr>
+                    <th scope="row">
+                        {% if is_granted("VIEW", support) %}
+                        <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}"
+                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                            title="Voir le suivi social"><span class="fas fa-eye"></span>
+                        </a>
+                        {% else %}
+                        <span class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                            title="Accès non autorisé"><span class="fas fa-ban"></span>
+                        </span>
+                        {% endif %}
+                        {% if is_granted("EDIT", support) %}
+                        <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}"
+                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                            title="Modifier le suivi social"><span class="fas fa-edit"></span>
+                        </a>
+                        {% endif %}
+                    </th>
+                    <td class="align-middle">{{ support.getStatusType }}</td>
+                    <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>
+                    <td class="align-middle">
+                        {% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if support.referent %}
+                        <a href="mailto:{{ support.referent.email }}" class="text-{{ theme_color }}"
+                            data-toggle="tooltip" data-placement="right" data-html="true"
+                            title="{{ contact_user }}">{{ support.referent.firstname }}
+                            {{ support.referent.lastname }}</a>
+                        {% else %}-{% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if support.service %}
+                        <a href="mailto:{{ support.service.email }}" class="text-{{ theme_color }}"
+                            data-toggle="tooltip" data-placement="right" data-html="true"
+                            title="{{ contact_service }}">{{ support.service.name }}</a>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if support.service %}{{ support.service.pole.name }}{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
+        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</a>
+</section>

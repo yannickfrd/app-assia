@@ -36,8 +36,8 @@
 {% set rolesUser = [] %}
 {% set theme_color = "dark" %}
 
-{% if app.user.roleUser is defined %}
-{% for role in app.user.roleUser %}
+{% if app.user.serviceUser is defined %}
+{% for role in app.user.serviceUser %}
 {% set rolesUser = rolesUser|merge([role.service.id]) %}
 {% set theme_color = role.service.pole.color %}
 {% endfor %}
@@ -118,7 +118,7 @@
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
                             title="{{ app.user.firstname }} {{ app.user.lastname }}"
                             data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y H:i") }} <br />Services rattachés :
-                            {% for role in app.user.roleUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
+                            {% for role in app.user.serviceUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
                             <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
                         </a>
                         <br />
@@ -137,33 +137,6 @@
         </div>
 
         {% block body %}{% endblock %}
-
-        <!-- Modal -->
-        <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalConfirmation">
-                            {% block modal_title %}Demande de confirmation{% endblock %}
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">{% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="modal-confirm"
-                            class="btn btn-{% block modal_alert %}{{ theme_color }}{% endblock %}"
-                            data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
-                        <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </main>
 

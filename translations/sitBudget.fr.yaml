@@ -8,7 +8,7 @@ Asylum seeker alw amt: Montant Allocation pour demandeur d'asile (ADA)
 Charge comment: Commentaire sur les charges
 Charges: Charges
 Charges amt: Montant total des charges
-Charges grp amt: Charges totales du groupe
+Charges group amt: Charges totales du groupe
 Childcare: Garde d'enfant(s)
 Childcare amt: Montant garde enfant(s)
 Comment sit budget: Commentaire relatif à la situation budgétaire
@@ -29,7 +29,7 @@ Debt rental: Dettes locatives
 Debt rental amt: Montant des dettes locatives
 Debts: Dettes
 Debts amt: Montant des dettes
-Debts grp amt: Dettes totales du groupe
+Debts group amt: Dettes totales du groupe
 Debt tax delays: Retards d'impôts
 Debt tax delays amt: Montant retards d'impôts
 Debt unpaid maint: Pension alimentaire non réglée
@@ -71,10 +71,10 @@ Rent amt: Montant loyer
 Resources: Ressources
 Ressources amt: Montant total des ressources
 Ressources comment: Commentaire sur les ressources
-Ressources grp amt: Ressources totales du groupe
+Ressources group amt: Ressources totales du groupe
 Salary: Salaire
 Salary amt: Montant salaire
-Settlementplan: Plan d'apurement
+Settlement plan: Plan d'apurement
 Solidarity alw: Allocation de solidarité spécifique (ASS)
 Solidarity alw amt: Montant ASS
 Taxes: Impôts

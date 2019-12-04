@@ -30,9 +30,9 @@ class Service
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoleUser", mappedBy="service", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="service", cascade={"persist"})
      */
-    private $roleUser;
+    private $serviceUser;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="services", cascade={"persist"})
@@ -40,9 +40,9 @@ class Service
     private $pole;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportGrp", mappedBy="service")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="service")
      */
-    private $supportGrp;
+    private $supportGroup;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -88,8 +88,8 @@ class Service
 
     public function __construct()
     {
-        $this->roleUser = new ArrayCollection();
-        $this->supportGrp = new ArrayCollection();
+        $this->serviceUser = new ArrayCollection();
+        $this->supportGroup = new ArrayCollection();
     }
 
     public function __toString()
@@ -127,30 +127,30 @@ class Service
     }
 
     /**
-     * @return Collection|RoleUser[]
+     * @return Collection|ServiceUser[]
      */
-    public function getroleUser(): Collection
+    public function getserviceUser(): Collection
     {
-        return $this->roleUser;
+        return $this->serviceUser;
     }
 
-    public function addRoleUser(RoleUser $roleUser): self
+    public function addServiceUser(ServiceUser $serviceUser): self
     {
-        if (!$this->roleUser->contains($roleUser)) {
-            $this->roleUser[] = $roleUser;
-            $roleUser->setService($this);
+        if (!$this->serviceUser->contains($serviceUser)) {
+            $this->serviceUser[] = $serviceUser;
+            $serviceUser->setService($this);
         }
 
         return $this;
     }
 
-    public function removeRoleUser(RoleUser $roleUser): self
+    public function removeServiceUser(ServiceUser $serviceUser): self
     {
-        if ($this->roleUser->contains($roleUser)) {
-            $this->roleUser->removeElement($roleUser);
+        if ($this->serviceUser->contains($serviceUser)) {
+            $this->serviceUser->removeElement($serviceUser);
             // set the owning side to null (unless already changed)
-            if ($roleUser->getService() === $this) {
-                $roleUser->setService(null);
+            if ($serviceUser->getService() === $this) {
+                $serviceUser->setService(null);
             }
         }
 
@@ -170,30 +170,30 @@ class Service
     }
 
     /**
-     * @return Collection|SupportGrp[]
+     * @return Collection|SupportGroup[]
      */
-    public function getSupportGrp(): Collection
+    public function getSupportGroup(): Collection
     {
-        return $this->supportGrp;
+        return $this->supportGroup;
     }
 
-    public function addSupportGrp(SupportGrp $supportGrp): self
+    public function addSupportGroup(SupportGroup $supportGroup): self
     {
-        if (!$this->supportGrp->contains($supportGrp)) {
-            $this->supportGrp[] = $supportGrp;
-            $supportGrp->setService($this);
+        if (!$this->supportGroup->contains($supportGroup)) {
+            $this->supportGroup[] = $supportGroup;
+            $supportGroup->setService($this);
         }
 
         return $this;
     }
 
-    public function removeSupportGrp(SupportGrp $supportGrp): self
+    public function removeSupportGroup(SupportGroup $supportGroup): self
     {
-        if ($this->supportGrp->contains($supportGrp)) {
-            $this->supportGrp->removeElement($supportGrp);
+        if ($this->supportGroup->contains($supportGroup)) {
+            $this->supportGroup->removeElement($supportGroup);
             // set the owning side to null (unless already changed)
-            if ($supportGrp->getService() === $this) {
-                $supportGrp->setService(null);
+            if ($supportGroup->getService() === $this) {
+                $supportGroup->setService(null);
             }
         }
 

@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Fiche du service{% endblock %}
+{% block title %}Fiche du service | Esperer95-app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -62,7 +62,7 @@
     <section id="groups-people">
         <h2 class="h4 my-4">Utilisateurs rattachés</h2>
 
-        {% if service.roleUser %}
+        {% if service.serviceUser %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
@@ -78,7 +78,7 @@
                 </thead>
 
                 <tbody>
-                    {% for role in service.roleUser %}
+                    {% for role in service.serviceUser %}
                     <tr>
                         <th scope="row">
                             <a href="{{ path('user_show', {'id':role.user.id}) }}"

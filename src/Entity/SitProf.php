@@ -25,10 +25,11 @@ class SitProf
         2 => "Avant 3ème",
         3 => "Fin de scolarité obligatoire",
         4 => "BEP / CAP",
-        5 => "Bac",
-        6 => "Bac +2",
-        7 => "Bac +3 (Licence)",
-        8 => "Bac +5 et plus",
+        5 => "Bac pro.",
+        6 => "Bac général",
+        7 => "Bac +2",
+        8 => "Bac +3 (licence)",
+        9 => "Bac +5 (master) et plus",
         98 => "Autre",
         99 => "Non renseigné"
     ];
@@ -118,10 +119,10 @@ class SitProf
     private $commentSitProf;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPers", inversedBy="sitProf", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitProf", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $supportPers;
+    private $supportPerson;
 
     public function getId(): ?int
     {
@@ -300,14 +301,14 @@ class SitProf
         return $this;
     }
 
-    public function getSupportPers(): ?SupportPers
+    public function getSupportPerson(): ?SupportPerson
     {
-        return $this->supportPers;
+        return $this->supportPerson;
     }
 
-    public function setSupportPers(SupportPers $supportPers): self
+    public function setSupportPerson(SupportPerson $supportPerson): self
     {
-        $this->supportPers = $supportPers;
+        $this->supportPerson = $supportPerson;
 
         return $this;
     }

@@ -1,0 +1,125 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{% block title %}Suivi social | Esperer95-app{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+  {% set support = form.vars.value %}
+
+  <h1 class="h2 mb-3">Suivi social</h1>
+
+  {% if edit_mode %}
+  <div class="small text-secondary">
+    <p>
+      Créé le {{support.createdAt | date("d/m/Y à H:i") }}
+      {% if support.createdBy %}par
+      {{ support.createdBy.firstname }} {{ support.createdBy.lastname }}
+      {% endif %}
+      <span id="js-social-support-updated">
+        (modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.firstname }}
+        {{ support.updatedBy.lastname }})
+      </span>
+    </p>
+  </div>
+  {% else %}
+  <div class="mb-4"></div>
+  {% endif %}
+  {% if group_people is defined %}
+  <div class="my-3">
+    <div>
+      <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
+        <span class="fas fa-users"></span> Fiche groupe</a>
+    </div>
+
+  </div>
+  {% endif %}
+
+
+  <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}" class="text-{{ theme_color }}">
+    <span class="fas fa-users"></span>
+    Retour à la fiche du suivi</a>
+
+  {{ form_start(form) }}
+
+  {% include "model/msgFlash.html.twig" %}
+  <div id="js-msg-flash-content"></div>
+
+  <section>
+    <h2 class="h4 my-4">Personnes rattachées au suivi social</h2>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover text-dark shadow-sm">
+            <thead>
+              <tr>
+                <th scope="col" class="align-middle th-w-20"></th>
+                <th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
+                <th scope="col" class="align-middle th-w-100">Date de début</th>
+                <th scope="col" class="align-middle th-w-100">Date de fin</th>
+                <th scope="col" class="align-middle th-w-100">Statut</th>
+                <th scope="col" class="align-middle th-w-150">Commentaire</th>
+                <th scope="col" class="align-middle th-w-20"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for form_support_pers in form.supportPerson.children %}
+              {% set person = form_support_pers.vars.data.person %}
+              <tr class="js-tr-support_pers">
+                <th scope="row">
+                  <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
+                    class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                    title="Modifier les informations de la personne">
+                    <span class="fas fa-user-edit"></span>
+                  </a>
+                </th>
+                <td class="px-1 align-middle">{{ person.firstname }} {{ person.lastname }}</td>
+                <td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
+                <td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
+                <td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
+                <td class="px-1">{{ form_widget(form_support_pers.comment) }}</td>
+                <td class="px-1">
+                  <button class="js-remove btn btn-danger shadow"
+                    data-url="{{ path('remove_support_pers', {'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}"
+                    data-toggle="modal" data-target="#modal-block" data-placement="bottom"
+                    title="Retirer la personne du suivi">
+                    <span class="fas fa-user-times"></span>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-md-12">
+        <div class="mb-4 float-right">
+          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Enregistrer">
+        </div>
+      </div>
+    </div>
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {"render_rest": false}) }}
+
+    <a href="{{ path('support_add_people', {'id':group_people.id, 'support_id':support.id}) }}"
+      class="btn btn-{{ theme_color }} btn-sm mb-2">Ajouter les autres personnes du groupe au suivi</a>
+
+  </section>
+</div>
+
+{% include "modalDialog/removeSupportPerson.html.twig" %}
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("supportPers") }}
+{% endblock javascripts %}
