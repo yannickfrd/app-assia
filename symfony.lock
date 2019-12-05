@@ -380,6 +380,9 @@
     "symfony/property-info": {
         "version": "v4.3.4"
     },
+    "symfony/proxy-manager-bridge": {
+        "version": "v4.3.9"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {

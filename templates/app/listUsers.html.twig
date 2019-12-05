@@ -102,17 +102,13 @@
                     {% for user in users %}
                     <tr>
                         <th scope="row">
-                            {% if service_users is defined %}
-                            <a href="{{ path('service_add_user', {'id':service_users.id, 'user_id': user.id}) }}"
-                                class="js-add-user" data-toggle="modal" data-target="#modal-block"
-                                data-placement="bottom" title="Ajouter l'utilisateur au service">
-                                <i class="fas fa-plus-square fa-2x"></i>
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            <a href="{{ path('user_show', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"
+                                data-placement="bottom" title="Voir la fiche">
+                                <span class="fas fa-eye"></span>
                             </a>
                             {% else %}
-                            <a href="{{ path('user_show', {'id':user.id}) }}" class="btn btn-{{ theme_color }} shadow"
-                                data-placement="bottom" title="Voir la fiche individuelle">
-                                <span class="fas fa-user"></span>
-                            </a>
+                                <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>
                             {% endif %}
                         </th>
                         <td class="text-uppercase">{{ user.lastname }}</td>

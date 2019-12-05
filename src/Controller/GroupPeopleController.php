@@ -79,7 +79,7 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function showGroupPeople(GroupPeople $groupPeople, Request $request): Response
+    public function editGroupPeople(GroupPeople $groupPeople, Request $request): Response
     {
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
         $formGroupPeople->handleRequest($request);

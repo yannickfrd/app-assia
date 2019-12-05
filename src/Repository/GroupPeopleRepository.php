@@ -61,16 +61,4 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    // Trouve tous les personnes du même groupe
-    public function findPeopleFromGroupV2($groupPeople)
-    {
-
-        $q = Doctrine_Query::create()
-            ->from('GroupPeople g')
-            ->leftJoin('g.rolePerson r')
-            ->leftJoin('r.person p')
-            ->where('g.id = ?', 1);
-        $user = $q->fetchOne();
-    }
 }

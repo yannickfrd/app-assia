@@ -53,26 +53,26 @@ class SupportController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listSupports(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function viewListSupports(SupportGroupRepository $repo, GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
         $groupPeopleSearch = new GroupPeopleSearch();
 
         $form = $this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch);
         $form->handleRequest($request);
 
-        $rolePeople =  $paginator->paginate(
+        $supports =  $paginator->paginate(
             $repo->findAllSupports($groupPeopleSearch),
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        $rolePeople->setPageRange(5);
-        $rolePeople->setCustomParameters([
+        // $rolePeople->setPageRange(5);
+        $supports->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
 
         return $this->render("app/listSupports.html.twig", [
             "controller_name" => "listSupports",
-            "role_people" => $rolePeople,
+            "supports" => $supports,
             "form" => $form->createView(),
             "current_menu" => "supports"
         ]);

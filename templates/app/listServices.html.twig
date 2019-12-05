@@ -90,11 +90,15 @@
                     {% for service in services %}
                     <tr>
                         <th scope="row">
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
                             <a href="{{ path('service_show', {'id':service.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                class="btn btn-{{ theme_color }}  btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>
+                            {% endif %}
                         </th>
                         <td>{{ service.name }}</td>
                         <td><a href="{{ path('pole_show', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">

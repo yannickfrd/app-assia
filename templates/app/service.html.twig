@@ -48,7 +48,7 @@
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
-                    <input type="submit" id="send" name="send" id="send" class="btn btn-{{ theme_color }} shadow"
+                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
                         value="Enregistrer">
                 </div>
             </div>
@@ -78,20 +78,20 @@
                 </thead>
 
                 <tbody>
-                    {% for role in service.serviceUser %}
+                    {% for serviceUser in service.serviceUser %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('user_show', {'id':role.user.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                            <a href="{{ path('user_show', {'id':serviceUser.user.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ role.user.firstname }}</td>
-                        <td>{{ role.user.lastname }}</td>
-                        <td>{{ role.getRoleList }}</td>
-                        <td>{{ role.user.phone }}</td>
-                        <td>{{ role.user.email }}</td>
+                        <td>{{ serviceUser.user.firstname }}</td>
+                        <td>{{ serviceUser.user.lastname }}</td>
+                        <td>{{ serviceUser.user.statusList }}</td>
+                        <td>{{ serviceUser.user.phone }}</td>
+                        <td>{{ serviceUser.user.email }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

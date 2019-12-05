@@ -43,10 +43,14 @@
                     {% for pole in poles %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('pole_show', {'id':pole.id}) }}" class="btn btn-{{ theme_color }} shadow"
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            <a href="{{ path('pole_show', {'id':pole.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"
                                 data-placement="bottom" title="Voir la fiche du pôle">
                                 <span class="fas fa-eye"></span>
                             </a>
+                            {% else %}
+                                <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>
+                            {% endif %}                        
                         </th>
                         <td>{{ pole.name }}</td>
                         <td>{{ pole.phone }}</td>

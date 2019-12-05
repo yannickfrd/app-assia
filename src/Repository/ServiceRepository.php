@@ -21,7 +21,7 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les personnes
+     * Retourne tous services
      * @return Query
      */
     public function findAllServicesQuery($serviceSearch): Query

@@ -37,14 +37,12 @@ class PoleController extends AbstractController
      */
     public function listPole(Request $request, PaginatorInterface $paginator): Response
     {
-        $search = $request->query->get("search");
-
         $poles =  $paginator->paginate(
             $this->repo->findAllPolesQuery(),
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        $poles->setPageRange(5);
+        // $poles->setPageRange(5);
         $poles->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
@@ -56,13 +54,15 @@ class PoleController extends AbstractController
     }
 
     /**
-     * Voir la fiche du pôle
+     * Editer la fiche du pôle
      * 
      * @Route("/pole/{id}", name="pole_show", methods="GET|POST")
      *  @return Response
      */
-    public function poleShow(Pole $pole, Request $request): Response
+    public function editPole(Pole $pole, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
         $form = $this->createForm(PoleType::class, $pole);
         $form->handleRequest($request);
 

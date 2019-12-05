@@ -269,7 +269,7 @@ class SupportGroup
     /**
      * @return Collection|SupportPerson[]
      */
-    public function getSupportPerson(): Collection
+    public function getSupportPerson(): ?Collection
     {
         return $this->supportPerson;
     }

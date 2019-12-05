@@ -71,22 +71,22 @@ class SupportPerson
     private $supportGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPerson", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPerson", mappedBy="supportPerson", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
      */
     private $sitFamilyPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPerson", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
      */
     private $sitProf;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPerson", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
      */
     private $sitAdm;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPerson", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
      */
     private $sitBudget;
 
