@@ -117,10 +117,7 @@
                         </th>
                         <td class="text-uppercase">{{ user.lastname }}</td>
                         <td>{{ user.firstname }}</td>
-                        <td>{% for role in user.serviceUser %}
-                            {{ role.getRoleType }}<br>
-                            {% endfor %}
-                        </td>
+                        <td>{{ user.statusList }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
                         <td>{% for role in user.serviceUser %}

@@ -132,7 +132,7 @@
                             {% elseif person.person.gender == 2 %}
                             <i class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></i>
                             {% endif %} </td>
-                        <td>{{ person.getRoleType }}{% if person.head %} (DP){% endif %}</td>
+                        <td>{{ person.getRoleList }}{% if person.head %} (DP){% endif %}</td>
                         <td>{% if person.groupPeople %}{{ person.groupPeople.getFamilyTypologyType }}{% endif %}
                         </td>
                         <td>{% if person.groupPeople %}{{ person.groupPeople.nbPeople }}{% endif %}

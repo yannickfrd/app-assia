@@ -114,12 +114,14 @@
                     </form>
                     <div class="text-light">
                         {% if app.user %}
-                        <a class="text-light font-weight-bold" href="{{ path('user_show', {'id':app.user.id}) }}"
+                        {% set user = app.user %}
+                        <a class="text-light font-weight-bold" href="{{ path('user_show', {'id':user.id}) }}"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
-                            title="{{ app.user.firstname }} {{ app.user.lastname }}"
-                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y H:i") }} <br />Services rattachés :
-                            {% for role in app.user.serviceUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
-                            <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
+                            title="{{ user.firstname }} {{ user.lastname }}"
+                            data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y H:i") }}
+                            <br>{{ user.statusList }}<br>Services rattachés :
+                            {% for serviceUser in user.serviceUser %}<br> - {{ serviceUser.service.name }}{% endfor %}">
+                            <span class="fas fa-user"></span> {{ user.firstname }} {{ user.lastname|first }}.
                         </a>
                         <br />
                         <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>

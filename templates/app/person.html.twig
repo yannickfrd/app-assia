@@ -158,7 +158,7 @@
                             {% if role.groupPeople.nbPeople > 1 %}<span
                                 class="d-inline d-sm-none">{{ role.groupPeople.nbPeople }}personnes</span>{% endif %}
                         </td>
-                        <td>{{ role.getRoleType }} {% if role.head %} (DP){% endif %}</td>
+                        <td>{{ role.getRoleList }} {% if role.head %} (DP){% endif %}</td>
                         <td class="d-none d-sm-table-cell">
                             {{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
                         <td class="d-none d-sm-table-cell">

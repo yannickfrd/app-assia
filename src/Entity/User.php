@@ -18,6 +18,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface
 {
+    public const STATUS = [
+        1 => "Travailleur social",
+        2 => "Coordinatrice/teur",
+        3 => "Chef·fe de service",
+        4 => "Directrice/teur",
+        5 => "Administratif",
+        6 => "Chargé·e de mission",
+        7 => "Stagiaire",
+        98 => "Autre",
+    ];
+
     public const ROLES = [
         "ROLE_USER" => "Utilisateur",
         "ROLE_ADMIN" => "Administrateur",
@@ -70,6 +81,12 @@ class User implements UserInterface
      */
     private $firstname;
     //* @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $status;
+
 
     /**
      * @ORM\Column(type="json")
@@ -266,6 +283,24 @@ class User implements UserInterface
 
     public function getSalt()
     { }
+
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatusList()
+    {
+        return self::STATUS[$this->status];
+    }
 
     public function getRoles(): array
     {

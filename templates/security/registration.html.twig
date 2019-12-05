@@ -18,6 +18,7 @@
             <div class="col-md-6">{{ form_row(form.lastname) }}</div>
             <div class="col-md-6">{{ form_row(form.email) }}</div>
             <div class="col-md-6">{{ form_row(form.username) }}</div>
+            <div class="col-md-6">{{ form_row(form.status) }}</div>
             <div class="col-md-6">{{ form_row(form.roles) }}</div>
         </div>
         <div class="row">
@@ -53,7 +54,7 @@
 
         <hr>
 
-        <h2 class="h4 mb-3">Profils et services rattachés</h2>
+        <h2 class="h4 mb-3">Services rattachés</h2>
         <div id="serviceUser-fields-list" data-prototype="{{ form_widget(form.serviceUser.vars.prototype)|e }}"
             data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
             data-widget-counter="{{ form.serviceUser|length }}">
@@ -61,7 +62,7 @@
                 <table id="function-table" class="table">
                     <thead>
                         <tr>
-                            <th scope="col" class="align-middle th-w-150">Fonction</th>
+                            <!-- <th scope="col" class="align-middle th-w-150">Fonction</th> -->
                             <th scope="col" class="align-middle th-w-150">Service</th>
                             <th scope="col" class="align-middle th-w-120">Pôle</th>
                             <th scope="col" class="align-middle th-w-20"></th>
@@ -70,8 +71,7 @@
                     <tbody>
                         {% for role in form.serviceUser %}
                         <tr id="{{ role.vars.id }}">
-                            <th scope="row">{{ form_widget(role.role) }}
-                            </th>
+                            {#<th scope="row">{{ form_widget(role.role) }}</th>#}
                             <td>{{ form_widget(role.service) }}</td>
                             <td class="align-middle">{{ role.vars.value.service.pole.name }}</td>
                             <td class="align-middle"><button class="btn btn-danger js-remove">
@@ -85,8 +85,8 @@
         </div>
         <div class="my-2">
             <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square"></span> Ajouter une
-                fonction</button>
+                data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+                service</button>
         </div>
         <div class="row">
             <div class="col-md-12">
