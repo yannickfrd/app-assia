@@ -75,11 +75,9 @@ class PersonController extends AbstractController
         }
 
         return $this->render("app/listPeople.html.twig", [
-            // "controller_name" => "PersonController",
             "people" => $people ?? null,
             "personSearch" => $personSearch,
-            "form" => $form->createView(),
-            "current_menu" => "list_people"
+            "form" => $form->createView()
         ]);
         // return $this->pagination($personSearch, $request, $form, $paginator);
     }
@@ -122,13 +120,11 @@ class PersonController extends AbstractController
         }
 
         return $this->render("app/listPeople.html.twig", [
-            // "controller_name" => "PersonController",
             "group_people" => $groupPeople,
             "people" => $people ?? null,
             "personSearch" => $personSearch,
             "form" => $form->createView(),
-            "form_role_person" => $formRolePerson->createView(),
-            "current_menu" => "list_people"
+            "form_role_person" => $formRolePerson->createView()
         ]);
         // return $this->pagination($personSearch, $request, $groupPeople, $form,  $formRolePerson, $paginator);
     }
@@ -519,8 +515,7 @@ class PersonController extends AbstractController
 
     //     return $this->render("app/personSearch.html.twig", [
     //     "personSearch" =>$personSearch,
-    //     "form" => $form->createView(),
-    //     "current_menu" => "person_search"
+    //     "form" => $form->createView()
     //     ]);
     // }
 }

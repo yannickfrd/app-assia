@@ -18,7 +18,6 @@ class CurrentUserService
         return $this->user;
     }
 
-
     public function getServices()
     {
         $services = [];
@@ -30,7 +29,7 @@ class CurrentUserService
         return $services;
     }
 
-    public function isAdmin($role)
+    public function isRole($role)
     {
         foreach ($this->user->getRoles() as $value) {
             if ($value == $role) {

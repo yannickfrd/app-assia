@@ -87,7 +87,6 @@ class User implements UserInterface
      */
     private $status;
 
-
     /**
      * @ORM\Column(type="json")
      */
@@ -183,6 +182,11 @@ class User implements UserInterface
         $this->referentSupport = new ArrayCollection();
         $this->referent2Support = new ArrayCollection();
     }
+
+    // public function __toString()
+    // {
+    //     return strval($this->id);
+    // }
 
     public function getId(): ?int
     {

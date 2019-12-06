@@ -78,7 +78,7 @@ class GroupPeopleSearch
     }
 
     /**
-     * @return date|null
+     * @return \DateTimeInterface|null
      */
     public function getBirthdate(): ?\DateTimeInterface
     {

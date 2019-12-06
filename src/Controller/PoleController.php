@@ -45,8 +45,7 @@ class PoleController extends AbstractController
         ]);
 
         return $this->render("app/listpoles.html.twig", [
-            "poles" => $poles ?? null,
-            "current_menu" => "list_poles"
+            "poles" => $poles ?? null
         ]);
     }
 

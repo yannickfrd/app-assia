@@ -16,11 +16,9 @@
 
         <div class="small text-secondary">
             <p>Créé le {{ group_people.createdAt | date("d/m/Y à H:i") }}
-                {% if group_people.createdBy %} par {{ group_people.createdBy.firstname }}
-                {{ group_people.createdBy.lastname }}
+                {% if group_people.createdBy %} par {{ group_people.createdBy.fullname }}
                 {% endif %} (modifié le {{ group_people.updatedAt | date("d/m/Y à H:i") }}
-                {% if group_people.updatedBy %} par {{ group_people.updatedBy.firstname }}
-                {{ group_people.updatedBy.lastname }}{% endif %})
+                {% if group_people.updatedBy %} par {{ group_people.updatedBy.fullname }}{% endif %})
             </p>
         </div>
     </div>
@@ -71,7 +69,7 @@
                                 <th scope="row">
                                     <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
                                         class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
-                                        title="Modifier les informations de la personne">
+                                        title="Voir la fiche individuelle">
                                         <span class="fas fa-user"></span>
                                     </a>
                                 </th>

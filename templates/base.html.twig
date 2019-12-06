@@ -47,12 +47,10 @@
                                 Accueil<span class="sr-only">(Accueil)</span>
                             </a>
                         </li>
-                        <li
-                            class="nav-item {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
+                        <li class="nav-item">
                             <a class="nav-link text-light" href="{{ path("list_people") }}">Personnes</a>
                         </li>
-                        <li
-                            class="nav-item {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
+                        <li class="nav-item">
                             <a class="nav-link text-light" href="{{ path("list_groups_people") }}">Ménages</a>
                         </li>
                         <li class="nav-item dropdown">

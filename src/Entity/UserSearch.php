@@ -151,7 +151,8 @@ class UserSearch
     }
 
     /**
-     * @return int|null
+     *
+     * @return ArrayCollection|null
      */
     public function getService(): ?ArrayCollection
     {

@@ -39,7 +39,7 @@
                 <tr>
                     <th scope="row">
                         {% if is_granted("VIEW", support) %}
-                        <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}"
+                        <a href="{{ path('support_edit', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
@@ -49,7 +49,7 @@
                         </span>
                         {% endif %}
                         {% if is_granted("EDIT", support) %}
-                        <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}"
+                        <a href="{{ path('support_edit', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
                             title="Modifier le suivi social"><span class="fas fa-edit"></span>
                         </a>

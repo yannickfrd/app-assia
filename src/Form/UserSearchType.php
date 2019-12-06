@@ -61,10 +61,11 @@ class UserSearchType extends AbstractType
                 // "checkboxes", true,
                 "label" => false,
                 "placeholder" => "-- Service --",
-                "required" => false,
                 "attr" => [
-                    "class" => "multi-select"
-                ]
+                    "class" => "multi-select js-service"
+                ],
+                "required" => false
+
             ])
             ->add("pole", EntityType::class, [
                 "class" => Pole::class,

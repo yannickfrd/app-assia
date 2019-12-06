@@ -20,10 +20,9 @@
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{person.createdAt | date("d/m/Y à H:i") }}
-            {% if person.createdBy %}par {{ person.createdBy.firstname }} {{ person.createdBy.lastname }}{% endif %}
+            {% if person.createdBy %}par {{ person.createdBy.fullname }}{% endif %}
             <span id="js-person-updated"> (modifié le {{ person.updatedAt | date("d/m/Y à H:i") }}
-                {% if person.updatedBy %}par {{ person.updatedBy.firstname }}
-                {{ person.updatedBy.lastname }}{% endif %})</span>
+                {% if person.updatedBy %}par {{ person.updatedBy.fullname }}{% endif %})</span>
         </p>
     </div>
     {% else %}

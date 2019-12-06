@@ -77,15 +77,14 @@
                     {% for support in form.vars.value.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
                     <tr>
                         <th scope="row" class="align-middle">
-                            <a href="{{ path('support_edit', {'id':support.groupPeople.id, 'support_id':support.id}) }}"
+                            <a href="{{ path('support_edit', {'id':support.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le suivi social"><span class="fas fa-eye"></span>
                             </a>
                         </th>
                         <td class="align-middle">
                             {% for rolePerson in support.groupPeople.rolePerson|filter(person => person.role != 3) %}
-                            <span class="text-uppercase">{{ rolePerson.person.lastname }}</span>
-                            {{ rolePerson.person.firstname }}<br>
+                            {{ rolePerson.person.fullname }}<br>
                             {% endfor %}
                         <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
                             {% if support.supportPerson|length > 1 %}

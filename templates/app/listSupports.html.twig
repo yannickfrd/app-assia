@@ -18,33 +18,34 @@
         {{ form_start(form) }}
         <div class="form-inline justify-content-md-center align-items-end">
             <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.lastname) }}
+                {{ form_row(form.fullname) }}
             </div>
-            <div class="form-group col-auto my-1 px-1 ">
-                {{ form_row(form.firstname) }}
+            <div class="form-group col-auto my-1 px-1">
+                {{ form_row(form.status) }}
             </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
-                            title="Date de naissance">
-                            <i class=" fas fa-calendar-alt text-dark"></i>
-                        </div>
-                    </div>
-                    {{ form_row(form.birthdate) }}
-                </div>
+            <div class="form-group col-auto my-1 px-1">
+                {{ form_row(form.supportDates) }}
             </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                {{ form_row(form.familyTypology) }}
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline" data-toggle="tooltip"
+                data-placement="bottom" title="Date de fin">
+                <span class="px-1">Entre</span>{{ form_row(form.startDate) }}
             </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                {{ form_row(form.nbPeople) }}
+            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline" data-toggle="tooltip"
+                data-placement="bottom" title="Date de fin">
+                <span class="pr-2">et</span>{{ form_row(form.endDate) }}
             </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
+            <div class="form-group col-auto my-1 px-1">
+                {{ form_row(form.referent) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1">
+                {{ form_row(form.service) }}
+            </div>
+            <div class="form-group col-auto my-1 px-1">
                 <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow">
-                    <i class="fas fa-search" data-placement="bottom" title="Rechercher"></i>
+                    <span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
                 </button>
-                <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i class="fas fa-eraser"></i></button>
+                <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow">
+                    <span class="fas fa-eraser"></span></button>
             </div>
             {{ form_end(form, {"render_rest": false}) }}
         </div>
@@ -67,52 +68,78 @@
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
                     <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-100">
-                            {{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}
+                        <th scope="col" class="align-middle th-w-80"></th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(supports, "Prénom et Nom", "p.lastname") }}
                         </th>
-                        <th scope="col" class="align-middle th-date">
+                        <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(supports, "Date de naissance", "p.birthdate") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-140">
+                        <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(supports, "Typologie familiale", "g.familyTypology") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-100">Service</th>
-                        <th scope="col" class="align-middle th-w-100">Statut du suivi</th>
-                        <th scope="col" class="align-middle th-w-80">Date de début de suivi</th>
-                        <th scope="col" class="align-middle th-w-80">Date de fin de suivi</th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(supports, "Statut", "sg.status") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(supports, "Début de suivi", "sg.startDate") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(supports, "Fin de suivi", "sg.endDate") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-100">
+                            {{ knp_pagination_sortable(supports, "Référent", "u.lastname") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(supports, "Service", "s.name") }}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for support in supports %}
                     <tr>
-                        <th scope="row"  class="align-middle">
-                            <a href="{% if support.groupPeople %}{{ path('group_people_show', {'id':support.groupPeople.id}) }} {% endif %}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
-                                title="Voir la fiche du groupe">
-                                <span class="fas fa-users"></span>
+                        <th scope="row" class="align-middle">
+                            {% if is_granted("VIEW", support) %}
+                            <a href="{% if support.groupPeople %}{{ path('support_edit', {'id':support.id}) }} {% endif %}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                                title="Modifier la fiche du suivi"><span class="fas fa-eye"></span>
                             </a>
-                        </th>
-                        {% for rolePerson in support.groupPeople.rolePerson %}
-                        <td class="align-middle">
-                            <a href="{% if support.groupPeople %}{{ path('group_people_show', {'id':support.groupPeople.id}) }} {% endif %}"
-                                class="text-{{ theme_color }}"><span class="text-uppercase font-weight-bold">
-                                    {{ rolePerson.person.lastname }}</span><br /> {{ rolePerson.person.firstname }}</a>
-                        </td>
-                        <td class="align-middle">{{ rolePerson.person.birthdate | date("d/m/Y") }}</td>
-                        {% endfor %}
-                        <td class="align-middle">
-                            {{ support.groupPeople.getFamilyTypologyType }}<br />
-                            {% if support.supportPerson|length > 1 %}
-                            {{ support.supportPerson|length }} personnes
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow my-1">
+                                <span class="fas fa-ban"></span></span>
                             {% endif %}
+                            {% if is_granted("EDIT", support) %}
+                            <a href="{% if support.groupPeople %}{{ path('support_edit', {'id':support.id}) }} {% endif %}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                                title="Voir la fiche du suivi"><span class="fas fa-edit"></span>
+                            </a>
+                            {% endif %}
+                        </th>
+                        <td class="align-middle">
+                            {% for rolePerson in support.groupPeople.rolePerson %}
+                            <a href="{% if support.groupPeople %}{{ path('group_people_show', {'id':support.groupPeople.id}) }} {% endif %}"
+                                class="text-{{ theme_color }} font-weight-bold">{{ rolePerson.person.fullname }}</a>
+                            {% endfor %}
                         </td>
-                        <td class="align-middle">{{ support.service.name }}</td>
+                        <td class="align-middle">
+                            {% for rolePerson in support.groupPeople.rolePerson %}
+                            {{ rolePerson.person.birthdate | date("d/m/Y") }}
+                            {% endfor %}
+                        </td>
+                        <td class="align-middle">
+                            {{ support.groupPeople.getFamilyTypologyType }}
+                            {% if support.supportPerson|length > 1 %} | {{ support.supportPerson|length }}
+                            pers.{% endif %}
+                        </td>
                         <td class="align-middle">{{ support.getStatusType }}</td>
                         <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>
                         <td class="align-middle">{% if support.endDate %}
                             {{ support.endDate | date("d/m/Y") }}{% endif %}
                         </td>
+                        <td class="align-middle">
+                            {% if support.referent %}{{ support.referent.fullname }}{% endif %}
+                        </td>
+                        <td class="align-middle">{{ support.service.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

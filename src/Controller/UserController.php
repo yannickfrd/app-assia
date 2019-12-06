@@ -64,11 +64,9 @@ class UserController extends AbstractController
         }
 
         return $this->render("app/listUsers.html.twig", [
-            // "controller_name" => "UserController",
             "users" => $users ?? null,
             "userSearch" => $userSearch,
-            "form" => $form->createView(),
-            "current_menu" => "list_users"
+            "form" => $form->createView()
         ]);
         // return $this->pagination($userSearch, $request, $form, $paginator);
     }

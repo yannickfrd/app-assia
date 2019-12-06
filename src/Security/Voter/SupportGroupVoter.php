@@ -71,7 +71,7 @@ class SupportGroupVoter extends Voter
 
         if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() == $this->userId)
             || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() == $this->userId)
-            || ($this->supportGroup->getCreatedBy()->getId() == $this->userId)
+            || ($this->supportGroup->getCreatedBy() && $this->supportGroup->getCreatedBy()->getId() == $this->userId)
         ) {
             return true;
         }

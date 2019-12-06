@@ -61,13 +61,12 @@ class Person
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $maidenName;
+
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères max).")     
      */
     private $usename;
-
-    private $fullname;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -169,7 +168,7 @@ class Person
 
     public function setLastname(?string $lastname): self
     {
-        $this->lastname = ucfirst($lastname);
+        $this->lastname = strtoupper($lastname);
 
         return $this;
     }
@@ -193,16 +192,9 @@ class Person
         return $slugify->slugify($this->firstname . "-" . $this->lastname);
     }
 
-    public function getFullName(): string
+    public function getFullname(): ?string
     {
-        return $this->fullname;
-    }
-
-    public function setFullname(): self
-    {
-        $this->fullname = $this->firstname . " " . $this->lastname;
-
-        return $this;
+        return $this->firstname . " " . $this->lastname;
     }
 
     public function getMaidenName(): ?string

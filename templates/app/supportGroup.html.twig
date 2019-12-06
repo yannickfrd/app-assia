@@ -2,6 +2,9 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
+{% if group_people is not defined %}
+{% set group_people = form.vars.value.groupPeople %}
+{% endif %}
 {% set typo = group_people.familyTypology %}
 
 {% block title %}Suivi social | Esperer95-app{% endblock %}
@@ -22,12 +25,9 @@
     <p>
       Créé le
       {{support.createdAt | date("d/m/Y à H:i") }}
-      {% if support.createdBy %}par
-      {{ support.createdBy.firstname }} {{ support.createdBy.lastname }}
-      {% endif %}
+      {% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
       <span id="js-social-support-updated">
-        (modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.firstname }}
-        {{ support.updatedBy.lastname }})
+        (modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})
       </span>
     </p>
   </div>
@@ -43,8 +43,7 @@
       {% set person = form_support_pers.vars.data.person %}
       <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
         class="btn btn-outline-{{ theme_color }} btn-sm mb-2">
-        {{ person.firstname }}
-        {{ person.lastname }}</a>
+        {{ person.fullname }}</a>
       {% endfor %}
 
     </div>
@@ -85,8 +84,7 @@
     </div>
     {% if edit_mode %}
     <div class="col-md-12">
-      <a class="text-{{ theme_color }}"
-        href="{{ path('support_pers_edit', {'id':group_people.id, 'support_id':support.id}) }}">Voir les
+      <a class="text-{{ theme_color }}" href="{{ path('support_pers_edit', {'id':support.id}) }}">Voir les
         personnes rattachées au suivi</a>
     </div>
     {% endif %}

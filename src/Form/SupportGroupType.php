@@ -52,7 +52,7 @@ class SupportGroupType extends AbstractType
                 "class" => Service::class,
                 "choice_label" => "name",
                 "query_builder" => function (ServiceRepository $repo) {
-                    if ($this->currentUser->isAdmin("ROLE_SUPER_ADMIN")) {
+                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
                         return $repo->createQueryBuilder("s")
                             ->orderBy("s.name", "ASC");
                     }
@@ -66,10 +66,10 @@ class SupportGroupType extends AbstractType
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    if ($this->currentUser->isAdmin("ROLE_SUPER_ADMIN")) {
+                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
                         return $repo->createQueryBuilder("u")
                             ->orderBy("u.lastname", "ASC");
-                    } else if ($this->currentUser->isAdmin("ROLE_ADMIN")) {
+                    } else if ($this->currentUser->isRole("ROLE_ADMIN")) {
                         return $repo->createQueryBuilder("u")
                             ->select("u")
                             ->leftJoin("u.serviceUser", "r")
@@ -88,10 +88,10 @@ class SupportGroupType extends AbstractType
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    if ($this->currentUser->isAdmin("ROLE_SUPER_ADMIN")) {
+                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
                         return $repo->createQueryBuilder("u")
                             ->orderBy("u.lastname", "ASC");
-                    } else if ($this->currentUser->isAdmin("ROLE_ADMIN")) {
+                    } else if ($this->currentUser->isRole("ROLE_ADMIN")) {
                         return $repo->createQueryBuilder("u")
                             ->select("u")
                             ->leftJoin("u.serviceUser", "r")
