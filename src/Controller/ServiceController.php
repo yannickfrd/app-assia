@@ -72,7 +72,7 @@ class ServiceController extends AbstractController
      */
     public function editService(Service $service, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("EDIT", $service);
 
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);

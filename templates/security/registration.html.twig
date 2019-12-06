@@ -54,15 +54,15 @@
 
         <hr>
 
-        <h2 class="h4 mb-3">Services rattachés</h2>
+        <h2 class="h4 mb-4">Services rattachés</h2>
         <div id="serviceUser-fields-list" data-prototype="{{ form_widget(form.serviceUser.vars.prototype)|e }}"
             data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
             data-widget-counter="{{ form.serviceUser|length }}">
-            <div class="table-responsive">
+            {% if form.serviceUser|length > 0 %}
+            <div class="table-responsive table-sm">
                 <table id="function-table" class="table">
                     <thead>
                         <tr>
-                            <!-- <th scope="col" class="align-middle th-w-150">Fonction</th> -->
                             <th scope="col" class="align-middle th-w-150">Service</th>
                             <th scope="col" class="align-middle th-w-120">Pôle</th>
                             <th scope="col" class="align-middle th-w-20"></th>
@@ -71,17 +71,17 @@
                     <tbody>
                         {% for role in form.serviceUser %}
                         <tr id="{{ role.vars.id }}">
-                            {#<th scope="row">{{ form_widget(role.role) }}</th>#}
                             <td>{{ form_widget(role.service) }}</td>
                             <td class="align-middle">{{ role.vars.value.service.pole.name }}</td>
-                            <td class="align-middle"><button class="btn btn-danger js-remove">
-                                    <i class="fas fa-trash-alt"></i></button>
+                            <td class="align-middle">
+                                <button class="btn btn-danger js-remove"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% endif %}
         </div>
         <div class="my-2">
             <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"

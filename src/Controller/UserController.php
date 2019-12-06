@@ -38,7 +38,7 @@ class UserController extends AbstractController
     /**
      * Permet de rechercher un utilisateur
      * 
-     * @Route("admin/list/users", name="list_users")
+     * @Route("directory/list/users", name="list_users")
      * @Route("/new_support/search/user", name="new_support_search_user")
      * @return Response
      */
@@ -100,14 +100,10 @@ class UserController extends AbstractController
      */
     public function editUser(User $user, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("EDIT", $user);
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
-        foreach ($user->getServiceUser() as $key => $serviceUser) {
-            dump($serviceUser->getService());
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -124,12 +120,6 @@ class UserController extends AbstractController
             "edit_mode" => true
         ]);
     }
-
-
-    // Met en place la pagination du tableau et affiche le rendu
-
-    protected function pagination($userSearch, $request, $service, $form, $formServiceUser = null, $paginator)
-    { }
 
     /**
      * Permet de trouver les utilisateurs par le mode de recherche instannée

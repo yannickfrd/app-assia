@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Pole;
 use App\Form\PoleType;
-use App\Entity\PoleSearch;
-use App\Form\PoleSearchType;
 use App\Repository\PoleRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +40,6 @@ class PoleController extends AbstractController
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        // $poles->setPageRange(5);
         $poles->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
@@ -61,7 +58,7 @@ class PoleController extends AbstractController
      */
     public function editPole(Pole $pole, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("EDIT", $pole);
 
         $form = $this->createForm(PoleType::class, $pole);
         $form->handleRequest($request);

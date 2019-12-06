@@ -67,22 +67,26 @@
                                     suivi</a>
                             </div>
                         </li>
-                        {% if is_granted("ROLE_ADMIN") %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuAdmin"
-                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Admin
+                                role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">Répertoire
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
-                                <a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel
-                                    utilisateur</a>
-                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
                                 <a class="dropdown-item" href="{{ path("list_services") }}">Services</a>
                                 <a class="dropdown-item" href="{{ path("list_poles") }}">Pôles</a>
+                                {% if is_granted("ROLE_ADMIN") %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel
+                                    utilisateur</a>
+                                {% endif %}
+                                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                <a class="dropdown-item" href="">Créer un nouveau service</a>
+                                <a class="dropdown-item" href="">Créer un nouveau pôle</a>
+                                {% endif %}
                             </div>
                         </li>
-                        {% endif %}
                     </ul>
                     <form action="{{ path("list_people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
                         <div class="position-relative" style="z-index: 9;">

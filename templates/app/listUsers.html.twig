@@ -12,7 +12,7 @@
 
 {% block body %}
 
-<section class="my-0">
+<section class="mt-0 mb-4">
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Utilisateurs</h1>
@@ -102,13 +102,15 @@
                     {% for user in users %}
                     <tr>
                         <th scope="row">
-                            {% if is_granted("ROLE_SUPER_ADMIN") %}
-                            <a href="{{ path('user_show', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"
-                                data-placement="bottom" title="Voir la fiche">
+                            {% if is_granted("EDIT", user) %}
+                            <a href="{{ path('user_show', {'id':user.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir la fiche">
                                 <span class="fas fa-eye"></span>
                             </a>
                             {% else %}
-                                <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                                    class="fas fa-ban"></span></span>
                             {% endif %}
                         </th>
                         <td class="text-uppercase">{{ user.lastname }}</td>
@@ -146,11 +148,10 @@
         </div>
         {% endif %}
 </section>
-</div>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("admin") }}
+{{ encore_entry_script_tags("directory") }}
 {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

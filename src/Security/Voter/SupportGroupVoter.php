@@ -86,12 +86,12 @@ class SupportGroupVoter extends Voter
         return false;
     }
 
-    // Is administrator of service
+    // If current user is administrator
     protected function isAdminService()
     {
         if ($this->security->isGranted("ROLE_ADMIN")) {
-            foreach ($this->user->getServiceUser() as $role) {
-                if ($this->supportGroup->getService()->getId() == $role->getService()->getId()) {
+            foreach ($this->user->getServiceUser() as $serviceUser) {
+                if ($this->supportGroup->getService()->getId() == $serviceUser->getService()->getId()) {
                     return true;
                 }
             }

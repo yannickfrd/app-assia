@@ -82,18 +82,17 @@
     <div class="container">
 
         {% if app.request.attributes.get("_route") == "new_support_search_person" %}
-        <p><a href="{{ path("person_new") }}" class="js-create-person text-{{ theme_color }}"><span
-                    class="fas fa-plus-square"></span> Créer une
-                nouvelle personne</a></p>
+        <a href="{{ path("person_new") }}" class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span
+                class="fas fa-plus-square"></span> Créer une nouvelle personne</a>
         {% endif %}
 
         {% if people is defined %}
 
         {% if people %}
         {% if group_people is defined %}
-        <p><a href="{{ path("group_create_person", {"id":group_people.id}) }}"
-                class="js-create-person text-{{ theme_color }}"><span class="fas fa-plus-square"></span> Créer une
-                nouvelle personne</a></p>
+        <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
+            class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span class="fas fa-plus-square"></span>
+            Créer une nouvelle personne</a>
         {% endif %}
 
         <div class="row align-items-baseline">
@@ -176,15 +175,6 @@
             {{ knp_pagination_render(people) }}
         </div>
 
-        {% if group_people is defined %}
-        <div class="row">
-            <div class="col-md-12">
-                <p><a href="{{ path("group_create_person", {"id":group_people.id}) }}"
-                        class="text-{{ theme_color }}"><span class="fas fa-plus-square"></span> Créer une nouvelle
-                        personne</a></p>
-            </div>
-        </div>
-        {% endif %}
         {% endif %}
 </section>
 {% endif %}

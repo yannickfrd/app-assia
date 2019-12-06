@@ -76,24 +76,25 @@
                 <tbody>
                     {% for support in form.vars.value.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
                     <tr>
-                        <th scope="row">
+                        <th scope="row" class="align-middle">
                             <a href="{{ path('support_edit', {'id':support.groupPeople.id, 'support_id':support.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le suivi social"><span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>
-                            {% for person in support.groupPeople.rolePerson|filter(person => person.role != 3) %}
-                            <span class="text-uppercase">{{ person.person.lastname }}</span>
-                            {{ person.person.firstname }}
+                        <td class="align-middle">
+                            {% for rolePerson in support.groupPeople.rolePerson|filter(person => person.role != 3) %}
+                            <span class="text-uppercase">{{ rolePerson.person.lastname }}</span>
+                            {{ rolePerson.person.firstname }}<br>
                             {% endfor %}
-                        <td>{{ support.groupPeople.getFamilyTypologyType }}<br>
+                        <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
                             {% if support.supportPerson|length > 1 %}
                             {{ support.supportPerson|length }} personnes{% endif %}
                         </td>
-                        <td>{{ support.getstatusType }}</td>
-                        <td>{{ support.startDate| date("d/m/Y") }}</td>
-                        <td>{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}</td>
+                        <td class="align-middle">{{ support.getstatusType }}</td>
+                        <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
+                        <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -123,8 +124,8 @@
                 <tbody>
                     {% for serviceUser in form.vars.value.serviceUser %}
                     <tr>
-                        <th scope="row">
-                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <th scope="row" class="align-middle">
+                            {% if is_granted("EDIT", serviceUser.service) %}
                             <a href="{{ path('service_show', {'id':serviceUser.service.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
@@ -135,10 +136,10 @@
                                     class="fas fa-ban"></span></span>
                             {% endif %}
                         </th>
-                        <td>{{ serviceUser.service.name }}</td>
-                        <td>{{ serviceUser.service.email }}</td>
-                        <td>{{ serviceUser.service.phone }}</td>
-                        <td>{{ serviceUser.service.pole.name }}</td>
+                        <td class="align-middle">{{ serviceUser.service.name }}</td>
+                        <td class="align-middle">{{ serviceUser.service.email }}</td>
+                        <td class="align-middle">{{ serviceUser.service.phone }}</td>
+                        <td class="align-middle">{{ serviceUser.service.pole.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
