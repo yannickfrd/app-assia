@@ -196,6 +196,7 @@ class AppFixtures extends Fixture
             ->setEmail($this->faker->freeEmail())
             ->setphone($phone)
             ->setCreatedAt($createdAt)
+            ->setUpdatedAt($createdAt)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin)
             ->addServiceUser($this->serviceUser);

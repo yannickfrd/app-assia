@@ -175,10 +175,12 @@ class PersonController extends AbstractController
                     "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !"
                 );
             } else {
+                $user = $this->security->getUser();
+
                 $groupPeople->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($this->security->getUser())
+                    ->setCreatedBy($user)
                     ->setUpdatedAt(new \DateTime())
-                    ->setUpdatedBy($this->security->getUser());
+                    ->setUpdatedBy($user);
                 $this->manager->persist($groupPeople);
 
                 $rolePerson->setHead(true)
@@ -187,18 +189,15 @@ class PersonController extends AbstractController
                 $this->manager->persist($rolePerson);
 
                 $person->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($this->security->getUser())
+                    ->setCreatedBy($user)
                     ->setUpdatedAt(new \DateTime())
-                    ->setUpdatedBy($this->security->getUser())
+                    ->setUpdatedBy($user)
                     ->addRolesPerson($rolePerson);
                 $this->manager->persist($person);
 
                 $this->manager->flush();
 
-                $this->addFlash(
-                    "success",
-                    $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe."
-                );
+                $this->addFlash("success", $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe.");
                 return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
             }
         }
@@ -239,10 +238,7 @@ class PersonController extends AbstractController
             ]);
             // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
             if ($personExist) {
-                $this->addFlash(
-                    "warning",
-                    "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !"
-                );
+                $this->addFlash("warning", "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !");
                 return $this->redirectToRoute("person_show", ["id" => $personExist->getId()]);
             } else {
                 $this->createPerson($person, $groupPeople, $rolePerson);
@@ -271,10 +267,12 @@ class PersonController extends AbstractController
             ->setGroupPeople($groupPeople);
         $this->manager->persist($rolePerson);
 
+        $user = $this->security->getUser();
+
         $person->setCreatedAt(new \DateTime())
-            ->setCreatedBy($this->security->getUser())
+            ->setCreatedBy($user)
             ->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->security->getUser())
+            ->setUpdatedBy($user)
             ->addRolesPerson($rolePerson);
         $this->manager->persist($person);
 
@@ -283,10 +281,7 @@ class PersonController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash(
-            "success",
-            $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au groupe."
-        );
+        $this->addFlash("success", $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au groupe.");
     }
 
     /**
@@ -423,11 +418,13 @@ class PersonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $groupPeople = $rolePerson->getGroupPeople();
+            $user = $this->security->getUser();
+
 
             $groupPeople->setCreatedAt(new \DateTime())
-                ->setCreatedBy($this->security->getUser())
+                ->setCreatedBy($user)
                 ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
+                ->setUpdatedBy($user);
             $this->manager->persist($groupPeople);
 
             $rolePerson->setHead(true)
@@ -437,7 +434,7 @@ class PersonController extends AbstractController
 
             $person->addRolesPerson($rolePerson)
                 ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
+                ->setUpdatedBy($user);
             $this->manager->persist($person);
 
             $this->manager->flush();

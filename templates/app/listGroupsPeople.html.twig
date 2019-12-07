@@ -14,7 +14,7 @@
         <h1 class="h2 mb-4">Liste des ménages</h1>
     </div>
 
-    <div id="form-search" class="jumbotron py-3">
+    <div id="form-search" class="jumbotron mb-0 py-3">
         {{ form_start(form) }}
         <div class="form-inline justify-content-md-center align-items-end">
             <div class="form-group col-auto my-1 px-1">
@@ -103,6 +103,7 @@
 
                 <tbody>
                     {% for person in role_people %}
+                    {% cache "lisGroupsPeoplePerson" ~ person.groupPeople.id person.groupPeople.updatedAt.timestamp %}
                     <tr>
                         <th scope="row">
                             {% if person.groupPeople.nbPeople > 1 %}
@@ -138,6 +139,7 @@
                         <td>{% if person.groupPeople %}{{ person.groupPeople.nbPeople }}{% endif %}
                         </td>
                     </tr>
+                    {% endcache %}
                     {% endfor %}
                 </tbody>
             </table>

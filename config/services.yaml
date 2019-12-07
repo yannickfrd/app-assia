@@ -27,6 +27,16 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
 
+    Twig\CacheExtension\CacheProviderInterface:
+        class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter
+
+    Twig\CacheExtension\CacheStrategyInterface:
+        class : Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
+
+    Twig\CacheExtension\Extension:
+        tags :
+        - { name: twig.extension }
+
     App\Twig\AppExtension:
         lazy: true
         

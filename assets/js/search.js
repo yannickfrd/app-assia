@@ -11,5 +11,4 @@ $("select.multi-select.js-status").select2({
     placeholder: "  -- Statut --",
 });
 
-
 let search = new Search("form-search");

@@ -75,6 +75,7 @@
 
                 <tbody>
                     {% for support in form.vars.value.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                    {% cache "referentSupport" ~ support.id support.updatedAt.timestamp %}
                     <tr>
                         <th scope="row" class="align-middle">
                             <a href="{{ path('support_edit', {'id':support.id}) }}"
@@ -95,6 +96,7 @@
                         <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
                         </td>
                     </tr>
+                    {% endcache %}
                     {% endfor %}
                 </tbody>
             </table>

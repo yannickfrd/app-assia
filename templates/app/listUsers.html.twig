@@ -19,16 +19,16 @@
     </div>
 
     <div class="container-fluid p-0">
-        <div id="form-search" class="jumbotron py-3">
+        <div id="form-search" class="jumbotron mb-0 py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
-                <div class="form-service col-auto my-1 px-1 ">
+                <div class="form-group col-auto my-1 px-1 ">
                     {{ form_row(form.lastname) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1">
                     {{ form_row(form.firstname) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                <div class="form-group col-auto my-1 px-1">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text d-none d-sm-block" data-toggle="tooltip"
@@ -39,13 +39,16 @@
                         {{ form_row(form.phone) }}
                     </div>
                 </div>
-                <div class="form-service col-auto my-1 px-1 ">
+                <div class="form-group col-auto my-1 px-1 ">
+                    {{ form_row(form.status) }}
+                </div>
+                <div class="form-group col-auto my-1 px-1 ">
                     {{ form_row(form.service) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1 ">
+                <div class="form-group col-auto my-1 px-1 ">
                     {{ form_row(form.pole) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1">
                     <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
                             class="fas fa-search"></i></button>
                     <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
@@ -100,6 +103,7 @@
                 <tbody>
 
                     {% for user in users %}
+                    {% cache "user" ~ app.user.id ~ user.id user.createdAt.timestamp %}
                     <tr>
                         <th scope="row">
                             {% if is_granted("EDIT", user) %}
@@ -131,6 +135,7 @@
                             {% endfor %}
                         </td>
                     </tr>
+                    {% endcache %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -142,8 +147,8 @@
 
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path("security_registration") }}" class="text-{{ theme_color }}">
-                        <span class="fas fa-plus-square"></span> Créer un nouvel utilisateur</a></p>
+                <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                        <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a></p>
             </div>
         </div>
         {% endif %}

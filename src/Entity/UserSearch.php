@@ -21,6 +21,12 @@ class UserSearch
 
     private $username;
 
+
+    /**
+     * @var int|null
+     */
+    private $status;
+
     /**
      * @var int|null
      */
@@ -94,6 +100,21 @@ class UserSearch
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

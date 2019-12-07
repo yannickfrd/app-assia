@@ -33,6 +33,7 @@ class UserFixtures extends Fixture
             ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
             ->setEmail("romain.madelaine@esperer-95.org")
             ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
             ->setLoginCount(0)
             ->setLastLogin(new \DateTime());
 

@@ -50,6 +50,10 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere("u.phone = :phone")
                 ->setParameter("phone", $userSearch->getPhone());
         }
+        if ($userSearch->getStatus()) {
+            $query->andWhere("u.status = :status")
+                ->setParameter("status", $userSearch->getStatus());
+        }
         if ($userSearch->getService()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();

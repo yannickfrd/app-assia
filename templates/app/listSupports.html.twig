@@ -14,7 +14,7 @@
         <h1 class="h2 mb-4">Les suivis</h1>
     </div>
 
-    <div id="form-search" class="jumbotron py-3">
+    <div id="form-search" class="jumbotron mb-0 py-3">
         {{ form_start(form) }}
         <div class="form-inline justify-content-md-center align-items-end">
             <div class="form-group col-auto my-1 px-1">
@@ -57,7 +57,7 @@
             <div class="col-md-4 count align-middle">
                 <p class="align-middle">Résultat :
                     {{ supports.getTotalItemCount | number_format(0,'', ' ')  }}
-                    personnes.</p>
+                    suivis.</p>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -97,6 +97,7 @@
                 </thead>
                 <tbody>
                     {% for support in supports %}
+                    {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %}
                     <tr>
                         <th scope="row" class="align-middle">
                             {% if is_granted("VIEW", support) %}
@@ -141,6 +142,7 @@
                         </td>
                         <td class="align-middle">{{ support.service.name }}</td>
                     </tr>
+                    {% endcache %}
                     {% endfor %}
                 </tbody>
             </table>

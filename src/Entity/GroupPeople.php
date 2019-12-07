@@ -86,12 +86,18 @@ class GroupPeople
      */
     private $updatedBy;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Referent", mappedBy="groupPeople", orphanRemoval=true)
+     */
+    private $referents;
+
     public function __construct()
     {
         $this->supports = new ArrayCollection();
         $this->rolePerson = new ArrayCollection();
         $this->createdAt = new \Datetime();
         $this->updatedAt = new \Datetime();
+        $this->referents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,6 +250,37 @@ class GroupPeople
             // set the owning side to null (unless already changed)
             if ($rolePerson->getGroupPeople() === $this) {
                 $rolePerson->setGroupPeople(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Referent[]
+     */
+    public function getReferents(): Collection
+    {
+        return $this->referents;
+    }
+
+    public function addReferent(Referent $referent): self
+    {
+        if (!$this->referents->contains($referent)) {
+            $this->referents[] = $referent;
+            $referent->setGroupPeople($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferent(Referent $referent): self
+    {
+        if ($this->referents->contains($referent)) {
+            $this->referents->removeElement($referent);
+            // set the owning side to null (unless already changed)
+            if ($referent->getGroupPeople() === $this) {
+                $referent->setGroupPeople(null);
             }
         }
 

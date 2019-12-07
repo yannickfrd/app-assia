@@ -37,7 +37,7 @@ class SupportGroupSearchType extends AbstractType
                 "label" => false,
                 "attr" => [
                     "placeholder" => "Nom et/ou prénom",
-                    "class" => "w-max-180",
+                    "class" => "w-max-170",
                 ]
             ])
             // ->add("birthdate", DateType::class, [
@@ -82,7 +82,7 @@ class SupportGroupSearchType extends AbstractType
                 "attr" => [
                     "class" => "",
                 ],
-                "placeholder" => "-- Date --",
+                "placeholder" => "-- Date de suivi --",
                 "required" => false
             ])
             ->add("startDate", DateType::class, [
@@ -120,6 +120,9 @@ class SupportGroupSearchType extends AbstractType
                 },
                 "label" => false,
                 "placeholder" => "-- Référent --",
+                "attr" => [
+                    "class" => "w-max-180"
+                ],
                 "required" => false
             ])
             ->add("service", EntityType::class, [
@@ -139,7 +142,7 @@ class SupportGroupSearchType extends AbstractType
                 "label" => false,
                 "placeholder" => "-- Service --",
                 "attr" => [
-                    "class" => "multi-select js-service"
+                    "class" => "multi-select js-service w-min-150 w-max-180"
                 ],
                 "required" => false
             ]);

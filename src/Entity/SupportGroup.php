@@ -98,28 +98,40 @@ class SupportGroup
     private $service;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitSocial", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitSocial", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitSocial;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitFamilyGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitHousing", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitHousing", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitHousing;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitBudgetGroup;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportGroup")
+     */
+    private $notes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="supportGroup", orphanRemoval=true)
+     */
+    private $rdvs;
 
     public function __construct()
     {
         $this->supportPerson = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->rdvs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -372,6 +384,68 @@ class SupportGroup
         // set the owning side of the relation if necessary
         if ($this !== $sitBudgetGroup->getSupportGroup()) {
             $sitBudgetGroup->setSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->contains($note)) {
+            $this->notes->removeElement($note);
+            // set the owning side to null (unless already changed)
+            if ($note->getSupportGroup() === $this) {
+                $note->setSupportGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rdv[]
+     */
+    public function getRdvs(): Collection
+    {
+        return $this->rdvs;
+    }
+
+    public function addRdv(Rdv $rdv): self
+    {
+        if (!$this->rdvs->contains($rdv)) {
+            $this->rdvs[] = $rdv;
+            $rdv->setSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRdv(Rdv $rdv): self
+    {
+        if ($this->rdvs->contains($rdv)) {
+            $this->rdvs->removeElement($rdv);
+            // set the owning side to null (unless already changed)
+            if ($rdv->getSupportGroup() === $this) {
+                $rdv->setSupportGroup(null);
+            }
         }
 
         return $this;

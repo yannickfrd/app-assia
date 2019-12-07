@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -26,10 +27,9 @@ class AppController extends AbstractController
      * @Route("/", name="home")
      * @return Response
      */
-    public function home(): Response
+    public function home(UserRepository $repo): Response
     {
         return $this->render("app/home.html.twig", [
-            "title" => "Bienvenue sur l'application de suivi social d'ESPERER 95",
             "current_menu" => "home"
         ]);
     }

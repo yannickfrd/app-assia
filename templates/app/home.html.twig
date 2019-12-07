@@ -1,25 +1,159 @@
 {% extends "base.html.twig" %}
 
-{% block stylesheets %}{% endblock %}
+{% block title %}Mon espace personnel | Esperer95-app{% endblock %}
 
-{% block title %}Accueil | Esperer95-app{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    {% include "model/msgFlash.html.twig" %}
-    <h1>{{ title }}</h1>
 
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto enim culpa velit mollitia illum veritatis,
-        dignissimos
-        saepe nemo obcaecati. Similique, quos, magnam blanditiis quam eligendi laudantium quod ab nobis dolor vel
-        adipisci
-        maiores quis quidem necessitatibus natus totam. Nostrum, accusantium?</p>
-    <p>Placeat dolorum, doloribus voluptatibus tempore repellendus eaque voluptas velit aperiam, perferendis enim
-        molestias
-        modi, iure harum laboriosam. Nesciunt maxime accusantium facilis corporis natus soluta veritatis, dolore est,
-        animi
-        ea consequuntur dicta dolores dolor nisi a recusandae aspernatur reiciendis consequatur ipsum.</p>
+    <h1 class="h2 mb-3">Mon espace personnel</h1>
+    <div class="small text-secondary">
+        <p> Dernière connexion le {{ app.user.lastLogin | date("d/m/Y à H:i") }}</p>
+    </div>
+
+    <hr>
+
+    {% include "model/msgFlash.html.twig" %}
+
+    <section>
+        <h2 class="h4 my-4">Mes suivis en cours</h2>
+
+        <div class="row align-items-baseline">
+            <div class="col-md-12 count align-middle">
+                <p class="align-middle">{{ app.user.referentSupport|filter(support => support.status == 2)|length }}
+                    suivis en cours (sur {{ app.user.referentSupport|length }}).</p>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
+                        <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
+                        <th scope="col" class="align-middle th-w-100">Statut</th>
+                        <th scope="col" class="align-middle th-date">Date de début</th>
+                        <th scope="col" class="align-middle th-date">Date de fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for support in app.user.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                    {% cache "referentSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %}
+                    <tr>
+                        <th scope="row" class="align-middle">
+                            <a href="{{ path('support_edit', {'id':support.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir le suivi social"><span class="fas fa-eye"></span>
+                            </a>
+                        </th>
+                        <td class="align-middle">
+                            {% for rolePerson in support.groupPeople.rolePerson|filter(person => person.role != 3) %}
+                            {{ rolePerson.person.fullname }}<br>
+                            {% endfor %}
+                        <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
+                            {% if support.supportPerson|length > 1 %}
+                            {{ support.supportPerson|length }} personnes{% endif %}
+                        </td>
+                        <td class="align-middle">{{ support.getstatusType }}</td>
+                        <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
+                        <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
+                        </td>
+                    </tr>
+                    {% endcache %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{{ path('new_support_search_person') }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
+            <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
+        <br />
+    </section>
+
+    <hr>
+
+    <section>
+        <h2 class="h4 my-4">Mes prochains rendez-vous</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-date">Date</th>
+                        <th scope="col" class="align-middle th-w-date">Heure</th>
+                        <th scope="col" class="align-middle th-50">Suivi concerné</th>
+                        <th scope="col" class="align-middle th-150">Lieu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in app.user.rdvs|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                    <tr>
+                        <th scope="row" class="align-middle">
+                            <a href="#" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir le suivi social"><span class="fas fa-eye"></span>
+                            </a>
+                        </th>
+                        <td class="align-middle">{{ rdv.createdAt| date("d/m/Y") }}</td>
+                        <td class="align-middle"> </td>
+                        <td class="align-middle">
+                            {% for rolePerson in rdv.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}
+                            {{ rolePerson.person.fullname }}<br>
+                            {% endfor %}
+                        <td class="align-middle"> Inconnu </td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2 class="h4 my-4">Mes dernières notes sociales</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover text-dark">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-150">Titre</th>
+                        <th scope="col" class="align-middle th-w-100">Statut</th>
+                        <th scope="col" class="align-middle th-w-100">Suivi concerné</th>
+                        <th scope="col" class="align-middle th-date">Date de création</th>
+                        <th scope="col" class="align-middle th-date">Date de modification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in app.user.notes|sort ((a, b) => a.updatedAt <=> b.updatedAt)|reverse  %}
+                    <tr>
+                        <th scope="row" class="align-middle">
+                            <a href="{{ path('note_list', {'id':note.supportGroup.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir le suivi social"><span class="fas fa-eye"></span>
+                            </a>
+                        </th>
+                        <td class="align-middle">{{ note.title }}</td>
+                        <td class="align-middle">{{ note.statusList }}</td>
+                        <td class="align-middle">
+                            {% for rolePerson in note.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}
+                            {{ rolePerson.person.fullname }}<br>
+                            {% endfor %}
+                        </td>
+                        <td class="align-middle">{{ note.createdAt| date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ note.updatedAt| date("d/m/Y") }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <hr>
 
 </div>
 {% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

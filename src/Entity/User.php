@@ -93,9 +93,25 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
+     */
+    private $updatedBy;
+
 
     /**
      * @ORM\Column(type="integer", options={"default":0})
@@ -172,6 +188,16 @@ class User implements UserInterface
      */
     private $referent2Support;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="user")
+     */
+    private $notes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="user")
+     */
+    private $rdvs;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
@@ -181,6 +207,8 @@ class User implements UserInterface
         $this->userConnections = new ArrayCollection();
         $this->referentSupport = new ArrayCollection();
         $this->referent2Support = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->rdvs = new ArrayCollection();
     }
 
     // public function __toString()
@@ -368,6 +396,44 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+
     /**
      * @return Collection|Person[]
      */
@@ -607,6 +673,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($referent2Support->getReferent2() === $this) {
                 $referent2Support->setReferent2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->contains($note)) {
+            $this->notes->removeElement($note);
+            // set the owning side to null (unless already changed)
+            if ($note->getUser() === $this) {
+                $note->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rdv[]
+     */
+    public function getRdvs(): Collection
+    {
+        return $this->rdvs;
+    }
+
+    public function addRdv(Rdv $rdv): self
+    {
+        if (!$this->rdvs->contains($rdv)) {
+            $this->rdvs[] = $rdv;
+            $rdv->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRdv(Rdv $rdv): self
+    {
+        if ($this->rdvs->contains($rdv)) {
+            $this->rdvs->removeElement($rdv);
+            // set the owning side to null (unless already changed)
+            if ($rdv->getUser() === $this) {
+                $rdv->setUser(null);
             }
         }
 

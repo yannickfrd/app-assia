@@ -17,7 +17,7 @@
             <tbody>
 
                 {% for support in group_people.supports|reverse %}
-
+                {% cache "GroupPeopleSupport" ~ support.id support.updatedAt.timestamp %}
                 {% if support.referent %}
                 {% set contact_user %}
                 <div class='text-left p-2'>
@@ -64,8 +64,7 @@
                         {% if support.referent %}
                         <a href="mailto:{{ support.referent.email }}" class="text-{{ theme_color }}"
                             data-toggle="tooltip" data-placement="right" data-html="true"
-                            title="{{ contact_user }}">{{ support.referent.firstname }}
-                            {{ support.referent.lastname }}</a>
+                            title="{{ contact_user }}">{{ support.referent.fullname }}</a>
                         {% else %}-{% endif %}
                     </td>
                     <td class="align-middle">
@@ -79,6 +78,7 @@
                         {% if support.service %}{{ support.service.pole.name }}{% endif %}
                     </td>
                 </tr>
+                {% endcache %}
                 {% endfor %}
             </tbody>
         </table>

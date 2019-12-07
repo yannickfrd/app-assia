@@ -65,8 +65,8 @@
             </table>
         </div>
         {% if is_granted("ROLE_SUPER_ADMIN") %}
-        <p><a href="#" class="js-create-pole text-{{ theme_color }}">
-                <span class="fas fa-plus-square"></span> Créer un nouveau pôle</a>
+        <p><a href="#" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
+                <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
         </p>
         {% endif %}
 </section>
