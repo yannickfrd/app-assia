@@ -9,6 +9,7 @@
         "friendsofsymfony/ckeditor-bundle": "^2.1",
         "knplabs/knp-paginator-bundle": "^4.0",
         "sensio/framework-extra-bundle": "^5.1",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "4.3.*",
         "symfony/cache": "4.3.*",
         "symfony/console": "4.3.*",
@@ -30,6 +31,7 @@
         "symfony/twig-bundle": "4.3.*",
         "symfony/validator": "4.3.*",
         "symfony/web-link": "4.3.*",
+        "symfony/web-server-bundle": "4.3.*",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "4.3.*",
         "twig/cache-extension": "^1.4@dev",
@@ -38,12 +40,12 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.2",
+        "easycorp/easy-deploy-bundle": "^1.0",
         "fzaninotto/faker": "^1.8",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
-        "symfony/test-pack": "*",
-        "symfony/web-server-bundle": "4.3.*"
+        "symfony/test-pack": "*"
     },
     "config": {
         "preferred-install": {

@@ -58,7 +58,6 @@
                 <div class="navigation">{{ knp_pagination_render(services) }}</div>
             </div>
         </div>
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
@@ -70,23 +69,15 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(services, "Pôle", "s.name") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Téléphone
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Email
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Adresse
-                        </th>
+                        <th scope="col" class="align-middle th-w-120">Téléphone</th>
+                        <th scope="col" class="align-middle th-w-150">Email</th>
+                        <th scope="col" class="align-middle th-w-120">Adresse</th>
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(services, "Ville", "s.city") }}
                         </th>
                     </tr>
                 </thead>
-
                 <tbody>
-
                     {% for service in services %}
                     <tr>
                         <th scope="row">
@@ -114,11 +105,9 @@
                 </tbody>
             </table>
         </div>
-
         <div class="navigation">
             {{ knp_pagination_render(services) }}
         </div>
-
         {% if is_granted("ROLE_SUPER_ADMIN") %}
         <div class="row">
             <div class="col-md-12">
@@ -131,7 +120,6 @@
     </div>
     {% endif %}
 </section>
-
 {% endblock %}
 
 {% block javascripts %}

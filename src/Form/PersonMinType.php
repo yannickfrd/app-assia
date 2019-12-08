@@ -35,7 +35,7 @@ class PersonMinType extends AbstractType
             ->add("birthdate", DateType::class, [
                 "widget" => "single_text",
                 "attr" => [
-                    "class" => "w-max-180",
+                    "class" => "w-max-165",
                     "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],

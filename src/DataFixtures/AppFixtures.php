@@ -371,11 +371,7 @@ class AppFixtures extends Fixture
     {
         $this->person = new Person();
         $this->firstname = $this->faker->firstName();
-        $phone = $this->faker->mobileNumber();
-        $phone = strtr($phone, "+33 ", "0");
-        $phone = strtr($phone, "+3 3", "0");
-        $phone = strtr($phone, "033 ", "0");
-        $phone = strtr($phone, "033 (0)", "0");
+        $phone = "06 42 67 88 21";
 
         $this->person->setFirstName($this->firstname)
             ->setLastName($this->lastname)

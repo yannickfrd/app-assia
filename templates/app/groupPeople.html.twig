@@ -26,7 +26,6 @@
     <hr>
 
     <section>
-
         {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
 
@@ -48,17 +47,12 @@
                                 <th scope="col" class="align-middle th-w-20"></th>
                                 <th scope="col" class="align-middle th-w-20 d-none d-sm-table-cell"
                                     data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
-                                <th scope="col" class="align-middle th-w-150 d-table-row d-sm-table-cell">Prénom
-                                </th>
+                                <th scope="col" class="align-middle th-w-150 d-table-row d-sm-table-cell">Prénom</th>
                                 <th scope="col" class="align-middle th-w-150 d-table-row d-sm-table-cell">Nom</th>
                                 <th scope="col" class="align-middle th-w-120">Date de naissance</th>
-                                <th scope="col" class="align-middle th-w-50 d-none d-sm-table-cell">
-                                    Âge
-                                </th>
-                                <th scope="col" class="align-middle th-w-100 d-table-row d-sm-table-cell">Sexe
-                                </th>
-                                <th scope="col" class="align-middle th-w-150 d-table-row d-sm-table-cell">Rôle
-                                </th>
+                                <th scope="col" class="align-middle th-w-50 d-none d-sm-table-cell">Âge</th>
+                                <th scope="col" class="align-middle th-w-100 d-table-row d-sm-table-cell">Sexe</th>
+                                <th scope="col" class="align-middle th-w-150 d-table-row d-sm-table-cell">Rôle</th>
                                 <th scope="col" class="align-middle th-w-50"></th>
                             </tr>
                         </thead>
@@ -85,49 +79,20 @@
                                 <td class="px-1">
                                     {{ form_widget(form_person.person.birthdate) }}
                                     <span class="d-inline d-sm-none px-1 text-center">{{ age }}
-                                        {% if age > 1 %}ans
-                                        {% elseif age %}
-                                        an
-                                        {% endif %}
+                                        {% if age > 1 %}ans{% elseif age %}an{% endif %}
                                     </span>
                                 </td>
                                 <td class="align-middle text-center px-1 d-none d-sm-table-cell">
-                                    {{ age }}
-                                    {% if age > 1 %}ans
-                                    {% elseif age %}
-                                    an
-                                    {% endif %}
-                                </td>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                <td class="align-middle text-center px-1 d-none d-sm-table-cell">
                                     {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
-=======
->>>>>>> test
                                 <td class="px-1 d-table-row d-sm-table-cell">
                                     {{ form_widget(form_person.person.gender) }}</td>
                                 <td class="px-1 d-table-row d-sm-table-cell">{{ form_widget(form_person.role) }}</td>
                                 <td class="align-middle px-1">
                                     <button class="js-remove btn btn-danger shadow"
-<<<<<<< HEAD
                                         data-url="{{ path('remove_person', {'id':form.vars.value.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
                                         data-toggle="modal" data-target="#modal-block" data-placement="bottom"
                                         title="Retirer la personne du groupe">
                                         <span class="fas fa-user-times"></span></button>
-                                    {# <a href="" class="js-remove btn btn-danger shadow"
-                                         onclick="return confirm('Êtes-vous vraiment sûr de vouloir retirer {{ form_person.vars.value.person.firstname }} du ménage ?')" 
-                                        data-placement="bottom" title="Retirer la personne du groupe">
-                                        <span class="fas fa-user-times"></span>
-                                    </a> #}
-=======
-                                <td>XXX
->>>>>>> test
-=======
-                                        data-url="{{ path('remove_person', {'id':group_people.id, 'person_id':person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        data-toggle="modal" data-target="#modal-block" data-placement="bottom"
-                                        title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
-                                    </button>
->>>>>>> test
                                 </td>
                             </tr>
                             {% endfor %}
@@ -146,7 +111,6 @@
                     <span class="fas fa-plus-square mr-2"></span>Enregistrer une naissance</a>
             </div>
         </div>
-
     </section>
 
     <section>
@@ -154,7 +118,7 @@
             <div class="col-md-6">{{ form_row(form.familyTypology) }}</div>
             <div class="col-md-6">{{ form_row(form.nbPeople) }}</div>
         </div>
-        <div class="form-group row">{{ form_label(form.comment) }}
+        <div class="form-group row">
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
         {{ form_row(form._token) }}

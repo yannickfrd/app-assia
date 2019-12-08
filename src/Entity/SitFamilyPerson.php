@@ -177,7 +177,7 @@ class SitFamilyPerson
         return self::CHILD_DEPENDANCE[$this->childDependance];
     }
 
-    public function getSupportPerson(): ?Supportpers
+    public function getSupportPerson(): ?Supportperson
     {
         return $this->supportPerson;
     }
