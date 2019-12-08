@@ -1,0 +1,60 @@
+ {% extends "model/collapseCard.html.twig" %}
+
+ {% set id = "listSupports" %}
+
+{% block card_title %}Mes suivis en cours{% endblock %}
+
+{% block card_body %}
+
+<section>
+    <div class="row align-items-baseline">
+        <div class="col-md-12 count align-middle">
+            <p class="align-middle">{{ app.user.referentSupport|filter(support => support.status == 2)|length }}
+                suivis en cours (sur {{ app.user.referentSupport|length }}).</p>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-dark">
+            <thead>
+                <tr>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                    <th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
+                    <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
+                    <th scope="col" class="align-middle th-w-100">Statut</th>
+                    <th scope="col" class="align-middle th-date">Date de début</th>
+                    <th scope="col" class="align-middle th-date">Date de fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for support in app.user.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                {% cache "referentSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %}
+                <tr>
+                    <th scope="row" class="align-middle">
+                        <a href="{{ path('support_edit', {'id':support.id}) }}"
+                            class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                            title="Voir le suivi social"><span class="fas fa-eye"></span>
+                        </a>
+                    </th>
+                    <td class="align-middle">
+                        {% for rolePerson in support.groupPeople.rolePerson|filter(person => person.role != 3) %}
+                        {{ rolePerson.person.fullname }}<br>
+                        {% endfor %}
+                    <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
+                        {% if support.supportPerson|length > 1 %}
+                        {{ support.supportPerson|length }} personnes{% endif %}
+                    </td>
+                    <td class="align-middle">{{ support.getstatusType }}</td>
+                    <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
+                    <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
+                    </td>
+                </tr>
+                {% endcache %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('new_support_search_person') }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
+        <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
+    <br />
+</section>
+{% endblock %}

@@ -27,7 +27,7 @@
         <div class="row align-items-baseline mb-3">
             <div class="col-md-4 count align-middle">
                 <span class="align-middle">Résultat : {{ notes.getTotalItemCount | number_format(0,'', ' ')}}
-                    notes.</span>
+                    note(s)</span>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(notes) }}</div>
@@ -39,6 +39,7 @@
                 <a href="{{ path("note_create", {'id':support.id}) }}"
                     class="btn btn-{{ theme_color }} btn-sm mb-3 shadow"><span
                         class="fas fa-plus-square mr-2"></span>Créer une nouvelle note</a>
+                {% if notes.getTotalItemCount %}  
                 <div class="float-right">
                     <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
                         {{ knp_pagination_sortable(notes, "Titre", "n.title") }}
@@ -50,6 +51,7 @@
                         {{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
                     </button>
                 </div>
+                {% endif %}
             </div>
         </div>
         {% for note in notes %}
