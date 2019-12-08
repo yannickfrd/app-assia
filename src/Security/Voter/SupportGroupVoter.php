@@ -71,7 +71,7 @@ class SupportGroupVoter extends Voter
 
         if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() == $this->userId)
             || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() == $this->userId)
-            || ($this->supportGroup->getCreatedBy()->getId() == $this->userId)
+            || ($this->supportGroup->getCreatedBy() && $this->supportGroup->getCreatedBy()->getId() == $this->userId)
         ) {
             return true;
         }
@@ -86,12 +86,12 @@ class SupportGroupVoter extends Voter
         return false;
     }
 
-    // Is administrator of service
+    // If current user is administrator
     protected function isAdminService()
     {
         if ($this->security->isGranted("ROLE_ADMIN")) {
-            foreach ($this->user->getServiceUser() as $role) {
-                if ($this->supportGroup->getService()->getId() == $role->getService()->getId()) {
+            foreach ($this->user->getServiceUser() as $serviceUser) {
+                if ($this->supportGroup->getService()->getId() == $serviceUser->getService()->getId()) {
                     return true;
                 }
             }

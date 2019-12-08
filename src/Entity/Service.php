@@ -16,6 +16,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Service
 {
+    public const SUPPORT_ACCESS = [
+        1 => "Uniquement le référent du suivi",
+        2 => "Tou·te·s les salarié·e·s du service",
+        3 => "Tou·te·s les salarié·e·s du pôle",
+        4 => "Tou·te·s les salarié·e·s de l'association"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -77,6 +84,11 @@ class Service
     private $chief;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $supportAccess;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -86,10 +98,16 @@ class Service
      */
     private $createdAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Space", mappedBy="service")
+     */
+    private $spaces;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
+        $this->spaces = new ArrayCollection();
     }
 
     public function __toString()
@@ -272,6 +290,23 @@ class Service
         return $this;
     }
 
+    public function getSupportAccess(): ?int
+    {
+        return $this->supportAccess;
+    }
+
+    public function setSupportAccess(?int $supportAccess): self
+    {
+        $this->supportAccess = $supportAccess;
+
+        return $this;
+    }
+
+    public function getSupportAccessList()
+    {
+        return self::SUPPORT_ACCESS[$this->supportAccess];
+    }
+
     public function getComment(): ?string
     {
         return $this->comment;
@@ -280,6 +315,37 @@ class Service
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Space[]
+     */
+    public function getSpaces(): Collection
+    {
+        return $this->spaces;
+    }
+
+    public function addSpace(Space $space): self
+    {
+        if (!$this->spaces->contains($space)) {
+            $this->spaces[] = $space;
+            $space->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpace(Space $space): self
+    {
+        if ($this->spaces->contains($space)) {
+            $this->spaces->removeElement($space);
+            // set the owning side to null (unless already changed)
+            if ($space->getService() === $this) {
+                $space->setService(null);
+            }
+        }
 
         return $this;
     }

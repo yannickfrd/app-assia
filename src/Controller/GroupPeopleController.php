@@ -64,10 +64,8 @@ class GroupPeopleController extends AbstractController
         ]);
 
         return $this->render("app/listGroupsPeople.html.twig", [
-            "controller_name" => "ListPeopleController",
             "role_people" => $rolePeople,
-            "form" => $form->createView(),
-            "current_menu" => "list_groups_people"
+            "form" => $form->createView()
         ]);
     }
 
@@ -79,7 +77,7 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function showGroupPeople(GroupPeople $groupPeople, Request $request): Response
+    public function editGroupPeople(GroupPeople $groupPeople, Request $request): Response
     {
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
         $formGroupPeople->handleRequest($request);

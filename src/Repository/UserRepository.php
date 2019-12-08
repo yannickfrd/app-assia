@@ -21,18 +21,18 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les personnes
+     * Retourne toutes les utilisateurs
      * @return Query
      */
     public function findAllUsersQuery($userSearch): Query
     {
-        $query =  $this->createQueryBuilder("u");
-        $query = $query->select("u")
+        $query =  $this->createQueryBuilder("u")
+            ->select("u")
             ->leftJoin("u.serviceUser", "r")
-            ->leftJoin("r.service", "s")
-            ->leftJoin("s.pole", "p")
             ->addselect("r")
+            ->leftJoin("r.service", "s")
             ->addselect("s")
+            ->leftJoin("s.pole", "p")
             ->addselect("p");
         if ($userSearch->getPole()) {
             $query->andWhere("p.id = :pole_id")
@@ -50,12 +50,10 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere("u.phone = :phone")
                 ->setParameter("phone", $userSearch->getPhone());
         }
-        // if ($userSearch->getService()) {
-        //     foreach ($userSearch->getService() as $key => $service) {
-        //         $query->orWhere("s.id = :service_$key")
-        //             ->setParameter("service_$key", $service);
-        //     }
-        // }
+        if ($userSearch->getStatus()) {
+            $query->andWhere("u.status = :status")
+                ->setParameter("status", $userSearch->getStatus());
+        }
         if ($userSearch->getService()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();

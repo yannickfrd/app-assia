@@ -17,7 +17,7 @@
             <tbody>
 
                 {% for support in group_people.supports|reverse %}
-
+                {% cache "GroupPeopleSupport" ~ support.id support.updatedAt.timestamp %}
                 {% if support.referent %}
                 {% set contact_user %}
                 <div class='text-left p-2'>
@@ -39,7 +39,7 @@
                 <tr>
                     <th scope="row">
                         {% if is_granted("VIEW", support) %}
-                        <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}"
+                        <a href="{{ path('support_edit', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
@@ -49,7 +49,7 @@
                         </span>
                         {% endif %}
                         {% if is_granted("EDIT", support) %}
-                        <a href="{{ path('support_edit', {'id':group_people.id, 'support_id':support.id}) }}"
+                        <a href="{{ path('support_edit', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
                             title="Modifier le suivi social"><span class="fas fa-edit"></span>
                         </a>
@@ -64,8 +64,7 @@
                         {% if support.referent %}
                         <a href="mailto:{{ support.referent.email }}" class="text-{{ theme_color }}"
                             data-toggle="tooltip" data-placement="right" data-html="true"
-                            title="{{ contact_user }}">{{ support.referent.firstname }}
-                            {{ support.referent.lastname }}</a>
+                            title="{{ contact_user }}">{{ support.referent.fullname }}</a>
                         {% else %}-{% endif %}
                     </td>
                     <td class="align-middle">
@@ -79,10 +78,11 @@
                         {% if support.service %}{{ support.service.pole.name }}{% endif %}
                     </td>
                 </tr>
+                {% endcache %}
                 {% endfor %}
             </tbody>
         </table>
     </div>
     <a href="{{ path('support_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
-        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</a>
+        <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
 </section>

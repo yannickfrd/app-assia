@@ -4,10 +4,12 @@ namespace App\Form;
 
 use App\Entity\Pole;
 use App\Entity\Service;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ServiceType extends AbstractType
 {
@@ -41,7 +43,17 @@ class ServiceType extends AbstractType
                     "class" => "js-zip-code ",
                 ]
             ])
-            ->add("comment");
+            ->add("supportAccess", ChoiceType::class, [
+                "choices" => Choices::getChoices(Service::SUPPORT_ACCESS),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("comment", null, [
+                "attr" => [
+                    "rows" => 5,
+                    "placeholder" => "Write a comment about the service"
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

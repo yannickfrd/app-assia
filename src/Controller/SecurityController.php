@@ -56,7 +56,7 @@ class SecurityController extends AbstractController
             $this->manager->persist($user);
             $this->manager->flush();
 
-            $this->addFlash("success", "Votre compte a été créé !");
+            $this->addFlash("success", "Le compte a été créé.");
 
             return $this->redirectToRoute("security_login");
         }
@@ -75,10 +75,7 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if ($error) {
-            $this->addFlash(
-                "danger",
-                "Identifiant ou mot de passe incorrect."
-            );
+            $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
         }
 
         return $this->render("security/login.html.twig", [
@@ -119,16 +116,10 @@ class SecurityController extends AbstractController
                 // Envoie l'email
                 $notification->reinitPassword($user);
 
-                $this->addFlash(
-                    "success",
-                    "Un mail vous a été envoyé."
-                );
+                $this->addFlash("success",  "Un mail vous a été envoyé.");
                 return $this->redirectToRoute("security_forgot_password");
             } else {
-                $this->addFlash(
-                    "danger",
-                    "Le login ou l'adresse email sont incorrects."
-                );
+                $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
             }
         }
         return $this->render("security/forgotPassword.html.twig", [
@@ -179,30 +170,19 @@ class SecurityController extends AbstractController
 
                     $this->manager->flush();
 
-                    $this->addFlash(
-                        "success",
-                        "Votre mot de passe a été réinitialisé !"
-                    );
+                    $this->addFlash("success", "Votre mot de passe a été réinitialisé !");
                     return $this->redirectToRoute("security_login");
                 } else {
-                    $this->addFlash(
-                        "danger",
-                        "Le lien de réinitialisation est périmé."
-                    );
+                    $this->addFlash("danger", "Le lien de réinitialisation est périmé.");
                 }
             } else {
-                $this->addFlash(
-                    "danger",
-                    "Le login ou l'adresse email sont incorrects."
-                );
+                $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
             }
         }
         return $this->render("security/reinitPassword.html.twig", [
             "form" => $form->createView()
         ]);
     }
-
-
 
     /**
      * @Route("/connexion", name="security_login_valid")
@@ -215,9 +195,6 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-        $this->addFlash(
-            "notice",
-            "Vous êtes déconnecté."
-        );
+        $this->addFlash("notice", "Vous êtes déconnecté.");
     }
 }

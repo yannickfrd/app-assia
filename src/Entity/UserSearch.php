@@ -21,6 +21,12 @@ class UserSearch
 
     private $username;
 
+
+    /**
+     * @var int|null
+     */
+    private $status;
+
     /**
      * @var int|null
      */
@@ -101,6 +107,21 @@ class UserSearch
     /**
      * @return int|null
      */
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
     public function getServiceUser(): ?int
     {
         return $this->serviceUser;
@@ -151,7 +172,8 @@ class UserSearch
     }
 
     /**
-     * @return int|null
+     *
+     * @return ArrayCollection|null
      */
     public function getService(): ?ArrayCollection
     {

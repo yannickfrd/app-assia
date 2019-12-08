@@ -1,25 +1,32 @@
 {% extends "base.html.twig" %}
 
-{% block stylesheets %}{% endblock %}
+{% block title %}Mon espace personnel | Esperer95-app{% endblock %}
 
-{% block title %}Accueil | Esperer95-app{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
 <div class="container">
-    {% include "model/msgFlash.html.twig" %}
-    <h1>{{ title }}</h1>
 
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto enim culpa velit mollitia illum veritatis,
-        dignissimos
-        saepe nemo obcaecati. Similique, quos, magnam blanditiis quam eligendi laudantium quod ab nobis dolor vel
-        adipisci
-        maiores quis quidem necessitatibus natus totam. Nostrum, accusantium?</p>
-    <p>Placeat dolorum, doloribus voluptatibus tempore repellendus eaque voluptas velit aperiam, perferendis enim
-        molestias
-        modi, iure harum laboriosam. Nesciunt maxime accusantium facilis corporis natus soluta veritatis, dolore est,
-        animi
-        ea consequuntur dicta dolores dolor nisi a recusandae aspernatur reiciendis consequatur ipsum.</p>
+    <h1 class="h2 mb-3">Mon espace personnel</h1>
+    <div class="small text-secondary">
+        <p> Dernière connexion le {{ app.user.lastLogin | date("d/m/Y à H:i") }}</p>
+    </div>
+
+    {% include "model/msgFlash.html.twig" %}
+
+    <hr>
+
+    <div class="accordion my-5" id="accordion-home">
+      {% set accordion_id = "accordion-home" %}
+      {% include "app/home/listSupports.html.twig" %}
+      {% include "app/home/listRdv.html.twig" %}
+      {% include "app/home/listNotes.html.twig" %}
+      {% include "app/home/listTasks.html.twig" %}
+    </div>
 
 </div>
 {% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

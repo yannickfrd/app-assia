@@ -9,18 +9,9 @@
     <meta charset="utf-8" />
     <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bibliothèque Bootstrap-->
-    {# <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> #}
-    <!-- Bootstrap Date-Picker Plugin -->
-    <!-- <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" /> -->
-    <!-- Bibliothèque Fontawesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    {#<link href="{{ asset("css/style.css") }}" rel="stylesheet" />#}
     {{ encore_entry_link_tags('app') }}
-
     {% block stylesheets %}{% endblock %}
 
     <link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
@@ -32,21 +23,13 @@
 
 </head>
 
-
-{% set rolesUser = [] %}
 {% set theme_color = "dark" %}
-
-{% if app.user.serviceUser is defined %}
-{% for role in app.user.serviceUser %}
-{% set rolesUser = rolesUser|merge([role.service.id]) %}
-{% set theme_color = role.service.pole.color %}
-{% endfor %}
-{% endif %}
+{% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %}
 
 <body>
     <main class="min-vh-100">
         <header>
-            <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-4 shadow">
+            <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
                 <a class="navbar-brand text-light" href="{{ path("home") }}">
                     <img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app"></a>
                 </a>
@@ -60,18 +43,15 @@
                         <li
                             class="nav-item {% if current_menu is defined and current_menu == "home" %} active {% endif %}">
                             <a class="nav-link text-light " href="{{ path("home") }}">
-                                <span class="fas fa-home"></span>
-                                Accueil<span class="sr-only">(Accueil)</span>
+                                <span class="fas fa-home mr-1"></span>Mon espace
                             </a>
                         </li>
-                        <li
-                            class="nav-item {% if current_menu is defined and current_menu == "list_people" %} active {% endif %}">
+                        {#<li class="nav-item">
                             <a class="nav-link text-light" href="{{ path("list_people") }}">Personnes</a>
                         </li>
-                        <li
-                            class="nav-item {% if current_menu is defined and current_menu == "list_groups_people" %} active {% endif %}">
+                        <li class="nav-item">
                             <a class="nav-link text-light" href="{{ path("list_groups_people") }}">Ménages</a>
-                        </li>
+                        </li>#}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuSupports"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -84,19 +64,33 @@
                                     suivi</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="#">Agenda</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuDirectory"
+                                role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">Répertoire
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuDirectory">
+                                <a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
+                                <a class="dropdown-item" href="{{ path("list_services") }}">Services</a>
+                                <a class="dropdown-item" href="{{ path("list_poles") }}">Pôles</a>
+                            </div>
+
+                        </li>
                         {% if is_granted("ROLE_ADMIN") %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuAdmin"
-                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Admin
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
                                 <a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel
                                     utilisateur</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
-                                <a class="dropdown-item" href="{{ path("list_services") }}">Services</a>
-                                <a class="dropdown-item" href="{{ path("list_poles") }}">Pôles</a>
+                                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                <a class="dropdown-item" href="">Créer un nouveau service</a>
+                                <a class="dropdown-item" href="">Créer un nouveau pôle</a>
+                                {% endif %}
                             </div>
                         </li>
                         {% endif %}
@@ -114,12 +108,14 @@
                     </form>
                     <div class="text-light">
                         {% if app.user %}
-                        <a class="text-light font-weight-bold" href="{{ path('user_show', {'id':app.user.id}) }}"
+                        {% set user = app.user %}
+                        <a class="text-light font-weight-bold" href="{{ path('user_show', {'id':user.id}) }}"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
-                            title="{{ app.user.firstname }} {{ app.user.lastname }}"
-                            data-content="Dernière connexion : {{ app.user.lastLogin | date(" d/m/y H:i") }} <br />Services rattachés :
-                            {% for role in app.user.serviceUser %}<br> - {{ role.getRoleType }} à {{ role.service.name }} ({{ role.service.pole.name }}){% endfor %}">
-                            <span class="fas fa-user"></span> {{ app.user.firstname }} {{ app.user.lastname|first }}.
+                            title="{{ user.firstname }} {{ user.lastname }}"
+                            data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y H:i") }}
+                            <br>Fonction : {{ user.statusList }}<br>Services rattachés
+                            :{% for serviceUser in app.session.get("servicesUser") %}<br>- {{ serviceUser }}{% endfor %}">
+                            <span class="fas fa-user"></span> {{ user.firstname }} {{ user.lastname|first }}.
                         </a>
                         <br />
                         <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
@@ -132,7 +128,7 @@
         </header>
 
         <div class="position-fixed container-fluid fixed-bottom">
-            <div id="js-notif-container" class="container" aria-live="polite" aria-atomic="true">
+            <div id="js-notif-container" class="container d-none" aria-live="polite" aria-atomic="true">
             </div>
         </div>
 
@@ -140,36 +136,15 @@
 
     </main>
 
-    <footer class="bg-dark p-4 text-light shadow">
-        {# <p>Ce site web est un projet d'application réalisé dans le cadre d'une formation de développeur Web.</p>
-        <p>© Romain MADELAINE |
-            <a href="https://romain-mad.fr" target="_blank" class="text-blue">romain-mad.fr</a>
-        </p> #}
+    <footer class="bg-dark p-4 text-light">
+        <p class="mb-0"><b>Esperer 95 © 2019. Tous droits réservés.</b><br>
+            www.esperer-95.org | secretariatgeneral@esperer-95.org | 01 30 38 86 66 <br>
+            <span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février
+                1979.</span>
+        </p>
     </footer>
 </body>
 
 </html>
-{# <script src="https://unpkg.com/axios/dist/axios.min.js"></script> #}
-{# <script src="{{ asset("js/jquery.js") }}"></script> #}
-{# <script src="{{ asset("js/scroll_to.js") }}"></script> #}
-{# <script src="{{ asset("js/ajaxRequest.js") }}"></script>
-<script src="{{ asset("js/searchPerson.js") }}"></script> #}
-{# <script src="{{ asset("js/messageFlash.js") }}"></script> #}
-{# <script src="{{ asset("js/notification.js") }}"></script> #}
-{# <script src="{{ asset("js/app.js") }}"></script> #}
 {{ encore_entry_script_tags("app") }}
-
-<!-- Les fichiers Javascript pour Bootstrap -->
-{# <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-</script> #}
-{# <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-</script> #}
-{# <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-</script> #}
-{# <script type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="{{ asset("js/bootstrap-datepicker.fr.min.js") }}"></script> #}
 {% block javascripts %}{% endblock %}

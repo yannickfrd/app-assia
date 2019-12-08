@@ -4,7 +4,7 @@
 
 {% block body %}
 
-<section class="my-0">
+<section class="mt-0 mb-4">
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Pôles</h1>
@@ -43,10 +43,16 @@
                     {% for pole in poles %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('pole_show', {'id':pole.id}) }}" class="btn btn-{{ theme_color }} shadow"
-                                data-placement="bottom" title="Voir la fiche du pôle">
+                            {% if is_granted("EDIT", pole) %}
+                            <a href="{{ path('pole_show', {'id':pole.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir la fiche du pôle">
                                 <span class="fas fa-eye"></span>
                             </a>
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                                    class="fas fa-ban"></span></span>
+                            {% endif %}
                         </th>
                         <td>{{ pole.name }}</td>
                         <td>{{ pole.phone }}</td>
@@ -58,11 +64,11 @@
                 </tbody>
             </table>
         </div>
-
-        <p><a href="#" class="js-create-pole text-{{ theme_color }}"><span class="fas fa-plus-square"></span>
-                Créer un nouveau pôle</a>
+        {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <p><a href="#" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
+                <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
         </p>
+        {% endif %}
 </section>
-</div>
 
 {% endblock %}

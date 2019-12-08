@@ -45,7 +45,6 @@ class GroupPeopleSearchType extends AbstractType
                 ],
                 "required" => false
             ])
-
             ->add("head", CheckBoxType::class, [
                 "label" => "DP",
                 "required" => false,

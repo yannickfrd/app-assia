@@ -60,44 +60,6 @@ class RolePersonRepository extends ServiceEntityRepository
         return $query->orderBy("g.id", "ASC")
             ->getQuery();
     }
-    /**
-     * @return Query
-     */
-    // Donne tous les roles de toutes les personnes
-    public function findAllSupports($groupPeopleSearch): Query
-    {
-        $query =  $this->createQueryBuilder("r")
-            ->select("r")
-            ->leftJoin("r.person", "p")
-            ->leftJoin("r.groupPeople", "g")
-            ->leftJoin("g.supports", "s")
-            ->addselect("p")
-            ->addselect("g")
-            ->addselect("s")
-            ->andWhere("r.head = TRUE");
-        if ($groupPeopleSearch->getFirstname()) {
-            $query->andWhere("p.firstname LIKE :firstname")
-                ->setParameter("firstname", $groupPeopleSearch->getFirstname() . '%');
-        }
-        if ($groupPeopleSearch->getLastname()) {
-            $query->andWhere("p.lastname LIKE :lastname")
-                ->setParameter("lastname", $groupPeopleSearch->getLastname() . '%');
-        }
-        if ($groupPeopleSearch->getBirthdate()) {
-            $query->andWhere("p.birthdate = :birthdate")
-                ->setParameter("birthdate", $groupPeopleSearch->getBirthdate());
-        }
-        if ($groupPeopleSearch->getFamilyTypology()) {
-            $query->andWhere("g.familyTypology = :familyTypology")
-                ->setParameter("familyTypology", $groupPeopleSearch->getFamilyTypology());
-        }
-        if ($groupPeopleSearch->getNbPeople()) {
-            $query->andWhere("g.nbPeople = :nbPeople")
-                ->setParameter("nbPeople", $groupPeopleSearch->getNbPeople());
-        }
-        return $query->orderBy("g.id", "ASC")
-            ->getQuery();
-    }
 
     // /**
     //  * @return RolePerson[] Returns an array of RolePerson objects

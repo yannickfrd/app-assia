@@ -16,11 +16,9 @@
 
         <div class="small text-secondary">
             <p>Créé le {{ group_people.createdAt | date("d/m/Y à H:i") }}
-                {% if group_people.createdBy %} par {{ group_people.createdBy.firstname }}
-                {{ group_people.createdBy.lastname }}
+                {% if group_people.createdBy %} par {{ group_people.createdBy.fullname }}
                 {% endif %} (modifié le {{ group_people.updatedAt | date("d/m/Y à H:i") }}
-                {% if group_people.updatedBy %} par {{ group_people.updatedBy.firstname }}
-                {{ group_people.updatedBy.lastname }}{% endif %})
+                {% if group_people.updatedBy %} par {{ group_people.updatedBy.fullname }}{% endif %})
             </p>
         </div>
     </div>
@@ -71,8 +69,7 @@
                                 <th scope="row">
                                     <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
                                         class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
-                                        title="Modifier les informations de la personne">
-                                        <span class="fas fa-user"></span>
+                                        title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                     </a>
                                 </th>
                                 <td class="align-middle px-1 d-none d-sm-table-cell">
@@ -110,7 +107,7 @@
                                 <td class="px-1 d-table-row d-sm-table-cell">
                                     {{ form_widget(form_person.person.gender) }}</td>
                                 <td class="px-1 d-table-row d-sm-table-cell">{{ form_widget(form_person.role) }}</td>
-                                <td class="px-1">
+                                <td class="align-middle px-1">
                                     <button class="js-remove btn btn-danger shadow"
 <<<<<<< HEAD
                                         data-url="{{ path('remove_person', {'id':form.vars.value.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
@@ -128,8 +125,7 @@
 =======
                                         data-url="{{ path('remove_person', {'id':group_people.id, 'person_id':person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
                                         data-toggle="modal" data-target="#modal-block" data-placement="bottom"
-                                        title="Retirer la personne du groupe">
-                                        <span class="fas fa-user-times"></span>
+                                        title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
                                     </button>
 >>>>>>> test
                                 </td>

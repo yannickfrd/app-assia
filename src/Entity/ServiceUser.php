@@ -28,7 +28,8 @@ class ServiceUser
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="smallint", nullable=true)
+     * 
      */
     private $role;
 
@@ -58,14 +59,14 @@ class ServiceUser
         return $this->role;
     }
 
-    public function setRole(int $role): self
+    public function setRole(?int $role): self
     {
         $this->role = $role;
 
         return $this;
     }
 
-    public function getRoleType()
+    public function getRoleList()
     {
         return self::ROLE[$this->role];
     }

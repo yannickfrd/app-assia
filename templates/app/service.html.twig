@@ -43,12 +43,18 @@
             <div class="col-md-6">{{ form_row(form_service.city) }}</div>
             <div class="col-md-6">{{ form_row(form_service.zipCode) }}</div>
         </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form_service.supportAccess) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">{{ form_widget(form_service.comment) }}</div>
+        </div>
 
         {{ form_row(form._token) }}
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
-                    <input type="submit" id="send" name="send" id="send" class="btn btn-{{ theme_color }} shadow"
+                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
                         value="Enregistrer">
                 </div>
             </div>
@@ -73,38 +79,36 @@
                         <th scope="col" class="align-middle th-w-140">Fonction</th>
                         <th scope="col" class="align-middle th-w-140">Téléphone</th>
                         <th scope="col" class="align-middle th-w-140">Email</th>
-
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for role in service.serviceUser %}
+                    {% for serviceUser in service.serviceUser %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('user_show', {'id':role.user.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                            <a href="{{ path('user_show', {'id':serviceUser.user.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ role.user.firstname }}</td>
-                        <td>{{ role.user.lastname }}</td>
-                        <td>{{ role.getRoleType }}</td>
-                        <td>{{ role.user.phone }}</td>
-                        <td>{{ role.user.email }}</td>
+                        <td>{{ serviceUser.user.firstname }}</td>
+                        <td>{{ serviceUser.user.lastname }}</td>
+                        <td>{{ serviceUser.user.statusList }}</td>
+                        <td>{{ serviceUser.user.phone }}</td>
+                        <td>{{ serviceUser.user.email }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         {% endif %}
-        <a href="#" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Ajouter un nouvel
-            utilisateur</a>
+        <a href="#" class="m-3 btn btn-{{ theme_color }} btn-sm shadow"><span
+                class="fas fa-plus-square pr-2"></span>Ajouter un nouvel utilisateur</a>
     </section>
 
 </div>
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("admin") }}
-{% endblock javascripts %}
+{{ encore_entry_script_tags("directory") }}{% endblock javascripts %}

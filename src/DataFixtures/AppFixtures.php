@@ -192,9 +192,11 @@ class AppFixtures extends Fixture
             ->setFirstName($firstname)
             ->setLastName($this->faker->lastName())
             ->setPassword($this->passwordEncoder->encodePassword($this->user, "test123"))
+            ->setStatus(1)
             ->setEmail($this->faker->freeEmail())
             ->setphone($phone)
             ->setCreatedAt($createdAt)
+            ->setUpdatedAt($createdAt)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin)
             ->addServiceUser($this->serviceUser);

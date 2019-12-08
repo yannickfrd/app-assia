@@ -20,10 +20,9 @@
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{person.createdAt | date("d/m/Y à H:i") }}
-            {% if person.createdBy %}par {{ person.createdBy.firstname }} {{ person.createdBy.lastname }}{% endif %}
+            {% if person.createdBy %}par {{ person.createdBy.fullname }}{% endif %}
             <span id="js-person-updated"> (modifié le {{ person.updatedAt | date("d/m/Y à H:i") }}
-                {% if person.updatedBy %}par {{ person.updatedBy.firstname }}
-                {{ person.updatedBy.lastname }}{% endif %})</span>
+                {% if person.updatedBy %}par {{ person.updatedBy.fullname }}{% endif %})</span>
         </p>
     </div>
     {% else %}
@@ -95,7 +94,7 @@
                         data-url="{{ path('update_person', {'id':person.id}) }}">Mettre à jour</button>
                     <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
                     {% else %}
-                    <input type="submit" id="send" name="send" id="send" class="btn btn-{{ theme_color }} shadow"
+                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
                         value="Enregistrer">
                     {% endif %}
 
@@ -143,7 +142,7 @@
                     <tr>
                         <th scope="row">
                             <a href="{{ path('group_people_show', {'id':role.groupPeople.id}) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du groupe">
                                 <span class="fas fa-eye"></span>
                             </a>
@@ -158,7 +157,7 @@
                             {% if role.groupPeople.nbPeople > 1 %}<span
                                 class="d-inline d-sm-none">{{ role.groupPeople.nbPeople }}personnes</span>{% endif %}
                         </td>
-                        <td>{{ role.getRoleType }} {% if role.head %} (DP){% endif %}</td>
+                        <td>{{ role.getRoleList }} {% if role.head %} (DP){% endif %}</td>
                         <td class="d-none d-sm-table-cell">
                             {{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
                         <td class="d-none d-sm-table-cell">

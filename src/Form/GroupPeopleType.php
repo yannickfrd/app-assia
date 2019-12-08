@@ -30,7 +30,6 @@ class GroupPeopleType extends AbstractType
                 'allow_delete' => false,
                 "required" => true
             ])
-
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 4,

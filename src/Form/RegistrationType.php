@@ -44,11 +44,17 @@ class RegistrationType extends AbstractType
                     "placeholder" => "Email"
                 ]
             ])
+            ->add("status", ChoiceType::class, [
+                "choices" => Choices::getChoices(User::STATUS),
+                "label" => "Fonction",
+                'placeholder' => "-- Select --",
+                "required" => true
+            ])
             ->add("roles", ChoiceType::class, [
+                "choices" => Choices::getChoices(User::ROLES),
                 "label" => "Rôle",
                 "data" => false,
                 'placeholder' => "-- Select --",
-                "choices" => Choices::getChoices(User::ROLES)
             ])
             ->add("password", PasswordType::class, [
                 "attr" => [

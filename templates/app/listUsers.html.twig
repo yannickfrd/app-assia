@@ -12,23 +12,23 @@
 
 {% block body %}
 
-<section class="my-0">
+<section class="mt-0 mb-4">
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Utilisateurs</h1>
     </div>
 
     <div class="container-fluid p-0">
-        <div id="form-search" class="jumbotron py-3">
+        <div id="form-search" class="jumbotron mb-0 py-3">
             {{ form_start(form) }}
             <div class="form-inline justify-content-md-center align-items-end">
-                <div class="form-service col-auto my-1 px-1 ">
+                <div class="form-group col-auto my-1 px-1 ">
                     {{ form_row(form.lastname) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1">
                     {{ form_row(form.firstname) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1 d-inline-flex align-items-baseline">
+                <div class="form-group col-auto my-1 px-1">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text d-none d-sm-block" data-toggle="tooltip"
@@ -39,13 +39,16 @@
                         {{ form_row(form.phone) }}
                     </div>
                 </div>
-                <div class="form-service col-auto my-1 px-1 ">
+                <div class="form-group col-auto my-1 px-1 ">
+                    {{ form_row(form.status) }}
+                </div>
+                <div class="form-group col-auto my-1 px-1 ">
                     {{ form_row(form.service) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1 ">
+                <div class="form-group col-auto my-1 px-1 ">
                     {{ form_row(form.pole) }}
                 </div>
-                <div class="form-service col-auto my-1 px-1">
+                <div class="form-group col-auto my-1 px-1">
                     <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
                             class="fas fa-search"></i></button>
                     <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
@@ -100,27 +103,23 @@
                 <tbody>
 
                     {% for user in users %}
+                    {% cache "user" ~ app.user.id ~ user.id user.createdAt.timestamp %}
                     <tr>
                         <th scope="row">
-                            {% if service_users is defined %}
-                            <a href="{{ path('service_add_user', {'id':service_users.id, 'user_id': user.id}) }}"
-                                class="js-add-user" data-toggle="modal" data-target="#modal-block"
-                                data-placement="bottom" title="Ajouter l'utilisateur au service">
-                                <i class="fas fa-plus-square fa-2x"></i>
+                            {% if is_granted("EDIT", user) %}
+                            <a href="{{ path('user_show', {'id':user.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir la fiche">
+                                <span class="fas fa-eye"></span>
                             </a>
                             {% else %}
-                            <a href="{{ path('user_show', {'id':user.id}) }}" class="btn btn-{{ theme_color }} shadow"
-                                data-placement="bottom" title="Voir la fiche individuelle">
-                                <span class="fas fa-user"></span>
-                            </a>
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                                    class="fas fa-ban"></span></span>
                             {% endif %}
                         </th>
                         <td class="text-uppercase">{{ user.lastname }}</td>
                         <td>{{ user.firstname }}</td>
-                        <td>{% for role in user.serviceUser %}
-                            {{ role.getRoleType }}<br>
-                            {% endfor %}
-                        </td>
+                        <td>{{ user.statusList }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
                         <td>{% for role in user.serviceUser %}
@@ -136,6 +135,7 @@
                             {% endfor %}
                         </td>
                     </tr>
+                    {% endcache %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -147,17 +147,16 @@
 
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path("security_registration") }}" class="text-{{ theme_color }}">
-                        <span class="fas fa-plus-square"></span> Créer un nouvel utilisateur</a></p>
+                <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                        <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a></p>
             </div>
         </div>
         {% endif %}
 </section>
-</div>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("admin") }}
+{{ encore_entry_script_tags("directory") }}
 {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

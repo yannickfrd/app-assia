@@ -44,14 +44,13 @@ class ServiceController extends AbstractController
 
         $search = $request->query->get("search");
 
-
         if ($request->query->all()) {
             $services =  $paginator->paginate(
                 $this->repo->findAllServicesQuery($serviceSearch, $search),
                 $request->query->getInt("page", 1), // page number
                 20 // limit per page
             );
-            $services->setPageRange(5);
+            // $services->setPageRange(5);
             $services->setCustomParameters([
                 "align" => "right", // alignement de la pagination
             ]);
@@ -66,13 +65,15 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * Voir la fiche individuelle
+     * Editer la fiche du service
      * 
      * @Route("/service/{id}", name="service_show", methods="GET|POST")
      *  @return Response
      */
-    public function serviceShow(Service $service, Request $request): Response
+    public function editService(Service $service, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("EDIT", $service);
+
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
 

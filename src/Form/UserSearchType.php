@@ -3,11 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Pole;
-use App\Form\Utils\Choices;;
+use App\Entity\User;
 
-use App\Entity\ServiceUser;
 use App\Entity\Service;
 use App\Entity\UserSearch;
+use App\Entity\ServiceUser;
+use App\Form\Utils\Choices;;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,27 +26,31 @@ class UserSearchType extends AbstractType
                 "label" => false,
                 "attr" => [
                     "class" => "w-max-140 text-uppercase",
-                    "placeholder" => "Nom",
-                    "autocomplete" => "off"
+                    "placeholder" => "Lastname",
                 ]
             ])
             ->add("firstname", null, [
                 "label" => false,
                 "attr" => [
                     "class" => "w-max-140 text-capitalize",
-                    "placeholder" => "Prénom",
-                    "autocomplete" => "off"
+                    "placeholder" => "Firstname",
                 ]
             ])
-            ->add("serviceUser", ChoiceType::class, [
-                'placeholder' => "-- Rôle --",
+            ->add("status", ChoiceType::class, [
+                "choices" => Choices::getChoices(User::STATUS),
                 "label" => false,
-                "required" => false,
+                "placeholder" => "-- Fonction --",
+                "required" => false
+
+            ])
+            ->add("serviceUser", ChoiceType::class, [
                 "choices" => Choices::getChoices(ServiceUser::ROLE),
+                "label" => false,
                 "attr" => [
                     "class" => "w-max-120",
-                    "autocomplete" => "off"
-                ]
+                ],
+                "placeholder" => "-- Rôle --",
+                "required" => false,
             ])
             ->add("phone", null, [
                 "label" => false,
@@ -61,10 +67,11 @@ class UserSearchType extends AbstractType
                 // "checkboxes", true,
                 "label" => false,
                 "placeholder" => "-- Service --",
-                "required" => false,
                 "attr" => [
-                    "class" => "multi-select"
-                ]
+                    "class" => "multi-select js-service"
+                ],
+                "required" => false
+
             ])
             ->add("pole", EntityType::class, [
                 "class" => Pole::class,

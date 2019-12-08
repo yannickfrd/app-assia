@@ -49,10 +49,21 @@ class LoginListener
         $this->entityManager->persist($connection);
         $this->entityManager->flush();
 
-        $this->session->getFlashBag()->add(
-            "success",
-            "Vous êtes connecté !"
-        );
+        // Récupère en session les services rattachés à l'utilisateur et le code couleur du 1er service
+        $servicesUser = [];
+        $i = 0;
+
+        foreach ($user->getServiceUser() as $serviceUser) {
+            if ($i == 0) {
+                $this->session->set("themeColor", $serviceUser->getService()->getPole()->getColor());
+            }
+            $servicesUser[] = $serviceUser->getService()->getName();
+            $i++;
+        }
+
+        $this->session->set("servicesUser", $servicesUser);
+
+        $this->session->getFlashBag()->add("success", "Bonjour " .  $user->getFirstname() . " !");
     }
 
     public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)
@@ -63,9 +74,6 @@ class LoginListener
         $count++;
         $user->setFailureLogincount($count);
 
-        $this->session->getFlashBag()->add(
-            "danger",
-            "Identifiant ou mot de passe incorrect."
-        );
+        $this->session->getFlashBag()->add("danger", "Identifiant ou mot de passe incorrect.");
     }
 }

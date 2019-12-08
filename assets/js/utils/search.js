@@ -27,8 +27,12 @@ export default class Search {
             checkboxElt.value = "0";
         });
         this.selectElts.forEach(selectElt => {
-            let optionElt = selectElt.querySelector("option");
-            optionElt.selected = "selected";
+            selectElt.querySelectorAll("option").forEach(option => {
+                option.selected = "";
+            });
+        });
+        this.formSearch.querySelectorAll("li.select2-selection__choice").forEach(liElt => {
+            liElt.remove();
         });
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -71,24 +73,34 @@ class SupportPerson
     private $supportGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPerson", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitFamilyPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitProf;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitAdm;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $sitBudget;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportPerson")
+     */
+    private $notes;
+
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -259,6 +271,37 @@ class SupportPerson
         // set the owning side of the relation if necessary
         if ($this !== $sitBudget->getSupportPerson()) {
             $sitBudget->setSupportPerson($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setSupportPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->contains($note)) {
+            $this->notes->removeElement($note);
+            // set the owning side to null (unless already changed)
+            if ($note->getSupportPerson() === $this) {
+                $note->setSupportPerson(null);
+            }
         }
 
         return $this;

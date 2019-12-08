@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Pole;
 use App\Form\PoleType;
-use App\Entity\PoleSearch;
-use App\Form\PoleSearchType;
 use App\Repository\PoleRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,32 +35,30 @@ class PoleController extends AbstractController
      */
     public function listPole(Request $request, PaginatorInterface $paginator): Response
     {
-        $search = $request->query->get("search");
-
         $poles =  $paginator->paginate(
             $this->repo->findAllPolesQuery(),
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        $poles->setPageRange(5);
         $poles->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
 
         return $this->render("app/listpoles.html.twig", [
-            "poles" => $poles ?? null,
-            "current_menu" => "list_poles"
+            "poles" => $poles ?? null
         ]);
     }
 
     /**
-     * Voir la fiche du pôle
+     * Editer la fiche du pôle
      * 
      * @Route("/pole/{id}", name="pole_show", methods="GET|POST")
      *  @return Response
      */
-    public function poleShow(Pole $pole, Request $request): Response
+    public function editPole(Pole $pole, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("EDIT", $pole);
+
         $form = $this->createForm(PoleType::class, $pole);
         $form->handleRequest($request);
 

@@ -2,29 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-
-use App\Utils\Agree;
-
-use App\Entity\Person;
-use App\Entity\RolePerson;
-
-use App\Entity\SupportGroup;
-
 use App\Entity\GroupPeople;
+use App\Entity\SupportGroup;
+use App\Entity\SupportGroupSearch;
 use App\Entity\SupportPerson;
 
+use App\Form\SupportGroupSearchType;
 use App\Form\SupportGroupType;
-use App\Form\GroupPeopleType;
 use App\Form\SupportGroupType2;
-
-use App\Entity\GroupPeopleSearch;
-use App\Form\GroupPeopleSearchType;
 
 use App\Repository\RolePersonRepository;
 use App\Repository\SupportGroupRepository;
-use App\Repository\SupportPersonRepository;
-use Symfony\Bundle\MakerBundle\Validator;
+
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -48,33 +37,31 @@ class SupportController extends AbstractController
     /**
      * @Route("/list/supports", name="list_supports")
      * @param RolePersonRepository $repo
-     * @param GroupPeopleSearch $groupPeopleSearch
+     * @param SupportGroupSearch $supportGroupSearch
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listSupports(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function viewListSupports(SupportGroupRepository $repo, SupportGroupSearch $supportGroupSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
-        $groupPeopleSearch = new GroupPeopleSearch();
+        $supportGroupSearch = new SupportGroupSearch();
 
-        $form = $this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch);
+        $form = $this->createForm(SupportGroupSearchType::class, $supportGroupSearch);
         $form->handleRequest($request);
 
-        $rolePeople =  $paginator->paginate(
-            $repo->findAllSupports($groupPeopleSearch),
+        $supports =  $paginator->paginate(
+            $repo->findAllSupports($supportGroupSearch),
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        $rolePeople->setPageRange(5);
-        $rolePeople->setCustomParameters([
+        // $rolePeople->setPageRange(5);
+        $supports->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
 
         return $this->render("app/listSupports.html.twig", [
-            "controller_name" => "listSupports",
-            "role_people" => $rolePeople,
-            "form" => $form->createView(),
-            "current_menu" => "supports"
+            "supports" => $supports,
+            "form" => $form->createView()
         ]);
     }
 
@@ -133,22 +120,15 @@ class SupportController extends AbstractController
 
                 $this->manager->flush();
 
-                $this->addFlash(
-                    "success",
-                    "Le suivi social a été créé."
-                );
+                $this->addFlash("success", "Le suivi social a été créé.");
                 return $this->redirectToRoute("support_edit", [
-                    "id" => $groupPeople->getId(),
-                    "support_id" => $supportGroup->getId()
+                    "id" => $supportGroup->getId()
                 ]);
             } else {
-                $this->addFlash(
-                    "danger",
-                    "Attention, un suivi social est déjà en cours pour ce groupe."
-                );
+                $this->addFlash("danger", "Attention, un suivi social est déjà en cours pour ce groupe.");
             }
         }
-        return $this->render("app/support.html.twig", [
+        return $this->render("app/supportGroup.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),
             "edit_mode" => false
@@ -158,15 +138,13 @@ class SupportController extends AbstractController
     /**
      * Voir un suvi social
      * 
-     * @Route("/group/{id}/support/{support_id}", name="support_edit", methods="GET|POST")
-     * @ParamConverter("supportGroup", options={"id" = "support_id"})
-     * @param GroupPeople $groupPeople
+     * @Route("/support/{id}", name="support_edit", methods="GET|POST")
      * @param SupportGroup $supportGroup
      * @param SupportPerson $supportPerson
      * @param Request $request
      * @return Response
      */
-    public function editSupport(GroupPeople $groupPeople, SupportGroup $supportGroup, SupportPerson $supportPerson = null, Request $request): Response
+    public function editSupport(SupportGroup $supportGroup, SupportPerson $supportPerson = null, Request $request): Response
     {
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
@@ -183,6 +161,7 @@ class SupportController extends AbstractController
             $chargesGroupAmt = 0;
             $debtsGroupAmt = 0;
             $monthlyRepaymentAmt = 0;
+
             // Met à jour le suivi social individuel pour chaque personne du groupe
             foreach ($supportGroup->getSupportPerson() as $supportPerson) {
 
@@ -214,10 +193,7 @@ class SupportController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash(
-                "success",
-                "Le suivi social a été modifié."
-            );
+            $this->addFlash("success", "Le suivi social a été modifié.");
         }
 
         // Si erreur de validation
@@ -226,15 +202,11 @@ class SupportController extends AbstractController
             $errors = $form->getErrors(true);
             foreach ($errors as $error) {
                 $errorOrigin = $error->getOrigin();
-                $this->addFlash(
-                    "danger",
-                    $errorOrigin->getName() . " : " . $error->getMessage()
-                );
+                $this->addFlash("danger", $errorOrigin->getName() . " : " . $error->getMessage());
             }
         }
 
-        return $this->render("app/support.html.twig", [
-            "group_people" => $groupPeople,
+        return $this->render("app/supportGroup.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
@@ -243,15 +215,14 @@ class SupportController extends AbstractController
     /**
      * Voir les dates individuelles du suivi social
      * 
-     * @Route("/group/{id}/support/{support_id}/individuals", name="support_pers_edit", methods="GET|POST")
-     * @ParamConverter("supportGroup", options={"id" = "support_id"})
+     * @Route("/support/{id}/individuals", name="support_pers_edit", methods="GET|POST")
      * @param GroupPeople $groupPeople
      * @param SupportGroup $supportGroup
      * @param SupportPerson $supportPerson
      * @param Request $request
      * @return Response
      */
-    public function editSupportPerson(GroupPeople $groupPeople, SupportGroup $supportGroup, SupportPerson $supportPerson = null, Request $request): Response
+    public function editSupportPerson(SupportGroup $supportGroup, Request $request): Response
     {
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
@@ -268,14 +239,10 @@ class SupportController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash(
-                "success",
-                "Le suivi social a été modifié."
-            );
+            $this->addFlash("success", "Le suivi social a été modifié.");
         }
 
         return $this->render("app/support/supportPerson.html.twig", [
-            "group_people" => $groupPeople,
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
@@ -285,13 +252,12 @@ class SupportController extends AbstractController
     /**
      * Voir les dates individuelles du suivi social
      * 
-     * @Route("/group/{id}/support/{support_id}/add_people", name="support_add_people", methods="GET|POST")
-     * @ParamConverter("supportGroup", options={"id" = "support_id"})
+     * @Route("/support/{id}/add_people", name="support_add_people", methods="GET|POST")
      * @param GroupPeople $groupPeople
      * @param SupportGroup $supportGroup
      * @param SupportPerson $supportPerson
      */
-    public function addPeopleInSupport(GroupPeople $groupPeople, SupportGroup $supportGroup, SupportPersonRepository $repo): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup): Response
     {
         $people = [];
 
@@ -299,7 +265,7 @@ class SupportController extends AbstractController
             $people[] = $supportPerson->getPerson()->getId();
         }
 
-        foreach ($groupPeople->getrolePerson() as $role) {
+        foreach ($supportGroup->getGroupPeople()->getrolePerson() as $role) {
 
             $personId = $role->getPerson()->getId();
 
@@ -329,8 +295,7 @@ class SupportController extends AbstractController
             $this->manager->flush();
         }
         return $this->redirectToRoute("support_pers_edit", [
-            "id" => $groupPeople->getId(),
-            "support_id" => $supportGroup->getId()
+            "id" => $supportGroup->getId()
         ]);
     }
 
