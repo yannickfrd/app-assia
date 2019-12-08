@@ -1395,7 +1395,7 @@ class SitBudget
         return $this;
     }
 
-    public function getSupportPerson(): ?Supportpers
+    public function getSupportPerson(): ?Supportperson
     {
         return $this->supportPerson;
     }
