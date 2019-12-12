@@ -1,14 +1,8 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "bootstrap_4_layout.html.twig" %}
-
 {% block title %}Utilisateurs | Esperer95-app{% endblock %}
 
-{% block stylesheets %}
-{# <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"> #}
-{# <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"> #}
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
@@ -18,46 +12,7 @@
         <h1 class="h2 mb-4">Utilisateurs</h1>
     </div>
 
-    <div class="container-fluid p-0">
-        <div id="form-search" class="jumbotron mb-0 py-3">
-            {{ form_start(form) }}
-            <div class="form-inline justify-content-md-center align-items-end">
-                <div class="form-group col-auto my-1 px-1 ">
-                    {{ form_row(form.lastname) }}
-                </div>
-                <div class="form-group col-auto my-1 px-1">
-                    {{ form_row(form.firstname) }}
-                </div>
-                <div class="form-group col-auto my-1 px-1">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text d-none d-sm-block" data-toggle="tooltip"
-                                data-placement="bottom" title="Téléphone">
-                                <i class=" fas fa-phone text-black-50"></i>
-                            </div>
-                        </div>
-                        {{ form_row(form.phone) }}
-                    </div>
-                </div>
-                <div class="form-group col-auto my-1 px-1 ">
-                    {{ form_row(form.status) }}
-                </div>
-                <div class="form-group col-auto my-1 px-1 ">
-                    {{ form_row(form.service) }}
-                </div>
-                <div class="form-group col-auto my-1 px-1 ">
-                    {{ form_row(form.pole) }}
-                </div>
-                <div class="form-group col-auto my-1 px-1">
-                    <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
-                            class="fas fa-search"></i></button>
-                    <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
-                            class="fas fa-eraser"></i></button>
-                </div>
-                {{ form_end(form, {"render_rest": false}) }}
-            </div>
-        </div>
-    </div>
+    {% include "app/search/searchUsers.html.twig" %}
 
     {% if users %}
     <div class="container">
@@ -103,11 +58,11 @@
                 <tbody>
 
                     {% for user in users %}
-                    {% cache "user" ~ app.user.id ~ user.id user.createdAt.timestamp %}
+                    {#{% cache "user" ~ app.user.id ~ user.id user.updatedAt.timestamp %}#}
                     <tr>
                         <th scope="row">
                             {% if is_granted("EDIT", user) %}
-                            <a href="{{ path('user_show', {'id':user.id}) }}"
+                            <a href="{{ path('security_user', {'id':user.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche">
                                 <span class="fas fa-eye"></span>
@@ -135,7 +90,7 @@
                             {% endfor %}
                         </td>
                     </tr>
-                    {% endcache %}
+                    {#{% endcache %}#}
                     {% endfor %}
                 </tbody>
             </table>

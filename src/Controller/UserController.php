@@ -2,22 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\ServiceUser;
 use App\Entity\User;
 use App\Entity\UserSearch;
 
-use App\Form\UserSearchType;
-use App\Form\UserType;
+use App\Form\User\UserType;
+use App\Form\User\UserSearchType;
 
 use App\Repository\UserRepository;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -91,12 +88,12 @@ class UserController extends AbstractController
     }
 
     /**
-     * Editer la fiche Utilisateur
+     * Voir la fiche Utilisateur
      * 
      * @Route("/user/{id}", name="user_show", methods="GET|POST")
      *  @return Response
      */
-    public function editUser(User $user, Request $request): Response
+    public function showUser(User $user, Request $request): Response
     {
         $this->denyAccessUnlessGranted("EDIT", $user);
 
@@ -105,8 +102,8 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // $user->setUpdatedAt(new \DateTime())
-            //     ->setUpdatedBy($this->security->getUser());
+            $user->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
@@ -115,7 +112,6 @@ class UserController extends AbstractController
 
         return $this->render("app/user.html.twig", [
             "form" => $form->createView(),
-            "edit_mode" => true
         ]);
     }
 

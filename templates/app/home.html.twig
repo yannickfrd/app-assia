@@ -8,25 +8,26 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">Mon espace personnel</h1>
-    <div class="small text-secondary">
-        <p> Dernière connexion le {{ app.user.lastLogin | date("d/m/Y à H:i") }}</p>
-    </div>
+  <h1 class="h2 mb-3">Mon espace personnel</h1>
+  <div class="small text-secondary">
+    <p> Dernière connexion le {{ app.user.lastLogin | date("d/m/Y à H:i") }}</p>
+  </div>
 
-    {% include "model/msgFlash.html.twig" %}
+  {% include "model/msgFlash.html.twig" %}
 
-    <hr>
+  <hr>
 
-    <div class="accordion my-5" id="accordion-home">
-      {% set accordion_id = "accordion-home" %}
-      {% include "app/home/listSupports.html.twig" %}
-      {% include "app/home/listRdv.html.twig" %}
-      {% include "app/home/listNotes.html.twig" %}
-      {% include "app/home/listTasks.html.twig" %}
-    </div>
+  <div class="my-5">
+    {% include "app/home/listSupports.html.twig" %}
+    {% include "app/home/listRdv.html.twig" %}
+    {% include "app/home/listNotes.html.twig" %}
+    {% include "app/home/listTasks.html.twig" %}
+  </div>
 
 </div>
+
 {% endblock %}
 
 {% block javascripts %}
+{{ encore_entry_script_tags("home") }}
 {% endblock javascripts %}

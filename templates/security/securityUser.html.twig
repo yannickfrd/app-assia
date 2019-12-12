@@ -1,0 +1,85 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{% block title %}Compte utilisateur | Esperer95-app{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <section id="inscription">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-3">Compte utilisateur : {{ form.vars.value.fullname }}</h1>
+        <hr>
+        {{ form_start(form)}}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.firstname) }}</div>
+            <div class="col-md-6">{{ form_row(form.lastname) }}</div>
+            <div class="col-md-6">{{ form_row(form.email) }}</div>
+            <div class="col-md-6">{{ form_row(form.username) }}</div>
+            <div class="col-md-6">{{ form_row(form.status) }}</div>
+            <div class="col-md-6">{{ form_row(form.roles) }}</div>
+        </div>
+
+        <hr>
+
+        <h2 class="h4 mb-4">Services rattachés</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div id="serviceUser-fields-list" data-prototype="{{ form_widget(form.serviceUser.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
+                    data-widget-counter="{{ form.serviceUser|length }}">
+                    {% if form.serviceUser|length > 0 %}
+                    <div class="table-responsive table-sm">
+                        <table id="function-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="align-middle th-w-150">Service</th>
+                                    <th scope="col" class="align-middle th-w-120">Pôle</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for role in form.serviceUser %}
+                                <tr id="{{ role.vars.id }}">
+                                    <td>{{ form_widget(role.service) }}</td>
+                                    <td class="align-middle">{{ role.vars.value.service.pole.name }}</td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-danger js-remove"><i
+                                                class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="my-2">
+            <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+                service</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-right mb-2">
+                    <button type="submit" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
+
+    </section>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("securityUser") }}
+{% endblock %}

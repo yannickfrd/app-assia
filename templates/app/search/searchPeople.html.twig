@@ -1,0 +1,40 @@
+{% extends "model/search.html.twig" %}
+
+{% block search_form %}
+
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.lastname) }}</div>
+<div class="form-group col-auto my-1 px-1 ">{{ form_row(form.firstname) }}</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
+                title="Date de naissance">
+                <i class=" fas fa-calendar-alt text-black-50"></i>
+            </div>
+        </div>{{ form_row(form.birthdate) }}
+    </div>
+</div>
+{#<div class="form-group col-auto my-1 px-1 d-inline-flex">
+                    {{ form_row(form.age) }} 
+                </div> #}
+<div class="form-group col-auto my-1 px-1 d-inline-flex">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom" title="Sexe">
+                <i class=" fas fa-venus-mars text-black-50"></i>
+            </div>
+        </div>{{ form_row(form.gender) }}
+    </div>
+</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
+                title="Téléphone">
+                <i class=" fas fa-phone text-black-50"></i>
+            </div>
+        </div>{{ form_row(form.phone) }}
+    </div>
+</div>
+
+{% endblock %}

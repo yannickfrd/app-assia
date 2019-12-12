@@ -104,16 +104,9 @@ export default class ValidationPerson {
 
     checkEmail() {
         let regex = this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}");
-<<<<<<< HEAD
-        if (regex | this.emailInputElt.value === "") {
-=======
         if (regex || this.emailInputElt.value === "") {
-<<<<<<< HEAD
->>>>>>> test
             this.valid("email", this.emailInputElt);
-=======
             this.validationInput.valid("email", this.emailLabelElt, this.emailInputElt);
->>>>>>> test
         } else {
             this.validationInput.invalid("email", this.emailLabelElt, this.emailInputElt, "L'adresse email est incorrecte.");
         }
@@ -147,7 +140,6 @@ export default class ValidationPerson {
 
     checkNbPeople() {
         if (this.nbPeopleInputElt.value >= 1 && this.nbPeopleInputElt.value <= 9) {
-<<<<<<< HEAD
             this.valid("nbPeople", this.nbPeopleInputElt);
         } else {
             this.invalid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
@@ -158,11 +150,8 @@ export default class ValidationPerson {
     valid(field, input) {
         if (input.classList.contains("is-invalid")) {
             input.classList.replace("is-invalid", "is-valid");
-<<<<<<< HEAD
             document.querySelector(".invalid-" + field).remove();
-=======
             document.querySelector(".js-invalid-" + field).remove();
->>>>>>> test
         } else {
             input.classList.add("is-valid");
         }
@@ -170,43 +159,30 @@ export default class ValidationPerson {
 
     // Met le champ en invalide et met un message d'erreur
     invalid(field, label, input, msg) {
-<<<<<<< HEAD
         if (document.querySelector("label.invalid-" + field)) {
             document.querySelector(".invalid-" + field).remove();
-=======
-        if (document.querySelector("label>span.js-invalid-" + field)) {
-            document.querySelector("span.js-invalid-" + field).remove();
->>>>>>> test
-        }
-        if (!input.classList.contains("is-invalid")) {
-            input.classList.add("is-invalid");
-        }
-        let invalidFeedbackElt = document.createElement("span");
-<<<<<<< HEAD
-        invalidFeedbackElt.className = "invalid-feedback d-block invalid-" + field;
-=======
-        invalidFeedbackElt.className = "invalid-feedback d-block js-invalid js-invalid-" + field;
->>>>>>> test
-        invalidFeedbackElt.innerHTML = `
+            if (document.querySelector("label>span.js-invalid-" + field)) {
+                document.querySelector("span.js-invalid-" + field).remove();
+            }
+            if (!input.classList.contains("is-invalid")) {
+                input.classList.add("is-invalid");
+            }
+            let invalidFeedbackElt = document.createElement("span");
+            invalidFeedbackElt.className = "invalid-feedback d-block js-invalid js-invalid-" + field;
+            invalidFeedbackElt.innerHTML = `
                 <span class="form-error-icon badge badge-danger text-uppercase">Erreur</span> 
                 <span class="form-error-message">${msg}</span>
                 `
-        label.appendChild(invalidFeedbackElt);
-=======
+            label.appendChild(invalidFeedbackElt);
             this.validationInput.valid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt);
         } else {
             this.validationInput.invalid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
         }
->>>>>>> test
     }
 
     // Renvoie le nombre de champs invalides
     getNbErrors() {
-<<<<<<< HEAD
-        let nbErrors = document.querySelectorAll(".is-invalid").length + document.querySelectorAll("select.is-invalid").length;
-=======
-        let nbErrors = document.querySelectorAll(".js-invalid").length;
->>>>>>> test
+        let nbErrors = document.querySelectorAll(".js-invalid").length + document.querySelectorAll("select.is-invalid").length;
         return nbErrors;
     }
 }

@@ -34,20 +34,20 @@
   {% else %}
   <div class="mb-4"></div>
   {% endif %}
-  {% if group_people is defined %}
-  <div class="my-3">
-    <div>
-      <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
-        <span class="fas fa-users mr-2"></span>Fiche groupe</a>
-      {% for form_support_pers in form.supportPerson.children %}
-      {% set person = form_support_pers.vars.data.person %}
-      <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-        class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.fullname }}</a>
-      {% endfor %}
-
-    </div>
-
-  </div>
+  {% if edit_mode %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+          href="{{ path('group_people_show', {'id': group_people.id}) }}"><span class="fas fa-users mr-2"></span>Fiche
+          groupe <span class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+      <li class="breadcrumb-item active" aria-current="page">Fiche de suivi</li>
+    </ol>
+  </nav>
+  {% for form_support_pers in form.supportPerson.children %}
+  {% set person = form_support_pers.vars.data.person %}
+  <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
+    class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.fullname }}</a>
+  {% endfor %}
   {% endif %}
 
   <hr>
@@ -70,31 +70,36 @@
       <div class="col-md-6">{{ form_row(form.referent2) }}</div>
     </div>
 
+    {% if edit_mode %}
+
     <div class="row my-4">
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#">Évaluation</a>
+        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom"
+          title="Voir l'évaluation sociale">Évaluation</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#">Hébergement</a>
+        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom"
+          title="Voir les modalités d'hébergement">Hébergement</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#">Redevance</a>
+        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom"
+          title="Voir les participations financières">Redevance</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#">RDV</a>
+        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom"
+          title="Voir les rendez-vous">RDV</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a href="{{ path('note_list', {'id':support.id}) }}"
-          class="btn btn-{{ theme_color }} btn-block shadow">Notes</a>
+        <a href="{{ path('note_list', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow"
+          data-placement="bottom" title="Voir les notes sociales et rapport">Notes</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#">Documents</a>
+        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom"
+          title="Voir les documents administratifs">Documents</a>
       </div>
     </div>
 
-    {% if edit_mode %}
-    <div class="accordion mb-4" id="accordion-support">
-      {% set accordion_id = "accordion-support" %}
+    <div class="mb-4">
       {# {% include "app/support/sitSummary.html.twig" %} #}
       {% include "app/support/sitSocial.html.twig" %}
       {% include "app/support/sitAdm.html.twig" %}
@@ -103,16 +108,16 @@
       {% include "app/support/sitBudget.html.twig" %}
       {% include "app/support/sitHousing.html.twig" %}
     </div>
-    {% if edit_mode %}
-    <div class="col-md-12">
-      <a class="text-{{ theme_color }}" href="{{ path('support_pers_edit', {'id':support.id}) }}">Voir les
-        personnes rattachées au suivi</a>
-    </div>
-    {% endif %}
+
     {% endif %}
 
     <div class="form-group row">
       <div class="col-md-12">
+        {% if edit_mode %}
+        <a class="d-block  mb-3 pl-3 text-{{ theme_color }}"
+          href="{{ path('support_pers_edit', {'id':support.id}) }}">Modifier les
+          personnes rattachées au suivi</a>
+        {% endif %}
         <div class="mb-4 float-right">
           {% if edit_mode %}
           <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Mettre à jour">

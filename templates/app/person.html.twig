@@ -29,18 +29,18 @@
     <div class="mb-4"></div>
     {% endif %}
 
-    {% if group_people is defined and group_people.rolePerson|length > 1 %}
-    <div class="my-3">
-        <a href="{{ path('group_people_show', {'id': group_people.id}) }}" class="text-{{ theme_color }}">
-            <span class="fas fa-users"></span>
-            Retour à la fiche du groupe</a>
-        <span class="small text-secondary">{{ group_people.getFamilyTypologyType }}
-            {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }}
-            personnes)
-            {% endif %}
-        </span>
-        <br />
-    </div>
+    {% if group_people is defined %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                    href="{{ path('group_people_show', {'id': group_people.id}) }}"><span
+                        class="fas fa-users mr-2"></span>Fiche groupe</a> <span
+                    class="small text-secondary">{{ group_people.getFamilyTypologyType }}
+                    {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }} personnes){% endif %}
+                </span></li>
+            <li class="breadcrumb-item active" aria-current="page">Fiche individuelle</li>
+        </ol>
+    </nav>
     {% endif %}
 
     <hr>

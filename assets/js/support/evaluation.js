@@ -76,21 +76,6 @@ export default class evaluation {
                 btnElt.addEventListener("click", this.activeBtn.bind(this, btnPersonElts, btnElt));
             });
         });
-
-        let cardHeaderElts = document.querySelectorAll("div.card-header");
-        cardHeaderElts.forEach(cardHeaderElt => {
-            let spanFaElt = cardHeaderElt.querySelector("span.fa");
-            cardHeaderElt.addEventListener("click", function () {
-                cardHeaderElts.forEach(cardHeaderElt => {
-                    cardHeaderElt.querySelector("span.fa").classList.replace("fa-chevron-down", "fa-chevron-up");
-                });
-                if (cardHeaderElt.classList.contains("collapsed")) {
-                    spanFaElt.classList.replace("fa-chevron-up", "fa-chevron-down");
-                } else {
-                    spanFaElt.classList.replace("fa-chevron-down", "fa-chevron-up");
-                }
-            });
-        });
     }
 
     //

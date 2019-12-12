@@ -26,13 +26,13 @@ class User implements UserInterface
         5 => "Administratif",
         6 => "Chargé·e de mission",
         7 => "Stagiaire",
-        98 => "Autre",
+        98 => "Autre"
     ];
 
     public const ROLES = [
         "ROLE_USER" => "Utilisateur",
         "ROLE_ADMIN" => "Administrateur",
-        "ROLE_SUPER_ADMIN" => "Administreur général",
+        "ROLE_SUPER_ADMIN" => "Administrateur général"
     ];
     /**
      * @ORM\Id()
@@ -159,7 +159,7 @@ class User implements UserInterface
     private $supportsGroupUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
     private $serviceUser;
 
@@ -337,14 +337,20 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
+        $roles[] = "ROLE_USER";
 
         return array_unique($roles);
     }
 
-    public function setRoles(string $role): self
+    public function setRoles(array $roles): self
     {
-        $this->roles[] = $role;
+        $this->roles = [];
+
+        foreach ($roles as $role) {
+            $this->roles[] = $role;
+        }
+
+        // $this->roles[] = $role;
 
         return $this;
     }

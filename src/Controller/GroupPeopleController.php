@@ -5,23 +5,19 @@ namespace App\Controller;
 use App\Utils\Agree;
 
 use App\Entity\Person;
-
-use App\Form\Utils\Choices;
-
 use App\Entity\RolePerson;
-
 use App\Entity\GroupPeople;
-
-use App\Form\GroupPeopleType;
 use App\Entity\GroupPeopleSearch;
 
-use App\Form\GroupPeopleSearchType;
+use App\Form\Utils\Choices;
+use App\Form\Group\GroupPeopleType;
+
 use App\Repository\RolePersonRepository;
-use App\Repository\GroupPeopleRepository;
+
+use App\Form\Group\GroupPeopleSearchType;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\Security\Core\Security;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +54,7 @@ class GroupPeopleController extends AbstractController
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        $rolePeople->setPageRange(5);
+        // $rolePeople->setPageRange(5);
         $rolePeople->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);

@@ -1,13 +1,15 @@
-<div id="card-{{ id }}" class="card mb-0">
-    <div class="card-header py-2 collapsed cursor-pointer" id="heading-{{ id }}" data-toggle="collapse"
-        data-target="#collapse-{{ id }}" aria-expanded="false" aria-controls="collapse-{{ id }}">
-        <h2 class="h4 my-2">{% block card_title %}{% endblock %}
-            <div class="float-right"><span class="fa fa-chevron-up"></span></div>
-        </h2>
-    </div>
-    <div id="collapse-{{ id }}" class="collapse" aria-labelledby="heading-{{ id }}" data-parent="#{{ accordion_id }}">
-        <div class="card-body bg-light">
-            {% block card_body %}{% endblock %}
+<div class="accordion" id="accordion-parent-{{ id }}">
+    <div id="card-{{ id }}" class="card mb-0 border-bottom">
+        <div class="card-header py-2 collapsed cursor-pointer" id="heading-{{ id }}" data-toggle="collapse"
+            data-target="#collapse-{{ id }}" aria-expanded="true" aria-controls="collapse-{{ id }}">
+            <h2 class="h4 my-2">{% block card_title %}{% endblock %}
+                <div class="float-right"><span class="fa fa-chevron-right"></span></div>
+            </h2>
+        </div>
+        <div id="collapse-{{ id }}" class="collapse" aria-labelledby="heading-{{ id }}" data-parent="#accordion-parent-{{ id }}">
+            <div class="card-body bg-light">
+                {% block card_body %}{% endblock %}
+            </div>
         </div>
     </div>
 </div>

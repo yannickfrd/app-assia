@@ -12,6 +12,10 @@ export default class SearchPerson {
     }
 
     init() {
+        if (!this.searchElt) {
+            return;
+        }
+
         this.searchElt.addEventListener("keyup", this.timer.bind(this));
         this.searchElt.addEventListener("click", function () {
             this.resultsSearchElt.classList.replace("fade-out", "fade-in");

@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
-use App\Entity\SupportGroupSearch;
 use App\Entity\SupportPerson;
+use App\Entity\SupportGroupSearch;
 
-use App\Form\SupportGroupSearchType;
-use App\Form\SupportGroupType;
-use App\Form\SupportGroupType2;
+use App\Form\Support\SupportGroupType;
+use App\Form\Support\SupportGroupType2;
+use App\Form\Support\SupportGroupSearchType;
 
 use App\Repository\RolePersonRepository;
 use App\Repository\SupportGroupRepository;

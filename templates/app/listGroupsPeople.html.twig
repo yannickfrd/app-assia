@@ -1,12 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form "bootstrap_4_layout.html.twig" %}
-
 {% block title %}Liste des ménages | Esperer95-app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
 {% block body %}
+
 
 <section class="my-0">
     <div class="container">
@@ -14,46 +13,7 @@
         <h1 class="h2 mb-4">Liste des ménages</h1>
     </div>
 
-    <div id="form-search" class="jumbotron mb-0 py-3">
-        {{ form_start(form) }}
-        <div class="form-inline justify-content-md-center align-items-end">
-            <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.lastname) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1 ">
-                {{ form_row(form.firstname) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
-                            title="Date de naissance">
-                            <i class=" fas fa-calendar-alt text-black-50"></i>
-                        </div>
-                    </div>
-                    {{ form_row(form.birthdate) }}
-                </div>
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
-                    data-placement="bottom" title="Demandeur/euse princiapl·e">
-                    {{ form_row(form.head) }}
-                </div>
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                {{ form_row(form.familyTypology) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                {{ form_row(form.nbPeople) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline">
-                <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i class="fas fa-search"
-                        data-placement="bottom" title="Rechercher"></i></button>
-                <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i class="fas fa-eraser"></i></button>
-            </div>
-            {{ form_end(form, {"render_rest": false}) }}
-        </div>
-    </div>
+    {% include "app/search/searchGroupPeople.html.twig" %}
 
     <div class="container">
 

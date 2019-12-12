@@ -4,12 +4,17 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserResetPass;
-use App\Form\RegistrationType;
-use App\Form\ForgotPasswordType;
-use App\Form\ReinitPasswordType;
-use App\Repository\UserRepository;
+
+use App\Form\Security\ForgotPasswordType;
 use App\Notification\MailNotification;
+use App\Form\Security\ReinitPasswordType;
+use App\Form\Security\RegistrationType;
+use App\Form\Security\SecurityUserType;
+
+use App\Repository\UserRepository;
+
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,11 +26,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class SecurityController extends AbstractController
 {
     private $manager;
+    private $security;
 
-    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder)
+    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder, Security $security)
     {
         $this->manager = $manager;
         $this->encoder = $encoder;
+        $this->security = $security;
     }
 
     /**
@@ -51,17 +58,49 @@ class SecurityController extends AbstractController
 
             $hashPassword = $this->encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashPassword)
-                ->setCreatedAt(new \DateTime());
+                ->setCreatedAt(new \DateTime())
+                ->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
 
             $this->manager->persist($user);
             $this->manager->flush();
 
             $this->addFlash("success", "Le compte a été créé.");
 
-            return $this->redirectToRoute("security_login");
+            return $this->redirectToRoute("security_user", [
+                "id" => $user->getId(),
+            ]);
         }
 
         return $this->render("security/registration.html.twig", [
+            "form" => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/admin/user/{id}", name="security_user") 
+     */
+    public function editUser(User $user, Request $request)
+    {
+        $form = $this->createForm(SecurityUserType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->security->getUser());
+
+            $this->manager->persist($user);
+            $this->manager->flush();
+
+            $this->addFlash("success", "Le compte utilisateur a été modifié.");
+
+            return $this->redirectToRoute("security_user", [
+                "id" => $user->getId(),
+            ]);
+        }
+
+        return $this->render("security/securityUser.html.twig", [
             "form" => $form->createView(),
         ]);
     }

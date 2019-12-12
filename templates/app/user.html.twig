@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Fiche utilisateur | Esperer95-app{% endblock %}
+{% block title %}{{ form.vars.value.fullname }} | Esperer95-app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -10,15 +10,10 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Fiche utilisateur{% else %}Création d'un utilisateur{% endif %}</h1>
-    {% if edit_mode %}
+    <h1 class="h2 mb-3">{{ form.vars.value.fullname }}</h1>
     <div class="small text-secondary">
-        <p> Dernière connexion le {{ form.vars.value.lastLogin | date("d/m/Y à H:i") }}
-        </p>
+        <p> Dernière connexion le {{ form.vars.value.lastLogin | date("d/m/Y à H:i") }}</p>
     </div>
-    {% else %}
-    <div class="mb-4"></div>
-    {% endif %}
 
     <hr>
 
@@ -29,21 +24,19 @@
 
         {{ form_start(form) }}
 
-        {% if edit_mode %} {% set form_user = form %} {% else %} {% set form_user = form.user %} {% endif %}
-
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_user.firstname) }}</div>
-            <div class="col-md-6">{{ form_row(form_user.lastname) }}</div>
-            <div class="col-md-6">{{ form_row(form_user.username) }}</div>
-            <div class="col-md-6">{{ form_row(form_user.status) }}</div>
+            <div class="col-4 col-md-2 mb-3">Prénom :</div>
+            <div class="col-8 col-md-4">{{ form.vars.value.firstname }}</div>
+            <div class="col-4 col-md-2 mb-3">Nom :</div>
+            <div class="col-8 col-md-4">{{ form.vars.value.lastname }}</div>
+            <div class="col-4 col-md-2 mb-3">Login :</div>
+            <div class="col-8 col-md-4">{{ form.vars.value.username }}</div>
+            <div class="col-4 col-md-2 mb-3">Statut :</div>
+            <div class="col-8 col-md-4">{{ form.vars.value.statusList }}</div>
+            <div class="col-md-6">{{ form_row(form.email) }}</div>
+            <div class="col-md-6">{{ form_row(form.phone) }}</div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_user.email) }}</div>
-            <div class="col-md-6">{{ form_row(form_user.phone) }}</div>
-        </div>
-
-        {{ form_row(form._token) }}
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
@@ -53,7 +46,9 @@
             </div>
         </div>
 
+        {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
+
     </section>
 
     <hr>
@@ -149,7 +144,9 @@
         {% endif %}
     </section>
 </div>
+
 {% endblock %}
 
 {% block javascripts %}
+{{ encore_entry_script_tags("user") }}
 {% endblock javascripts %}

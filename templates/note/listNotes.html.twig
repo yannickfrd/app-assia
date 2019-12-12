@@ -1,8 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% if form is defined %}
 {% form_theme form "bootstrap_4_layout.html.twig" %}
-{% endif %}
 
 {% block title %}Notes sociales | Esperer95-app {% endblock %}
 
@@ -15,8 +13,17 @@
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Notes sociales</h1>
         <div>
-            <a href="{{ path('support_edit', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
-                <span class="fas fa-users mr-2"></span>Fiche suivi</a>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}" 
+                        href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span 
+                        class="fas fa-users mr-2"></span>Fiche groupe <span 
+                        class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}" 
+                        href="{{ path('support_edit', {'id':support.id }) }}">Fiche de suivi</a></li> 
+                    <li class="breadcrumb-item active" aria-current="page">Notes sociales</li>
+                </ol>
+            </nav>
             {% for supportPerson in support.supportPerson %}
             <span class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ supportPerson.person.fullname }}</span>
             {% endfor %}
@@ -41,17 +48,32 @@
                         class="fas fa-plus-square mr-2"></span>Créer une nouvelle note</a>
                 {% if notes.getTotalItemCount %}  
                 <div class="float-right">
-                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
-                        {{ knp_pagination_sortable(notes, "Titre", "n.title") }}
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
-                        {{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
-                        {{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
-                    </button>
+                        {{ form_start(form) }}
+                    <div class="form-inline justify-content-md-center align-items-end">
+                        <div class="form-group col-auto my-1 px-1 ">{{ form_row(form.content) }}</div>
+                        <div class="form-group col-auto my-1 px-1 ">{{ form_row(form.status) }}</div>
+                        <div class="form-group col-auto my-1 px-1 ">{{ form_row(form.type) }}</div>
+                        <div class="form-group col-auto my-1 px-1">
+                            <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
+                                    class="fas fa-search"></i></button>
+                            {{ form_end(form, {"render_rest": false}) }}
+                        </div>
+                    </div>
+                    <div>
                 </div>
+                <div class="float-right">
+                        <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
+                            {{ knp_pagination_sortable(notes, "Titre", "n.title") }}
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
+                            {{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
+                            {{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
+                        </button>
+                    </div>
                 {% endif %}
+                </div>
             </div>
         </div>
         {% for note in notes %}
@@ -59,7 +81,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">{{ note.title }}</h5>
+                        <h5 class="card-title"><a class="text-{{ theme_color }}" href="{{ path("note_edit", {'id':note.id}) }}">{{ note.title }}</a></h5>
                         <div class="small text-secondary">Créé le {{note.createdAt | date("d/m/Y à H:i") }} par
                             {{ note.createdBy.fullname }}
                             {% if note.updatedAt != note.createdAt %}

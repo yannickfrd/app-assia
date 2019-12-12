@@ -29,7 +29,7 @@ class UserFixtures extends Fixture
             ->setFirstName("Romain")
             ->setLastName("Madelaine")
             ->setStatus(6)
-            ->setRoles("ROLE_SUPER_ADMIN")
+            ->setRoles(["ROLE_SUPER_ADMIN"])
             ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
             ->setEmail("romain.madelaine@esperer-95.org")
             ->setCreatedAt(new \DateTime())

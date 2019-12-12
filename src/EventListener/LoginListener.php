@@ -2,8 +2,8 @@
 
 namespace App\EventListener;
 
-use App\Entity\User;
 use App\Entity\UserConnection;
+
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserConnectionRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Service;
-use App\Form\ServiceType;
 use App\Entity\ServiceSearch;
-use App\Form\ServiceSearchType;
+
+use App\Form\Service\ServiceType;
+use App\Form\Service\ServiceSearchType;
+
 use App\Repository\ServiceRepository;
+
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;

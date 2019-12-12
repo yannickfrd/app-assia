@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form "bootstrap_4_layout.html.twig" %}
-
 {% block title %}Les suivis | Esperer95-app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
@@ -14,42 +12,7 @@
         <h1 class="h2 mb-4">Les suivis</h1>
     </div>
 
-    <div id="form-search" class="jumbotron mb-0 py-3">
-        {{ form_start(form) }}
-        <div class="form-inline justify-content-md-center align-items-end">
-            <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.fullname) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.status) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.supportDates) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline" data-toggle="tooltip"
-                data-placement="bottom" title="Date de fin">
-                <span class="px-1">Entre</span>{{ form_row(form.startDate) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1 d-inline-flex align-items-baseline" data-toggle="tooltip"
-                data-placement="bottom" title="Date de fin">
-                <span class="pr-2">et</span>{{ form_row(form.endDate) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.referent) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1">
-                {{ form_row(form.service) }}
-            </div>
-            <div class="form-group col-auto my-1 px-1">
-                <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow">
-                    <span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
-                </button>
-                <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow">
-                    <span class="fas fa-eraser"></span></button>
-            </div>
-            {{ form_end(form, {"render_rest": false}) }}
-        </div>
-    </div>
+    {% include "app/search/searchSupports.html.twig" %}
 
     <div class="container">
 

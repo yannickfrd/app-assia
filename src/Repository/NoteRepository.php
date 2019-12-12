@@ -25,13 +25,25 @@ class NoteRepository extends ServiceEntityRepository
      * 
      * @return Query
      */
-    public function findAllNotesQuery($supportGroup): Query
+    public function findAllNotesQuery($supportGroupId, $noteSearch): Query
     {
         $query =  $this->createQueryBuilder("n")
             ->andWhere("n.supportGroup = :supportGroup")
-            ->setParameter("supportGroup", $supportGroup->getId())
-            ->orderBy("n.createdAt", "DESC");
+            ->setParameter("supportGroup", $supportGroupId);
 
+        if ($noteSearch->getContent()) {
+            $query->andWhere("n.content LIKE :content")
+                ->setParameter("content", '%' . $noteSearch->getContent() . '%');
+        }
+        if ($noteSearch->getStatus()) {
+            $query->andWhere("n.status = :status")
+                ->setParameter("status", $noteSearch->getStatus());
+        }
+        if ($noteSearch->getType()) {
+            $query->andWhere("n.type = :type")
+                ->setParameter("type", $noteSearch->getType());
+        }
+        $query = $query->orderBy("n.createdAt", "DESC");
         return $query->getQuery();
     }
 }

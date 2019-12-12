@@ -3,21 +3,21 @@ import ValidationInput from "../utils/validationInput";
 
 // Création automatique du login de l'utilisateur
 export default class Username {
-    constructor() {
-        this.firstnameInputElt = document.getElementById("registration_firstname");
-        this.lastnameInputElt = document.getElementById("registration_lastname");
+    constructor(formName) {
+        this.firstnameInputElt = document.getElementById(formName + "_firstname");
+        this.lastnameInputElt = document.getElementById(formName + "_lastname");
 
-        this.usernameLabelElt = document.querySelector("label[for=registration_username]");
-        this.usernameInputElt = document.getElementById("registration_username");
+        this.usernameLabelElt = document.querySelector("label[for=" + formName + "_username]");
+        this.usernameInputElt = document.getElementById(formName + "_username");
 
-        this.emailLabelElt = document.querySelector("label[for=registration_email]");
-        this.emailInputElt = document.getElementById("registration_email");
+        this.emailLabelElt = document.querySelector("label[for=" + formName + "_email]");
+        this.emailInputElt = document.getElementById(formName + "_email");
 
         this.regexPassword = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).{6,20}";
-        this.passwordLabelElt = document.querySelector("label[for=registration_password]");
-        this.passwordInputElt = document.getElementById("registration_password");
-        this.confirmPasswordLabelElt = document.querySelector("label[for=registration_confirmPassword]");
-        this.confirmPasswordInputElt = document.getElementById("registration_confirmPassword");
+        this.passwordLabelElt = document.querySelector("label[for=" + formName + "_password]");
+        this.passwordInputElt = document.getElementById(formName + "_password");
+        this.confirmPasswordLabelElt = document.querySelector("label[for=" + formName + "_confirmPassword]");
+        this.confirmPasswordInputElt = document.getElementById(formName + "_confirmPassword");
 
         this.ajaxRequest = new AjaxRequest();
         this.validationInput = new ValidationInput();
@@ -25,13 +25,18 @@ export default class Username {
     }
 
     init() {
-        this.firstnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
-        this.lastnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
-        this.usernameInputElt.addEventListener("keyup", this.timer.bind(this));
+
+        if (this.lastnameInputElt) {
+            this.firstnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
+            this.lastnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
+            this.usernameInputElt.addEventListener("keyup", this.timer.bind(this));
+        }
         this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
-        this.passwordInputElt.addEventListener("keyup", this.checkPassword.bind(this));
-        this.passwordInputElt.addEventListener("focusout", this.checkoutPassword.bind(this));
-        this.confirmPasswordInputElt.addEventListener("focusout", this.checkConfirmPassword.bind(this));
+        if (this.passwordInputElt) {
+            this.passwordInputElt.addEventListener("keyup", this.checkPassword.bind(this));
+            this.passwordInputElt.addEventListener("focusout", this.checkoutPassword.bind(this));
+            this.confirmPasswordInputElt.addEventListener("focusout", this.checkConfirmPassword.bind(this));
+        }
     }
 
 

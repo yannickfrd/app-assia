@@ -5,6 +5,9 @@ body {
     background-color: #fafafafa;
 }
 
+
+
+
 .container {
     padding-top: 24px;
     // padding-bottom: 1px;
@@ -106,6 +109,15 @@ th.required:after {
     min-width: 150px;
 }
 
+.h-max-38 {
+    max-height: 38px;
+}
+
+.h-max-76 {
+    max-height: 76px;
+}
+
+
 .font-size-10 {
     font-size: 1rem;
 }
@@ -146,6 +158,37 @@ th.required:after {
     /* white-space: pre-line; */
     // max-width: 300px;
     // width: 250px;
+}
+
+// Modification des couleurs des liens de tri de Paginator
+thead a {
+    color: var(--gray) !important;
+}
+
+thead a:hover {
+    color: var(--dark) !important;
+}
+
+button.btn-outline-secondary a {
+    color: var(--gray) !important;
+}
+
+button.btn-outline-secondary a:hover {
+    color: $light !important;
+}
+
+
+.page-item.active .page-link {
+    background-color: var(--gray);
+    border-color: var(--gray);
+}
+
+.page-link {
+    color: var(--gray);
+}
+
+.page-link:hover {
+    color: var(--dark);
 }
 
 @media (max-width: 992px) {

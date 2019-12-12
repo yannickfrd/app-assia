@@ -1,0 +1,28 @@
+{% extends "model/search.html.twig" %}
+
+{% block search_form %}
+
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.lastname) }}</div>
+<div class="form-group col-auto my-1 px-1 ">{{ form_row(form.firstname) }}</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text d-none d-sm-block" data-toggle="tooltip" data-placement="bottom"
+                title="Date de naissance">
+                <i class=" fas fa-calendar-alt text-black-50"></i>
+            </div>
+        </div>{{ form_row(form.birthdate) }}
+    </div>
+</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex">
+    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
+        data-placement="bottom" title="Demandeur/euse princiapl·e">
+        {{ form_row(form.head) }}
+    </div>
+</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex">{{ form_row(form.familyTypology) }}
+</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex">{{ form_row(form.nbPeople) }}
+</div>
+
+{% endblock %}

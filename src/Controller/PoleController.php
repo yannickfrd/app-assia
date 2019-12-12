@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Pole;
-use App\Form\PoleType;
+
+use App\Form\Pole\PoleType;
+
 use App\Repository\PoleRepository;
+
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
