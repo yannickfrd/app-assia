@@ -2,46 +2,46 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Fiche du pole | Esperer95-app{% endblock %}
-
-{% block stylesheets %}{% endblock %}
-
 {% set pole = form.vars.value %}
+
+{% block title %}{{ pole.name }} | Esperer95-app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Pôle {{ pole.name }}{% else %}Création d'un pôle{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}{{ pole.name }}{% else %}Création d'un nouveau pôle{% endif %}</h1>
     {% if edit_mode %}
+    <div class="small text-secondary">
+        <p> Créé le {{pole.createdAt | date("d/m/Y à H:i") }}
+            {#{% if pole.createdBy %}par {{ pole.createdBy.fullname }}{% endif %}#}
+            {% if pole.updatedAt %}(modifié le {{ pole.updatedAt | date("d/m/Y à H:i") }}){% endif %}
+        </p>
+    </div>
     {% else %}
     <div class="mb-4"></div>
     {% endif %}
 
     <hr>
 
-    <section id="pole">
-
+    <section>
         {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
 
-        {% if edit_mode %} {% set form_pole = form %} {% else %} {% set form_pole = form.pole %}
-        {% endif %}
-
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_pole.name) }}</div>
+            <div class="col-md-6">{{ form_row(form.name) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_pole.phone) }}</div>
-            <div class="col-md-6">{{ form_row(form_pole.email) }}</div>
+            <div class="col-md-6">{{ form_row(form.phone) }}</div>
+            <div class="col-md-6">{{ form_row(form.email) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_pole.address) }}</div>
-            <div class="col-md-6">{{ form_row(form_pole.city) }}</div>
-            <div class="col-md-6">{{ form_row(form_pole.zipCode) }}</div>
-            <div class="col-md-6">{{ form_row(form_pole.color) }}</div>
+            <div class="col-md-6">{{ form_row(form.address) }}</div>
+            <div class="col-md-6">{{ form_row(form.city) }}</div>
+            <div class="col-md-6">{{ form_row(form.zipCode) }}</div>
+            <div class="col-md-6">{{ form_row(form.color) }}</div>
         </div>
 
         {{ form_row(form._token) }}
@@ -53,15 +53,13 @@
                 </div>
             </div>
         </div>
-
         {{ form_end(form, {"render_rest": false}) }}
     </section>
 
+    {% if edit_mode %}
     <hr>
-
-    <section id="groups-people">
+    <section>
         <h2 class="h4 my-4">Services rattachés</h2>
-
         {% if pole.services %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
@@ -75,12 +73,11 @@
                         <th scope="col" class="align-middle th-w-140">Ville</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     {% for service in pole.services %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('service_show', {'id':service.id}) }}"
+                            <a href="{{ path('service_edit', {'id':service.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
@@ -97,10 +94,14 @@
             </table>
         </div>
         {% endif %}
-        <a href="" class="m-3 text-{{ theme_color }}"><span class="fas fa-plus-square pr-2"></span>Créer un nouveau
-            service</a>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ path("service_new") }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                        class="fas fa-plus-square mr-2"></span>Créer un nouveau service</a>
+            </div>
+        </div>
     </section>
-
+    {% endif %}
 </div>
 {% endblock %}
 

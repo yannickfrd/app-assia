@@ -3,8 +3,8 @@ Activity bonus: Prime d'activité
 Activity bonus amt: Montant Prime d'activité
 Alimony: Pension alimentaire
 Alimony amt: Montant Pension alimentaire
-Asylum seeker alw: Allocation pour demandeur d'asile (ADA)
-Asylum seeker alw amt: Montant Allocation pour demandeur d'asile (ADA)
+Asylum seeker alw: ADA
+Asylum seeker alw amt: Montant ADA
 Charge comment: Commentaire sur les charges
 Charges: Charges
 Charges amt: Montant total des charges
@@ -34,10 +34,10 @@ Debt tax delays: Retards d'impôts
 Debt tax delays amt: Montant retards d'impôts
 Debt unpaid maint: Pension alimentaire non réglée
 Debt unpaid maint amt: Montant pension alimentaire non réglée
-Dis adult alw: Allocation adulte handicapé
+Dis adult alw: AAH
 Dis adult alw amt: Montant AAH
-Dis child alw: Allocation d'éducation de l'enfant handicapé (AEEH)
-Dis child alw amt: Allocation d'éducation de l'enfant handicapé (AEEH)
+Dis child alw: AEEH
+Dis child alw amt: Montant AAEH
 Electricity gas: Electricité / Gaz
 Electricity gas amt: Montant électricité / Gaz
 Family allowances amt: Montant allocations familiales
@@ -75,18 +75,18 @@ Ressources group amt: Ressources totales du groupe
 Salary: Salaire
 Salary amt: Montant salaire
 Settlement plan: Plan d'apurement
-Solidarity alw: Allocation de solidarité spécifique (ASS)
+Solidarity alw: ASS
 Solidarity alw amt: Montant ASS
 Taxes: Impôts
 Taxes amt: Montant impôts
 Tax income n1: Revenu fiscal n-1
 Tax income n2: Revenu fiscal n-2
-Temp waiting alw: Allocation temporaire d'attente
+Temp waiting alw: ATA
 Temp waiting alw amt: Montant allocation temporaire d'attente
 Transport: Transport
 Transport amt: Montant transport
-Unempl benf: Allocation chômage (ARE)
-Unempl benf amt: Montant allocation chômage (ARE)
+Unempl benf: ARE
+Unempl benf amt: Montant ARE
 Water: Eau
 Water amt: Montant Eau
 Write a comment about the budget situation : Ecrire un commentaire relatif à la situation budgétaire

@@ -2,22 +2,22 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}{{ form.vars.value.fullname }} | Esperer95-app{% endblock %}
+{% set person = form.vars.value %}
 
-{% block stylesheets %}{% endblock %}
+{% block title %}{{ person.fullname }} | Esperer95-app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{{ form.vars.value.fullname }}</h1>
+    <h1 class="h2 mb-3">{{ person.fullname }}</h1>
     <div class="small text-secondary">
-        <p> Dernière connexion le {{ form.vars.value.lastLogin | date("d/m/Y à H:i") }}</p>
+        <p> Dernière connexion le {{ person.lastLogin | date("d/m/Y à H:i") }}</p>
     </div>
 
     <hr>
 
-    <section id="user">
+    <section>
 
         {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
@@ -26,13 +26,13 @@
 
         <div class="form-group row">
             <div class="col-4 col-md-2 mb-3">Prénom :</div>
-            <div class="col-8 col-md-4">{{ form.vars.value.firstname }}</div>
+            <div class="col-8 col-md-4">{{ person.firstname }}</div>
             <div class="col-4 col-md-2 mb-3">Nom :</div>
-            <div class="col-8 col-md-4">{{ form.vars.value.lastname }}</div>
+            <div class="col-8 col-md-4">{{ person.lastname }}</div>
             <div class="col-4 col-md-2 mb-3">Login :</div>
-            <div class="col-8 col-md-4">{{ form.vars.value.username }}</div>
+            <div class="col-8 col-md-4">{{ person.username }}</div>
             <div class="col-4 col-md-2 mb-3">Statut :</div>
-            <div class="col-8 col-md-4">{{ form.vars.value.statusList }}</div>
+            <div class="col-8 col-md-4">{{ person.statusList }}</div>
             <div class="col-md-6">{{ form_row(form.email) }}</div>
             <div class="col-md-6">{{ form_row(form.phone) }}</div>
         </div>
@@ -53,7 +53,7 @@
 
     <hr>
 
-    <section id="social-supports">
+    <section>
         <h2 class="h4 my-4">Suivis sociaux en cours</h2>
         <div class="table-responsive">
             <table class="table table-striped table-hover text-dark">
@@ -69,7 +69,7 @@
                 </thead>
 
                 <tbody>
-                    {% for support in form.vars.value.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                    {% for support in person.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
                     {% cache "referentSupport" ~ support.id support.updatedAt.timestamp %}
                     <tr>
                         <th scope="row" class="align-middle">
@@ -103,9 +103,9 @@
 
     <hr>
 
-    <section id="services">
+    <section>
         <h2 class="h4 my-4">Services rattachés</h2>
-        {% if form.vars.value.serviceUser %}
+        {% if person.serviceUser %}
         <div class="table-responsive">
             <table class="table table-striped table-hover text-dark">
                 <thead>
@@ -118,11 +118,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for serviceUser in form.vars.value.serviceUser %}
+                    {% for serviceUser in person.serviceUser %}
                     <tr>
                         <th scope="row" class="align-middle">
                             {% if is_granted("EDIT", serviceUser.service) %}
-                            <a href="{{ path('service_show', {'id':serviceUser.service.id}) }}"
+                            <a href="{{ path('service_edit', {'id':serviceUser.service.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>

@@ -6,7 +6,7 @@
             <div class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" data-toggle="collapse"
                 data-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
                 <h2 class="h5">Recherche
-                    <div class="float-right"><span class="fa fa-chevron-right"></span></div>
+                    <div class="float-right"><span class="fa fa-chevron-down"></span></div>
                 </h2>
             </div>
             <div id="collapseSearch" class="collapse show" aria-labelledby="headingSearch"
@@ -15,10 +15,12 @@
                 <div class="form-inline justify-content-md-center align-items-end">
                     {% block search_form %}{% endblock %}
                     <div class="form-group col-auto my-1 px-1">
-                        <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
-                                class="fas fa-search"></i></button>
-                        <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
-                                class="fas fa-eraser"></i></button>
+                        <div class="form-group">
+                            <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
+                                    class="fas fa-search"></i></button>
+                            <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
+                                    class="fas fa-eraser"></i></button>
+                        </div>
                     </div>
                 </div>
                 {{ form_end(form, {"render_rest": false}) }}

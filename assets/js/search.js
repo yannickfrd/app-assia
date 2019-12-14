@@ -14,11 +14,13 @@ $("select.multi-select.js-status").select2({
 let search = new Search("form-search");
 
 let headingSearchElt = document.getElementById("headingSearch");
-let spanFaElt = headingSearchElt.querySelector("span.fa");
-headingSearchElt.addEventListener("click", function () {
-    if (headingSearchElt.classList.contains("collapsed")) {
-        spanFaElt.classList.replace("fa-chevron-right", "fa-chevron-down");
-    } else {
-        spanFaElt.classList.replace("fa-chevron-down", "fa-chevron-right");
-    }
-});
+if (headingSearchElt) {
+    let spanFaElt = headingSearchElt.querySelector("span.fa");
+    headingSearchElt.addEventListener("click", function () {
+        if (headingSearchElt.classList.contains("collapsed")) {
+            spanFaElt.classList.replace("fa-chevron-down", "fa-chevron-right");
+        } else {
+            spanFaElt.classList.replace("fa-chevron-right", "fa-chevron-down");
+        }
+    });
+}

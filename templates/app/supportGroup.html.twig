@@ -2,10 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-
 {% block title %}Suivi social | Esperer95-app{% endblock %}
-
-{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
@@ -40,7 +37,7 @@
       <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
           href="{{ path('group_people_show', {'id': group_people.id}) }}"><span class="fas fa-users mr-2"></span>Fiche
           groupe <span class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
-      <li class="breadcrumb-item active" aria-current="page">Fiche de suivi</li>
+      <li class="breadcrumb-item active" aria-current="page">Suivi social</li>
     </ol>
   </nav>
   {% for form_support_pers in form.supportPerson.children %}
@@ -54,7 +51,7 @@
 
   {{ form_start(form) }}
 
-  <section id="social-support">
+  <section>
 
     {% include "model/msgFlash.html.twig" %}
     <div id="js-msg-flash-content"></div>

@@ -19,25 +19,25 @@ class NoteType extends AbstractType
         $builder
             ->add("title", null, [
                 "attr" => [
-                    "placeholder" => "Title"
+                    "placeholder" => "Title",
+                    "class" => "font-weight-bold"
                 ],
-                // "required" => true
+                "required" => true
             ])
             ->add("content", CKEditorType::class, [
                 "config" => [
-
                     "uiColor" => "#fafafafa",
-                ]
+                    // "toolbar" => "full"
+                ],
+                // "required" => true
             ])
             ->add("type", ChoiceType::class, [
                 "choices" => Choices::getchoices(Note::TYPE),
                 "placeholder" => "-- Select --",
-                // "required" => true
             ])
             ->add("status", ChoiceType::class, [
                 "choices" => Choices::getchoices(Note::STATUS),
                 "placeholder" => "-- Select --",
-                // "required" => true
             ]);
     }
 

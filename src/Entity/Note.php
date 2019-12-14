@@ -11,15 +11,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Note
 {
     public const TYPE = [
-        1 => "Rapport social",
-        2 => "Note de situation"
+        1 => "Note",
+        2 => "Rapport social"
     ];
 
+    public const TYPE_DEFAULT = 1;
+
     public const STATUS = [
-        0 => "Brouillon",
-        1 => "En attente de validation",
-        1 => "Validé"
+        1 => "Brouillon",
+        2 => "Finalisé",
+        3 => "En attente validation",
+        4 => "Validé",
     ];
+
+    public const STATUS_DEFAULT = 1;
 
     /**
      * @ORM\Id()
@@ -41,12 +46,12 @@ class Note
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $type;
+    private $type = self::TYPE_DEFAULT;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $status;
+    private $status = self::STATUS_DEFAULT;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -59,7 +64,7 @@ class Note
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notesCreated")
      */
     private $createdBy;
 
@@ -69,7 +74,7 @@ class Note
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notesUpdated")
      */
     private $updatedBy;
 
@@ -84,11 +89,6 @@ class Note
      */
     private $supportPerson;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
     public function getId(): ?int
     {
@@ -233,18 +233,6 @@ class Note
     public function setSupportPerson(?SupportPerson $supportPerson): self
     {
         $this->supportPerson = $supportPerson;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }

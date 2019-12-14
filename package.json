@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "@ckeditor/ckeditor5-alignment": "^16.0.0",
         "@symfony/webpack-encore": "^0.28.0",
         "core-js": "^3.0.0",
         "node-sass": "^4.13.0",
@@ -17,6 +18,9 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^16.0.0",
+        "@ckeditor/ckeditor5-editor-classic": "^16.0.0",
+        "@ckeditor/ckeditor5-essentials": "^16.0.0",
         "bootstrap": "^4.3.1",
         "bootstrap-datepicker": "^1.9.0",
         "ckeditor": "^4.12.1",

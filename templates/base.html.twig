@@ -28,7 +28,7 @@
 
 <body>
     <main class="min-vh-100">
-        <header>
+        <header id="header">
             <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
                 <a class="navbar-brand text-light" href="{{ path("home") }}">
                     <img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app"></a>
@@ -88,8 +88,8 @@
                                 <a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel
                                     utilisateur</a>
                                 {% if is_granted("ROLE_SUPER_ADMIN") %}
-                                <a class="dropdown-item" href="">Créer un nouveau service</a>
-                                <a class="dropdown-item" href="">Créer un nouveau pôle</a>
+                                <a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
+                                <a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
                                 {% endif %}
                             </div>
                         </li>
@@ -133,6 +133,8 @@
         </div>
 
         {% block body %}{% endblock %}
+
+        <a id="scroll-top" href="#header"><span class="fa fa-chevron-up"></span></a>
 
     </main>
 

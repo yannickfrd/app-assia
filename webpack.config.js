@@ -29,6 +29,7 @@ Encore
     .addEntry('groupPeople', './assets/js/groupPeople/groupPeople.js')
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
     .addEntry('login', './assets/js/security/login.js')
+    .addEntry('note', './assets/js/note/note.js')
     .addEntry('registration', './assets/js/security/registration.js')
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('search', './assets/js/search.js')

@@ -1,0 +1,29 @@
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+
+<div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body pb-0">
+                {{ form_start(form) }}
+                <div class="form-group row">
+                    <div class="col-12">{{ form_widget(form.title) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">{{ form_widget(form.content) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">{{ form_row(form.type) }}</div>
+                    <div class="col-md-6">{{ form_row(form.status) }}</div>
+                </div>
+                {{ form_row(form._token) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>

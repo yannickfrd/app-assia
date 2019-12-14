@@ -5,9 +5,6 @@ body {
     background-color: #fafafafa;
 }
 
-
-
-
 .container {
     padding-top: 24px;
     // padding-bottom: 1px;
@@ -109,6 +106,10 @@ th.required:after {
     min-width: 150px;
 }
 
+.w-min-200 {
+    min-width: 200px;
+}
+
 .h-max-38 {
     max-height: 38px;
 }
@@ -139,7 +140,6 @@ th.required:after {
     transition: all 0.5s ease;
 }
 
-
 .position-fixed {
     z-index: 999;
 }
@@ -160,13 +160,61 @@ th.required:after {
     // width: 250px;
 }
 
+#scroll-top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 40px;
+    line-height: 35px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    z-index: 100;
+}
+
+#scroll-top .fa.fa-chevron-up {
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    font-size: 30px;
+    color: #fff;
+}
+
+#scroll-top:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: all 0.5s ease;
+}
+
+
+
+/* Gestion de dépassement des notes */
+.note-content {
+    position: relative;
+    max-height: 400px;
+    overflow: hidden;
+}
+
+/* Effet fade out pour le contenu des notes  */
+.note-fadeout {
+    content: "";
+    position: absolute;
+    top: 60%;
+    left: 0;
+    height: 40%;
+    width: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0), white);
+}
+
 // Modification des couleurs des liens de tri de Paginator
 thead a {
-    color: var(--gray) !important;
+    color: var(--dark) !important;
 }
 
 thead a:hover {
-    color: var(--dark) !important;
+    color: var(--black) !important;
 }
 
 button.btn-outline-secondary a {

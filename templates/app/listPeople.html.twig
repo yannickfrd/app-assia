@@ -26,7 +26,7 @@
 
         {% if app.request.attributes.get("_route") == "new_support_search_person" %}
         <a href="{{ path("person_new") }}" class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span
-                class="fas fa-plus-square"></span> Créer une nouvelle personne</a>
+                class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
         {% endif %}
 
         {% if people is defined %}
@@ -34,8 +34,8 @@
         {% if people %}
         {% if group_people is defined %}
         <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
-            class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span class="fas fa-plus-square"></span>
-            Créer une nouvelle personne</a>
+            class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span
+                class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
         {% endif %}
 
         <div class="row align-items-baseline">
@@ -83,7 +83,7 @@
                             <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
                                 class="js-add-person" data-toggle="modal" data-target="#modal-block"
                                 data-placement="bottom" title="Ajouter la personne au groupe">
-                                <i class="fas fa-plus-square fa-2x"></i>
+                                <i class="fas fa-plus-square text-{{ theme_color }} fa-2x"></i>
                             </a>
                             {% else %}
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"

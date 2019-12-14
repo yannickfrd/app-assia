@@ -1,22 +1,20 @@
 {% extends "base.html.twig" %}
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
-{% if edit_mode == true %}
-{% form_theme form_new_group "form/bootstrap_4_horizontal.html.twig" %}
-{% endif %}
-
-{% block title %}Fiche individuelle | Esperer95-app{% endblock %}
-
-{% block stylesheets %}{% endblock %}
+{% if edit_mode %}{% form_theme form_new_group "form/bootstrap_4_horizontal.html.twig" %}{% endif %}
 
 {% set person = form.vars.value %}
+
+{% block title %}{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} |
+Esperer95-app{% endblock %}
+
+{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Fiche individuelle{% else %}Création d'une personne{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{person.createdAt | date("d/m/Y à H:i") }}
@@ -92,7 +90,6 @@
                     <button type="submit" id="updatePerson" name="updatePerson"
                         class="btn btn-{{ theme_color }} btn-smshadow"
                         data-url="{{ path('update_person', {'id':person.id}) }}">Mettre à jour</button>
-                    <input type="submit" id="send" name="send" class="btn btn-secondary shadow" value="Enregistrer">
                     {% else %}
                     <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
                         value="Enregistrer">
@@ -114,9 +111,8 @@
 
     <hr>
 
-    <section id="groups-people">
+    <section>
         <h2 class="h4 my-4">Groupes d'appartenance</h2>
-
         {% if person.rolesPerson %}
         <div class="table-responsive">
             <table class="table table-striped table-hover text-dark">
@@ -172,7 +168,6 @@
                 class="fas fa-plus-square pr-2"></span>Créer un nouveau
             groupe</button>
     </section>
-
     {% endif %}
 
 </div>

@@ -67,10 +67,49 @@ class ServiceController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Créer un service
+     * 
+     * @Route("/service/new", name="service_new", methods="GET|POST")
+     *  @return Response
+     */
+    public function createService(Service $service = null, Request $request): Response
+    {
+        $service = new Service();
+
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $form = $this->createForm(ServiceType::class, $service);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user = $this->security->getUser();
+
+            $service->setCreatedAt(new \DateTime())
+                // ->setCreatedBy($user)
+                // ->setUpdatedBy($user)
+                ->setUpdatedAt(new \DateTime());
+
+            $this->manager->persist($service);
+            $this->manager->flush();
+
+            $this->addFlash("success", "Le service a été créé.");
+
+            return $this->redirectToRoute("service_edit", ["id" => $service->getId()]);
+        }
+
+        return $this->render("app/service.html.twig", [
+            "form" => $form->createView(),
+            "edit_mode" => false
+        ]);
+    }
+
     /**
      * Editer la fiche du service
      * 
-     * @Route("/service/{id}", name="service_show", methods="GET|POST")
+     * @Route("/service/{id}", name="service_edit", methods="GET|POST")
      *  @return Response
      */
     public function editService(Service $service, Request $request): Response
@@ -82,7 +121,7 @@ class ServiceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // $service->setUpdatedAt(new \DateTime())
+            $service->setUpdatedAt(new \DateTime());
             //     ->setUpdatedBy($this->security->getservice());
 
             $this->manager->flush();

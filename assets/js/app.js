@@ -30,6 +30,17 @@ $(function () {
     $("[data-toggle='popover']").popover()
 });
 
+// Smooth Scroll animation
+$(document).ready(function ($) {
+    $("a[href^='#']").on("click", function (e) {
+        e.preventDefault();
+        let target = $(this).attr("href");
+        $("html, body").stop().animate({
+            scrollTop: $(target).height()
+        }, 1000);
+    });
+});
+
 // Requête Ajax
 let ajaxRequest = new AjaxRequest();
 

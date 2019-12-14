@@ -74,7 +74,7 @@ class SupportController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function newSupport(GroupPeople $groupPeople, SupportGroupRepository $repo, Request $request): Response
+    public function createSupport(GroupPeople $groupPeople, SupportGroupRepository $repo, Request $request): Response
     {
         $supportGroup = new SupportGroup();
 

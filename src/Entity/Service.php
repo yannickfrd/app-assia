@@ -98,6 +98,21 @@ class Service
      */
     private $createdAt;
 
+    // /**
+    //  * @ORM\ManyToOne(targetEntity="App\Entity\User")
+    //  */
+    // private $createdBy;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $updatedBy;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Space", mappedBy="service")
      */
@@ -140,6 +155,42 @@ class Service
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }

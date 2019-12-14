@@ -53,9 +53,47 @@ class PoleController extends AbstractController
     }
 
     /**
+     * Créer un pôle
+     * 
+     * @Route("/pole/new", name="pole_new", methods="GET|POST")
+     *  @return Response
+     */
+    public function createPole(Pole $pole = null, Request $request): Response
+    {
+        $pole = new Pole();
+
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $form = $this->createForm(PoleType::class, $pole);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user = $this->security->getUser();
+
+            $pole->setCreatedAt(new \DateTime())
+                // ->setCreatedBy($user)
+                // ->setUpdatedBy($user)
+                ->setUpdatedAt(new \DateTime());
+
+            $this->manager->persist($pole);
+            $this->manager->flush();
+
+            $this->addFlash("success", "Le pôle a été créé.");
+
+            return $this->redirectToRoute("pole_edit", ["id" => $pole->getId()]);
+        }
+
+        return $this->render("app/pole.html.twig", [
+            "form" => $form->createView(),
+            "edit_mode" => false
+        ]);
+    }
+
+    /**
      * Editer la fiche du pôle
      * 
-     * @Route("/pole/{id}", name="pole_show", methods="GET|POST")
+     * @Route("/pole/{id}", name="pole_edit", methods="GET|POST")
      *  @return Response
      */
     public function editPole(Pole $pole, Request $request): Response

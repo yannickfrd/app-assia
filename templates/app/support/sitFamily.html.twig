@@ -28,10 +28,11 @@
                     <tr>
                         <th scope="row"></th>
                         <td class="px-1 align-middle">{{ person.firstname }} {{ person.lastname }}</td>
-                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childcareSchool) }}</td>
-                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childcareSchoolLocation) }}</td>
-                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childToHost) }}</td>
-                        <td class="px-1">{{ form_widget(supportPerson.sitFamilyPerson.childDependance) }}</td>
+                        <td class="px-1 w-min-150">{{ form_widget(supportPerson.sitFamilyPerson.childcareSchool) }}</td>
+                        <td class="px-1 w-min-150">
+                            {{ form_widget(supportPerson.sitFamilyPerson.childcareSchoolLocation) }}</td>
+                        <td class="px-1 w-min-200">{{ form_widget(supportPerson.sitFamilyPerson.childToHost) }}</td>
+                        <td class="px-1 w-min-200">{{ form_widget(supportPerson.sitFamilyPerson.childDependance) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

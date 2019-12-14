@@ -189,9 +189,14 @@ class User implements UserInterface
     private $referent2Support;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="createdBy")
      */
-    private $notes;
+    private $notesCreated;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="updatedBy")
+     */
+    private $notesUpdated;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="user")
@@ -207,7 +212,7 @@ class User implements UserInterface
         $this->userConnections = new ArrayCollection();
         $this->referentSupport = new ArrayCollection();
         $this->referent2Support = new ArrayCollection();
-        $this->notes = new ArrayCollection();
+        $this->notesCreated = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
     }
 
@@ -688,16 +693,16 @@ class User implements UserInterface
     /**
      * @return Collection|Note[]
      */
-    public function getNotes(): Collection
+    public function getNotesCreated(): Collection
     {
-        return $this->notes;
+        return $this->notesCreated;
     }
 
     public function addNote(Note $note): self
     {
-        if (!$this->notes->contains($note)) {
-            $this->notes[] = $note;
-            $note->setUser($this);
+        if (!$this->notesCreated->contains($note)) {
+            $this->notesCreated[] = $note;
+            $note->setCreatedBy($this);
         }
 
         return $this;
@@ -705,11 +710,11 @@ class User implements UserInterface
 
     public function removeNote(Note $note): self
     {
-        if ($this->notes->contains($note)) {
-            $this->notes->removeElement($note);
+        if ($this->notesCreated->contains($note)) {
+            $this->notesCreated->removeElement($note);
             // set the owning side to null (unless already changed)
-            if ($note->getUser() === $this) {
-                $note->setUser(null);
+            if ($note->getCreatedBy() === $this) {
+                $note->setCreatedBy(null);
             }
         }
 

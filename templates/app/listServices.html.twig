@@ -47,7 +47,7 @@
                     <tr>
                         <th scope="row">
                             {% if is_granted("EDIT", service) %}
-                            <a href="{{ path('service_show', {'id':service.id}) }}"
+                            <a href="{{ path('service_edit', {'id':service.id}) }}"
                                 class="btn btn-{{ theme_color }}  btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
@@ -58,7 +58,7 @@
                             {% endif %}
                         </th>
                         <td>{{ service.name }}</td>
-                        <td><a href="{{ path('pole_show', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">
+                        <td><a href="{{ path('pole_edit', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">
                                 {{ service.pole.name }}</a>
                         </td>
                         <td>{{ service.phone }}</td>

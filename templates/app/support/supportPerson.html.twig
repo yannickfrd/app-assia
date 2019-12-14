@@ -3,16 +3,13 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set group_people = form.vars.value.groupPeople %}
+{% set support = form.vars.value %}
 
 {% block title %}Suivi social | Esperer95-app{% endblock %}
-
-{% block stylesheets %}{% endblock %}
 
 {% block body %}
 
 <div class="container">
-
-  {% set support = form.vars.value %}
 
   <h1 class="h2 mb-3">Suivi social</h1>
 
@@ -29,17 +26,16 @@
   {% else %}
   <div class="mb-4"></div>
   {% endif %}
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="text-{{ theme_color }}" 
-          href="{{ path('group_people_show', {'id': group_people.id}) }}"><span 
-          class="fas fa-users mr-2"></span>Fiche groupe <span 
-                    class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
-        <li class="breadcrumb-item"><a class="text-{{ theme_color }}" 
-          href="{{ path('support_edit', {'id':support.id }) }}">Fiche de suivi</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Personnes rattachées au suivi social</li>
-      </ol>
-    </nav>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+          href="{{ path('group_people_show', {'id': group_people.id}) }}"><span class="fas fa-users mr-2"></span>Fiche
+          groupe <span class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+      <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+          href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Personnes rattachées au suivi social</li>
+    </ol>
+  </nav>
 
   {{ form_start(form) }}
 
@@ -96,8 +92,9 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-          <a href="{{ path('support_add_people', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2"><span 
-            class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe au suivi</a>
+        <a href="{{ path('support_add_people', {'id':support.id}) }}"
+          class="btn btn-{{ theme_color }} btn-sm mb-2"><span class="fas fa-plus-square mr-2"></span>Ajouter les autres
+          personnes du groupe au suivi</a>
         <div class="mb-4 float-right">
           <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Enregistrer">
         </div>

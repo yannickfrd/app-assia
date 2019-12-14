@@ -6,7 +6,7 @@ use App\Entity\RolePerson;
 
 use App\Form\Group\GroupPeopleType;
 use App\Form\Person\PersonType;
-use App\Form\Utils\Choices;;
+use App\Form\Utils\Choices;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

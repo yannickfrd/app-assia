@@ -2,11 +2,9 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Fiche de groupe | Esperer95-app{% endblock %}
-
-{% block stylesheets %}{% endblock %}
-
 {% set group_people = form.vars.value %}
+
+{% block title %}Fiche de groupe | Esperer95-app{% endblock %}
 
 {% block body %}
 
@@ -22,13 +20,13 @@
         </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page"><span 
-                class="fas fa-users mr-2"></span>Fiche groupe</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users mr-2"></span>Fiche
+                    groupe</a></li>
             </ol>
         </nav>
     </div>
 
-        {{ form_start(form) }}
+    {{ form_start(form) }}
     <section>
         {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
@@ -36,8 +34,8 @@
         <div class="row">
             <div class="col-md-12 mb-3">
                 <div class="float-right">
-                    <button type="submit" name="updateInfo" 
-                        class="btn btn-{{ theme_color }} shadow">Mettre à jour</button>
+                    <button type="submit" name="updateInfo" class="btn btn-{{ theme_color }} shadow">Mettre à
+                        jour</button>
                 </div>
             </div>
         </div>
@@ -48,8 +46,8 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="th-w-20 align-middle"></th>
-                                <th scope="col" class="th-w-20"
-                                    data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
+                                <th scope="col" class="th-w-20" data-placement="bottom"
+                                    title="Demandeur/euse principal·e">DP</th>
                                 <th scope="col" class="th-w-150 align-middle">Prénom</th>
                                 <th scope="col" class="th-w-150 align-middle">Nom</th>
                                 <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
@@ -85,8 +83,10 @@
                                 <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                 <td class="px-1 align-middle">
                                     <button class="js-remove btn btn-danger shadow"
-                                        data-url="{{ path('remove_person', {'id':form.vars.value.id, 'person_id':form_person.vars.value.person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Retirer la personne du groupe"><span class="fas fa-user-times"></span></button>
+                                        data-url="{{ path('remove_person', {'id':group_people.id, 'person_id': person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                        data-toggle="modal" data-target="#modal-block" data-placement="bottom"
+                                        title="Retirer la personne du groupe"><span
+                                            class="fas fa-user-times"></span></button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -102,7 +102,7 @@
                     <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
                 <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
                     class="btn btn-secondary btn-sm my-2">
-                    <span class="fas fa-plus-square mr-2"></span>Enregistrer une naissance</a>
+                    <span class="fas fa-plus-square mr-2"></span>Naissance</a>
             </div>
         </div>
     </section>

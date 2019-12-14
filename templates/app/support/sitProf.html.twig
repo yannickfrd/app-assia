@@ -54,8 +54,11 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-md-6">{{ form_row(supportPerson.sitProf.transportMeans) }}</div>
-                <div class="col-md-6">{{ form_row(supportPerson.sitProf.rqth) }}</div>
+                <div class="col-md-6">
+                    {{ form_row(supportPerson.sitProf.transportMeans) }}</div>
+                <div class="col-md-6" data-placement="bottom"
+                    title="Reconnaissance de la qualité de travailleur handicapé">
+                    {{ form_row(supportPerson.sitProf.rqth) }}</div>
             </div>
             <div class="form-group row">
                 {# {{ form_label(supportPerson.sitProf.commentSitProf) }} #}
