@@ -1,12 +1,10 @@
 import AjaxRequest from "../utils/ajaxRequest";
 
-import ShowNote from "./showNote";
+import EditNote from "./editNote";
 
 let ajaxRequest = new AjaxRequest();
 
-let showNote = new ShowNote(ajaxRequest);
-
-
+let editNote = new EditNote(ajaxRequest);
 
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 

@@ -27,6 +27,50 @@ section {
     opacity: .5;
 }
 
+/* Loader spinner */
+#loader {
+    position: fixed;
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#loader .fas {
+    font-size: 2.5em;
+    opacity: 0.5;
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    34% {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+// Animation de synchronisation
+.fas.fa-sync-alt {
+    animation: sync 1s linear infinite;
+}
+
+@keyframes sync {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 // Pagination
 .page-item.active .page-link {
     background-color: var(--primary);
@@ -40,7 +84,6 @@ section {
 #logo-mail {
     max-width: 200px;
 }
-
 
 .fa-phone {
     transform: rotate(160deg);
@@ -150,20 +193,20 @@ th.required:after {
 
 /* Notifications */
 .msg-flash {
-    min-height: 80px;
+    // min-height: 80px;
     opacity: 0.9;
 }
 
 .tooltip-inner {
-    /* white-space: pre-line; */
+    // white-space: pre-line;
     // max-width: 300px;
     // width: 250px;
 }
 
 #scroll-top {
     position: fixed;
-    right: 20px;
-    bottom: 20px;
+    right: 16px;
+    bottom: 16px;
     width: 50px;
     height: 40px;
     line-height: 35px;
@@ -188,7 +231,9 @@ th.required:after {
     transition: all 0.5s ease;
 }
 
-
+.cke_contents {
+    min-height: 250px !important;
+}
 
 /* Gestion de dépassement des notes */
 .note-content {
@@ -225,7 +270,6 @@ button.btn-outline-secondary a:hover {
     color: $light !important;
 }
 
-
 .page-item.active .page-link {
     background-color: var(--gray);
     border-color: var(--gray);
@@ -239,8 +283,26 @@ button.btn-outline-secondary a:hover {
     color: var(--dark);
 }
 
-@media (max-width: 992px) {
-    body {
-        // padding-top: 80px;
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+    .cke_contents {
+        min-height: 350px !important;
     }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+    // .cke_contents {
+    //     min-height: 400px !important;
+    // }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+    // .cke_contents {
+    //     min-height: 400px !important;
+    // }
 }

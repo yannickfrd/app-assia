@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
         integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags("app") }}
     {% block stylesheets %}{% endblock %}
 
     <link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
@@ -27,6 +27,10 @@
 {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %}
 
 <body>
+    <div id="loader" data-value="{{ theme_color }}">
+        <span class="fas fa-circle-notch text-{{ theme_color }}"></span>
+    </div>
+
     <main class="min-vh-100">
         <header id="header">
             <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
@@ -46,12 +50,6 @@
                                 <span class="fas fa-home mr-1"></span>Mon espace
                             </a>
                         </li>
-                        {#<li class="nav-item">
-                            <a class="nav-link text-light" href="{{ path("list_people") }}">Personnes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="{{ path("list_groups_people") }}">Ménages</a>
-                        </li>#}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuSupports"
                                 role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -127,9 +125,8 @@
             </nav>
         </header>
 
-        <div class="position-fixed container-fluid fixed-bottom">
-            <div id="js-notif-container" class="container" aria-live="polite" aria-atomic="true">
-            </div>
+        <div class="position-fixed fixed-bottom container-fluid">
+            <div id="js-notif-container" class="container" aria-live="polite" aria-atomic="true"></div>
         </div>
 
         {% block body %}{% endblock %}
@@ -140,7 +137,7 @@
 
     <footer class="bg-dark p-4 text-light">
         <p class="mb-0"><b>Esperer 95 © 2019. Tous droits réservés.</b><br>
-            www.esperer-95.org<br>
+            <a href="www.esperer-95.org" class="text-{{ theme_color }}">www.esperer-95.org</a><br>
             <span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février
                 1979.</span>
         </p>

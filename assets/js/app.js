@@ -22,12 +22,17 @@ require("bootstrap-datepicker");
 import AjaxRequest from "./utils/ajaxRequest";
 import SearchPerson from "./searchPerson";
 
+// Masque le loader lorsque le DOM est chargé
+window.onload = function () {
+    document.getElementById("loader").classList.add("d-none");
+};
+
 $(function () {
-    $("[data-toggle='tooltip']").tooltip()
+    $("[data-toggle='tooltip']").tooltip();
 });
 
 $(function () {
-    $("[data-toggle='popover']").popover()
+    $("[data-toggle='popover']").popover();
 });
 
 // Smooth Scroll animation

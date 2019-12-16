@@ -14,18 +14,20 @@ export default class MessageFlash {
     init() {
         this.msg = document.createElement("div");
         this.msg.className = "js-msg-content rounded";
-        this.msg.innerHTML = `
-                <div id="js-msg-flash" class="msg-flash alert alert-${this.alert} alert-dismissible mb-2 fade show"
+        this.msg.innerHTML =
+            `<div id="js-msg-flash" class="msg-flash alert alert-${this.alert} alert-dismissible fade show align-items-center"
                     role="alert" aria-live="assertive" aria-atomic="true">
-                    <i class="fas fa-info-circle ml-1"></i>
+                <div class="">
+                    <i class="fas fa-info-circle mr-2"></i>
                     <span>${this.message}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
-            `
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>`
         this.timerID = setInterval(this.timer.bind(this), 1000);
-        this.msgFlashContentElt.appendChild(this.msg);
+        // this.msgFlashContentElt.appendChild(this.msg);
+        this.msgFlashContentElt.insertBefore(this.msg, this.msgFlashContentElt.firstChild);
     }
 
     timer() {

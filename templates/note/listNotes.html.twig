@@ -1,7 +1,6 @@
 {% extends "base.html.twig" %}
 
 {% form_theme form_search "bootstrap_4_layout.html.twig" %}
-
 {% form_theme form "bootstrap_4_layout.html.twig" %}
 
 {% block title %}Notes sociales | Esperer95-app {% endblock %}
@@ -25,21 +24,24 @@
                 </ol>
             </nav>
             {% for supportPerson in support.supportPerson %}
-            <span class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ supportPerson.person.fullname }}</span>
+            <span
+                class="btn btn-outline-{{ theme_color }} btn-sm mb-2 shadow-sm">{{ supportPerson.person.fullname }}</span>
             {% endfor %}
         </div>
 
         <hr>
 
-        <div class="row align-items-baseline mb-3">
-            <div class="col-md-4 count align-middle">
+        <div class="row">
+            <div class="col-md-6 mb-1">
                 <button id="js-new-note" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
                     data-target="#modal-block" data-placement="bottom" title="Créer une nouvelle note"><span
                         class="fas fa-plus-square mr-2"></span>Nouvelle note</button>
-                <span class="align-middle">Résultat : {{ notes.getTotalItemCount | number_format(0,'', ' ')}}
-                    note(s)</span>
+                <div class="d-inline align-middle">Résultat :
+                    <span id="count-notes">{{ notes.getTotalItemCount | number_format(0,'', ' ')}}</span>
+                    note{% if notes.getTotalItemCount > 0 %}s{% endif %}.
+                </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="navigation">{{ knp_pagination_render(notes) }}</div>
             </div>
         </div>
@@ -51,31 +53,27 @@
                         <div class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch"
                             data-toggle="collapse" data-target="#collapseSearch" aria-expanded="true"
                             aria-controls="collapseSearch">
-                            <h2 class="h5">Recherche
-                                <div class="float-right"><span class="fa fa-chevron-down"></span></div>
+                            <h2 class="h5">Recherche<div class="float-right">
+                                    <span class="fa fa-chevron-down"></span></div>
                             </h2>
                         </div>
                         <div id="collapseSearch" class="collapse show float-right" aria-labelledby="headingSearch"
                             data-parent="#accordionSearch">
-
                             {{ form_start(form_search) }}
                             <div class="form-inline justify-content-md-center align-items-end">
-
                                 {% if notes.getTotalItemCount %}
                                 <div class="form-group col-auto my-1 px-1">
-                                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
+                                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
                                         {{ knp_pagination_sortable(notes, "Titre", "n.title") }}
                                     </button>
-                                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
+                                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
                                         {{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}
                                     </button>
-                                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow">
+                                    <button class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
                                         {{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
                                     </button>
                                 </div>
                                 {% endif %}
-
-
                                 <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.content) }}</div>
                                 <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
                                 <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
@@ -89,43 +87,42 @@
                                 </div>
                             </div>
                             {{ form_end(form_search, {"render_rest": false}) }}
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-
-        {% for note in notes %}
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div id="note-{{ note.id }}" class="card">
+        <div id="container-notes" class="row">
+            {% for note in notes %}
+            <div id="note-{{ note.id }}" class="col-sm-12 col-lg-6 mb-4 js-note">
+                <div class="card h-100 shadow cursor-pointer" data-toggle="modal" data-target="#modal-block"
+                    data-placement="bottom" title="Modifier la note">
                     <div class="card-header">
-                        <h5 class="card-title"><a class="text-{{ theme_color }}"
-                                href="{{ path("note_edit", {'id':note.id}) }}">{{ note.title }}</a></h5>
-                        <span class="js-noteType" data-value={{ note.type }}>
+                        <h3 class="card-title h5 text-{{ theme_color }}">{{ note.title }}</h3>
+                        <span class="js-note-type" data-value={{ note.type }}>
                             {{ note.typeList }} </span>
-                        <span class="js-noteStatus" data-value={{ note.status }}>
+                        <span class="js-note-status" data-value={{ note.status }}>
                             ({{ note.statusList }})</span>
-                        <span class="small text-secondary"> | Créé le {{note.createdAt | date("d/m/Y à H:i") }} par
+                        <span class="small text-secondary js-note-created"> | Créé le
+                            {{note.createdAt | date("d/m/Y à H:i") }} par
                             {{ note.createdBy.fullname }}
+                        </span>
+                        <span class="small text-secondary js-note-updated">
                             {% if note.updatedAt != note.createdAt %}
                             (modifié le {{ note.updatedAt | date("d/m/Y à H:i") }}
                             par {{ note.updatedBy.fullname }})
                             {% endif %}
                         </span>
                     </div>
-                    <div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-block"
-                        data-placement="bottom" title="Modifier la note">
+                    <div class="card-body note-content">
                         <div class="card-text">{{ note.content | raw }}</div>
                         <span class="note-fadeout"></span>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         <div class="navigation">
             {{ knp_pagination_render(notes) }}
         </div>
@@ -133,7 +130,6 @@
 </div>
 
 {% include "note/modalNote.html.twig" %}
-
 
 {% endblock %}
 

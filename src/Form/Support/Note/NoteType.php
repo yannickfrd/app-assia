@@ -21,8 +21,7 @@ class NoteType extends AbstractType
                 "attr" => [
                     "placeholder" => "Title",
                     "class" => "font-weight-bold"
-                ],
-                "required" => true
+                ]
             ])
             ->add("content", CKEditorType::class, [
                 "config" => [
@@ -33,11 +32,9 @@ class NoteType extends AbstractType
             ])
             ->add("type", ChoiceType::class, [
                 "choices" => Choices::getchoices(Note::TYPE),
-                "placeholder" => "-- Select --",
             ])
             ->add("status", ChoiceType::class, [
                 "choices" => Choices::getchoices(Note::STATUS),
-                "placeholder" => "-- Select --",
             ]);
     }
 

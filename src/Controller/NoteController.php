@@ -6,10 +6,10 @@ use App\Entity\Note;
 use App\Entity\NoteSearch;
 use App\Entity\SupportGroup;
 
-use App\Repository\NoteRepository;
 use App\Form\Support\Note\NoteType;
-
 use App\Form\Support\Note\NoteSearchType;
+
+use App\Repository\NoteRepository;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,44 +17,44 @@ use Symfony\Component\Security\Core\Security;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class NoteController extends AbstractController
 {
     private $manager;
     private $repo;
-    private $security;
+    private $currentUser;
 
     public function __construct(ObjectManager $manager, NoteRepository $repo, Security $security)
     {
         $this->manager = $manager;
         $this->repo = $repo;
         $this->security = $security;
+        $this->currentUser = $security->getUser();
     }
-
 
     /**
      * Liste des notes
      * 
      * @Route("support/{id}/note/list", name="note_list")
+     *
+     * @param SupportGroup $supportGroup
+     * @param NoteSearch $noteSearch
+     * @param Note $note
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
     public function listPeople(SupportGroup $supportGroup, NoteSearch $noteSearch = null, Note $note = null, Request $request, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+
         $noteSearch = new NoteSearch;
 
         $formSearch = $this->createForm(NoteSearchType::class, $noteSearch);
         $formSearch->handleRequest($request);
 
-        $notes =  $paginator->paginate(
-            $this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        $notes->setCustomParameters([
-            "align" => "right", // align pagination
-        ]);
+        $notes =  $this->paginate($paginator, $supportGroup, $noteSearch, $request);
 
         if ($note == null) {
             $note = new Note();
@@ -65,24 +65,7 @@ class NoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user = $this->security->getUser();
-
-            $note->setSupportGroup($supportGroup)
-                ->setCreatedAt(new \DateTime())
-                ->setCreatedBy($user)
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-
-            $this->manager->persist($note);
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "La note sociale a été enregistrée.");
-
-            return $this->redirectToRoute("note_list", [
-                "id" => $supportGroup->getId(),
-                "notes" => $notes ?? null,
-            ]);
+            return $this->createNote($supportGroup, $note);
         }
 
         return $this->render("note/listNotes.html.twig", [
@@ -94,116 +77,108 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("support/{id}/note/create", name="note_create")
-     *
-     * @param Note $note
-     * @param Request $request
-     * @return Response
-     */
-    public function createNote(SupportGroup $supportGroup, Note $note = null, Request $request): Response
-    {
-        $note = new Note();
-
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $user = $this->security->getUser();
-
-            $note->setSupportGroup($supportGroup)
-                ->setCreatedAt(new \DateTime())
-                ->setCreatedBy($user)
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-
-            $this->manager->persist($note);
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "La note sociale a été enregistrée.");
-
-            return $this->redirectToRoute("note_list", [
-                "id" => $supportGroup->getId(),
-                "notes" => $notes ?? null,
-            ]);
-        }
-
-        return $this->render("note/note.html.twig", [
-            "support" => $supportGroup,
-            "form" => $form->createView(),
-            "edit_mode" => false
-        ]);
-    }
-
-    /**
+     * Modifie la note
+     * 
      * @Route("note/{id}/edit", name="note_edit")
-     *
      * @param Note $note
      * @param Request $request
      * @return Response
      */
     public function editNote(Note $note, Request $request): Response
     {
+        $this->denyAccessUnlessGranted("EDIT", $note->getSupportGroup());
+
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user = $this->security->getUser();
-
-            $note->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "La note sociale a été modifiée.");
-
-            return $this->redirectToRoute("note_list", [
-                "id" => $note->getSupportGroup()->getId()
-            ]);
+            return $this->updateNote($note, "update");
         }
-
-        return $this->render("note/note.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
-        ]);
     }
 
     /**
-     * @Route("note/{id}/show", name="note_show")
-     *
+     * Supprime la note
+     * 
+     * @Route("note/{id}/delete", name="note_delete")
      * @param Note $note
-     * @param Request $request
      * @return Response
      */
-    public function showNote(Note $note, Request $request, ValidatorInterface $validator): Response
+    public function deleteNote(Note $note): Response
     {
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
+        $this->denyAccessUnlessGranted("EDIT", $note->getSupportGroup());
 
-        $now = new \DateTime();
+        $this->manager->remove($note);
+        $this->manager->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $note->setUpdatedAt($now)
-                ->setUpdatedBy($this->security->getUser());
-
-            $this->manager->flush();
-
-            $alert = "success";
-            $msg[] = "Les modifications ont été enregistrées.";
-        } else {
-            $alert = "danger";
-            $errors = $validator->validate($form);
-            foreach ($errors as $error) {
-                $msg[] = $error->getMessage();
-            }
-        }
         return $this->json([
             "code" => 200,
-            "note" => $note,
-            "alert" => $alert,
-            "msg" => $msg,
+            "action" => "delete",
+            "alert" => "warning",
+            "msg" => "La note sociale a été supprimée.",
+        ], 200);
+    }
+
+    // Pagination de la liste des notes
+    protected function paginate($paginator, $supportGroup, $noteSearch, $request)
+    {
+        $notes =  $paginator->paginate(
+            $this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch),
+            $request->query->getInt("page", 1), // page number
+            6 // limit per page
+        );
+        $notes->setCustomParameters([
+            "align" => "right", // align pagination
+        ]);
+
+        return $notes;
+    }
+
+    // Crée la note une fois le formulaire soumis et validé
+    protected function createNote($supportGroup, $note)
+    {
+        $note->setSupportGroup($supportGroup)
+            ->setCreatedAt(new \DateTime())
+            ->setCreatedBy($this->currentUser)
+            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->persist($note);
+        $this->manager->flush();
+
+        return $this->json([
+            "code" => 200,
+            "action" => "create",
+            "alert" => "success",
+            "msg" => "La note sociale a été enregistrée.",
+            "data" => [
+                "noteId" => $note->getId(),
+                "type" => $note->getTypeList(),
+                "status" => $note->getStatusList(),
+                "editInfo" => "| Créé le " . date_format($note->getCreatedAt(), "d/m/Y à H:i") .  " par " . $note->getCreatedBy()->getFullname()
+            ]
+        ], 200);
+    }
+
+    // Met à jour la note une fois le formulaire soumis et validé
+    protected function updateNote($note, $typeSave)
+    {
+        $note->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->flush();
+
+        return $this->json([
+            "code" => 200,
+            "action" => $typeSave,
+            "alert" => "success",
+            "msg" => "La note sociale a été modifiée.",
+            "data" => [
+                "noteId" => $note->getId(),
+                "type" => $note->getTypeList(),
+                "status" => $note->getStatusList(),
+                "editInfo" => "(modifié le " . date_format($note->getUpdatedAt(), "d/m/Y à H:i") . " par " . $note->getUpdatedBy()->getFullname() . ")"
+            ]
         ], 200);
     }
 }
