@@ -95,6 +95,11 @@ class NoteController extends AbstractController
 
             return $this->updateNote($note, "update");
         }
+
+        return $this->render("note/note.html.twig", [
+            "form" => $form->createView(),
+            "edit_mode" => true,
+        ]);
     }
 
     /**

@@ -3,7 +3,7 @@ export default class SearchPerson {
 
     constructor(ajaxRequest, lengthSearch, time) {
         this.ajaxRequest = ajaxRequest;
-        this.searchElt = document.getElementById("search");
+        this.searchElt = document.getElementById("search-person");
         this.resultsSearchElt = document.getElementById("results_search");
         this.lengthSearch = lengthSearch;
         this.time = time;

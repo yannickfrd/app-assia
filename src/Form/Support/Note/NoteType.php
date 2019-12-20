@@ -11,6 +11,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class NoteType extends AbstractType
 {
@@ -23,18 +24,25 @@ class NoteType extends AbstractType
                     "class" => "font-weight-bold"
                 ]
             ])
-            ->add("content", CKEditorType::class, [
-                "config" => [
-                    "uiColor" => "#fafafafa",
-                    // "toolbar" => "full"
-                ],
-                // "required" => true
+            ->add("content", null, [
+                "attr" => [
+                    "class" => "d-none"
+                ]
             ])
+            // ->add("content", CKEditorType::class, [
+            //     "config" => [
+            //         // "uiColor" => "#fafafafa",
+            //         // "toolbar" => "full"
+            //     ],
+            //     // "required" => true
+            // ])
             ->add("type", ChoiceType::class, [
                 "choices" => Choices::getchoices(Note::TYPE),
+                "placeholder" => "-- Type --"
             ])
             ->add("status", ChoiceType::class, [
                 "choices" => Choices::getchoices(Note::STATUS),
+                "placeholder" => "-- Statut --"
             ]);
     }
 

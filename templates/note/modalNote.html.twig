@@ -1,5 +1,3 @@
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalNote" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -9,11 +7,25 @@
                     <div class="col-12">{{ form_widget(form.title) }}</div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-md-12">{{ form_widget(form.content) }}</div>
+                    <div class="col-md-12">
+                        <div id="toolbar-container" class="shadow-sm"></div>
+                        <div id="editor" class="bg-white border shadow-sm"></div>
+                        {{ form_widget(form.content) }}
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">{{ form_row(form.type) }}</div>
-                    <div class="col-md-6">{{ form_row(form.status) }}</div>
+                <div class="form-group row">
+                    <div class="col-sm-2 d-none d-sm-block">
+                    {{ form_label(form.type) }}
+                    </div>  
+                    <div class="col-6 col-sm-4">
+                    {{ form_widget(form.type) }}
+                    </div>  
+                    <div class="col-sm-2 d-none d-sm-block">
+                    {{ form_label(form.status) }}
+                    </div>
+                    <div class="col-6 col-sm-4">
+                    {{ form_widget(form.status) }}
+                    </div>
                 </div>
                 {{ form_row(form._token) }}
             </div>

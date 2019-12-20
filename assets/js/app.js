@@ -24,7 +24,16 @@ import SearchPerson from "./searchPerson";
 
 // Masque le loader lorsque le DOM est chargé
 window.onload = function () {
+    // Stop spinner loader 
     document.getElementById("loader").classList.add("d-none");
+    // Smooth Scroll animation
+    document.getElementById("scroll-top").addEventListener("click", function (e) {
+        e.preventDefault();
+        let target = this.getAttribute("href");
+        $("html, body").stop().animate({
+            scrollTop: $(target).height()
+        }, 1000);
+    });
 };
 
 $(function () {
@@ -33,17 +42,6 @@ $(function () {
 
 $(function () {
     $("[data-toggle='popover']").popover();
-});
-
-// Smooth Scroll animation
-$(document).ready(function ($) {
-    $("a[href^='#']").on("click", function (e) {
-        e.preventDefault();
-        let target = $(this).attr("href");
-        $("html, body").stop().animate({
-            scrollTop: $(target).height()
-        }, 1000);
-    });
 });
 
 // Requête Ajax

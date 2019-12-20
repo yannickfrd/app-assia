@@ -1,11 +1,15 @@
 import MessageFlash from "../utils/messageFlash";
+import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
+import language from "@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js";
 
-export default class EditNote {
+export default class ListNotes {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
         this.noteElts = document.querySelectorAll(".js-note");
         this.modalForm = document.querySelector(".modal-content");
+        this.noteContentElt = document.getElementById("note_content");
+        this.editorElt = document.getElementById("editor");
         this.newNoteBtn = document.getElementById("js-new-note");
         this.formNoteElt = document.querySelector("form[name=note]");
         this.btnSaveElt = document.getElementById("js-btn-save");
@@ -17,10 +21,13 @@ export default class EditNote {
         this.countNotesElt = document.getElementById("count-notes");
         this.autoSave = false;
         this.count = 0;
+        this.editor;
         this.init();
     }
 
     init() {
+        this.ckEditor();
+
         this.newNoteBtn.addEventListener("click", this.newNote.bind(this));
 
         this.noteElts.forEach(noteElt => {
@@ -45,13 +52,33 @@ export default class EditNote {
         }.bind(this));
     }
 
+    // Initialise CKEditor
+    ckEditor() {
+        DecoupledEditor
+            .create(document.querySelector("#editor"), {
+                toolbar: ["undo", "redo", "|", "fontFamily", "fontSize", "|", "bold", "italic", "underline", "highlight", "|", "heading", "alignment", "|", "bulletedList", "numberedList", "|", "link", "blockQuote", "imageUpload", "|", "insertTable"],
+                language: {
+                    ui: "fr",
+                    content: "fr"
+                },
+            })
+            .then(editor => {
+                this.editor = editor;
+                const toolbarContainer = document.querySelector("#toolbar-container");
+                // console.log(Array.from(editor.ui.componentFactory.names()));
+                toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
     newNote() {
         this.modalForm.querySelector("form").action = "";
         this.modalForm.querySelector("#note_title").value = "";
-        let bodyElt = document.querySelector("#cke_1_contents>iframe").contentWindow.document.querySelector("body");
-        bodyElt.innerHTML = "";
+        this.editor.setData("");
         this.btnDeleteElt.classList.replace("d-block", "d-none");
-        bodyElt.addEventListener("keydown", this.countKeyDown.bind(this));
+        this.editorElt.addEventListener("keydown", this.countKeyDown.bind(this));
         this.timerAutoSave();
     }
 
@@ -71,13 +98,13 @@ export default class EditNote {
         let statusValue = noteElt.querySelector(".js-note-status").getAttribute("data-value");
         this.selectOption(this.modalForm.querySelector("#note_status"), statusValue);
 
-        let bodyElt = document.querySelector("#cke_1_contents>iframe").contentWindow.document.querySelector("body");
-        bodyElt.innerHTML = this.contentNoteElt.innerHTML;
+        this.editor.setData(this.contentNoteElt.innerHTML);
 
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         this.btnDeleteElt.href = "/note/" + this.cardId + "/delete";
 
-        bodyElt.addEventListener("keydown", this.countKeyDown.bind(this));
+        this.editorElt.addEventListener("keydown", this.countKeyDown.bind(this));
+
         this.timerAutoSave();
     }
 
@@ -87,7 +114,7 @@ export default class EditNote {
 
     timerAutoSave() {
         clearInterval(this.countdownID);
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 5 * 60 * 1000);
+        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 5 * 1000);
         if (this.count > 10) {
             this.autoSave = true;
             this.count = 0;
@@ -128,8 +155,8 @@ export default class EditNote {
     }
 
     saveNote() {
-        if (CKEDITOR.instances.note_content.getData() != "") {
-            CKEDITOR.instances.note_content.updateElement();
+        if (this.editor.getData() != "") {
+            this.noteContentElt.textContent = this.editor.getData();
             let formData = new FormData(this.formNoteElt);
             let formToString = new URLSearchParams(formData).toString();
             this.animateLoader();
@@ -181,16 +208,16 @@ export default class EditNote {
         this.modalForm.querySelector("form").action = "/note/" + data.noteId + "/edit";
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         let title = this.modalForm.querySelector("#note_title").value;
-        let content = CKEDITOR.instances.note_content.getData();
+        let content = this.editor.getData();
 
         note.className = "col-sm-12 col-lg-6 mb-4 js-note";
         note.innerHTML =
             `<div class="card h-100 shadow">
                 <div class="card-header">
-                    <h5 class="card-title"><a class="text-${this.themeColor}" href="/note/${data.noteId}/edit">${title}</a></h5>
+                    <h3 class="card-title h5 text-${this.themeColor}">${title}</h3>
                     <span class="js-note-type" data-value="1">${data.type}</span>
                     <span class="js-note-status" data-value="1">(${data.status})</span>
-                    <span class="small text-secondary">${data.editInfo}</span>
+                    <span class="small text-secondary js-note-created">${data.editInfo}</span>
                     <span class="small text-secondary js-note-updated"></span>
                 </div>
                 <div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Modifier la note">
@@ -207,7 +234,7 @@ export default class EditNote {
 
     updateNote(data) {
         this.titleNoteElt.textContent = this.modalForm.querySelector("#note_title").value;
-        this.contentNoteElt.innerHTML = CKEDITOR.instances.note_content.getData();
+        this.contentNoteElt.innerHTML = this.editor.getData();
 
         let noteTypeElt = this.noteElt.querySelector(".js-note-type");
         noteTypeElt.textContent = data.type;
