@@ -9,12 +9,14 @@ Confirm new password: Confirmation nouveau mot de passe
 Department: Service
 Department name: Nom du service
 Email: Adresse email
+End: Fin
 End date: Date de fin
 Error: Erreur
 Family typology: Typologie familiale
 Firstname: Prénom
 Gender: Sexe
 Lastname: Nom
+Location: Lieu
 Name: Nom
 Nb people: Nb. de personnes
 NbPeople: Nb. pers.
@@ -31,6 +33,7 @@ Role: Rôle dans le groupe
 Search : Recherche...
 Select: Sélectionner
 Service name: Nom du service
+Start: Début
 Start date: Date de début
 Status: Statut
 Support access: Accès aux suivis sociaux du service

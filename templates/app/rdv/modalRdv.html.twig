@@ -1,0 +1,45 @@
+<div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalNote" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body pb-0">
+                {{ form_start(form) }}
+                <div class="form-group row">
+                    <div class="col-12">{{ form_widget(form.title) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 col-lg-2">{{ form_label(form.start) }}</div>
+                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.start) }}</div>
+                    <div class="col-4 col-lg-2">{{ form_label(form.end) }}</div>
+                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.end) }}</div>
+                    <div class="col-4 col-lg-2">{{ form_label(form.location) }}</div>
+                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.location) }}</div>
+                    <div class="col-4 col-lg-2">{{ form_label(form.status) }}</div>
+                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.status) }}</div>
+                </div>
+                {# <div class="form-group row">
+                    <div class="col-md-12">
+                        <div id="toolbar-container" class="shadow-sm"></div>
+                        <div id="editor" class="bg-white border shadow-sm"></div>
+                    </div>
+                </div> #}
+                <div class="form-group row">
+                    <div class="col-md-12">{{ form_widget(form.content) }}</div>
+                </div>
+                {{ form_row(form._token) }}
+            </div>
+            <div class="modal-footer d-block">
+                <div class="float-left d-flex">
+                    <a href="{{ path("rdv_delete", {'id':0 }) }}" id="modal-btn-delete" class="mr-3 btn btn-danger d-block"
+                        data-placement="bottom" title="Supprimer le rendez-vous"
+                        onclick="if(window.confirm('Voulez-vous vraiment supprimer cet rendez-vous ?', 'Demande de confirmation')){return true;}else{return false;}">Supprimer</a>
+                </div>
+                <div class="float-right">
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary"
+                        data-dismiss="modal">Annuler</button>
+                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>

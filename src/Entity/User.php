@@ -199,7 +199,7 @@ class User implements UserInterface
     private $notesUpdated;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="createdBy")
      */
     private $rdvs;
 
@@ -316,10 +316,12 @@ class User implements UserInterface
     }
 
     public function eraseCredentials()
-    { }
+    {
+    }
 
     public function getSalt()
-    { }
+    {
+    }
 
 
     public function getStatus(): ?int
@@ -733,7 +735,7 @@ class User implements UserInterface
     {
         if (!$this->rdvs->contains($rdv)) {
             $this->rdvs[] = $rdv;
-            $rdv->setUser($this);
+            $rdv->setCreatedBy($this);
         }
 
         return $this;
@@ -744,8 +746,8 @@ class User implements UserInterface
         if ($this->rdvs->contains($rdv)) {
             $this->rdvs->removeElement($rdv);
             // set the owning side to null (unless already changed)
-            if ($rdv->getUser() === $this) {
-                $rdv->setUser(null);
+            if ($rdv->getCreatedBy() === $this) {
+                $rdv->setCreatedBy(null);
             }
         }
 

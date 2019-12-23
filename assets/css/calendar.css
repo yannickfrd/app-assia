@@ -1,0 +1,78 @@
+.calendar-table {
+    width: 100%;
+    height: calc(100vh - 132px);
+}
+
+.calendar-header {
+    display: flex;
+    font-weight: bold;
+    border-bottom: 1px solid #cecfd1;
+}
+
+.calendar-header-col {
+    width: 14.285%;
+    padding: 4px;
+}
+
+.calendar-body {
+    position: relative;
+    height: calc(100% - 32px);
+}
+
+.calendar-week-row {
+    display: flex;
+    height: 20%;
+    border-bottom: 1px solid #cecfd1;
+}
+
+.calendar-4weeks .calendar-week-row {
+    height: 25%;
+}
+
+.calendar-6weeks .calendar-week-row {
+    height: 16.66%;
+}
+
+.calendar-week-number {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    padding-top: 0.25rem;
+    background-color: #f1f3f4;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.calendar-table .calendar-day-block {
+    position: relative;
+    width: 14.285%;
+    padding: 0.25rem;
+    border-right: 1px solid #cecfd1;
+    vertical-align: top;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.week-5days {
+    width: 20% !important;
+}
+
+.calendar-other-month {
+    opacity: 0.4;
+}
+
+.calendar-event,
+.calendar-others-events {
+    display: block;
+    width: 100%;
+    max-height: 18px;
+    padding-left: 0.20rem;
+    margin-bottom: 0.20rem;
+    border-radius: 0.25rem;
+    font-size: 75%;
+    font-weight: 400;
+    word-break: normal;
+    white-space: nowrap;
+    text-decoration-line: none !important;
+    cursor: pointer;
+}

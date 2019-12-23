@@ -2,43 +2,45 @@
 
  {% set id = "listRdv" %}
 
-{% block card_title %}Mes prochains rendez-vous{% endblock %}
+ {% block card_title %}Mes prochains rendez-vous{% endblock %}
 
-{% block card_body %}
+ {% block card_body %}
 
-<section>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover text-dark">
-            <thead>
-                <tr>
-                    <th scope="col" class="align-middle th-w-20"></th>
-                    <th scope="col" class="align-middle th-w-date">Date</th>
-                    <th scope="col" class="align-middle th-w-date">Heure</th>
-                    <th scope="col" class="align-middle th-50">Suivi concerné</th>
-                    <th scope="col" class="align-middle th-150">Lieu</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for rdv in app.user.rdvs|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
-                <tr>
-                    <th scope="row" class="align-middle">
-                        <a href="#" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                            title="Voir le suivi social"><span class="fas fa-eye"></span>
-                        </a>
-                    </th>
-                    <td class="align-middle">{{ rdv.createdAt| date("d/m/Y") }}</td>
-                    <td class="align-middle"> </td>
-                    <td class="align-middle">
-                        {% for rolePerson in rdv.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}
-                        {{ rolePerson.person.fullname }}<br>
-                        {% endfor %}
-                    <td class="align-middle"> Inconnu </td>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
+ <section>
+     <div class="table-responsive">
+         <table class="table table-striped table-hover text-dark">
+             <thead>
+                 <tr>
+                     <th scope="col" class="align-middle th-w-20"></th>
+                     <th scope="col" class="align-middle th-w-date">Début</th>
+                     <th scope="col" class="align-middle th-w-date">Fin</th>
+                     <th scope="col" class="align-middle th-50">Suivi concerné</th>
+                     <th scope="col" class="align-middle th-150">Lieu</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 {% for rdv in app.user.rdvs|sort ((a, b) => a.start <=> b.start)|reverse  %}
+                 <tr>
+                     <th scope="row" class="align-middle">
+                         <a href="#" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                             title="Voir le suivi social"><span class="fas fa-eye"></span>
+                         </a>
+                     </th>
+                     <td class="align-middle">{{ rdv.start| date("d/m/Y H:m") }}</td>
+                     <td class="align-middle">{{ rdv.end| date("d/m/Y H:m") }}</td>
+                     <td class="align-middle">
+                         {% if rdv.supportGroup %}
+                         {% for rolePerson in rdv.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}
+                         {{ rolePerson.person.fullname }}<br>
+                         {% endfor %}
+                         {% endif %}
+                     <td class="align-middle">{{ rdv.location }}</td>
+                     </td>
+                 </tr>
+                 {% endfor %}
+             </tbody>
+         </table>
+     </div>
+ </section>
 
-{% endblock %}
+ {% endblock %}

@@ -123,7 +123,7 @@ class SupportGroup
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="supportGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="supportGroup")
      */
     private $rdvs;
 

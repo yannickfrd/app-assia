@@ -12,7 +12,8 @@ class Note
 {
     public const TYPE = [
         1 => "Note",
-        2 => "Rapport social"
+        2 => "RDV",
+        3 => "Rapport social"
     ];
 
     public const TYPE_DEFAULT = 1;
@@ -80,7 +81,6 @@ class Note
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="notes")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $supportGroup;
 

@@ -1,0 +1,96 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{% if edit_mode %}{% set support = form.vars.value.supportGroup %}{% endif %}
+
+{% block title %}{% if edit_mode %}Édition RDV{% else %}Rendez-vous{% endif %} | Esperer95-app{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <section class="my-0">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-3">{% if edit_mode %}Édition RDV{% else %}Rendez-vous{% endif %}</h1>
+        {% if edit_mode %}
+        <div class="small text-secondary">
+            <p> Créé le {{ form.vars.value.createdAt | date("d/m/Y à H:i") }}
+                {% if form.vars.value.createdBy %}par {{ form.vars.value.createdBy.fullname }}{% endif %}
+                <span id="js-person-updated"> (modifié le {{ form.vars.value.updatedAt | date("d/m/Y à H:i") }}
+                    {% if form.vars.value.updatedBy %}par {{ form.vars.value.updatedBy.fullname }}{% endif %})</span>
+            </p>
+        </div>
+        {% endif %}
+        <div>
+            {% if support is defined and support is not null %}
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                            href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span
+                                class="fas fa-users mr-2"></span>Fiche groupe <span
+                                class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                            href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                            href="{{ path('note_list', {'id':support.id }) }}">Notes sociales</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {% if edit_mode %}Édition{% else %}Création{% endif %} Rendez-vous</li>
+                </ol>
+            </nav>
+            {% for supportPerson in support.supportPerson %}
+            <span class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ supportPerson.person.fullname }}</span>
+            {% endfor %}
+            {% else %}
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('calendar') }}"><span
+                                class="fas fa-calendar-alt mr-2"></span>Agenda</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Rendez-vous</li>
+                </ol>
+            </nav>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        {{ form_start(form) }}
+
+        <div class="form-group row">
+            <div class="col-12">{{ form_widget(form.title) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">{{ form_row(form.start) }}</div>
+            <div class="col-sm-6">{{ form_row(form.end) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">{{ form_row(form.location) }}</div>
+            <div class="col-sm-6">{{ form_row(form.status) }}</div>
+        </div>
+        <!-- <div class="form-group row">
+            <div class="col-md-12">
+                <div id="toolbar-container" class="shadow-sm"></div>
+                <div id="editor" class="bg-white border shadow-sm"></div>
+            </div>
+        </div> -->
+        <div class="form-group row">
+            <div class="col-md-12">{{ form_widget(form.content) }}</div>
+        </div>
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12">
+                <div class="mb-4 float-right">
+                    <input type="submit" id="submit" name="submit" class="btn btn-{{ theme_color }} shadow"
+                        value="Enregistrer">
+                </div>
+            </div>
+        </div>
+        {{ form_end(form, {"render_rest": false}) }}
+    </section>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script> -->
+<!-- {{ encore_entry_script_tags("note") }} -->
+{% endblock javascripts %}

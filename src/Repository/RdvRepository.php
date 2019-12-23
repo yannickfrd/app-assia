@@ -19,32 +19,40 @@ class RdvRepository extends ServiceEntityRepository
         parent::__construct($registry, Rdv::class);
     }
 
-    // /**
-    //  * @return Rdv[] Returns an array of Rdv objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Trouve tous les RDV entre 2 dates
+     * 
+     * @return Rdv[]
+     */
+    public function findRdvsBetween(\Datetime $start, \Datetime $end)
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder("r")
+            ->andWhere("r.start >= :start")
+            ->setParameter("start", $start)
+            ->andWhere("r.start <= :end")
+            ->setParameter("end", $end)
+            ->orderBy("r.start", "ASC")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Rdv
+    /**
+     * Donne tous les RDV entre 2 dates par jour
+     * 
+     * @return Array
+     */
+    public function FindRdvsBetweenByDay(\Datetime $start, \Datetime $end): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $rdvs = $this->findRdvsBetween($start, $end);
+        $days = [];
+
+        foreach ($rdvs as $rdv) {
+            $date =  $rdv->getStart()->format("Y-m-d");
+            if (!isset($days[$date])) {
+                $days[] = $date;
+            }
+            $days[$date][] = $rdv;
+        }
+        return $days;
     }
-    */
 }

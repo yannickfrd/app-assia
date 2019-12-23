@@ -7,23 +7,24 @@ use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class RdvType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("title")
-            ->add("startDate", DateType::class, [
+            ->add("title", null, [
+                "attr" => [
+                    "class" => "font-weight-bold",
+                    "placeholder" => "Ajouter un titre"
+                ]
+            ])
+            ->add("start", DateTimeType::class, [
                 "widget" => "single_text",
             ])
-            ->add("startTime", TimeType::class, [
-                "widget" => "single_text",
-            ])
-            ->add("endTime", TimeType::class, [
+            ->add("end", DateTimeType::class, [
                 "widget" => "single_text",
             ])
             ->add("status", ChoiceType::class, [
@@ -34,8 +35,9 @@ class RdvType extends AbstractType
             ->add("location")
             ->add("content", null, [
                 "attr" => [
+                    // "class" => "d-none",
                     "rows" => 5,
-                    "placeholder" => "Write a comment about the person"
+                    "placeholder" => "Ajouter une note"
                 ]
             ]);
     }

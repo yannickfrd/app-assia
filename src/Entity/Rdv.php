@@ -10,10 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Rdv
 {
     public const STATUS = [
-        0 => "Brouillon",
-        1 => "Publié"
+        0 => "Public",
+        1 => "Privé"
     ];
 
+    public const STATUS_DEFAULT = 0;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -22,29 +23,25 @@ class Rdv
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
-    private $startDate;
+    private $start;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="datetime")
      */
-    private $startTime;
+    private $end;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="smallint", nullable=true, options={"default":Rdv::STATUS_DEFAULT})
+ 
      */
-    private $endTime;
-
-    /**
-     * @ORM\Column(type="smallint")
-     */
-    private $status;
+    private $status = self::STATUS_DEFAULT;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -56,14 +53,13 @@ class Rdv
      */
     private $content;
 
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="rdvs")
      */
     private $createdBy;
 
@@ -73,22 +69,14 @@ class Rdv
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $updatedBy;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="rdvs")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $supportGroup;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="rdvs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
     public function getId(): ?int
     {
@@ -107,38 +95,26 @@ class Rdv
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStart(): ?\DateTimeInterface
     {
-        return $this->startDate;
+        return $this->start;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStart(\DateTimeInterface $start): self
     {
-        $this->startDate = $startDate;
+        $this->start = $start;
 
         return $this;
     }
 
-    public function getStartTime(): ?\DateTimeInterface
+    public function getEnd(): ?\DateTimeInterface
     {
-        return $this->startTime;
+        return $this->end;
     }
 
-    public function setStartTime(\DateTimeInterface $startTime): self
+    public function setEnd(\DateTimeInterface $end): self
     {
-        $this->startTime = $startTime;
-
-        return $this;
-    }
-
-    public function getEndTime(): ?\DateTimeInterface
-    {
-        return $this->endTime;
-    }
-
-    public function setEndTime(\DateTimeInterface $endTime): self
-    {
-        $this->endTime = $endTime;
+        $this->end = $end;
 
         return $this;
     }
@@ -148,10 +124,13 @@ class Rdv
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(?int $status): self
     {
-        $this->status = $status;
-
+        if ($status == null) {
+            $this->status = 0;
+        } else {
+            $this->status = $status;
+        }
         return $this;
     }
 
@@ -241,18 +220,6 @@ class Rdv
     public function setSupportGroup(?SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }
