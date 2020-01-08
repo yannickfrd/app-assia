@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use DateTime;
 use Exception;
 
 class Calendar
@@ -185,6 +186,12 @@ class Calendar
     public function withinMonth(\datetime $date): bool
     {
         return $this->getFirstDay()->format("m") === $date->format("m");
+    }
+
+    public function IsToday(\datetime $date): bool
+    {
+        $today = new \dateTime();
+        return $date->format("Y-m-d") === $today->format("Y-m-d");
     }
 
     /**

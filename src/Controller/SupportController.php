@@ -17,18 +17,18 @@ use App\Repository\SupportGroupRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SupportController extends AbstractController
 {
     private $manager;
     private $security;
 
-    public function __construct(ObjectManager $manager, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security)
     {
         $this->manager = $manager;
         $this->security = $security;
@@ -36,6 +36,7 @@ class SupportController extends AbstractController
 
     /**
      * @Route("/list/supports", name="list_supports")
+     * 
      * @param RolePersonRepository $repo
      * @param SupportGroupSearch $supportGroupSearch
      * @param Request $request

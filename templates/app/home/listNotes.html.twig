@@ -20,7 +20,7 @@
                  </tr>
              </thead>
              <tbody>
-                 {% for note in app.user.notesCreated|sort ((a, b) => a.updatedAt <=> b.updatedAt)|reverse|slice(0, 10)  %}
+                 {% for note in user.notesCreated|sort ((a, b) => a.updatedAt <=> b.updatedAt)|reverse|slice(0, 10)  %}
                  <tr>
                      <th scope="row" class="align-middle">
                          <a href="{{ path('note_list', {'id':note.supportGroup.id}) }}"

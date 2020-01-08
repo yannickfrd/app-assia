@@ -83,8 +83,8 @@
           title="Voir les participations financières">Redevance</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom"
-          title="Voir les rendez-vous">RDV</a>
+        <a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow"
+          data-placement="bottom" title="Voir les rendez-vous">Rendez-vous</a>
       </div>
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
         <a href="{{ path('note_list', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow"

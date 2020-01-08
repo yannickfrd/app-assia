@@ -109,13 +109,11 @@
 						{% set user = app.user %}
 						<a class="text-light font-weight-bold" href="{{ path('user_show', {'id':user.id}) }}"
 							data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
-							title="{{ user.firstname }} {{ user.lastname }}"
-							data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y h:i") }}
-									                            <br>fonction : {{ user.statuslist }}<br>services rattachés
-									                            :{% for serviceuser in app.session.get(" servicesuser") %}<br>- {{ serviceuser }}{% endfor %}">
+							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y h:i") }}
+							<br>fonction : {{ user.statuslist }}<br>Services rattachés :
+							{% for serviceuser in app.session.get("servicesUser") %}<br>- {{ serviceuser }}{% endfor %}">
 							<span class="fas fa-user"></span>
-							{{ user.firstname }}
-							{{ user.lastname|first }}.
+							{{ user.firstname }} {{ user.lastname|first }}.
 						</a>
 						<br />
 						<a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>

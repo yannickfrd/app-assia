@@ -9,8 +9,8 @@
 <section>
     <div class="row align-items-baseline">
         <div class="col-md-12 count align-middle">
-            <p class="align-middle">{{ app.user.referentSupport|filter(support => support.status == 2)|length }}
-                suivis en cours (sur {{ app.user.referentSupport|length }}).</p>
+            <p class="align-middle">{{ user.referentSupport|filter(support => support.status == 2)|length }}
+                suivis en cours (sur {{ user.referentSupport|length }}).</p>
         </div>
     </div>
     <div class="table-responsive">
@@ -26,8 +26,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% for support in app.user.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
-                {% cache "referentSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %}
+                {% for support in user.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                {# {% cache "referentSupport" ~ user.id ~ support.id support.updatedAt.timestamp %} #}
                 <tr>
                     <th scope="row" class="align-middle">
                         <a href="{{ path('support_edit', {'id':support.id}) }}"
@@ -48,7 +48,7 @@
                     <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
                     </td>
                 </tr>
-                {% endcache %}
+                {# {% endcache %} #}
                 {% endfor %}
             </tbody>
         </table>

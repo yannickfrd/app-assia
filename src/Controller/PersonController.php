@@ -2,26 +2,26 @@
 
 namespace App\Controller;
 
-use App\Entity\GroupPeople;
+use App\Utils\Agree;
 use App\Entity\Person;
-use App\Entity\PersonSearch;
 use App\Entity\RolePerson;
+use App\Entity\GroupPeople;
 
 use App\Form\Utils\Choices;
+use App\Entity\PersonSearch;
 use App\Form\Person\PersonType;
-use App\Form\Person\PersonSearchType;
-use App\Form\Person\PersonNewGroupType;
 use App\Form\Person\RolePersonType;
+use App\Repository\PersonRepository;
+use App\Form\Person\PersonSearchType;
+
+use App\Form\Person\PersonNewGroupType;
+
 use App\Form\Person\RolePersonGroupType;
 
-use App\Utils\Agree;
-
-use App\Repository\PersonRepository;
-
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -35,7 +35,7 @@ class PersonController extends AbstractController
     private $repo;
     private $security;
 
-    public function __construct(ObjectManager $manager, PersonRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, PersonRepository $repo, Security $security)
     {
         $this->manager = $manager;
         $this->repo = $repo;
@@ -447,7 +447,8 @@ class PersonController extends AbstractController
 
     // Met en place la pagination du tableau et affiche le rendu
     protected function pagination($personSearch, $request, $groupPeople, $form, $formRolePerson = null, $paginator)
-    { }
+    {
+    }
 
     /**
      * Permet de trouver les personnes par le mode de recherche instannée AJAX

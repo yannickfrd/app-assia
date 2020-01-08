@@ -112,11 +112,10 @@ class User implements UserInterface
      */
     private $updatedBy;
 
-
     /**
      * @ORM\Column(type="integer", options={"default":0})
      */
-    private $loginCount;
+    private $loginCount = 0;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -124,9 +123,9 @@ class User implements UserInterface
     private $lastLogin;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", options={"default":0})
      */
-    private $failureLoginCount;
+    private $failureLoginCount = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="createdBy")
@@ -313,6 +312,11 @@ class User implements UserInterface
     public function getFullname(): ?string
     {
         return $this->firstname . " " . $this->lastname;
+    }
+
+    public function getInitials(): ?string
+    {
+        return substr($this->firstname, 0, 1) . substr($this->lastname, 0, 1);
     }
 
     public function eraseCredentials()

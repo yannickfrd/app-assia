@@ -69,12 +69,12 @@ class Rdv
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EXTRA_LAZY")
      */
     private $updatedBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="rdvs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="rdvs", fetch="EXTRA_LAZY")
      */
     private $supportGroup;
 

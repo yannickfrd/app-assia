@@ -26,9 +26,36 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne le suivi social avec le groupe et les personnes rattachées
+     *
+     * @param int $id
+     * @return SupportGroup|null
+     */
+    public function findSupportById($id): ?SupportGroup
+    {
+        return $this->createQueryBuilder("sg")
+            ->select("sg")
+            ->leftJoin("sg.supportPerson", "sp")
+            ->addselect("sp")
+            ->leftJoin("sp.person", "p")
+            ->addselect("p")
+            ->leftJoin("sg.groupPeople", "g")
+            ->addselect("g")
+            ->leftJoin("g.rolePerson", "r")
+            ->addselect("r")
+            ->leftJoin("r.person", "p2")
+            ->addselect("p2")
+            ->andWhere("sg.id = :id")
+            ->setParameter("id", $id)
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Donne tous les suivis sociaux
+     * 
      * @return Query
      */
-    // Donne les suivis sociaux
     public function findAllSupports($supportGroupSearch): Query
     {
         $query =  $this->createQueryBuilder("sg")

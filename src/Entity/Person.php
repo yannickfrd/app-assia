@@ -110,6 +110,11 @@ class Person
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contactOtherPerson;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -302,6 +307,18 @@ class Person
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getContactOtherPerson(): ?string
+    {
+        return $this->contactOtherPerson;
+    }
+
+    public function setContactOtherPerson(?string $contactOtherPerson): self
+    {
+        $this->contactOtherPerson = $contactOtherPerson;
 
         return $this;
     }

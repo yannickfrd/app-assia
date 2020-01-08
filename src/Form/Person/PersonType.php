@@ -62,6 +62,10 @@ class PersonType extends AbstractType
                 ]
             ])
             ->add("email")
+            ->add("contactOtherPerson", null, [
+                "help" => "Autre personne à contacter en cas d'urgence.",
+
+            ])
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 5,

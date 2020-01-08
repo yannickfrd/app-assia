@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Rdv;
-use App\Entity\RdvSearch;
 use App\Utils\Calendar;
+use App\Entity\RdvSearch;
 
 use App\Entity\SupportGroup;
 use App\Form\Support\Rdv\RdvType;
@@ -12,10 +12,11 @@ use App\Form\Support\Rdv\RdvType;
 use App\Repository\RdvRepository;
 
 use App\Form\Support\Rdv\RdvSearchType;
+use App\Repository\SupportGroupRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,7 @@ class RdvController extends AbstractController
     private $repo;
     private $currentUser;
 
-    public function __construct(ObjectManager $manager, RdvRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, RdvRepository $repo, Security $security)
     {
         $this->manager = $manager;
         $this->repo = $repo;
@@ -34,21 +35,24 @@ class RdvController extends AbstractController
         $this->currentUser = $security->getUser();
     }
 
-
     /**
      * Affiche le calendrier (vue mensuelle)
      * 
      * @Route("/calendar/{year}/{month}", name="calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
      * @Route("/calendar", name="calendar")
+     * @Route("support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
+     * @Route("support/{id}/calendar", name="support_calendar")
      * @return Response
      */
-    public function showCalendar($year = null, $month = null, RdvRepository $repo, Request $request): Response
+    public function showCalendar($id = null, SupportGroupRepository $supportRepo, $year = null, $month = null, RdvRepository $repo, Request $request): Response
     {
+        $supportGroup = $supportRepo->findSupportById($id);
+
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday());
+        $rdvs = $repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup);
 
-        $rdv = new Rdv;
+        $rdv = new Rdv();
 
         $form = $this->createForm(RdvType::class, $rdv);
         $form->handleRequest($request);
@@ -56,6 +60,7 @@ class RdvController extends AbstractController
         return $this->render("app/rdv/calendar.html.twig", [
             "calendar" => $calendar,
             "rdvs" => $rdvs,
+            "support" => $supportGroup ?? null,
             "form" => $form->createView()
         ]);
     }
@@ -72,16 +77,16 @@ class RdvController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listPeople(SupportGroup $supportGroup, RdvSearch $rdvSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function listRdv(SupportGroup $supportGroup, RdvSearch $rdvSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        // $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $rdvSearch = new RdvSearch;
 
         $formSearch = $this->createForm(RdvSearchType::class, $rdvSearch);
         $formSearch->handleRequest($request);
 
-        $rdvs =  $this->paginate($paginator, $supportGroup, $rdvSearch, $request);
+        $rdvs =  $this->paginate($paginator, $supportGroup->getId(), $rdvSearch, $request);
 
         $rdv = new Rdv();
 
@@ -90,17 +95,16 @@ class RdvController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->createRdv($supportGroup, $rdv);
+            return $this->createRdv($supportGroup->getId(), $rdv);
         }
 
-        return $this->render("rdv/listRdvs.html.twig", [
+        return $this->render("app/rdv/listRdvs.html.twig", [
             "support" => $supportGroup,
             "form_search" => $formSearch->createView(),
             "form" => $form->createView(),
             "rdvs" => $rdvs ?? null,
         ]);
     }
-
 
     /**
      * Crée le RDV
@@ -113,7 +117,7 @@ class RdvController extends AbstractController
      */
     public function newRdv(SupportGroup $supportGroup = null, Request $request): Response
     {
-        // $this->denyAccessUnlessGranted("EDIT", $rdv->getSupportGroup());
+        // $this->denyAccessUnlessGranted("CREATE", $rdv);
 
         $rdv = new Rdv();
 
@@ -138,15 +142,27 @@ class RdvController extends AbstractController
      */
     public function getRdv(Rdv $rdv, RdvRepository $repo): Response
     {
-        // $this->denyAccessUnlessGranted("EDIT", $rdv->getSupportGroup());
+        if ($this->denyAccessUnlessGranted("EDIT", $rdv)) {
+        };
 
         $rdv = $repo->find($rdv->getId());
+
+        // Obtenir le nom du suivi
+        if ($rdv->getSupportGroup()) {
+            $supportFullname = "";
+            foreach ($rdv->getSupportGroup()->getGroupPeople()->getRolePerson() as $rolePerson) {
+                if ($rolePerson->getHead() == true) {
+                    $supportFullname = $rolePerson->getPerson()->getFullname();
+                }
+            };
+        }
 
         return $this->json([
             "code" => 200,
             "action" => "show",
             "data" => [
                 "title" => $rdv->getTitle(),
+                "supportFullname" => $supportFullname ?? null,
                 "start" => $rdv->getStart()->format("Y-m-d\TH:i"),
                 "end" => $rdv->getEnd()->format("Y-m-d\TH:i"),
                 "location" => $rdv->getLocation(),
@@ -167,7 +183,7 @@ class RdvController extends AbstractController
      */
     public function editRdv(Rdv $rdv, Request $request): Response
     {
-        // $this->denyAccessUnlessGranted("EDIT", $rdv->getSupportGroup());
+        $this->denyAccessUnlessGranted("EDIT", $rdv);
 
         $form = $this->createForm(RdvType::class, $rdv);
         $form->handleRequest($request);
@@ -188,7 +204,7 @@ class RdvController extends AbstractController
      */
     public function deleteRdv(Rdv $rdv): Response
     {
-        // $this->denyAccessUnlessGranted("EDIT", $rdv->getSupportGroup());
+        $this->denyAccessUnlessGranted("DELETE", $rdv);
 
         $this->manager->remove($rdv);
         $this->manager->flush();
@@ -202,10 +218,10 @@ class RdvController extends AbstractController
     }
 
     // Pagination de la liste des RDVs
-    protected function paginate($paginator, $supportGroup, $rdvSearch, $request)
+    protected function paginate($paginator, $supportGroupId, $rdvSearch, $request)
     {
         $rdvs =  $paginator->paginate(
-            $this->repo->findAllRdvsQuery($supportGroup->getId(), $rdvSearch),
+            $this->repo->findAllRdvsQuery($supportGroupId, $rdvSearch),
             $request->query->getInt("page", 1), // page number
             6 // limit per page
         );

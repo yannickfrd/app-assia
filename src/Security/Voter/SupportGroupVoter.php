@@ -55,8 +55,8 @@ class SupportGroupVoter extends Voter
             return true;
         }
 
-        foreach ($this->user->getServiceUser() as $role) {
-            if ($this->supportGroup->getService()->getId() == $role->getService()->getId()) {
+        foreach ($this->user->getServiceUser() as $serviceUser) {
+            if ($this->supportGroup->getService()->getId() == $serviceUser->getService()->getId()) {
                 return true;
             }
         }

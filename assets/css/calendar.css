@@ -16,7 +16,7 @@
 
 .calendar-body {
     position: relative;
-    height: calc(100% - 32px);
+    height: calc(100% - 35px);
 }
 
 .calendar-week-row {
@@ -50,7 +50,7 @@
     border-right: 1px solid #cecfd1;
     vertical-align: top;
     overflow: hidden;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .week-5days {
@@ -59,6 +59,11 @@
 
 .calendar-other-month {
     opacity: 0.4;
+}
+
+.calendar-today {
+    background-color: #e4e3e3;
+    font-weight: bold;
 }
 
 .calendar-event,

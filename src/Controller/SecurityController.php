@@ -5,17 +5,17 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserResetPass;
 
-use App\Form\Security\ForgotPasswordType;
+use App\Repository\UserRepository;
 use App\Notification\MailNotification;
-use App\Form\Security\ReinitPasswordType;
 use App\Form\Security\RegistrationType;
 use App\Form\Security\SecurityUserType;
+use Doctrine\ORM\EntityManagerInterface;
 
-use App\Repository\UserRepository;
+use App\Form\Security\ForgotPasswordType;
 
+use App\Form\Security\ReinitPasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -28,7 +28,7 @@ class SecurityController extends AbstractController
     private $manager;
     private $security;
 
-    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder, Security $security)
+    public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, Security $security)
     {
         $this->manager = $manager;
         $this->encoder = $encoder;
@@ -108,13 +108,26 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="security_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, UserRepository $repo): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        $user = $repo->findOneBy(["username" => $lastUsername]);
+
+        if ($user && $user->getFailureLoginCount() >= 5) {
+            $this->addFlash("danger", "Ce compte utilisateur a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
+        }
+
         if ($error) {
-            $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
+
+            if ($user) {
+                $failureLoginCount = $user->getFailureLoginCount() + 1;
+                $user->setFailureLoginCount($failureLoginCount);
+                $this->manager->flush();
+            } else {
+                $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
+            }
         }
 
         return $this->render("security/login.html.twig", [
@@ -227,7 +240,8 @@ class SecurityController extends AbstractController
      * @Route("/connexion", name="security_login_valid")
      */
     public function loginValid(AuthenticationUtils $authenticationUtils)
-    { }
+    {
+    }
 
     /**
      * @Route("/deconnexion", name="security_logout")

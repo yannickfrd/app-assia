@@ -8,10 +8,10 @@ use App\Form\Pole\PoleType;
 
 use App\Repository\PoleRepository;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +23,7 @@ class PoleController extends AbstractController
     private $request;
     private $security;
 
-    public function __construct(ObjectManager $manager, PoleRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, PoleRepository $repo, Security $security)
     {
         $this->manager = $manager;
         $this->repo = $repo;

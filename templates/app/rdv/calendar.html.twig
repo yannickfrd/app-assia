@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "bootstrap_4_layout.html.twig" %}
-
 {% block title %}Agenda{% endblock %}
 
 {% block stylesheets %}{% endblock %}
@@ -12,26 +10,54 @@
     <div class="container pt-3">
         {% include "model/msgFlash.html.twig" %}
         <div class="d-flex flex-row align-items-center justify-content-between mx-2">
-            <div class="d-flex  align-items-center">
+            <div class="d-flex align-items-center mb-3">
                 <h1 class="h2 mr-3">Agenda</h1>
                 <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
                     data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous"><span
                         class="far fa-calendar-plus"></span></button>
-                {# <a href="{{ path('rdv_new')}}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                    title="Ajouter un rendez-vous"></a> #}
             </div>
             <h3 class="h4 text-secondary">{{ calendar.getMonthToString }}</h3>
             <div class="float-right">
-                <a href="{{path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                {% if support %}
+                <a href="{{ path('support_calendar', {'id': support.id}) }}"
+                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                     title="Mois actuel">Aujourd'hui</a>
-                <a href="{{path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}"
+                <a href="{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}"
                     class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                     title="Voir le mois précédent"><i class="fas fa-angle-left"></i></a>
-                <a href="{{path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}"
+                <a href="{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}"
                     class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Mois suivant"><i
                         class="fas fa-angle-right"></i></a>
+                {% else %}
+                <a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                    title="Mois actuel">Aujourd'hui</a>
+                <a href="{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}"
+                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                    title="Voir le mois précédent"><i class="fas fa-angle-left"></i></a>
+                <a href="{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}"
+                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Mois suivant"><i
+                        class="fas fa-angle-right"></i></a>
+                {% endif %}
             </div>
         </div>
+
+        {% if support %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                        href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span
+                            class="fas fa-users mr-2"></span>Fiche groupe <span
+                            class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                        href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Agenda</li>
+            </ol>
+        </nav>
+        <span id="support" data="{{ support.id }}"></span>
+        {% for supportPerson in support.supportPerson %}
+        <span class="btn btn-outline-{{ theme_color }} btn-sm mb-2 shadow-sm">{{ supportPerson.person.fullname }}</span>
+        {% endfor %}
+        {% endif %}
 
         {% set start_day = calendar.firstMonday %}
 
@@ -55,17 +81,20 @@
                     {% for j in 0..6 %}
                     {% if j < 5 %}
                     {% set day = start_day |date_modify("+" ~ (j + week * 7) ~ " day") %}
-                    <div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}"
-                        id="{{ day| date("Y-m-d") }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous">
+                    <div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %} 
+                        {% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}"
+                        data-toggle="modal" data-target="#modal-block" data-placement="bottom"
+                        title="Ajouter un rendez-vous">
                         <div class="text-dark calendar-day">{{ day| date("d") }} {{ calendar.otherMonth(day) }}</div>
                         {% if day| date("Y-m-d") in rdvs %}
                         {% for rdv in rdvs[day| date("Y-m-d")] %}
-                        {# {% if loop.index < 3 %} #}
-                            <div class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}"
-                                data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Voir le rendez-vous">
-                                <span class="rdv-start">{{ rdv.start| date("H:i") }}</span> 
-                                <span class="rdv-title">{{ rdv.title }}</span>
-                            </div>
+                        <a class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}"
+                            data-toggle="modal" data-target="#modal-block" data-placement="bottom"
+                            title="Voir le rendez-vous">
+                            <span class="rdv-start">{{ rdv.start| date("H:i") }}</span>
+                            <span class="rdv-initiales">{{ rdv.createdBy.initials }}</span>
+                            <span class="rdv-title">{{ rdv.title }}</span>
+                        </a>
                         {% endfor %}
                         {% endif %}
                     </div>

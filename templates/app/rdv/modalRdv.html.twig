@@ -1,3 +1,5 @@
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
 <div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalNote" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -7,14 +9,48 @@
                     <div class="col-12">{{ form_widget(form.title) }}</div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-4 col-lg-2">{{ form_label(form.start) }}</div>
-                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.start) }}</div>
-                    <div class="col-4 col-lg-2">{{ form_label(form.end) }}</div>
-                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.end) }}</div>
-                    <div class="col-4 col-lg-2">{{ form_label(form.location) }}</div>
-                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.location) }}</div>
-                    <div class="col-4 col-lg-2">{{ form_label(form.status) }}</div>
-                    <div class="col-8 col-lg-4 mb-3">{{ form_widget(form.status) }}</div>
+                    <div class="col-4 col-lg-2">Suivi</div>
+                    <div id="js-support-fullname" class="col-8 col-lg-4 font-weight-bold">
+                        {% if support is defined and support != null %}
+                        {% for rolePerson in support.groupPeople.rolePerson|filter(a => a.head == true) %}
+                        {{ rolePerson.person.fullname }}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                <div class="col-12 col-lg-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4 col-sm-4 required" for="date">Date</label>
+                        <div class="col-8 col-sm-8">
+                            <input type="date" id="date" name="date" required="required" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="form-group row">
+                        <label class="sr-only col-form-label col-4 col-sm-4 required" for="start">Début</label>
+                        <div class="col-12">
+                            <input type="time" id="start" name="start" required="required" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <span>-</span>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="form-group row">
+                        <label class="sr-only col-form-label col-4 col-sm-4 required" for="end">Fin</label>
+                        <div class="col-12">
+                            <input type="time" id="end" name="end" required="required" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-12 col-lg-6">{{ form_row(form.start) }}</div>
+                    <div class="col-12 col-lg-6">{{ form_row(form.end) }}</div>
+                    <div class="col-12 col-lg-6">{{ form_row(form.location) }}</div>
+                    {#<div class="col-12 col-lg-6">{{ form_row(form.status) }}</div>#}
                 </div>
                 {# <div class="form-group row">
                     <div class="col-md-12">
@@ -29,8 +65,8 @@
             </div>
             <div class="modal-footer d-block">
                 <div class="float-left d-flex">
-                    <a href="{{ path("rdv_delete", {'id':0 }) }}" id="modal-btn-delete" class="mr-3 btn btn-danger d-block"
-                        data-placement="bottom" title="Supprimer le rendez-vous"
+                    <a href="{{ path("rdv_delete", {'id':0 }) }}" id="modal-btn-delete"
+                        class="mr-3 btn btn-danger d-block" data-placement="bottom" title="Supprimer le rendez-vous"
                         onclick="if(window.confirm('Voulez-vous vraiment supprimer cet rendez-vous ?', 'Demande de confirmation')){return true;}else{return false;}">Supprimer</a>
                 </div>
                 <div class="float-right">
@@ -38,7 +74,7 @@
                         data-dismiss="modal">Annuler</button>
                     <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }}">Enregistrer</button>
                 </div>
-                {{ form_end(form) }}
+                {{ form_end(form, {"render_rest": false}) }}
             </div>
         </div>
     </div>

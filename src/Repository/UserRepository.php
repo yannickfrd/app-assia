@@ -66,7 +66,43 @@ class UserRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
+    /**
+     * Donne l'utilisateur avec tous ses suivis et rdv
+     *
+     * @param int $id
+     * @return User|null
+     */
+    public function findUserById($id): ?User
+    {
+        return $this->createQueryBuilder("u")
+            ->select("u")
 
+            ->leftJoin("u.referentSupport", "sg")
+            ->addselect("sg")
+            ->leftJoin("sg.groupPeople", "g")
+            ->addselect("g")
+            ->leftJoin("g.rolePerson", "r")
+            ->addselect("r")
+            ->leftJoin("r.person", "p")
+            ->addselect("p")
+
+            // ->leftJoin("u.rdvs", "rdv")
+            // ->addselect("rdv")
+            // ->leftJoin("rdv.supportGroup", "sg2")
+            // ->addselect("sg2")
+            // ->leftJoin("sg2.groupPeople", "g2")
+            // ->addselect("g2")
+            // ->leftJoin("g2.rolePerson", "r2")
+            // ->addselect("r2")
+            // ->leftJoin("r2.person", "p2")
+            // ->addselect("p2")
+
+            ->andWhere("u.id = :id")
+            ->setParameter("id", $id)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
 
     // /**
     //  * @return User[] Returns an array of User objects

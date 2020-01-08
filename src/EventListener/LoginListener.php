@@ -6,6 +6,7 @@ use App\Entity\UserConnection;
 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserConnectionRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
@@ -14,12 +15,14 @@ class LoginListener
 {
     private $entityManager;
     private $session;
+    private $manager;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UserConnectionRepository $repo)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UserConnectionRepository $repo, ObjectManager $manager)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->repo = $repo;
+        $this->manager = $manager;
     }
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
@@ -40,7 +43,7 @@ class LoginListener
         $count = $user->getLogincount();
         $count++;
         $user->setLogincount($count);
-        $user->setFailureLogincount(0);
+        // $user->setFailureLogincount(0);
 
         $connection = new UserConnection();
         $connection->setConnectionAt(new \DateTime())
@@ -70,9 +73,9 @@ class LoginListener
     {
         $user = $event->getAuthenticationToken()->getUser();
 
-        $count = $user->getFailureLogincount();
-        $count++;
+        $count = $user->getFailureLogincount() + 1;
         $user->setFailureLogincount($count);
+        $this->manager->flush();
 
         $this->session->getFlashBag()->add("danger", "Identifiant ou mot de passe incorrect.");
     }

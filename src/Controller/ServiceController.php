@@ -6,14 +6,14 @@ use App\Entity\Service;
 use App\Entity\ServiceSearch;
 
 use App\Form\Service\ServiceType;
-use App\Form\Service\ServiceSearchType;
-
 use App\Repository\ServiceRepository;
 
+use App\Form\Service\ServiceSearchType;
+
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +25,7 @@ class ServiceController extends AbstractController
     private $request;
     private $security;
 
-    public function __construct(ObjectManager $manager, ServiceRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, ServiceRepository $repo, Security $security)
     {
         $this->manager = $manager;
         $this->repo = $repo;

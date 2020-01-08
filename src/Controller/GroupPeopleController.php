@@ -7,19 +7,19 @@ use App\Utils\Agree;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-use App\Entity\GroupPeopleSearch;
-
 use App\Form\Utils\Choices;
+
+use App\Entity\GroupPeopleSearch;
 use App\Form\Group\GroupPeopleType;
 
 use App\Repository\RolePersonRepository;
 
-use App\Form\Group\GroupPeopleSearchType;
+use Doctrine\ORM\EntityManagerInterface;
 
+use App\Form\Group\GroupPeopleSearchType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -31,7 +31,7 @@ class GroupPeopleController extends AbstractController
     private $manager;
     private $security;
 
-    public function __construct(ObjectManager $manager, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security)
     {
         $this->manager = $manager;
         $this->security = $security;

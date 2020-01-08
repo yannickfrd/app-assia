@@ -10,11 +10,11 @@ use App\Form\Support\Note\NoteType;
 use App\Form\Support\Note\NoteSearchType;
 
 use App\Repository\NoteRepository;
-
+use App\Repository\SupportGroupRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +25,7 @@ class NoteController extends AbstractController
     private $repo;
     private $currentUser;
 
-    public function __construct(ObjectManager $manager, NoteRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, NoteRepository $repo, Security $security)
     {
         $this->manager = $manager;
         $this->repo = $repo;
@@ -45,8 +45,10 @@ class NoteController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listPeople(SupportGroup $supportGroup, NoteSearch $noteSearch = null, Note $note = null, Request $request, PaginatorInterface $paginator): Response
+    public function listNotes($id, SupportGroupRepository $supportRepo, NoteSearch $noteSearch = null, Note $note = null, Request $request, PaginatorInterface $paginator): Response
     {
+        $supportGroup = $supportRepo->findSupportById($id);
+
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $noteSearch = new NoteSearch;
