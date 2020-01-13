@@ -32,7 +32,11 @@ class RdvType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("location")
+            ->add("location", null, [
+                "attr" => [
+                    "placeholder" => "Ajouter un lieu"
+                ]
+            ])
             ->add("content", null, [
                 "attr" => [
                     // "class" => "d-none",

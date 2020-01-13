@@ -8,11 +8,14 @@ export default class Calendar {
         this.dayElts = document.querySelectorAll(".calendar-day-block");
         this.rdvElts = document.querySelectorAll(".js-rdv");
         this.modalForm = document.querySelector(".modal-content");
-        this.rdvContentElt = document.getElementById("rdv_content");
         this.newRdvBtn = document.getElementById("js-new-rdv");
         this.formRdvElt = document.querySelector("form[name=rdv]");
+        this.supportFullNameElt = document.getElementById("js-support-fullname");
         this.rdvStartInput = document.getElementById("rdv_start");
         this.rdvEndInput = document.getElementById("rdv_end");
+        this.rdvLocationInput = document.getElementById("rdv_location");
+        this.rdvContentElt = document.getElementById("rdv_content");
+        this.rdvCreatedByElt = document.getElementById("js-created-by");
 
         this.dateInput = document.getElementById("date");
         this.startInput = document.getElementById("start");
@@ -57,9 +60,9 @@ export default class Calendar {
             this.requestSaveRdv();
         }.bind(this));
 
-        this.btnCancelElt.addEventListener("click", function (e) {
-            e.preventDefault();
-        }.bind(this));
+        // this.btnCancelElt.addEventListener("click", function (e) {
+        //     e.preventDefault();
+        // }.bind(this));
 
         this.btnDeleteElt.addEventListener("click", function (e) {
             e.preventDefault();
@@ -77,6 +80,8 @@ export default class Calendar {
 
         this.modalForm.querySelector("#rdv_title").value = "";
 
+        this.supportFullNameElt.textContent = "";
+
         let dateFormat = new DateFormat();
         this.dateInput.value = dateFormat.getDateNow();
         this.startInput.value = dateFormat.getHour();
@@ -85,6 +90,7 @@ export default class Calendar {
 
         this.rdvStartInput.value = "";
         this.rdvEndInput.value = "";
+        this.rdvLocationInput.value = "";
 
         // this.modalForm.querySelector("#rdv_status").value = 0;
         this.modalForm.querySelector("#rdv_content").value = "";
@@ -146,10 +152,10 @@ export default class Calendar {
 
     requestSaveRdv() {
         if (this.modalForm.querySelector("#rdv_title").value != "") {
+            this.updateDatetimes();
             let formData = new FormData(this.formRdvElt);
             let formToString = new URLSearchParams(formData).toString();
             this.animateLoader();
-            console.log(this.formRdvElt.getAttribute("action"));
             this.ajaxRequest.init("POST", this.formRdvElt.getAttribute("action"), this.responseAjax.bind(this), true, formToString);
         } else {
             // $("#modal-block").modal("hide");
@@ -192,7 +198,6 @@ export default class Calendar {
     showRdv(data) {
         this.modalForm.querySelector("form").action = "/rdv/" + this.rdvId + "/edit";
         this.modalForm.querySelector("#rdv_title").value = data.title;
-        this.modalForm.querySelector("#js-support-fullname").textContent = data.supportFullname;
         this.rdvStartInput.value = data.start;
         this.rdvEndInput.value = data.end;
 
@@ -200,9 +205,13 @@ export default class Calendar {
         this.startInput.value = data.start.substr(11, 5);
         this.endInput.value = data.end.substr(11, 5);
 
-        this.modalForm.querySelector("#rdv_location").value = data.location;
+        this.rdvLocationInput.value = data.location;
         // this.modalForm.querySelector("#rdv_status").value = data.status;
         this.modalForm.querySelector("#rdv_content").value = data.content;
+
+
+        this.rdvCreatedByElt.textContent = data.createdBy;
+        this.supportFullNameElt.textContent = data.supportFullname;
 
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         this.btnDeleteElt.href = "/rdv/" + this.rdvId + "/delete";
@@ -282,12 +291,13 @@ export default class Calendar {
         if (sumHeightdivElts > dayElt.clientHeight && rdvElts.length > maxHeight) {
             let divElt = document.createElement("a");
             divElt.className = "calendar-others-events bg-" + this.themeColor + " text-light font-weight-bold";
-            divElt.setAttribute("data-toggle", "modal");
-            divElt.setAttribute("data-target", "#modal-block");
-            divElt.setAttribute("title", "Voir tous les rendez-vous");
-            let spanElt = document.createElement("span");
-            spanElt.textContent = (parseInt(rdvElts.length - maxHeight) + 2) + " autres...";
-            divElt.appendChild(spanElt);
+            let date = dayElt.id.replace("-", "/");
+            date = date.replace("-", "/");
+            divElt.href = "/calendar/day/" + date;
+            // divElt.setAttribute("data-toggle", "modal");
+            // divElt.setAttribute("data-target", "#modal-block");
+            divElt.setAttribute("title", "Voir tous les rendez-vous du jour");
+            divElt.textContent = (parseInt(rdvElts.length - maxHeight) + 2) + " autres...";
             dayElt.insertBefore(divElt, dayElt.lastChild);
         }
     }

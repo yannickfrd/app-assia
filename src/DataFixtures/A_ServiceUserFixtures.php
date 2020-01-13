@@ -77,9 +77,9 @@ class A_ServiceUserFixtures extends Fixture
                 case 3:
                     $this->addData($this::SERVICES_HABITAT);
                     break;
-                case 4:
-                    $this->addData($this::SERVICES_HEB);
-                    break;
+                    // case 4:
+                    //     $this->addData($this::SERVICES_HEB);
+                    //     break;
             }
         }
     }

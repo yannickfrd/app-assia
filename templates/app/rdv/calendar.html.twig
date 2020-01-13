@@ -20,22 +20,22 @@
             <div class="float-right">
                 {% if support %}
                 <a href="{{ path('support_calendar', {'id': support.id}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom"
                     title="Mois actuel">Aujourd'hui</a>
                 <a href="{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                    title="Voir le mois précédent"><i class="fas fa-angle-left"></i></a>
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom"
+                    title="Mois précédent"><i class="fas fa-angle-left"></i></a>
                 <a href="{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Mois suivant"><i
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant"><i
                         class="fas fa-angle-right"></i></a>
                 {% else %}
-                <a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                    title="Mois actuel">Aujourd'hui</a>
+                <a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow"
+                    data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
                 <a href="{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                    title="Voir le mois précédent"><i class="fas fa-angle-left"></i></a>
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom"
+                    title="Mois précédent"><i class="fas fa-angle-left"></i></a>
                 <a href="{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Mois suivant"><i
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant"><i
                         class="fas fa-angle-right"></i></a>
                 {% endif %}
             </div>
@@ -85,7 +85,8 @@
                         {% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}"
                         data-toggle="modal" data-target="#modal-block" data-placement="bottom"
                         title="Ajouter un rendez-vous">
-                        <div class="text-dark calendar-day">{{ day| date("d") }} {{ calendar.otherMonth(day) }}</div>
+                        <div class="text-dark calendar-day">{{ day| date("d") }} {{ calendar.otherMonth(day) }}
+                        </div>
                         {% if day| date("Y-m-d") in rdvs %}
                         {% for rdv in rdvs[day| date("Y-m-d")] %}
                         <a class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}"

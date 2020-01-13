@@ -16,7 +16,7 @@
 
 .calendar-body {
     position: relative;
-    height: calc(100% - 35px);
+    height: calc(100% - 45px);
 }
 
 .calendar-week-row {

@@ -66,6 +66,35 @@ class RdvController extends AbstractController
     }
 
     /**
+     * Affiche un jour du mois (vue journalière)
+     * 
+     * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*", "day" : "[0-9]*"}, methods="GET")
+     * @Route("/calendar/day", name="calendar_day")
+     * @return Response
+     */
+    public function showDay($year = null, $month = null, $day = null, RdvRepository $repo, Request $request): Response
+    {
+        $startDay = new \Datetime($year . "-" . $month . "-" . $day);
+        $endDay = new \Datetime($year . "-" . $month . "-" . ($day + 1));
+
+        dump($day);
+
+        $rdvs = $repo->findRdvsBetween($startDay, $endDay, null);
+
+        dump($rdvs);
+
+        $rdv = new Rdv();
+
+        $form = $this->createForm(RdvType::class, $rdv);
+        $form->handleRequest($request);
+
+        return $this->render("app/rdv/day.html.twig", [
+            "rdvs" => $rdvs,
+            "form" => $form->createView()
+        ]);
+    }
+
+    /**
      * Liste des RDVs
      * 
      * @Route("support/{id}/rdv/list", name="rdv_list")
@@ -105,6 +134,7 @@ class RdvController extends AbstractController
             "rdvs" => $rdvs ?? null,
         ]);
     }
+
 
     /**
      * Crée le RDV

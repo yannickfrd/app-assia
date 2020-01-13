@@ -23,7 +23,7 @@ class E_NoteFixtures extends Fixture
 
         foreach ($supports as $support) {
 
-            for ($i = 0; $i < mt_rand(5, 10); $i++) {
+            for ($i = 0; $i < mt_rand(1, 3); $i++) {
 
                 $note = new Note();
 

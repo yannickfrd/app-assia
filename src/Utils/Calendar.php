@@ -141,7 +141,7 @@ class Calendar
     }
 
     /**
-     * Donne le premier lundi
+     * Donne le dernier jour du mois
      *
      * @return \DateTime
      */
