@@ -3,7 +3,7 @@
 namespace App\Form\Pole;
 
 use App\Entity\Pole;
-use App\Form\Utils\Choices;;
+use App\Form\Utils\Choices;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

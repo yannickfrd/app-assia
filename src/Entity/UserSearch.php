@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Pole;
-use App\Utils\Phone;
+use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -133,12 +133,6 @@ class UserSearch
 
         return $this;
     }
-
-    public function getServiceUserType()
-    {
-        return self::GENDER[$this->serviceUser];
-    }
-
 
     /**
      * @return string|null

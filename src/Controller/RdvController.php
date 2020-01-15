@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Rdv;
-use App\Utils\Calendar;
+use App\Service\Calendar;
 use App\Entity\RdvSearch;
 
 use App\Entity\SupportGroup;

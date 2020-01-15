@@ -36,7 +36,7 @@ class NoteController extends AbstractController
     /**
      * Liste des notes
      * 
-     * @Route("support/{id}/note/list", name="note_list")
+     * @Route("support/{id}/notes", name="notes")
      *
      * @param SupportGroup $supportGroup
      * @param NoteSearch $noteSearch
@@ -126,8 +126,14 @@ class NoteController extends AbstractController
         ], 200);
     }
 
-    // Pagination de la liste des notes
-    protected function paginate($paginator, $supportGroup, $noteSearch, $request)
+    /**
+     * Pagination de la liste des notes
+     *
+     * @param SupportGroup $supportGroup
+     * @param NoteSearch $noteSearch
+     * @param Request $request
+     */
+    protected function paginate($paginator, SupportGroup $supportGroup, NoteSearch $noteSearch, Request $request)
     {
         $notes =  $paginator->paginate(
             $this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch),
@@ -141,8 +147,13 @@ class NoteController extends AbstractController
         return $notes;
     }
 
-    // Crée la note une fois le formulaire soumis et validé
-    protected function createNote($supportGroup, $note)
+    /**
+     * Crée la note une fois le formulaire soumis et validé
+     *
+     * @param SupportGroup $supportGroup
+     * @param Note $note
+     */
+    protected function createNote(SupportGroup $supportGroup, Note $note)
     {
         $note->setSupportGroup($supportGroup)
             ->setCreatedAt(new \DateTime())
@@ -167,8 +178,12 @@ class NoteController extends AbstractController
         ], 200);
     }
 
-    // Met à jour la note une fois le formulaire soumis et validé
-    protected function updateNote($note, $typeSave)
+    /**
+     * Met à jour la note une fois le formulaire soumis et validé
+     *
+     * @param Note $note
+     */
+    protected function updateNote(Note $note, $typeSave)
     {
         $note->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->currentUser);

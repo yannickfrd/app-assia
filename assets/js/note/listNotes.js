@@ -73,6 +73,7 @@ export default class ListNotes {
             });
     }
 
+    // Affiche un formulaire modal vierge
     newNote() {
         this.modalForm.querySelector("form").action = "";
         this.modalForm.querySelector("#note_title").value = "";
@@ -82,6 +83,7 @@ export default class ListNotes {
         this.timerAutoSave();
     }
 
+    // Donne la note sélectionnée dans le formulaire modal
     getNote(noteElt) {
         this.noteElt = noteElt;
         this.contentNoteElt = noteElt.querySelector(".card-text");
@@ -108,13 +110,15 @@ export default class ListNotes {
         this.timerAutoSave();
     }
 
+    // Compte le nombre de saisie dans l'éditeur de texte
     countKeyDown() {
         this.count++;
     }
 
+    // Timer pour la sauvegarde automatique
     timerAutoSave() {
         clearInterval(this.countdownID);
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 5 * 1000);
+        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000);
         if (this.count > 10) {
             this.autoSave = true;
             this.count = 0;
@@ -126,13 +130,14 @@ export default class ListNotes {
         }
     }
 
+    // Remet à zéro le timer
     clearTimer() {
         this.autoSave = false;
         this.count = 0;
         clearInterval(this.countdownID);
     }
 
-    // 
+    // Sélectionne une des options dans une liste select
     selectOption(selectElt, value) {
         selectElt.querySelectorAll("option").forEach(option => {
             if (option.value === value) {
@@ -143,7 +148,7 @@ export default class ListNotes {
         });
     }
 
-    // Retourne l'option sélelectionnée
+    // Retourne l'option sélectionnée
     getOption(selectElt) {
         let optionValue;
         selectElt.querySelectorAll("option").forEach(option => {
@@ -154,6 +159,7 @@ export default class ListNotes {
         return optionValue;
     }
 
+    // Envoie la requête ajax pour sauvegarder la note
     saveNote() {
         if (this.editor.getData() != "") {
             this.noteContentElt.textContent = this.editor.getData();
@@ -167,20 +173,13 @@ export default class ListNotes {
         }
     }
 
+    // Envoie la requête ajax pour supprimer la note
     deleteNote() {
         this.animateLoader();
         this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
     }
 
-    animateLoader() {
-        if (this.autoSave) {
-            this.autoSave === false;
-        } else {
-            $("#modal-block").modal("hide");
-            this.loaderElt.classList.remove("d-none");
-        }
-    }
-
+    // Réponse du serveur
     responseAjax(data) {
         let dataJSON = JSON.parse(data);
         if (dataJSON.code === 200) {
@@ -202,16 +201,16 @@ export default class ListNotes {
         }
     }
 
+    // Crée la note dans le container
     createNote(data) {
-        let note = document.createElement("div");
-        note.id = "note-" + data.noteId;
+        let noteElt = document.createElement("div");
+        noteElt.id = "note-" + data.noteId;
         this.modalForm.querySelector("form").action = "/note/" + data.noteId + "/edit";
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         let title = this.modalForm.querySelector("#note_title").value;
-        let content = this.editor.getData();
 
-        note.className = "col-sm-12 col-lg-6 mb-4 js-note";
-        note.innerHTML =
+        noteElt.className = "col-sm-12 col-lg-6 mb-4 js-note";
+        noteElt.innerHTML =
             `<div class="card h-100 shadow">
                 <div class="card-header">
                     <h3 class="card-title h5 text-${this.themeColor}">${title}</h3>
@@ -221,17 +220,18 @@ export default class ListNotes {
                     <span class="small text-secondary js-note-updated"></span>
                 </div>
                 <div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Modifier la note">
-                    <div class="card-text">${content}</div>
+                    <div class="card-text">${this.editor.getData()}</div>
                     <span class="note-fadeout"></span>
                 </div>
             </div>`
 
         let containerNotesElt = document.getElementById("container-notes");
-        containerNotesElt.insertBefore(note, containerNotesElt.firstChild);
+        containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild);
         this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) + 1;
-        this.getNote(containerNotesElt.firstChild);
+        noteElt.addEventListener("click", this.getNote.bind(this, noteElt));
     }
 
+    // Met à jour la note dans le container
     updateNote(data) {
         this.titleNoteElt.textContent = this.modalForm.querySelector("#note_title").value;
         this.contentNoteElt.innerHTML = this.editor.getData();
@@ -246,5 +246,15 @@ export default class ListNotes {
         noteStatusElt.setAttribute("data-value", this.getOption(this.modalForm.querySelector("#note_status")));
 
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
+    }
+
+    // Active le loader spinner
+    animateLoader() {
+        if (this.autoSave) {
+            this.autoSave === false;
+        } else {
+            $("#modal-block").modal("hide");
+            this.loaderElt.classList.remove("d-none");
+        }
     }
 }

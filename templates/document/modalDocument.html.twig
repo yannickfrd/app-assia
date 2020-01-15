@@ -1,0 +1,37 @@
+<div id="modal-document" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocument" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body pb-0">
+                {{ form_start(form) }}
+                <div class="form-group row">
+                    <div class="col-sm-12">{{ form_widget(form.name) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">{{ form_widget(form.type) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">{{ form_widget(form.content) }}</div>
+                </div>
+                <div class="form-group row js-document-block-file">
+                    <div class="col-sm-12">{{ form_widget(form.file) }}</div>
+                    <div class="col-sm-12">{{ form_help(form.file) }}</div>
+                    <div class="col-sm-12">{{ form_errors(form.file) }}</div>
+                </div>
+                {{ form_row(form._token) }}
+            </div>
+            <div class="modal-footer d-block">
+                <div class="float-left d-flex">
+                    <a href="{{ path("document_delete", {'id':0 }) }}" id="modal-btn-delete"
+                        class="mr-3 btn btn-danger d-block" data-placement="bottom" title="Supprimer le document"
+                        onclick="if(window.confirm('Voulez-vous vraiment supprimer ce document ?', 'Demande de confirmation')){return true;}else{return false;}">Supprimer</a>
+                </div>
+                <div class="float-right">
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary"
+                        data-dismiss="modal">Annuler</button>
+                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }}" data-action="new">Enregistrer</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>

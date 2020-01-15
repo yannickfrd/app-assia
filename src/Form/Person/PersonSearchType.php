@@ -4,7 +4,7 @@ namespace App\Form\Person;
 
 use App\Entity\Person;
 
-use App\Form\Utils\Choices;;
+use App\Form\Utils\Choices;
 
 use App\Entity\PersonSearch;
 

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Utils\Agree;
+use App\Service\Agree;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
@@ -167,10 +167,7 @@ class PersonController extends AbstractController
             ]);
             // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
             if ($personExist) {
-                $this->addFlash(
-                    "warning",
-                    "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !"
-                );
+                $this->addFlash("warning", "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !");
             } else {
                 $user = $this->security->getUser();
 

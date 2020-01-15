@@ -23,7 +23,7 @@
                  {% for note in user.notesCreated|sort ((a, b) => a.updatedAt <=> b.updatedAt)|reverse|slice(0, 10)  %}
                  <tr>
                      <th scope="row" class="align-middle">
-                         <a href="{{ path('note_list', {'id':note.supportGroup.id}) }}"
+                         <a href="{{ path('notes', {'id':note.supportGroup.id}) }}"
                              class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                              title="Voir le suivi social"><span class="fas fa-eye"></span>
                          </a>

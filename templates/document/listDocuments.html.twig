@@ -1,0 +1,143 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form_search "bootstrap_4_layout.html.twig" %}
+{% form_theme form "bootstrap_4_layout.html.twig" %}
+
+{% block title %}Documents | Esperer95-app {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <section class="mt-0">
+        <h1 class="h2 mb-4">Documents</h1>
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                            href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span
+                                class="fas fa-users mr-2"></span>Fiche groupe <span
+                                class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                            href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Documents</li>
+                </ol>
+            </nav>
+            {% for supportPerson in support.supportPerson %}
+            <span
+                class="btn btn-outline-{{ theme_color }} btn-sm mb-2 shadow-sm">{{ supportPerson.person.fullname }}</span>
+            {% endfor %}
+        </div>
+
+        <hr>
+        
+        {% include "model/msgFlash.html.twig" %}
+
+        <div class="row">
+            <div class="col-md-6 mb-1">
+                <button id="js-new-document" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
+                    data-target="#modal-document" data-placement="bottom" title="Ajouter un nouveau document"><span
+                        class="fas fa-plus-square mr-2"></span>Nouveau document</button>
+                <div class="d-inline align-middle">Résultat :
+                    <span id="count-documents">{{ documents.getTotalItemCount | number_format(0,'', ' ')}}</span>
+                    document{% if documents.getTotalItemCount > 1 %}s{% endif %}.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="navigation">{{ knp_pagination_render(documents) }}</div>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div class="accordion" id="accordionSearch">
+                    <div id="form-search">
+                        <div class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch"
+                            data-toggle="collapse" data-target="#collapseSearch" aria-expanded="true"
+                            aria-controls="collapseSearch">
+                            <h2 class="h5">Recherche<div class="float-right">
+                                    <span class="fa fa-chevron-down"></span></div>
+                            </h2>
+                        </div>
+                        <div id="collapseSearch" class="collapse show float-right" aria-labelledby="headingSearch"
+                            data-parent="#accordionSearch">
+                            {{ form_start(form_search) }}
+                            <div class="form-inline justify-content-md-center align-items-end">
+                                <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.name) }}</div>
+                                <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
+                                <div class="form-group col-auto my-1 px-1">
+                                    <div class="form-group">
+                                        <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
+                                                class="fas fa-search"></i></button>
+                                        <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
+                                                class="fas fa-eraser"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_end(form_search, {"render_rest": false}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="row" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(documents, "Type", "d.type") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(documents, "Description", "d.content") }}
+                        </th>
+                        <th scope="col" class="align-middle th-date">
+                            {{ knp_pagination_sortable(documents, "Date d'ajout", "d.createdAt") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                    </tr>
+                </thead>
+
+                <tbody id="container-documents" data-support="{{ support.id }}">
+
+                    {% for document in documents %}
+                    <tr id="document-{{ document.id }}" class="js-document">
+                        <th scope="row" class="align-middle text-center">
+                            <a href="{{ asset("uploads/documents/" ~ document.groupPeople.id ~ "/" ~ document.internalFileName) }}" target="_blank"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                                title="Télécharger le document"><span class="fas fa-file-download"></span>
+                            </a>
+                        </th>
+                        <td class="js-document-name" data-toggle="modal" data-target="#modal-document">{{ document.name }}</td>
+                        <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="{{ document.type }}" >{{ document.typeList }}</td>
+                        <td class="js-document-content" data-toggle="modal" data-target="#modal-document">{{ document.content }}</td>
+                        <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">{{ document.createdAt | date("d/m/Y H:i") }}</td>
+                        <td class="align-middle text-center">
+                            <button data-url="{{ path('document_delete', {'id':document.id}) }}"  class="js-delete btn btn-danger btn-sm shadow my-1" data-placement="bottom"
+                                title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="navigation">
+            {{ knp_pagination_render(documents) }}
+        </div>
+
+        {% include "document/modalDocument.html.twig" %}
+        {% include "document/modalDeleteDocument.html.twig" %}
+
+    </section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{{ encore_entry_script_tags("document") }}
+{% endblock javascripts %}

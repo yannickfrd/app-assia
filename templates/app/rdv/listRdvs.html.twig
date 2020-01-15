@@ -45,7 +45,7 @@
                         class="far fa-calendar-plus mr-2"></span>Nouveau rdv</button>
                 <div class="d-inline align-middle">Résultat :
                     <span id="count-rdvs">{{ rdvs.getTotalItemCount | number_format(0,'', ' ')}}</span>
-                    rdv{% if rdvs.getTotalItemCount > 0 %}s{% endif %}.
+                    rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
                 </div>
             </div>
             <div class="col-md-6">

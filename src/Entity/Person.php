@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Utils\Phone;
+use App\Service\Phone;
 use Cocur\Slugify\Slugify;
 
 use Doctrine\ORM\Mapping as ORM;

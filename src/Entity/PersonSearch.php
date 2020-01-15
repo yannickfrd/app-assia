@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Utils\Phone;
+use App\Service\Phone;
 use App\Entity\Person;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,7 +43,8 @@ class PersonSearch
     private $email;
 
     public function __construct()
-    { }
+    {
+    }
 
     /**
      * @return string|null

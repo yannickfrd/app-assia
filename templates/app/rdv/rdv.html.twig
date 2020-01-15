@@ -31,8 +31,6 @@
                                 class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
                     <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
                             href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
-                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                            href="{{ path('note_list', {'id':support.id }) }}">Notes sociales</a></li>
                     <li class="breadcrumb-item active" aria-current="page">
                         {% if edit_mode %}Édition{% else %}Création{% endif %} Rendez-vous</li>
                 </ol>

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Utils\Agree;
+use App\Service\Agree;
 
 use App\Entity\Person;
 use App\Entity\RolePerson;

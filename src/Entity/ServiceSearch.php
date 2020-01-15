@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Utils\Phone;
+use App\Service\Phone;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ServiceSearch
@@ -34,7 +34,8 @@ class ServiceSearch
     private $pole;
 
     public function __construct()
-    { }
+    {
+    }
 
     /**
      * @return string|null
