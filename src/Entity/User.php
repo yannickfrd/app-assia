@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *  message="Ce nom d'utilisateur existe déjà."
  * )
  */
+
 class User implements UserInterface
 {
     public const STATUS = [

@@ -19,7 +19,8 @@ class A_ServiceUserFixtures extends Fixture
         1 => "ALTHO",
         2 => "ASSLT - ASLLT",
         3 => "10 000 logements",
-        4 => "SAVL"
+        4 => "SAVL",
+        5 => "AVDL"
     ];
 
     public const SERVICES_HEB = [

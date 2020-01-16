@@ -83,7 +83,7 @@
                                 {{  role.service.name }}</a><br>
                             {% endfor %}
                         </td>
-                        <td>{% for role in user.serviceUser %}
+                        <td>{% for role in user.serviceUser|slice(0, 1) %}
                             <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}"
                                 class="text-{{ theme_color }}">
                                 {{  role.service.pole.name }}</a><br>
