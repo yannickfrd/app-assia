@@ -21,9 +21,7 @@
             </div>
             <div class="modal-footer d-block">
                 <div class="float-left d-flex">
-                    <a href="{{ path("document_delete", {'id':0 }) }}" id="modal-btn-delete"
-                        class="mr-3 btn btn-danger d-block" data-placement="bottom" title="Supprimer le document"
-                        onclick="if(window.confirm('Voulez-vous vraiment supprimer ce document ?', 'Demande de confirmation')){return true;}else{return false;}">Supprimer</a>
+                    <button id="modal-btn-delete" class="mr-3 btn btn-danger d-block" data-placement="bottom" title="Supprimer le document"><span class="fas fa-trash-alt"></span></button>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary"

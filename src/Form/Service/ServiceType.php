@@ -30,7 +30,8 @@ class ServiceType extends AbstractType
             ])
             ->add("phone", null, [
                 "attr" => [
-                    "class" => "js-phone ",
+                    "class" => "js-phone",
+                    "placeholder" => "Phone"
                 ]
             ])
             ->add("email", null, [

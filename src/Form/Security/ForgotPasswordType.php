@@ -30,7 +30,7 @@ class ForgotPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => UserResetPass::class,
+            "data_class" => UserResetPass::class,
             "translation_domain" => "forms",
         ]);
     }

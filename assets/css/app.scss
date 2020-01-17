@@ -71,6 +71,10 @@ section {
     }
 }
 
+.form-signin {
+    max-width: 320px !important;
+}
+
 // Pagination
 .page-item.active .page-link {
     background-color: var(--primary);
@@ -312,20 +316,7 @@ button.btn-outline-secondary a:hover {
 @media (max-width: 992px) {}
 
 // Medium devices (tablets, 768px and up)
-@media (max-width: 768px) {
-
-    .cke_contents,
-    #editor {
-        // max-height: 60vh;
-    }
-
-}
+@media (max-width: 768px) {}
 
 // Small devices (landscape phones, 576px and up)
-@media (max-width: 576px) {
-
-    .cke_contents,
-    #editor {
-        // max-height: 60vh;
-    }
-}
+@media (max-width: 576px) {}

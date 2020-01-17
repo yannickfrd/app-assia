@@ -115,19 +115,20 @@ class SecurityController extends AbstractController
 
         $user = $repo->findOneBy(["username" => $lastUsername]);
 
-        if ($user && $user->getFailureLoginCount() >= 5) {
-            $this->addFlash("danger", "Ce compte utilisateur a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
-        }
+        // if ($user && $user->getFailureLoginCount() >= 5) {
+        //     $this->addFlash("danger", "Ce compte utilisateur a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
+        // }
 
         if ($error) {
+            $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
 
-            if ($user) {
-                $failureLoginCount = $user->getFailureLoginCount() + 1;
-                $user->setFailureLoginCount($failureLoginCount);
-                $this->manager->flush();
-            } else {
-                $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
-            }
+            // if ($user) {
+            //     $failureLoginCount = $user->getFailureLoginCount() + 1;
+            //     $user->setFailureLoginCount($failureLoginCount);
+            //     $this->manager->flush();
+            // } else {
+            //     $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
+            // }
         }
 
         return $this->render("security/login.html.twig", [
@@ -166,10 +167,14 @@ class SecurityController extends AbstractController
                 $this->manager->flush();
 
                 // Envoie l'email
-                $notification->reinitPassword($user);
+                if ($_SERVER["HTTP_HOST"] == "127.0.0.1:8000") {
+                    $notification->reinitPassword($user);
+                } else {
+                    $notification->reinitPassword2($user);
+                }
 
-                $this->addFlash("success",  "Un mail vous a été envoyé.");
-                return $this->redirectToRoute("security_forgot_password");
+                $this->addFlash("success",  "Un mail vous a été envoyé. Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables.");
+                return $this->redirectToRoute("security_login");
             } else {
                 $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
             }

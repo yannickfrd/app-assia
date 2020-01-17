@@ -13,8 +13,8 @@
                  <tr>
                      <th scope="col" class="align-middle th-w-20"></th>
                      <th scope="col" class="align-middle th-w-150">Titre</th>
-                     <th scope="col" class="align-middle th-w-100">Statut</th>
                      <th scope="col" class="align-middle th-w-100">Suivi concerné</th>
+                     <th scope="col" class="align-middle th-w-100">Statut</th>
                      <th scope="col" class="align-middle th-date">Date de création</th>
                      <th scope="col" class="align-middle th-date">Date de modification</th>
                  </tr>
@@ -29,12 +29,12 @@
                          </a>
                      </th>
                      <td class="align-middle">{{ note.title }}</td>
-                     <td class="align-middle">{{ note.statusList }}</td>
                      <td class="align-middle">
                          {% for rolePerson in note.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}
                          {{ rolePerson.person.fullname }}<br>
                          {% endfor %}
                      </td>
+                     <td class="align-middle">{{ note.statusList }}</td>
                      <td class="align-middle">{{ note.createdAt| date("d/m/Y") }}</td>
                      <td class="align-middle">{{ note.updatedAt| date("d/m/Y") }}</td>
                  </tr>

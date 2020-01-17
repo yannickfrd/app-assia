@@ -179,8 +179,10 @@ export default class ListDocuments {
 
     // Envoie une requête ajax pour supprimer le document
     deleteDocument(url) {
-        this.animateLoader();
-        this.ajaxRequest(url, "GET", null, false, false);
+        if (window.confirm("Voulez-vous vraiment supprimer ce document ?")) {
+            this.animateLoader();
+            this.ajaxRequest(url, "GET", null, false, false);
+        }
     }
 
     // Requête Ajax

@@ -31,9 +31,8 @@
             </div>
             <div class="modal-footer d-block">
                 <div class="float-left d-flex">
-                    <a href="{{ path("note_delete", {'id':0 }) }}" id="modal-btn-delete"
-                        class="mr-3 btn btn-danger d-none" data-placement="bottom" title="Supprimer la note"
-                        onclick="if(window.confirm('Voulez-vous vraiment supprimer cette note ?', 'Demande de confirmation')){return true;}else{return false;}">Supprimer</a>
+                    <button id="modal-btn-delete"
+                        class="mr-3 btn btn-danger d-none" data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span></button>
                     <div id="js-auto-save" class="text-secondary py-1 d-none">
                         <span class="fas fa-sync-alt mr-2"></span>Sauvegarde auto.
                     </div>

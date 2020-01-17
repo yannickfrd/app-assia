@@ -47,7 +47,7 @@ class PoleController extends AbstractController
             "align" => "right", // alignement de la pagination
         ]);
 
-        return $this->render("app/listpoles.html.twig", [
+        return $this->render("app/listPoles.html.twig", [
             "poles" => $poles ?? null
         ]);
     }

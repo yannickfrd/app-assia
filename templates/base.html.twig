@@ -27,8 +27,9 @@
 {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %}
 
 <body>
-	<div id="loader" data-value="{{ theme_color }}">
+	<div id="loader" role="status" data-value="{{ theme_color }}">
 		<span class="fas fa-circle-notch text-{{ theme_color }}"></span>
+		<span class="sr-only">Loading...</span>
 	</div>
 
 	<main class="min-vh-100">

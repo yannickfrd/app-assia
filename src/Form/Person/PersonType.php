@@ -53,12 +53,12 @@ class PersonType extends AbstractType
             ])
             ->add("phone1", null, [
                 "attr" => [
-                    "class" => "js-phone ",
+                    "class" => "js-phone",
                 ]
             ])
             ->add("phone2", null, [
                 "attr" => [
-                    "class" => "js-phone ",
+                    "class" => "js-phone",
                 ]
             ])
             ->add("email")

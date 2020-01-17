@@ -13,8 +13,7 @@
                  <tr>
                      <th scope="col" class="align-middle th-w-20"></th>
                      <th scope="col" class="align-middle">Titre</th>
-                     <th scope="col" class="align-middle th-w-date">Début</th>
-                     <th scope="col" class="align-middle th-w-date">Fin</th>
+                     <th scope="col" class="align-middle th-w-120">Date</th>
                      <th scope="col" class="align-middle th-50">Suivi concerné</th>
                      <th scope="col" class="align-middle">Lieu</th>
                  </tr>
@@ -23,13 +22,12 @@
                  {% for rdv in user.rdvs|filter(a => a.start|date("Y-m-d") >= "now"|date("Y-m-d"))|sort ((a, b) => a.start <=> b.start)|slice(0, 10)  %}
                  <tr>
                      <th scope="row" class="align-middle">
-                         <a href="#" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                         <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                              title="Voir le suivi social"><span class="fas fa-eye"></span>
                          </a>
                      </th>
                      <td class="align-middle">{{ rdv.title }}</td>
-                     <td class="align-middle">{{ rdv.start| date("d/m/Y H:m") }}</td>
-                     <td class="align-middle">{{ rdv.end| date("d/m/Y H:m") }}</td>
+                     <td class="align-middle">{{ rdv.start| date("d/m/Y") }}<br/>{{ rdv.start| date("H:i") }} – {{ rdv.end| date("H:i") }}</td>
                      <td class="align-middle">
                          {% if rdv.supportGroup %}
                          {% for rolePerson in rdv.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}

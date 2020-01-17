@@ -56,7 +56,7 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
-        $search = $request->query->get("search");
+        $search = $request->query->get("search-person");
 
 
         if ($request->query->all()) {

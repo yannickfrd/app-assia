@@ -82,9 +82,7 @@
             </div>
             <div class="modal-footer d-block">
                 <div class="float-left d-flex">
-                    <a href="{{ path("rdv_delete", {'id':0 }) }}" id="modal-btn-delete"
-                        class="mr-3 btn btn-danger d-block" data-placement="bottom" title="Supprimer le rendez-vous"
-                        onclick="if(window.confirm('Voulez-vous vraiment supprimer cet rendez-vous ?', 'Demande de confirmation')){return true;}else{return false;}">Supprimer</a>
+                    <button id="modal-btn-delete" class="mr-3 btn btn-danger d-block" data-placement="bottom" title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span></button>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary"

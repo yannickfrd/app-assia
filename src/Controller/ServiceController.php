@@ -59,7 +59,7 @@ class ServiceController extends AbstractController
             ]);
         }
 
-        return $this->render("app/listservices.html.twig", [
+        return $this->render("app/listServices.html.twig", [
             "services" => $services ?? null,
             "serviceSearch" => $serviceSearch,
             "form" => $form->createView(),

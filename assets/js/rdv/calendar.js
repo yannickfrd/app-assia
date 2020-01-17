@@ -168,8 +168,10 @@ export default class Calendar {
 
     // Requête pour supprimer le RDV
     requestDeleteRdv() {
-        this.animateLoader();
-        this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
+        if (window.confirm("Voulez-vous vraiment supprimer ce rendez-vous ?")) {
+            this.animateLoader();
+            this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
+        }
     }
 
     responseAjax(data) {

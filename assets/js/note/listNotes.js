@@ -175,8 +175,10 @@ export default class ListNotes {
 
     // Envoie la requête ajax pour supprimer la note
     deleteNote() {
-        this.animateLoader();
-        this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
+        if (window.confirm("Voulez-vous vraiment supprimer cette note ?")) {
+            this.animateLoader();
+            this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
+        }
     }
 
     // Réponse du serveur

@@ -19,42 +19,12 @@ class MailNotification
         $this->renderer = $renderer;
     }
 
-    public function sendMail($name, $title, $from, $to, $replyTo = null, $emailHtml, $emailTxt = null)
-    {
-        $message = (new \Swift_Message())
-            ->setSubject($title)
-            ->setFrom($from)
-            ->setTo($to)
-            // ->setReplyTo($replyTo)
-            ->setBody(
-                $this->renderer->render(
-                    $emailHtml,
-                    ["name" => $name]
-                ),
-                "text/html"
-            )
-            ->addPart(
-                $this->renderer->render(
-                    $emailTxt,
-                    ["name" => $name]
-                ),
-                "text/plain"
-            );
-        // $message->attach(Swift_Attachment::fromPath($path));
-
-        $this->mailer->send($message);
-    }
-
-
     public function reinitPassword(User $user)
     {
-        //Solid (single responsability)
-
-
         $message = (new \Swift_Message())
             ->setSubject("Esperer95-app : Réinitialisation du mot de passe")
-            ->setFrom(["noreply@esperer-95.org" => "Esperer95-app"])
-            ->setTo(["romain.madelaine@esperer-95.org" => $user->getUsername()]);
+            ->setFrom(["romain.madelaine@gmail.com" => "Esperer95-app"])
+            ->setTo([$user->getEmail() => $user->getFullname()]);
 
         $message->setBody(
             $this->renderer->render(
@@ -72,5 +42,27 @@ class MailNotification
             );
 
         $this->mailer->send($message);
+    }
+
+    public function reinitPassword2(User $user)
+    {
+        $to = $user->getEmail();
+        $subject = "Esperer95-app : Réinitialisation du mot de passe";
+        $message = $this->renderer->render(
+            "emails/reinitPassword.html.twig",
+            ["user" => $user]
+        );
+
+        $headers = [
+            "MIME-Version" => "1.0",
+            "Content-type" => "text/html;charset=UTF-8",
+            "From" => "Esperer95-app <contact@romain-mad.fr>",
+            // "CC" => $cc,
+            // "Bcc" => $bcc,
+            "Reply-To" => "Esperer95-app <romain.madelaine@esperer-95.org>",
+            "X-Mailer" => "PHP/" . phpversion()
+        ];
+
+        mail($to, $subject, $message, $headers);
     }
 }

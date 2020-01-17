@@ -1,4 +1,5 @@
 import Username from "./username";
+import "../utils/maskPhone";
 import SeePassword from "./seePassword";
 import DeleteTr from "../utils/deleteTr";
 import addCollectionWidget from "../utils/addCollectionWidget";

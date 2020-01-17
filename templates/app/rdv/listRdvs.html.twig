@@ -43,7 +43,7 @@
                 <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
                     data-target="#modal-block" data-placement="bottom" title="Créer un nouveau rdv"><span
                         class="far fa-calendar-plus mr-2"></span>Nouveau rdv</button>
-                <div class="d-inline align-middle">Résultat :
+                <div class="d-inline align-middle">Total :
                     <span id="count-rdvs">{{ rdvs.getTotalItemCount | number_format(0,'', ' ')}}</span>
                     rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
                 </div>

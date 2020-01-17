@@ -77,11 +77,7 @@ class RdvController extends AbstractController
         $startDay = new \Datetime($year . "-" . $month . "-" . $day);
         $endDay = new \Datetime($year . "-" . $month . "-" . ($day + 1));
 
-        dump($day);
-
         $rdvs = $repo->findRdvsBetween($startDay, $endDay, null);
-
-        dump($rdvs);
 
         $rdv = new Rdv();
 

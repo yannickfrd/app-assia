@@ -37,9 +37,8 @@
                 <button id="js-new-document" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
                     data-target="#modal-document" data-placement="bottom" title="Ajouter un nouveau document"><span
                         class="fas fa-plus-square mr-2"></span>Nouveau document</button>
-                <div class="d-inline align-middle">Résultat :
+                <div class="d-inline align-middle">Total :
                     <span id="count-documents">{{ documents.getTotalItemCount | number_format(0,'', ' ')}}</span>
-                    document{% if documents.getTotalItemCount > 1 %}s{% endif %}.
                 </div>
             </div>
             <div class="col-md-6">

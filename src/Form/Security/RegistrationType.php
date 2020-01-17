@@ -54,6 +54,12 @@ class RegistrationType extends AbstractType
                     "placeholder" => "Email"
                 ]
             ])
+            ->add("phone", null, [
+                "attr" => [
+                    "class" => "js-phone",
+                    "placeholder" => "Phone"
+                ]
+            ])
             ->add("status", ChoiceType::class, [
                 "choices" => Choices::getChoices(User::STATUS),
                 "label" => "Fonction",

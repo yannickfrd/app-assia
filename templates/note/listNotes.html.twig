@@ -36,7 +36,7 @@
                 <button id="js-new-note" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
                     data-target="#modal-block" data-placement="bottom" title="Créer une nouvelle note"><span
                         class="fas fa-plus-square mr-2"></span>Nouvelle note</button>
-                <div class="d-inline align-middle">Résultat :
+                <div class="d-inline align-middle">Total :
                     <span id="count-notes">{{ notes.getTotalItemCount | number_format(0,'', ' ')}}</span>
                     note{% if notes.getTotalItemCount > 1 %}s{% endif %}.
                 </div>
