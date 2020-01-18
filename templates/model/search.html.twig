@@ -16,10 +16,15 @@
                     {% block search_form %}{% endblock %}
                     <div class="form-group col-auto my-1 px-1">
                         <div class="form-group">
-                            <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
-                                    class="fas fa-search"></i></button>
-                            <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
-                                    class="fas fa-eraser"></i></button>
+                            <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"
+                                data-placement="bottom" title="Rechercher"><span class="fas fa-search"></span><span
+                                    class="sr-only">Rechercher</span></button>
+                            <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow" data-placement="bottom"
+                                title="Effacer les filtres"><span class="fas fa-eraser"></span><span
+                                    class="sr-only">Effacer</span></button>
+                            <button id="js-btn-export" name="export" value="true" class="btn btn-success ml-2 shadow"
+                                data-placement="bottom" title="Exporter les données au format Excel"><span
+                                    class="fas fa-file-excel"></span><span class="sr-only">Exporter</span></button>
                         </div>
                     </div>
                 </div>

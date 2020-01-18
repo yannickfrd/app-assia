@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\SelectList;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -84,6 +85,11 @@ class SitHousing
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $specificities;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $syplo;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -251,11 +257,6 @@ class SitHousing
      */
     private $supportGroup;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $syplo;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -271,6 +272,11 @@ class SitHousing
         $this->dls = $dls;
 
         return $this;
+    }
+
+    public function getDlsList()
+    {
+        return SelectList::YES_NO[$this->dls];
     }
 
     public function getDlsId(): ?string
@@ -345,6 +351,23 @@ class SitHousing
         return $this;
     }
 
+    public function getSyplo(): ?int
+    {
+        return $this->syplo;
+    }
+
+    public function setSyplo(?int $syplo): self
+    {
+        $this->syplo = $syplo;
+
+        return $this;
+    }
+
+    public function getSyploList()
+    {
+        return SelectList::YES_NO[$this->syplo];
+    }
+
     public function getSyploId(): ?string
     {
         return $this->syploId;
@@ -381,6 +404,11 @@ class SitHousing
         return $this;
     }
 
+    public function getDaloCommissionList()
+    {
+        return SelectList::YES_NO[$this->daloCommission];
+    }
+
     public function getDaloRecordDate(): ?\DateTimeInterface
     {
         return $this->daloRecordDate;
@@ -403,6 +431,11 @@ class SitHousing
         $this->requalifiedDalo = $requalifiedDalo;
 
         return $this;
+    }
+
+    public function getRequalifiedDaloList()
+    {
+        return SelectList::YES_NO[$this->syplo];
     }
 
     public function getDecisionDate(): ?\DateTimeInterface
@@ -429,6 +462,11 @@ class SitHousing
         return $this;
     }
 
+    public function getHsgActionEligibilityList()
+    {
+        return SelectList::YES_NO[$this->syplo];
+    }
+
     public function getHsgActionRecord(): ?int
     {
         return $this->hsgActionRecord;
@@ -439,6 +477,11 @@ class SitHousing
         $this->hsgActionRecord = $hsgActionRecord;
 
         return $this;
+    }
+
+    public function getHsgActionRecordList()
+    {
+        return SelectList::YES_NO[$this->syplo];
     }
 
     public function getHsgActionDate(): ?\DateTimeInterface
@@ -489,6 +532,11 @@ class SitHousing
         return $this;
     }
 
+    public function getExpulsionInProgressList()
+    {
+        return SelectList::YES_NO[$this->syplo];
+    }
+
     public function getPublicForce(): ?int
     {
         return $this->publicForce;
@@ -499,6 +547,11 @@ class SitHousing
         $this->publicForce = $publicForce;
 
         return $this;
+    }
+
+    public function getPublicForceList()
+    {
+        return SelectList::YES_NO[$this->syplo];
     }
 
     public function getPublicForceDate(): ?\DateTimeInterface
@@ -535,6 +588,11 @@ class SitHousing
         $this->housingExperience = $housingExperience;
 
         return $this;
+    }
+
+    public function getHousingExperienceList()
+    {
+        return SelectList::YES_NO[$this->syplo];
     }
 
     public function getHousingExpeComment(): ?string
@@ -633,7 +691,6 @@ class SitHousing
         return $this;
     }
 
-
     public function getHousingStatusList()
     {
         return self::HOUSING_STATUS[$this->housingStatus];
@@ -650,6 +707,11 @@ class SitHousing
         $this->housing = $housing;
 
         return $this;
+    }
+
+    public function getHousinglist()
+    {
+        return SelectList::YES_NO[$this->syplo];
     }
 
     public function getHousingAddress(): ?string
@@ -700,6 +762,11 @@ class SitHousing
         return $this;
     }
 
+    public function getDomiciliationlist()
+    {
+        return SelectList::YES_NO[$this->syplo];
+    }
+
     public function getDomiciliationAddress(): ?string
     {
         return $this->domiciliationAddress;
@@ -744,18 +811,6 @@ class SitHousing
     public function setSupportGroup(SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
-
-        return $this;
-    }
-
-    public function getSyplo(): ?int
-    {
-        return $this->syplo;
-    }
-
-    public function setSyplo(?int $syplo): self
-    {
-        $this->syplo = $syplo;
 
         return $this;
     }

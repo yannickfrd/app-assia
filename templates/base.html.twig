@@ -2,7 +2,6 @@
 <html lang="fr">
 
 <head>
-	<meta charset="UTF-8">
 	<title>
 		{% block title %}E95-app{% endblock %}
 	</title>
@@ -36,7 +35,7 @@
 		<header id="header">
 			<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
 				<a class="navbar-brand text-light" href="{{ path("home") }}">
-					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app"></a>
+					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app">
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
 					aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +56,7 @@
 								Suivis
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
-								<a class="dropdown-item" href="{{ path("list_supports") }}">Voir tous les
+								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les
 									suivis</a>
 								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau
 									suivi</a>

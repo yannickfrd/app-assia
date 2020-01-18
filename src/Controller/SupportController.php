@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Person;
+use App\Service\Export;
+use App\Entity\RolePerson;
+use App\Entity\SitHousing;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
@@ -9,19 +13,20 @@ use App\Entity\SupportGroupSearch;
 
 use App\Form\Support\SupportGroupType;
 use App\Form\Support\SupportGroupType2;
-use App\Form\Support\SupportGroupSearchType;
 
 use App\Repository\RolePersonRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use App\Repository\SupportGroupRepository;
-
 use Knp\Component\Pager\PaginatorInterface;
+use App\Form\Support\SupportGroupSearchType;
+use App\Repository\SupportPersonRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Doctrine\ORM\EntityManagerInterface;
 
 class SupportController extends AbstractController
 {
@@ -35,30 +40,28 @@ class SupportController extends AbstractController
     }
 
     /**
-     * @Route("/list/supports", name="list_supports")
+     * Voir la liste des suivis sociaux
      * 
+     * @Route("/supports", name="supports")
      * @param RolePersonRepository $repo
      * @param SupportGroupSearch $supportGroupSearch
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function viewListSupports(SupportGroupRepository $repo, SupportGroupSearch $supportGroupSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function viewListSupports(SupportGroupRepository $repo, SupportPersonRepository $repoSupportPerson, SupportGroupSearch $supportGroupSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
         $supportGroupSearch = new SupportGroupSearch();
 
         $form = $this->createForm(SupportGroupSearchType::class, $supportGroupSearch);
         $form->handleRequest($request);
 
-        $supports =  $paginator->paginate(
-            $repo->findAllSupports($supportGroupSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        // $rolePeople->setPageRange(5);
-        $supports->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
+        if ($supportGroupSearch->getExport()) {
+            $supports = $repoSupportPerson->getSupports($supportGroupSearch);
+            return $this->exportExcel($supports);
+        }
+
+        $supports = $this->paginate($paginator,  $repo,  $supportGroupSearch,  $request);
 
         return $this->render("app/listSupports.html.twig", [
             "supports" => $supports,
@@ -327,5 +330,169 @@ class SupportController extends AbstractController
             "msg" => "Une erreur s'est produite.",
             "data" => null
         ], 200);
+    }
+
+    /**
+     * Pagination de la liste des suivis sociaux
+     *
+     * @param PaginatorInterface $paginator
+     * @param SupportGroupRepository $repo
+     * @param DocumentSearch $documentSearch
+     * @param Request $request
+     */
+    protected function paginate(PaginatorInterface $paginator, SupportGroupRepository $repo, SupportGroupSearch $supportGroupSearch, Request $request)
+    {
+        $supports =  $paginator->paginate(
+            $repo->findAllSupportsQuery($supportGroupSearch),
+            $request->query->getInt("page", 1), // page number
+            20 // limit per page
+        );
+
+        $supports->setCustomParameters([
+            "align" => "right", // alignement de la pagination
+        ]);
+
+        return $supports;
+    }
+
+
+    /**
+     * Export des données au format Excel
+     * 
+     * @param SupportGroupRepository $repo
+     * @param SupportGroupSearch $supportGroupSearch
+     * @return Response
+     */
+    public function exportExcel($supports)
+    {
+        $arrayData = [];
+
+        $headers = [
+            "N° Suivi groupe",
+            "N° Suivi personne",
+            "N° Groupe",
+            "N° Personne",
+            "Nom",
+            "Prénom",
+            "Date de naissance",
+            "Typologie familiale",
+            "Nb de personnes",
+            "Rôle dans le groupe",
+            "DP",
+            "Statut",
+            "Début du suivi",
+            "Fin du suivi",
+            "Référent social",
+            "Service",
+            "Pôle"
+        ];
+
+        $sitHousing = new SitHousing();
+        $sitHousing = (array) $sitHousing;
+
+        $i = 0;
+        foreach ($sitHousing as $key => $value) {
+            if ($i == 0) {
+                $key = explode("\x00", $key);
+                $headers[] = array_pop($key);
+            }
+        }
+
+        $arrayData[] = $headers;
+
+        // /** @var SupportGroup $support */
+        // foreach ($supports as $key => $support) {
+
+        //     $rolePeople = $support->getGroupPeople()->getrolePerson();
+
+        //     /** @var Person $person */
+        //     $person = null;
+
+        //     /** @var RolePerson $rolePerson */
+        //     foreach ($rolePeople as $key => $rolePerson) {
+        //         if ($rolePerson->getHead()) {
+        //             $person = $rolePerson->getPerson();
+        //         }
+        //     }
+
+
+        /** @var SupportPerson $supportPerson */
+        foreach ($supports as $supportPerson) {
+
+            /** @var Person $person */
+            $person = $supportPerson->getPerson();
+
+            /** @var SupportGroup $supportGroup */
+            $supportGroup = $supportPerson->getSupportGroup();
+
+            /** @var GroupPeople $groupPeople */
+            $groupPeople = $supportGroup->getGroupPeople();
+
+            $rolePerson = null;
+            /** @var RolePerson $rolePerson */
+            foreach ($person->getRolesPerson() as $role) {
+                if ($role->getGroupPeople() == $groupPeople) {
+                    $rolePerson = $role;
+                }
+            }
+
+            $row = [
+                $supportGroup->getId(),
+                $supportPerson->getId(),
+                $groupPeople->getId(),
+                $person->getId(),
+                $person->getLastname(),
+                $person->getFirstname(),
+                Date::PHPToExcel($person->getBirthdate()->format("Y-m-d")),
+                $groupPeople->getFamilyTypologyType(),
+                $groupPeople->getNbPeople(),
+                $rolePerson->getRoleList(),
+                $rolePerson->getHead() ? "Oui" : "Non",
+                $supportPerson->getStatusType(),
+                Date::PHPToExcel($supportPerson->getStartDate()->format("Y-m-d")),
+                $supportPerson->getEndDate() ?  Date::PHPToExcel($supportPerson->getEndDate()->format("Y-m-d")) : null,
+                $supportGroup->getReferent()->getFullname(),
+                $supportGroup->getService()->getName(),
+                $supportGroup->getService()->getPole()->getName(),
+            ];
+
+            $sitHousing = (array) $supportGroup->getSitHousing();
+
+            if ($sitHousing) {
+                foreach ($sitHousing as $key => $value) {
+                    if (is_int($value)) {
+                        $key = explode("\x00", $key);
+                        $key = array_pop($key);
+                        $method = "get" . ucfirst($key) . "List";
+                        if (method_exists($supportGroup->getSitHousing(), $method)) {
+                            $row[] = $supportGroup->getSitHousing()->$method($value);
+                        } else {
+                            $row[] = $value;
+                        }
+                    } elseif (is_object($value)) {
+                        if (method_exists($value, "getId")) {
+                            $row[] = $value->getId();
+                        } else {
+                            $row[] = $value->format("d/m/Y");
+                        }
+                    } elseif (is_bool($value)) {
+                        $row[] = $value ? "Oui" : "Non";
+                    } else {
+                        $row[] = $value;
+                    }
+                }
+                // dd($row);
+            }
+
+            $arrayData[] = $row;
+        }
+
+        // dd($arrayData);
+
+        $export = new Export();
+
+        $columnsWithDate = ["G", "M", "N"];
+
+        return $export->exportFile("export_suivis", "xlsx", $arrayData,  $columnsWithDate);
     }
 }

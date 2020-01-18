@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\User;
+use App\Entity\SupportGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -67,18 +68,23 @@ class SupportGroupSearch
     private $endDate;
 
     /**
-     * @var int
+     * @var User
      */
     private $referent;
 
     /**
-     * @var Array
+     * @var ArrayCollection
      */
     private $service;
 
+    /**
+     * @var bool
+     */
+    private $export;
 
     public function __construct()
-    { }
+    {
+    }
 
     /**
      * @return string|null
@@ -160,7 +166,7 @@ class SupportGroupSearch
 
     public function getStatusType()
     {
-        return self::STATUS[$this->status];
+        return SupportGroup::STATUS[$this->status];
     }
 
     public function setStatus(?array $status): self
@@ -236,6 +242,21 @@ class SupportGroupSearch
     public function setService(?ArrayCollection $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getExport(): ?bool
+    {
+        return $this->export;
+    }
+
+    public function setExport(bool $export): self
+    {
+        $this->export = $export;
 
         return $this;
     }

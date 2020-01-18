@@ -150,10 +150,7 @@ Esperer95-app{% endblock %}
                         <td class="d-table-row d-sm-table-cell">
                             {{ role.groupPeople.getFamilyTypologyType }}
                         </td>
-                        <td class="d-table-row d-sm-table-cell">
-                            {% if role.groupPeople.nbPeople > 1 %}<span
-                                class="d-inline d-sm-none">{{ role.groupPeople.nbPeople }}personnes</span>{% endif %}
-                        </td>
+                        <td class="d-table-row d-sm-table-cell">{{ role.groupPeople.nbPeople }}</td>
                         <td>{{ role.getRoleList }} {% if role.head %} (DP){% endif %}</td>
                         <td class="d-none d-sm-table-cell">
                             {{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>

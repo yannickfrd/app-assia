@@ -146,7 +146,8 @@ class SupportGroupSearchType extends AbstractType
                     "class" => "multi-select js-service w-min-150 w-max-180"
                 ],
                 "required" => false
-            ]);
+            ])
+            ->add("export");
     }
 
     public function configureOptions(OptionsResolver $resolver)

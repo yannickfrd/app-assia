@@ -400,7 +400,7 @@ class PersonController extends AbstractController
      * 
      * @Route("/person/{id}/new_group", name="person_new_group", methods="GET|POST")
      */
-    public function addNewGroupToPerson(Person $person, RolePerson $rolePerson, Request $request)
+    public function addNewGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
     {
         $rolePerson = new RolePerson;
         $groupPeople = new GroupPeople;

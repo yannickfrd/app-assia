@@ -56,7 +56,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      * 
      * @return Query
      */
-    public function findAllSupports($supportGroupSearch): Query
+    public function findAllSupportsQuery($supportGroupSearch): Query
     {
         $query =  $this->createQueryBuilder("sg")
             ->select("sg")
@@ -73,6 +73,50 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("r.person", "p")
             ->addselect("p")
             ->andWhere("r.head = TRUE");
+
+        $query = $this->filter($query, $supportGroupSearch);
+
+        return $query->orderBy("sg.startDate", "DESC")
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    public function getSupports($supportGroupSearch)
+    {
+        $query =  $this->createQueryBuilder("sg")
+            ->select("sg")
+
+            ->leftJoin("sg.service", "s")
+            ->addselect("s")
+
+            ->leftJoin("s.pole", "pole")
+            ->addselect("pole")
+
+            ->leftJoin("sg.supportPerson", "sp")
+            ->addselect("sp")
+
+            ->leftJoin("sg.groupPeople", "g")
+            ->addselect("g")
+
+            ->leftJoin("g.rolePerson", "r")
+            ->addselect("r")
+
+            ->leftJoin("r.person", "p")
+            ->addselect("p")
+
+            ->leftJoin("sg.referent", "u")
+            ->addselect("u")
+
+            ->andWhere("r.head = TRUE");
+
+        $query = $this->filter($query, $supportGroupSearch);
+
+        return $query->orderBy("sg.startDate", "DESC")
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    protected function filter($query, $supportGroupSearch)
+    {
         if (!$this->currentUserService->isRole("ROLE_SUPER_ADMIN")) {
             // if ($this->currentUserService->isRole("ROLE_ADMIN")) {
             $query->andWhere("s.id IN (:services)")
@@ -160,7 +204,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             }
             $query->andWhere($orX);
         }
-        return $query->orderBy("sg.startDate", "DESC")
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+        return $query;
     }
 }
