@@ -20,7 +20,9 @@ class GroupPeopleSearchType extends AbstractType
     {
         $builder
             ->add("lastname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Lastname",
                     "class" => "w-max-180 text-uppercase",
@@ -28,7 +30,9 @@ class GroupPeopleSearchType extends AbstractType
                 ]
             ])
             ->add("firstname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Firstname",
                     "class" => "w-max-140 text-capitalize",
@@ -36,7 +40,9 @@ class GroupPeopleSearchType extends AbstractType
                 ]
             ])
             ->add("birthdate", DateType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-180",
@@ -57,7 +63,9 @@ class GroupPeopleSearchType extends AbstractType
             ])
             ->add("familyTypology", ChoiceType::class, [
                 "placeholder" => "-- Family Typology --",
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "required" => false,
                 "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 "attr" => [
@@ -66,7 +74,9 @@ class GroupPeopleSearchType extends AbstractType
                 ]
             ])
             ->add("nbPeople", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "NbPeople",
                     "class" => "w-max-100",

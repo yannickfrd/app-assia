@@ -35,14 +35,15 @@ class SupportGroupSearchType extends AbstractType
     {
         $builder
             ->add("fullname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Nom et/ou prénom",
                     "class" => "w-max-170",
                 ]
             ])
             // ->add("birthdate", DateType::class, [
-            //     "label" => false,
             //     "widget" => "single_text",
             //     "attr" => [
             //         "class" => "w-max-165",
@@ -52,7 +53,6 @@ class SupportGroupSearchType extends AbstractType
             // ])
             // ->add("familyTypology", ChoiceType::class, [
             //     "placeholder" => "-- Family Typology --",
-            //     "label" => false,
             //     "required" => false,
             //     "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
             //     "attr" => [
@@ -60,7 +60,6 @@ class SupportGroupSearchType extends AbstractType
             //     ]
             // ])
             // ->add("nbPeople", null, [
-            //     "label" => false,
             //     "attr" => [
             //         "class" => "w-max-100",
             //         "placeholder" => "NbPeople",
@@ -68,7 +67,9 @@ class SupportGroupSearchType extends AbstractType
             //     ]
             // ])
             ->add("status", ChoiceType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "multiple" => true,
                 "choices" => Choices::getChoices(SupportGroup::STATUS),
                 "attr" => [
@@ -78,7 +79,9 @@ class SupportGroupSearchType extends AbstractType
                 "required" => false
             ])
             ->add("supportDates", ChoiceType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "choices" => Choices::getChoices(SupportGroupSearch::SUPPORT_DATES),
                 "attr" => [
                     "class" => "",
@@ -87,7 +90,9 @@ class SupportGroupSearchType extends AbstractType
                 "required" => false
             ])
             ->add("startDate", DateType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
@@ -96,7 +101,9 @@ class SupportGroupSearchType extends AbstractType
                 "required" => false
             ])
             ->add("endDate", DateType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
@@ -119,7 +126,9 @@ class SupportGroupSearchType extends AbstractType
                         ->setParameter("services", $this->currentUser->getServices())
                         ->orderBy("u.lastname", "ASC");
                 },
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "placeholder" => "-- Référent --",
                 "attr" => [
                     "class" => "w-max-180"
@@ -140,7 +149,9 @@ class SupportGroupSearchType extends AbstractType
                         ->setParameter("services", $this->currentUser->getServices())
                         ->orderBy("s.name", "ASC");
                 },
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "placeholder" => "-- Service --",
                 "attr" => [
                     "class" => "multi-select js-service w-min-150 w-max-180"

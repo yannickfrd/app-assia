@@ -18,13 +18,17 @@ class RdvSearchType extends AbstractType
     {
         $builder
             ->add("content", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Search"
                 ],
             ])
             ->add("status", ChoiceType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "choices" => Choices::getchoices(Rdv::STATUS),
                 "attr" => [
                     "class" => "w-max-150",

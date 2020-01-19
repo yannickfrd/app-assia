@@ -18,13 +18,17 @@ class NoteSearchType extends AbstractType
     {
         $builder
             ->add("content", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Search"
                 ],
             ])
             ->add("type", ChoiceType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "choices" => Choices::getchoices(Note::TYPE),
                 "attr" => [
                     "class" => "w-max-150",
@@ -33,7 +37,9 @@ class NoteSearchType extends AbstractType
                 "required" => false
             ])
             ->add("status", ChoiceType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "choices" => Choices::getchoices(Note::STATUS),
                 "attr" => [
                     "class" => "w-max-150",

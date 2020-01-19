@@ -29,7 +29,9 @@ class PersonSearchType extends AbstractType
                 ]
             ])
             ->add("firstname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "class" => "w-max-140 text-capitalize",
                     "placeholder" => "Prénom",
@@ -37,7 +39,9 @@ class PersonSearchType extends AbstractType
                 ]
             ])
             ->add("birthdate", DateType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "widget" => "single_text",
                 // "html5" => false,
                 // "format" => "dd/MM/yyyy",
@@ -49,7 +53,6 @@ class PersonSearchType extends AbstractType
                 "required" => false
             ])
             // ->add("age", null, [
-            //     "label" => false,
             //     "attr" => [
             //         "placeholder" => "Age",
             //         "class" => "w-max-100",
@@ -58,7 +61,9 @@ class PersonSearchType extends AbstractType
             // ])
             ->add("gender", ChoiceType::class, [
                 'placeholder' => "-- Gender --",
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "required" => false,
                 "choices" => Choices::getChoices(Person::GENDER),
                 "attr" => [
@@ -67,7 +72,9 @@ class PersonSearchType extends AbstractType
                 ]
             ])
             ->add("phone", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Phone",
                     "class" => "js-phone w-max-140",

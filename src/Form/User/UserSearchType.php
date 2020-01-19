@@ -22,14 +22,18 @@ class UserSearchType extends AbstractType
     {
         $builder
             ->add("lastname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "class" => "w-max-140 text-uppercase",
                     "placeholder" => "Lastname",
                 ]
             ])
             ->add("firstname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "class" => "w-max-140 text-capitalize",
                     "placeholder" => "Firstname",
@@ -37,14 +41,18 @@ class UserSearchType extends AbstractType
             ])
             ->add("status", ChoiceType::class, [
                 "choices" => Choices::getChoices(User::STATUS),
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "placeholder" => "-- Fonction --",
                 "required" => false
 
             ])
             ->add("serviceUser", ChoiceType::class, [
                 "choices" => Choices::getChoices(ServiceUser::ROLE),
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "class" => "w-max-120",
                 ],
@@ -52,7 +60,9 @@ class UserSearchType extends AbstractType
                 "required" => false,
             ])
             ->add("phone", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "attr" => [
                     "placeholder" => "Phone",
                     "class" => "js-phone w-max-140",
@@ -64,7 +74,9 @@ class UserSearchType extends AbstractType
                 "choice_label" => "name",
                 "multiple" => true,
                 // "checkboxes", true,
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "placeholder" => "-- Service --",
                 "attr" => [
                     "class" => "multi-select js-service"
@@ -76,7 +88,9 @@ class UserSearchType extends AbstractType
                 "class" => Pole::class,
                 "choice_label" => "name",
                 // "multiple" => true,
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "placeholder" => "-- Pole --",
                 "required" => false,
             ]);

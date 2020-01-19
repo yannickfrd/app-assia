@@ -29,7 +29,9 @@ class SupportGroupType2 extends AbstractType
         $builder
             ->add("supportPerson", CollectionType::class, [
                 "entry_type"   => SupportPersonType::class,
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "allow_add" => true,
                 "allow_delete" => true,
                 "delete_empty" => true,

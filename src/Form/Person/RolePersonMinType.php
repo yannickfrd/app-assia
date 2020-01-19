@@ -18,7 +18,9 @@ class RolePersonMinType extends AbstractType
     {
         $builder
             ->add("head", CheckBoxType::class, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
