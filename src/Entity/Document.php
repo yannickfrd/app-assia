@@ -59,6 +59,11 @@ class Document
     private $createdBy;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $UpdatedAt;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="documents")
      */
     private $groupPeople;
@@ -67,7 +72,6 @@ class Document
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="documents")
      */
     private $supportGroup;
-
 
     public function getId(): ?int
     {
@@ -147,6 +151,18 @@ class Document
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->UpdatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $UpdatedAt): self
+    {
+        $this->UpdatedAt = $UpdatedAt;
 
         return $this;
     }

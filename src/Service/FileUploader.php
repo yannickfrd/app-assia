@@ -14,7 +14,7 @@ class FileUploader
         $this->targetDirectory = $targetDirectory;
     }
 
-    public function upload(UploadedFile $file, $groupPeopleId = null)
+    public function upload(UploadedFile $file, $path = null)
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         // this is needed to safely include the file name as part of the URL
@@ -24,7 +24,7 @@ class FileUploader
         // Move the file to the directory where document are stored
         try {
             $file->move(
-                $this->getTargetDirectory() . "/" . $groupPeopleId,
+                $this->getTargetDirectory() . $path,
                 $newFilename
             );
         } catch (FileException $e) {
