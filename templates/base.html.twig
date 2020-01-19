@@ -56,10 +56,8 @@
 								Suivis
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
-								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les
-									suivis</a>
-								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau
-									suivi</a>
+								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
+								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
 							</div>
 						</li>
 						<li class="nav-item">
@@ -90,6 +88,11 @@
 								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
 								{% endif %}
 							</div>
+						</li>
+						{% endif %}
+						{% if is_granted("ROLE_SUPER_ADMIN") %}
+						<li class="nav-item">
+							<a class="nav-link text-light" href="{{ path("export") }}">Export</a>
 						</li>
 						{% endif %}
 					</ul>

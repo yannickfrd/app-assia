@@ -19,19 +19,20 @@ class Export
 {
     private $name;
     private $format;
-    private $columnsWith;
+    private $arrayData;
+    private $columnsWidth;
 
     private $spreadsheet;
     private $sheet;
     private $writer;
     private $contentType;
 
-    public function __construct($name, $format, $arrayData,  $columnsWithDate = null, $columnsWith)
+    public function __construct($name, $format, $arrayData,  $columnsWidth)
     {
         $this->name = $name;
         $this->format = $format;
-        $this->columnsWithDate = $columnsWithDate;
-        $this->columnsWith = $columnsWith;
+        $this->arrayData = $arrayData;
+        $this->columnsWidth = $columnsWidth;
 
         $this->spreadsheet = new Spreadsheet();
         $this->sheet = $this->spreadsheet->getActiveSheet();
@@ -57,9 +58,9 @@ class Export
     {
         $columnLetter = "A";
 
-        if ($this->columnsWith) {
+        if ($this->columnsWidth) {
             for ($i = 0; $i < $this->nbColumns; $i++) {
-                $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWith);
+                $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWidth);
                 $columnLetter++;
             }
         } else {
@@ -69,7 +70,17 @@ class Export
             }
         }
 
-        foreach ($this->columnsWithDate as  $value) {
+        // Récupère les colonnes de Date
+        $alphas = range("A", "Z");
+        $columnsWithDate = [];
+        foreach ($this->arrayData[0] as $key => $value) {
+            if (stristr($value, "Date"))
+                if ($key < 26) {
+                    $columnsWithDate[] = $alphas[$key];
+                }
+        }
+        // Format les colonnes de date
+        foreach ($columnsWithDate as  $value) {
             for ($i = 2; $i <= $this->nbRows; $i++) {
                 // $cellValue = $this->sheet->getCell($value . $i)->getValue();
                 // $this->sheet->setCellValue($value . $i, Date::PHPToExcel($cellValue));

@@ -50,7 +50,16 @@ class ObjectToArray
                     $values[] = $value->format("d/m/Y");
                 }
             } elseif (is_bool($value)) {
-                $values[] = $value ? "Oui" : "Non";
+                switch ($value) {
+                    case true:
+                        $values[] = "Oui";
+                        break;
+                    case false:
+                        $values[] = "Non";
+                        break;
+                    default:
+                        break;
+                }
             } else {
                 $values[] = $value;
             }

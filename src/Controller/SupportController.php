@@ -2,21 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\Export;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use App\Form\Support\ExportType;
 use App\Entity\SupportGroupSearch;
 use App\Export\SupportPersonExport;
+
 use App\Form\Support\SupportGroupType;
+use App\Export\SupportPersonFullExport;
+
 use App\Form\Support\SupportGroupType2;
-
 use App\Repository\RolePersonRepository;
-use App\Form\Support\SupportGroupSearchType;
-
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\SupportPersonRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Form\Support\SupportGroupSearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -327,6 +330,35 @@ class SupportController extends AbstractController
             "msg" => "Une erreur s'est produite.",
             "data" => null
         ], 200);
+    }
+
+    /**
+     * Export des données
+     * 
+     * @Route("export", name="export")
+     * @param Export $export
+     * @param Request $request
+     * @param SupportPersonRepository $repoSupportPerson
+     * @return Response
+     */
+    public function export(Export $export = null, Request $request, SupportPersonRepository $repoSupportPerson): Response
+    {
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $export = new Export();
+
+        $form = $this->createForm(ExportType::class, $export);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $supports = $repoSupportPerson->findSupportsFullToExport($export);
+            $exportSupport = new SupportPersonFullExport();
+            return $exportSupport->exportData($supports);
+        }
+
+        return $this->render("app/export.html.twig", [
+            "form" => $form->createView()
+        ]);
     }
 
     /**

@@ -39,14 +39,7 @@ class PersonExport
             $this->arrayData[] = $row;
         }
 
-        $alphas = range("A", "Z");
-        $columnsWithDate = [];
-        foreach ($headers as $key => $value) {
-            if (stristr($value, "Date"))
-                $columnsWithDate[] = $alphas[$key];
-        }
-
-        $export = new Export("export_utilisateurs", "xlsx", $this->arrayData,  $columnsWithDate, null);
+        $export = new Export("export_utilisateurs", "xlsx", $this->arrayData, null);
 
         return $export->exportFile();
     }

@@ -55,14 +55,7 @@ class SupportPersonExport
             $this->arrayData[] = $row;
         }
 
-        $alphas = range("A", "Z");
-        $columnsWithDate = [];
-        foreach ($headers as $key => $value) {
-            if (stristr($value, "Date"))
-                $columnsWithDate[] = $alphas[$key];
-        }
-
-        $export = new Export("export_suivis", "xlsx", $this->arrayData,  $columnsWithDate, 12.5);
+        $export = new Export("export_suivis", "xlsx", $this->arrayData, 12.5);
 
         return $export->exportFile();
     }

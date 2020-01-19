@@ -143,7 +143,7 @@ class SitProf
 
     public function getProfStatusList()
     {
-        return self::STATUS[$this->status];
+        return self::STATUS[$this->profStatus];
     }
 
     public function getSchoolLevel(): ?int
