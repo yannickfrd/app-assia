@@ -270,7 +270,7 @@ class Person
         return $this;
     }
 
-    public function getGenderType()
+    public function getGenderList()
     {
         return self::GENDER[$this->gender];
     }

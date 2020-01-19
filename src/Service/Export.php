@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
@@ -18,129 +17,75 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class Export
 
 {
+    private $name;
+    private $format;
+    private $columnsWith;
+
     private $spreadsheet;
+    private $sheet;
     private $writer;
     private $contentType;
 
-    public function __construct()
+    public function __construct($name, $format, $arrayData,  $columnsWithDate = null, $columnsWith)
     {
+        $this->name = $name;
+        $this->format = $format;
+        $this->columnsWithDate = $columnsWithDate;
+        $this->columnsWith = $columnsWith;
+
         $this->spreadsheet = new Spreadsheet();
+        $this->sheet = $this->spreadsheet->getActiveSheet();
+
+        $this->sheet->fromArray(
+            $arrayData,  // The data to set
+            NULL,        // Array values with this value will not be set
+            "A1"         // Top left coordinate of the worksheet range where
+        );
+
+        $this->nbColumns = count($arrayData[0]);
+        $this->nbRows = $this->sheet->getHighestRow();
+        $this->highestColumn = $this->sheet->getHighestColumn();
+        // $this->selectedCells = $this->sheet->getSelectedCells();
+
+        $this->headers = "A1:" . $this->highestColumn . "1";
+        $this->allCells = "A1:" . $this->highestColumn . $this->nbRows;
+
+        $this->init();
     }
 
-    public function exportFile($name, $format, $arrayData,  $columnsWithDate = null)
+    protected function init()
     {
-        $styleHeaders = [
-            'font' => [
-                'bold' => true,
-            ],
-            'alignment' => [
-                'vertical' => Alignment::VERTICAL_CENTER,
-            ],
-            'borders' => [
-                'top' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                ],
-            ],
-            'fill' => [
-                'fillType' => Fill::FILL_GRADIENT_LINEAR,
-                'rotation' => 90,
-                'startColor' => [
-                    'argb' => 'FFA0A0A0',
-                ],
-                'endColor' => [
-                    'argb' => 'FFFFFFFF',
-                ],
-            ],
-        ];
-
-        $styleTable = [
-            'alignment' => [
-                'vertical' => Alignment::VERTICAL_CENTER,
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'a6a6a6'],
-                ],
-            ],
-        ];
-
-        $this->spreadsheet->getActiveSheet()
-            ->fromArray(
-                $arrayData,  // The data to set
-                NULL,        // Array values with this value will not be set
-                "A1"         // Top left coordinate of the worksheet range where
-            );
-
-        // Page margins
-        $this->spreadsheet->getActiveSheet()->getPageMargins()->setTop(0.4);
-        $this->spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.2);
-        $this->spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.2);
-        $this->spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.4);
-        $this->spreadsheet->getActiveSheet()->getPageMargins()->setHeader(0.1);
-        $this->spreadsheet->getActiveSheet()->getPageMargins()->setFooter(0.1);
-
-        // Hide gridlines
-        $this->spreadsheet->getActiveSheet()->setShowGridlines(false);
-
-        // Set name of sheet
-        $this->spreadsheet->getActiveSheet()->setTitle($name);
-
-        // Header and footer
-        $this->spreadsheet->getActiveSheet()->getHeaderFooter()
-            ->setOddHeader('&L&B' .  $name);
-        $this->spreadsheet->getActiveSheet()->getHeaderFooter()
-            ->setOddFooter($name . '&RPage &P sur &N');
-
-        // Repeat first row
-        $this->spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
-
-        // Landscape orientation
-        $this->spreadsheet->getActiveSheet()->getPageSetup()
-            ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
-
-        $nbColumns = count($arrayData[0]);
-        $nbRows = $this->spreadsheet->getActiveSheet()->getHighestRow();
-        $highestColumn = $this->spreadsheet->getActiveSheet()->getHighestColumn();
-        $selectedCells = $this->spreadsheet->getActiveSheet()->getSelectedCells();
-
-        $headers = "A1:" . $this->spreadsheet->getActiveSheet()->getHighestColumn() . "1";
-        $allCells = "A1:" . $this->spreadsheet->getActiveSheet()->getHighestColumn() . $nbRows;
-
-        $this->spreadsheet->getActiveSheet()
-            ->setAutoFilter($headers) // filtres
-            ->getStyle($headers)
-            ->applyFromArray($styleHeaders);
-
-        $this->spreadsheet->getActiveSheet()->getRowDimension("1")->setRowHeight(20); // hauteur de la ligne
-
-        $this->spreadsheet->getActiveSheet()
-            ->getStyle($allCells)
-            ->applyFromArray($styleTable);
-
         $columnLetter = "A";
-        for ($i = 0; $i < $nbColumns; $i++) {
-            $this->spreadsheet->getActiveSheet()->getColumnDimension($columnLetter)->setAutoSize(true);
-            $columnLetter++;
+
+        if ($this->columnsWith) {
+            for ($i = 0; $i < $this->nbColumns; $i++) {
+                $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWith);
+                $columnLetter++;
+            }
+        } else {
+            for ($i = 0; $i < $this->nbColumns; $i++) {
+                $this->sheet->getColumnDimension($columnLetter)->setAutoSize(true);
+                $columnLetter++;
+            }
         }
 
-        foreach ($columnsWithDate as  $value) {
-
-            for ($i = 2; $i <= $nbRows; $i++) {
-                // $cellValue = $this->spreadsheet->getActiveSheet()->getCell($value . $i)->getValue();
-                // dd($cellValue);
-                // $this->spreadsheet->getActiveSheet()->setCellValue($value . $i, Date::PHPToExcel($cellValue));
-                $this->spreadsheet->getActiveSheet()
-                    ->getStyle($value . $i)
+        foreach ($this->columnsWithDate as  $value) {
+            for ($i = 2; $i <= $this->nbRows; $i++) {
+                // $cellValue = $this->sheet->getCell($value . $i)->getValue();
+                // $this->sheet->setCellValue($value . $i, Date::PHPToExcel($cellValue));
+                $this->sheet->getStyle($value . $i)
                     ->getNumberFormat()
                     ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
             }
         }
+        $this->getFormat($this->format);
+        $this->stylePrint();
+        $this->styleSheet();
+    }
 
-
-        $this->getFormat($format);
-
-        $filename = $name . "." . $format;
+    public function exportFile()
+    {
+        $filename = $this->name . "." . $this->format;
         $this->writer->save($filename);
 
         $response = new StreamedResponse();
@@ -159,6 +104,54 @@ class Export
         return $response;
     }
 
+    // Style for print
+    protected function stylePrint()
+    {
+        // Page margins for print
+        $this->sheet->getPageMargins()->setTop(0.4);
+        $this->sheet->getPageMargins()->setRight(0.2);
+        $this->sheet->getPageMargins()->setLeft(0.2);
+        $this->sheet->getPageMargins()->setBottom(0.4);
+        $this->sheet->getPageMargins()->setHeader(0.1);
+        $this->sheet->getPageMargins()->setFooter(0.1);
+
+        $now = new \DateTime();
+
+        // Header and footer for print
+        $this->sheet->getHeaderFooter()->setOddHeader("&C&B" .  $this->name);
+        $this->sheet->getHeaderFooter()->setOddFooter("&L" .  $this->name . "&C" . $now->format("d/m/Y") . "&RPage &P sur &N");
+
+        // Repeat first row  for print
+        $this->sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
+
+        // Landscape orientation for print
+        $this->sheet->getPageSetup()->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
+    }
+
+    protected function styleSheet()
+    {
+        // Set name of sheet
+        $this->sheet->setTitle($this->name);
+
+        // set headers style
+        $this->sheet
+            ->setAutoFilter($this->headers) // filtres
+            ->getStyle($this->headers)
+            ->applyFromArray($this->styleHeaders());
+
+        // set table style
+        $this->sheet->getStyle($this->allCells)->applyFromArray($this->styleTable());
+
+        $this->sheet->getRowDimension("1")->setRowHeight(20); // hauteur de la ligne
+
+        // Hide gridlines
+        $this->sheet->setShowGridlines(false);
+
+        // Position on cell "A1"
+        $this->sheet->getStyle("A1");
+    }
+
+    // Get format of file 
     protected function getFormat($format)
     {
         switch ($format) {
@@ -175,8 +168,52 @@ class Export
                 $this->writer = new Csv($this->spreadsheet);
                 break;
             default:
-                $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                $this->contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                 $this->writer = new Xlsx($this->spreadsheet);
         }
+    }
+
+    // Headers style
+    protected function styleHeaders()
+    {
+        return [
+            "font" => [
+                "bold" => true,
+            ],
+            "alignment" => [
+                "vertical" => Alignment::VERTICAL_CENTER,
+            ],
+            "borders" => [
+                "top" => [
+                    "borderStyle" => Border::BORDER_THIN,
+                ],
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_GRADIENT_LINEAR,
+                "rotation" => 90,
+                "startColor" => [
+                    "argb" => "FFA0A0A0",
+                ],
+                "endColor" => [
+                    "argb" => "FFFFFFFF",
+                ],
+            ],
+        ];
+    }
+
+    // Table style
+    protected function styleTable()
+    {
+        return  [
+            "alignment" => [
+                "vertical" => Alignment::VERTICAL_CENTER,
+            ],
+            "borders" => [
+                "allBorders" => [
+                    "borderStyle" => Border::BORDER_THIN,
+                    "color" => ["argb" => "a6a6a6"],
+                ],
+            ],
+        ];
     }
 }

@@ -25,7 +25,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         $this->currentUserService = $currentUserService;
     }
 
-    public function getSupports($supportGroupSearch = null)
+    public function findSupportsToExport($supportGroupSearch = null)
     {
         $query =  $this->createQueryBuilder("sp")
             ->select("sp")
@@ -60,7 +60,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query = $this->filter($query, $supportGroupSearch);
         }
 
-        return $query->orderBy("sp.startDate", "DESC")
+        return $query->setMaxResults(502)
+            ->orderBy("sp.startDate", "DESC")
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -68,8 +69,6 @@ class SupportPersonRepository extends ServiceEntityRepository
     protected function filter($query, $supportGroupSearch)
     {
         if (!$this->currentUserService->isRole("ROLE_SUPER_ADMIN")) {
-
-            dd("role");
             // if ($this->currentUserService->isRole("ROLE_ADMIN")) {
             $query->andWhere("s.id IN (:services)")
                 ->setParameter("services",  $this->currentUserService->getServices());
@@ -79,7 +78,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             // }
         }
         if ($supportGroupSearch->getFullname()) {
-            dd("fullname");
             $query->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter("fullname", '%' . $supportGroupSearch->getFullname() . '%');
         }
@@ -101,8 +99,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         //         ->setParameter("status", $supportGroupSearch->getStatus());
         // }
         if ($supportGroupSearch->getStatus()) {
-            dd("status");
-
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($supportGroupSearch->getStatus() as $status) {
@@ -114,8 +110,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         $supportDates = $supportGroupSearch->getSupportDates();
 
         if ($supportDates == 1) {
-            dd("dates");
-
             if ($supportGroupSearch->getStartDate()) {
                 $query->andWhere("sp.startDate >= :startDate")
                     ->setParameter("startDate", $supportGroupSearch->getStartDate());
@@ -164,34 +158,4 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         return $query;
     }
-
-
-    // /**
-    //  * @return SupportPerson[] Returns an array of SupportPerson objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?SupportPerson
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

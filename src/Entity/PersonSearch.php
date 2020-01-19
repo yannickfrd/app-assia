@@ -42,6 +42,11 @@ class PersonSearch
      */
     private $email;
 
+    /**
+     * @var bool
+     */
+    private $export;
+
     public function __construct()
     {
     }
@@ -144,7 +149,7 @@ class PersonSearch
         return $this;
     }
 
-    public function getGenderType()
+    public function getGenderList()
     {
         return Person::GENDER[$this->gender];
     }
@@ -176,6 +181,21 @@ class PersonSearch
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getExport(): ?bool
+    {
+        return $this->export;
+    }
+
+    public function setExport(bool $export): self
+    {
+        $this->export = $export;
 
         return $this;
     }

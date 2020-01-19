@@ -9,6 +9,7 @@ use App\Entity\GroupPeople;
 
 use App\Form\Utils\Choices;
 use App\Entity\PersonSearch;
+use App\Export\PersonExport;
 use App\Form\Person\PersonType;
 use App\Form\Person\RolePersonType;
 use App\Repository\PersonRepository;
@@ -45,7 +46,7 @@ class PersonController extends AbstractController
     /**
      * Permet de rechercher une personne
      * 
-     * @Route("/list/people", name="list_people")
+     * @Route("/people", name="people")
      * @Route("/new_support/search/person", name="new_support_search_person")
      * @return Response
      */
@@ -56,8 +57,14 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
-        $search = $request->query->get("search-person");
 
+        if ($personSearch->getExport()) {
+            $people = $this->repo->findPeopleToExport($personSearch);
+            $export = new PersonExport();
+            return $export->exportData($people);
+        }
+
+        $search = $request->query->get("search-person");
 
         if ($request->query->all()) {
             $people =  $paginator->paginate(
@@ -486,28 +493,4 @@ class PersonController extends AbstractController
             ], 200);
         }
     }
-
-
-    // /**
-    //  * @Route("/search/person", name="person_search")
-    //  */
-    // public function personSearch(PersonSearch $personSearch = null, Request $request) 
-    // {
-    //     $personSearch = new PersonSearch();
-
-    //     $form = $this->createForm(PersonSearchType::class, $personSearch);
-
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->IsValid()) {
-    //         return $this->redirectToRoute("list_people", [
-    //         "personSearch" => $personSearch,
-    //         ]);   
-    //     }
-
-    //     return $this->render("app/personSearch.html.twig", [
-    //     "personSearch" =>$personSearch,
-    //     "form" => $form->createView()
-    //     ]);
-    // }
 }

@@ -24,7 +24,8 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/", name="home")
+     * @Route("/home", name="home")
+     * @Route("/")
      * @return Response
      */
     public function home(UserRepository $repo): Response

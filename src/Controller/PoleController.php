@@ -20,7 +20,6 @@ class PoleController extends AbstractController
 {
     private $manager;
     private $repo;
-    private $request;
     private $security;
 
     public function __construct(EntityManagerInterface $manager, PoleRepository $repo, Security $security)
@@ -33,7 +32,7 @@ class PoleController extends AbstractController
     /**
      * Permet de rechercher un pôle
      * 
-     * @Route("/list/poles", name="list_poles")
+     * @Route("/poles", name="poles")
      * @return Response
      */
     public function listPole(Request $request, PaginatorInterface $paginator): Response

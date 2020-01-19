@@ -38,7 +38,7 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * @Route("/list/group_people", name="list_groups_people")
+     * @Route("/groups_people", name="groups_people")
      * @return Response
      */
     public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
@@ -170,7 +170,7 @@ class GroupPeopleController extends AbstractController
     /**
      * Retire la personne du groupe
      * 
-     * @Route("/group/{id}/person/remove-{person_id}_{role_person_id}_{_token}", name="remove_person", methods="GET")
+     * @Route("/groupe/{id}/personne/retrait-{person_id}_{role_person_id}_{_token}", name="remove_person", methods="GET")
      * @ParamConverter("rolePerson", options={"id" = "role_person_id"})
      * @ParamConverter("person", options={"id" = "person_id"})
      * @param GroupPeople $groupPeople

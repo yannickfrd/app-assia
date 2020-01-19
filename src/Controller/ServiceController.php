@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\Service;
 use App\Entity\ServiceSearch;
 
+use App\Export\ServiceExport;
 use App\Form\Service\ServiceType;
+
 use App\Repository\ServiceRepository;
 
 use App\Form\Service\ServiceSearchType;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class ServiceController extends AbstractController
     /**
      * Permet de rechercher un service
      * 
-     * @Route("/list/services", name="list_services")
+     * @Route("/services", name="services")
      * @return Response
      */
     public function listService(Request $request, ServiceSearch $serviceSearch = null, PaginatorInterface $paginator): Response
@@ -45,11 +46,15 @@ class ServiceController extends AbstractController
         $form = $this->createForm(ServiceSearchType::class, $serviceSearch);
         $form->handleRequest($request);
 
-        $search = $request->query->get("search");
+        if ($serviceSearch->getExport()) {
+            $services = $this->repo->findServicesToExport($serviceSearch);
+            $export = new ServiceExport();
+            return $export->exportData($services);
+        }
 
         if ($request->query->all()) {
             $services =  $paginator->paginate(
-                $this->repo->findAllServicesQuery($serviceSearch, $search),
+                $this->repo->findAllServicesQuery($serviceSearch),
                 $request->query->getInt("page", 1), // page number
                 20 // limit per page
             );
@@ -63,7 +68,7 @@ class ServiceController extends AbstractController
             "services" => $services ?? null,
             "serviceSearch" => $serviceSearch,
             "form" => $form->createView(),
-            "current_menu" => "list_services"
+            "current_menu" => "services"
         ]);
     }
 

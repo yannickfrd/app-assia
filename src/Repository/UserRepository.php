@@ -66,6 +66,12 @@ class UserRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
+    public function findUsersToExport($userSearch)
+    {
+        $query = $this->findAllUsersQuery($userSearch);
+        return $query->getResult();
+    }
+
     /**
      * Donne l'utilisateur avec tous ses suivis et rdv
      *
@@ -86,50 +92,10 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin("r.person", "p")
             ->addselect("p")
 
-            // ->leftJoin("u.rdvs", "rdv")
-            // ->addselect("rdv")
-            // ->leftJoin("rdv.supportGroup", "sg2")
-            // ->addselect("sg2")
-            // ->leftJoin("sg2.groupPeople", "g2")
-            // ->addselect("g2")
-            // ->leftJoin("g2.rolePerson", "r2")
-            // ->addselect("r2")
-            // ->leftJoin("r2.person", "p2")
-            // ->addselect("p2")
-
             ->andWhere("u.id = :id")
             ->setParameter("id", $id)
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
-
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

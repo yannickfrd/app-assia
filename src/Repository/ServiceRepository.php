@@ -46,33 +46,9 @@ class ServiceRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-
-    // /**
-    //  * @return Service[] Returns an array of Service objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findServicesToExport($serviceSearch)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $query = $this->findAllServicesQuery($serviceSearch);
+        return $query->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Service
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

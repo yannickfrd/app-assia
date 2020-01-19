@@ -2,24 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Person;
-use App\Service\Export;
-use App\Entity\RolePerson;
-use App\Entity\SitHousing;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\SupportGroupSearch;
-
+use App\Export\SupportPersonExport;
 use App\Form\Support\SupportGroupType;
 use App\Form\Support\SupportGroupType2;
 
 use App\Repository\RolePersonRepository;
+use App\Form\Support\SupportGroupSearchType;
+
 use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use App\Repository\SupportGroupRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Form\Support\SupportGroupSearchType;
 use App\Repository\SupportPersonRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -57,8 +53,9 @@ class SupportController extends AbstractController
         $form->handleRequest($request);
 
         if ($supportGroupSearch->getExport()) {
-            $supports = $repoSupportPerson->getSupports($supportGroupSearch);
-            return $this->exportExcel($supports);
+            $supports = $repoSupportPerson->findSupportsToExport($supportGroupSearch);
+            $export = new SupportPersonExport();
+            return $export->exportData($supports);
         }
 
         $supports = $this->paginate($paginator,  $repo,  $supportGroupSearch,  $request);
@@ -254,7 +251,7 @@ class SupportController extends AbstractController
 
 
     /**
-     * Voir les dates individuelles du suivi social
+     * Ajout de personnes au suivi
      * 
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET|POST")
      * @param GroupPeople $groupPeople
@@ -353,146 +350,5 @@ class SupportController extends AbstractController
         ]);
 
         return $supports;
-    }
-
-
-    /**
-     * Export des données au format Excel
-     * 
-     * @param SupportGroupRepository $repo
-     * @param SupportGroupSearch $supportGroupSearch
-     * @return Response
-     */
-    public function exportExcel($supports)
-    {
-        $arrayData = [];
-
-        $headers = [
-            "N° Suivi groupe",
-            "N° Suivi personne",
-            "N° Groupe",
-            "N° Personne",
-            "Nom",
-            "Prénom",
-            "Date de naissance",
-            "Typologie familiale",
-            "Nb de personnes",
-            "Rôle dans le groupe",
-            "DP",
-            "Statut",
-            "Début du suivi",
-            "Fin du suivi",
-            "Référent social",
-            "Service",
-            "Pôle"
-        ];
-
-        $sitHousing = new SitHousing();
-        $sitHousing = (array) $sitHousing;
-
-        $i = 0;
-        foreach ($sitHousing as $key => $value) {
-            if ($i == 0) {
-                $key = explode("\x00", $key);
-                $headers[] = array_pop($key);
-            }
-        }
-
-        $arrayData[] = $headers;
-
-        // /** @var SupportGroup $support */
-        // foreach ($supports as $key => $support) {
-
-        //     $rolePeople = $support->getGroupPeople()->getrolePerson();
-
-        //     /** @var Person $person */
-        //     $person = null;
-
-        //     /** @var RolePerson $rolePerson */
-        //     foreach ($rolePeople as $key => $rolePerson) {
-        //         if ($rolePerson->getHead()) {
-        //             $person = $rolePerson->getPerson();
-        //         }
-        //     }
-
-
-        /** @var SupportPerson $supportPerson */
-        foreach ($supports as $supportPerson) {
-
-            /** @var Person $person */
-            $person = $supportPerson->getPerson();
-
-            /** @var SupportGroup $supportGroup */
-            $supportGroup = $supportPerson->getSupportGroup();
-
-            /** @var GroupPeople $groupPeople */
-            $groupPeople = $supportGroup->getGroupPeople();
-
-            $rolePerson = null;
-            /** @var RolePerson $rolePerson */
-            foreach ($person->getRolesPerson() as $role) {
-                if ($role->getGroupPeople() == $groupPeople) {
-                    $rolePerson = $role;
-                }
-            }
-
-            $row = [
-                $supportGroup->getId(),
-                $supportPerson->getId(),
-                $groupPeople->getId(),
-                $person->getId(),
-                $person->getLastname(),
-                $person->getFirstname(),
-                Date::PHPToExcel($person->getBirthdate()->format("Y-m-d")),
-                $groupPeople->getFamilyTypologyType(),
-                $groupPeople->getNbPeople(),
-                $rolePerson->getRoleList(),
-                $rolePerson->getHead() ? "Oui" : "Non",
-                $supportPerson->getStatusType(),
-                Date::PHPToExcel($supportPerson->getStartDate()->format("Y-m-d")),
-                $supportPerson->getEndDate() ?  Date::PHPToExcel($supportPerson->getEndDate()->format("Y-m-d")) : null,
-                $supportGroup->getReferent()->getFullname(),
-                $supportGroup->getService()->getName(),
-                $supportGroup->getService()->getPole()->getName(),
-            ];
-
-            $sitHousing = (array) $supportGroup->getSitHousing();
-
-            if ($sitHousing) {
-                foreach ($sitHousing as $key => $value) {
-                    if (is_int($value)) {
-                        $key = explode("\x00", $key);
-                        $key = array_pop($key);
-                        $method = "get" . ucfirst($key) . "List";
-                        if (method_exists($supportGroup->getSitHousing(), $method)) {
-                            $row[] = $supportGroup->getSitHousing()->$method($value);
-                        } else {
-                            $row[] = $value;
-                        }
-                    } elseif (is_object($value)) {
-                        if (method_exists($value, "getId")) {
-                            $row[] = $value->getId();
-                        } else {
-                            $row[] = $value->format("d/m/Y");
-                        }
-                    } elseif (is_bool($value)) {
-                        $row[] = $value ? "Oui" : "Non";
-                    } else {
-                        $row[] = $value;
-                    }
-                }
-                // dd($row);
-            }
-
-            $arrayData[] = $row;
-        }
-
-        // dd($arrayData);
-
-        $export = new Export();
-
-        $columnsWithDate = ["G", "M", "N"];
-
-        return $export->exportFile("export_suivis", "xlsx", $arrayData,  $columnsWithDate);
     }
 }

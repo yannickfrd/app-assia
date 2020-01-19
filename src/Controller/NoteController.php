@@ -36,7 +36,7 @@ class NoteController extends AbstractController
     /**
      * Liste des notes
      * 
-     * @Route("support/{id}/notes", name="notes")
+     * @Route("suivi/{id}/notes", name="notes")
      *
      * @param SupportGroup $supportGroup
      * @param NoteSearch $noteSearch

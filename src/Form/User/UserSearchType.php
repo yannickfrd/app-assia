@@ -93,7 +93,8 @@ class UserSearchType extends AbstractType
                 ],
                 "placeholder" => "-- Pole --",
                 "required" => false,
-            ]);
+            ])
+            ->add("export");
     }
 
     public function configureOptions(OptionsResolver $resolver)

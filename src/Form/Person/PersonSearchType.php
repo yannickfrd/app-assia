@@ -80,7 +80,8 @@ class PersonSearchType extends AbstractType
                     "class" => "js-phone w-max-140",
                     "autocomplete" => "off"
                 ],
-            ]);
+            ])
+            ->add("export");
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -71,9 +71,9 @@
 								aria-expanded="false">Répertoire
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuDirectory">
-								<a class="dropdown-item" href="{{ path("list_users") }}">Utilisateurs</a>
-								<a class="dropdown-item" href="{{ path("list_services") }}">Services</a>
-								<a class="dropdown-item" href="{{ path("list_poles") }}">Pôles</a>
+								<a class="dropdown-item" href="{{ path("users") }}">Utilisateurs</a>
+								<a class="dropdown-item" href="{{ path("services") }}">Services</a>
+								<a class="dropdown-item" href="{{ path("poles") }}">Pôles</a>
 							</div>
 
 						</li>
@@ -93,7 +93,7 @@
 						</li>
 						{% endif %}
 					</ul>
-					<form action="{{ path("list_people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
+					<form action="{{ path("people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
 						<div class="position-relative" style="z-index: 9;">
 							<label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
 							<input name="search-person" id="search-person" class="form-control mr-sm-2" type="text"

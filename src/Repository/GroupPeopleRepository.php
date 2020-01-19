@@ -48,17 +48,4 @@ class GroupPeopleRepository extends ServiceEntityRepository
         ;
     }
     */
-    // Trouve tous les personnes du même groupe
-    public function findPeopleFromGroup($groupPeople)
-    {
-
-        return $this->createQueryBuilder("group")
-            ->leftJoin("group.rolePerson", "role")
-            ->leftJoin("role.person", "pers")
-            ->select("group", "role", "pers")
-            ->andWhere("group = :group")
-            ->setParameter("group", $groupPeople)
-            ->getQuery()
-            ->getResult();
-    }
 }

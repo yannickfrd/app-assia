@@ -93,7 +93,7 @@ class RdvController extends AbstractController
     /**
      * Liste des RDVs
      * 
-     * @Route("support/{id}/rdv/list", name="rdv_list")
+     * @Route("support/{id}/rdvs", name="rdvs")
      *
      * @param SupportGroup $supportGroup
      * @param RdvSearch $rdvSearch

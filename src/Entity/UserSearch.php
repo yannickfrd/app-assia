@@ -54,6 +54,11 @@ class UserSearch
      */
     private $pole;
 
+    /**
+     * @var bool
+     */
+    private $export;
+
     public function __construct()
     {
         $this->service = new ArrayCollection();
@@ -192,6 +197,21 @@ class UserSearch
     public function setPole(?Pole $pole): self
     {
         $this->pole = $pole;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getExport(): ?bool
+    {
+        return $this->export;
+    }
+
+    public function setExport(bool $export): self
+    {
+        $this->export = $export;
 
         return $this;
     }

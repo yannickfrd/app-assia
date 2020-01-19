@@ -22,10 +22,11 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Retourne toutes les personnes
+     * 
      * @return Query
      */
-    // Retourne toutes les personnes
-    public function findAllPeopleQuery($personSearch, $search): Query
+    public function findAllPeopleQuery($personSearch, $search = null): Query
     {
         $query =  $this->createQueryBuilder("p")
             ->select("p");
@@ -59,9 +60,18 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Trouve toutes les personnes à exporter
      *
      */
-    // Trouve toutes les personnes
+    public function findPeopleToExport($personSearch)
+    {
+        $query = $this->findAllPeopleQuery($personSearch);
+        return $query->getResult();
+    }
+
+    /**
+     *  Trouve toutes les personnes
+     */
     public function findPeopleByResearch($search)
     {
         return $this->createQueryBuilder("p")

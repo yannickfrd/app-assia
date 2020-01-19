@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserSearch;
 
+use App\Export\UserExport;
 use App\Form\User\UserType;
+
 use App\Form\User\UserSearchType;
 
 use App\Repository\UserRepository;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class UserController extends AbstractController
     /**
      * Permet de rechercher un utilisateur
      * 
-     * @Route("directory/list/users", name="list_users")
+     * @Route("directory/users", name="users")
      * @Route("/new_support/search/user", name="new_support_search_user")
      * @return Response
      */
@@ -46,6 +47,12 @@ class UserController extends AbstractController
         $form = $this->createForm(UserSearchType::class, $userSearch);
 
         $form->handleRequest($request);
+
+        if ($userSearch->getExport()) {
+            $users = $this->repo->findUsersToExport($userSearch);
+            $export = new UserExport();
+            return $export->exportData($users);
+        }
 
         if ($request->query->all()) {
 
