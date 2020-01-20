@@ -2,42 +2,33 @@
 
 namespace App\Form\Security;
 
-use App\Entity\UserResetPassword;
+use App\Form\Model\UserChangePassword;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class ReinitPasswordType extends AbstractType
+class ChangePasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("username", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+            ->add("oldPassword", PasswordType::class, [
                 "attr" => [
-                    "placeholder" => "Login"
-                ]
-            ])
-            ->add("email", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
+                    "class" => "js-password",
+                    "placeholder" => "Password",
                 ],
-                "attr" => [
-                    "placeholder" => "Email"
-                ]
             ])
-            ->add("password", PasswordType::class, [
+            ->add("newPassword", PasswordType::class, [
+
                 "attr" => [
                     "class" => "js-password",
                     "placeholder" => "New password",
                 ],
                 "help" => "8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)",
             ])
-            ->add("confirmPassword", PasswordType::class, [
+            ->add("confirmNewPassword", PasswordType::class, [
                 "attr" => [
                     "class" => "js-password",
                     "placeholder" => "Confirm new password",
@@ -48,7 +39,7 @@ class ReinitPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => UserResetPassword::class,
+            "data_class" => UserChangePassword::class,
             "translation_domain" => "forms",
         ]);
     }

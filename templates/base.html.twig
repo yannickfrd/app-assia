@@ -110,7 +110,7 @@
 					<div class="text-light">
 						{% if app.user %}
 						{% set user = app.user %}
-						<a class="text-light font-weight-bold" href="{{ path('user_show', {'id':user.id}) }}"
+						<a class="text-light font-weight-bold" href="{{ path('user_show') }}"
 							data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
 							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y h:i") }}
 							<br>fonction : {{ user.statuslist }}<br>Services rattachés :

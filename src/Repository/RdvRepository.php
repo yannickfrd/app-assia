@@ -6,7 +6,7 @@ use App\Entity\Rdv;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Security\CurrentUserService;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**

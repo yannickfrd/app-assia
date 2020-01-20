@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Form\Model;
 
 use App\Entity\Pole;
 use App\Service\Phone;

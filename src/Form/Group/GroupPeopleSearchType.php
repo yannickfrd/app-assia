@@ -5,7 +5,7 @@ namespace App\Form\Group;
 use App\Form\Utils\Choices;
 
 use App\Entity\GroupPeople;
-use App\Entity\GroupPeopleSearch;
+use App\Form\Model\GroupPeopleSearch;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

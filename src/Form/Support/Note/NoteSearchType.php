@@ -3,7 +3,7 @@
 namespace App\Form\Support\Note;
 
 use App\Entity\Note;
-use App\Entity\NoteSearch;
+use App\Form\Model\NoteSearch;
 
 use App\Form\Utils\Choices;
 

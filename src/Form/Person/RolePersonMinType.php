@@ -18,18 +18,20 @@ class RolePersonMinType extends AbstractType
     {
         $builder
             ->add("head", CheckBoxType::class, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
-                "required" => false,
+                "label" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
                 ],
                 "attr" => [
                     "class" => "custom-control-input checkbox"
-                ]
+                ],
+                "help" => "Demandeur principal",
+                "help_attr" => ["class" => "sr-only"],
+                "required" => false
+
             ])
             ->add("role", ChoiceType::class, [
+                "label_attr" => ["class" => "sr-only"],
                 "choices" => Choices::getChoices(RolePerson::ROLE),
                 "placeholder" => "-- Select --",
                 "required" => true

@@ -3,22 +3,26 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\UserResetPass;
-
+use App\Form\Model\UserChangeInfo;
+use App\Form\User\UserType;
 use App\Repository\UserRepository;
+use App\Form\Model\UserResetPassword;
+
+use App\Form\User\UserChangeInfoType;
+
+use App\Form\Model\UserChangePassword;
+
 use App\Notification\MailNotification;
 use App\Form\Security\RegistrationType;
 use App\Form\Security\SecurityUserType;
 use Doctrine\ORM\EntityManagerInterface;
-
+use App\Form\Security\ChangePasswordType;
 use App\Form\Security\ForgotPasswordType;
-
 use App\Form\Security\ReinitPasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -26,13 +30,16 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class SecurityController extends AbstractController
 {
     private $manager;
+    private $encoder;
     private $security;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, UserPasswordEncoderInterface $encoder, UserRepository $repo)
     {
         $this->manager = $manager;
         $this->encoder = $encoder;
         $this->security = $security;
+        $this->repo = $repo;
     }
 
     /**
@@ -76,6 +83,7 @@ class SecurityController extends AbstractController
             "form" => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/admin/user/{id}", name="security_user") 
      */
@@ -108,12 +116,12 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="security_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils, UserRepository $repo): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        $user = $repo->findOneBy(["username" => $lastUsername]);
+        $user = $this->repo->findOneBy(["username" => $lastUsername]);
 
         // if ($user && $user->getFailureLoginCount() >= 5) {
         //     $this->addFlash("danger", "Ce compte utilisateur a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
@@ -138,26 +146,103 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login/forgot_password", name="security_forgot_password")
+     * Fiche de l'utilisateur connecté
+     * 
+     * @Route("/user", name="user_show", methods="GET|POST")
+     * @param UserChangePassword $userChangePassword
+     * @param Request $request
+     * @return Response
      */
-    public function forgotPassword(Request $request, UserResetPass $user = null, UserRepository $repo, MailNotification $notification): Response
+    public function showCurrentUser(UserChangeInfo $userChangeInfo = null, UserChangePassword $userChangePassword = null, Request $request): Response
     {
-        $user = new UserResetPass();
+        $user = $this->repo->findUserById($this->security->getUser());
 
-        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $userChangeInfo->setEmail($user->getEmail())
+            ->setPhone($user->getPhone())
+            ->setPhone2($user->getPhone2());
+
+        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo);
+        $form->handleRequest($request);
+
+        $userChangePassword = new UserChangePassword();
+
+        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword);
+        $formPassword->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->updateInfoCurrentUser($user, $userChangeInfo);
+        }
+
+        if ($formPassword->isSubmitted()) {
+            $this->updatePasswordCurrentUser($formPassword, $user, $userChangePassword);
+        }
+
+        return $this->render("app/user.html.twig", [
+            "user" => $user,
+            "form" => $form->createView(),
+            "formPassword" => $formPassword->createView(),
+        ]);
+    }
+
+    /**
+     * Met à jour les coordonnées de l'utilisateur connecté
+     */
+    protected function updateInfoCurrentUser($user, $userChangeInfo)
+    {
+        $user->setEmail($userChangeInfo->getEmail())
+            ->setPhone($userChangeInfo->getPhone())
+            ->setPhone2($userChangeInfo->getPhone2())
+            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->security->getUser());
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Les modifications ont été enregistrées.");
+    }
+
+    /**
+     * Met à jour le mot de passe de l'utilisateur connecté
+     */
+    protected function updatePasswordCurrentUser($formPassword, $user, $userChangePassword)
+    {
+        if ($formPassword->isValid()) {
+
+            $hashPassword = $this->encoder->encodePassword($user, $userChangePassword->getNewPassword());
+            $user->setPassword($hashPassword);
+
+            $this->manager->flush();
+
+            return $this->addFlash("success", "Votre mot de passe a été mis à jour !");
+        }
+        return $this->addFlash("danger ", "Le mot de passe ou la confirmation est invalide.");
+    }
+
+    /**
+     * Page dans le cas d'un mot de passe oublié
+     * 
+     * @Route("/login/forgot_password", name="security_forgot_password")
+     * @param Request $request
+     * @param UserResetPassword $userResetPassword
+     * @param MailNotification $notification
+     * @return Response
+     */
+    public function forgotPassword(Request $request, UserResetPassword $userResetPassword = null, MailNotification $notification): Response
+    {
+        $userResetPassword = new UserResetPassword();
+
+        $form = $this->createForm(ForgotPasswordType::class, $userResetPassword);
 
         $form->handleRequest($request);
 
         // Vérifie si l'utilisateur existe
-        $userExists = $repo->findOneBy([
-            "username" => $user->getUsername(),
-            "email" => $user->getEmail(),
+        $user = $this->repo->findOneBy([
+            "username" => $userResetPassword->getUsername(),
+            "email" => $userResetPassword->getEmail(),
         ]);
         // Si le formulaire est soumis
         if ($form->isSubmitted()) {
             // Vérifie si l'utilisateur existe
-            if ($userExists) {
-                $user = $userExists;
+            if ($user) {
                 // Génère un token
                 $token = bin2hex(random_bytes(32));
                 // Enregistre le token dans la base
@@ -167,7 +252,7 @@ class SecurityController extends AbstractController
                 $this->manager->flush();
 
                 // Envoie l'email
-                if ($_SERVER["HTTP_HOST"] == "127.0.0.1:8000") {
+                if ($_SERVER["HTTP_HOST"] == "127.0.0.1:8001") {
                     $notification->reinitPassword($user);
                 } else {
                     $notification->reinitPassword2($user);
@@ -189,38 +274,34 @@ class SecurityController extends AbstractController
      * 
      * @Route("/login/reinit_password", name="security_reinit_password")
      * @param Request $request
-     * @param UserResetPass $user
-     * @param UserRepository $repo
+     * @param UserResetPassword $user
      * @return Response
      */
-    public function reinitPassword(Request $request, UserResetPass $user = null, UserRepository $repo): Response
+    public function reinitPassword(Request $request, UserResetPassword $user = null): Response
     {
-        $user = new UserResetPass();
+        $userResetPassword = new UserResetPassword();
 
-        $form = $this->createForm(ReinitPasswordType::class, $user);
+        $form = $this->createForm(ReinitPasswordType::class, $userResetPassword);
 
         $form->handleRequest($request);
 
         // Si le formulaire est soumis
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si l'utilisateur existe avec le même token
-            $userExists = $repo->findOneBy([
-                "username" => $user->getUsername(),
-                "email" => $user->getEmail(),
+            $user = $this->repo->findOneBy([
+                "username" => $userResetPassword->getUsername(),
+                "email" => $userResetPassword->getEmail(),
                 "token" => $request->get("token"),
             ]);
             // Si l'utilisateur existe
-            if ($userExists) {
+            if ($user) {
                 // Calcule l'intervalle entre le moment de demande de réinitialisation et maintenant
-                $interval = date_timestamp_get(new \DateTime()) - date_timestamp_get($userExists->getTokenCreatedAt());
+                $interval = date_timestamp_get(new \DateTime()) - date_timestamp_get($user->getTokenCreatedAt());
                 $delay = 5 * 60; // 5 minutes x 60 secondes
-
                 // Si le lien de réinitialisaiton est toujours valide
                 if ($interval < $delay) {
-                    $newPassword = $user->getPassword();
-                    $user = $userExists;
-                    $hashPassword = $this->encoder->encodePassword($user, $newPassword);
-                    // Met à jout le nouveau mot de passe
+                    $hashPassword = $this->encoder->encodePassword($user, $userResetPassword->getPassword());
+                    // Met à jour le nouveau mot de passe
                     $user->setPassword($hashPassword)
                         ->setToken(null)
                         ->setTokenCreatedAt(null);

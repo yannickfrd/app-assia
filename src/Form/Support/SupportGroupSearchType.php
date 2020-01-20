@@ -5,9 +5,9 @@ namespace App\Form\Support;
 use App\Entity\GroupPeople;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
-use App\Entity\SupportGroupSearch;
 use App\Entity\User;
 
+use App\Form\Model\SupportGroupSearch;
 use App\Form\Utils\Choices;
 
 use App\Repository\UserRepository;
@@ -35,9 +35,7 @@ class SupportGroupSearchType extends AbstractType
     {
         $builder
             ->add("fullname", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "placeholder" => "Nom et/ou prénom",
                     "class" => "w-max-170",
@@ -67,9 +65,7 @@ class SupportGroupSearchType extends AbstractType
             //     ]
             // ])
             ->add("status", ChoiceType::class, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "multiple" => true,
                 "choices" => Choices::getChoices(SupportGroup::STATUS),
                 "attr" => [
@@ -79,20 +75,13 @@ class SupportGroupSearchType extends AbstractType
                 "required" => false
             ])
             ->add("supportDates", ChoiceType::class, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "choices" => Choices::getChoices(SupportGroupSearch::SUPPORT_DATES),
-                "attr" => [
-                    "class" => "",
-                ],
                 "placeholder" => "-- Date de suivi --",
                 "required" => false
             ])
             ->add("startDate", DateType::class, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
@@ -101,9 +90,7 @@ class SupportGroupSearchType extends AbstractType
                 "required" => false
             ])
             ->add("endDate", DateType::class, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
@@ -126,9 +113,7 @@ class SupportGroupSearchType extends AbstractType
                         ->setParameter("services", $this->currentUser->getServices())
                         ->orderBy("u.lastname", "ASC");
                 },
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "placeholder" => "-- Référent --",
                 "attr" => [
                     "class" => "w-max-180"
@@ -149,9 +134,7 @@ class SupportGroupSearchType extends AbstractType
                         ->setParameter("services", $this->currentUser->getServices())
                         ->orderBy("s.name", "ASC");
                 },
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "placeholder" => "-- Service --",
                 "attr" => [
                     "class" => "multi-select js-service w-min-150 w-max-180"

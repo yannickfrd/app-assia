@@ -25,7 +25,6 @@ export default class Username {
     }
 
     init() {
-
         if (this.lastnameInputElt) {
             this.firstnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
             this.lastnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));

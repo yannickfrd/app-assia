@@ -2,22 +2,23 @@
 
 namespace App\Controller;
 
-use App\Service\Agree;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 
+use App\Service\Agree;
+
+use App\Form\Model\PersonSearch;
 use App\Form\Utils\Choices;
-use App\Entity\PersonSearch;
-use App\Export\PersonExport;
 use App\Form\Person\PersonType;
 use App\Form\Person\RolePersonType;
-use App\Repository\PersonRepository;
 use App\Form\Person\PersonSearchType;
-
 use App\Form\Person\PersonNewGroupType;
-
 use App\Form\Person\RolePersonGroupType;
+
+use App\Export\PersonExport;
+
+use App\Repository\PersonRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;

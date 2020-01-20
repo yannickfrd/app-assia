@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Rdv;
-use App\Service\Calendar;
-use App\Entity\RdvSearch;
-
 use App\Entity\SupportGroup;
+
+use App\Service\Calendar;
+
+use App\Form\Model\RdvSearch;
 use App\Form\Support\Rdv\RdvType;
+use App\Form\Support\Rdv\RdvSearchType;
 
 use App\Repository\RdvRepository;
-
-use App\Form\Support\Rdv\RdvSearchType;
 use App\Repository\SupportGroupRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,17 +37,42 @@ class RdvController extends AbstractController
     }
 
     /**
-     * Affiche le calendrier (vue mensuelle)
+     * Affiche l'agenda de l'utilisateur (vue mensuelle)
      * 
      * @Route("/calendar/{year}/{month}", name="calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
      * @Route("/calendar", name="calendar")
+     * @return Response
+     */
+    public function showCalendar($year = null, $month = null, RdvRepository $repo, Request $request): Response
+    {
+        $calendar = new Calendar($year, $month);
+
+        $rdvs = $repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
+
+        $rdv = new Rdv();
+
+        $form = $this->createForm(RdvType::class, $rdv);
+        $form->handleRequest($request);
+
+        return $this->render("app/rdv/calendar.html.twig", [
+            "calendar" => $calendar,
+            "rdvs" => $rdvs,
+            "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * Affiche l'agenda du suivi (vue mensuelle)
+     * 
      * @Route("support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
      * @Route("support/{id}/calendar", name="support_calendar")
      * @return Response
      */
-    public function showCalendar($id = null, SupportGroupRepository $supportRepo, $year = null, $month = null, RdvRepository $repo, Request $request): Response
+    public function showSupportCalendar($id = null, SupportGroupRepository $supportRepo, $year = null, $month = null, RdvRepository $repo, Request $request): Response
     {
         $supportGroup = $supportRepo->findSupportById($id);
+
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $calendar = new Calendar($year, $month);
 
@@ -58,9 +84,9 @@ class RdvController extends AbstractController
         $form->handleRequest($request);
 
         return $this->render("app/rdv/calendar.html.twig", [
+            "support" => $supportGroup,
             "calendar" => $calendar,
             "rdvs" => $rdvs,
-            "support" => $supportGroup ?? null,
             "form" => $form->createView()
         ]);
     }

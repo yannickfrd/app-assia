@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -20,7 +21,7 @@ class D_SupportGroupFixtures extends Fixture
     private $supportGroup, $nbSupports, $startDate, $endDate, $status;
     public $supports;
 
-    public function __construct(ObjectManager $manager, GroupPeopleRepository $repo)
+    public function __construct(EntityManagerInterface $manager, GroupPeopleRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;

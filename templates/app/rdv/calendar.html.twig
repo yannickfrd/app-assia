@@ -18,7 +18,7 @@
             </div>
             <h3 class="h4 text-secondary">{{ calendar.getMonthToString }}</h3>
             <div class="float-right">
-                {% if support %}
+                {% if support is defined %}
                 <a href="{{ path('support_calendar', {'id': support.id}) }}"
                     class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom"
                     title="Mois actuel">Aujourd'hui</a>
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        {% if support %}
+        {% if support is defined %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a class="text-{{ theme_color }}"

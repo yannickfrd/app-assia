@@ -9,6 +9,8 @@ use App\Entity\ServiceUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class A_ServiceUserFixtures extends Fixture
@@ -54,7 +56,7 @@ class A_ServiceUserFixtures extends Fixture
     private $serviceUser;
     private $passwordEncoder;
 
-    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;

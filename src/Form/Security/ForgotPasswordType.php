@@ -2,7 +2,7 @@
 
 namespace App\Form\Security;
 
-use App\Entity\UserResetPass;
+use App\Entity\UserResetPassword;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,7 +34,7 @@ class ForgotPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => UserResetPass::class,
+            "data_class" => UserResetPassword::class,
             "translation_domain" => "forms",
         ]);
     }

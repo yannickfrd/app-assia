@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,7 +45,8 @@ class GroupPeopleSearch
 
 
     public function __construct()
-    { }
+    {
+    }
 
     /**
      * @return string|null

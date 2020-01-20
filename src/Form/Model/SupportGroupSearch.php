@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Form\Model;
 
 use App\Entity\User;
 use App\Entity\SupportGroup;

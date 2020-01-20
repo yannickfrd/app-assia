@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Note;
-use App\Entity\NoteSearch;
 use App\Entity\SupportGroup;
 
+use App\Form\Model\NoteSearch;
 use App\Form\Support\Note\NoteType;
 use App\Form\Support\Note\NoteSearchType;
 
@@ -36,7 +36,7 @@ class NoteController extends AbstractController
     /**
      * Liste des notes
      * 
-     * @Route("suivi/{id}/notes", name="notes")
+     * @Route("support/{id}/notes", name="notes")
      *
      * @param SupportGroup $supportGroup
      * @param NoteSearch $noteSearch

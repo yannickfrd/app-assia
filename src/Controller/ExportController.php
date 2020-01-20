@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Export;
+use App\Form\Model\Export;
 use App\Form\Support\ExportType;
+
 use App\Export\SupportPersonExport;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Repository\SupportPersonRepository;

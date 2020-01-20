@@ -6,20 +6,17 @@ use App\Entity\UserConnection;
 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserConnectionRepository;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 
 class LoginListener
 {
-    private $entityManager;
-    private $session;
     private $manager;
+    private $session;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UserConnectionRepository $repo, ObjectManager $manager)
+    public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
     {
-        $this->entityManager = $entityManager;
         $this->session = $session;
         $this->repo = $repo;
         $this->manager = $manager;
@@ -49,8 +46,8 @@ class LoginListener
         $connection->setConnectionAt(new \DateTime())
             ->setUser($user);
 
-        $this->entityManager->persist($connection);
-        $this->entityManager->flush();
+        $this->manager->persist($connection);
+        $this->manager->flush();
 
         // Récupère en session les services rattachés à l'utilisateur et le code couleur du 1er service
         $servicesUser = [];

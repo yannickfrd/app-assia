@@ -3,12 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\UserSearch;
+
+use App\Form\Model\UserSearch;
+use App\Form\User\UserSearchType;
 
 use App\Export\UserExport;
-use App\Form\User\UserType;
-
-use App\Form\User\UserSearchType;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,14 +22,13 @@ class UserController extends AbstractController
 {
     private $manager;
     private $repo;
-    private $request;
     private $security;
 
     public function __construct(EntityManagerInterface $manager, UserRepository $repo, Security $security)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
         $this->security = $security;
+        $this->repo = $repo;
     }
 
     /**
@@ -92,36 +90,6 @@ class UserController extends AbstractController
             $exists = false;
         }
         return $this->json(["response" => $exists], 200);
-    }
-
-    /**
-     * Voir la fiche Utilisateur
-     * 
-     * @Route("/user/{id}", name="user_show", methods="GET|POST")
-     *  @return Response
-     */
-    public function showUser(User $user, Request $request): Response
-    {
-
-
-        $this->denyAccessUnlessGranted("EDIT", $user);
-
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $user->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
-        }
-
-        return $this->render("app/user.html.twig", [
-            "form" => $form->createView(),
-        ]);
     }
 
     /**

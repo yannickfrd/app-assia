@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Form\Model;
 
-use App\Entity\Rdv;
+use App\Entity\Note;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RdvSearch
+class NoteSearch
 {
     /**
      * @var string|null
@@ -46,6 +46,11 @@ class RdvSearch
         return $this;
     }
 
+    public function getTypeList()
+    {
+        return Note::TYPE[$this->type];
+    }
+
     public function getStatus(): ?int
     {
         return $this->status;
@@ -60,6 +65,6 @@ class RdvSearch
 
     public function getStatusList()
     {
-        return Rdv::STATUS[$this->status];
+        return Note::STATUS[$this->status];
     }
 }

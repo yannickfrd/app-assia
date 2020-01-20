@@ -6,6 +6,7 @@ use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -19,7 +20,7 @@ class C_GroupPeopleFixtures extends Fixture
     private $rolePerson, $head, $role;
     private $person, $lastname, $firstname, $birthdate, $sex;
 
-    public function __construct(ObjectManager $manager, UserRepository $repo)
+    public function __construct(EntityManagerInterface $manager, UserRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;

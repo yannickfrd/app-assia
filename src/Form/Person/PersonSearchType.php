@@ -6,7 +6,7 @@ use App\Entity\Person;
 
 use App\Form\Utils\Choices;
 
-use App\Entity\PersonSearch;
+use App\Form\Model\PersonSearch;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

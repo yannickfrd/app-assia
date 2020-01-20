@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Pole;
 use Doctrine\ORM\Query;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**

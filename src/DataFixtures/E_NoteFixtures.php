@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Note;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -10,7 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class E_NoteFixtures extends Fixture
 {
 
-    public function __construct(ObjectManager $manager, SupportGroupRepository $repo)
+    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;

@@ -3,7 +3,7 @@
 namespace App\Form\Support\Document;
 
 use App\Entity\Document;
-use App\Entity\DocumentSearch;
+use App\Form\Model\DocumentSearch;
 
 use App\Form\Utils\Choices;
 

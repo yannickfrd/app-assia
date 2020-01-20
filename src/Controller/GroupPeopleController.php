@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use App\Service\Agree;
-
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-use App\Form\Utils\Choices;
 
-use App\Entity\GroupPeopleSearch;
+use App\Service\Agree;
+
+use App\Form\Model\GroupPeopleSearch;
+use App\Form\Utils\Choices;
 use App\Form\Group\GroupPeopleType;
+use App\Form\Group\GroupPeopleSearchType;
 
 use App\Repository\RolePersonRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
 
-use App\Form\Group\GroupPeopleSearchType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;

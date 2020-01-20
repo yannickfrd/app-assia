@@ -60,14 +60,18 @@ class User implements UserInterface
     private $phone;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $password;
-    //  @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
-    //  @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{6,20}$^", match=true, message="Le mot de passe est invalide.")
+    private $phone2;
 
     /**
-     * @Assert\EqualTo(propertyPath="password", message="Mot de passe différent de la confirmation.")
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,20}$^", match=true, message="Le mot de passe est invalide.")
+     */
+    private $password;
+
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="Le mot de passe différent de la confirmation.")
      */
     private $confirmPassword;
 
@@ -110,6 +114,7 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $updatedBy;
 
@@ -258,6 +263,18 @@ class User implements UserInterface
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPhone2(): ?string
+    {
+        return $this->phone2;
+    }
+
+    public function setPhone2(?string $phone2): self
+    {
+        $this->phone2 = $phone2;
 
         return $this;
     }

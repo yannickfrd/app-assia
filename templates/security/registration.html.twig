@@ -14,7 +14,7 @@
         <h1 class="h2 mb-3">Création d'un compte utilisateur</h1>
         <hr>
         {{ form_start(form)}}
-        <div class="row">
+        <div class="form-group row mb-2">
             <div class="col-md-6">{{ form_row(form.firstname) }}</div>
             <div class="col-md-6">{{ form_row(form.lastname) }}</div>
             <div class="col-md-6">{{ form_row(form.email) }}</div>
@@ -23,11 +23,11 @@
             <div class="col-md-6">{{ form_row(form.roles) }}</div>
             <div class="col-md-6">{{ form_row(form.username) }}</div>
         </div>
-        <div class="row">
+        <div class="form-group row mb-2">
             <div class="col-md-6">
                 <div class="form-group row">
                     {{ form_label(form.password) }}
-                    <div class="col-md-8">
+                    <div class="col-8">
                         <div class="input-group js-password-group">
                             {{ form_widget(form.password) }}
                             <div class="input-group-append">
@@ -40,7 +40,7 @@
             <div class="col-md-6">
                 <div class="form-group row">
                     {{ form_label(form.confirmPassword) }}
-                    <div class="col-md-8">
+                    <div class="col-8">
                         <div class="input-group js-password-group">
                             {{ form_widget(form.confirmPassword) }}
                             <div class="input-group-append">

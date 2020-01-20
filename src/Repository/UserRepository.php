@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\ORM\Query;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -73,7 +73,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne l'utilisateur avec tous ses suivis et rdv
+     * Donne l'utilisateur avec tous ses suivis et rdvs
      *
      * @param int $id
      * @return User|null

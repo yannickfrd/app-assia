@@ -26,6 +26,7 @@ class Export
     private $sheet;
     private $writer;
     private $contentType;
+    private $now;
 
     public function __construct($name, $format, $arrayData,  $columnsWidth)
     {
@@ -51,6 +52,8 @@ class Export
         $this->headers = "A1:" . $this->highestColumn . "1";
         $this->allCells = "A1:" . $this->highestColumn . $this->nbRows;
 
+        $this->now = new \DateTime();
+
         $this->init();
     }
 
@@ -68,7 +71,7 @@ class Export
     {
         $this->getFormat($this->format);
 
-        $filename = $this->name . "." . $this->format;
+        $filename = $this->name . $this->now->format("_YmdHis") . "." . $this->format;
         $this->writer->save($filename);
 
         $response = new StreamedResponse();
@@ -135,7 +138,6 @@ class Export
         return $columnsWithDate;
     }
 
-
     // Format the sheet to print
     protected function formatPrint()
     {
@@ -147,11 +149,9 @@ class Export
         $this->sheet->getPageMargins()->setHeader(0.1);
         $this->sheet->getPageMargins()->setFooter(0.1);
 
-        $now = new \DateTime();
-
         // Header and footer for print
         $this->sheet->getHeaderFooter()->setOddHeader("&C&B" .  $this->name);
-        $this->sheet->getHeaderFooter()->setOddFooter("&L" .  $this->name . "&C" . $now->format("d/m/Y") . "&RPage &P sur &N");
+        $this->sheet->getHeaderFooter()->setOddFooter("&L" .  $this->name . "&C" . $this->now->format("d/m/Y") . "&RPage &P sur &N");
 
         // Repeat first row  for print
         $this->sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);

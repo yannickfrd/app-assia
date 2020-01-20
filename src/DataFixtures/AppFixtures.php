@@ -9,11 +9,13 @@ use Doctrine\Common\Persistence\ObjectManager;
 class AppFixtures extends Fixture
 {
     public function __construct()
-    { }
+    {
+    }
 
 
     public function load(ObjectManager $manager)
-    { }
+    {
+    }
 
 
     public static function getDateTimeBeetwen($startEnd, $endDate = "now")

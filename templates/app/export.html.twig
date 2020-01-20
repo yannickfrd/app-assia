@@ -9,68 +9,68 @@
 <div class="container">
 
     <h1 class="h2 mb-3">Export des données</h1>
-
     <hr>
-
     <section>
         {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
-
-        {{ form_start(form) }}
-
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.status) }}</div>
-            <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
-            <div class="col-md-6">{{ form_row(form.startDate) }}</div>
-            <div class="col-md-6">{{ form_row(form.endDate) }}</div>
-            <div class="col-md-6">{{ form_row(form.referent) }}</div>
-            <div class="col-md-6">{{ form_row(form.service) }}</div>
+            <div id="form-search">
+                {{ form_start(form) }}
+                <div class="form-group row">
+                    <div class="col-md-6">{{ form_row(form.status) }}</div>
+                    <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
+                    <div class="col-md-6">{{ form_row(form.startDate) }}</div>
+                    <div class="col-md-6">{{ form_row(form.endDate) }}</div>
+                    <div class="col-md-6">{{ form_row(form.referent) }}</div>
+                    <div class="col-md-6">{{ form_row(form.service) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.sitSocial) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.sitAdm) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.sitFamily) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.sitProf) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.sitBudget) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.sitHousing) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="mb-4 float-right">
+                            <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow" data-placement="bottom"
+                                title="Effacer les filtres"><span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
+                            </button>
+                            <input type="submit" id="calcul" name="calcul" class="btn btn-{{ theme_color }} shadow"
+                                value="Calculer">
+                            <input type="submit" id="export" name="export" class="btn btn-{{ theme_color }} shadow"
+                                value="Exporter">
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form, {"render_rest": false}) }}
+            </div>
         </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_widget(form.sitSocial) }}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_widget(form.sitAdm) }}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_widget(form.sitFamily) }}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_widget(form.sitProf) }}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_widget(form.sitBudget) }}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_widget(form.sitHousing) }}
-                </div>
-            </div>
-        </div>
-
-        {{ form_row(form._token) }}
-        <div class="form-group row">
-            <div class="col-md-12">
-                <div class="mb-4 float-right">
-                    <input type="submit" id="calcul" name="calcul" class="btn btn-{{ theme_color }} shadow"
-                        value="Calculer">
-                    <input type="submit" id="export" name="export" class="btn btn-{{ theme_color }} shadow"
-                        value="Exporter">
-                </div>
-            </div>
-        </div>
-        {{ form_end(form, {"render_rest": false}) }}
     </section>
 </div>
 {% endblock %}

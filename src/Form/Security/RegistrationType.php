@@ -78,7 +78,7 @@ class RegistrationType extends AbstractType
                     "class" => "js-password",
                     "placeholder" => "Password",
                 ],
-                "help" => "6 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)",
+                "help" => "8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)",
 
             ])
             ->add("confirmPassword", PasswordType::class, [

@@ -3,7 +3,7 @@
 namespace App\Form\Service;
 
 use App\Entity\Pole;
-use App\Entity\ServiceSearch;
+use App\Form\Model\ServiceSearch;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

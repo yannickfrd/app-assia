@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UserResetPass
+class UserResetPassword
 {
 
     /**
@@ -19,7 +19,7 @@ class UserResetPass
     private $email;
 
     /**
-     * @Assert\Length(min=6, minMessage="Le mot de passe est trop court (6 caractères minimum).")
+     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,20}$^", match=true, message="Le mot de passe est invalide.")
      */
     private $password;
 

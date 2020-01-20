@@ -6,7 +6,7 @@ use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method SupportGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,16 +35,31 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder("sg")
             ->select("sg")
+
+            ->leftJoin("sg.createdBy", "user")
+            ->addselect("user")
+            ->leftJoin("sg.referent", "ref")
+            ->addselect("ref")
+            ->leftJoin("sg.referent2", "ref2")
+            ->addselect("ref2")
+
+            ->leftJoin("sg.service", "sv")
+            ->addselect("sv")
+
             ->leftJoin("sg.supportPerson", "sp")
             ->addselect("sp")
+
             ->leftJoin("sp.person", "p")
             ->addselect("p")
+
             ->leftJoin("sg.groupPeople", "g")
             ->addselect("g")
             ->leftJoin("g.rolePerson", "r")
             ->addselect("r")
+
             ->leftJoin("r.person", "p2")
             ->addselect("p2")
+
             ->andWhere("sg.id = :id")
             ->setParameter("id", $id)
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)

@@ -6,8 +6,8 @@ use App\Entity\Pole;
 use App\Entity\Service;
 use App\Entity\ServiceUser;
 use App\Entity\User;
-use App\Entity\UserSearch;
 
+use App\Form\Model\UserSearch;
 use App\Form\Utils\Choices;
 
 use Symfony\Component\Form\AbstractType;

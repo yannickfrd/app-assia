@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Entity\SupportGroup;
-use App\Entity\DocumentSearch;
+
+use App\Form\Model\DocumentSearch;
 
 use App\Repository\DocumentRepository;
 use App\Repository\SupportGroupRepository;

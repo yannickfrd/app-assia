@@ -3,18 +3,19 @@
 namespace App\Form\Support;
 
 use App\Entity\User;
-use App\Entity\Export;
 use App\Entity\Service;
-use App\Form\Utils\Choices;
-
 use App\Entity\SupportGroup;
 
-use App\Entity\SupportGroupSearch;
+use App\Form\Model\Export;
+use App\Form\Model\SupportGroupSearch;
+use App\Form\Utils\Choices;
+
 use App\Repository\UserRepository;
 
 use App\Security\CurrentUserService;
 
 use App\Repository\ServiceRepository;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -177,6 +178,7 @@ class ExportType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => Export::class,
+            "csrf_protection" => false,
             "translation_domain" => "support",
         ]);
     }

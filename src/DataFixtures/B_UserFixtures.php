@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use App\Entity\ServiceUser;
 use App\Repository\ServiceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ServiceUserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -18,7 +19,7 @@ class B_UserFixtures extends Fixture
 
     public $users = [];
 
-    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder, ServiceUserRepository $repo, ServiceRepository $repoService)
+    public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder, ServiceUserRepository $repo, ServiceRepository $repoService)
     {
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
