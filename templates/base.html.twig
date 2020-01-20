@@ -86,6 +86,8 @@
 								{% if is_granted("ROLE_SUPER_ADMIN") %}
 								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
 								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="{{ path("admin_users") }}">Liste des utilisateurs</a>
 								{% endif %}
 							</div>
 						</li>

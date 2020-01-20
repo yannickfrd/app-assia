@@ -35,7 +35,6 @@ class UserController extends AbstractController
      * Permet de rechercher un utilisateur
      * 
      * @Route("directory/users", name="users")
-     * @Route("/new_support/search/user", name="new_support_search_user")
      * @return Response
      */
     public function listUsers(Request $request, UserSearch $userSearch = null, PaginatorInterface $paginator): Response
@@ -71,6 +70,46 @@ class UserController extends AbstractController
             "form" => $form->createView()
         ]);
         // return $this->pagination($userSearch, $request, $form, $paginator);
+    }
+
+    /**
+     * Tableaud d'administration des utilisateurs
+     * 
+     * @Route("admin/users", name="admin_users")
+     * @return Response
+     */
+    public function adminListUsers(Request $request, UserSearch $userSearch = null, PaginatorInterface $paginator): Response
+    {
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $userSearch = new UserSearch();
+
+        $form = $this->createForm(UserSearchType::class, $userSearch);
+
+        $form->handleRequest($request);
+
+        if ($userSearch->getExport()) {
+            $users = $this->repo->findUsersToExport($userSearch);
+            $export = new UserExport();
+            return $export->exportData($users);
+        }
+
+        $users =  $paginator->paginate(
+            $this->repo->findAllUsersQuery($userSearch),
+            $request->query->getInt("page", 1), // page number
+            20 // limit per page
+        );
+        // $users->setPageRange(5);
+        $users->setCustomParameters([
+            "align" => "right", // alignement de la pagination
+        ]);
+
+
+        return $this->render("app/admin/listUsers.html.twig", [
+            "users" => $users,
+            "userSearch" => $userSearch,
+            "form" => $form->createView()
+        ]);
     }
 
     /**
