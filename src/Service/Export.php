@@ -54,48 +54,20 @@ class Export
         $this->init();
     }
 
+    // Initialize the style sheet
     protected function init()
     {
-        $columnLetter = "A";
-
-        if ($this->columnsWidth) {
-            for ($i = 0; $i < $this->nbColumns; $i++) {
-                $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWidth);
-                $columnLetter++;
-            }
-        } else {
-            for ($i = 0; $i < $this->nbColumns; $i++) {
-                $this->sheet->getColumnDimension($columnLetter)->setAutoSize(true);
-                $columnLetter++;
-            }
-        }
-
-        // Récupère les colonnes de Date
-        $alphas = range("A", "Z");
-        $columnsWithDate = [];
-        foreach ($this->arrayData[0] as $key => $value) {
-            if (stristr($value, "Date"))
-                if ($key < 26) {
-                    $columnsWithDate[] = $alphas[$key];
-                }
-        }
-        // Format les colonnes de date
-        foreach ($columnsWithDate as  $value) {
-            for ($i = 2; $i <= $this->nbRows; $i++) {
-                // $cellValue = $this->sheet->getCell($value . $i)->getValue();
-                // $this->sheet->setCellValue($value . $i, Date::PHPToExcel($cellValue));
-                $this->sheet->getStyle($value . $i)
-                    ->getNumberFormat()
-                    ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
-            }
-        }
-        $this->getFormat($this->format);
-        $this->stylePrint();
-        $this->styleSheet();
+        $this->formatColumnsWidth();
+        $this->formatDateColumns();
+        $this->formatSheet();
+        $this->formatPrint();
     }
 
+    // Export the file
     public function exportFile()
     {
+        $this->getFormat($this->format);
+
         $filename = $this->name . "." . $this->format;
         $this->writer->save($filename);
 
@@ -115,8 +87,57 @@ class Export
         return $response;
     }
 
-    // Style for print
-    protected function stylePrint()
+    // Format the widht of columns
+    protected function formatColumnsWidth()
+    {
+        $columnLetter = "A";
+
+        if ($this->columnsWidth) {
+            $method = "setWidth";
+            $value = $this->columnsWidth;
+        } else {
+            $method = "setAutoSize";
+            $value = true;
+            $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWidth);
+        }
+
+        for ($i = 0; $i < $this->nbColumns; $i++) {
+            $this->sheet->getColumnDimension($columnLetter)->$method($value);
+            $columnLetter++;
+        }
+    }
+
+    // Format the columns with date
+    protected function formatDateColumns()
+    {
+        // Format les colonnes de date
+        foreach ($this->getDateColumns() as  $value) {
+            for ($i = 2; $i <= $this->nbRows; $i++) {
+
+                $this->sheet->getStyle($value . $i)
+                    ->getNumberFormat()
+                    ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
+            }
+        }
+    }
+
+    // Return the columns with date
+    protected function getDateColumns()
+    {
+        $alphas = range("A", "Z");
+        $columnsWithDate = [];
+        foreach ($this->arrayData[0] as $key => $value) {
+            if (stristr($value, "Date"))
+                if ($key < 26) {
+                    $columnsWithDate[] = $alphas[$key];
+                }
+        }
+        return $columnsWithDate;
+    }
+
+
+    // Format the sheet to print
+    protected function formatPrint()
     {
         // Page margins for print
         $this->sheet->getPageMargins()->setTop(0.4);
@@ -139,7 +160,8 @@ class Export
         $this->sheet->getPageSetup()->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
     }
 
-    protected function styleSheet()
+    // Format the style sheet
+    protected function formatSheet()
     {
         // Set name of sheet
         $this->sheet->setTitle($this->name);
@@ -148,10 +170,10 @@ class Export
         $this->sheet
             ->setAutoFilter($this->headers) // filtres
             ->getStyle($this->headers)
-            ->applyFromArray($this->styleHeaders());
+            ->applyFromArray($this->getStyleHeaders());
 
         // set table style
-        $this->sheet->getStyle($this->allCells)->applyFromArray($this->styleTable());
+        $this->sheet->getStyle($this->allCells)->applyFromArray($this->getStyleTable());
 
         $this->sheet->getRowDimension("1")->setRowHeight(20); // hauteur de la ligne
 
@@ -184,8 +206,8 @@ class Export
         }
     }
 
-    // Headers style
-    protected function styleHeaders()
+    // Get the style of headers
+    protected function getStyleHeaders()
     {
         return [
             "font" => [
@@ -212,8 +234,8 @@ class Export
         ];
     }
 
-    // Table style
-    protected function styleTable()
+    // Get the style of table
+    protected function getStyleTable()
     {
         return  [
             "alignment" => [
