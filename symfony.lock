@@ -168,6 +168,9 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
+    "phpmailer/phpmailer": {
+        "version": "v6.1.4"
+    },
     "phpoffice/phpspreadsheet": {
         "version": "1.10.1"
     },

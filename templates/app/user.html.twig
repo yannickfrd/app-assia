@@ -24,34 +24,34 @@
         {{ form_start(form) }}
 
         <h2 class="h4 my-4">Coordonnées</h1>
-        <div class="form-group row mb-2">
-            <div class="col-4 col-md-2 mb-3">Prénom :</div>
-            <div class="col-8 col-md-4">{{ user.firstname }}</div>
-            <div class="col-4 col-md-2 mb-3">Nom :</div>
-            <div class="col-8 col-md-4">{{ user.lastname }}</div>
-            <div class="col-4 col-md-2 mb-3">Login :</div>
-            <div class="col-8 col-md-4">{{ user.username }}</div>
-            <div class="col-4 col-md-2 mb-3">Fonction :</div>
-            <div class="col-8 col-md-4">{{ user.statusList }}</div>
-        </div>
-        <div class="form-group row mb-2">
-            <div class="col-md-6">{{ form_row(form.email) }}</div>
-        </div>
-        <div class="form-group row mb-2">
-            <div class="col-md-6">{{ form_row(form.phone) }}</div>
-            <div class="col-md-6">{{ form_row(form.phone2) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-12">
-                <div class="mb-4 float-right">
-                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
-                        value="Mettre à jour">
+            <div class="form-group row mb-2">
+                <div class="col-4 col-md-2 mb-3">Prénom :</div>
+                <div class="col-8 col-md-4">{{ user.firstname }}</div>
+                <div class="col-4 col-md-2 mb-3">Nom :</div>
+                <div class="col-8 col-md-4">{{ user.lastname }}</div>
+                <div class="col-4 col-md-2 mb-3">Login :</div>
+                <div class="col-8 col-md-4">{{ user.username }}</div>
+                <div class="col-4 col-md-2 mb-3">Fonction :</div>
+                <div class="col-8 col-md-4">{{ user.statusList }}</div>
+            </div>
+            <div class="form-group row mb-2">
+                <div class="col-md-6">{{ form_row(form.email) }}</div>
+            </div>
+            <div class="form-group row mb-2">
+                <div class="col-md-6">{{ form_row(form.phone) }}</div>
+                <div class="col-md-6">{{ form_row(form.phone2) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="mb-4 float-right">
+                        <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
+                            value="Mettre à jour">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {"render_rest": false}) }}
 
     </section>
 
@@ -65,61 +65,64 @@
         {{ form_start(formPassword) }}
 
         <h2 class="h4 my-4">Modification du mot de passe</h1>
-        <div class="form-group row mb-2">
-            <div class="col-md-6">
-                <div class="form-group row">
-                    {{ form_label(formPassword.oldPassword) }}
-                    <div class="col-8">
-                        <div class="input-group js-password-group">
-                            {{ form_widget(formPassword.oldPassword) }}
-                            <div class="input-group-append">
-                                <span class="input-group-text"><span class="fa fa-eye js-show-password"></span></span>
-                            </div>{{ form_help(formPassword.oldPassword) }}
+            <div class="form-group row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        {{ form_label(formPassword.oldPassword) }}
+                        <div class="col-8">
+                            <div class="input-group js-password-group">
+                                {{ form_widget(formPassword.oldPassword) }}
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><span
+                                            class="fa fa-eye js-show-password"></span></span>
+                                </div>{{ form_help(formPassword.oldPassword) }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group row mb-2">
-            <div class="col-md-6">
-                <div class="form-group row">
-                    {{ form_label(formPassword.newPassword) }}
-                    <div class="col-8">
-                        <div class="input-group js-password-group">
-                            {{ form_widget(formPassword.newPassword) }}
-                            <div class="input-group-append">
-                                <span class="input-group-text"><span class="fa fa-eye js-show-password"></span></span>
-                            </div>{{ form_help(formPassword.newPassword) }}
+            <div class="form-group row mb-2">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        {{ form_label(formPassword.newPassword) }}
+                        <div class="col-8">
+                            <div class="input-group js-password-group">
+                                {{ form_widget(formPassword.newPassword) }}
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><span
+                                            class="fa fa-eye js-show-password"></span></span>
+                                </div>{{ form_help(formPassword.newPassword) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        {{ form_label(formPassword.confirmNewPassword) }}
+                        <div class="col-8">
+                            <div class="input-group js-password-group">
+                                {{ form_widget(formPassword.confirmNewPassword) }}
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><span
+                                            class="fa fa-eye js-show-password"></span></span>
+                                </div>{{ form_help(formPassword.confirmNewPassword) }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    {{ form_label(formPassword.confirmNewPassword) }}
-                    <div class="col-8">
-                        <div class="input-group js-password-group">
-                            {{ form_widget(formPassword.confirmNewPassword) }}
-                            <div class="input-group-append">
-                                <span class="input-group-text"><span class="fa fa-eye js-show-password"></span></span>
-                            </div>{{ form_help(formPassword.confirmNewPassword) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="form-group row">
-            <div class="col-md-12">
-                <div class="mb-4 float-right">
-                    <input type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"
-                        value="Mettre à jour">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="mb-4 float-right">
+                        <input type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"
+                            value="Mettre à jour">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{ form_row(formPassword._token) }}
-        {{ form_end(formPassword, {"render_rest": false}) }}
+            {{ form_row(formPassword._token) }}
+            {{ form_end(formPassword, {"render_rest": false}) }}
 
     </section>
 

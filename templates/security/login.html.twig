@@ -35,6 +35,8 @@
                     class="custom-control-input checkbox form-check-input" value="true">
                 <label class="custom-control-label form-check-label" for="remember">Se souvenir de moi</label>
             </div>
+            <input type="hidden" name="_target_path" value="{{ path('security_after_login') }}" />
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <input type="submit" value="Se connecter" id="validation"
                 class="btn btn-lg btn-{{ theme_color }} btn-block mb-4 shadow">
             <a href="{{ path("security_forgot_password") }}" class="text-{{ theme_color }} mb-4">Login ou mot de passe

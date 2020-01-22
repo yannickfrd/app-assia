@@ -179,6 +179,11 @@ class User implements UserInterface
     private $token;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $active;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $tokenCreatedAt;
@@ -648,6 +653,18 @@ class User implements UserInterface
     public function setTokenCreatedAt(?\DateTimeInterface $tokenCreatedAt): self
     {
         $this->tokenCreatedAt = $tokenCreatedAt;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(?bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

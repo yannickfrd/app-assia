@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\Model\UserChangeInfo;
-use App\Form\User\UserType;
 use App\Repository\UserRepository;
+use App\Form\Model\UserInitPassword;
+
 use App\Form\Model\UserResetPassword;
 
 use App\Form\User\UserChangeInfoType;
 
 use App\Form\Model\UserChangePassword;
-
 use App\Notification\MailNotification;
+use App\Form\Security\InitPasswordType;
 use App\Form\Security\RegistrationType;
 use App\Form\Security\SecurityUserType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,14 +32,13 @@ class SecurityController extends AbstractController
 {
     private $manager;
     private $encoder;
-    private $security;
     private $repo;
 
     public function __construct(EntityManagerInterface $manager, Security $security, UserPasswordEncoderInterface $encoder, UserRepository $repo)
     {
         $this->manager = $manager;
+        $this->user = $security->getUser();
         $this->encoder = $encoder;
-        $this->security = $security;
         $this->repo = $repo;
     }
 
@@ -50,24 +50,18 @@ class SecurityController extends AbstractController
         $user = new User();
 
         $form = $this->createForm(RegistrationType::class, $user);
-
         $form->handleRequest($request);
 
-        // Vérifie et compte les erreurs de validation
-        // $errors = $validator->validate($user);
-        // $nbErrors = count($errors);
-        // if ($nbErrors > 0) {
-        //     $errorsString = (string) $errors;
-        // }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setLoginCount(0);
 
             $hashPassword = $this->encoder->encodePassword($user, $user->getPassword());
+
             $user->setPassword($hashPassword)
+                ->setLoginCount(0)
+                ->setActive(true)
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
+                ->setUpdatedBy($this->user);
 
             $this->manager->persist($user);
             $this->manager->flush();
@@ -85,6 +79,172 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * @Route("/login", name="security_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
+        if ($this->user) {
+            return $this->redirect("home");
+        }
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        $user = $this->repo->findOneBy(["username" => $lastUsername]);
+
+        if ($user && $user->getFailureLoginCount() >= 10) {
+            $this->addFlash("danger", "Ce compte a été bloqué suite à de nombreux échecs de connexion.");
+            return $this->redirectToRoute("security_logout");
+        }
+
+        if ($error) {
+            $this->errorLogin($user);
+        }
+
+        return $this->render("security/login.html.twig", [
+            "last_username" => $lastUsername,
+            "error" => $error
+        ]);
+    }
+
+    /**
+     * En cas d'erreur lors de la tentative de connexion
+     * 
+     * @param User $user
+     * @return void
+     */
+    protected function errorLogin(User $user)
+    {
+        if ($user) {
+            $user->setFailureLoginCount($user->getFailureLoginCount() + 1);
+
+            if ($user->getFailureLoginCount() >= 5) {
+                $this->addFlash("danger", "Ce compte a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
+            }
+            $this->manager->flush();
+        }
+        return $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
+    }
+
+    /**
+     * Création du mot de passe par l'utilisateur à sa première connexion
+     * 
+     * @Route("/login/after_login", name="security_after_login")
+     * @return Response
+     */
+    public function afterLogin(): Response
+    {
+        $this->addFlash("success", "Bonjour " . $this->user->getFirstname() . " !");
+
+        if ($this->user->getLoginCount() == 1) {
+            return $this->redirectToRoute("security_init_password");
+        }
+        return $this->redirectToRoute("home");
+    }
+
+    /**
+     * Création du mot de passe par l'utilisateur à sa première connexion
+     * 
+     * @Route("/login/init_password", name="security_init_password")
+     * @param Request $request
+     * @param UserResetPassword $user
+     * @return Response
+     */
+    public function initPassword(Request $request, UserInitPassword $userInitPassword = null): Response
+    {
+        $userInitPassword = new UserInitPassword();
+
+        $form = $this->createForm(InitPasswordType::class, $userInitPassword);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $hashPassword = $this->encoder->encodePassword($this->user, $userInitPassword->getPassword());
+            $this->user->setPassword($hashPassword);
+
+            $this->manager->flush();
+
+            $this->addFlash("success", "Votre mot de passe a été modifié !");
+            return $this->redirectToRoute("home");
+        }
+
+        return $this->render("security/initPassword.html.twig", [
+            "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * Fiche de l'utilisateur connecté
+     * 
+     * @Route("/user", name="user_show", methods="GET|POST")
+     * @param UserChangePassword $userChangePassword
+     * @param Request $request
+     * @return Response
+     */
+    public function showCurrentUser(UserChangeInfo $userChangeInfo = null, UserChangePassword $userChangePassword = null, Request $request): Response
+    {
+        $userChangeInfo->setEmail($this->user->getEmail())
+            ->setPhone($this->user->getPhone())
+            ->setPhone2($this->user->getPhone2());
+
+        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo);
+        $form->handleRequest($request);
+
+        $userChangePassword = new UserChangePassword();
+
+        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword);
+        $formPassword->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->updateInfoCurrentUser($userChangeInfo);
+        }
+
+        if ($formPassword->isSubmitted()) {
+            $this->updatePasswordCurrentUser($formPassword, $userChangePassword);
+        }
+
+        return $this->render("app/user.html.twig", [
+            "user" => $this->user,
+            "form" => $form->createView(),
+            "formPassword" => $formPassword->createView(),
+        ]);
+    }
+
+    /**
+     * Met à jour les coordonnées de l'utilisateur connecté
+     */
+    protected function updateInfoCurrentUser($userChangeInfo)
+    {
+        $this->user->setEmail($userChangeInfo->getEmail())
+            ->setPhone($userChangeInfo->getPhone())
+            ->setPhone2($userChangeInfo->getPhone2())
+            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->user);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Les modifications ont été enregistrées.");
+    }
+
+    /**
+     * Met à jour le mot de passe de l'utilisateur connecté
+     */
+    protected function updatePasswordCurrentUser($formPassword, $userChangePassword)
+    {
+        if ($formPassword->isValid()) {
+
+            $hashPassword = $this->encoder->encodePassword($this->user, $userChangePassword->getNewPassword());
+            $this->user->setPassword($hashPassword);
+
+            $this->manager->flush();
+
+            return $this->addFlash("success", "Votre mot de passe a été mis à jour !");
+        }
+        return $this->addFlash("danger ", "Le mot de passe ou la confirmation est invalide.");
+    }
+
+    /**
      * @Route("/admin/user/{id}", name="security_user") 
      */
     public function editUser(User $user, Request $request)
@@ -96,7 +256,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
+                ->setUpdatedBy($this->user);
 
             $this->manager->persist($user);
             $this->manager->flush();
@@ -111,110 +271,6 @@ class SecurityController extends AbstractController
         return $this->render("security/securityUser.html.twig", [
             "form" => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/login", name="security_login")
-     */
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        $user = $this->repo->findOneBy(["username" => $lastUsername]);
-
-        // if ($user && $user->getFailureLoginCount() >= 5) {
-        //     $this->addFlash("danger", "Ce compte utilisateur a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
-        // }
-
-        if ($error) {
-            $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
-
-            // if ($user) {
-            //     $failureLoginCount = $user->getFailureLoginCount() + 1;
-            //     $user->setFailureLoginCount($failureLoginCount);
-            //     $this->manager->flush();
-            // } else {
-            //     $this->addFlash("danger", "Identifiant ou mot de passe incorrect.");
-            // }
-        }
-
-        return $this->render("security/login.html.twig", [
-            "last_username" => $lastUsername,
-            "error" => $error
-        ]);
-    }
-
-    /**
-     * Fiche de l'utilisateur connecté
-     * 
-     * @Route("/user", name="user_show", methods="GET|POST")
-     * @param UserChangePassword $userChangePassword
-     * @param Request $request
-     * @return Response
-     */
-    public function showCurrentUser(UserChangeInfo $userChangeInfo = null, UserChangePassword $userChangePassword = null, Request $request): Response
-    {
-        $user = $this->repo->findUserById($this->security->getUser());
-
-        $userChangeInfo->setEmail($user->getEmail())
-            ->setPhone($user->getPhone())
-            ->setPhone2($user->getPhone2());
-
-        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo);
-        $form->handleRequest($request);
-
-        $userChangePassword = new UserChangePassword();
-
-        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword);
-        $formPassword->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateInfoCurrentUser($user, $userChangeInfo);
-        }
-
-        if ($formPassword->isSubmitted()) {
-            $this->updatePasswordCurrentUser($formPassword, $user, $userChangePassword);
-        }
-
-        return $this->render("app/user.html.twig", [
-            "user" => $user,
-            "form" => $form->createView(),
-            "formPassword" => $formPassword->createView(),
-        ]);
-    }
-
-    /**
-     * Met à jour les coordonnées de l'utilisateur connecté
-     */
-    protected function updateInfoCurrentUser($user, $userChangeInfo)
-    {
-        $user->setEmail($userChangeInfo->getEmail())
-            ->setPhone($userChangeInfo->getPhone())
-            ->setPhone2($userChangeInfo->getPhone2())
-            ->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->security->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash("success", "Les modifications ont été enregistrées.");
-    }
-
-    /**
-     * Met à jour le mot de passe de l'utilisateur connecté
-     */
-    protected function updatePasswordCurrentUser($formPassword, $user, $userChangePassword)
-    {
-        if ($formPassword->isValid()) {
-
-            $hashPassword = $this->encoder->encodePassword($user, $userChangePassword->getNewPassword());
-            $user->setPassword($hashPassword);
-
-            $this->manager->flush();
-
-            return $this->addFlash("success", "Votre mot de passe a été mis à jour !");
-        }
-        return $this->addFlash("danger ", "Le mot de passe ou la confirmation est invalide.");
     }
 
     /**
@@ -252,7 +308,7 @@ class SecurityController extends AbstractController
                 $this->manager->flush();
 
                 // Envoie l'email
-                if ($_SERVER["HTTP_HOST"] == "127.0.0.1:8001") {
+                if (strchr($_SERVER["HTTP_HOST"], "127.0.0.1")) {
                     $notification->reinitPassword($user);
                 } else {
                     $notification->reinitPassword2($user);

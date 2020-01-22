@@ -37,10 +37,8 @@ class LoginListener
             $user->setLastLogin(new \DateTime());
         }
 
-        $count = $user->getLogincount();
-        $count++;
-        $user->setLogincount($count);
-        // $user->setFailureLogincount(0);
+        $user->setLogincount($user->getLogincount() + 1);
+        $user->setFailureLogincount(0);
 
         $connection = new UserConnection();
         $connection->setConnectionAt(new \DateTime())
@@ -62,8 +60,6 @@ class LoginListener
         }
 
         $this->session->set("servicesUser", $servicesUser);
-
-        $this->session->getFlashBag()->add("success", "Bonjour " .  $user->getFirstname() . " !");
     }
 
     public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)
@@ -73,7 +69,5 @@ class LoginListener
         $count = $user->getFailureLogincount() + 1;
         $user->setFailureLogincount($count);
         $this->manager->flush();
-
-        $this->session->getFlashBag()->add("danger", "Identifiant ou mot de passe incorrect.");
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Form\Security;
 
-use App\Entity\UserResetPassword;
+use App\Form\Model\UserResetPassword;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

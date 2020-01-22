@@ -57,7 +57,8 @@
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
 								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
-								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
+								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau
+									suivi</a>
 							</div>
 						</li>
 						<li class="nav-item">
@@ -96,6 +97,9 @@
 						<li class="nav-item">
 							<a class="nav-link text-light" href="{{ path("export") }}">Export</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link text-light" href="{{ path("email") }}">Test email</a>
+						</li>
 						{% endif %}
 					</ul>
 					<form action="{{ path("people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
@@ -112,8 +116,8 @@
 					<div class="text-light">
 						{% if app.user %}
 						{% set user = app.user %}
-						<a class="text-light font-weight-bold" href="{{ path('user_show') }}"
-							data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true"
+						<a class="text-light font-weight-bold" href="{{ path('user_show') }}" data-toggle="popover"
+							data-trigger="hover" data-placement="bottom" data-html="true"
 							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y h:i") }}
 							<br>fonction : {{ user.statuslist }}<br>Services rattachés :
 							{% for serviceuser in app.session.get("servicesUser") %}<br>- {{ serviceuser }}{% endfor %}">

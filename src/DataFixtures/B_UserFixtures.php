@@ -48,10 +48,11 @@ class B_UserFixtures extends Fixture
             ->addServiceUser($serviceUser)
             ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
             ->setEmail("romain.madelaine@esperer-95.org")
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime())
+            ->setActive(true)
             ->setLoginCount(0)
-            ->setLastLogin(new \DateTime());
+            ->setLastLogin(new \DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime());
 
         $manager->persist($user);
 
@@ -74,6 +75,7 @@ class B_UserFixtures extends Fixture
                 ->setEmail($email)
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())
+                ->setActive(true)
                 ->setLoginCount(0)
                 ->setLastLogin(new \DateTime());
 
