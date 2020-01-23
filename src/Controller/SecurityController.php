@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\Model\UserChangeInfo;
+
 use App\Repository\UserRepository;
+
+use App\Form\Model\UserChangeInfo;
 use App\Form\Model\UserInitPassword;
-
 use App\Form\Model\UserResetPassword;
-
+use App\Form\Model\UserChangePassword;
 use App\Form\User\UserChangeInfoType;
 
-use App\Form\Model\UserChangePassword;
 use App\Notification\MailNotification;
+
 use App\Form\Security\InitPasswordType;
 use App\Form\Security\RegistrationType;
 use App\Form\Security\SecurityUserType;
@@ -308,13 +309,9 @@ class SecurityController extends AbstractController
                 $this->manager->flush();
 
                 // Envoie l'email
-                if (strchr($_SERVER["HTTP_HOST"], "127.0.0.1")) {
-                    $notification->reinitPassword($user);
-                } else {
-                    $notification->reinitPassword2($user);
-                }
+                $message =  $notification->reinitPassword($user);
 
-                $this->addFlash("success",  "Un mail vous a été envoyé. Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables.");
+                $this->addFlash($message["type"], $message["content"]);
                 return $this->redirectToRoute("security_login");
             } else {
                 $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");

@@ -3,66 +3,123 @@
 namespace App\Notification;
 
 use App\Entity\User;
-use Swift_Mailer;
-use Swift_Attachment;
-use Swift_Image;
 use Twig\Environment;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class MailNotification
 {
-    private $mailer;
-    private $renderer;
+    protected $mail;
+    protected $renderer;
 
-    public function __construct(Swift_Mailer $mailer, Environment $renderer)
+    public function __construct(Environment $renderer)
     {
-        $this->mailer = $mailer;
+        $this->mail = new PHPMailer(true);
+
+        $this->mail->Debugoutput = "html";
+        $this->mail->isSMTP(); // Send using SMTP
+        $this->mail->SMTPAuth = true; // Enable SMTP authentication
+        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+        if (strchr($_SERVER["HTTP_HOST"], "127.0.0.1")) {
+            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
+            $this->mail->Host = "smtp.gmail.com"; // Set the SMTP server to send through
+            $this->mail->Username = "romain.madelaine@gmail.com"; // SMTP username
+            $this->mail->Password = "!joiro+689*"; // SMTP password
+            $this->mail->Port = 587; // TCP port to connect to        
+        } else {
+            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
+            $this->mail->Host = "smtp.ionos.fr";
+            $this->mail->Username = "esperer95-app@romain-mad.fr";
+            $this->mail->Password = "Esp3r3r-95*";
+            $this->mail->Port = 25;
+        }
+
+        $this->mail->CharSet = "UTF-8";
+        $this->mail->isHTML(true); // Set email format to HTML
+
         $this->renderer = $renderer;
     }
 
-    public function reinitPassword(User $user)
+    public function send($to, $subject, $htmlBody, $txtBody = null)
     {
-        $message = (new \Swift_Message())
-            ->setSubject("Esperer95-app : Réinitialisation du mot de passe")
-            ->setFrom(["romain.madelaine@gmail.com" => "Esperer95-app"])
-            ->setTo([$user->getEmail() => $user->getFullname()]);
+        try {
+            //Recipients
+            $this->mail->setFrom("noreply@romain-mad.fr", "Esperer95-app");
+            $this->mail->addAddress($to["email"], $to["name"]);     // Add a recipient
+            // $this->mail->addAddress("ellen@example.com");               // Name is optional
+            // $this->mail->addReplyTo("info@example.com", "Information");
+            // $this->mail->addCC("cc@example.com");
+            // $this->mail->addBCC("bcc@example.com");
 
-        $message->setBody(
-            $this->renderer->render(
-                "emails/reinitPassword.html.twig",
-                ["user" => $user]
-            ),
-            "text/html"
-        )
-            ->addPart(
-                $this->renderer->render(
-                    "emails/reinitPassword.txt.twig",
-                    ["user" => $user]
-                ),
-                "text/plain"
-            );
+            // Attachments
+            // $this->mail->addAttachment("/var/tmp/file.tar.gz");         // Add attachments
+            // $this->mail->addAttachment("/tmp/image.jpg", "new.jpg");    // Optional name
 
-        $this->mailer->send($message);
+            // Content
+            $this->mail->Subject = $subject;
+            $this->mail->Body    = $htmlBody;
+            $this->mail->AltBody = $txtBody ?? null;
+
+            $this->mail->send();
+
+            // echo "Message has been sent";
+            return true;
+        } catch (Exception $e) {
+            // echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            return false;
+        }
     }
 
-    public function reinitPassword2(User $user)
+    public function altSend($to, $subject, $htmlBody)
     {
-        $to = $user->getEmail();
-        $subject = "Esperer95-app : Réinitialisation du mot de passe";
-        $message = $this->renderer->render(
-            "emails/reinitPassword.html.twig",
-            ["user" => $user]
-        );
-
         $headers = [
             "MIME-Version" => "1.0",
             "Content-type" => "text/html;charset=UTF-8",
-            "From" => "Esperer95-app <contact@romain-mad.fr>",
+            "From" => "Esperer95-app <noreply@esperer95-app.fr>",
             // "CC" => $cc,
             // "Bcc" => $bcc,
-            "Reply-To" => "Esperer95-app <romain.madelaine@esperer-95.org>",
+            // "Reply-To" => "Esperer95-app <romain.madelaine@esperer-95.org>",
             "X-Mailer" => "PHP/" . phpversion()
         ];
+        mail($to, $subject, $htmlBody, $headers);
+    }
 
-        mail($to, $subject, $message, $headers);
+    /**
+     * Mail de réinitialisation du mot de psasse
+     *
+     * @param User $user
+     */
+    public function reinitPassword(User $user)
+    {
+        $to = [
+            "email" => $user->getEmail(),
+            "name" =>  $user->getFullname()
+        ];
+
+        $subject = "Esperer95-app : Réinitialisation du mot de passe";
+
+        $htmlBody = $this->renderer->render(
+            "emails/reinitPassword.html.twig",
+            ["user" => $user]
+        );
+        $txtBody = $this->renderer->render(
+            "emails/reinitPassword.txt.twig",
+            ["user" => $user]
+        );
+
+        $send = $this->send($to, $subject, $htmlBody, $txtBody);
+
+        if ($send) {
+            return [
+                "type" => "success",
+                "content" => "Un mail vous a été envoyé. Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables."
+            ];
+        }
+        return [
+            "type" => "danger",
+            "content" => "Une erreur s'est produite. L'email n'a pas pu être envoyé."
+        ];
     }
 }
