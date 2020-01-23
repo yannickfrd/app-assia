@@ -17,18 +17,17 @@ class MailNotification
     {
         $this->mail = new PHPMailer(true);
 
-        $this->mail->Debugoutput = "html";
-        $this->mail->isSMTP(); // Send using SMTP
         $this->mail->SMTPAuth = true; // Enable SMTP authentication
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
         if (strchr($_SERVER["HTTP_HOST"], "127.0.0.1")) {
             $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
-            $this->mail->Host = "smtp.gmail.com"; // Set the SMTP server to send through
-            $this->mail->Username = "romain.madelaine@gmail.com"; // SMTP username
-            $this->mail->Password = "!joiro+689*"; // SMTP password
-            $this->mail->Port = 587; // TCP port to connect to        
+            $this->mail->Host = "localhost"; // Set the SMTP server to send through
+            $this->mail->Username = ""; // SMTP username
+            $this->mail->Password = ""; // SMTP password
+            $this->mail->Port = 25; // TCP port to connect to        
         } else {
+            $this->mail->isSMTP(); // Send using SMTP
             $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
             $this->mail->Host = "smtp.ionos.fr";
             $this->mail->Username = "esperer95-app@romain-mad.fr";
@@ -67,8 +66,9 @@ class MailNotification
             // echo "Message has been sent";
             return true;
         } catch (Exception $e) {
-            // echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
-            return false;
+            echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            // return false;
+            dd($e);
         }
     }
 
