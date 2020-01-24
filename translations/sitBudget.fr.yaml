@@ -8,7 +8,6 @@ Asylum seeker alw amt: Montant ADA
 Charge comment: Commentaire sur les charges
 Charges: Charges
 Charges amt: Montant total des charges
-Charges group amt: Charges totales du groupe
 Childcare: Garde d'enfant(s)
 Childcare amt: Montant garde enfant(s)
 Comment sit budget: Commentaire relatif à la situation budgétaire
@@ -29,7 +28,6 @@ Debt rental: Dettes locatives
 Debt rental amt: Montant des dettes locatives
 Debts: Dettes
 Debts amt: Montant des dettes
-Debts group amt: Dettes totales du groupe
 Debt tax delays: Retards d'impôts
 Debt tax delays amt: Montant retards d'impôts
 Debt unpaid maint: Pension alimentaire non réglée
@@ -40,7 +38,7 @@ Dis child alw: AEEH
 Dis child alw amt: Montant AAEH
 Electricity gas: Electricité / Gaz
 Electricity gas amt: Montant électricité / Gaz
-Family allowances amt: Montant allocations familiales
+Family alw amt: Montant allocations familiales
 Family alw: Allocations familiales
 Insurance: Assurance(s)
 Insurance amt: Montant assurance(s)
@@ -55,10 +53,10 @@ Mutual amt: Montant mutuelle(s)
 Charge other: Autre charge
 Charge other amt: Montant autre charge
 Charge other precision: Précision Autre charge
-Ressource autre: Autre ressource
-Ressource autre amt: Montant autre ressource
-Ressource autre precision: Précision Autres revenus
-Over indebt record:  Dossier de surendettement
+Ressource other: Autre ressource
+Ressource other amt: Montant autre ressource
+Ressource other precision: Précision autres revenus
+Over indebt record: Dossier de surendettement
 Over indebt record date: Date de dépôt du dossier
 Paid training: Formation rémunérée
 Paid training amt: Montant formation rémunérée
@@ -71,16 +69,18 @@ Rent amt: Montant loyer
 Resources: Ressources
 Ressources amt: Montant total des ressources
 Ressources comment: Commentaire sur les ressources
-Ressources group amt: Ressources totales du groupe
 Salary: Salaire
 Salary amt: Montant salaire
 Settlement plan: Plan d'apurement
+Sit budget: Sit. budgétaire
 Solidarity alw: ASS
 Solidarity alw amt: Montant ASS
 Taxes: Impôts
 Taxes amt: Montant impôts
 Tax income n1: Revenu fiscal n-1
+Tax incomen1: Revenu fiscal n-1
 Tax income n2: Revenu fiscal n-2
+Tax incomen2: Revenu fiscal n-2
 Temp waiting alw: ATA
 Temp waiting alw amt: Montant allocation temporaire d'attente
 Transport: Transport

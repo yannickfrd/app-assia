@@ -2,26 +2,19 @@
 
 namespace App\Export;
 
-use App\Entity\SitHousing;
-
 use App\Service\Export;
 use App\Service\ObjectToArray;
+use App\Entity\SupportPerson;
 
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
 {
     protected $arrayData;
-    protected $person;
-    protected $supportPerson;
-    protected $supportGroup;
-    protected $groupPeople;
-    protected $rolePerson;
 
     public function __construct()
     {
         $this->arrayData = [];
-        $this->objectToArray = new ObjectToArray();
     }
 
     /**
@@ -29,91 +22,56 @@ class SupportPersonExport
      */
     public function exportData($supports)
     {
-        $headers = $this->getHeaders();
-        $this->arrayData[] = $headers;
-
-        foreach ($supports as $this->supportPerson) {
-
-            $this->person = $this->supportPerson->getPerson();
-            $this->supportGroup = $this->supportPerson->getSupportGroup();
-            $this->groupPeople = $this->supportGroup->getGroupPeople();
-            $this->rolePerson = null;
-
-            foreach ($this->person->getRolesPerson() as $role) {
-                if ($role->getGroupPeople() == $this->groupPeople) {
-                    $this->rolePerson = $role;
-                }
+        $i = 0;
+        foreach ($supports as $supportPerson) {
+            if ($i == 0) {
+                $arrayData[] = array_keys($this->getDatas($supportPerson));
             }
-
-            $row = $this->getRow();
-
-            // $sitHousing = $this->supportGroup->getSitHousing();
-            // if ($sitHousing) {
-            //     $row = array_merge($row, $this->objectToArray->getValues($sitHousing));
-            // }
-
-            $this->arrayData[] = $row;
+            $arrayData[] = $this->getDatas($supportPerson);
+            $i++;
         }
 
-        $export = new Export("export_suivis", "xlsx", $this->arrayData, 12.5);
+        $export = new Export("export_suivis", "xlsx", $arrayData, 12.5);
 
         return $export->exportFile();
     }
 
     /**
-     *  Retourne les entêtes du tableau
+     * Retourne les résultats sous forme de tableau
+     * @param SupportPerson $supportPerson
+     * @return array
      */
-    protected function getHeaders()
+    protected function getDatas(SupportPerson $supportPerson)
     {
-        $headers = [
-            "N° Suivi groupe",
-            "N° Suivi personne",
-            "N° Groupe",
-            "N° Personne",
-            "Nom",
-            "Prénom",
-            "Date de naissance",
-            "Typologie familiale",
-            "Nb de personnes",
-            "Rôle dans le groupe",
-            "DP",
-            "Statut",
-            "Date début suivi",
-            "Date Fin suivi",
-            "Référent social",
-            "Service",
-            "Pôle"
-        ];
+        $person = $supportPerson->getPerson();
+        $supportGroup = $supportPerson->getSupportGroup();
+        $groupPeople = $supportGroup->getGroupPeople();
+        $rolePerson = null;
 
-        // $sitHousing = $this->objectToArray->getKeys(new SitHousing());
-        // $headers = array_merge($headers, $sitHousing);
+        foreach ($person->getRolesPerson() as $role) {
+            if ($role->getGroupPeople() == $groupPeople) {
+                $rolePerson = $role;
+            }
+        }
 
-        return $headers;
-    }
-
-    /**
-     * Retourne une ligne de résultats
-     */
-    protected function getRow()
-    {
         return [
-            $this->supportGroup->getId(),
-            $this->supportPerson->getId(),
-            $this->groupPeople->getId(),
-            $this->person->getId(),
-            $this->person->getLastname(),
-            $this->person->getFirstname(),
-            Date::PHPToExcel($this->person->getBirthdate()->format("Y-m-d")),
-            $this->groupPeople->getFamilyTypologyType(),
-            $this->groupPeople->getNbPeople(),
-            $this->rolePerson->getRoleList(),
-            $this->rolePerson->getHead() ? "Oui" : "Non",
-            $this->supportPerson->getStatusType(),
-            Date::PHPToExcel($this->supportPerson->getStartDate()->format("Y-m-d")),
-            $this->supportPerson->getEndDate() ?  Date::PHPToExcel($this->supportPerson->getEndDate()->format("Y-m-d")) : null,
-            $this->supportGroup->getReferent()->getFullname(),
-            $this->supportGroup->getService()->getName(),
-            $this->supportGroup->getService()->getPole()->getName(),
+            "N° Suivi groupe" => $supportGroup->getId(),
+            "N° Suivi personne" => $supportPerson->getId(),
+            "N° Groupe" => $groupPeople->getId(),
+            "N° Personne" => $person->getId(),
+            "Nom" => $person->getLastname(),
+            "Prénom" => $person->getFirstname(),
+            "Date de naissance" => Date::PHPToExcel($person->getBirthdate()->format("Y-m-d")),
+            "Typologie familiale" => $groupPeople->getFamilyTypologyType(),
+            "Nb de personnes" => $groupPeople->getNbPeople(),
+            "Rôle dans le groupe" => $rolePerson->getRoleList(),
+            "DP" => $rolePerson->getHead() ? "Oui" : "Non",
+            "Statut" => $supportPerson->getStatusType(),
+            "Date début suivi" => Date::PHPToExcel($supportPerson->getStartDate()->format("Y-m-d")),
+            "Date Fin suivi" => $supportPerson->getEndDate() ?  Date::PHPToExcel($supportPerson->getEndDate()->format("Y-m-d")) : null,
+            "Référent social" => $supportGroup->getReferent()->getFullname(),
+            "Service" => $supportGroup->getService()->getName(),
+            "Pôle" => $supportGroup->getService()->getPole()->getName(),
         ];
     }
 }

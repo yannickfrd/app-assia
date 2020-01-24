@@ -5,7 +5,6 @@ namespace App\Service;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -71,8 +70,14 @@ class Export
     {
         $this->getFormat($this->format);
 
-        $filename = $this->name . $this->now->format("_YmdHis") . "." . $this->format;
-        $this->writer->save($filename);
+        $path = "uploads/exports/" . $this->now->format("Y/m/d/");
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $filename = $this->name . $this->now->format("_Y_m_d_His") . "." . $this->format;
+        $this->writer->save($path . $filename);
 
         $response = new StreamedResponse();
 
@@ -133,6 +138,10 @@ class Export
             if (stristr($value, "Date"))
                 if ($key < 26) {
                     $columnsWithDate[] = $alphas[$key];
+                } else {
+                    $xAlphas = floor($key / 26);
+                    $diff = $key - ($xAlphas * 26);
+                    $columnsWithDate[] = $alphas[$xAlphas - 1] . $alphas[$diff];
                 }
         }
         return $columnsWithDate;

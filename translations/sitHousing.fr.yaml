@@ -1,20 +1,21 @@
 -- Select --: -- Sélectionner --
-Caf eligibility: Eligibililité CAF
+Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
 Comment sit housing: Commentaire relatif à la situation liée au logement et l'hébergement
 Dalo commission: Passage en commission DALO
 Dalo record date: Date de dépôt
 Decision date: Date de décision
-Dls id: Numéro unique régional (NUR)
-Dls Renewal date: Date de renouvellement 
 Dls: Demande de logement social
+Dls date: Date de demande de logement social
+Dls id: Numéro unique régional (NUR)
+Dls renewal date: Date de renouvellement 
 Domiciliation: Domiciliation
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
 Expulsion in progress: Procédure d'expulsion en cours
-Fsl eligibility: Eligibité aide à l'installation FSL
+Fsl eligibility: Eligibilité aide à l'installation FSL
 Fsl: FSL
 Heps precision: Précision sur les aides et accès au logement
 Housing : Logement ou hébergement
@@ -35,6 +36,7 @@ Other helps: Autre(s) aide(s)
 Public force date: Date du concours de la Force Publique
 Public force: Concours de la Force Publique
 Requalified dalo: DALO requalifié en DAHO
+Sit housing: Sit. logmt
 Sls date: Date de demande de logement social
 Specificities: Spécificités à prendre en considération 
 Syplo: SYPLO

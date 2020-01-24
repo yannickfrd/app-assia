@@ -7,6 +7,7 @@ use Twig\Environment;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use Symfony\Component\DependencyInjection\Container;
 
 class MailNotification
 {

@@ -435,7 +435,7 @@ class SitHousing
 
     public function getRequalifiedDaloList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->requalifiedDalo];
     }
 
     public function getDecisionDate(): ?\DateTimeInterface
@@ -481,7 +481,7 @@ class SitHousing
 
     public function getHsgActionRecordList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->hsgActionRecord];
     }
 
     public function getHsgActionDate(): ?\DateTimeInterface
@@ -534,7 +534,7 @@ class SitHousing
 
     public function getExpulsionInProgressList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->expulsionInProgress];
     }
 
     public function getPublicForce(): ?int
@@ -551,7 +551,7 @@ class SitHousing
 
     public function getPublicForceList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->publicForce];
     }
 
     public function getPublicForceDate(): ?\DateTimeInterface
@@ -592,7 +592,7 @@ class SitHousing
 
     public function getHousingExperienceList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->housingExperience];
     }
 
     public function getHousingExpeComment(): ?string
@@ -711,7 +711,7 @@ class SitHousing
 
     public function getHousinglist()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->housing];
     }
 
     public function getHousingAddress(): ?string
@@ -764,7 +764,7 @@ class SitHousing
 
     public function getDomiciliationlist()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return SelectList::YES_NO[$this->domiciliation];
     }
 
     public function getDomiciliationAddress(): ?string

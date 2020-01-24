@@ -5,84 +5,42 @@ namespace App\Export;
 use App\Entity\Service;
 use App\Service\Export;
 
-use App\Service\ObjectToArray;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ServiceExport
 {
-    protected $arrayData;
-
-    /**
-     * @var Service $service
-     */
-    protected $service;
-
-    public function __construct()
-    {
-        $this->arrayData = [];
-        $this->objectToArray = new ObjectToArray();
-    }
-
     /**
      * Exporte les données
      */
     public function exportData($services)
     {
-        $headers = $this->getHeaders();
-        $this->arrayData[] = $headers;
+        $arrayData[] = array_keys($this->getDatas($services[0]));
 
         foreach ($services as $service) {
-            $this->service = $service;
-
-            $row = $this->getRow();
-
-            $this->arrayData[] = $row;
+            $arrayData[] = $this->getDatas($service);
         }
 
-        $export = new Export("export_utilisateurs", "xlsx", $this->arrayData, null);
+        $export = new Export("export_services", "xlsx", $arrayData, null);
 
         return $export->exportFile();
     }
 
     /**
-     *  Retourne les entêtes du tableau
+     * Retourne les résultats sous forme de tableau
+     * @param Service $service
+     * @return array
      */
-    protected function getHeaders()
+    protected function getDatas(Service $service)
     {
-        $headers = [
-            "N° service",
-            "Service",
-            "Pôle",
-            "Téléphone",
-            "Email",
-            "Adresse",
-            "Ville",
-            // "Utilisateurs",
-            "Date de création"
-        ];
-
-        return $headers;
-    }
-
-    /**
-     * Retourne une ligne de résultats
-     */
-    protected function getRow()
-    {
-        // foreach ($this->service->getserviceUser() as $serviceService) {
-        //     $users[] = $serviceService->getUser()->getFullname();
-        // }
-
         return [
-            $this->service->getId(),
-            $this->service->getName(),
-            $this->service->getPole()->getName(),
-            $this->service->getPhone(),
-            $this->service->getEmail(),
-            $this->service->getAddress(),
-            $this->service->getCity(),
-            // join($users, ", "),
-            Date::PHPToExcel($this->service->getCreatedAt()->format("d/m/Y")),
+            "N° service" => $service->getId(),
+            "Service" =>  $service->getName(),
+            "Pôle" => $service->getPole()->getName(),
+            "Téléphone" => $service->getPhone(),
+            "Email" => $service->getEmail(),
+            "Adresse" => $service->getAddress(),
+            "Ville" => $service->getCity(),
+            "Date de création" => Date::PHPToExcel($service->getCreatedAt()->format("d/m/Y")),
         ];
     }
 }

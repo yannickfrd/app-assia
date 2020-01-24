@@ -5,94 +5,54 @@ namespace App\Export;
 use App\Entity\Person;
 use App\Service\Export;
 
-use App\Service\ObjectToArray;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class PersonExport
 {
-    protected $arrayData;
-
-    /**
-     * @var Person $person
-     */
-    protected $person;
-
-    public function __construct()
-    {
-        $this->arrayData = [];
-        $this->objectToArray = new ObjectToArray();
-    }
-
     /**
      * Exporte les données
      */
-    public function exportData($persons)
+    public function exportData($people)
     {
-        $headers = $this->getHeaders();
-        $this->arrayData[] = $headers;
+        $arrayData[] = array_keys((array) $this->getDatas($people[0]));
 
-        foreach ($persons as $person) {
-            $this->person = $person;
-
-            $row = $this->getRow();
-
-            $this->arrayData[] = $row;
+        foreach ($people as $person) {
+            $arrayData[] = $this->getDatas($person);
         }
 
-        $export = new Export("export_utilisateurs", "xlsx", $this->arrayData, null);
+        $export = new Export("export_personnes", "xlsx", $arrayData, null);
 
         return $export->exportFile();
     }
 
     /**
-     *  Retourne les entêtes du tableau
+     * Retourne les résultats sous forme de tableau
+     * @param Person $person
+     * @return array
      */
-    protected function getHeaders()
-    {
-        $headers = [
-            "N° utilisateur",
-            "Nom",
-            "Prénom",
-            "Date de naissance",
-            "Sexe",
-            "Typologie familiale",
-            "Nb de personnes",
-            "Rôle dans le groupe",
-            "Date de création",
-            "Date de mise à jour",
-            "Typologie familiale",
-            "Nb de personnes"
-        ];
-
-        return $headers;
-    }
-
-    /**
-     * Retourne une ligne de résultats
-     */
-    protected function getRow()
+    protected function getDatas(Person $person)
     {
         $typologies = [];
         $nbPeople = [];
         $roles = [];
-        foreach ($this->person->getRolesPerson() as $roleUser) {
-            $group = $roleUser->getGroupPeople();
-            $typologies[] = $group->getFamilyTypologyType();
-            $nbPeople[] = $group->getNbPeople();
+        foreach ($person->getRolesPerson() as $roleUser) {
+            $groupPeople = $roleUser->getGroupPeople();
+            $typologies[] = $groupPeople->getFamilyTypologyType();
+            $nbPeople[] = $groupPeople->getNbPeople();
             $roles[] = $roleUser->getRoleList();
         }
 
         return [
-            $this->person->getId(),
-            $this->person->getLastname(),
-            $this->person->getFirstname(),
-            Date::PHPToExcel($this->person->getBirthdate()->format("d/m/Y")),
-            $this->person->getGenderList(),
-            join($typologies, ", "),
-            join($nbPeople, ", "),
-            join($roles, ", "),
-            Date::PHPToExcel($this->person->getCreatedAt()->format("d/m/Y")),
-            Date::PHPToExcel($this->person->getUpdatedAt()->format("d/m/Y")),
+            "N° utilisateur" => $person->getId(),
+            "Nom" => $person->getLastname(),
+            "Prénom" => $person->getFirstname(),
+            "Date de naissance" => Date::PHPToExcel($person->getBirthdate()->format("d/m/Y")),
+            "Sexe" => $person->getGenderList(),
+            "Typologie familiale" => join($typologies, ", "),
+            "Nb de personnes" => join($nbPeople, ", "),
+            "Rôle dans le groupe" => join($roles, ", "),
+            "Date de création" => Date::PHPToExcel($person->getCreatedAt()->format("d/m/Y")),
+            "Date de mise à jour" => Date::PHPToExcel($person->getUpdatedAt()->format("d/m/Y")),
         ];
     }
 }

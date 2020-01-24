@@ -2,24 +2,24 @@
 
 namespace App\Controller;
 
+use App\Form\Model\Export;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
-use App\Entity\SupportPerson;
 
-use App\Form\Model\Export;
-use App\Form\Model\SupportGroupSearch;
+use App\Entity\SupportPerson;
 use App\Form\Support\ExportType;
+use App\Export\SupportPersonExport;
+use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
+
+use App\Export\SupportPersonFullExport;
 use App\Form\Support\SupportGroupType2;
 
-use App\Export\SupportPersonExport;
-use App\Export\SupportPersonFullExport;
+use App\Repository\RolePersonRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 use App\Repository\SupportGroupRepository;
-use App\Repository\RolePersonRepository;
 use App\Repository\SupportPersonRepository;
-
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\Support\SupportGroupSearchType;
 use Symfony\Component\HttpFoundation\Request;
@@ -343,7 +343,7 @@ class SupportController extends AbstractController
      * @param SupportPersonRepository $repoSupportPerson
      * @return Response
      */
-    public function export(Export $export = null, Request $request, SupportPersonRepository $repoSupportPerson): Response
+    public function export(Export $export = null, Request $request, SupportPersonRepository $repoSupportPerson, SupportPersonFullExport $exportSupport): Response
     {
         $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
 
@@ -354,7 +354,6 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $supports = $repoSupportPerson->findSupportsFullToExport($export);
-            $exportSupport = new SupportPersonFullExport();
             return $exportSupport->exportData($supports);
         }
 
