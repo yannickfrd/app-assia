@@ -5,7 +5,6 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     documents_directory: '%kernel.project_dir%/public/uploads/documents'
-    pass_phpmailer: '%env(PASS_PHPMAILER)%'
 
 services:
     # default configuration for services in *this* file

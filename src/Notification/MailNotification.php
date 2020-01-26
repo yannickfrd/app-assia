@@ -7,6 +7,7 @@ use Twig\Environment;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+
 use Symfony\Component\DependencyInjection\Container;
 
 class MailNotification
@@ -20,21 +21,16 @@ class MailNotification
 
         $this->mail->SMTPAuth = true; // Enable SMTP authentication
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
 
-        if (strchr($_SERVER["HTTP_HOST"], "127.0.0.1")) {
-            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
-            $this->mail->Host = "localhost"; // Set the SMTP server to send through
-            $this->mail->Username = ""; // SMTP username
-            $this->mail->Password = ""; // SMTP password
-            $this->mail->Port = 25; // TCP port to connect to        
-        } else {
+        if ($_SERVER["SERVER_NAME"] != "127.0.0.1") {
             $this->mail->isSMTP(); // Send using SMTP
-            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
-            $this->mail->Host = "smtp.ionos.fr";
-            $this->mail->Username = "esperer95-app@romain-mad.fr";
-            $this->mail->Password = "Esp3r3r-95*";
-            $this->mail->Port = 25;
         }
+
+        $this->mail->Host = $_SERVER["HOST"];
+        $this->mail->Username = $_SERVER["USERNAME"];
+        $this->mail->Password = $_SERVER["PASSOWRD"];
+        $this->mail->Port = $_SERVER["PORT"];
 
         $this->mail->CharSet = "UTF-8";
         $this->mail->isHTML(true); // Set email format to HTML

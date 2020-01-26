@@ -1,5 +1,6 @@
 
 ###> symfony/framework-bundle ###
+.env
 /.env
 /.env.local
 /.env.local.php
@@ -26,8 +27,15 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-###< uploaded files ###
+###> uploaded files ###
 /public/uploads/
+###< uploaded files ###
 
-###< migration files ###
+###> migration files ###
 /src/Migrations/
+###< migration files ###
+
+###> secrets keys ###
+/config/secrets/dev/dev.decrypt.private.php
+/config/secrets/prod/prod.decrypt.private.php
+###< secrets keys ###
