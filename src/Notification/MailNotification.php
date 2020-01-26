@@ -60,12 +60,11 @@ class MailNotification
 
             $this->mail->send();
 
-            // echo "Message has been sent";
+            echo "Message has been sent";
             return true;
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
-            // return false;
-            dd($e);
+            return false;
         }
     }
 

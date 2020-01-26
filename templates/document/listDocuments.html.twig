@@ -97,6 +97,9 @@
                         <th scope="col" class="align-middle th-w-150">
                             {{ knp_pagination_sortable(documents, "Description", "d.content") }}
                         </th>
+                        <th scope="col" class="align-middle th-w-60">
+                            {{ knp_pagination_sortable(documents, "Taille", "d.size") }}
+                        </th>
                         <th scope="col" class="align-middle th-date">
                             {{ knp_pagination_sortable(documents, "Date d'ajout", "d.createdAt") }}
                         </th>
@@ -121,6 +124,8 @@
                             data-value="{{ document.type }}">{{ document.typeList }}</td>
                         <td class="js-document-content" data-toggle="modal" data-target="#modal-document">
                             {{ document.content }}</td>
+                        <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">
+                            {{ (document.size / 1000)|round(0, "floor") }} Ko</td>
                         <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">
                             {{ document.createdAt | date("d/m/Y H:i") }}</td>
                         <td class="align-middle text-center">

@@ -122,10 +122,10 @@ export default class ListDocuments {
     // Vérifie le fichier choisi
     checkFile() {
         let error = false;
-        let validsExtensions = ["pdf", "jpg", "png", "doc", "docx"];
+        let validExtensions = ["doc", "docx", "jpg", "pdf", "png", "rar", "xls", "xlsx", "zip"];
         let extensionFile = this.documentFileInput.value.split(".").pop().toLowerCase();
         // Vérifie si l'extension du fichier est valide
-        if ((validsExtensions.indexOf(extensionFile) === -1)) {
+        if ((validExtensions.indexOf(extensionFile) === -1)) {
             error = true;
             new MessageFlash("danger", "Le format du fichier n'est pas valide.");
         }
@@ -225,6 +225,7 @@ export default class ListDocuments {
         let documentElt = document.createElement("tr");
         documentElt.id = "document-" + data.documentId;
         documentElt.className = "js-document";
+        let size = Math.floor(data.size / 1000) + " Ko";
 
         documentElt.innerHTML =
             `<th scope="row" class="align-middle text-center">
@@ -233,6 +234,7 @@ export default class ListDocuments {
             <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
             <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.typeList}</td>
             <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
+            <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
             <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
             <td class="align-middle text-center">
                 <button data-url="/document/${data.documentId}/delete"  class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span></button>

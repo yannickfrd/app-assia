@@ -73,6 +73,11 @@ class Document
      */
     private $supportGroup;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $size;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -187,6 +192,18 @@ class Document
     public function setSupportGroup(?SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
+
+        return $this;
+    }
+
+    public function getSize(): ?float
+    {
+        return $this->size;
+    }
+
+    public function setSize(?float $size): self
+    {
+        $this->size = $size;
 
         return $this;
     }

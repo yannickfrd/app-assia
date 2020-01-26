@@ -196,7 +196,10 @@ class DocumentController extends AbstractController
 
         $fileName = $fileUploader->upload($file, $path);
 
+        $size = filesize($fileUploader->getTargetDirectory() . $path . "/" . $fileName);
+
         $document->setInternalFileName($fileName)
+            ->setSize($size)
             ->setGroupPeople($groupPeople)
             ->setSupportGroup($supportGroup)
             ->setCreatedAt($createdAt)
@@ -216,6 +219,7 @@ class DocumentController extends AbstractController
                 "groupPeopleId" => $groupPeople->getId(),
                 "typeList" => $document->getTypeList(),
                 "path" => $path . "/" . $fileName,
+                "size" => $size,
                 "createdAt" => date_format($createdAt, "d/m/Y H:i")
             ]
         ], 200);

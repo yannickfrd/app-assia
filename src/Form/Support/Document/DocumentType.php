@@ -44,15 +44,19 @@ class DocumentType extends AbstractType
                             "image/jpeg",
                             "image/png",
                             "application/msword",
-                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            "application/x-rar-compressed",
+                            "application/zip",
+                            "application/vnd.ms-excel",
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         ],
-                        "mimeTypesMessage" => "Merci de télécharger un document valide (pdf, jpg, png, doc, docx).",
+                        "mimeTypesMessage" => "Merci de télécharger un fichier au format valide (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip).",
                     ])
                 ],
                 "attr" => [
                     "placeholder" => "Choisir un fichier..."
                 ],
-                "help" => "Fichier de 5Mo maximum. Formats autorisés : pdf, jpg, png, doc, docx.",
+                "help" => "5Mo maximum. Formats acceptés : doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip.",
             ]);
     }
 
