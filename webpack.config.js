@@ -35,6 +35,7 @@ Encore
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('rdv', './assets/js/rdv/rdv.js')
     .addEntry('search', './assets/js/search.js')
+    .addEntry('service', './assets/js/service/service.js')
     .addEntry('support', './assets/js/support/support.js')
     .addEntry('supportPers', './assets/js/support/supportPerson.js')
     .addEntry('user', './assets/js/user/user.js')

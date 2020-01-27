@@ -1,0 +1,78 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Dispositifs | Esperer95-app{% endblock %}
+
+{% block body %}
+
+<section class="mt-0 mb-4">
+    <div class="container">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-4">Dispositifs</h1>
+
+        <div class="row align-items-baseline">
+            <div class="col-md-4 count align-middle">
+                <p class="align-middle">{{ devices.getTotalItemCount | number_format(0,'', ' ')}}
+                    dispositifs.</p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(devices, "Nom du dispositif", "d.name") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(devices, "Description", "d.comment") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(devices, "Date de création", "d.createdAt") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(devices, "Créé par", "d.createdBy") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(devices, "Date de mise à jour", "d.updatedAt") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(devices, "Modifié par", "d.updatedBy") }}
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <th scope="row">
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            <a href="{{ path('admin_device_edit', {'id':device.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir la fiche du dispositif">
+                                <span class="fas fa-eye"></span>
+                            </a>
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                                    class="fas fa-ban"></span></span>
+                            {% endif %}
+                        </th>
+                        <td>{{ device.name }}</td>
+                        <td>{{ device.comment }}</td>
+                        <td>{{ device.createdAt | date("d/m/Y H:i") }}</td>
+                        <td>{{ device.createdBy.fullname }}</td>
+                        <td>{{ device.updatedAt | date("d/m/Y H:i") }}</td>
+                        <td>{{ device.createdBy.fullname }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
+                <span class="fas fa-plus-square mr-2"></span>Créer un nouveau dispositif</a>
+        </p>
+        {% endif %}
+</section>
+
+{% endblock %}

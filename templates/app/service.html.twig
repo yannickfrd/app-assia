@@ -24,10 +24,10 @@
 
     <hr>
 
+    {% include "model/msgFlash.html.twig" %}
+    <div id="js-msg-flash-content"></div>
+    {{ form_start(form) }}
     <section>
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
-        {{ form_start(form) }}
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.name) }}</div>
             <div class="col-md-6">{{ form_row(form.pole) }}</div>
@@ -47,7 +47,6 @@
         <div class="form-group row">
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
-        {{ form_row(form._token) }}
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
@@ -56,11 +55,63 @@
                 </div>
             </div>
         </div>
-        {{ form_end(form, {"render_rest": false}) }}
     </section>
 
-    {% if edit_mode %}
     <hr>
+
+    <section>
+        <h2 class="h4 mb-4">Dispositif(s) rattaché(s)</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="serviceDevices-fields-list"
+                    data-prototype="{{ form_widget(form.serviceDevices.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
+                    data-widget-counter="{{ form.serviceDevices|length }}">
+                    {% if form.serviceDevices|length > 0 %}
+                    <div class="table-responsive table-sm">
+                        <table id="function-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="align-middle th-w-150">Dispositif</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for serviceDevice in form.serviceDevices %}
+                                <tr id="{{ serviceDevice.vars.id }}">
+                                    <td>{{ form_widget(serviceDevice.device) }}</td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-danger js-remove"><i
+                                                class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="my-2">
+            <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                data-list-selector="#serviceDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+                service</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-right mb-2">
+                    <button type="submit" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
+
+    </section>
+
+    <hr>
+
     <section>
         <h2 class="h4 my-4">Utilisateurs rattachés</h2>
         <div class="table-responsive">
@@ -102,10 +153,9 @@
             </div>
         </div>
     </section>
-    {% endif %}
 </div>
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("directory") }}
+{{ encore_entry_script_tags("service") }}
 {% endblock javascripts %}

@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Device;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Device|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,15 @@ class DeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, Device::class);
     }
 
-    // /**
-    //  * @return Device[] Returns an array of Device objects
-    //  */
-    /*
-    public function findByExampleField($value)
+        /**
+     * Retourne toutes les personnes
+     * @return Query
+     */
+    public function findAllDevicesQuery(): Query
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $query =  $this->createQueryBuilder("d")
+            ->select("d");
+        return $query->orderBy("d.name", "ASC")
+            ->getQuery();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Device
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

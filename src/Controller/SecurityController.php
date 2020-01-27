@@ -251,10 +251,14 @@ class SecurityController extends AbstractController
     public function editUser(User $user, Request $request)
     {
         $form = $this->createForm(SecurityUserType::class, $user);
-
         $form->handleRequest($request);
 
+        dump($user);
+        dd($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+
 
             $user->setUpdatedAt(new \DateTime())
                 ->setUpdatedBy($this->user);
@@ -263,12 +267,10 @@ class SecurityController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash("success", "Le compte utilisateur a été modifié.");
-
-            return $this->redirectToRoute("security_user", [
-                "id" => $user->getId(),
-            ]);
+            // return $this->redirectToRoute("security_user", [
+            //     "id" => $user->getId(),
+            // ]);
         }
-
         return $this->render("security/securityUser.html.twig", [
             "form" => $form->createView(),
         ]);

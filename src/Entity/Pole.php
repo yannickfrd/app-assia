@@ -97,12 +97,6 @@ class Pole
      */
     private $updatedAt;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Device", mappedBy="pole")
-     */
-    private $devices;
-
-
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -297,37 +291,6 @@ class Pole
             // set the owning side to null (unless already changed)
             if ($service->getPole() === $this) {
                 $service->setPole(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Device[]
-     */
-    public function getDevices(): Collection
-    {
-        return $this->devices;
-    }
-
-    public function addDevice(Device $device): self
-    {
-        if (!$this->devices->contains($device)) {
-            $this->devices[] = $device;
-            $device->setPole($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDevice(Device $device): self
-    {
-        if ($this->devices->contains($device)) {
-            $this->devices->removeElement($device);
-            // set the owning side to null (unless already changed)
-            if ($device->getPole() === $this) {
-                $device->setPole(null);
             }
         }
 

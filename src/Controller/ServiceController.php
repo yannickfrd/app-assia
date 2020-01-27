@@ -53,17 +53,15 @@ class ServiceController extends AbstractController
             return $export->exportData($services);
         }
 
-        if ($request->query->all()) {
-            $services =  $paginator->paginate(
-                $this->repo->findAllServicesQuery($serviceSearch),
-                $request->query->getInt("page", 1), // page number
-                20 // limit per page
-            );
-            // $services->setPageRange(5);
-            $services->setCustomParameters([
-                "align" => "right", // alignement de la pagination
-            ]);
-        }
+        $services =  $paginator->paginate(
+            $this->repo->findAllServicesQuery($serviceSearch),
+            $request->query->getInt("page", 1), // page number
+            20 // limit per page
+        );
+        // $services->setPageRange(5);
+        $services->setCustomParameters([
+            "align" => "right", // alignement de la pagination
+        ]);
 
         return $this->render("app/listServices.html.twig", [
             "services" => $services ?? null,

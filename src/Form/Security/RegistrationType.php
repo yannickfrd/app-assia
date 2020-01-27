@@ -90,14 +90,14 @@ class RegistrationType extends AbstractType
             ])
             ->add("serviceUser", CollectionType::class, [
                 "entry_type" => ServiceUserType::class,
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
                 "allow_add" => true,
                 "allow_delete" => true,
                 "delete_empty" => true,
                 "prototype" => true,
                 "by_reference" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
                 "entry_options" => [
                     "attr" => ["class" => "form-inline"],
                 ]

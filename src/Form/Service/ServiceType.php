@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ServiceType extends AbstractType
 {
@@ -51,10 +52,25 @@ class ServiceType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the service"
+                ]
+            ])
+            ->add("serviceDevices", CollectionType::class, [
+                "entry_type" => ServiceDeviceType::class,
+                "allow_add" => true,
+                "allow_delete" => true,
+                "delete_empty" => true,
+                "prototype" => true,
+                "by_reference" => false,
+                "label_attr" => [
+                    "class" => "sr-only"
+                ],
+                "entry_options" => [
+                    "attr" => ["class" => "form-inline"],
                 ]
             ]);
     }
@@ -63,7 +79,7 @@ class ServiceType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => Service::class,
-            "translation_domain" => "forms",
+            "translation_domain" => "forms"
         ]);
     }
 }

@@ -598,7 +598,6 @@ class User implements UserInterface
                 $serviceUser->setUser(null);
             }
         }
-
         return $this;
     }
 

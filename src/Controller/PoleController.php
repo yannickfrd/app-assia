@@ -30,7 +30,7 @@ class PoleController extends AbstractController
     }
 
     /**
-     * Permet de rechercher un pôle
+     * Rechercher un pôle
      * 
      * @Route("/poles", name="poles")
      * @return Response
@@ -46,7 +46,7 @@ class PoleController extends AbstractController
             "align" => "right", // alignement de la pagination
         ]);
 
-        return $this->render("app/listPoles.html.twig", [
+        return $this->render("app/admin/listPoles.html.twig", [
             "poles" => $poles ?? null
         ]);
     }
@@ -83,7 +83,7 @@ class PoleController extends AbstractController
             return $this->redirectToRoute("pole_edit", ["id" => $pole->getId()]);
         }
 
-        return $this->render("app/pole.html.twig", [
+        return $this->render("app/admin/pole.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
         ]);
@@ -105,14 +105,14 @@ class PoleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // $pole->setUpdatedAt(new \DateTime())
-            //     ->setUpdatedBy($this->security->getpole());
+            //     ->setUpdatedBy($this->security->getUser());
 
             $this->manager->flush();
 
             $this->addFlash("success", "Les modifications ont été enregistrées.");
         }
 
-        return $this->render("app/pole.html.twig", [
+        return $this->render("app/admin/pole.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

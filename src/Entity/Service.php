@@ -4,10 +4,10 @@ namespace App\Entity;
 
 use App\Service\Phone;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -114,15 +114,15 @@ class Service
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Space", mappedBy="service")
+     * @ORM\OneToMany(targetEntity="App\Entity\ServiceDevice", mappedBy="service", orphanRemoval=true, cascade={"persist"})
      */
-    private $spaces;
+    private $serviceDevices;
 
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
-        $this->spaces = new ArrayCollection();
+        $this->serviceDevices = new ArrayCollection();
     }
 
     public function __toString()
@@ -371,30 +371,30 @@ class Service
     }
 
     /**
-     * @return Collection|Space[]
+     * @return Collection|ServiceDevice[]
      */
-    public function getSpaces(): Collection
+    public function getServiceDevices(): Collection
     {
-        return $this->spaces;
+        return $this->serviceDevices;
     }
 
-    public function addSpace(Space $space): self
+    public function addServiceDevice(ServiceDevice $serviceDevice): self
     {
-        if (!$this->spaces->contains($space)) {
-            $this->spaces[] = $space;
-            $space->setService($this);
+        if (!$this->serviceDevices->contains($serviceDevice)) {
+            $this->serviceDevices[] = $serviceDevice;
+            $serviceDevice->setService($this);
         }
 
         return $this;
     }
 
-    public function removeSpace(Space $space): self
+    public function removeServiceDevice(ServiceDevice $serviceDevice): self
     {
-        if ($this->spaces->contains($space)) {
-            $this->spaces->removeElement($space);
+        if ($this->serviceDevices->contains($serviceDevice)) {
+            $this->serviceDevices->removeElement($serviceDevice);
             // set the owning side to null (unless already changed)
-            if ($space->getService() === $this) {
-                $space->setService(null);
+            if ($serviceDevice->getService() === $this) {
+                $serviceDevice->setService(null);
             }
         }
 

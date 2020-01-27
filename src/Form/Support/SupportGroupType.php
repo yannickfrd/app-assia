@@ -2,25 +2,28 @@
 
 namespace App\Form\Support;
 
-use App\Entity\Service;
-use App\Entity\SupportGroup;
 use App\Entity\User;
+use App\Entity\Device;
+use App\Entity\Service;
 
 use App\Form\Utils\Choices;
+use App\Entity\SupportGroup;
+use App\Entity\ServiceDevice;
+use App\Repository\UserRepository;
 use App\Form\Support\SupportSitType;
-use App\Form\Support\Evaluation\SitBudgetGroupType;
-use App\Form\Support\Evaluation\SitHousingType;
-use App\Form\Support\Evaluation\SitSocialType;
-use App\Form\Support\Evaluation\SitFamilyGroupType;
-
 use App\Security\CurrentUserService;
 
 use App\Repository\ServiceRepository;
-use App\Repository\UserRepository;
 
 use Symfony\Component\Form\AbstractType;
+use App\Repository\ServiceDeviceRepository;
+
+use App\Form\Support\Evaluation\SitSocialType;
+use App\Form\Support\Evaluation\SitHousingType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\Support\Evaluation\SitBudgetGroupType;
+use App\Form\Support\Evaluation\SitFamilyGroupType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -62,6 +65,17 @@ class SupportGroupType extends AbstractType
                         ->orderBy("s.name", "ASC");
                 }
             ])
+            // ->add("device", EntityType::class, [
+            //     "class" => ServiceDevice::class,
+            //     "mapped" => false,
+            //     "choice_label" => "device.name",
+            //     "query_builder" => function (ServiceDeviceRepository $repo) {
+            //         return $repo->createQueryBuilder("sd")
+            //             // ->where("sd.service IN (:services)")
+            //             // ->setParameter("services", $this->currentUser->getServices())
+            //             ->orderBy("sd.device", "ASC");
+            //     }
+            // ])
             ->add("referent", EntityType::class, [
                 "class" => User::class,
                 "choice_label" => "fullname",
