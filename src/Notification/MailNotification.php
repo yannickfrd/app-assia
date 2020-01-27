@@ -27,10 +27,10 @@ class MailNotification
             $this->mail->isSMTP(); // Send using SMTP
         }
 
-        $this->mail->Host = $_SERVER["HOST"];
-        $this->mail->Username = $_SERVER["USERNAME"];
-        $this->mail->Password = $_SERVER["PASSOWRD"];
-        $this->mail->Port = $_SERVER["PORT"];
+        $this->mail->Host = $_SERVER["MAILER_HOST"];
+        $this->mail->Username = $_SERVER["MAILER_USERNAME"];
+        $this->mail->Password = $_SERVER["MAILER_PASSWORD"];
+        $this->mail->Port = $_SERVER["MAILER_PORT"];
 
         $this->mail->CharSet = "UTF-8";
         $this->mail->isHTML(true); // Set email format to HTML
@@ -43,27 +43,28 @@ class MailNotification
         try {
             //Recipients
             $this->mail->setFrom("noreply@romain-mad.fr", "Esperer95-app");
-            $this->mail->addAddress($to["email"], $to["name"]);     // Add a recipient
-            // $this->mail->addAddress("ellen@example.com");               // Name is optional
+            $this->mail->addAddress($to["email"], $to["name"]); // Add a recipient
+            // $this->mail->addAddress("ellen@example.com"); // Name is optional
             // $this->mail->addReplyTo("info@example.com", "Information");
             // $this->mail->addCC("cc@example.com");
             // $this->mail->addBCC("bcc@example.com");
 
             // Attachments
-            // $this->mail->addAttachment("/var/tmp/file.tar.gz");         // Add attachments
-            // $this->mail->addAttachment("/tmp/image.jpg", "new.jpg");    // Optional name
+            // $this->mail->addAttachment("/var/tmp/file.tar.gz"); // Add attachments
+            // $this->mail->addAttachment("/tmp/image.jpg", "new.jpg"); // Optional name
 
             // Content
             $this->mail->Subject = $subject;
-            $this->mail->Body    = $htmlBody;
+            $this->mail->Body = $htmlBody;
             $this->mail->AltBody = $txtBody ?? null;
 
             $this->mail->send();
 
-            echo "Message has been sent";
+            // echo "Message has been sent";
             return true;
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            // dd($e);
             return false;
         }
     }

@@ -312,7 +312,10 @@ class SecurityController extends AbstractController
                 $message =  $notification->reinitPassword($user);
 
                 $this->addFlash($message["type"], $message["content"]);
-                return $this->redirectToRoute("security_login");
+
+                if ($message) {
+                    return $this->redirectToRoute("security_login");
+                }
             } else {
                 $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
             }

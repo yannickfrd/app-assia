@@ -1,20 +1,20 @@
-Nationality: Nationalité 
-Country: Pays
-Paper: Papier d'identité
-Paper type: Type de papier
-Right reside: Droit de séjour
+-- Select --: -- Sélectionner --
 Appl resid permit: Demande de titre de séjour
+Comment sit adm: Commentaire relatif à la situation administrative
+Country: Pays
 End date valid permit: Date de fin de validité du titre
-Renewal date permit: Date de renouvellement du titre
+Housing alw: Aide au logement
+Nationality: Nationalité 
 Nb renewals: Nombre de renouvellements
 No rights open: Aucun droit ouvert
-Right work: Autorisation de travail
+Paper type: Type de papier
+Paper: Papier d'identité
+Renewal date permit: Date de renouvellement du titre
+Right reside: Droit de séjour
 Right social benf: Droit aux prestations sociales et familiales
-Housing alw: Aide au logement
 Right social secu: Droits ouverts Sécurité sociale
+Right work: Autorisation de travail
 Sit adm: Sit. adm
-Social secu: Sécurité sociale
 Social secu office: Caisse de Sécurité sociale
-Comment sit adm: Commentaire relatif à la situation administrative
+Social secu: Sécurité sociale
 Write a comment about the administrative situation: Ecrire un commentaire relatif à la situation administrative
--- Select --: -- Sélectionner --
