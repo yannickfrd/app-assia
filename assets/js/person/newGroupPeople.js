@@ -2,14 +2,25 @@ import ValidationPerson from "./validationPerson";
 
 //
 export default class NewGroupPeople {
-    constructor() {
-        this.birthdateInputElt = document.getElementById("role_person_group_person_birthdate");
-        this.genderInputElt = document.getElementById("role_person_group_person_gender");
+    constructor(parametersUrl) {
+        this.parametersUrl = parametersUrl;
+
         this.typoInputElt = document.getElementById("role_person_group_groupPeople_familyTypology");
         this.nbPeopleInputElt = document.getElementById("role_person_group_groupPeople_nbPeople");
-        this.roleInputElt = document.getElementById("role_person_group_role");
-        // this.emailInputElt = document.getElementById("role_person_group_person_email");
-        // this.phone1InputElt = document.getElementById("role_person_group_person_phone1");
+
+        this.form = "role_person_person_";
+        this.roleInputElt = document.getElementById("role_person_role");
+        if (this.typoInputElt) {
+            this.form = "role_person_group_person_";
+            this.roleInputElt = document.getElementById("role_person_group_role");
+        }
+        this.firstnameInputElt = document.getElementById(this.form + "firstname");
+        this.lastnameInputElt = document.getElementById(this.form + "lastname");
+        this.birthdateInputElt = document.getElementById(this.form + "birthdate");
+        this.genderInputElt = document.getElementById(this.form + "gender");
+        // this.emailInputElt = document.getElementById(this.form + "email");
+        // this.phone1InputElt = document.getElementById(this.form + "phone1");
+
         this.genderValue = null, this.typoValue = null, this.nbPeopleValue = null, this.roleValue = null;
         this.init();
     }
@@ -17,16 +28,18 @@ export default class NewGroupPeople {
     init() {
         this.birthdateInputElt.addEventListener("focusout", this.getAge.bind(this));
         this.genderInputElt.addEventListener("input", this.getGender.bind(this));
-        this.typoInputElt.addEventListener("input", this.editTypo.bind(this));
-        this.nbPeopleInputElt.addEventListener("input", this.editNbPeople.bind(this));
+        if (this.typoInputElt) {
+            this.typoInputElt.addEventListener("input", this.editTypo.bind(this));
+            this.nbPeopleInputElt.addEventListener("input", this.editNbPeople.bind(this));
+        }
         // this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
         // this.phone1InputElt.addEventListener("input", this.phone.bind(this));
         let validationPerson = new ValidationPerson(
-            "role_person_group_person_lastname",
-            "role_person_group_person_firstname",
-            "role_person_group_person_birthdate",
-            "role_person_group_person_gender",
-            "role_person_group_person_email",
+            this.form + "lastname",
+            this.form + "firstname",
+            this.form + "birthdate",
+            this.form + "gender",
+            this.form + "email",
             "role_person_group_role",
             "role_person_group_groupPeople_familyTypology",
             "role_person_group_groupPeople_nbPeople"
@@ -40,8 +53,24 @@ export default class NewGroupPeople {
                 new MessageFlash("danger", "Veuillez corriger les erreurs avant d'enregistrer.");
             }
         }.bind(this));
-    }
 
+        let firstname = this.parametersUrl.getOne("firstname");
+        if (firstname) {
+            this.firstnameInputElt.value = firstname;
+        }
+        let lastname = this.parametersUrl.getOne("lastname");
+        if (lastname) {
+            this.lastnameInputElt.value = lastname;
+        }
+        let birthdate = this.parametersUrl.getOne("birthdate");
+        if (birthdate) {
+            this.birthdateInputElt.value = birthdate;
+        }
+        let gender = this.parametersUrl.getOne("gender");
+        if (gender) {
+            this.setOption(this.genderInputElt, parseInt(gender));
+        }
+    }
 
     getValues() {
         this.getGender();

@@ -14,14 +14,20 @@
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{service.createdAt | date("d/m/Y à H:i") }}
-            {#{% if service.createdBy %}par {{ service.createdBy.fullname }}{% endif %}#}
+            {# {% if service.createdBy %}par {{ service.createdBy.fullname }}{% endif %} #}
             {% if service.updatedAt %}(modifié le {{ service.updatedAt | date("d/m/Y à H:i") }}){% endif %}
         </p>
     </div>
     {% else %}
     <div class="mb-4"></div>
     {% endif %}
-
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                href="{{ path('services') }}">Liste des services</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Fiche service</li>
+        </ol>
+    </nav>
     <hr>
 
     {% include "model/msgFlash.html.twig" %}
@@ -108,6 +114,56 @@
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
 
+    </section>
+
+    <hr>
+
+    <section>
+        <h2 class="h4 my-4">Groupes de places rattachés</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
+                        <th scope="col" class="align-middle th-w-100">Dispositif</th>
+                        <th scope="col" class="align-middle th-w-80">Nombre de places</th>
+                        <th scope="col" class="align-middle th-date">Date d'ouverture</th>
+                        <th scope="col" class="align-middle th-date">Date de fermeture</th>
+                        <th scope="col" class="align-middle th-w-100">Ville</th>
+                        <th scope="col" class="align-middle th-w-60">Département</th>
+                        <th scope="col" class="align-middle th-w-150">Adresse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for place in service.places %}
+                    <tr>
+                        <th scope="row">
+                            <a href="{{ path('admin_place_edit', {'id':place.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir le groupe de places">
+                                <span class="fas fa-eye"></span>
+                            </a>
+                        </th>
+                        <td>{{ place.name }}</td>
+                        <td>{{ place.device.name }}</td>
+                        <td>{{ place.placesNumber }}</td>
+                        <td>{{ place.openingDate | date("d/m/Y") }}</td>
+                        <td>{{ place.closingDate | date("d/m/Y") }}</td>
+                        <td>{{ place.city }}</td>
+                        <td>{{ place.department }}</td>
+                        <td>{{ place.address }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-12">
+                <a href="{{ path('service_place_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                        class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+            </div>
+        </div>
     </section>
 
     <hr>

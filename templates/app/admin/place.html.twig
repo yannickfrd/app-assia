@@ -1,0 +1,76 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{% set place = form.vars.value %}
+
+{% block title %}{% if edit_mode %}{{ place.name }}{% else %}Création d'un groupe de places{% endif %} | Esperer95-app{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1 class="h2 mb-3">{{ service.name }} : {% if edit_mode %}{{ place.name }}{% else %}création d'un groupe de places{% endif %}</h1>
+    {% if edit_mode %}
+    <div class="small text-secondary">
+        <p> Créé le {{place.createdAt | date("d/m/Y à H:i") }}
+            {% if place.createdBy %}par {{ place.createdBy.fullname }}{% endif %}
+            {% if place.updatedAt %}(modifié le {{ place.updatedAt | date("d/m/Y à H:i") }}){% endif %}
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-4"></div>
+    {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                href="{{ path('services') }}">Liste des services</a></li>
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                href="{{ path('service_edit', {'id':service.id}) }}">Fiche du service</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
+        </ol>
+    </nav>
+
+    <hr>
+
+    <section>
+        {% include "model/msgFlash.html.twig" %}
+        <div id="js-msg-flash-content"></div>
+
+        {{ form_start(form) }}
+
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.name) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.device) }}</div>
+            <div class="col-md-6">{{ form_row(form.placesNumber) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.openingDate) }}</div>
+            <div class="col-md-6">{{ form_row(form.closingDate) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.city) }}</div>
+            <div class="col-md-6">{{ form_row(form.department) }}</div>
+            <div class="col-md-6">{{ form_row(form.address) }}</div>
+            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+        </div>
+
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12"> 
+                <div class="mb-4 float-right">
+                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
+                        value="Enregistrer">
+                </div>
+            </div>
+        </div>
+        {{ form_end(form, {"render_rest": false}) }}
+    </section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("directory") }}
+{% endblock javascripts %}

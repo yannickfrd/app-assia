@@ -13,7 +13,15 @@ class DeviceType extends AbstractType
     {
         $builder
             ->add("name")
-            ->add("comment");
+            ->add("coefficient", null, [
+                "help" => "Coefficient entre 0 et 10. Les décimales sont acceptées."
+            ])
+            ->add("comment", null, [
+                "attr" => [
+                    "rows" => 5,
+                    "placeholder" => "Description..."
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

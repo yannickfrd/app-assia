@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DeviceRepository")
@@ -16,18 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Device
 {
-    public const TYPE = [
-        1 => "Hébergement d'urgence",
-        2 => "Hébergement de stabilisation",
-        3 => "Hébergement d'insertion",
-        4 => "ALT",
-        5 => "Maison relais",
-        6 => "Résidence sociale",
-        7 => "Hébergement d'urgence hivernale",
-        8 => "AVDL",
-        9 => "ASLLL",
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -39,6 +28,12 @@ class Device
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="float", nullable=true, options={"default":1})
+     * @Assert\Range(min = 0, max = 10, minMessage="Le coefficient ne peut être inférieur à 0",  maxMessage="Le coefficient ne peut être supérieur à 10")
+     */
+    private $coefficient = 1;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -70,10 +65,22 @@ class Device
      */
     private $serviceDevices;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Place", mappedBy="device")
+     */
+    private $places;
+
 
     public function __construct()
     {
         $this->serviceDevices = new ArrayCollection();
+        $this->places = new ArrayCollection();
+    }
+
+
+    public function __toString()
+    {
+        return strval($this->id);
     }
 
     public function getId(): ?int
@@ -93,6 +100,18 @@ class Device
         return $this;
     }
 
+    public function getCoefficient(): ?float
+    {
+        return $this->coefficient;
+    }
+
+    public function setCoefficient(?float $coefficient): self
+    {
+        $this->coefficient = $coefficient;
+
+        return $this;
+    }
+
     public function getComment(): ?string
     {
         return $this->comment;
@@ -104,7 +123,6 @@ class Device
 
         return $this;
     }
-
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -179,6 +197,37 @@ class Device
             // set the owning side to null (unless already changed)
             if ($serviceDevice->getDevice() === $this) {
                 $serviceDevice->setDevice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Place[]
+     */
+    public function getPlaces(): Collection
+    {
+        return $this->places;
+    }
+
+    public function addPlace(Place $place): self
+    {
+        if (!$this->places->contains($place)) {
+            $this->places[] = $place;
+            $place->setDevice($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlace(Place $place): self
+    {
+        if ($this->places->contains($place)) {
+            $this->places->removeElement($place);
+            // set the owning side to null (unless already changed)
+            if ($place->getDevice() === $this) {
+                $place->setDevice(null);
             }
         }
 

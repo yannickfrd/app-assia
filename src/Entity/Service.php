@@ -118,11 +118,17 @@ class Service
      */
     private $serviceDevices;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Place", mappedBy="service")
+     */
+    private $places;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
         $this->serviceDevices = new ArrayCollection();
+        $this->places = new ArrayCollection();
     }
 
     public function __toString()
@@ -395,6 +401,37 @@ class Service
             // set the owning side to null (unless already changed)
             if ($serviceDevice->getService() === $this) {
                 $serviceDevice->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Place[]
+     */
+    public function getPlaces(): Collection
+    {
+        return $this->places;
+    }
+
+    public function addPlace(Place $place): self
+    {
+        if (!$this->places->contains($place)) {
+            $this->places[] = $place;
+            $place->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlace(Place $place): self
+    {
+        if ($this->places->contains($place)) {
+            $this->places->removeElement($place);
+            // set the owning side to null (unless already changed)
+            if ($place->getService() === $this) {
+                $place->setService(null);
             }
         }
 

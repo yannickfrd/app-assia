@@ -4,16 +4,17 @@ namespace App\DataFixtures;
 
 use App\Entity\Pole;
 use App\Entity\User;
+use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\ServiceUser;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class A_ServiceUserFixtures extends Fixture
+class A_ServiceFixtures extends Fixture
 {
     private $manager;
 
@@ -47,6 +48,19 @@ class A_ServiceUserFixtures extends Fixture
         5 => "PE 78",
         6 => "PE 95",
         7 => "Pré-sentenciel"
+    ];
+
+    public const DEVICES = [
+        1 => "Hébergement d'urgence",
+        2 => "Hébergement de stabilisation",
+        3 => "Hébergement d'insertion",
+        4 => "ALT",
+        5 => "ALTHO",
+        6 => "Maison relais",
+        7 => "Résidence sociale",
+        8 => "Hébergement d'urgence hivernale",
+        9 => "AVDL",
+        10 => "ASLLL",
     ];
 
     private $pole;
@@ -85,6 +99,9 @@ class A_ServiceUserFixtures extends Fixture
                     //     break;
             }
         }
+        $this->createDevices();
+
+        $this->manager->flush();
     }
 
     public function addData($services)
@@ -97,7 +114,6 @@ class A_ServiceUserFixtures extends Fixture
                 $this->addServiceUser();
             }
         }
-        $this->manager->flush();
     }
 
     // Crée les pôles
@@ -146,5 +162,18 @@ class A_ServiceUserFixtures extends Fixture
             ->setService($this->service);
 
         $this->manager->persist($this->serviceUser);
+    }
+
+    public function createDevices()
+    {
+        foreach (self::DEVICES as $key => $value) {
+            $device = new Device();
+
+            $device->setName($value)
+                ->setCreatedAt(new \DateTime())
+                ->setUpdatedAt(new \DateTime());
+
+            $this->manager->persist($device);
+        }
     }
 }

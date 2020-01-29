@@ -4,17 +4,17 @@ import AjaxRequest from "../utils/ajaxRequest";
 
 import UpdatePerson from "./updatePerson";
 import NewGroupPeople from "./newGroupPeople";
-
+import ParametersUrl from "../utils/parametersUrl";
 import "../utils/maskPhone";
 
 let ajaxRequest = new AjaxRequest();
+let parametersUrl = new ParametersUrl();
 
 document.addEventListener("DOMContentLoaded", function () {
-    let editModeElt = document.getElementById("person");
-    let editMode = editModeElt.dataset.isEditMode;
+    let editMode = document.getElementById("person").dataset.editMode;
     if (editMode === "true") {
         let updatePerson = new UpdatePerson(ajaxRequest);
     } else {
-        let newGroupPeople = new NewGroupPeople();
+        let newGroupPeople = new NewGroupPeople(parametersUrl);
     }
 });

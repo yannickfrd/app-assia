@@ -58,7 +58,6 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
-
         if ($personSearch->getExport()) {
             $people = $this->repo->findPeopleToExport($personSearch);
             $export = new PersonExport();
@@ -88,7 +87,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Permet de rechercher une personne pour l'ajouter dans un group groupe
+     * Rechercher une personne pour l'ajouter dans un groupe
      * 
      * @Route("/group/{id}/search/person", name="group_search_person")
      * @return Response
@@ -256,7 +255,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Crée une personne avec son rôle²
+     * Crée une personne avec son rôle
      *
      * @param Person $person
      * @param GroupPeople $groupPeople

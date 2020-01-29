@@ -47,7 +47,8 @@ class SitFamilyPerson
         5 => "Tiers",
         6 => "Garde alternée",
         7 => "Droit d'hébergement",
-        8 => "À l'étranger",
+        8 => "Droit de visite",
+        9 => "À l'étranger",
         98 => "Autre",
         99 => "Non renseigné"
     ];

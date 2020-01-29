@@ -49,10 +49,10 @@ export default class ValidationPerson {
         this.birthdateInputElt.addEventListener("focusout", this.checkBirthdate.bind(this));
         this.genderInputElt.addEventListener("input", this.checkGender.bind(this));
         this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
-        if (this.role) {
+        if (this.roleInputElt) {
             this.roleInputElt.addEventListener("input", this.checkRole.bind(this));
         }
-        if (this.typo) {
+        if (this.typoInputElt) {
             this.typoInputElt.addEventListener("input", this.checkTypo.bind(this));
             this.nbPeopleInputElt.addEventListener("input", this.checkNbPeople.bind(this));
         }
@@ -139,7 +139,7 @@ export default class ValidationPerson {
     }
 
     checkNbPeople() {
-        if (this.nbPeopleInputElt.value >= 1 && this.nbPeopleInputElt.value <= 9) {
+        if (this.nbPeopleInputElt.value >= 1 && this.nbPeopleInputElt.value <= 19) {
             this.valid("nbPeople", this.nbPeopleInputElt);
         } else {
             this.invalid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
@@ -150,7 +150,7 @@ export default class ValidationPerson {
     valid(field, input) {
         if (input.classList.contains("is-invalid")) {
             input.classList.replace("is-invalid", "is-valid");
-            document.querySelector(".invalid-" + field).remove();
+            // document.querySelector(".invalid-" + field).remove();
             document.querySelector(".js-invalid-" + field).remove();
         } else {
             input.classList.add("is-valid");

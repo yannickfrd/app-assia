@@ -42,12 +42,6 @@ class Accommodation
      */
     private $supportPerson;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Space", inversedBy="accommodations")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $space;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -109,18 +103,6 @@ class Accommodation
     public function setSupportPerson(?SupportPerson $supportPerson): self
     {
         $this->supportPerson = $supportPerson;
-
-        return $this;
-    }
-
-    public function getSpace(): ?Space
-    {
-        return $this->space;
-    }
-
-    public function setSpace(?Space $space): self
-    {
-        $this->space = $space;
 
         return $this;
     }

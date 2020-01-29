@@ -47,7 +47,6 @@ class SupportGroupType extends AbstractType
                 "widget" => "single_text",
             ])
             ->add("status", ChoiceType::class, [
-
                 "choices" => Choices::getChoices(SupportGroup::STATUS),
                 "placeholder" => "-- Select --",
             ])

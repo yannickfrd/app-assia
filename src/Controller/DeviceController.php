@@ -37,6 +37,8 @@ class DeviceController extends AbstractController
      */
     public function listDevice(Request $request, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
         $devices =  $paginator->paginate(
             $this->repo->findAllDevicesQuery(),
             $request->query->getInt("page", 1), // page number

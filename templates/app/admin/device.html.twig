@@ -4,23 +4,31 @@
 
 {% set device = form.vars.value %}
 
-{% block title %}{% if edit_mode %}{{ device.name }}{% else %}Ajout d'un nouveau dispositif{% endif %} | Esperer95-app{% endblock %}
+{% block title %}{% if edit_mode %}Dispositif {{ device.name }}{% else %}Ajout d'un nouveau dispositif{% endif %} | Esperer95-app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}{{ device.name }}{% else %}Ajout d'un nouveau dispositif{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}Dispositif {{ device.name }}{% else %}Ajout d'un nouveau dispositif{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{device.createdAt | date("d/m/Y à H:i") }}
-            {#{% if device.createdBy %}par {{ device.createdBy.fullname }}{% endif %}#}
-            {% if device.updatedAt %}(modifié le {{ device.updatedAt | date("d/m/Y à H:i") }}){% endif %}
+            {% if device.createdBy %}par {{ device.createdBy.fullname }}{% endif %}
+            (modifié le {{ device.updatedAt | date("d/m/Y à H:i") }}
+            {% if device.updatedBy %}par {{ device.updatedBy.fullname }}{% endif %})
         </p>
     </div>
     {% else %}
     <div class="mb-4"></div>
     {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                href="{{ path('admin_devices') }}">Liste des dispositifs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Fiche dispositif</li>
+        </ol>
+    </nav>
 
     <hr>
 
@@ -31,8 +39,9 @@
         {{ form_start(form) }}
 
         <div class="form-group row">
-            <div class="col-md-12">{{ form_row(form.name) }}</div>
-            <div class="col-md-12">{{ form_row(form.comment) }}</div>
+            <div class="col-md-6">{{ form_row(form.name) }}</div>
+            <div class="col-md-6">{{ form_row(form.coefficient) }}</div>
+            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
 
         {{ form_row(form._token) }}
@@ -51,7 +60,7 @@
     <hr>
     <section>
         <h2 class="h4 my-4">Services rattachés</h2>
-        {% if device.serviceDevice %}
+        {% if device.serviceDevices %}
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
@@ -65,7 +74,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for serviceDevice in device.serviceDevice %}
+                    {% for serviceDevice in device.serviceDevices %}
                     <tr>
                         <th scope="row">
                             <a href="{{ path('service_edit', {'id':serviceDevice.service.id}) }}"

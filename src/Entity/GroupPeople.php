@@ -41,7 +41,7 @@ class GroupPeople
 
     /**
      * @ORM\Column(type="smallint")
-     * @Assert\Range(min = 1, max = 10, minMessage="Le nombre de personnes doit être renseigné.",  maxMessage="Le nombre de personnes doit être renseigné.")
+     * @Assert\Range(min = 1, max = 99, minMessage="Le nombre de personnes doit être renseigné.",  maxMessage="Le nombre de personnes doit être renseigné.")
      */
     private $nbPeople;
 

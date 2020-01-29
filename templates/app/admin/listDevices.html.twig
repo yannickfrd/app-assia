@@ -24,6 +24,9 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(devices, "Nom du dispositif", "d.name") }}
                         </th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(devices, "Coefficient", "d.coefficient") }}
+                        </th>
                         <th scope="col" class="align-middle th-w-150">
                             {{ knp_pagination_sortable(devices, "Description", "d.comment") }}
                         </th>
@@ -46,33 +49,27 @@
                     {% for device in devices %}
                     <tr>
                         <th scope="row">
-                            {% if is_granted("ROLE_SUPER_ADMIN") %}
                             <a href="{{ path('admin_device_edit', {'id':device.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du dispositif">
                                 <span class="fas fa-eye"></span>
                             </a>
-                            {% else %}
-                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
-                                    class="fas fa-ban"></span></span>
-                            {% endif %}
                         </th>
                         <td>{{ device.name }}</td>
+                        <td>{{ device.coefficient }}</td>
                         <td>{{ device.comment }}</td>
                         <td>{{ device.createdAt | date("d/m/Y H:i") }}</td>
-                        <td>{{ device.createdBy.fullname }}</td>
+                        <td>{% if device.createdBy %}{{ device.createdBy.fullname }}{% endif %}</td>
                         <td>{{ device.updatedAt | date("d/m/Y H:i") }}</td>
-                        <td>{{ device.createdBy.fullname }}</td>
+                        <td>{% if device.updatedBy %}{{ device.updatedBy.fullname }}{% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        {% if is_granted("ROLE_SUPER_ADMIN") %}
         <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
                 <span class="fas fa-plus-square mr-2"></span>Créer un nouveau dispositif</a>
         </p>
-        {% endif %}
 </section>
 
 {% endblock %}

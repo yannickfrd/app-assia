@@ -137,7 +137,7 @@ class B_UserFixtures extends Fixture
     public function getHabitatUsers()
     {
         return [
-            0 => [
+            [
                 "firstname" => "Gaëlle",
                 "lastname" => "ARTIFONI",
                 "status" => 4,
@@ -150,7 +150,7 @@ class B_UserFixtures extends Fixture
                     "AVDL"
                 ]
             ],
-            1 => [
+            [
                 "firstname" => "Laetitia",
                 "lastname" => "CHANIAL",
                 "status" => 3,
@@ -163,7 +163,7 @@ class B_UserFixtures extends Fixture
                     "AVDL"
                 ]
             ],
-            2 => [
+            [
                 "firstname" => "Priscillia",
                 "lastname" => "CORNU",
                 "status" => 1,
@@ -171,14 +171,14 @@ class B_UserFixtures extends Fixture
                     "ALTHO"
                 ]
             ],
-            3 => [
+            [
                 "firstname" => "Krystel",
                 "lastname" => "FONDRILLE",
                 "services" => [
                     "ASSLT - ASLLT",
                 ]
             ],
-            4 => [
+            [
                 "firstname" => "Aurore",
                 "lastname" => "FROMONT",
                 "status" => 2,
@@ -191,14 +191,14 @@ class B_UserFixtures extends Fixture
                     "AVDL"
                 ]
             ],
-            5 => [
+            [
                 "firstname" => "Nicolas",
                 "lastname" => "GIROD",
                 "services" => [
                     "10 000 logements",
                 ]
             ],
-            6 => [
+            [
                 "firstname" => "Lucie",
                 "lastname" => "LALOU",
                 "services" => [
@@ -206,35 +206,28 @@ class B_UserFixtures extends Fixture
                     "SAVL"
                 ]
             ],
-            7 => [
+            [
                 "firstname" => "Valerie",
                 "lastname" => "LEOTARD",
                 "services" => [
                     "ALTHO"
                 ]
             ],
-            8 => [
+            [
                 "firstname" => "Melanie",
                 "lastname" => "LEY",
                 "services" => [
                     "SAVL",
                 ]
             ],
-            9 => [
+            [
                 "firstname" => "Eva",
                 "lastname" => "MASSON",
                 "services" => [
                     "AVDL",
                 ]
             ],
-            10 => [
-                "firstname" => "Michaël",
-                "lastname" => "ORPHELIN",
-                "services" => [
-                    "AVDL",
-                ]
-            ],
-            11 => [
+            [
                 "firstname" => "Alison",
                 "lastname" => "ROUGIER",
                 "status" => 5,
@@ -242,14 +235,14 @@ class B_UserFixtures extends Fixture
                     "AVDL",
                 ]
             ],
-            12 => [
+            [
                 "firstname" => "Maryse",
                 "lastname" => "STEPHAN",
                 "services" => [
                     "ALTHO",
                 ]
             ],
-            13 => [
+            [
                 "firstname" => "Kristell",
                 "lastname" => "VIMOND",
                 "services" => [

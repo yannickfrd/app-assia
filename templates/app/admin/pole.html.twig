@@ -21,6 +21,13 @@
     {% else %}
     <div class="mb-4"></div>
     {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                href="{{ path('poles') }}">Liste des pôles</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Fiche pôle</li>
+        </ol>
+    </nav>
 
     <hr>
 
