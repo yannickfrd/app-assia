@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Pole;
-
 use App\Form\Pole\PoleType;
-
 use App\Repository\PoleRepository;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,14 +16,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PoleController extends AbstractController
 {
     private $manager;
+    private $currentUser;
     private $repo;
-    private $security;
 
-    public function __construct(EntityManagerInterface $manager, PoleRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, PoleRepository $repo)
     {
         $this->manager = $manager;
+        $this->currentUser = $security->getUser();
         $this->repo = $repo;
-        $this->security = $security;
     }
 
     /**
@@ -38,13 +35,8 @@ class PoleController extends AbstractController
     public function listPole(Request $request, PaginatorInterface $paginator): Response
     {
         $poles =  $paginator->paginate(
-            $this->repo->findAllPolesQuery(),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
+            $this->repo->findAllPolesQuery()
         );
-        $poles->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
 
         return $this->render("app/admin/listPoles.html.twig", [
             "poles" => $poles ?? null
@@ -52,35 +44,22 @@ class PoleController extends AbstractController
     }
 
     /**
-     * Créer un pôle
+     * Nouveau pôle
      * 
      * @Route("/pole/new", name="pole_new", methods="GET|POST")
      *  @return Response
      */
-    public function createPole(Pole $pole = null, Request $request): Response
+    public function newPole(Pole $pole = null, Request $request): Response
     {
-        $pole = new Pole();
-
         $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $pole = new Pole();
 
         $form = $this->createForm(PoleType::class, $pole);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user = $this->security->getUser();
-
-            $pole->setCreatedAt(new \DateTime())
-                // ->setCreatedBy($user)
-                // ->setUpdatedBy($user)
-                ->setUpdatedAt(new \DateTime());
-
-            $this->manager->persist($pole);
-            $this->manager->flush();
-
-            $this->addFlash("success", "Le pôle a été créé.");
-
-            return $this->redirectToRoute("pole_edit", ["id" => $pole->getId()]);
+            return $this->createPole($pole);
         }
 
         return $this->render("app/admin/pole.html.twig", [
@@ -90,7 +69,7 @@ class PoleController extends AbstractController
     }
 
     /**
-     * Editer la fiche du pôle
+     * Modification d'un pôle
      * 
      * @Route("/pole/{id}", name="pole_edit", methods="GET|POST")
      *  @return Response
@@ -103,18 +82,50 @@ class PoleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // $pole->setUpdatedAt(new \DateTime())
-            //     ->setUpdatedBy($this->security->getUser());
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
+            $this->updatePole($pole);
         }
 
         return $this->render("app/admin/pole.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
+    }
+
+    /**
+     * Crée un pôle
+     *
+     * @param Pole $pole
+     */
+    protected function createPole(Pole $pole)
+    {
+
+        $now = new \DateTime();
+
+        $pole->setCreatedAt($now)
+            ->setCreatedBy($this->currentUser)
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->persist($pole);
+        $this->manager->flush();
+
+        $this->addFlash("success", "Le pôle a été créé.");
+
+        return $this->redirectToRoute("pole_edit", ["id" => $pole->getId()]);
+    }
+
+    /**
+     * Met à jour un pôle
+     *
+     * @param Pole $pole
+     */
+    protected function updatePole(Pole $pole)
+    {
+        $pole->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Les modifications ont été enregistrées.");
     }
 }

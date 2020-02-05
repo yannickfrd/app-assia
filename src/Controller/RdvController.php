@@ -4,16 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Rdv;
 use App\Entity\SupportGroup;
-
-use App\Service\Calendar;
-
 use App\Form\Model\RdvSearch;
 use App\Form\Support\Rdv\RdvType;
 use App\Form\Support\Rdv\RdvSearchType;
-
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
-
+use App\Service\Calendar;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,15 +21,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class RdvController extends AbstractController
 {
     private $manager;
-    private $repo;
     private $currentUser;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, RdvRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, RdvRepository $repo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
-        $this->security = $security;
         $this->currentUser = $security->getUser();
+        $this->repo = $repo;
     }
 
     /**
@@ -41,13 +36,16 @@ class RdvController extends AbstractController
      * 
      * @Route("/calendar/{year}/{month}", name="calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
      * @Route("/calendar", name="calendar")
+     * @param int $year
+     * @param int $month
+     * @param Request $request
      * @return Response
      */
-    public function showCalendar($year = null, $month = null, RdvRepository $repo, Request $request): Response
+    public function showCalendar($year = null, $month = null, Request $request): Response
     {
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
+        $rdvs = $this->repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
 
         $rdv = new Rdv();
 
@@ -62,21 +60,26 @@ class RdvController extends AbstractController
     }
 
     /**
-     * Affiche l'agenda du suivi (vue mensuelle)
+     * Affiche l'agenda d'un suivi (vue mensuelle) 
      * 
-     * @Route("support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
-     * @Route("support/{id}/calendar", name="support_calendar")
+     * @Route("/support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
+     * @Route("/support/{id}/calendar", name="support_calendar")
+     * @param int $id
+     * @param SupportGroupRepository $supportRepo
+     * @param int $year
+     * @param int $month
+     * @param Request $request
      * @return Response
      */
-    public function showSupportCalendar($id = null, SupportGroupRepository $supportRepo, $year = null, $month = null, RdvRepository $repo, Request $request): Response
+    public function showSupportCalendar($id, SupportGroupRepository $repoSupport, $year = null, $month = null, Request $request): Response
     {
-        $supportGroup = $supportRepo->findSupportById($id);
+        $supportGroup = $repoSupport->findSupportById($id);
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup);
+        $rdvs = $this->repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup);
 
         $rdv = new Rdv();
 
@@ -96,14 +99,18 @@ class RdvController extends AbstractController
      * 
      * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*", "day" : "[0-9]*"}, methods="GET")
      * @Route("/calendar/day", name="calendar_day")
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @param Request $request
      * @return Response
      */
-    public function showDay($year = null, $month = null, $day = null, RdvRepository $repo, Request $request): Response
+    public function showDay($year = null, $month = null, $day = null, Request $request): Response
     {
         $startDay = new \Datetime($year . "-" . $month . "-" . $day);
         $endDay = new \Datetime($year . "-" . $month . "-" . ($day + 1));
 
-        $rdvs = $repo->findRdvsBetween($startDay, $endDay, null);
+        $rdvs = $this->repo->findRdvsBetween($startDay, $endDay, null);
 
         $rdv = new Rdv();
 
@@ -117,20 +124,21 @@ class RdvController extends AbstractController
     }
 
     /**
-     * Liste des RDVs
+     * Liste des rendez-vous
      * 
      * @Route("support/{id}/rdvs", name="rdvs")
-     *
-     * @param SupportGroup $supportGroup
+     * @param int $id
+     * @param SupportGroupRepository $repoSupport
      * @param RdvSearch $rdvSearch
-     * @param Rdv $rdv
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listRdv(SupportGroup $supportGroup, RdvSearch $rdvSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function listRdv($id, SupportGroupRepository $repoSupport,  RdvSearch $rdvSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
-        // $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $supportGroup = $repoSupport->findSupportById($id);
+
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $rdvSearch = new RdvSearch;
 
@@ -145,7 +153,6 @@ class RdvController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->createRdv($supportGroup->getId(), $rdv);
         }
 
@@ -157,19 +164,23 @@ class RdvController extends AbstractController
         ]);
     }
 
-
     /**
-     * Crée le RDV
+     * Nouveau rendez-vous
      * 
      * @Route("support/{id}/rdv/new", name="support_rdv_new")
      * @Route("rdv/new", name="rdv_new")
+     * @param int $id
+     * @param SupportGroupRepository $repoSupport
      * @param Rdv $rdv
      * @param Request $request
      * @return Response
      */
-    public function newRdv(SupportGroup $supportGroup = null, Request $request): Response
+    public function newRdv($id = null, SupportGroupRepository $repoSupport, Rdv $rdv = null, Request $request): Response
     {
-        // $this->denyAccessUnlessGranted("CREATE", $rdv);
+        if ($id) {
+            $supportGroup = $repoSupport->findSupportById($id);
+            $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        }
 
         $rdv = new Rdv();
 
@@ -177,10 +188,8 @@ class RdvController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            return $this->createRdv($supportGroup, $rdv);
+            return $this->createRdv($supportGroup = null, $rdv);
         }
-
         return $this->error();
     }
 
@@ -194,12 +203,11 @@ class RdvController extends AbstractController
      */
     public function getRdv(Rdv $rdv, RdvRepository $repo): Response
     {
-        if ($this->denyAccessUnlessGranted("EDIT", $rdv)) {
-        };
+        $this->denyAccessUnlessGranted("VIEW", $rdv);
 
         $rdv = $repo->find($rdv->getId());
 
-        // Obtenir le nom du suivi
+        // Obtenir le nom de la personne suivie
         if ($rdv->getSupportGroup()) {
             $supportFullname = "";
             foreach ($rdv->getSupportGroup()->getGroupPeople()->getRolePerson() as $rolePerson) {
@@ -269,7 +277,7 @@ class RdvController extends AbstractController
         ], 200);
     }
 
-    // Pagination de la liste des RDVs
+    // Pagination de la liste des rendez-vous
     protected function paginate($paginator, $supportGroupId, $rdvSearch, $request)
     {
         $rdvs =  $paginator->paginate(
@@ -287,10 +295,12 @@ class RdvController extends AbstractController
     // Crée le RDV une fois le formulaire soumis et validé
     protected function createRdv($supportGroup = null, $rdv)
     {
+        $now = new \DateTime();
+
         $rdv->setSupportGroup($supportGroup)
-            ->setCreatedAt(new \DateTime())
+            ->setCreatedAt($now)
             ->setCreatedBy($this->currentUser)
-            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedAt($now)
             ->setUpdatedBy($this->currentUser);
 
         $this->manager->persist($rdv);
@@ -341,22 +351,5 @@ class RdvController extends AbstractController
             "alert" => "danger",
             "msg" => "Une erreur s'est produite.",
         ], 200);
-    }
-
-
-    protected function objectToArray($object)
-    {
-        if (is_array($object) || is_object($object)) {
-
-            $result = [];
-
-            foreach ((array) $object as $key => $value) {
-                $result[$key] = $value;
-            }
-
-            return $result;
-        }
-
-        return $object;
     }
 }

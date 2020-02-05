@@ -2,26 +2,22 @@
 
 namespace App\Controller;
 
-use App\Form\Model\Export;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
-
 use App\Entity\SupportPerson;
-use App\Form\Support\ExportType;
 use App\Export\SupportPersonExport;
-use App\Form\Model\SupportGroupSearch;
-use App\Form\Support\SupportGroupType;
-
 use App\Export\SupportPersonFullExport;
+use App\Form\Model\Export;
+use App\Form\Model\SupportGroupSearch;
+use App\Form\Support\ExportType;
+use App\Form\Support\SupportGroupSearchType;
+use App\Form\Support\SupportGroupType;
 use App\Form\Support\SupportGroupType2;
-
 use App\Repository\RolePersonRepository;
-use Doctrine\ORM\EntityManagerInterface;
-
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Form\Support\SupportGroupSearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,11 +29,13 @@ class SupportController extends AbstractController
 {
     private $manager;
     private $security;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, SupportGroupRepository $repo)
     {
         $this->manager = $manager;
         $this->security = $security;
+        $this->repo = $repo;
     }
 
     /**
@@ -50,7 +48,7 @@ class SupportController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function viewListSupports(SupportGroupRepository $repo, SupportPersonRepository $repoSupportPerson, SupportGroupSearch $supportGroupSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function viewListSupports(SupportPersonRepository $repoSupportPerson, SupportGroupSearch $supportGroupSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
         $supportGroupSearch = new SupportGroupSearch();
 
@@ -63,7 +61,7 @@ class SupportController extends AbstractController
             return $export->exportData($supports);
         }
 
-        $supports = $this->paginate($paginator,  $repo,  $supportGroupSearch,  $request);
+        $supports = $this->paginate($paginator, $supportGroupSearch,  $request);
 
         return $this->render("app/listSupports.html.twig", [
             "supports" => $supports,
@@ -76,11 +74,10 @@ class SupportController extends AbstractController
      * 
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      * @param GroupPeople $groupPeople
-     * @param SupportGroupRepository $repo
      * @param Request $request
      * @return Response
      */
-    public function createSupport(GroupPeople $groupPeople, SupportGroupRepository $repo, Request $request): Response
+    public function createSupport(GroupPeople $groupPeople, Request $request): Response
     {
         $supportGroup = new SupportGroup();
 
@@ -89,7 +86,7 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si un suivi social est déjà en cours
-            $activeSupport = $repo->findBy([
+            $activeSupport = $this->repo->findBy([
                 "groupPeople" => $groupPeople,
                 "status" => 2,
                 "service" => $supportGroup->getService()
@@ -376,14 +373,13 @@ class SupportController extends AbstractController
      * Pagination de la liste des suivis sociaux
      *
      * @param PaginatorInterface $paginator
-     * @param SupportGroupRepository $repo
      * @param DocumentSearch $documentSearch
      * @param Request $request
      */
-    protected function paginate(PaginatorInterface $paginator, SupportGroupRepository $repo, SupportGroupSearch $supportGroupSearch, Request $request)
+    protected function paginate(PaginatorInterface $paginator, SupportGroupSearch $supportGroupSearch, Request $request)
     {
         $supports =  $paginator->paginate(
-            $repo->findAllSupportsQuery($supportGroupSearch),
+            $this->repo->findAllSupportsQuery($supportGroupSearch),
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );

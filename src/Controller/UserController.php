@@ -2,13 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-
+use App\Export\UserExport;
 use App\Form\Model\UserSearch;
 use App\Form\User\UserSearchType;
-
-use App\Export\UserExport;
-
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -21,10 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class UserController extends AbstractController
 {
     private $manager;
-    private $repo;
     private $security;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, UserRepository $repo)
     {
         $this->manager = $manager;
         $this->security = $security;

@@ -4,52 +4,49 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Entity\SupportGroup;
-
 use App\Form\Model\DocumentSearch;
-
+use App\Form\Support\Document\DocumentSearchType;
+use App\Form\Support\Document\DocumentType;
+use App\Service\FileUploader;
 use App\Repository\DocumentRepository;
 use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
-
-use App\Form\Support\Document\DocumentType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Support\Document\DocumentSearchType;
-use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DocumentController extends AbstractController
 {
     private $manager;
-    private $repo;
     private $currentUser;
+    private $repo;
+    private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, DocumentRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, DocumentRepository $repo, SupportGroupRepository $repoSupportGroup)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
-        $this->security = $security;
         $this->currentUser = $security->getUser();
+        $this->repo = $repo;
+        $this->repoSupportGroup = $repoSupportGroup;
     }
 
     /**
      * Liste des documents du suivi
      * 
      * @Route("support/{id}/documents", name="documents")
-     * @param SupportGroupRepository $supportRepo
      * @param DocumentSearch $documentSearch
      * @param Document $document
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listDocuments($id, SupportGroupRepository $supportRepo, DocumentSearch $documentSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function listDocuments($id, DocumentSearch $documentSearch = null, Document $document = null, Request $request, PaginatorInterface $paginator): Response
     {
-        $supportGroup = $supportRepo->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
@@ -74,17 +71,16 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Création d'un nouveau document
+     * Nouveau document
      * 
      * @Route("support/{id}/document/new", name="document_new", methods="POST")
-     * @param SupportGroupRepository $supportRepo
      * @param Request $request
      * @param FileUploader $fileUploader
      * @return Response
      */
-    public function newDocument($id, SupportGroupRepository $supportRepo, Request $request, FileUploader $fileUploader): Response
+    public function newDocument($id, Request $request, FileUploader $fileUploader): Response
     {
-        $supportGroup = $supportRepo->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
@@ -94,13 +90,13 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createNewDocument($supportGroup, $form, $fileUploader, $document);
+            return $this->createDocument($supportGroup, $form, $fileUploader, $document);
         }
         return $this->errorMessage();
     }
 
     /**
-     * Edition d'un document existant
+     * Modification d'un document
      * 
      * @Route("document/{id}/edit", name="document_edit", methods="POST")
      * @param Document $document
@@ -123,7 +119,7 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Supprime le document
+     * Supprime un document
      * 
      * @Route("document/{id}/delete", name="document_delete", methods="GET")
      * @param Document $document
@@ -177,22 +173,21 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Crée le document une fois le formulaire soumis et validé
+     * Crée un document une fois le formulaire soumis et validé
      *
      * @param SupportGroup $supportGroup
      * @param FileUploader $fileUploader
      * @param Document $document
      */
-    protected function createNewDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Document $document)
+    protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Document $document)
     {
-        /** @var UploadedFile $file */
         $file = $form["file"]->getData();
 
         $groupPeople = $supportGroup->getGroupPeople();
 
-        $createdAt = new \DateTime();
+        $now = new \DateTime();
 
-        $path = "/" . $groupPeople->getId() . "/" . $createdAt->format("Y/m");
+        $path = "/" . $groupPeople->getId() . "/" . $now->format("Y/m");
 
         $fileName = $fileUploader->upload($file, $path);
 
@@ -202,9 +197,9 @@ class DocumentController extends AbstractController
             ->setSize($size)
             ->setGroupPeople($groupPeople)
             ->setSupportGroup($supportGroup)
-            ->setCreatedAt($createdAt)
-            ->setUpdatedAt($createdAt)
-            ->setCreatedBy($this->currentUser);
+            ->setCreatedAt($now)
+            ->setCreatedBy($this->currentUser)
+            ->setUpdatedAt($now);
 
         $this->manager->persist($document);
         $this->manager->flush();
@@ -220,7 +215,7 @@ class DocumentController extends AbstractController
                 "typeList" => $document->getTypeList(),
                 "path" => $path . "/" . $fileName,
                 "size" => $size,
-                "createdAt" => date_format($createdAt, "d/m/Y H:i")
+                "createdAt" => date_format($now, "d/m/Y H:i")
             ]
         ], 200);
     }
@@ -246,7 +241,10 @@ class DocumentController extends AbstractController
         ], 200);
     }
 
-    // Retourne un message d'erreur au format JSON
+    /**
+     * Retourne un message d'erreur au format JSON
+     * @return json
+     */
     protected function errorMessage()
     {
         return $this->json([

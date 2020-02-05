@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Device;
-
 use App\Form\Service\DeviceType;
-
 use App\Repository\DeviceRepository;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,20 +16,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DeviceController extends AbstractController
 {
     private $manager;
+    private $currentUser;
     private $repo;
-    private $security;
 
-    public function __construct(EntityManagerInterface $manager, DeviceRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, DeviceRepository $repo)
     {
         $this->manager = $manager;
+        $this->currentUser = $security->getUser();
         $this->repo = $repo;
-        $this->security = $security;
     }
 
     /**
-     * Rechercher un dispositif
+     * Affiche la liste des dispositifs
      * 
      * @Route("/admin/devices", name="admin_devices")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
     public function listDevice(Request $request, PaginatorInterface $paginator): Response
@@ -54,36 +53,25 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * Créer un dispositif
+     * Nouveau dispositif
      * 
      * @Route("/admin/device/new", name="admin_device_new", methods="GET|POST")
-     *  @return Response
+     * @param Device $device
+     * @param Request $request
+     * @return Response
      */
-    public function createDevice(Device $device = null, Request $request): Response
+    public function newDevice(Device $device = null, Request $request): Response
     {
-        $device = new Device();
-
         $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $device = new Device();
 
         $form = $this->createForm(DeviceType::class, $device);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user = $this->security->getUser();
-
-            $device->setCreatedAt(new \DateTime())
-                ->setCreatedBy($user)
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-
-            $this->manager->persist($device);
-            $this->manager->flush();
-
-            $this->addFlash("success", "Le dispositif a été créé.");
-
-            return $this->redirectToRoute("admin_devices");
         }
+
         return $this->render("app/admin/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
@@ -91,10 +79,12 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * Editer la fiche du dispositif
+     * Modification d'un dispositif
      * 
      * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
-     *  @return Response
+     * @param Device $device
+     * @param Request $request
+     * @return Response
      */
     public function editDevice(Device $device, Request $request): Response
     {
@@ -104,17 +94,52 @@ class DeviceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $device->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
 
-            $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
-            return $this->redirectToRoute("admin_devices");
+            $this->updateDevice($device);
         }
         return $this->render("app/admin/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
+    }
+
+    /**
+     * Crée un dispositif
+     *
+     * @param Device $device
+     * @return void
+     */
+    protected function createDevice(Device $device)
+    {
+        $now = new \DateTime();
+
+        $device->setCreatedAt($now)
+            ->setCreatedBy($this->currentUser)
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->persist($device);
+        $this->manager->flush();
+
+        $this->addFlash("success", "Le dispositif a été créé.");
+
+        return $this->redirectToRoute("admin_devices");
+    }
+
+    /**
+     * Met à jour un dispositif
+     *
+     * @param Device $device
+     * @return void
+     */
+    protected function updateDevice(Device $device)
+    {
+        $device->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Les modifications ont été enregistrées.");
+        return $this->redirectToRoute("admin_devices");
     }
 }

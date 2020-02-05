@@ -3,17 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
-
-use App\Repository\UserRepository;
-
 use App\Form\Model\UserChangeInfo;
 use App\Form\Model\UserInitPassword;
 use App\Form\Model\UserResetPassword;
 use App\Form\Model\UserChangePassword;
 use App\Form\User\UserChangeInfoType;
-
+use App\Repository\UserRepository;
 use App\Notification\MailNotification;
-
 use App\Form\Security\InitPasswordType;
 use App\Form\Security\RegistrationType;
 use App\Form\Security\SecurityUserType;
@@ -32,8 +28,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class SecurityController extends AbstractController
 {
     private $manager;
-    private $encoder;
     private $repo;
+    private $encoder;
 
     public function __construct(EntityManagerInterface $manager, Security $security, UserPasswordEncoderInterface $encoder, UserRepository $repo)
     {

@@ -35,10 +35,9 @@ class RdvRepository extends ServiceEntityRepository
     {
         $query =  $this->createQueryBuilder("r")
             ->select("r")
-            ->leftJoin("r.createdBy", "u")
-            ->addselect("u")
-            ->leftJoin("r.supportGroup", "s")
-            ->addSelect("s")
+            ->leftJoin("r.createdBy", "u")->addselect("PARTIAL u.{id. fistname, lastname}")
+            ->leftJoin("r.supportGroup", "sg")->addSelect("sg")
+
             ->andWhere("s.id = :supportGroup")
             ->setParameter("supportGroup", $supportGroupId);
 

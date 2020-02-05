@@ -3,24 +3,21 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppController extends AbstractController
 {
-    private $manager;
-    private $security;
+    private $currentUser;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, SessionInterface $session)
+    public function __construct(Security $security, UserRepository $repo)
     {
-        $this->manager = $manager;
-        $this->security = $security;
-        $this->session = $session;
+        $this->currentUser = $security->getUser();
+        $this->repo = $repo;
     }
 
     /**
@@ -28,9 +25,9 @@ class AppController extends AbstractController
      * @Route("/")
      * @return Response
      */
-    public function home(UserRepository $repo): Response
+    public function home(): Response
     {
-        $user = $repo->findUserById($this->security->getUser());
+        $user = $this->repo->findUserById($this->currentUser);
 
         return $this->render("app/home.html.twig", [
             "user" => $user,

@@ -30,17 +30,10 @@ class PersonAccommodationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder("pa")
             ->select("pa")
-
-            ->leftJoin("pa.createdBy", "user")
-            ->addselect("user")
-
-            ->leftJoin("pa.person", "p")
-            ->addselect("p")
-
-            ->leftJoin("pa.groupPeopleAccommodation", "gpa")
-            ->addselect("gpa")
-            ->leftJoin("gpa.supportGroup", "sg")
-            ->addselect("sg")
+            ->leftJoin("pa.createdBy", "user")->addselect("user")
+            ->leftJoin("pa.person", "p")->addselect("p")
+            ->leftJoin("pa.groupPeopleAccommodation", "gpa")->addselect("gpa")
+            ->leftJoin("gpa.supportGroup", "sg")->addselect("sg")
 
             ->andWhere("pa.id = :id")
             ->setParameter("id", $id)

@@ -4,17 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Note;
 use App\Entity\SupportGroup;
-
 use App\Form\Model\NoteSearch;
 use App\Form\Support\Note\NoteType;
 use App\Form\Support\Note\NoteSearchType;
-
 use App\Repository\NoteRepository;
 use App\Repository\SupportGroupRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,22 +20,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class NoteController extends AbstractController
 {
     private $manager;
-    private $repo;
     private $currentUser;
+    private $repo;
+    private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, NoteRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, NoteRepository $repo, SupportGroupRepository $repoSupportGroup)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
-        $this->security = $security;
         $this->currentUser = $security->getUser();
+        $this->repo = $repo;
+        $this->repoSupportGroup = $repoSupportGroup;
     }
 
     /**
      * Liste des notes
      * 
      * @Route("support/{id}/notes", name="notes")
-     *
      * @param SupportGroup $supportGroup
      * @param NoteSearch $noteSearch
      * @param Note $note
@@ -45,9 +43,9 @@ class NoteController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listNotes($id, SupportGroupRepository $supportRepo, NoteSearch $noteSearch = null, Note $note = null, Request $request, PaginatorInterface $paginator): Response
+    public function listNotes($id, NoteSearch $noteSearch = null, Note $note = null, Request $request, PaginatorInterface $paginator): Response
     {
-        $supportGroup = $supportRepo->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
@@ -58,17 +56,10 @@ class NoteController extends AbstractController
 
         $notes =  $this->paginate($paginator, $supportGroup, $noteSearch, $request);
 
-        if ($note == null) {
-            $note = new Note();
-        }
+        $note = new Note();
 
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            return $this->createNote($supportGroup, $note);
-        }
 
         return $this->render("note/listNotes.html.twig", [
             "support" => $supportGroup,
@@ -79,7 +70,33 @@ class NoteController extends AbstractController
     }
 
     /**
-     * Modifie la note
+     * Nouvelle note
+     * 
+     * @Route("support/{id}/note/new", name="note_new", methods="POST") *
+     * @param int $id
+     * @param Note $note
+     * @param Request $request
+     * @return Response
+     */
+    public function newNote($id, Note $note = null, Request $request): Response
+    {
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+
+        $note = new Note();
+
+        $form = $this->createForm(NoteType::class, $note);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->createNote($supportGroup, $note);
+        }
+        return $this->errorMessage();
+    }
+
+    /**
+     * Modification d'une note
      * 
      * @Route("note/{id}/edit", name="note_edit")
      * @param Note $note
@@ -94,14 +111,9 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->updateNote($note, "update");
         }
-
-        return $this->render("note/note.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true,
-        ]);
+        return $this->errorMessage();
     }
 
     /**
@@ -155,10 +167,12 @@ class NoteController extends AbstractController
      */
     protected function createNote(SupportGroup $supportGroup, Note $note)
     {
+        $now = new \DateTime();
+
         $note->setSupportGroup($supportGroup)
-            ->setCreatedAt(new \DateTime())
+            ->setCreatedAt($now)
             ->setCreatedBy($this->currentUser)
-            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedAt($now)
             ->setUpdatedBy($this->currentUser);
 
         $this->manager->persist($note);
@@ -173,7 +187,7 @@ class NoteController extends AbstractController
                 "noteId" => $note->getId(),
                 "type" => $note->getTypeList(),
                 "status" => $note->getStatusList(),
-                "editInfo" => "| Créé le " . date_format($note->getCreatedAt(), "d/m/Y à H:i") .  " par " . $note->getCreatedBy()->getFullname()
+                "editInfo" => "| Créé le " . date_format($now, "d/m/Y à H:i") .  " par " . $note->getCreatedBy()->getFullname()
             ]
         ], 200);
     }
@@ -201,6 +215,19 @@ class NoteController extends AbstractController
                 "status" => $note->getStatusList(),
                 "editInfo" => "(modifié le " . date_format($note->getUpdatedAt(), "d/m/Y à H:i") . " par " . $note->getUpdatedBy()->getFullname() . ")"
             ]
+        ], 200);
+    }
+
+    /**
+     * Retourne un message d'erreur au format JSON
+     * @return json
+     */
+    protected function errorMessage()
+    {
+        return $this->json([
+            "code" => 200,
+            "alert" => "danger",
+            "msg" => "Une erreur s'est produite. Le document n'a pas pu être enregistré.",
         ], 200);
     }
 }

@@ -19,6 +19,7 @@ export default class ListNotes {
         this.themeColor = this.loaderElt.getAttribute("data-value");
         this.autoSaveElt = document.getElementById("js-auto-save");
         this.countNotesElt = document.getElementById("count-notes");
+        this.supportId = document.getElementById("container-notes").getAttribute("data-support");
         this.autoSave = false;
         this.count = 0;
         this.editor;
@@ -75,7 +76,7 @@ export default class ListNotes {
 
     // Affiche un formulaire modal vierge
     newNote() {
-        this.modalForm.querySelector("form").action = "";
+        this.modalForm.querySelector("form").action = "/support/" + this.supportId + "/note/new";
         this.modalForm.querySelector("#note_title").value = "";
         this.editor.setData("");
         this.btnDeleteElt.classList.replace("d-block", "d-none");

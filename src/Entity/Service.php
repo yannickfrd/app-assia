@@ -104,10 +104,10 @@ class Service
      */
     private $createdAt;
 
-    // /**
-    //  * @ORM\ManyToOne(targetEntity="App\Entity\User")
-    //  */
-    // private $createdBy;
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $createdBy;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)

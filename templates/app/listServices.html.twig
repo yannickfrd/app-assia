@@ -76,7 +76,7 @@
         {% if is_granted("ROLE_SUPER_ADMIN") %}
         <div class="row">
             <div class="col-md-12">
-                <p><a href="#" class="bnt btn-{{ theme_color }} btn-sm shadow">
+                <p><a href="{{ path("service_new") }}" class="bnt btn-{{ theme_color }} btn-sm shadow">
                         <span class="fas fa-plus-square mr-2"></span>Créer un nouveau service</a>
                 </p>
             </div>

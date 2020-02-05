@@ -4,18 +4,19 @@
 
 {% set pole = form.vars.value %}
 
-{% block title %}{{ pole.name }} | Esperer95-app{% endblock %}
+{% block title %}{% if edit_mode %}{{ pole.name }}{% else %}Nouveau pôle{% endif %} | Esperer95-app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}{{ pole.name }}{% else %}Création d'un nouveau pôle{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}{{ pole.name }}{% else %}Nouveau pôle{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{pole.createdAt | date("d/m/Y à H:i") }}
-            {#{% if pole.createdBy %}par {{ pole.createdBy.fullname }}{% endif %}#}
-            {% if pole.updatedAt %}(modifié le {{ pole.updatedAt | date("d/m/Y à H:i") }}){% endif %}
+            {% if pole.createdBy %}par {{ pole.createdBy.fullname }}{% endif %}
+            {% if pole.updatedAt %}(modifié le {{ pole.updatedAt | date("d/m/Y à H:i") }}{% if pole.updatedBy %} par
+            {{ pole.updatedBy.fullname }}{% endif %}){% endif %}
         </p>
     </div>
     {% else %}
@@ -23,8 +24,8 @@
     {% endif %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                href="{{ path('poles') }}">Liste des pôles</a></li>
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('poles') }}">Liste des pôles</a>
+            </li>
             <li class="breadcrumb-item active" aria-current="page">Fiche pôle</li>
         </ol>
     </nav>

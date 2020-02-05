@@ -4,12 +4,9 @@ namespace App\Controller;
 
 use App\Form\Model\Export;
 use App\Form\Support\ExportType;
-
 use App\Export\SupportPersonExport;
-
-use Doctrine\ORM\EntityManagerInterface;
-
 use App\Repository\SupportPersonRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,15 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ExportController extends AbstractController
 {
     private $manager;
-    private $repo;
-    private $security;
     private $currentUser;
 
-    public function __construct(EntityManagerInterface $manager, SupportPersonRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
-        $this->security = $security;
         $this->currentUser = $security->getUser();
     }
     /**

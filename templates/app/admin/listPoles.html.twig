@@ -65,7 +65,7 @@
             </table>
         </div>
         {% if is_granted("ROLE_SUPER_ADMIN") %}
-        <p><a href="#" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
+        <p><a href="{{ path("pole_new") }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
                 <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
         </p>
         {% endif %}

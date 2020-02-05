@@ -93,9 +93,20 @@ class Pole
     private $createdAt;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $createdBy;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $updatedBy;
+
 
     public function __construct()
     {
@@ -216,7 +227,6 @@ class Pole
         return $this;
     }
 
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -228,7 +238,6 @@ class Pole
 
         return $this;
     }
-
 
     public function getCreatedBy(): ?User
     {

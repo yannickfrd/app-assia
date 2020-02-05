@@ -4,18 +4,20 @@
 
 {% set service = form.vars.value %}
 
-{% block title %}{{ service.name }} | Esperer95-app{% endblock %}
+{% block title %}{% if edit_mode %}{{ service.name }}{% else %}Nouveau service{% endif %} | Esperer95-app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}{{ service.name }}{% else %}Création d'un nouveau service{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}{{ service.name }}{% else %}Nouveau service{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{service.createdAt | date("d/m/Y à H:i") }}
-            {# {% if service.createdBy %}par {{ service.createdBy.fullname }}{% endif %} #}
-            {% if service.updatedAt %}(modifié le {{ service.updatedAt | date("d/m/Y à H:i") }}){% endif %}
+            {% if service.createdBy %} par {{ service.createdBy.fullname }}{% endif %}
+            {% if service.updatedAt %}(modifié le
+            {{ service.updatedAt | date("d/m/Y à H:i") }}{% if service.updatedBy %} par
+            {{ service.updatedBy.fullname }}{% endif %}){% endif %}
         </p>
     </div>
     {% else %}
@@ -121,6 +123,8 @@
 
     </section>
 
+    {% if edit_mode %}
+
     <hr>
 
     <section>
@@ -217,6 +221,9 @@
         </div>
     </section>
 </div>
+
+{% endif %}
+
 {% endblock %}
 
 {% block javascripts %}

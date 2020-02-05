@@ -3,15 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Service;
-
 use App\Form\Model\ServiceSearch;
 use App\Form\Service\ServiceType;
-
-use App\Export\ServiceExport;
-
-use App\Repository\ServiceRepository;
-
 use App\Form\Service\ServiceSearchType;
+use App\Export\ServiceExport;
+use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,15 +19,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ServiceController extends AbstractController
 {
     private $manager;
+    private $currentUser;
     private $repo;
-    private $request;
-    private $security;
 
-    public function __construct(EntityManagerInterface $manager, ServiceRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, ServiceRepository $repo)
     {
         $this->manager = $manager;
+        $this->currentUser = $security->getUser();
         $this->repo = $repo;
-        $this->security = $security;
     }
 
     /**
@@ -48,20 +43,10 @@ class ServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($serviceSearch->getExport()) {
-            $services = $this->repo->findServicesToExport($serviceSearch);
-            $export = new ServiceExport();
-            return $export->exportData($services);
+            $this->exportData($serviceSearch);
         }
 
-        $services =  $paginator->paginate(
-            $this->repo->findAllServicesQuery($serviceSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        // $services->setPageRange(5);
-        $services->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
+        $services = $this->paginate($paginator, $serviceSearch, $request);
 
         return $this->render("app/listServices.html.twig", [
             "services" => $services ?? null,
@@ -72,35 +57,22 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * Créer un service
+     * Nouveau service
      * 
      * @Route("/service/new", name="service_new", methods="GET|POST")
      *  @return Response
      */
-    public function createService(Service $service = null, Request $request): Response
+    public function newService(Service $service = null, Request $request): Response
     {
-        $service = new Service();
-
         $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $service = new Service();
 
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user = $this->security->getUser();
-
-            $service->setCreatedAt(new \DateTime())
-                // ->setCreatedBy($user)
-                // ->setUpdatedBy($user)
-                ->setUpdatedAt(new \DateTime());
-
-            $this->manager->persist($service);
-            $this->manager->flush();
-
-            $this->addFlash("success", "Le service a été créé.");
-
-            return $this->redirectToRoute("service_edit", ["id" => $service->getId()]);
+            return $this->createService($service);
         }
 
         return $this->render("app/service.html.twig", [
@@ -110,7 +82,7 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * Editer la fiche du service
+     * Modification d'un service
      * 
      * @Route("/service/{id}", name="service_edit", methods="GET|POST")
      *  @return Response
@@ -123,18 +95,80 @@ class ServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $service->setUpdatedAt(new \DateTime());
-            //     ->setUpdatedBy($this->security->getservice());
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
+            $this->updateService($service);
         }
 
         return $this->render("app/service.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
+    }
+
+    /**
+     * Pagine
+     *
+     * @param PaginatorInterface $paginator
+     * @param ServiceSearch $serviceSearch
+     * @param Request $request
+     * @return void
+     */
+    protected function paginate(PaginatorInterface $paginator, ServiceSearch $serviceSearch, Request $request)
+    {
+        $services =  $paginator->paginate(
+            $this->repo->findAllServicesQuery($serviceSearch),
+            $request->query->getInt("page", 1), // page number
+            20 // limit per page
+        );
+        $services->setCustomParameters([
+            "align" => "right", // alignement de la pagination
+        ]);
+        return $services;
+    }
+
+    /**
+     * Exporte les données
+     *
+     * @param ServiceSearch $serviceSearch
+     */
+    protected function exportData(ServiceSearch $serviceSearch)
+    {
+        $services = $this->repo->findServicesToExport($serviceSearch);
+        $export = new ServiceExport();
+        return $export->exportData($services);
+    }
+
+    /**
+     * Crée un service
+     * @param Service $service
+     */
+    protected function createService(Service $service)
+    {
+        $now = new \DateTime();
+
+        $service->setCreatedAt($now)
+            ->setCreatedBy($this->currentUser)
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->persist($service);
+        $this->manager->flush();
+
+        $this->addFlash("success", "Le service a été créé.");
+
+        return $this->redirectToRoute("service_edit", ["id" => $service->getId()]);
+    }
+
+    /**
+     * Met à jour un service
+     * @param Service $service
+     */
+    protected function updateService(Service $service)
+    {
+        $service->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Les modifications ont été enregistrées.");
     }
 }

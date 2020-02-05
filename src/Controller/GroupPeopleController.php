@@ -5,18 +5,14 @@ namespace App\Controller;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-
 use App\Service\Agree;
-
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\Utils\Choices;
 use App\Form\Group\GroupPeopleType;
 use App\Form\Group\GroupPeopleSearchType;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\RolePersonRepository;
-
 use Doctrine\ORM\EntityManagerInterface;
-
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -29,38 +25,43 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class GroupPeopleController extends AbstractController
 {
     private $manager;
-    private $security;
+    private $currentUser;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security)
+    public function __construct(EntityManagerInterface $manager, GroupPeopleRepository $repo, Security $security)
     {
         $this->manager = $manager;
-        $this->security = $security;
+        $this->currentUser = $security->getUser();
+        $this->repo = $repo;
     }
 
     /**
+     * Liste des groupes de personnes
+     * 
      * @Route("/groups_people", name="groups_people")
+     * @param GroupPeopleSearch $groupPeopleSearch
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listGroupsPeople(RolePersonRepository $repo, GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function listGroupsPeople(GroupPeopleSearch $groupPeopleSearch = null, Request $request, PaginatorInterface $paginator): Response
     {
-        // $rolePeople = $repo->findAll();
         $groupPeopleSearch = new GroupPeopleSearch();
 
         $form = $this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch);
         $form->handleRequest($request);
 
-        $rolePeople =  $paginator->paginate(
-            $repo->findAllRolePeopleQuery($groupPeopleSearch),
+        $groupsPeople =  $paginator->paginate(
+            $this->repo->findAllGroupPeopleQuery($groupPeopleSearch),
             $request->query->getInt("page", 1), // page number
             20 // limit per page
         );
-        // $rolePeople->setPageRange(5);
-        $rolePeople->setCustomParameters([
+        $groupsPeople->setCustomParameters([
             "align" => "right", // alignement de la pagination
         ]);
 
         return $this->render("app/listGroupsPeople.html.twig", [
-            "role_people" => $rolePeople,
+            "groupsPeople" => $groupsPeople,
             "form" => $form->createView()
         ]);
     }
@@ -73,19 +74,15 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function editGroupPeople($id, GroupPeopleRepository $repo, Request $request): Response
+    public function editGroupPeople($id, Request $request): Response
     {
-        $groupPeople = $repo->findGroupPeopleById($id);
+        $groupPeople = $this->repo->findGroupPeopleById($id);
 
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
         $formGroupPeople->handleRequest($request);
 
         if ($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
-            $groupPeople->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
-            $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
+            $this->updateGroupPeople($groupPeople);
         }
 
         return $this->render("app/groupPeople.html.twig", [
@@ -104,12 +101,12 @@ class GroupPeopleController extends AbstractController
      * @param RolePersonRepository $repo
      * @return Response
      */
-    public function addPersonInGroup($id, GroupPeopleRepository $repo, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
+    public function addPersonInGroup($id, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
     {
-        $groupPeople = $repo->findGroupPeopleById($id);
+        $groupPeople = $this->repo->findGroupPeopleById($id);
 
         // Vérifie si la personne est déjà associée à ce groupe
-        $personExist = $repoRolePerson->findOneBy([
+        $personExists = $repoRolePerson->findOneBy([
             "person" => $person->getId(),
             "groupPeople" => $groupPeople->getId()
         ]);
@@ -126,7 +123,7 @@ class GroupPeopleController extends AbstractController
 
         if ($formRolePerson->isSubmitted() && $formRolePerson->isValid()) {
             // Si la personne n'est pas associée, ajout de la liaison, sinon ne fait rien
-            if (!$personExist) {
+            if (!$personExists) {
                 $rolePerson
                     ->setHead(false)
                     ->setGroupPeople($groupPeople)
@@ -161,20 +158,10 @@ class GroupPeopleController extends AbstractController
         return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
     }
 
-
-    public function getchoices($const)
-    {
-        foreach ($const as $key => $value) {
-            $output[$value] = $key;
-        }
-        return $output;
-    }
-
-
     /**
      * Retire la personne du groupe
      * 
-     * @Route("/groupe/{id}/personne/retrait-{person_id}_{role_person_id}_{_token}", name="remove_person", methods="GET")
+     * @Route("/groupe/{id}/personne/remove-{person_id}_{role_person_id}_{_token}", name="remove_person", methods="GET")
      * @ParamConverter("rolePerson", options={"id" = "role_person_id"})
      * @ParamConverter("person", options={"id" = "person_id"})
      * @param GroupPeople $groupPeople
@@ -182,9 +169,9 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function removePerson($id, GroupPeopleRepository $repo, RolePerson $rolePerson, Person $person, Request $request): Response
+    public function removePerson($id, RolePerson $rolePerson, Person $person, Request $request): Response
     {
-        $groupPeople = $repo->findGroupPeopleById($id);
+        $groupPeople = $this->repo->findGroupPeopleById($id);
 
         if (!$this->isGranted("ROLE_ADMIN")) {
             return $this->json([
@@ -223,5 +210,20 @@ class GroupPeopleController extends AbstractController
             "msg" => "Une erreur s'est produite.",
             "data" => $nbPeople - 1
         ], 200);
+    }
+
+    /**
+     * Met à jour un groupe de personnes
+     *
+     * @param GroupPeople $groupPeople
+     */
+    protected function updateGroupPeople(GroupPeople $groupPeople)
+    {
+        $groupPeople->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->currentUser);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Les modifications ont été enregistrées.");
     }
 }

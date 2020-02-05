@@ -15,11 +15,8 @@ use App\Form\Person\RolePersonType;
 use App\Form\Person\PersonSearchType;
 use App\Form\Person\PersonNewGroupType;
 use App\Form\Person\RolePersonGroupType;
-
 use App\Export\PersonExport;
-
 use App\Repository\PersonRepository;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,14 +31,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class PersonController extends AbstractController
 {
     private $manager;
-    private $repo;
     private $security;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, PersonRepository $repo, Security $security)
+    public function __construct(EntityManagerInterface $manager, Security $security, PersonRepository $repo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
         $this->security = $security;
+        $this->repo = $repo;
     }
 
     /**

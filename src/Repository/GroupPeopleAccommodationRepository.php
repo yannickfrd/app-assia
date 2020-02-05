@@ -30,19 +30,15 @@ class GroupPeopleAccommodationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder("gpa")
             ->select("gpa")
-
-            ->leftJoin("gpa.createdBy", "user")->addselect("user")
-
-            ->leftJoin("gpa.accommodation", "a")->addselect("a")
-
+            ->leftJoin("gpa.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
+            ->leftJoin("gpa.accommodation", "a")->addselect("PARTIAL a.{id, name}")
             ->leftJoin("gpa.personAccommodations", "pa")->addselect("pa")
-            ->leftJoin("pa.person", "p")->addselect("p")
-
-            ->leftJoin("gpa.supportGroup", "sg")->addselect("sg")
-            ->leftJoin("sg.groupPeople", "gp")->addselect("gp")
-            ->leftJoin("gp.rolePerson", "rp")->addselect("rp")
-            ->leftJoin("rp.person", "p1")->addselect("p1")
-            ->leftJoin("sg.service", "sv")->addselect("sv")
+            ->leftJoin("pa.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+            ->leftJoin("gpa.supportGroup", "sg")->addselect("PARTIAL sg.{id, startDate, endDate}")
+            ->leftJoin("sg.groupPeople", "gp")->addselect("PARTIAL gp.{id, familyTypology, nbPeople}")
+            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            ->leftJoin("gp.rolePerson", "rp")->addselect("PARTIAL rp.{id, role, head}")
+            ->leftJoin("rp.person", "p1")->addselect("PARTIAL p1.{id, firstname, lastname}")
 
             ->andWhere("gpa.id = :id")
             ->setParameter("id", $id)
