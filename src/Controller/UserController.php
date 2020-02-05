@@ -85,7 +85,6 @@ class UserController extends AbstractController
         $userSearch = new UserSearch();
 
         $form = $this->createForm(UserSearchType::class, $userSearch);
-
         $form->handleRequest($request);
 
         if ($userSearch->getExport()) {
@@ -129,45 +128,5 @@ class UserController extends AbstractController
             $exists = false;
         }
         return $this->json(["response" => $exists], 200);
-    }
-
-    /**
-     * Permet de trouver les utilisateurs par le mode de recherche instannée
-     *
-     * @Route("/search/user", name="search_user")
-     * @param User $user
-     * @param Request $request
-     * @param UserRepository $repo
-     * @return Response
-     */
-    public function searchUser(Request $request): Response
-    {
-        if ($request->query->get("search")) {
-            $search = $request->query->get("search");
-        } else {
-            $search = null;
-        }
-
-        $users = $this->repo->findPeopleByResearch($search);
-        $nbResults = count($users);
-
-        if ($nbResults) {
-            foreach ($users as $user) {
-                $results[] = [
-                    "id" => $user->getId(),
-                    "lastname" => $user->getLastname(),
-                    "firstname" => $user->getFirstname()
-                ];
-            }
-            return $this->json([
-                "nb_results" => $nbResults,
-                "results" => $results
-            ], 200);
-        } else {
-            return $this->json([
-                "nb_results" => $nbResults,
-                "results" => "Aucun résultat."
-            ], 200);
-        }
     }
 }

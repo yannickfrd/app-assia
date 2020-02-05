@@ -87,10 +87,12 @@
 								{% if is_granted("ROLE_SUPER_ADMIN") %}
 								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
 								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
-								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter d'un dispositif</a>
+								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter d'un
+									dispositif</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{ path("admin_users") }}">Liste des utilisateurs</a>
 								<a class="dropdown-item" href="{{ path("admin_devices") }}">Liste des dispositifs</a>
+								<a class="dropdown-item" href="{{ path("admin_accommodations") }}">Liste des places</a>
 								{% endif %}
 							</div>
 						</li>

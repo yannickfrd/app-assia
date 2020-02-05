@@ -15,7 +15,7 @@ class MailNotification
     protected $mail;
     protected $renderer;
 
-    public function __construct(Environment $renderer)
+    public function __construct(Environment $renderer, $host, $username, $password, $port)
     {
         $this->mail = new PHPMailer(true);
 
@@ -27,10 +27,10 @@ class MailNotification
             $this->mail->isSMTP(); // Send using SMTP
         }
 
-        $this->mail->Host = $_SERVER["MAILER_HOST"];
-        $this->mail->Username = $_SERVER["MAILER_USERNAME"];
-        $this->mail->Password = $_SERVER["MAILER_PASSWORD"];
-        $this->mail->Port = $_SERVER["MAILER_PORT"];
+        $this->mail->Host = $host;
+        $this->mail->Username = $username;
+        $this->mail->Password = $password;
+        $this->mail->Port = $port;
 
         $this->mail->CharSet = "UTF-8";
         $this->mail->isHTML(true); // Set email format to HTML

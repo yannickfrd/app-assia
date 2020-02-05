@@ -16,10 +16,10 @@ class OptimizeImage
         $originalFile,
         $optimizedFile;
 
-    public function __construct(Tinify $tinify)
+    public function __construct(Tinify $tinify, $tinifyKey)
     {
         $this->tinify = $tinify;
-        $this->tinify->setKey($_SERVER["TINIFY_KEY"]);
+        $this->tinify->setKey($tinifyKey);
         $this->init();
     }
 

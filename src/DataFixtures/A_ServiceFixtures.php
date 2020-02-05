@@ -4,13 +4,15 @@ namespace App\DataFixtures;
 
 use App\Entity\Pole;
 use App\Entity\User;
+use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\ServiceUser;
+use App\Entity\ServiceDevice;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Collections\Collection;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -51,22 +53,22 @@ class A_ServiceFixtures extends Fixture
     ];
 
     public const DEVICES = [
-        1 => "Hébergement d'urgence",
-        2 => "Hébergement de stabilisation",
-        3 => "Hébergement d'insertion",
-        4 => "ALT",
-        5 => "ALTHO",
-        6 => "Maison relais",
-        7 => "Résidence sociale",
-        8 => "Hébergement d'urgence hivernale",
-        9 => "AVDL",
-        10 => "ASLLL",
+        1 => "ALT",
+        2 => "ALTHO",
+        3 => "ASLLL",
+        4 => "AVDL",
+        5 => "Hébergement d'insertion",
+        6 => "Hébergement d'urgence",
+        7 => "Maison relais",
+        8 => "ASSLT - ASLLT",
+        9 => "10 000 logements",
     ];
 
     private $pole;
     public $poles = [];
     private $service;
     public $services = [];
+    public $devices = [];
     private $serviceUser;
     private $passwordEncoder;
 
@@ -87,6 +89,8 @@ class A_ServiceFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        // Créé les dispositifs
+        $this->createDevices();
         //Crée les pôles d'activité
         foreach (Pole::POLES as $key => $pole) {
             $this->addPoles($key, $pole);
@@ -99,7 +103,6 @@ class A_ServiceFixtures extends Fixture
                     //     break;
             }
         }
-        $this->createDevices();
 
         $this->manager->flush();
     }
@@ -145,12 +148,49 @@ class A_ServiceFixtures extends Fixture
         $this->service = new Service();
 
         $this->service->setName($service)
+            ->setAccommodation(true)
             ->setPole($this->pole)
             ->setCreatedAt(new \DateTime());
 
         $this->services[] = $this->service;
 
         $this->manager->persist($this->service);
+
+        $this->addServiceDevice();
+    }
+
+    protected function addServiceDevice()
+    {
+        $serviceDevice = new ServiceDevice();
+
+        $serviceDevice->setService($this->service);
+
+        foreach ($this->devices as $device) {
+            if ($device->getName() == $this->service->getName()) {
+
+                $serviceDevice->setDevice($device);
+
+                $this->manager->persist($serviceDevice);
+
+                $this->addAccommodations($device);
+            }
+        }
+    }
+
+    protected function addAccommodations($device)
+    {
+        for ($i = 0; $i < mt_rand(5, 10); $i++) {
+            $place = new Accommodation();
+
+            $place->setService($this->service)
+                ->setDevice($device)
+                ->setName("Logement " . mt_rand(1, 100))
+                ->setPlacesNumber(mt_rand(2, 5))
+                ->setOpeningDate($this->faker->dateTimeBetween("-5years", "-12months"))
+                ->setCity("Cergy-Pontoise");
+
+            $this->manager->persist($place);
+        }
     }
 
     // Crée la liaison entre le service et l'utilisateur
@@ -172,6 +212,8 @@ class A_ServiceFixtures extends Fixture
             $device->setName($value)
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime());
+
+            $this->devices[] = $device;
 
             $this->manager->persist($device);
         }

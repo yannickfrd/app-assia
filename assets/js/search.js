@@ -4,7 +4,12 @@ import "select2";
 
 $("select.multi-select.js-service").select2({
     // theme: "bootstrap4",
-    placeholder: "  -- Services --",
+    placeholder: "  -- Service --",
+});
+
+$("select.multi-select.js-device").select2({
+    // theme: "bootstrap4",
+    placeholder: "  -- Dispositif --",
 });
 
 $("select.multi-select.js-status").select2({

@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\PersonAccommodation;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -97,15 +98,11 @@ class SupportPerson
      */
     private $notes;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Accommodation", mappedBy="supportPerson", orphanRemoval=true)
-     */
-    private $accommodations;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->accommodations = new ArrayCollection();
+        $this->personAccommodations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -307,37 +304,6 @@ class SupportPerson
             // set the owning side to null (unless already changed)
             if ($note->getSupportPerson() === $this) {
                 $note->setSupportPerson(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Accommodation[]
-     */
-    public function getAccommodations(): Collection
-    {
-        return $this->accommodations;
-    }
-
-    public function addAccommodation(Accommodation $accommodation): self
-    {
-        if (!$this->accommodations->contains($accommodation)) {
-            $this->accommodations[] = $accommodation;
-            $accommodation->setSupportPerson($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAccommodation(Accommodation $accommodation): self
-    {
-        if ($this->accommodations->contains($accommodation)) {
-            $this->accommodations->removeElement($accommodation);
-            // set the owning side to null (unless already changed)
-            if ($accommodation->getSupportPerson() === $this) {
-                $accommodation->setSupportPerson(null);
             }
         }
 

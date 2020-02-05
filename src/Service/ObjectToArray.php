@@ -11,15 +11,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ObjectToArray
 {
     protected $translator;
-    // protected $nameObject;
-    // protected $sitSocial = null;
-    // protected $sitAdm = null;
-    // protected $sitFamilyGroup = null;
-    // protected $sitFamilyPerson = null;
-    // protected $sitProf = null;
-    // protected $sitBudgetGroup = null;
-    // protected $sitBudget = null;
-    // protected $sitHousing = null;
+    protected $nameObject;
+    protected $sitSocial = null;
+    protected $sitAdm = null;
+    protected $sitFamily = null;
+    protected $sitFamilyGroup = null;
+    protected $sitFamilyPerson = null;
+    protected $sitProf = null;
+    protected $sitBudgetGroup = null;
+    protected $sitBudget = null;
+    protected $sitHousing = null;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -48,7 +49,8 @@ class ObjectToArray
         $keys = [];
         $transNameObject = $this->unCamelCase($this->nameObject);
         foreach ((array) $object as $key => $value) {
-            $key = array_pop(explode("\x00", $key));
+            $key = explode("\x00", $key);
+            $key = array_pop($key);
             $keys[] = $this->unCamelCase($key) . " (" . $transNameObject . ")";
         }
         $this->{$this->nameObject} = $keys;

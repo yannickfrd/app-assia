@@ -20,6 +20,33 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+
+    /**
+     * Donne l'utilisateur avec tous ses suivis et rdvs
+     *
+     * @param int $id
+     * @return User|null
+     */
+    public function findUserById($id): ?User
+    {
+        return $this->createQueryBuilder("u")
+            ->select("u")
+            ->leftJoin("u.referentSupport", "sg")->addselect("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+            ->leftJoin("u.serviceUser", "su")->addselect("su")
+            ->leftJoin("su.service", "service")->addselect("PARTIAL service.{id, name, email, phone}")
+            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+
+            ->andWhere("u.id = :id")
+            ->setParameter("id", $id)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
     /**
      * Retourne toutes les utilisateurs
      * @return Query
@@ -28,12 +55,10 @@ class UserRepository extends ServiceEntityRepository
     {
         $query =  $this->createQueryBuilder("u")
             ->select("u")
-            ->leftJoin("u.serviceUser", "r")
-            ->addselect("r")
-            ->leftJoin("r.service", "s")
-            ->addselect("s")
-            ->leftJoin("s.pole", "p")
-            ->addselect("p");
+            ->leftJoin("u.serviceUser", "su")->addselect("su")
+            ->leftJoin("su.service", "s")->addSelect("PARTIAL s.{id,name}")
+            ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
+
         if ($userSearch->getPole()) {
             $query->andWhere("p.id = :pole_id")
                 ->setParameter("pole_id", $userSearch->getPole());
@@ -63,39 +88,12 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
         $query = $query->orderBy("u.lastname", "ASC");
-        return $query->getQuery();
+        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     public function findUsersToExport($userSearch)
     {
         $query = $this->findAllUsersQuery($userSearch);
         return $query->getResult();
-    }
-
-    /**
-     * Donne l'utilisateur avec tous ses suivis et rdvs
-     *
-     * @param int $id
-     * @return User|null
-     */
-    public function findUserById($id): ?User
-    {
-        return $this->createQueryBuilder("u")
-            ->select("u")
-
-            ->leftJoin("u.referentSupport", "sg")
-            ->addselect("sg")
-            ->leftJoin("sg.groupPeople", "g")
-            ->addselect("g")
-            ->leftJoin("g.rolePerson", "r")
-            ->addselect("r")
-            ->leftJoin("r.person", "p")
-            ->addselect("p")
-
-            ->andWhere("u.id = :id")
-            ->setParameter("id", $id)
-
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
     }
 }

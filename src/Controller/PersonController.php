@@ -103,7 +103,7 @@ class PersonController extends AbstractController
             $formRolePerson = $this->createFormBuilder($rolePerson)
                 ->add("role", ChoiceType::class, [
                     "choices" => Choices::getChoices(RolePerson::ROLE),
-                    "placeholder" => "-- Sélectionner --",
+                    "accommodationholder" => "-- Sélectionner --",
                 ])
                 ->getForm();
         }
@@ -295,8 +295,10 @@ class PersonController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function editPerson(GroupPeople $groupPeople, Person $person, Request $request): Response
+    public function editPerson(GroupPeople $groupPeople, $person_id, Request $request): Response
     {
+        $person = $this->repo->findPersonById($person_id);
+
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 

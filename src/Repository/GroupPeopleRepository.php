@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query;
 use App\Entity\GroupPeople;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method GroupPeople|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,33 +20,27 @@ class GroupPeopleRepository extends ServiceEntityRepository
         parent::__construct($registry, GroupPeople::class);
     }
 
-
-    // /**
-    //  * @return GroupPeople[] Returns an array of GroupPeople objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Donne le groupe de personnes
+     *
+     * @param int $id
+     * @return GroupPeople|null
+     */
+    public function findGroupPeopleById($id): ?GroupPeople
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        return $this->createQueryBuilder("g")
+            ->select("g")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            ->leftJoin("r.person", "p")->addselect("p")
+            ->leftJoin("g.supports", "sg")->addselect("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname, email, phone}")
+            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
+            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
 
-    /*
-    public function findOneBySomeField($value): ?GroupPeople
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->andWhere("g.id = :id")
+            ->setParameter("id", $id)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
     }
-    */
 }

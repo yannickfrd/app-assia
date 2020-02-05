@@ -34,34 +34,20 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findSupportById($id): ?SupportGroup
     {
         return $this->createQueryBuilder("sg")
-            ->select("sg")
-
-            ->leftJoin("sg.createdBy", "user")
-            ->addselect("user")
-            ->leftJoin("sg.referent", "ref")
-            ->addselect("ref")
-            ->leftJoin("sg.referent2", "ref2")
-            ->addselect("ref2")
-
-            ->leftJoin("sg.service", "sv")
-            ->addselect("sv")
-
-            ->leftJoin("sg.supportPerson", "sp")
-            ->addselect("sp")
-
-            ->leftJoin("sp.person", "p")
-            ->addselect("p")
-
-            ->leftJoin("sg.groupPeople", "g")
-            ->addselect("g")
-            ->leftJoin("g.rolePerson", "r")
-            ->addselect("r")
-
-            ->leftJoin("r.person", "p2")
-            ->addselect("p2")
+            ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
+            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
+            ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
+            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            ->leftJoin("r.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")
 
             ->andWhere("sg.id = :id")
             ->setParameter("id", $id)
+
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
@@ -74,19 +60,14 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findAllSupportsQuery($supportGroupSearch): Query
     {
         $query =  $this->createQueryBuilder("sg")
-            ->select("sg")
-            ->leftJoin("sg.service", "s")
-            ->addselect("s")
-            ->leftJoin("sg.supportPerson", "sp")
-            ->addselect("sp")
-            ->leftJoin("sg.groupPeople", "g")
-            ->addselect("g")
-            ->leftJoin("sg.referent", "u")
-            ->addselect("u")
-            ->leftJoin("g.rolePerson", "r")
-            ->addselect("r")
-            ->leftJoin("r.person", "p")
-            ->addselect("p")
+            ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+            ->leftJoin("sg.referent", "u")->addselect("PARTIAL u.{id, firstname, lastname}")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+
             ->andWhere("r.head = TRUE");
 
         $query = $this->filter($query, $supportGroupSearch);
@@ -99,28 +80,13 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         $query =  $this->createQueryBuilder("sg")
             ->select("sg")
-
-            ->leftJoin("sg.service", "s")
-            ->addselect("s")
-
-            ->leftJoin("s.pole", "pole")
-            ->addselect("pole")
-
-            ->leftJoin("sg.supportPerson", "sp")
-            ->addselect("sp")
-
-            ->leftJoin("sg.groupPeople", "g")
-            ->addselect("g")
-
-            ->leftJoin("g.rolePerson", "r")
-            ->addselect("r")
-
-            ->leftJoin("r.person", "p")
-            ->addselect("p")
-
-            ->leftJoin("sg.referent", "u")
-            ->addselect("u")
-
+            ->leftJoin("sg.service", "s")->addSelect("PARTIAL s.{id,name}")
+            ->leftJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
+            ->leftJoin("sg.groupPeople", "g")->addselect("g")
+            ->leftJoin("g.rolePerson", "r")->addselect("r")
+            ->leftJoin("r.person", "p")->addselect("p")
+            ->leftJoin("sg.referent", "u")->addSelect("PARTIAL u.{id,fullname}")
             ->andWhere("r.head = TRUE");
 
         $query = $this->filter($query, $supportGroupSearch);

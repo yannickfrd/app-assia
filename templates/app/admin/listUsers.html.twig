@@ -67,7 +67,7 @@
                 <tbody>
 
                     {% for user in users %}
-                    {#{% cache "user" ~ app.user.id ~ user.id user.updatedAt.timestamp %}#}
+                    {% cache "user" ~ app.user.id ~ user.id user.updatedAt.timestamp %}
                     <tr>
                         <th scope="row">
                             {% if is_granted("EDIT", user) %}
@@ -106,7 +106,7 @@
                         <td>{{ user.lastLogin | date("d/m/Y") }}</td>
                         <td>{{ user.createdAt | date("d/m/Y") }}</td>
                     </tr>
-                    {#{% endcache %}#}
+                    {% endcache %}
                     {% endfor %}
                 </tbody>
             </table>

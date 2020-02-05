@@ -9,10 +9,12 @@ use Tinify\Tinify;
 class FileUploader
 {
     private $targetDirectory;
+    private $tinifyKey;
 
-    public function __construct($targetDirectory)
+    public function __construct($targetDirectory, $tinifyKey)
     {
         $this->targetDirectory = $targetDirectory;
+        $this->tinifyKey = $tinifyKey;
     }
 
     public function upload(UploadedFile $file, $path = null)
@@ -45,7 +47,7 @@ class FileUploader
         $pathParts = pathinfo($pathFile);
 
         if (in_array($pathParts["extension"], $imageExtensions)) {
-            \Tinify\setKey($_SERVER["TINIFY_KEY"]);
+            \Tinify\setKey($this->tinifyKey);
             $source = \Tinify\fromFile($pathFile);
             $source->toFile($pathFile);
         }

@@ -22,6 +22,31 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne le groupe de personnes
+     *
+     * @param int $id
+     * @return Person|null
+     */
+    public function findPersonById($id): ?Person
+    {
+        return $this->createQueryBuilder("p")
+            ->select("p")
+            ->leftJoin("p.rolesPerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            ->leftJoin("r.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}")
+            ->leftJoin("p.supports", "sp")->addselect("PARTIAL sp.{id, status, startDate, endDate, updatedAt}")
+            ->leftJoin("sp.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
+            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname, email, phone}")
+            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
+            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+
+            ->andWhere("p.id = :id")
+            ->setParameter("id", $id)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
+    /**
      * Retourne toutes les personnes
      * 
      * @return Query

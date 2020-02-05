@@ -12,7 +12,7 @@ use App\Form\Model\GroupPeopleSearch;
 use App\Form\Utils\Choices;
 use App\Form\Group\GroupPeopleType;
 use App\Form\Group\GroupPeopleSearchType;
-
+use App\Repository\GroupPeopleRepository;
 use App\Repository\RolePersonRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -73,8 +73,10 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function editGroupPeople(GroupPeople $groupPeople, Request $request): Response
+    public function editGroupPeople($id, GroupPeopleRepository $repo, Request $request): Response
     {
+        $groupPeople = $repo->findGroupPeopleById($id);
+
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
         $formGroupPeople->handleRequest($request);
 
@@ -102,10 +104,12 @@ class GroupPeopleController extends AbstractController
      * @param RolePersonRepository $repo
      * @return Response
      */
-    public function addPersonInGroup(GroupPeople $groupPeople, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repo, Request $request): Response
+    public function addPersonInGroup($id, GroupPeopleRepository $repo, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
     {
+        $groupPeople = $repo->findGroupPeopleById($id);
+
         // Vérifie si la personne est déjà associée à ce groupe
-        $personExist = $repo->findOneBy([
+        $personExist = $repoRolePerson->findOneBy([
             "person" => $person->getId(),
             "groupPeople" => $groupPeople->getId()
         ]);
@@ -178,8 +182,10 @@ class GroupPeopleController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function removePerson(GroupPeople $groupPeople, RolePerson $rolePerson, Person $person, Request $request): Response
+    public function removePerson($id, GroupPeopleRepository $repo, RolePerson $rolePerson, Person $person, Request $request): Response
     {
+        $groupPeople = $repo->findGroupPeopleById($id);
+
         if (!$this->isGranted("ROLE_ADMIN")) {
             return $this->json([
                 "code" => 403,

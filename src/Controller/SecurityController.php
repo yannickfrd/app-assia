@@ -185,6 +185,8 @@ class SecurityController extends AbstractController
      */
     public function showCurrentUser(UserChangeInfo $userChangeInfo = null, UserChangePassword $userChangePassword = null, Request $request): Response
     {
+        $user = $this->repo->findUserById($this->user->getId());
+
         $userChangeInfo->setEmail($this->user->getEmail())
             ->setPhone($this->user->getPhone())
             ->setPhone2($this->user->getPhone2());
@@ -206,7 +208,7 @@ class SecurityController extends AbstractController
         }
 
         return $this->render("app/user.html.twig", [
-            "user" => $this->user,
+            "user" => $user,
             "form" => $form->createView(),
             "formPassword" => $formPassword->createView(),
         ]);
@@ -253,12 +255,7 @@ class SecurityController extends AbstractController
         $form = $this->createForm(SecurityUserType::class, $user);
         $form->handleRequest($request);
 
-        dump($user);
-        dd($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-
 
             $user->setUpdatedAt(new \DateTime())
                 ->setUpdatedBy($this->user);

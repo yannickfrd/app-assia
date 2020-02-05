@@ -96,6 +96,11 @@ class GroupPeople
      */
     private $documents;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\GroupPeopleAccommodation", mappedBy="groupPeople", orphanRemoval=true)
+     */
+    private $groupPeopleAccommodations;
+
     public function __construct()
     {
         $this->supports = new ArrayCollection();
@@ -104,6 +109,7 @@ class GroupPeople
         $this->updatedAt = new \Datetime();
         $this->referents = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->groupPeopleAccommodations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -318,6 +324,37 @@ class GroupPeople
             // set the owning side to null (unless already changed)
             if ($document->getGroupPeople() === $this) {
                 $document->setGroupPeople(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GroupPeopleAccommodation[]
+     */
+    public function getGroupPeopleAccommodations(): Collection
+    {
+        return $this->groupPeopleAccommodations;
+    }
+
+    public function addGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    {
+        if (!$this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
+            $this->groupPeopleAccommodations[] = $groupPeopleAccommodation;
+            $groupPeopleAccommodation->setGroupPeople($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    {
+        if ($this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
+            $this->groupPeopleAccommodations->removeElement($groupPeopleAccommodation);
+            // set the owning side to null (unless already changed)
+            if ($groupPeopleAccommodation->getGroupPeople() === $this) {
+                $groupPeopleAccommodation->setGroupPeople(null);
             }
         }
 

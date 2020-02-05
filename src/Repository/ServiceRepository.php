@@ -28,8 +28,8 @@ class ServiceRepository extends ServiceEntityRepository
     {
         $query =  $this->createQueryBuilder("s")
             ->select("s")
-            ->leftJoin("s.pole", "p")
-            ->addselect("p");
+            ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
+
         if ($serviceSearch->getName()) {
             $query->andWhere("s.name LIKE :name")
                 ->setParameter("name", $serviceSearch->getName() . '%');

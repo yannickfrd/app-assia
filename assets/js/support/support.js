@@ -16,7 +16,7 @@ let removeSupportPerson = new RemoveSupportPerson();
 
 $("select.multi-select").select2({
     // theme: "bootstrap4",
-    placeholder: "-- Services --",
+    placeholder: "-- Service --",
 });
 
 document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {

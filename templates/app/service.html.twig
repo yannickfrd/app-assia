@@ -23,8 +23,8 @@
     {% endif %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                href="{{ path('services') }}">Liste des services</a></li>
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des
+                    services</a></li>
             <li class="breadcrumb-item active" aria-current="page">Fiche service</li>
         </ol>
     </nav>
@@ -49,6 +49,11 @@
         </div>
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.supportAccess) }}</div>
+            <div class="col-md-6">
+                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                    {{ form_row(form.accommodation) }}
+                </div>
+            </div>
         </div>
         <div class="form-group row">
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
@@ -136,23 +141,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for place in service.places %}
+                    {% for accommodation in service.accommodations %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('admin_place_edit', {'id':place.id}) }}"
+                            <a href="{{ path('admin_accommodation_edit', {'id':accommodation.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le groupe de places">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ place.name }}</td>
-                        <td>{{ place.device.name }}</td>
-                        <td>{{ place.placesNumber }}</td>
-                        <td>{{ place.openingDate | date("d/m/Y") }}</td>
-                        <td>{{ place.closingDate | date("d/m/Y") }}</td>
-                        <td>{{ place.city }}</td>
-                        <td>{{ place.department }}</td>
-                        <td>{{ place.address }}</td>
+                        <td>{{ accommodation.name }}</td>
+                        <td>{{ accommodation.device.name }}</td>
+                        <td>{{ accommodation.placesNumber }}</td>
+                        <td>{{ accommodation.openingDate | date("d/m/Y") }}</td>
+                        <td>{% if accommodation.closingDate %}{{ accommodation.closingDate | date("d/m/Y") }}{% endif %}
+                        </td>
+                        <td>{{ accommodation.city }}</td>
+                        <td>{{ accommodation.department }}</td>
+                        <td>{{ accommodation.address }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -160,8 +166,9 @@
         </div>
         <div class="row my-3">
             <div class="col-md-12">
-                <a href="{{ path('service_place_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
-                        class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+                <a href="{{ path('service_accommodation_new', {'id':service.id}) }}"
+                    class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-plus-square pr-2"></span>Créer
+                    un nouveau groupe de places</a>
             </div>
         </div>
     </section>

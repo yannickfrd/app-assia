@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Service\Phone;
 
+use App\Form\Utils\SelectList;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -89,6 +90,11 @@ class Service
     private $supportAccess;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $accommodation;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -119,16 +125,17 @@ class Service
     private $serviceDevices;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Place", mappedBy="service")
+     * @ORM\OneToMany(targetEntity="App\Entity\Accommodation", mappedBy="service")
      */
-    private $places;
+    private $accommodations;
+
 
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
         $this->serviceDevices = new ArrayCollection();
-        $this->places = new ArrayCollection();
+        $this->accommodations = new ArrayCollection();
     }
 
     public function __toString()
@@ -364,6 +371,18 @@ class Service
         return self::SUPPORT_ACCESS[$this->supportAccess];
     }
 
+    public function getAccommodation(): ?bool
+    {
+        return $this->accommodation;
+    }
+
+    public function setAccommodation(?bool $accommodation): self
+    {
+        $this->accommodation = $accommodation;
+
+        return $this;
+    }
+
     public function getComment(): ?string
     {
         return $this->comment;
@@ -408,30 +427,30 @@ class Service
     }
 
     /**
-     * @return Collection|Place[]
+     * @return Collection|Accommodation[]
      */
-    public function getPlaces(): Collection
+    public function getAccommodations(): Collection
     {
-        return $this->places;
+        return $this->accommodations;
     }
 
-    public function addPlace(Place $place): self
+    public function addAccommodation(Accommodation $accommodation): self
     {
-        if (!$this->places->contains($place)) {
-            $this->places[] = $place;
-            $place->setService($this);
+        if (!$this->accommodations->contains($accommodation)) {
+            $this->accommodations[] = $accommodation;
+            $accommodation->setService($this);
         }
 
         return $this;
     }
 
-    public function removePlace(Place $place): self
+    public function removeAccommodation(Accommodation $accommodation): self
     {
-        if ($this->places->contains($place)) {
-            $this->places->removeElement($place);
+        if ($this->accommodations->contains($accommodation)) {
+            $this->accommodations->removeElement($accommodation);
             // set the owning side to null (unless already changed)
-            if ($place->getService() === $this) {
-                $place->setService(null);
+            if ($accommodation->getService() === $this) {
+                $accommodation->setService(null);
             }
         }
 

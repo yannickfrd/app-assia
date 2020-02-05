@@ -28,9 +28,21 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
 
+    App\Notification\MailNotification:
+        arguments:
+            $host: '%env(MAILER_HOST)%'
+            $username: '%env(MAILER_USERNAME)%'
+            $password: '%env(MAILER_PASSWORD)%'
+            $port: '%env(MAILER_PORT)%'
+
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%documents_directory%'
+            $tinifyKey: '%env(TINIFY_KEY)%'
+
+    App\Service\OptimizeImage:
+        arguments:
+            $tinifyKey: '%env(TINIFY_KEY)%'
 
     App\Twig\AppExtension:
         lazy: true

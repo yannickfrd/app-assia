@@ -2,7 +2,7 @@
 
 namespace App\Form\Service;
 
-use App\Entity\Place;
+use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\ServiceDevice;
@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class PlaceType extends AbstractType
+class AccommodationType extends AbstractType
 {
     protected $place;
 
@@ -68,7 +68,7 @@ class PlaceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => Place::class,
+            "data_class" => Accommodation::class,
             "translation_domain" => "forms"
         ]);
     }

@@ -127,6 +127,12 @@ class SupportController extends AbstractController
                 $this->manager->flush();
 
                 $this->addFlash("success", "Le suivi social a été créé.");
+
+                if ($supportGroup->getService()->getAccommodation()) {
+                    return $this->redirectToRoute("support_accommodation_new", [
+                        "id" => $supportGroup->getId()
+                    ]);
+                }
                 return $this->redirectToRoute("support_edit", [
                     "id" => $supportGroup->getId()
                 ]);
@@ -134,7 +140,7 @@ class SupportController extends AbstractController
                 $this->addFlash("danger", "Attention, un suivi social est déjà en cours pour ce groupe.");
             }
         }
-        return $this->render("app/supportGroup.html.twig", [
+        return $this->render("app/support/supportGroup.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),
             "edit_mode" => false
@@ -212,7 +218,11 @@ class SupportController extends AbstractController
             }
         }
 
-        return $this->render("app/supportGroup.html.twig", [
+        if ($supportGroup->getService()->getAccommodation() && count($supportGroup->getGroupPeopleAccommodations()) == 0) {
+            $this->addFlash("warning", "Attention, aucun hébergement enregistré pour ce suivi.");
+        }
+
+        return $this->render("app/support/supportGroup.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

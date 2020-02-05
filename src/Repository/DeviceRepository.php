@@ -20,14 +20,15 @@ class DeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, Device::class);
     }
 
-        /**
-     * Retourne toutes les personnes
+    /**
+     * Retourne tous les dispositifs
      * @return Query
      */
     public function findAllDevicesQuery(): Query
     {
         $query =  $this->createQueryBuilder("d")
             ->select("d");
+
         return $query->orderBy("d.name", "ASC")
             ->getQuery();
     }

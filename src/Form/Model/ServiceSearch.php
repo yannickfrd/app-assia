@@ -24,6 +24,7 @@ class ServiceSearch
      * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone;
+
     /**
      * @var string|null
      */

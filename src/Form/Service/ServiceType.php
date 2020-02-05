@@ -11,8 +11,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ServiceType extends AbstractType
 {
@@ -52,7 +53,15 @@ class ServiceType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-
+            ->add("accommodation", CheckBoxType::class, [
+                "required" => false,
+                "label_attr" => [
+                    "class" => "custom-control-label",
+                ],
+                "attr" => [
+                    "class" => "custom-control-input checkbox"
+                ]
+            ])
             ->add("comment", null, [
                 "attr" => [
                     "rows" => 5,

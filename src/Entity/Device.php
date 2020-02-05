@@ -66,15 +66,15 @@ class Device
     private $serviceDevices;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Place", mappedBy="device")
+     * @ORM\OneToMany(targetEntity="App\Entity\Accommodation", mappedBy="device")
      */
-    private $places;
+    private $accommodations;
 
 
     public function __construct()
     {
         $this->serviceDevices = new ArrayCollection();
-        $this->places = new ArrayCollection();
+        $this->accommodations = new ArrayCollection();
     }
 
 
@@ -204,30 +204,30 @@ class Device
     }
 
     /**
-     * @return Collection|Place[]
+     * @return Collection|Accommodation[]
      */
-    public function getPlaces(): Collection
+    public function getAccommodations(): Collection
     {
-        return $this->places;
+        return $this->accommodations;
     }
 
-    public function addPlace(Place $place): self
+    public function addAccommodation(Accommodation $accommodation): self
     {
-        if (!$this->places->contains($place)) {
-            $this->places[] = $place;
-            $place->setDevice($this);
+        if (!$this->accommodations->contains($accommodation)) {
+            $this->accommodations[] = $accommodation;
+            $accommodation->setDevice($this);
         }
 
         return $this;
     }
 
-    public function removePlace(Place $place): self
+    public function removeAccommodation(Accommodation $accommodation): self
     {
-        if ($this->places->contains($place)) {
-            $this->places->removeElement($place);
+        if ($this->accommodations->contains($accommodation)) {
+            $this->accommodations->removeElement($accommodation);
             // set the owning side to null (unless already changed)
-            if ($place->getDevice() === $this) {
-                $place->setDevice(null);
+            if ($accommodation->getDevice() === $this) {
+                $accommodation->setDevice(null);
             }
         }
 
