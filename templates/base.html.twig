@@ -26,14 +26,14 @@
 {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %}
 
 <body>
-	<div id="loader" role="status" data-value="{{ theme_color }}">
+	<div id="loader" role="status">
 		<span class="fas fa-circle-notch text-{{ theme_color }}"></span>
 		<span class="sr-only">Loading...</span>
 	</div>
 
 	<main class="min-vh-100">
-		<header id="header">
-			<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
+		<header id="header" data-color="{{ theme_color }}">
+			<nav class=" navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
 				<a class="navbar-brand text-light" href="{{ path("home") }}">
 					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app">
 				</a>
@@ -44,8 +44,7 @@
 				<div class="collapse navbar-collapse" id="navbar">
 					<ul class="navbar-nav mr-auto">
 						{% if is_granted("ROLE_USER") %}
-						<li
-							class="nav-item {% if current_menu is defined and current_menu == " home" %} active {% endif %}">
+						<li class="nav-item">
 							<a class="nav-link text-light " href="{{ path("home") }}">
 								<span class="fas fa-home mr-1"></span>Mon espace
 							</a>

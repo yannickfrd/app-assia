@@ -10,10 +10,9 @@ use App\Form\Support\Document\DocumentType;
 use App\Service\FileUploader;
 use App\Repository\DocumentRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -22,14 +21,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DocumentController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
     private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, DocumentRepository $repo, SupportGroupRepository $repoSupportGroup)
+    public function __construct(EntityManagerInterface $manager, DocumentRepository $repo, SupportGroupRepository $repoSupportGroup)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
         $this->repoSupportGroup = $repoSupportGroup;
     }
@@ -41,10 +38,10 @@ class DocumentController extends AbstractController
      * @param DocumentSearch $documentSearch
      * @param Document $document
      * @param Request $request
-     * @param PaginatorInterface $paginator
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listDocuments($id, DocumentSearch $documentSearch = null, Document $document = null, Request $request, PaginatorInterface $paginator): Response
+    public function listDocuments($id, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
@@ -55,11 +52,9 @@ class DocumentController extends AbstractController
         $formSearch = $this->createForm(DocumentSearchType::class, $documentSearch);
         $formSearch->handleRequest($request);
 
-        $documents =  $this->paginate($paginator, $supportGroup, $documentSearch, $request);
+        $documents = $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $documentSearch), $request);
 
-        $document = new Document();
-
-        $form = $this->createForm(DocumentType::class, $document);
+        $form = $this->createForm(DocumentType::class, new Document());
         $form->handleRequest($request);
 
         return $this->render("document/listDocuments.html.twig", [
@@ -151,35 +146,14 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Pagination de la liste des documents
-     *
-     * @param PaginatorInterface $paginator
-     * @param SupportGroup $supportGroup
-     * @param DocumentSearch $documentSearch
-     * @param Request $request
-     */
-    protected function paginate(PaginatorInterface $paginator, SupportGroup $supportGroup, DocumentSearch $documentSearch, Request $request)
-    {
-        $documents =  $paginator->paginate(
-            $this->repo->findAllDocumentsQuery($supportGroup->getId(), $documentSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        $documents->setCustomParameters([
-            "align" => "right", // align pagination
-        ]);
-
-        return $documents;
-    }
-
-    /**
      * Crée un document une fois le formulaire soumis et validé
      *
      * @param SupportGroup $supportGroup
      * @param FileUploader $fileUploader
      * @param Document $document
+     * @return Response
      */
-    protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Document $document)
+    protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Document $document): Response
     {
         $file = $form["file"]->getData();
 
@@ -198,7 +172,7 @@ class DocumentController extends AbstractController
             ->setGroupPeople($groupPeople)
             ->setSupportGroup($supportGroup)
             ->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now);
 
         $this->manager->persist($document);
@@ -224,10 +198,12 @@ class DocumentController extends AbstractController
      * Met à jour le document une fois le formulaire soumis et validé
      *
      * @param Document $document
+     * @return Response
      */
-    protected function updateDocument(Document $document)
+    protected function updateDocument(Document $document): Response
     {
         $document->setUpdatedAt(new \DateTime());
+
         $this->manager->flush();
 
         return $this->json([
@@ -243,9 +219,10 @@ class DocumentController extends AbstractController
 
     /**
      * Retourne un message d'erreur au format JSON
-     * @return json
+     * 
+     * @return Response
      */
-    protected function errorMessage()
+    protected function errorMessage(): Response
     {
         return $this->json([
             "code" => 200,

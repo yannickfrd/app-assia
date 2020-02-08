@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Rdv;
+use App\Entity\User;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Security\CurrentUserService;
@@ -103,5 +104,31 @@ class RdvRepository extends ServiceEntityRepository
             $days[$date][] = $rdv;
         }
         return $days;
+    }
+
+    /**
+     * Donne tous les rdvs créées par l'utilisateur
+     *
+     */
+    public function findAllRdvsFromUser(User $user, $maxResults)
+    {
+        return $this->createQueryBuilder("rdv")
+            ->addselect("PARTIAL rdv.{id, title, start, end, location}")
+
+            ->leftJoin("rdv.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id}")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, head}")
+            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+
+            ->andWhere("rdv.createdBy = :createdBy")
+            ->setParameter("createdBy", $user)
+            ->andWhere("r.head = TRUE")
+
+            ->orderBy("rdv.start", "DESC")
+
+            ->setMaxResults($maxResults)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

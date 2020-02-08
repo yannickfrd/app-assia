@@ -19,7 +19,7 @@
                  </tr>
              </thead>
              <tbody>
-                 {% for rdv in user.rdvs|filter(a => a.start|date("Y-m-d") >= "now"|date("Y-m-d"))|sort ((a, b) => a.start <=> b.start)|slice(0, 10)  %}
+                 {% for rdv in rdvs  %}
                  <tr>
                      <th scope="row" class="align-middle">
                          <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"

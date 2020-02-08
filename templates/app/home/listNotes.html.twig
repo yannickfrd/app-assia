@@ -20,7 +20,7 @@
                  </tr>
              </thead>
              <tbody>
-                 {% for note in user.notesCreated|sort ((a, b) => a.updatedAt <=> b.updatedAt)|reverse|slice(0, 10)  %}
+                 {% for note in notes %}
                  <tr>
                      <th scope="row" class="align-middle">
                          <a href="{{ path('notes', {'id':note.supportGroup.id}) }}"
@@ -30,9 +30,7 @@
                      </th>
                      <td class="align-middle">{{ note.title }}</td>
                      <td class="align-middle">
-                         {% for rolePerson in note.supportGroup.groupPeople.rolePerson|filter(person => person.head == true) %}
-                         {{ rolePerson.person.fullname }}<br>
-                         {% endfor %}
+                         {{ note.supportGroup.groupPeople.rolePerson|first.person.fullname }}<br>
                      </td>
                      <td class="align-middle">{{ note.statusList }}</td>
                      <td class="align-middle">{{ note.createdAt| date("d/m/Y") }}</td>

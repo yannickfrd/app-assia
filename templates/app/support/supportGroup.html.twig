@@ -2,7 +2,15 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Suivi social | Esperer95-app{% endblock %}
+{% if edit_mode %}
+{% set people = form.vars.value.supportPerson %}
+{% set title = "Suivi social" %}
+{% else %}
+{% set people = group_people.rolePerson %}
+{% set title = "Nouveau suivi social" %}
+{% endif %}
+
+{% block title %}{{ title }} | Esperer95-app{% endblock %}
 
 {% block body %}
 
@@ -15,9 +23,7 @@
   {% set typo = group_people.familyTypology %}
   {% set support = form.vars.value %}
 
-  <h1 class="h2 mb-3">
-    {% if edit_mode %}Suivi social{% else %}Nouveau suivi social{% endif %}
-  </h1>
+  <h1 class="h2 mb-3">{{ title }}</h1>
   {% if edit_mode %}
   <div class="small text-secondary">
     <p>
@@ -31,21 +37,20 @@
   {% else %}
   <div class="mb-4"></div>
   {% endif %}
-  {% if edit_mode %}
+
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
           href="{{ path('group_people_show', {'id': group_people.id}) }}"><span class="fas fa-users mr-2"></span>Fiche
-          groupe <span class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
-      <li class="breadcrumb-item active" aria-current="page">Suivi social</li>
+          groupe <span class="small">{{ group_people.familyTypologyType }}</span></a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% if edit_mode %}Suivi social{% else %}Nouveau
+        suivi social{% endif %}</li>
     </ol>
   </nav>
-  {% for form_support_pers in form.supportPerson.children %}
-  {% set person = form_support_pers.vars.data.person %}
-  <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-    class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.fullname }}</a>
+  {% for person in people %}
+  <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}"
+    class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
   {% endfor %}
-  {% endif %}
 
   <hr>
 
@@ -75,8 +80,9 @@
       </div> #}
       {% if support.service.accommodation %}
       <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-        <a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_accommodations', {'id':support.id}) }}"
-          data-placement="bottom" title="Voir les modalités d'hébergement">Hébergement</a>
+        <a class="btn btn-{{ theme_color }} btn-block shadow"
+          href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom"
+          title="Voir les modalités d'hébergement">Hébergement</a>
       </div>
       {% endif %}
       {# <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">

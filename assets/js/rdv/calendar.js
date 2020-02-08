@@ -1,4 +1,5 @@
 import MessageFlash from "../utils/messageFlash";
+import Loader from "../utils/loader";
 import DateFormat from "../utils/dateFormat";
 
 export default class Calendar {
@@ -24,8 +25,8 @@ export default class Calendar {
         this.btnSaveElt = document.getElementById("js-btn-save");
         this.btnCancelElt = document.getElementById("js-btn-cancel");
         this.btnDeleteElt = document.getElementById("modal-btn-delete");
-        this.loaderElt = document.getElementById("loader");
-        this.themeColor = this.loaderElt.getAttribute("data-value");
+        this.loader = new Loader("#modal-block");
+        this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.supportElt = document.getElementById("support");
         // this.supportId;
         this.init();
@@ -132,12 +133,9 @@ export default class Calendar {
 
     // Requête pour obtenir le RDV sélectionné dans le formulaire modal
     requestGetRdv(rdvElt) {
-
-        this.loaderElt.classList.remove("d-none");
-
+        this.loader.on();
         this.rdvElt = rdvElt;
         this.rdvId = Number(this.rdvElt.id.replace("rdv-", ""));
-
         this.ajaxRequest.init("GET", "/rdv/" + this.rdvId + "/get", this.responseAjax.bind(this), true);
     }
 
@@ -158,10 +156,9 @@ export default class Calendar {
             this.updateDatetimes();
             let formData = new FormData(this.formRdvElt);
             let formToString = new URLSearchParams(formData).toString();
-            this.animateLoader();
+            this.loader.on(true);
             this.ajaxRequest.init("POST", this.formRdvElt.getAttribute("action"), this.responseAjax.bind(this), true, formToString);
         } else {
-            // $("#modal-block").modal("hide");
             new MessageFlash("danger", "La rdv est vide.");
         }
     }
@@ -169,7 +166,7 @@ export default class Calendar {
     // Requête pour supprimer le RDV
     requestDeleteRdv() {
         if (window.confirm("Voulez-vous vraiment supprimer ce rendez-vous ?")) {
-            this.animateLoader();
+            this.loader.on(true);
             this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
         }
     }
@@ -193,7 +190,7 @@ export default class Calendar {
         if (dataJSON.msg) {
             new MessageFlash(dataJSON.alert, dataJSON.msg);
         }
-        this.loaderElt.classList.add("d-none");
+        this.loader.off();
     }
 
     // Affiche le RDV dans le formulaire modal
@@ -306,11 +303,5 @@ export default class Calendar {
             divElt.textContent = (parseInt(rdvElts.length - maxHeight) + 2) + " autres...";
             dayElt.insertBefore(divElt, dayElt.lastChild);
         }
-    }
-
-    // Active le loader spinner
-    animateLoader() {
-        $("#modal-block").modal("hide");
-        this.loaderElt.classList.remove("d-none");
     }
 }

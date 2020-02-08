@@ -30,7 +30,7 @@ export default class AjaxRequest {
             callback(this.xhr.responseText); // Appelle la fonction callback en lui passant la réponse de la requête
             this.timeResp = Date.now(); // Temp pour test
             let time = (this.timeResp - this.timeSend) / 1000; // Temp pour test
-            console.log("Statut: " + this.xhr.status + ", Durée : " + time + "s");
+            // console.log("Statut: " + this.xhr.status + ", Durée : " + time + "s");
         } else {
             console.error("Statut: " + this.xhr.status + " " + this.xhr.statusText + " " + url);
         }

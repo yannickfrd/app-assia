@@ -13,7 +13,6 @@
 
   <h1 class="h2 mb-3">Suivi social</h1>
 
-  {% if edit_mode %}
   <div class="small text-secondary">
     <p>
       Créé le {{support.createdAt | date("d/m/Y à H:i") }}
@@ -23,9 +22,7 @@
       </span>
     </p>
   </div>
-  {% else %}
-  <div class="mb-4"></div>
-  {% endif %}
+
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a class="text-{{ theme_color }}"

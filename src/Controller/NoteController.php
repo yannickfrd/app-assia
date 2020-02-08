@@ -9,10 +9,9 @@ use App\Form\Support\Note\NoteType;
 use App\Form\Support\Note\NoteSearchType;
 use App\Repository\NoteRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,14 +19,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class NoteController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
     private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, NoteRepository $repo, SupportGroupRepository $repoSupportGroup)
+    public function __construct(EntityManagerInterface $manager, NoteRepository $repo, SupportGroupRepository $repoSupportGroup)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
         $this->repoSupportGroup = $repoSupportGroup;
     }
@@ -40,10 +37,10 @@ class NoteController extends AbstractController
      * @param NoteSearch $noteSearch
      * @param Note $note
      * @param Request $request
-     * @param PaginatorInterface $paginator
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listNotes($id, NoteSearch $noteSearch = null, Note $note = null, Request $request, PaginatorInterface $paginator): Response
+    public function listNotes($id, NoteSearch $noteSearch = null, Note $note = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
@@ -54,11 +51,9 @@ class NoteController extends AbstractController
         $formSearch = $this->createForm(NoteSearchType::class, $noteSearch);
         $formSearch->handleRequest($request);
 
-        $notes =  $this->paginate($paginator, $supportGroup, $noteSearch, $request);
+        $notes =  $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request);
 
-        $note = new Note();
-
-        $form = $this->createForm(NoteType::class, $note);
+        $form = $this->createForm(NoteType::class, new Note());
         $form->handleRequest($request);
 
         return $this->render("note/listNotes.html.twig", [
@@ -139,41 +134,21 @@ class NoteController extends AbstractController
     }
 
     /**
-     * Pagination de la liste des notes
-     *
-     * @param SupportGroup $supportGroup
-     * @param NoteSearch $noteSearch
-     * @param Request $request
-     */
-    protected function paginate($paginator, SupportGroup $supportGroup, NoteSearch $noteSearch, Request $request)
-    {
-        $notes =  $paginator->paginate(
-            $this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch),
-            $request->query->getInt("page", 1), // page number
-            6 // limit per page
-        );
-        $notes->setCustomParameters([
-            "align" => "right", // align pagination
-        ]);
-
-        return $notes;
-    }
-
-    /**
      * Crée la note une fois le formulaire soumis et validé
      *
      * @param SupportGroup $supportGroup
      * @param Note $note
+     * @return Response
      */
-    protected function createNote(SupportGroup $supportGroup, Note $note)
+    protected function createNote(SupportGroup $supportGroup, Note $note): Response
     {
         $now = new \DateTime();
 
         $note->setSupportGroup($supportGroup)
             ->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($note);
         $this->manager->flush();
@@ -196,11 +171,12 @@ class NoteController extends AbstractController
      * Met à jour la note une fois le formulaire soumis et validé
      *
      * @param Note $note
+     * @return Response
      */
-    protected function updateNote(Note $note, $typeSave)
+    protected function updateNote(Note $note, $typeSave): Response
     {
         $note->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->flush();
 
@@ -220,9 +196,10 @@ class NoteController extends AbstractController
 
     /**
      * Retourne un message d'erreur au format JSON
-     * @return json
+     * 
+     * @return Response
      */
-    protected function errorMessage()
+    protected function errorMessage(): Response
     {
         return $this->json([
             "code" => 200,

@@ -3,27 +3,23 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-
-use App\Service\Agree;
-
-use App\Form\Model\PersonSearch;
-use App\Form\Utils\Choices;
+use App\Export\PersonExport;
 use App\Form\Person\PersonType;
-use App\Form\Person\RolePersonType;
+use App\Form\Model\PersonSearch;
+use App\Repository\PersonRepository;
 use App\Form\Person\PersonSearchType;
 use App\Form\Person\PersonNewGroupType;
+use App\Form\RolePerson\RolePersonType;
 use App\Form\Person\RolePersonGroupType;
-use App\Export\PersonExport;
-use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Form\Person\PersonRolePersonType;
+use App\Service\Pagination;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -31,24 +27,25 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class PersonController extends AbstractController
 {
     private $manager;
-    private $security;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, PersonRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PersonRepository $repo)
     {
         $this->manager = $manager;
-        $this->security = $security;
         $this->repo = $repo;
     }
 
     /**
-     * Permet de rechercher une personne
+     * Liste des personnes
      * 
      * @Route("/people", name="people")
      * @Route("/new_support/search/person", name="new_support_search_person")
+     * @param Request $request
+     * @param PersonSearch $personSearch
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listPeople(Request $request, PersonSearch $personSearch = null, PaginatorInterface $paginator): Response
+    public function listPeople(Request $request, PersonSearch $personSearch = null, Pagination $pagination): Response
     {
         $personSearch = new PersonSearch();
 
@@ -56,148 +53,68 @@ class PersonController extends AbstractController
         $form->handleRequest($request);
 
         if ($personSearch->getExport()) {
-            $people = $this->repo->findPeopleToExport($personSearch);
-            $export = new PersonExport();
-            return $export->exportData($people);
+            return $this->exportData($personSearch);
         }
 
-        $search = $request->query->get("search-person");
-
-        if ($request->query->all()) {
-            $people =  $paginator->paginate(
-                $this->repo->findAllPeopleQuery($personSearch, $search),
-                $request->query->getInt("page", 1), // page number
-                20 // limit per page
-            );
-            // $people->setPageRange(5);
-            $people->setCustomParameters([
-                "align" => "right", // alignement de la pagination
-            ]);
-        }
+        $people = $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get("search-person")), $request);
 
         return $this->render("app/listPeople.html.twig", [
-            "people" => $people ?? null,
             "personSearch" => $personSearch,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "people" => $people ?? null
         ]);
-        // return $this->pagination($personSearch, $request, $form, $paginator);
     }
 
     /**
      * Rechercher une personne pour l'ajouter dans un groupe
      * 
-     * @Route("/group/{id}/search/person", name="group_search_person")
+     * @Route("/group/{id}/search_person", name="group_search_person")
+     * @param GroupPeople $groupPeople
+     * @param PersonSearch $personSearch
+     * @param Request $request
+     * @param Pagination $pagination
      * @return Response
      */
-    public function groupSearchPerson(Request $request, PersonSearch $personSearch = null, GroupPeople $groupPeople = null, RolePerson $rolePerson = null, PaginatorInterface $paginator): Response
+    public function searchPersonToAdd(GroupPeople $groupPeople, PersonSearch $personSearch = null, Request $request, Pagination $pagination): Response
     {
         $personSearch = new PersonSearch();
-
-        $formRolePerson = null;
-
-        if ($groupPeople) {
-            $rolePerson = new RolePerson();
-            $formRolePerson = $this->createFormBuilder($rolePerson)
-                ->add("role", ChoiceType::class, [
-                    "choices" => Choices::getChoices(RolePerson::ROLE),
-                    "accommodationholder" => "-- Sélectionner --",
-                ])
-                ->getForm();
-        }
+        $rolePerson = new RolePerson;
 
         $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
+        $formRolePerson = $this->createForm(RolePersonType::class, $rolePerson);
+        $formRolePerson->handleRequest($request);
+
         if ($request->query->all()) {
-            $people =  $paginator->paginate(
-                $this->repo->findAllPeopleQuery($personSearch, $search = null),
-                $request->query->getInt("page", 1), // page number
-                20 // limit per page
-            );
-            // $people->setPageRange(5);
-            $people->setCustomParameters([
-                "align" => "right", // alignement de la pagination
-            ]);
+            $people = $pagination->paginate($this->repo->findAllPeopleQuery($personSearch), $request);
         }
 
         return $this->render("app/listPeople.html.twig", [
-            "group_people" => $groupPeople,
-            "people" => $people ?? null,
-            "personSearch" => $personSearch,
             "form" => $form->createView(),
-            "form_role_person" => $formRolePerson->createView()
+            "form_role_person" => $formRolePerson->createView() ?? null,
+            "group_people" => $groupPeople,
+            "personSearch" => $personSearch,
+            "people" => $people ?? null
         ]);
-        // return $this->pagination($personSearch, $request, $groupPeople, $form,  $formRolePerson, $paginator);
-    }
-
-    public function getchoices($const)
-    {
-        foreach ($const as $key => $value) {
-            $output[$value] = $key;
-        }
-        return $output;
     }
 
     /**
-     * Crée une nouvelle personne
+     * Nouvelle personne
      * 
      * @Route("/person/new", name="person_new", methods="GET|POST")
-     * @param Person $person
-     * @param RolePerson $rolePerson
-     * @param GroupPeople $groupPeople
-     * @param PersonRepository $repo
-     * @param Request $request
+     * @param RolePerson $rolePersonequest
      * @return Response
      */
-    public function newPerson(Person $person = null, RolePerson $rolePerson = null, GroupPeople $groupPeople = null, PersonRepository $repo, Request $request): Response
+    public function newPerson(RolePerson $rolePerson = null, Request $request): Response
     {
-        $person = new Person();
         $rolePerson = new RolePerson();
-        $groupPeople = new GroupPeople();
 
         $form = $this->createForm(RolePersonGroupType::class, $rolePerson);
         $form->handleRequest($request);
 
-        $person = $rolePerson->getPerson();
-        $groupPeople = $rolePerson->getGroupPeople();
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Vérifie si la personne existe déjà dans la base de données
-            $personExist = $repo->findOneBy([
-                "lastname" => $person->getLastname(),
-                "firstname" => $person->getFirstname(),
-                "birthdate" => $person->getBirthdate()
-            ]);
-            // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
-            if ($personExist) {
-                $this->addFlash("warning", "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !");
-            } else {
-                $user = $this->security->getUser();
-
-                $groupPeople->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($user)
-                    ->setUpdatedAt(new \DateTime())
-                    ->setUpdatedBy($user);
-                $this->manager->persist($groupPeople);
-
-                $rolePerson->setHead(true)
-                    ->setCreatedAt(new \DateTime())
-                    ->setGroupPeople($groupPeople);
-                $this->manager->persist($rolePerson);
-
-                $person->setCreatedAt(new \DateTime())
-                    ->setCreatedBy($user)
-                    ->setUpdatedAt(new \DateTime())
-                    ->setUpdatedBy($user)
-                    ->addRolesPerson($rolePerson);
-                $this->manager->persist($person);
-
-                $this->manager->flush();
-
-                $this->addFlash("success", $person->getFirstname() . " a été créé" .  Agree::gender($person->getGender()) . ", ainsi que son groupe.");
-                return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
-            }
+            return $this->createPerson($rolePerson);
         }
         return $this->render("app/person.html.twig", [
             "form" => $form->createView(),
@@ -205,85 +122,43 @@ class PersonController extends AbstractController
         ]);
     }
 
-
     /**
      * Crée une nouvelle personne dans un group existant
      * 
      * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
-     * @param Person $person
-     * @param RolePerson $rolePerson
      * @param GroupPeople $groupPeople
-     * @param PersonRepository $repo
+     * @param RolePerson $rolePerson
      * @param Request $request
      * @return Response
      */
-    public function newPersonInGroup(Person $person = null, RolePerson $rolePerson = null, GroupPeople $groupPeople, PersonRepository $repo, Request $request): Response
+    public function newPersonInGroup(GroupPeople $groupPeople, RolePerson $rolePerson = null, Request $request): Response
     {
-        $person = new Person();
         $rolePerson = new RolePerson();
 
-        $form = $this->createForm(RolePersonType::class, $rolePerson);
+        $form = $this->createForm(PersonRolePersonType::class, $rolePerson);
         $form->handleRequest($request);
 
         $person = $rolePerson->getPerson();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifie si la personne existe déjà dans la base de données
-            $personExist = $repo->findOneBy([
-                "lastname" => $person->getLastname(),
-                "firstname" => $person->getFirstname(),
-                "birthdate" => $person->getBirthdate()
-            ]);
+            $personExists = $this->personExists($person);
             // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
-            if ($personExist) {
-                $this->addFlash("warning", "Attention : " . $person->getFirstname() . " " . $person->getLastname() . " existe déjà !");
-                return $this->redirectToRoute("person_show", ["id" => $personExist->getId()]);
-            } else {
-                $this->createPerson($person, $groupPeople, $rolePerson);
-                return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+            if ($personExists) {
+                $this->addFlash("warning", "Attention : " . $person->getFullname() . " existe déjà !");
+                return $this->redirectToRoute("person_show", ["id" => $personExists->getId()]);
             }
-        } else {
-            return $this->render("app/person.html.twig", [
-                "group_people" => $groupPeople,
-                "form" => $form->createView(),
-                "edit_mode" => false
-            ]);
+            $this->createPersonInGroup($person, $rolePerson, $groupPeople);
+            return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
         }
+        return $this->render("app/person.html.twig", [
+            "group_people" => $groupPeople,
+            "form" => $form->createView(),
+            "edit_mode" => false
+        ]);
     }
 
     /**
-     * Crée une personne avec son rôle
-     *
-     * @param Person $person
-     * @param GroupPeople $groupPeople
-     * @param RolePerson $rolePerson
-     */
-    protected function createPerson(Person $person, GroupPeople $groupPeople, RolePerson $rolePerson = null)
-    {
-        $rolePerson->setHead(false)
-            ->setCreatedAt(new \DateTime())
-            ->setGroupPeople($groupPeople);
-        $this->manager->persist($rolePerson);
-
-        $user = $this->security->getUser();
-
-        $person->setCreatedAt(new \DateTime())
-            ->setCreatedBy($user)
-            ->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($user)
-            ->addRolesPerson($rolePerson);
-        $this->manager->persist($person);
-
-        $nbPeople = $groupPeople->getRolePerson()->count();
-        $groupPeople->setNbPeople($nbPeople + 1);
-
-        $this->manager->flush();
-
-        $this->addFlash("success", $person->getFirstname() . " a été ajouté" .  Agree::gender($person->getGender()) . " au groupe.");
-    }
-
-    /**
-     * Edit a person in group people
+     * Modification d'une personne
      * 
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
@@ -292,30 +167,22 @@ class PersonController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function editPerson(GroupPeople $groupPeople, $person_id, Request $request): Response
+    public function editPersonInGroup(GroupPeople $groupPeople, $person_id, Request $request): Response
     {
         $person = $this->repo->findPersonById($person_id);
 
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        // Form to create a new groupPeople
         $rolePerson = new RolePerson();
         $formNewGroup = $this->createForm(PersonNewGroupType::class, $rolePerson, [
             "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
         ]);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $person->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
-
+                ->setUpdatedBy($this->getUser());
             $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
-
-            $this->addFlash("danger", "Les informations saisies sont invalides.");
         }
 
         return $this->render("app/person.html.twig", [
@@ -329,41 +196,22 @@ class PersonController extends AbstractController
     /**
      * Met à jour les informations d'une personne via Ajax
      * 
-     * @Route("/person/update-{id}", name="update_person", methods="GET|POST")
+     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="GET|POST")
      * @param Person $person
      * @param Request $request
      * @param ValidatorInterface $validator
      * @return Response
      */
-    public function updatePerson(Person $person, Request $request, ValidatorInterface $validator): Response
+    public function editPerson(Person $person, Request $request, ValidatorInterface $validator): Response
     {
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        $now = new \DateTime();
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $person->setUpdatedAt($now)
-                ->setUpdatedBy($this->security->getUser());
 
-            $this->manager->flush();
-
-            $alert = "success";
-            $msg[] = "Les modifications ont été enregistrées.";
-        } else {
-            $alert = "danger";
-            $errors = $validator->validate($form);
-            foreach ($errors as $error) {
-                $msg[] = $error->getMessage();
-            }
+            return $this->updatePerson($person);
         }
-        return $this->json([
-            "code" => 200,
-            "alert" => $alert,
-            "msg" => $msg,
-            "user" => $this->getUser()->getUsername(),
-            "date" => date_format($now, "d/m/Y à H:i")
-        ], 200);
+        return $this->errorMessage($validator, $form);
     }
 
     /**
@@ -371,28 +219,21 @@ class PersonController extends AbstractController
      * 
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @Route("/person/{id}", name="person_show", methods="GET|POST")
-     *  @return Response
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     * @param Request $request
+     * @return Response
      */
     public function personShow(Person $person, RolePerson $rolePerson = null, Request $request): Response
     {
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        // Form to create a new groupPeople
+        // Formulaire pour ajouter un nouveau groupe à la personne
         $rolePerson = new RolePerson();
         $formNewGroup = $this->createForm(PersonNewGroupType::class, $rolePerson, [
             "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
         ]);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $person->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->security->getUser());
-
-            $this->manager->flush();
-
-            $this->addFlash("success", "Les modifications ont été enregistrées.");
-        }
 
         return $this->render("app/person.html.twig", [
             "form" => $form->createView(),
@@ -402,55 +243,25 @@ class PersonController extends AbstractController
     }
 
     /**
-     *Add a new GroupPeople to Person
+     * Ajoute un nouveau groupe à la personne
      * 
      * @Route("/person/{id}/new_group", name="person_new_group", methods="GET|POST")
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     * @param Request $request
      */
-    public function addNewGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
+    public function newGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
     {
         $rolePerson = new RolePerson;
-        $groupPeople = new GroupPeople;
 
-        // Form to create a new groupPeople
         $form = $this->createForm(PersonNewGroupType::class, $rolePerson);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $groupPeople = $rolePerson->getGroupPeople();
-            $user = $this->security->getUser();
-
-
-            $groupPeople->setCreatedAt(new \DateTime())
-                ->setCreatedBy($user)
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-            $this->manager->persist($groupPeople);
-
-            $rolePerson->setHead(true)
-                ->setCreatedAt(new \DateTime())
-                ->setGroupPeople($groupPeople);
-            $this->manager->persist($rolePerson);
-
-            $person->addRolesPerson($rolePerson)
-                ->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($user);
-            $this->manager->persist($person);
-
-            $this->manager->flush();
-
-            $this->addFlash(
-                "success",
-                "Le nouveau groupe a créé."
-            );
-            return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+            return $this->createNewGroupToPerson($person, $rolePerson);
         }
-    }
-
-
-    // Met en place la pagination du tableau et affiche le rendu
-    protected function pagination($personSearch, $request, $groupPeople, $form, $formRolePerson = null, $paginator)
-    {
+        $this->addFlash("danger", "Une erreur s'est produite");
+        return $this->redirectToRoute("person_show", ["id" => $person->getId()]);
     }
 
     /**
@@ -459,7 +270,6 @@ class PersonController extends AbstractController
      * @Route("/search/person", name="search_person", methods="GET")
      * @param Person $person
      * @param Request $request
-     * @param PersonRepository $repo
      * @return Response
      */
     public function searchPerson(Request $request): Response
@@ -477,19 +287,194 @@ class PersonController extends AbstractController
             foreach ($people as $person) {
                 $results[] = [
                     "id" => $person->getId(),
-                    "lastname" => $person->getLastname(),
-                    "firstname" => $person->getFirstname()
+                    "fullname" => $person->getFullname(),
                 ];
             }
             return $this->json([
                 "nb_results" => $nbResults,
                 "results" => $results
             ], 200);
-        } else {
-            return $this->json([
-                "nb_results" => $nbResults,
-                "results" => "Aucun résultat."
-            ], 200);
         }
+        return $this->json([
+            "nb_results" => $nbResults,
+            "results" => "Aucun résultat."
+        ], 200);
+    }
+
+    /**
+     * Export des données
+     * 
+     * @param PersonSearch $personSearch
+     */
+    protected function exportData(PersonSearch $personSearch)
+    {
+        $people = $this->repo->findPeopleToExport($personSearch);
+        $export = new PersonExport();
+        return $export->exportData($people);
+    }
+
+    /**
+     * Crée une nouvelle personne
+     * 
+     * @param RolePerson $rolePerson
+     */
+    protected function createPerson(RolePerson $rolePerson)
+    {
+        $person = $rolePerson->getPerson();
+        $groupPeople = $rolePerson->getGroupPeople();
+
+        // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
+        if ($this->personExists($person)) {
+            return $this->addFlash("warning", "Attention : " . $person->getFullname() . " existe déjà !");
+        }
+
+        $now = new \DateTime();
+
+        $groupPeople->setCreatedAt($now)
+            ->setCreatedBy($this->getUser())
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser());
+        $this->manager->persist($groupPeople);
+
+        $rolePerson->setHead(true)
+            ->setCreatedAt($now)
+            ->setGroupPeople($groupPeople);
+        $this->manager->persist($rolePerson);
+
+        $person->setCreatedAt($now)
+            ->setCreatedBy($this->getUser())
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser())
+            ->addRolesPerson($rolePerson);
+        $this->manager->persist($person);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", $person->getFullname() . " a été créé" .  Grammar::gender($person->getGender()) . ", ainsi que son groupe.");
+        return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+    }
+
+    /**
+     * Vérifie si la personne existe déjà
+     * 
+     * @param Person $person
+     */
+    protected function personExists(Person $person)
+    {
+        return $this->repo->findOneBy([
+            "lastname" => $person->getLastname(),
+            "firstname" => $person->getFirstname(),
+            "birthdate" => $person->getBirthdate()
+        ]);
+    }
+
+    /**
+     * Crée une personne avec son rôle
+     * 
+     * @param Person $person
+     * @param GroupPeople $groupPeople
+     * @param RolePerson $rolePerson
+     */
+    protected function createPersonInGroup(Person $person, RolePerson $rolePerson = null, GroupPeople $groupPeople)
+    {
+        $now = new \DateTime();
+
+        $rolePerson->setHead(false)
+            ->setCreatedAt($now)
+            ->setGroupPeople($groupPeople);
+        $this->manager->persist($rolePerson);
+
+        $person->setCreatedAt($now)
+            ->setCreatedBy($this->getUser())
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser())
+            ->addRolesPerson($rolePerson);
+        $this->manager->persist($person);
+
+        $nbPeople = $groupPeople->getRolePerson()->count();
+        $groupPeople->setNbPeople($nbPeople + 1);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", $person->getFullname() . " a été ajouté" .  Grammar::gender($person->getGender()) . " au groupe.");
+    }
+
+    /** 
+     * Met à jour la personne
+     * 
+     * @param Person $person
+     * @return Response
+     */
+    protected function updatePerson(Person $person): Response
+    {
+        $now = new \DateTime();
+
+        $person->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser());
+
+        $this->manager->flush();
+
+        return $this->json([
+            "code" => 200,
+            "alert" => "success",
+            "msg" =>  "Les modifications ont été enregistrées.",
+            "user" => $this->getUser()->getFullname(),
+            "date" => date_format($now, "d/m/Y à H:i")
+        ], 200);
+    }
+
+    /**
+     * Crée un nouveau groupe à la personne
+     * 
+     * @param Person $person
+     * @param RolePerson $rolePerson
+     */
+    protected function createNewGroupToPerson(Person $person, RolePerson $rolePerson)
+    {
+        $now = new \DateTime();
+
+        $groupPeople = $rolePerson->getGroupPeople();
+
+        $groupPeople->setCreatedAt($now)
+            ->setCreatedBy($this->getUser())
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser());
+        $this->manager->persist($groupPeople);
+
+        $rolePerson->setHead(true)
+            ->setCreatedAt($now)
+            ->setGroupPeople($groupPeople);
+        $this->manager->persist($rolePerson);
+
+        $person->addRolesPerson($rolePerson)
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser());
+        $this->manager->persist($person);
+
+        $this->manager->flush();
+
+        $this->addFlash("success", "Le nouveau groupe a été créé.");
+
+        return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+    }
+
+    /**
+     * Retourne un message d'erreur au format JSON
+     * 
+     * @param ValidatorInterface $validator
+     * @return Response
+     */
+    protected function errorMessage(ValidatorInterface $validator = null, $form): Response
+    {
+        $errors = $validator->validate($form);
+        foreach ($errors as $error) {
+            $msg[] = $error->getMessage();
+        }
+
+        return $this->json([
+            "code" => 403,
+            "alert" => "danger",
+            "msg" => "Une erreur s'est produite : " . join($msg, " ")
+        ], 200);
     }
 }

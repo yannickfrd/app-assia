@@ -1,4 +1,5 @@
 import MessageFlash from "../utils/messageFlash";
+import Loader from "../utils/loader";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import language from "@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js";
 
@@ -15,8 +16,8 @@ export default class ListNotes {
         this.btnSaveElt = document.getElementById("js-btn-save");
         this.btnCancelElt = document.getElementById("js-btn-cancel");
         this.btnDeleteElt = document.getElementById("modal-btn-delete");
-        this.loaderElt = document.getElementById("loader");
-        this.themeColor = this.loaderElt.getAttribute("data-value");
+        this.loader = new Loader("#modal-block");
+        this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.autoSaveElt = document.getElementById("js-auto-save");
         this.countNotesElt = document.getElementById("count-notes");
         this.supportId = document.getElementById("container-notes").getAttribute("data-support");
@@ -119,7 +120,7 @@ export default class ListNotes {
     // Timer pour la sauvegarde automatique
     timerAutoSave() {
         clearInterval(this.countdownID);
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000);
+        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 1000);
         if (this.count > 10) {
             this.autoSave = true;
             this.count = 0;
@@ -177,7 +178,7 @@ export default class ListNotes {
     // Envoie la requête ajax pour supprimer la note
     deleteNote() {
         if (window.confirm("Voulez-vous vraiment supprimer cette note ?")) {
-            this.animateLoader();
+            this.loader.on(true);
             this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
         }
     }
@@ -197,7 +198,7 @@ export default class ListNotes {
                 this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
             }
         }
-        this.loaderElt.classList.add("d-none");
+        this.loader.off();
 
         if (!this.autoSave) {
             new MessageFlash(dataJSON.alert, dataJSON.msg);
@@ -254,10 +255,8 @@ export default class ListNotes {
     // Active le loader spinner
     animateLoader() {
         if (this.autoSave) {
-            this.autoSave === false;
-        } else {
-            $("#modal-block").modal("hide");
-            this.loaderElt.classList.remove("d-none");
+            return this.autoSave === false;
         }
+        return this.loader.on(true);
     }
 }

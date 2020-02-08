@@ -59,10 +59,6 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin("su.service", "s")->addSelect("PARTIAL s.{id,name}")
             ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
 
-        if ($userSearch->getPole()) {
-            $query->andWhere("p.id = :pole_id")
-                ->setParameter("pole_id", $userSearch->getPole());
-        }
         if ($userSearch->getFirstname()) {
             $query->andWhere("u.firstname LIKE :firstname")
                 ->setParameter("firstname", $userSearch->getFirstname() . '%');
@@ -79,6 +75,14 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere("u.status = :status")
                 ->setParameter("status", $userSearch->getStatus());
         }
+        if ($userSearch->getPole()) {
+            $query->andWhere("p.id = :pole_id")
+                ->setParameter("pole_id", $userSearch->getPole());
+        }
+        if ($userSearch->getActive()) {
+            $query->andWhere("u.active = TRUE");
+        }
+
         if ($userSearch->getService()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -95,5 +99,27 @@ class UserRepository extends ServiceEntityRepository
     {
         $query = $this->findAllUsersQuery($userSearch);
         return $query->getResult();
+    }
+
+    /** 
+     * Donne la liste des utilisateurs
+     */
+    public function getUsersQueryList($currentUser, $allServiceUsers = false)
+    {
+        $query =  $this->createQueryBuilder("u")
+            ->select("PARTIAL u.{id, firstname, lastname, active}")
+            ->where("u.active = TRUE");
+
+        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
+            if ($currentUser->isRole("ROLE_ADMIN") || $allServiceUsers == true) {
+                $query = $query->leftJoin("u.serviceUser", "r")
+                    ->andWhere("r.service IN (:services)")
+                    ->setParameter("services", $currentUser->getServices());
+            } else {
+                $query = $query->where("u.id = :user")
+                    ->setParameter("user", $currentUser->getUser());
+            }
+        }
+        return $query->orderBy("u.lastname", "ASC");
     }
 }

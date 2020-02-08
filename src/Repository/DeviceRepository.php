@@ -32,4 +32,19 @@ class DeviceRepository extends ServiceEntityRepository
         return $query->orderBy("d.name", "ASC")
             ->getQuery();
     }
+
+    /** 
+     * Donne la liste des dispositifs
+     */
+    public function getDevicesQueryList($place)
+    {
+        $query =  $this->createQueryBuilder("d")
+            ->select("PARIAL d.{id, name, serviceDevices}")
+            ->leftJoin("d.serviceDevices", "s")
+
+            ->where("s.service = :service")
+            ->setParameter("service", $place->getService());
+
+        return $query->orderBy("d.name", "ASC");
+    }
 }

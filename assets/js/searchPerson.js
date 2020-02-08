@@ -1,3 +1,4 @@
+import Loader from "./utils/loader";
 // Recherche instannée Ajax
 export default class SearchPerson {
 
@@ -8,6 +9,7 @@ export default class SearchPerson {
         this.lengthSearch = lengthSearch;
         this.time = time;
         this.countdownID = null;
+        this.loader = new Loader();
         this.init();
     }
 
@@ -33,13 +35,14 @@ export default class SearchPerson {
     count() {
         let valueSearch = this.searchElt.value;
         if (valueSearch.length >= this.lengthSearch) {
+            this.loader.on();
             let url = "/search/person?search=" + valueSearch;
-            this.ajaxRequest.init("GET", url, this.addResults.bind(this), true);
+            this.ajaxRequest.init("GET", url, this.response.bind(this), true);
         }
     }
 
     // Affiche les résultats de la rêquête
-    addResults(data) {
+    response(data) {
         let dataJSON = JSON.parse(data);
         this.resultsSearchElt.innerHTML = "";
         if (dataJSON.nb_results > 0) {
@@ -49,13 +52,14 @@ export default class SearchPerson {
         }
         this.resultsSearchElt.classList.replace("d-none", "d-block");
         this.resultsSearchElt.classList.replace("fade-out", "fade-in");
+        this.loader.off();
     }
 
     // Ajoute un élément à la liste des résultats
     addItem(dataJSON) {
         dataJSON.results.forEach(person => {
             let aElt = document.createElement("a");
-            aElt.innerHTML = "<span class='text-uppercase'>" + person.lastname + "</span> " + "<span class='text-capitalize'>" + person.firstname + "</span> ";
+            aElt.innerHTML = "<span class='text-capitalize'>" + person.fullname + "</span> ";
             aElt.href = "/person/" + person.id;
             aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 font-size-10";
             this.resultsSearchElt.appendChild(aElt);

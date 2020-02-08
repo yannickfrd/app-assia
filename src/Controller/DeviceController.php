@@ -5,10 +5,9 @@ namespace App\Controller;
 use App\Entity\Device;
 use App\Form\Service\DeviceType;
 use App\Repository\DeviceRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,13 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DeviceController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, DeviceRepository $repo)
+    public function __construct(EntityManagerInterface $manager, DeviceRepository $repo)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
     }
 
@@ -31,21 +28,14 @@ class DeviceController extends AbstractController
      * 
      * @Route("/admin/devices", name="admin_devices")
      * @param Request $request
-     * @param PaginatorInterface $paginator
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listDevice(Request $request, PaginatorInterface $paginator): Response
+    public function listDevice(Request $request, Pagination $pagination): Response
     {
         $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
 
-        $devices =  $paginator->paginate(
-            $this->repo->findAllDevicesQuery(),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        $devices->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
+        $devices = $pagination->paginate($this->repo->findAllDevicesQuery(), $request);
 
         return $this->render("app/admin/listDevices.html.twig", [
             "devices" => $devices ?? null
@@ -107,16 +97,15 @@ class DeviceController extends AbstractController
      * Crée un dispositif
      *
      * @param Device $device
-     * @return void
      */
     protected function createDevice(Device $device)
     {
         $now = new \DateTime();
 
         $device->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($device);
         $this->manager->flush();
@@ -130,12 +119,11 @@ class DeviceController extends AbstractController
      * Met à jour un dispositif
      *
      * @param Device $device
-     * @return void
      */
     protected function updateDevice(Device $device)
     {
         $device->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->flush();
 

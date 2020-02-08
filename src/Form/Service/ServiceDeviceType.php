@@ -28,12 +28,6 @@ class ServiceDeviceType extends AbstractType
             ->add("device", EntityType::class, [
                 "class" => Device::class,
                 "choice_label" => "name",
-                // "query_builder" => function (DeviceRepository $repo) {
-                //     if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                //         return $repo->createQueryBuilder("d")
-                //             ->orderBy("d.name", "ASC");
-                //     }
-                // },
                 "placeholder" => "-- Select --",
                 "attr" => [
                     "class" => "col-auto my-1",

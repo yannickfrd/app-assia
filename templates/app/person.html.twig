@@ -90,7 +90,7 @@ Esperer95-app{% endblock %}
                     {% if edit_mode %}
                     <button type="submit" id="updatePerson" name="updatePerson"
                         class="btn btn-{{ theme_color }} btn-smshadow"
-                        data-url="{{ path('update_person', {'id':person.id}) }}">Mettre à jour</button>
+                        data-url="{{ path('person_edit_ajax', {'id':person.id}) }}">Mettre à jour</button>
                     {% else %}
                     <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
                         value="Enregistrer">

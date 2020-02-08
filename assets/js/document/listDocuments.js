@@ -1,4 +1,5 @@
 import MessageFlash from "../utils/messageFlash";
+import Loader from "../utils/loader";
 
 export default class ListDocuments {
 
@@ -15,10 +16,11 @@ export default class ListDocuments {
 
         this.modalConfirmElt = document.getElementById("modal-confirm");
 
-        this.loaderElt = document.getElementById("loader");
-        this.themeColor = this.loaderElt.getAttribute("data-value");
+        this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.countDocumentsElt = document.getElementById("count-documents");
         this.supportId = document.getElementById("container-documents").getAttribute("data-support");
+
+        this.loader = new Loader("#modal-document");
 
         this.init();
     }
@@ -172,7 +174,6 @@ export default class ListDocuments {
         if (error === false) {
             let formData = new FormData(this.formDocumentElt);
             formData.append("file", $("input[type=file]")[0].files[0]);
-            this.animateLoader();
             this.ajaxRequest(this.formDocumentElt.getAttribute("action"), "POST", formData, false, false);
         }
     }
@@ -180,13 +181,13 @@ export default class ListDocuments {
     // Envoie une requête ajax pour supprimer le document
     deleteDocument(url) {
         if (window.confirm("Voulez-vous vraiment supprimer ce document ?")) {
-            this.animateLoader();
             this.ajaxRequest(url, "GET", null, false, false);
         }
     }
 
     // Requête Ajax
     ajaxRequest(url, type, data, processData, contentType) {
+        this.loader.on(true);
         $.ajax({
             url: url,
             type: type,
@@ -216,8 +217,8 @@ export default class ListDocuments {
                 this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) - 1;
             }
         }
-        this.loaderElt.classList.add("d-none");
         new MessageFlash(data.alert, data.msg);
+        this.loader.off();
     }
 
     // Crée la ligne du nouveau document dans le tableau
@@ -237,7 +238,7 @@ export default class ListDocuments {
             <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
             <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
             <td class="align-middle text-center">
-                <button data-url="/document/${data.documentId}/delete"  class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span></button>
+                <button data-url="/document/${data.documentId}/delete" class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span></button>
             </td>`
 
         let containerDocumentsElt = document.getElementById("container-documents");
@@ -257,11 +258,5 @@ export default class ListDocuments {
         documentTypeInput.textContent = data.typeList;
         documentTypeInput.setAttribute("data-value", this.getOption(this.documentTypeInput));
         this.documentElt.querySelector(".js-document-content").textContent = this.documentContentInput.value;
-    }
-
-    // Active le loader spinner
-    animateLoader() {
-        $("#modal-document").modal("hide");
-        this.loaderElt.classList.remove("d-none");
     }
 }

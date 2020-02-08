@@ -83,7 +83,7 @@
                                 <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                 <td class="px-1 align-middle">
                                     <button class="js-remove btn btn-danger shadow"
-                                        data-url="{{ path('remove_person', {'id':group_people.id, 'person_id': person.id, 'role_person_id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                        data-url="{{ path('role_person_remove', {'id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
                                         data-toggle="modal" data-target="#modal-block" data-placement="bottom"
                                         title="Retirer la personne du groupe"><span
                                             class="fas fa-user-times"></span></button>

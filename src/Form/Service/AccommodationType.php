@@ -33,12 +33,7 @@ class AccommodationType extends AbstractType
                 "class" => Device::class,
                 "choice_label" => "name",
                 "query_builder" => function (DeviceRepository $repo) {
-                    return $repo->createQueryBuilder("d")
-                        ->select("d")
-                        ->leftJoin("d.serviceDevices", "s")
-                        ->where("s.service = :service")
-                        ->setParameter("service", $this->place->getService())
-                        ->orderBy("d.name", "ASC");
+                    return $repo->getDevicesQueryList($this->place);
                 },
                 "placeholder" => "-- Select --"
             ])

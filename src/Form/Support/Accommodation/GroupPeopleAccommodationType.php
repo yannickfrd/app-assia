@@ -29,11 +29,7 @@ class GroupPeopleAccommodationType extends AbstractType
                 "class" => Accommodation::class,
                 "choice_label" => "name",
                 "query_builder" => function (AccommodationRepository $repo) {
-                    return $repo->createQueryBuilder("a")
-                        ->select("a")
-                        ->where("a.service = :service")
-                        ->setParameter("service", $this->service)
-                        ->orderBy("a.name", "ASC");
+                    return $repo->getAccommodationsQueryList($this->service);
                 },
                 "placeholder" => "-- Select --"
             ])

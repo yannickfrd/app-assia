@@ -11,7 +11,6 @@ use App\Repository\PersonAccommodationRepository;
 use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,13 +21,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class GroupPeopleAccommodationController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, GroupPeopleAccommodationRepository $repo)
+    public function __construct(EntityManagerInterface $manager, GroupPeopleAccommodationRepository $repo)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
     }
 
@@ -206,9 +203,9 @@ class GroupPeopleAccommodationController extends AbstractController
 
         $groupPeopleAccommodation->setGroupPeople($groupPeopleAccommodation->getSupportGroup()->getGroupPeople())
             ->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($groupPeopleAccommodation);
 
@@ -228,13 +225,13 @@ class GroupPeopleAccommodationController extends AbstractController
         $now = new \DateTime();
 
         $groupPeopleAccommodation->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         foreach ($groupPeopleAccommodation->getPersonAccommodations() as $personAccommodation) {
 
             $personAccommodation->setAccommodation($groupPeopleAccommodation->getAccommodation())
                 ->setUpdatedAt($now)
-                ->setUpdatedBy($this->currentUser);
+                ->setUpdatedBy($this->getUser());
 
             if ($personAccommodation->getEndDate() == null) {
                 $personAccommodation->setEndDate($groupPeopleAccommodation->getEndDate());
@@ -243,8 +240,6 @@ class GroupPeopleAccommodationController extends AbstractController
             if ($personAccommodation->getEndReason() == null) {
                 $personAccommodation->setEndReason($groupPeopleAccommodation->getEndReason());
             }
-
-            $this->manager->persist($personAccommodation);
         }
         $this->manager->flush();
 
@@ -282,14 +277,13 @@ class GroupPeopleAccommodationController extends AbstractController
                     ->setStartDate($groupPeopleAccommodation->getStartDate())
                     ->setEndDate($groupPeopleAccommodation->getEndDate())
                     ->setCreatedAt($now)
-                    ->setCreatedBy($this->currentUser)
+                    ->setCreatedBy($this->getUser())
                     ->setUpdatedAt($now)
-                    ->setUpdatedBy($this->currentUser);
+                    ->setUpdatedBy($this->getUser());
 
                 $this->manager->persist($personAccommodation);
             }
         }
         $this->manager->flush();
-        return;
     }
 }

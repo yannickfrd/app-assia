@@ -21,7 +21,6 @@ class UserSearch
 
     private $username;
 
-
     /**
      * @var int|null
      */
@@ -53,6 +52,11 @@ class UserSearch
      * @var int|null
      */
     private $pole;
+
+    /**
+     * @var bool|null
+     */
+    private $active = true;
 
     /**
      * @var bool
@@ -197,6 +201,21 @@ class UserSearch
     public function setPole(?Pole $pole): self
     {
         $this->pole = $pole;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

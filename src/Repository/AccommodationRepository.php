@@ -112,4 +112,18 @@ class AccommodationRepository extends ServiceEntityRepository
         return $query->orderBy("a.name", "ASC")
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
+
+    /** 
+     * Donne la liste des groupes de places
+     */
+    public function getAccommodationsQueryList($service)
+    {
+        $query =  $this->createQueryBuilder("a")
+            ->select("PARTIAL a.{id, name, service}")
+
+            ->where("a.service = :service")
+            ->setParameter("service", $service);
+
+        return $query->orderBy("a.name", "ASC");
+    }
 }

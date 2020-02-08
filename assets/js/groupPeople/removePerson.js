@@ -1,4 +1,5 @@
 import MessageFlash from "../utils/messageFlash";
+import Loader from "../utils/loader";
 
 // Requête Ajax pour retirer une personne d'un groupe
 export default class RemovePerson {
@@ -9,6 +10,7 @@ export default class RemovePerson {
         this.inputNbPeople = document.getElementById("group_people_nbPeople");
         this.modalConfirmElt = document.getElementById("modal-confirm");
         this.trElt = null;
+        this.loader = new Loader();
         this.init();
     }
 
@@ -26,6 +28,7 @@ export default class RemovePerson {
 
     // Envoie la requête Ajax après confirmation de l'action
     validate(btnElt, trElt) {
+        this.loader.on();
         this.trElt = trElt;
         this.ajaxRequest.init("GET", btnElt.getAttribute("data-url"), this.response.bind(this), true), {
             once: true
@@ -42,6 +45,7 @@ export default class RemovePerson {
         } else {
             new MessageFlash("danger", dataJSON.msg);
         }
+        this.loader.off();
     }
 
     // Supprime la ligne correspondant à la personne dans le tableau

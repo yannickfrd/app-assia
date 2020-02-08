@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class SupportGroupType2 extends AbstractType
+class SupportGroupWithPeopleType extends AbstractType
 {
     private $currentUser;
     private $groupPeople;

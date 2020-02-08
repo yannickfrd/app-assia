@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Form\Person;
+namespace App\Form\GroupPeople;
 
-use App\Entity\RolePerson;
+use App\Entity\GroupPeople;
 
-use App\Form\GroupPeople\GroupPeopleType;
-use App\Form\Person\PersonType;
 use App\Form\Utils\Choices;
 
 use Symfony\Component\Form\AbstractType;
@@ -13,24 +11,30 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class RolePersonGroupType extends AbstractType
+class GroupPeopleType2 extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("role", ChoiceType::class, [
-                "choices" => Choices::getChoices(RolePerson::ROLE),
+            ->add("familyTypology", ChoiceType::class, [
+                "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 "placeholder" => "-- Select --",
-                "required" => true
+                'empty_data' => '-- Select --',
+
             ])
-            ->add("person", PersonType::class)
-            ->add("groupPeople", GroupPeopleType::class);
+            ->add("nbPeople")
+            ->add("comment", null, [
+                "attr" => [
+                    "rows" => 4,
+                    "placeholder" => "Write a comment about the group"
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => RolePerson::class,
+            "data_class" => GroupPeople::class,
             "translation_domain" => "forms",
         ]);
     }

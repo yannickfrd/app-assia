@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Group;
+namespace App\Form\GroupPeople;
 
 use App\Form\Utils\Choices;
 

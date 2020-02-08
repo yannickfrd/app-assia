@@ -102,16 +102,7 @@ class SupportGroupSearchType extends AbstractType
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                        return $repo->createQueryBuilder("u")
-                            ->orderBy("u.lastname", "ASC");
-                    }
-                    return $repo->createQueryBuilder("u")
-                        ->select("u")
-                        ->leftJoin("u.serviceUser", "r")
-                        ->where("r.service IN (:services)")
-                        ->setParameter("services", $this->currentUser->getServices())
-                        ->orderBy("u.lastname", "ASC");
+                    return $repo->getUsersQueryList($this->currentUser);
                 },
                 "label_attr" => ["class" => "sr-only"],
                 "placeholder" => "-- Référent --",
@@ -125,14 +116,7 @@ class SupportGroupSearchType extends AbstractType
                 "choice_label" => "name",
                 "multiple" => true,
                 "query_builder" => function (ServiceRepository $repo) {
-                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                        return $repo->createQueryBuilder("s")
-                            ->orderBy("s.name", "ASC");
-                    }
-                    return $repo->createQueryBuilder("s")
-                        ->where("s.id IN (:services)")
-                        ->setParameter("services", $this->currentUser->getServices())
-                        ->orderBy("s.name", "ASC");
+                    return $repo->getServicesQueryList($this->currentUser);
                 },
                 "label_attr" => ["class" => "sr-only"],
                 "placeholder" => "-- Service --",

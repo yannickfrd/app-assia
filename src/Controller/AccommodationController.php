@@ -8,10 +8,9 @@ use App\Form\Model\AccommodationSearch;
 use App\Form\Service\AccommodationType;
 use App\Form\User\AccommodationSearchType;
 use App\Repository\AccommodationRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,13 +18,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AccommodationController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, AccommodationRepository $repo)
+    public function __construct(EntityManagerInterface $manager, AccommodationRepository $repo)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
     }
 
@@ -35,17 +32,16 @@ class AccommodationController extends AbstractController
      * @Route("/admin/accommodations", name="admin_accommodations")
      * @param AccommodationSearch $accommodationSearch
      * @param Request $request
-     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function listAccommodations(AccommodationSearch $accommodationSearch, Request $request, PaginatorInterface $paginator): Response
+    public function listAccommodations(AccommodationSearch $accommodationSearch, Request $request, Pagination $pagination): Response
     {
         $accommodationSearch = new AccommodationSearch();
 
         $form = $this->createForm(AccommodationSearchType::class, $accommodationSearch);
         $form->handleRequest($request);
 
-        $accommodations = $this->paginate($paginator, $accommodationSearch, $request);
+        $accommodations = $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request);
 
         return $this->render("app/admin/listAccommodations.html.twig", [
             "accommodations" => $accommodations ?? null,
@@ -128,41 +124,19 @@ class AccommodationController extends AbstractController
     }
 
     /**
-     * Pagination
-     *
-     * @param PaginatorInterface $paginator
-     * @param AccommodationSearch $accommodationSearch
-     * @param Request $request
-     */
-    protected function paginate(PaginatorInterface $paginator, AccommodationSearch $accommodationSearch, Request $request)
-    {
-        $accommodations =  $paginator->paginate(
-            $this->repo->findAllAccommodationsQuery($accommodationSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-
-        $accommodations->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
-
-        return $accommodations;
-    }
-    /**
      * Crée un groupe de places
      *
      * @param Accommodation $accommodation
      * @param Service $service
-     * @return void
      */
     protected function createAccommodation(Accommodation $accommodation, Service $service)
     {
         $now = new \DateTime();
 
         $accommodation->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($accommodation);
         $this->manager->flush();
@@ -176,12 +150,11 @@ class AccommodationController extends AbstractController
      * Met à jour un groupe de place
      *
      * @param Accommodation $accommodation
-     * @return void
      */
     protected function updateAccommodation(Accommodation $accommodation)
     {
         $accommodation->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->flush();
 

@@ -8,10 +8,9 @@ use App\Form\Service\ServiceType;
 use App\Form\Service\ServiceSearchType;
 use App\Export\ServiceExport;
 use App\Repository\ServiceRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,23 +18,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ServiceController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, ServiceRepository $repo)
+    public function __construct(EntityManagerInterface $manager, ServiceRepository $repo)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
     }
 
     /**
-     * Permet de rechercher un service
+     * Liste des services
      * 
      * @Route("/services", name="services")
+     * @param Request $request
+     * @param ServiceSearch $serviceSearch
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listService(Request $request, ServiceSearch $serviceSearch = null, PaginatorInterface $paginator): Response
+    public function listService(Request $request, ServiceSearch $serviceSearch = null, Pagination $pagination): Response
     {
         $serviceSearch = new ServiceSearch();
 
@@ -43,16 +43,15 @@ class ServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($serviceSearch->getExport()) {
-            $this->exportData($serviceSearch);
+            return $this->exportData($serviceSearch);
         }
 
-        $services = $this->paginate($paginator, $serviceSearch, $request);
+        $services = $pagination->paginate($this->repo->findAllServicesQuery($serviceSearch), $request);
 
         return $this->render("app/listServices.html.twig", [
-            "services" => $services ?? null,
             "serviceSearch" => $serviceSearch,
             "form" => $form->createView(),
-            "current_menu" => "services"
+            "services" => $services ?? null
         ]);
     }
 
@@ -105,29 +104,8 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * Pagine
-     *
-     * @param PaginatorInterface $paginator
-     * @param ServiceSearch $serviceSearch
-     * @param Request $request
-     * @return void
-     */
-    protected function paginate(PaginatorInterface $paginator, ServiceSearch $serviceSearch, Request $request)
-    {
-        $services =  $paginator->paginate(
-            $this->repo->findAllServicesQuery($serviceSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        $services->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
-        return $services;
-    }
-
-    /**
      * Exporte les données
-     *
+     * 
      * @param ServiceSearch $serviceSearch
      */
     protected function exportData(ServiceSearch $serviceSearch)
@@ -139,6 +117,7 @@ class ServiceController extends AbstractController
 
     /**
      * Crée un service
+     * 
      * @param Service $service
      */
     protected function createService(Service $service)
@@ -146,9 +125,9 @@ class ServiceController extends AbstractController
         $now = new \DateTime();
 
         $service->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($service);
         $this->manager->flush();
@@ -160,12 +139,13 @@ class ServiceController extends AbstractController
 
     /**
      * Met à jour un service
+     * 
      * @param Service $service
      */
     protected function updateService(Service $service)
     {
         $service->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->flush();
 

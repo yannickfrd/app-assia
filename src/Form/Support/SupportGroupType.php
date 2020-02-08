@@ -54,14 +54,7 @@ class SupportGroupType extends AbstractType
                 "class" => Service::class,
                 "choice_label" => "name",
                 "query_builder" => function (ServiceRepository $repo) {
-                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                        return $repo->createQueryBuilder("s")
-                            ->orderBy("s.name", "ASC");
-                    }
-                    return $repo->createQueryBuilder("s")
-                        ->where("s.id IN (:services)")
-                        ->setParameter("services", $this->currentUser->getServices())
-                        ->orderBy("s.name", "ASC");
+                    return $repo->getServicesQueryList($this->currentUser);
                 }
             ])
             // ->add("device", EntityType::class, [
@@ -79,38 +72,14 @@ class SupportGroupType extends AbstractType
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                        return $repo->createQueryBuilder("u")
-                            ->orderBy("u.lastname", "ASC");
-                    } else if ($this->currentUser->isRole("ROLE_ADMIN")) {
-                        return $repo->createQueryBuilder("u")
-                            ->select("u")
-                            ->leftJoin("u.serviceUser", "r")
-                            ->where("r.service IN (:services)")
-                            ->setParameter("services", $this->currentUser->getServices())
-                            ->orderBy("u.lastname", "ASC");
-                    }
-                    return $repo->createQueryBuilder("u")
-                        ->select("u")
-                        ->where("u.id = :user")
-                        ->setParameter("user", $this->currentUser->getUser())
-                        ->orderBy("u.lastname", "ASC");
-                },
+                    return $repo->getUsersQueryList($this->currentUser);
+                }
             ])
             ->add("referent2", EntityType::class, [
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                        return $repo->createQueryBuilder("u")
-                            ->orderBy("u.lastname", "ASC");
-                    }
-                    return $repo->createQueryBuilder("u")
-                        ->select("u")
-                        ->leftJoin("u.serviceUser", "r")
-                        ->where("r.service IN (:services)")
-                        ->setParameter("services", $this->currentUser->getServices())
-                        ->orderBy("u.lastname", "ASC");
+                    return $repo->getUsersQueryList($this->currentUser, true);
                 },
                 "placeholder" => "-- Select --",
                 "required" => false

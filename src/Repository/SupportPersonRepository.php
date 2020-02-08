@@ -27,43 +27,29 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     public function findSupportsToExport($supportGroupSearch = null)
     {
-        $query =  $this->createQueryBuilder("sp")
-            ->select("sp")
-
-            ->leftJoin("sp.person", "p")
-            ->addselect("p")
-
-            ->leftJoin("sp.supportGroup", "sg")
-            ->addselect("sg")
-
-            ->leftJoin("sg.groupPeople", "g")
-            ->addselect("g")
-
-            ->leftJoin("sg.referent", "u")
-            ->addselect("u")
-
-            ->leftJoin("sg.service", "s")
-            ->addselect("s")
-
-            ->leftJoin("s.pole", "pole")
-            ->addselect("pole")
-
-            ->leftJoin("p.rolesPerson", "r")
-            ->addselect("r")
-
-            ->leftJoin("r.groupPeople", "groupPeople")
-            ->addselect("groupPeople");
-
-        // $query->andWhere("r.groupPeople = g");
+        $query = $this->getSupportsQuery();
 
         if ($supportGroupSearch) {
             $query = $this->filter($query, $supportGroupSearch);
         }
 
-        return $query->setMaxResults(502)
-            ->orderBy("sp.startDate", "DESC")
+        return $query->orderBy("sp.startDate", "DESC")
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    protected function getSupportsQuery()
+    {
+        return $this->createQueryBuilder("sp")
+            ->select("PARTIAL sp.{id, status, startDate, endDate}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
+            ->leftJoin("sp.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+            ->leftJoin("sg.referent", "u")->addselect("PARTIAL u.{id, firstname, lastname}")
+            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
+            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+            ->leftJoin("p.rolesPerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            ->leftJoin("r.groupPeople", "gp")->addselect("PARTIAL gp.{id, familyTypology, nbPeople}");
     }
 
     protected function filter($query, $supportGroupSearch)
@@ -161,51 +147,18 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     public function findSupportsFullToExport($supportGroupSearch = null)
     {
+        $query = $this->getSupportsQuery();
 
-        $query =  $this->createQueryBuilder("sp")
-            ->select("sp")
+        $query = $query
+            ->leftJoin("sg.sitSocial", "sitSocial")->addselect("sitSocial")
+            ->leftJoin("sg.sitFamilyGroup", "sitFamilyGroup")->addselect("sitFamilyGroup")
+            ->leftJoin("sg.sitBudgetGroup", "sitBudgetGroup")->addselect("sitBudgetGroup")
+            ->leftJoin("sg.sitHousing", "sitHousing")->addselect("sitHousing")
 
-            ->leftJoin("sp.person", "p")
-            ->addselect("p")
-
-            ->leftJoin("sp.supportGroup", "sg")
-            ->addselect("sg")
-
-            ->leftJoin("sg.groupPeople", "g")
-            ->addselect("g")
-
-            ->leftJoin("sg.referent", "u")
-            ->addselect("u")
-
-            ->leftJoin("sg.service", "s")
-            ->addselect("s")
-
-            ->leftJoin("s.pole", "pole")
-            ->addselect("pole")
-
-            ->leftJoin("p.rolesPerson", "r")
-            ->addselect("r")
-
-            ->leftJoin("r.groupPeople", "groupPeople")
-            ->addselect("groupPeople")
-
-            ->leftJoin("sg.sitSocial", "sitSocial")
-            ->addselect("sitSocial")
-            ->leftJoin("sp.sitAdm", "sitAdm")
-            ->addselect("sitAdm")
-            ->leftJoin("sg.sitFamilyGroup", "sitFamilyGroup")
-            ->addselect("sitFamilyGroup")
-            ->addselect("sitFamilyPerson")
-            ->leftJoin("sp.sitFamilyPerson", "sitFamilyPerson")
-            ->addselect("sitProf")
-            ->leftJoin("sp.sitProf", "sitProf")
-            ->addselect("sitBudgetGroup")
-            ->leftJoin("sg.sitBudgetGroup", "sitBudgetGroup")
-            ->addselect("sitBudget")
-            ->leftJoin("sp.sitBudget", "sitBudget")
-            ->addselect("sitHousing")
-            ->leftJoin("sg.sitHousing", "sitHousing");
-
+            ->leftJoin("sp.sitAdm", "sitAdm")->addselect("sitAdm")
+            ->leftJoin("sp.sitFamilyPerson", "sitFamilyPerson")->addselect("sitFamilyPerson")
+            ->leftJoin("sp.sitProf", "sitProf")->addselect("sitProf")
+            ->leftJoin("sp.sitBudget", "sitBudget")->addselect("sitBudget");
 
         if ($supportGroupSearch->getStatus()) {
             $expr = $query->expr();

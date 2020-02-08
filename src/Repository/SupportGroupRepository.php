@@ -2,11 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Security\CurrentUserService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method SupportGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -187,5 +188,31 @@ class SupportGroupRepository extends ServiceEntityRepository
         }
 
         return $query;
+    }
+
+    /**
+     * Donne tous les suivis sociaux de l'utilisateur
+     *
+     */
+    public function findAllSupportsFromUser(User $user, $maxResults = null)
+    {
+        return $this->createQueryBuilder("sg")
+            ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, head}")
+            ->leftJoin("r.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")
+
+            ->andWhere("sg.referent = :referent")
+            ->setParameter("referent", $user)
+            ->andWhere("sg.status = 2")
+            ->andWhere("r.head = TRUE")
+
+            ->orderBy("sg.startDate", "DESC")
+
+            ->setMaxResults($maxResults)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

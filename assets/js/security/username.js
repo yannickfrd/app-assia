@@ -62,7 +62,7 @@ export default class Username {
     }
 
     sendAjaxRequest() {
-        let url = "/user/check_username?value=" + this.usernameInputElt.value;
+        let url = "/user/username_exists?value=" + this.usernameInputElt.value;
         this.ajaxRequest.init("GET", url, this.response.bind(this), true);
     }
 

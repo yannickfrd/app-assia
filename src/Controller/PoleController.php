@@ -5,10 +5,9 @@ namespace App\Controller;
 use App\Entity\Pole;
 use App\Form\Pole\PoleType;
 use App\Repository\PoleRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,27 +15,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PoleController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, PoleRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PoleRepository $repo)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
     }
 
     /**
-     * Rechercher un pôle
+     * Liste des pôles
      * 
      * @Route("/poles", name="poles")
+     * @param Request $request
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listPole(Request $request, PaginatorInterface $paginator): Response
+    public function listPole(Request $request, Pagination $pagination): Response
     {
-        $poles =  $paginator->paginate(
-            $this->repo->findAllPolesQuery()
-        );
+        $poles =  $pagination->paginate($this->repo->findAllPolesQuery(), $request);
 
         return $this->render("app/admin/listPoles.html.twig", [
             "poles" => $poles ?? null
@@ -102,9 +99,9 @@ class PoleController extends AbstractController
         $now = new \DateTime();
 
         $pole->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($pole);
         $this->manager->flush();
@@ -122,7 +119,7 @@ class PoleController extends AbstractController
     protected function updatePole(Pole $pole)
     {
         $pole->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->flush();
 

@@ -6,75 +6,60 @@ use App\Export\UserExport;
 use App\Form\Model\UserSearch;
 use App\Form\User\UserSearchType;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Service\Pagination;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
-    private $manager;
-    private $security;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, UserRepository $repo)
+    public function __construct(UserRepository $repo)
     {
-        $this->manager = $manager;
-        $this->security = $security;
         $this->repo = $repo;
     }
 
     /**
-     * Permet de rechercher un utilisateur
+     * Liste des utilisateurs
      * 
      * @Route("directory/users", name="users")
+     * @param Request $request
+     * @param UserSearch $userSearch
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listUsers(Request $request, UserSearch $userSearch = null, PaginatorInterface $paginator): Response
+    public function listUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
     {
         $userSearch = new UserSearch();
 
         $form = $this->createForm(UserSearchType::class, $userSearch);
-
         $form->handleRequest($request);
 
         if ($userSearch->getExport()) {
-            $users = $this->repo->findUsersToExport($userSearch);
-            $export = new UserExport();
-            return $export->exportData($users);
+            return $this->exportData($userSearch);
         }
 
-        if ($request->query->all()) {
-
-            $users =  $paginator->paginate(
-                $this->repo->findAllUsersQuery($userSearch),
-                $request->query->getInt("page", 1), // page number
-                20 // limit per page
-            );
-            // $users->setPageRange(5);
-            $users->setCustomParameters([
-                "align" => "right", // alignement de la pagination
-            ]);
-        }
+        $users = $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request);
 
         return $this->render("app/listUsers.html.twig", [
-            "users" => $users ?? null,
             "userSearch" => $userSearch,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "users" => $users ?? null
         ]);
-        // return $this->pagination($userSearch, $request, $form, $paginator);
     }
 
     /**
-     * Tableaud d'administration des utilisateurs
+     * Administration des utilisateurs
      * 
      * @Route("admin/users", name="admin_users")
+     * @param Request $request
+     * @param UserSearch $userSearch
+     * @param Pagination $pagination
      * @return Response
      */
-    public function adminListUsers(Request $request, UserSearch $userSearch = null, PaginatorInterface $paginator): Response
+    public function adminListUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
     {
         $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
 
@@ -84,45 +69,42 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($userSearch->getExport()) {
-            $users = $this->repo->findUsersToExport($userSearch);
-            $export = new UserExport();
-            return $export->exportData($users);
+            return $this->exportData($userSearch);
         }
 
-        $users =  $paginator->paginate(
-            $this->repo->findAllUsersQuery($userSearch),
-            $request->query->getInt("page", 1), // page number
-            20 // limit per page
-        );
-        // $users->setPageRange(5);
-        $users->setCustomParameters([
-            "align" => "right", // alignement de la pagination
-        ]);
-
+        $users = $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request);
 
         return $this->render("app/admin/listUsers.html.twig", [
-            "users" => $users,
             "userSearch" => $userSearch,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "users" => $users
         ]);
     }
 
     /**
      * Vérifie si le login est déjà utilisé
      * 
-     * @Route("/user/check_username", name="user_check_username", methods="GET")
+     * @Route("/user/username_exists", name="username_exists", methods="GET")
      * @param Request $request
      * @return Response
      */
-    public function checkUsername(Request $request): Response
+    public function usernameExists(Request $request): Response
     {
         $user = $this->repo->findOneBy(["username" => $request->query->get("value")]);
 
-        if ($user) {
-            $exists = true;
-        } else {
-            $exists = false;
-        }
-        return $this->json(["response" => $exists], 200);
+        return $this->json([
+            "response" => $user ? true : false
+        ], 200);
+    }
+
+    /**
+     * Exporte les données
+     * @param UserSearch $userSearch
+     */
+    protected function exportData(UserSearch $userSearch)
+    {
+        $users = $this->repo->findUsersToExport($userSearch);
+        $export = new UserExport();
+        return $export->exportData($users);
     }
 }

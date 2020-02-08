@@ -10,10 +10,9 @@ use App\Form\Support\Rdv\RdvSearchType;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
 use App\Service\Calendar;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,13 +20,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class RdvController extends AbstractController
 {
     private $manager;
-    private $currentUser;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, Security $security, RdvRepository $repo)
+    public function __construct(EntityManagerInterface $manager, RdvRepository $repo)
     {
         $this->manager = $manager;
-        $this->currentUser = $security->getUser();
         $this->repo = $repo;
     }
 
@@ -47,9 +44,7 @@ class RdvController extends AbstractController
 
         $rdvs = $this->repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
 
-        $rdv = new Rdv();
-
-        $form = $this->createForm(RdvType::class, $rdv);
+        $form = $this->createForm(RdvType::class, new Rdv());
         $form->handleRequest($request);
 
         return $this->render("app/rdv/calendar.html.twig", [
@@ -112,9 +107,7 @@ class RdvController extends AbstractController
 
         $rdvs = $this->repo->findRdvsBetween($startDay, $endDay, null);
 
-        $rdv = new Rdv();
-
-        $form = $this->createForm(RdvType::class, $rdv);
+        $form = $this->createForm(RdvType::class, new Rdv());
         $form->handleRequest($request);
 
         return $this->render("app/rdv/day.html.twig", [
@@ -131,10 +124,10 @@ class RdvController extends AbstractController
      * @param SupportGroupRepository $repoSupport
      * @param RdvSearch $rdvSearch
      * @param Request $request
-     * @param PaginatorInterface $paginator
+     * @param Pagination $pagination
      * @return Response
      */
-    public function listRdv($id, SupportGroupRepository $repoSupport,  RdvSearch $rdvSearch = null, Request $request, PaginatorInterface $paginator): Response
+    public function listRdv($id, SupportGroupRepository $repoSupport,  RdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
@@ -145,16 +138,10 @@ class RdvController extends AbstractController
         $formSearch = $this->createForm(RdvSearchType::class, $rdvSearch);
         $formSearch->handleRequest($request);
 
-        $rdvs =  $this->paginate($paginator, $supportGroup->getId(), $rdvSearch, $request);
+        $rdvs =  $pagination->paginate($this->repo->findAllRdvsQuery($supportGroup->getId(), $rdvSearch), $request);
 
-        $rdv = new Rdv();
-
-        $form = $this->createForm(RdvType::class, $rdv);
+        $form = $this->createForm(RdvType::class, new Rdv());
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createRdv($supportGroup->getId(), $rdv);
-        }
 
         return $this->render("app/rdv/listRdvs.html.twig", [
             "support" => $supportGroup,
@@ -188,17 +175,17 @@ class RdvController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createRdv($supportGroup = null, $rdv);
+            return $this->createRdv($rdv, $supportGroup ?? null);
         }
         return $this->error();
     }
 
     /**
-     * Modifie le RDV
+     * Voir le RDV
      * 
      * @Route("rdv/{id}/get", name="rdv_get")
      * @param Rdv $rdv
-     * @param Request $request
+     * @param RdvRepository $repo
      * @return Response
      */
     public function getRdv(Rdv $rdv, RdvRepository $repo): Response
@@ -277,31 +264,22 @@ class RdvController extends AbstractController
         ], 200);
     }
 
-    // Pagination de la liste des rendez-vous
-    protected function paginate($paginator, $supportGroupId, $rdvSearch, $request)
-    {
-        $rdvs =  $paginator->paginate(
-            $this->repo->findAllRdvsQuery($supportGroupId, $rdvSearch),
-            $request->query->getInt("page", 1), // page number
-            6 // limit per page
-        );
-        $rdvs->setCustomParameters([
-            "align" => "right", // align pagination
-        ]);
-
-        return $rdvs;
-    }
-
-    // Crée le RDV une fois le formulaire soumis et validé
-    protected function createRdv($supportGroup = null, $rdv)
+    /**
+     * Crée le RDV une fois le formulaire soumis et validé
+     *
+     * @param Rdv $rdv
+     * @param SupportGroup $supportGroup
+     * @return Response
+     */
+    protected function createRdv(Rdv $rdv, SupportGroup $supportGroup = null)
     {
         $now = new \DateTime();
 
         $rdv->setSupportGroup($supportGroup)
             ->setCreatedAt($now)
-            ->setCreatedBy($this->currentUser)
+            ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($rdv);
         $this->manager->flush();
@@ -320,11 +298,16 @@ class RdvController extends AbstractController
         ], 200);
     }
 
-    // Met à jour le RDV une fois le formulaire soumis et validé
-    protected function updateRdv($rdv, $typeSave)
+    /**
+     * Met à jour le RDV une fois le formulaire soumis et validé
+     *
+     * @param Rdv $rdv
+     * @param string $typeSave
+     */
+    protected function updateRdv(Rdv $rdv, $typeSave): Response
     {
         $rdv->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->currentUser);
+            ->setUpdatedBy($this->getUser());
 
         $this->manager->flush();
 
@@ -342,8 +325,12 @@ class RdvController extends AbstractController
         ], 200);
     }
 
-    // Retourne une erreur
-    protected function error()
+    /**
+     * Retourne une erreur
+     *
+     * @return Response
+     */
+    protected function error(): Response
     {
         return $this->json([
             "code" => 403,

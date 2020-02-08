@@ -5,7 +5,7 @@ namespace App\Form\Person;
 use App\Entity\RolePerson;
 
 use App\Form\Utils\Choices;
-use App\Form\Group\GroupPeopleType2;
+use App\Form\GroupPeople\GroupPeopleType2;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

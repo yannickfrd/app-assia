@@ -34,16 +34,6 @@ class SupportGroupServiceType extends AbstractType
                 "class" => Service::class,
                 "choice_label" => "name",
             ]);
-        // ->add("serviceDevices", EntityType::class, [
-        //     "class" => Device::class,
-        //     "choice_label" => "name",
-        //     "query_builder" => function (DeviceRepository $repo) {
-        //         return $repo->createQueryBuilder("d")
-        //             // ->where("d.id IN (:services)")
-        //             // ->setParameter("services", $this->currentUser->getServices())
-        //             ->orderBy("d.name", "ASC");
-        //     }
-        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

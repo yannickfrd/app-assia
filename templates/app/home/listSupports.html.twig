@@ -9,8 +9,7 @@
 <section>
     <div class="row align-items-baseline">
         <div class="col-md-12 count align-middle">
-            <p class="align-middle">{{ user.referentSupport|filter(support => support.status == 2)|length }}
-                suivis en cours (sur {{ user.referentSupport|length }}).</p>
+            <p class="align-middle">{{ supports|length }} suivis en cours.</p>
         </div>
     </div>
     <div class="table-responsive">
@@ -27,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for support in user.referentSupport|filter(support => support.status == 2)|sort ((a, b) => a.startDate <=> b.startDate)|reverse  %}
+                {% for support in supports %}
                 {# {% cache "referentSupport" ~ user.id ~ support.id support.updatedAt.timestamp %} #}
                 <tr>
                     <th scope="row" class="align-middle">
@@ -36,13 +35,9 @@
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
                     </th>
-                    <td class="align-middle">
-                        {% for rolePerson in support.groupPeople.rolePerson|filter(person => person.role != 3) %}
-                        {{ rolePerson.person.fullname }}<br>
-                        {% endfor %}
+                    <td class="align-middle">{{ support.groupPeople.rolePerson|first.person.fullname }}<br>
                     <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
-                        {% if support.supportPerson|length > 1 %}
-                        {{ support.supportPerson|length }} personnes{% endif %}
+                        {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
                     </td>
                     <td class="align-middle">{{ support.service.name }}</td>
                     <td class="align-middle">{{ support.getstatusType }}</td>

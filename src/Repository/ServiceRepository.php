@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
+use App\Entity\User;
 use App\Entity\Service;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -50,5 +51,40 @@ class ServiceRepository extends ServiceEntityRepository
     {
         $query = $this->findAllServicesQuery($serviceSearch);
         return $query->getResult();
+    }
+
+    /** 
+     * Donne la liste des services
+     */
+    public function getServicesQueryList($currentUser)
+    {
+        $query =  $this->createQueryBuilder("s")
+            ->select("PARTIAL s.{id, name}");
+
+        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
+            $query = $query->andWhere("s.id IN (:services)")
+                ->setParameter("services", $currentUser->getServices());
+        }
+        return $query->orderBy("s.name", "ASC");
+    }
+
+    /**
+     * Donne tous les services de l'utilisateur
+     *
+     */
+    public function findAllServicesFromUser(User $user)
+    {
+        return $this->createQueryBuilder("s")
+            ->select("PARTIAL s.{id, name, email, phone}")
+            ->leftJoin("s.pole", "p")->addselect("PARTIAL p.{id, name}")
+            ->leftJoin("s.serviceUser", "su")->addselect("su")
+
+            ->andWhere("su.user = :user")
+            ->setParameter("user", $user)
+
+            ->orderBy("s.name", "ASC")
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

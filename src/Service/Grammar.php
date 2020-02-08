@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-class Agree
+class Grammar
 {
     /**
      * Accorde en fonction du sexe de la personne (féminin, masculin)

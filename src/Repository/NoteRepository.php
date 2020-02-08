@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Note;
+use App\Entity\User;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -45,5 +46,31 @@ class NoteRepository extends ServiceEntityRepository
         }
         $query = $query->orderBy("n.createdAt", "DESC");
         return $query->getQuery();
+    }
+
+    /**
+     * Donne toutes les notes créées par l'utilisateur
+     *
+     */
+    public function findAllNotesFromUser(User $user, $maxResults)
+    {
+        return $this->createQueryBuilder("n")
+            ->addselect("PARTIAL n.{id, title, status, createdAt, updatedAt}")
+
+            ->leftJoin("n.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id}")
+            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, head}")
+            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+
+            ->andWhere("n.createdBy = :createdBy")
+            ->setParameter("createdBy", $user)
+            ->andWhere("r.head = TRUE")
+
+            ->orderBy("n.updatedAt", "DESC")
+
+            ->setMaxResults($maxResults)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

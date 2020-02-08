@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class UserSearchType extends AbstractType
 {
@@ -93,6 +94,15 @@ class UserSearchType extends AbstractType
                 ],
                 "placeholder" => "-- Pole --",
                 "required" => false,
+            ])
+            ->add("active", CheckBoxType::class, [
+                "required" => false,
+                "label_attr" => [
+                    "class" => "custom-control-label",
+                ],
+                "attr" => [
+                    "class" => "custom-control-input checkbox"
+                ]
             ])
             ->add("export");
     }

@@ -25,26 +25,11 @@ class ServiceUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // ->add("role", ChoiceType::class, [
-            //     "label" => "Fonction",
-            //     'placeholder' => "-- Select --",
-            //     "choices" => Choices::getChoices(ServiceUser::ROLE),
-            //     "attr" => [
-            //         "class" => "col-auto my-1",
-            //     ]
-            // ])
             ->add("service", EntityType::class, [
                 "class" => Service::class,
                 "choice_label" => "name",
                 "query_builder" => function (ServiceRepository $repo) {
-                    if ($this->currentUser->isRole("ROLE_SUPER_ADMIN")) {
-                        return $repo->createQueryBuilder("s")
-                            ->orderBy("s.name", "ASC");
-                    }
-                    return $repo->createQueryBuilder("s")
-                        ->where("s.id IN (:services)")
-                        ->setParameter("services", $this->currentUser->getServices())
-                        ->orderBy("s.name", "ASC");
+                    return $repo->getServicesQueryList($this->currentUser);
                 },
                 "placeholder" => "-- Select --",
                 "attr" => [

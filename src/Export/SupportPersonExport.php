@@ -3,9 +3,7 @@
 namespace App\Export;
 
 use App\Service\Export;
-use App\Service\ObjectToArray;
 use App\Entity\SupportPerson;
-
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
@@ -61,17 +59,22 @@ class SupportPersonExport
             "N° Personne" => $person->getId(),
             "Nom" => $person->getLastname(),
             "Prénom" => $person->getFirstname(),
-            "Date de naissance" => Date::PHPToExcel($person->getBirthdate()->format("Y-m-d")),
+            "Date de naissance" => $this->formatDate($person->getBirthdate()),
             "Typologie familiale" => $groupPeople->getFamilyTypologyType(),
             "Nb de personnes" => $groupPeople->getNbPeople(),
             "Rôle dans le groupe" => $rolePerson->getRoleList(),
             "DP" => $rolePerson->getHead() ? "Oui" : "Non",
             "Statut" => $supportPerson->getStatusType(),
-            "Date début suivi" => Date::PHPToExcel($supportPerson->getStartDate()->format("Y-m-d")),
-            "Date Fin suivi" => $supportPerson->getEndDate() ?  Date::PHPToExcel($supportPerson->getEndDate()->format("Y-m-d")) : null,
+            "Date début suivi" => $this->formatDate($supportPerson->getStartDate()),
+            "Date Fin suivi" => $this->formatDate($supportPerson->getEndDate()),
             "Référent social" => $supportGroup->getReferent()->getFullname(),
             "Service" => $supportGroup->getService()->getName(),
             "Pôle" => $supportGroup->getService()->getPole()->getName(),
         ];
+    }
+
+    public function formatDate($date)
+    {
+        return $date ? Date::PHPToExcel($date->format("Y-m-d")) : null;
     }
 }
