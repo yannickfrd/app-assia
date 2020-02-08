@@ -28,6 +28,12 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
 
+    App\EventListener\MaintenanceListener:
+        arguments:
+            $maintenance: '%env(MAINTENANCE)%'
+        tags:
+        - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest' }
+
     App\Notification\MailNotification:
         arguments:
             $host: '%env(MAILER_HOST)%'
@@ -40,6 +46,7 @@ services:
             $targetDirectory: '%documents_directory%'
             $tinifyKey: '%env(TINIFY_KEY)%'
 
+
     App\Service\OptimizeImage:
         arguments:
             $tinifyKey: '%env(TINIFY_KEY)%'
@@ -51,10 +58,10 @@ services:
         class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter
 
     Twig\CacheExtension\CacheStrategyInterface:
-        class : Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
+        class: Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
 
     Twig\CacheExtension\Extension:
-        tags :
+        tags:
         - { name: twig.extension }
         
     # add more service definitions when explicit configuration is needed
