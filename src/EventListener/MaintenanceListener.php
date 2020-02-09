@@ -20,12 +20,12 @@ class MaintenanceListener
     public function onKernelRequest(RequestEvent $event)
     {
         if ($this->maintenance) {
-            $event->setResponse(new Response($this->getView(), Response::HTTP_SERVICE_UNAVAILABLE));
+            $event->setResponse(
+                new Response(
+                    $this->renderer->render("bundles/TwigBundle/Exception/maintenance.html.twig"),
+                    Response::HTTP_SERVICE_UNAVAILABLE
+                )
+            );
         }
-    }
-
-    protected function getView()
-    {
-        return $this->renderer->render("bundles/TwigBundle/Exception/maintenance.html.twig");
     }
 }

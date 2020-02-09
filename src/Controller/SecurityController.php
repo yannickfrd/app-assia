@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\Form\Model\UserInitPassword;
 use App\Form\Model\UserResetPassword;
 use App\Form\User\UserChangeInfoType;
+use App\Repository\ServiceRepository;
 use App\Form\Model\UserChangePassword;
 use App\Notification\MailNotification;
 use App\Form\Security\InitPasswordType;
@@ -17,7 +18,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Security\ChangePasswordType;
 use App\Form\Security\ForgotPasswordType;
 use App\Form\Security\ReinitPasswordType;
-use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class SecurityController extends AbstractController
 {
@@ -78,11 +77,6 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $user = $this->repo->findOneBy(["username" => $lastUsername]);
-
-        if ($user && $user->getFailureLoginCount() >= 10) {
-            $this->addFlash("danger", "Ce compte a été bloqué suite à de nombreux échecs de connexion.");
-            return $this->redirectToRoute("security_logout");
-        }
 
         if ($error) {
             $this->errorLogin($user);

@@ -19,7 +19,7 @@ class UserResetPassword
     private $email;
 
     /**
-     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,20}$^", match=true, message="Le mot de passe est invalide.")
+     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le mot de passe est invalide.")
      */
     private $password;
 

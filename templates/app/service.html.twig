@@ -145,7 +145,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for accommodation in service.accommodations %}
+                    {% for accommodation in accommodations %}
                     <tr>
                         <th scope="row">
                             <a href="{{ path('admin_accommodation_edit', {'id':accommodation.id}) }}"
@@ -194,20 +194,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for serviceUser in service.serviceUser %}
+                    {% for user in users %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('user_show', {'id':serviceUser.user.id}) }}"
+                            <a href="{{ path('user_show', {'id':user.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du service">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td>{{ serviceUser.user.firstname }}</td>
-                        <td>{{ serviceUser.user.lastname }}</td>
-                        <td>{{ serviceUser.user.statusList }}</td>
-                        <td>{{ serviceUser.user.phone }}</td>
-                        <td>{{ serviceUser.user.email }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.statusList }}</td>
+                        <td>{{ user.phone }}</td>
+                        <td>{{ user.email }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

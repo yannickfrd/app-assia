@@ -40,7 +40,7 @@ class NoteController extends AbstractController
      * @param Pagination $pagination
      * @return Response
      */
-    public function listNotes($id, NoteSearch $noteSearch = null, Note $note = null, Request $request, Pagination $pagination): Response
+    public function listNotes($id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 

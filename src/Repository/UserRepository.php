@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Service;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -18,6 +19,24 @@ class UserRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    /**
+     * Trouve l'utilisateur par son login ou son adresse email
+     *
+     * @param string $username
+     * @return User|null
+     */
+    public function findUserByUsernameOrEmail($username)
+    {
+        return $this->createQueryBuilder("u")
+            ->select("u")
+            ->andWhere("u.username = :username")
+            ->setParameter("username", $username)
+            ->orWhere("u.email = :email")
+            ->setParameter("email", $username)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 
@@ -121,5 +140,26 @@ class UserRepository extends ServiceEntityRepository
             }
         }
         return $query->orderBy("u.lastname", "ASC");
+    }
+
+    /**
+     * Donne tous les utilisateurs du service
+     *
+     * @return Service|null
+     */
+    public function findUsersFromService(Service $service)
+    {
+        return $this->createQueryBuilder("u")
+            ->select("PARTIAL u.{id, firstname, lastname, status, phone, email, active}")
+            ->leftJoin("u.serviceUser", "su")->addselect("su")
+
+            ->where("su.service = :service")
+            ->setParameter("service", $service)
+            ->andWhere("u.active = TRUE")
+
+            ->orderBy("u.lastname", "ASC")
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

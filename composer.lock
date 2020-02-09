@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccce1e045408b85777568c913ed49688",
+    "content-hash": "46bf8a2f1d89dc858215d1c36afa33b5",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -3434,7 +3434,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v4.4.3",
+            "version": "v4.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",

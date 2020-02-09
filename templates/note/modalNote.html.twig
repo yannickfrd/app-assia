@@ -1,5 +1,5 @@
-<div id="modal-block" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalNote" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+<div id="modal-block" class="modal modal-fullscreen fade" tabindex="-1" role="dialog" aria-labelledby="modalNote" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-fullscreen modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body pb-0">
                 {{ form_start(form) }}
@@ -9,7 +9,7 @@
                 <div class="form-group row">
                     <div class="col-md-12">
                         <div id="toolbar-container" class="shadow-sm"></div>
-                        <div id="editor" class="bg-white border shadow-sm"></div>
+                        <div id="editor" class="editor-fullscreen bg-white border shadow-sm"></div>
                         {{ form_widget(form.content) }}
                     </div>
                 </div>

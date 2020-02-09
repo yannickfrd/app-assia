@@ -41,6 +41,7 @@ class LoginListener
         $user->setFailureLogincount(0);
 
         $connection = new UserConnection();
+
         $connection->setConnectionAt(new \DateTime())
             ->setUser($user);
 
@@ -52,7 +53,7 @@ class LoginListener
         $i = 0;
 
         foreach ($user->getServiceUser() as $serviceUser) {
-            if ($i == 0) {
+            if ($i == 0 && !in_array("ROLE_SUPER_ADMIN", $user->getRoles())) {
                 $this->session->set("themeColor", $serviceUser->getService()->getPole()->getColor());
             }
             $servicesUser[] = $serviceUser->getService()->getName();

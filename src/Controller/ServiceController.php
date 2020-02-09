@@ -7,7 +7,9 @@ use App\Form\Model\ServiceSearch;
 use App\Form\Service\ServiceType;
 use App\Form\Service\ServiceSearchType;
 use App\Export\ServiceExport;
+use App\Repository\AccommodationRepository;
 use App\Repository\ServiceRepository;
+use App\Repository\UserRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,7 +88,7 @@ class ServiceController extends AbstractController
      * @Route("/service/{id}", name="service_edit", methods="GET|POST")
      *  @return Response
      */
-    public function editService(Service $service, Request $request): Response
+    public function editService(Service $service, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
     {
         $this->denyAccessUnlessGranted("EDIT", $service);
 
@@ -99,6 +101,8 @@ class ServiceController extends AbstractController
 
         return $this->render("app/service.html.twig", [
             "form" => $form->createView(),
+            "users" => $repoUser->findUsersFromService($service),
+            "accommodations" => $repoAccommodation->findAccommodationsFromService($service),
             "edit_mode" => true
         ]);
     }

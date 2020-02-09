@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
-use App\Entity\Accommodation;
+use App\Entity\Service;
 use Doctrine\ORM\Query;
+use App\Entity\Accommodation;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -125,5 +126,25 @@ class AccommodationRepository extends ServiceEntityRepository
             ->setParameter("service", $service);
 
         return $query->orderBy("a.name", "ASC");
+    }
+
+    /**
+     * Donne toutes les places du service
+     *
+     * @return Service|null
+     */
+    public function findAccommodationsFromService(Service $service)
+    {
+        return $this->createQueryBuilder("a")
+            ->select("a")
+            ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
+
+            ->where("a.service = :service")
+            ->setParameter("service", $service)
+
+            ->orderBy("a.name", "ASC")
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

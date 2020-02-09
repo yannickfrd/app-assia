@@ -230,11 +230,11 @@ th.required:after {
     opacity: 0.9;
 }
 
-.tooltip-inner {
-    // white-space: pre-line;
-    // max-width: 300px;
-    // width: 250px;
-}
+// .tooltip-inner {
+// white-space: pre-line;
+// max-width: 300px;
+// width: 250px;
+// }
 
 #scroll-top {
     position: fixed;
@@ -264,26 +264,36 @@ th.required:after {
     transition: all 0.5s ease;
 }
 
-.modal-dialog {
-    // width: 100%;
-    // height: 100%;
-    // margin: 0;
-    // padding: 0;
+// Fenêtre modale
+.modal {
+    padding: 0 !important;
+}
+
+.modal-dialog-fullscreen {
+    height: 100%;
+    margin: auto;
+    padding: 0;
 }
 
 .modal-content {
-    // height: auto;
-    // max-height: 100%;
-    // border-radius: 0;
+    max-width: 1000px;
 }
 
+.modal-content-fullscreen {
+    height: auto;
+    min-height: 100%;
+}
 
-.cke_contents,
+// Editeur de texte des notes
 #editor {
-    min-height: 300px;
-    max-height: 55vh;
+    min-height: calc(100vh - 311px);
+    max-height: calc(100vh - 311px);
 }
 
+.editor-fullscreen {
+    min-height: calc(100vh - 255px) !important;
+    max-height: calc(100vh - 255px) !important;
+}
 
 /* Gestion de dépassement des notes */
 .note-content {
@@ -365,6 +375,8 @@ button.btn-outline-secondary a:hover {
         width: 100%;
     }
 }
+
+
 
 
 

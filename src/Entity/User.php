@@ -66,7 +66,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,20}$^", match=true, message="Le mot de passe est invalide.")
+     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le mot de passe est invalide.")
      */
     private $password;
 
@@ -289,7 +289,7 @@ class User implements UserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -301,7 +301,7 @@ class User implements UserInterface
         return $this->confirmPassword;
     }
 
-    public function setConfirmPassword(string $confirmPassword): self
+    public function setConfirmPassword(?string $confirmPassword): self
     {
         $this->confirmPassword = $confirmPassword;
 

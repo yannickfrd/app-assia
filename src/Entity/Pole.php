@@ -21,13 +21,14 @@ class Pole
     ];
 
     public const COLOR = [
-        "primary" => "Blue",
-        "purple" => "Violet",
-        "orange2" => "Orange",
-        "brown" => "Marron",
         "beige" => "Beige",
+        "primary" => "Bleu",
+        "cyan2" => "Cyan",
+        "brown" => "Marron",
+        "dark" => "Noir",
+        "orange2" => "Orange",
         "green2" => "Vert",
-        "cyan2" => "Cyan"
+        "purple" => "Violet"
     ];
 
     /**

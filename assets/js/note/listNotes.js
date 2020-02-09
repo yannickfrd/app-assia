@@ -58,7 +58,7 @@ export default class ListNotes {
     ckEditor() {
         DecoupledEditor
             .create(document.querySelector("#editor"), {
-                toolbar: ["undo", "redo", "|", "fontFamily", "fontSize", "|", "bold", "italic", "underline", "highlight", "|", "heading", "alignment", "|", "bulletedList", "numberedList", "|", "link", "blockQuote", "imageUpload", "|", "insertTable"],
+                toolbar: ["undo", "redo", "|", "fontFamily", "fontSize", "|", "bold", "italic", "underline", "highlight", "|", "heading", "alignment", "|", "bulletedList", "numberedList", "|", "link", "blockQuote", "|", "insertTable"],
                 language: {
                     ui: "fr",
                     content: "fr"
@@ -67,7 +67,6 @@ export default class ListNotes {
             .then(editor => {
                 this.editor = editor;
                 const toolbarContainer = document.querySelector("#toolbar-container");
-                // console.log(Array.from(editor.ui.componentFactory.names()));
                 toolbarContainer.appendChild(editor.ui.view.toolbar.element);
             })
             .catch(error => {
@@ -120,7 +119,7 @@ export default class ListNotes {
     // Timer pour la sauvegarde automatique
     timerAutoSave() {
         clearInterval(this.countdownID);
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 1000);
+        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 5 * 60 * 1000);
         if (this.count > 10) {
             this.autoSave = true;
             this.count = 0;
@@ -167,10 +166,13 @@ export default class ListNotes {
             this.noteContentElt.textContent = this.editor.getData();
             let formData = new FormData(this.formNoteElt);
             let formToString = new URLSearchParams(formData).toString();
-            this.animateLoader();
+
+            if (!this.autoSave) {
+                this.loader.on(false);
+            }
+
             this.ajaxRequest.init("POST", this.formNoteElt.getAttribute("action"), this.responseAjax.bind(this), true, formToString);
         } else {
-            $("#modal-block").modal("hide");
             new MessageFlash("danger", "La note est vide.");
         }
     }
@@ -187,7 +189,7 @@ export default class ListNotes {
     responseAjax(data) {
         let dataJSON = JSON.parse(data);
         if (dataJSON.code === 200) {
-            if (dataJSON.action === "create") {
+            if (dataJSON.action === "create" && !this.autoSave) {
                 this.createNote(dataJSON.data);
             }
             if (dataJSON.action === "update") {
@@ -198,10 +200,9 @@ export default class ListNotes {
                 this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
             }
         }
-        this.loader.off();
-
         if (!this.autoSave) {
             new MessageFlash(dataJSON.alert, dataJSON.msg);
+            this.loader.off(true);
         }
     }
 
@@ -216,22 +217,23 @@ export default class ListNotes {
         noteElt.className = "col-sm-12 col-lg-6 mb-4 js-note";
         noteElt.innerHTML =
             `<div class="card h-100 shadow">
-                <div class="card-header">
-                    <h3 class="card-title h5 text-${this.themeColor}">${title}</h3>
-                    <span class="js-note-type" data-value="1">${data.type}</span>
-                    <span class="js-note-status" data-value="1">(${data.status})</span>
+        <div class="card-header">
+        <h3 class="card-title h5 text-${this.themeColor}">${title}</h3>
+        <span class="js-note-type" data-value="1">${data.type}</span>
+        <span class="js-note-status" data-value="1">(${data.status})</span>
                     <span class="small text-secondary js-note-created">${data.editInfo}</span>
                     <span class="small text-secondary js-note-updated"></span>
                 </div>
                 <div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Modifier la note">
-                    <div class="card-text">${this.editor.getData()}</div>
-                    <span class="note-fadeout"></span>
+                <div class="card-text">${this.editor.getData()}</div>
+                <span class="note-fadeout"></span>
                 </div>
-            </div>`
+                </div>`
 
         let containerNotesElt = document.getElementById("container-notes");
         containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild);
         this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) + 1;
+
         noteElt.addEventListener("click", this.getNote.bind(this, noteElt));
     }
 
@@ -252,11 +254,4 @@ export default class ListNotes {
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
     }
 
-    // Active le loader spinner
-    animateLoader() {
-        if (this.autoSave) {
-            return this.autoSave === false;
-        }
-        return this.loader.on(true);
-    }
 }

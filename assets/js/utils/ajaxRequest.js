@@ -2,13 +2,13 @@ export default class AjaxRequest {
 
     constructor() {
         this.xhr = new XMLHttpRequest();
-        this.timeSend = null; // Temp pour test
-        this.timeResp = null; // Temp pour test
-        this.data = null;
+        // this.timeSend = null; // Temp pour test
+        // this.timeResp = null; // Temp pour test
+        // this.data = null;
     }
 
     init(method, url, callback, async, data) {
-        this.timeSend = Date.now(); // Temp pour test
+        // this.timeSend = Date.now(); // Temp pour test
         this.xhr.open(method, url, async);
 
         if (method === "POST") {
@@ -28,8 +28,8 @@ export default class AjaxRequest {
     load(callback, url) {
         if (this.xhr.status >= 200 && this.xhr.status < 400) {
             callback(this.xhr.responseText); // Appelle la fonction callback en lui passant la réponse de la requête
-            this.timeResp = Date.now(); // Temp pour test
-            let time = (this.timeResp - this.timeSend) / 1000; // Temp pour test
+            // this.timeResp = Date.now(); // Temp pour test
+            // let time = (this.timeResp - this.timeSend) / 1000; // Temp pour test
             // console.log("Statut: " + this.xhr.status + ", Durée : " + time + "s");
         } else {
             console.error("Statut: " + this.xhr.status + " " + this.xhr.statusText + " " + url);
@@ -40,10 +40,3 @@ export default class AjaxRequest {
         console.error("Statut: " + this.xhr.status + " : Erreur réseau avec l'URL " + url);
     }
 }
-
-// axios.get(url).then(function (response) {
-//     let response.data
-// }).catch(function (error) {
-//     if (error.status === 403) {} 
-//     else {}
-// })

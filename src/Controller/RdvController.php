@@ -190,7 +190,7 @@ class RdvController extends AbstractController
      */
     public function getRdv(Rdv $rdv, RdvRepository $repo): Response
     {
-        $this->denyAccessUnlessGranted("VIEW", $rdv);
+        $this->denyAccessUnlessGranted("EDIT", $rdv);
 
         $rdv = $repo->find($rdv->getId());
 

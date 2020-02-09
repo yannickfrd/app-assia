@@ -59,7 +59,7 @@
                 </thead>
                 <tbody>
                     {% for support in supports %}
-                    {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %}
+                    {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
                     <tr>
                         <th scope="row" class="align-middle">
                             {% if is_granted("VIEW", support) %}
@@ -104,7 +104,7 @@
                         </td>
                         <td class="align-middle">{{ support.service.name }}</td>
                     </tr>
-                    {% endcache %}
+                    {# {% endcache %} #}
                     {% endfor %}
                 </tbody>
             </table>
