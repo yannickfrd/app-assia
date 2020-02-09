@@ -38,23 +38,7 @@ class B_UserFixtures extends Fixture
             $this->addUser($serviceUser);
         }
 
-        $user = new User();
-
-        $user->setUsername("r.madelaine")
-            ->setFirstName("Romain")
-            ->setLastName("Madelaine")
-            ->setStatus(6)
-            ->setRoles(["ROLE_SUPER_ADMIN"])
-            ->addServiceUser($serviceUser)
-            ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
-            ->setEmail("romain.madelaine@esperer-95.org")
-            ->setActive(true)
-            ->setLoginCount(0)
-            ->setLastLogin(new \DateTime())
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime());
-
-        $manager->persist($user);
+        $this->createSuperAdmin();
 
         foreach ($this->getHabitatUsers() as $habitatUser) {
 
@@ -97,6 +81,27 @@ class B_UserFixtures extends Fixture
             $manager->persist($user);
         }
         $manager->flush();
+    }
+
+    protected function createSuperAdmin($serviceUser = null)
+    {
+        $user = new User();
+
+        $user->setUsername("r.madelaine")
+            ->setFirstName("Romain")
+            ->setLastName("Madelaine")
+            ->setStatus(6)
+            ->setRoles(["ROLE_SUPER_ADMIN"])
+            // ->addServiceUser($serviceUser)
+            ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
+            ->setEmail("romain.madelaine@esperer-95.org")
+            ->setActive(true)
+            ->setLoginCount(0)
+            ->setLastLogin(new \DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime());
+
+        $this->manager->persist($user);
     }
 
     // Crée les utilisateurs

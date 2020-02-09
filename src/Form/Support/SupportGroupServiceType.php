@@ -1,32 +1,15 @@
 <?php
 
-namespace App\Form;
-
-use App\Entity\Pole;
-use App\Entity\Device;
+namespace App\Form\Support;
 
 use App\Entity\Service;
-
-use App\Form\Utils\Choices;
-use App\Entity\ServiceDevice;
-use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
 use Symfony\Component\Form\AbstractType;
-use App\Repository\ServiceDeviceRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SupportGroupServiceType extends AbstractType
 {
-    private $currentUser;
-
-    public function __construct()
-    {
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

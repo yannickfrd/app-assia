@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\User;
+namespace App\Form\Accommodation;
 
 use App\Entity\Pole;
 use App\Entity\Device;
