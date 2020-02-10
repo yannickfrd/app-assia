@@ -45,7 +45,7 @@ class AccommodationGroupController extends AbstractController
 
         $accommodationGroups = $this->repo->findBy(["supportGroup" => $supportGroup]);
 
-        return $this->render("app/support/listAccommodationGroups.html.twig", [
+        return $this->render("app/support/listAccommodationsGroup.html.twig", [
             "support" => $supportGroup,
             "support_group_accommodations" => $accommodationGroups,
         ]);

@@ -104,6 +104,7 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $createdBy;
 

@@ -6,52 +6,53 @@ Application métier de gestion des accompagnements pour les travailleurs sociaux
 Romain MADELAINE
 10/02/2020
 
+
 # Repository Git
 https://github.com/RomMad/esperer95-app
 
 
 # Connection à la base démo
 L'application nécessite de disposer au préalable d'un compte créé par un administrateur.
-Pour tester l'application vous pouvez vous connecter avec les identifiants suivants :
-- Login : user_test
-- Mot de passe : Test2020*
+Pour tester l'application, vous pouvez vous connecter avec les identifiants suivants:
+- Login: j.doe_test
+- Mot de passe: test2020*
 
 
 # Glossaire
 
 ## Traduction des entités
-    Accommodation :     Groupe de places
-    AccommodationGroup : Prise en charge du groupe de personnes
-    AccommodationPerson : Prise en charge d'une personne
-    Activity : Services et prestations
-    City : Liste des villes de France
-    Device : Dispositif
-    Document : Document (fichiers uploadés)
-    FinancialContrib : Partipations financières et quittances
-    formation : Module Formation
-    GroupPeople : Groupe de personnes (ménage)
-    Justice : Module justice
-    Note : Note/rapport social
-    Person : Personne
-    Pole : Pôle
-    Rdv : rendez-vous
-    Referent : Service social référent
-    RolePerson : Table de jointure entre personne et groupe de personnes
-    Service : Service
-    ServiceDevice : Table de jointure entre dispositif et service
-    ServiceUser : Table de jointure entre utilisateur et service
-    SitAdmPerson : Situation administrative
-    SitBudgetPerson : Situation budgétaire de la personne
-    SitBudgetGroup : Situation budgétaire du groupe
-    SitFamilyGroup : Situation familiale du groupe
-    SitFamilyPerson : Situation familiale de la personne
-    SitHousingGroup : Situation au regard du logement et de l'hébergement
-    SitProfPerson : Situation professionnelle de la personne
-    SitSocialPerson : Situation sociale de la personne
-    SupportGroup : Suivi social du groupe
-    SupportPerson : Suivi sociale de la personne
-    User : Utilisateur
-    UserConnection : Historique des connexions de l'utilisateur
+    Accommodation:     Groupe de places
+    AccommodationGroup: Prise en charge du groupe de personnes
+    AccommodationPerson: Prise en charge d'une personne
+    Activity: Services et prestations
+    City: Liste des villes de France
+    Device: Dispositif
+    Document: Document (fichiers uploadés)
+    FinancialContrib: Partipations financières et quittances
+    formation: Module Formation
+    GroupPeople: Groupe de personnes (ménage)
+    Justice: Module justice
+    Note: Note/rapport social
+    Person: Personne
+    Pole: Pôle
+    Rdv: rendez-vous
+    Referent: Service social référent
+    RolePerson: Table de jointure entre personne et groupe de personnes
+    Service: Service
+    ServiceDevice: Table de jointure entre dispositif et service
+    ServiceUser: Table de jointure entre utilisateur et service
+    SitAdmPerson: Situation administrative
+    SitBudgetPerson: Situation budgétaire de la personne
+    SitBudgetGroup: Situation budgétaire du groupe
+    SitFamilyGroup: Situation familiale du groupe
+    SitFamilyPerson: Situation familiale de la personne
+    SitHousingGroup: Situation au regard du logement et de l'hébergement
+    SitProfPerson: Situation professionnelle de la personne
+    SitSocialPerson: Situation sociale de la personne
+    SupportGroup: Suivi social du groupe
+    SupportPerson: Suivi sociale de la personne
+    User: Utilisateur
+    UserConnection: Historique des connexions de l'utilisateur
 
 ## Traduction des variables
     accessSupport: Accès aux suivis sociaux

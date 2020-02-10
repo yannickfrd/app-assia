@@ -123,7 +123,7 @@ class B_UserFixtures extends Fixture
         $user->setUsername($firstname)
             ->setFirstName($firstname)
             ->setLastName($lastname)
-            ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
+            ->setPassword($this->passwordEncoder->encodePassword($user, "test2020"))
             ->setStatus(1)
             ->setEmail(mb_strtolower($firstname) . "." . mb_strtolower($lastname) . "@esperer-95.org")
             ->setphone($phone)
@@ -131,6 +131,7 @@ class B_UserFixtures extends Fixture
             ->setUpdatedAt($createdAt)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin)
+            ->setEnabled(true)
             ->addServiceUser($serviceUser);
 
         $this->users[] = $user;
@@ -142,6 +143,13 @@ class B_UserFixtures extends Fixture
     public function getHabitatUsers()
     {
         return [
+            [
+                "firstname" => "John",
+                "lastname" => "DOE",
+                "services" => [
+                    "ALTHO"
+                ]
+            ],
             [
                 "firstname" => "Gaëlle",
                 "lastname" => "ARTIFONI",
