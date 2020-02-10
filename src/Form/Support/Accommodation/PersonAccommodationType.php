@@ -4,8 +4,8 @@ namespace App\Form\Support\Accommodation;
 
 use App\Form\Utils\Choices;
 use App\Entity\Accommodation;
-use App\Entity\PersonAccommodation;
-use App\Entity\GroupPeopleAccommodation;
+use App\Entity\AccommodationPerson;
+use App\Entity\AccommodationGroup;
 use Symfony\Component\Form\AbstractType;
 use App\Repository\AccommodationRepository;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class PersonAccommodationType extends AbstractType
+class AccommodationPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,7 +27,7 @@ class PersonAccommodationType extends AbstractType
                 "required" => false
             ])
             ->add("endReason", ChoiceType::class, [
-                "choices" => Choices::getChoices(GroupPeopleAccommodation::END_REASON),
+                "choices" => Choices::getChoices(AccommodationGroup::END_REASON),
                 "required" => false,
                 "placeholder" => "-- Select --",
 
@@ -42,7 +42,7 @@ class PersonAccommodationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => PersonAccommodation::class,
+            "data_class" => AccommodationPerson::class,
             "translation_domain" => "forms"
         ]);
     }

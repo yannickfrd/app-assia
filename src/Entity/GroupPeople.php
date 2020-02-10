@@ -97,9 +97,9 @@ class GroupPeople
     private $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\GroupPeopleAccommodation", mappedBy="groupPeople", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="groupPeople", orphanRemoval=true)
      */
-    private $groupPeopleAccommodations;
+    private $accommodationGroups;
 
     public function __construct()
     {
@@ -109,7 +109,7 @@ class GroupPeople
         $this->updatedAt = new \Datetime();
         $this->referents = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->groupPeopleAccommodations = new ArrayCollection();
+        $this->accommodationGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,30 +331,30 @@ class GroupPeople
     }
 
     /**
-     * @return Collection|GroupPeopleAccommodation[]
+     * @return Collection|AccommodationGroup[]
      */
-    public function getGroupPeopleAccommodations(): Collection
+    public function getAccommodationGroups(): Collection
     {
-        return $this->groupPeopleAccommodations;
+        return $this->accommodationGroups;
     }
 
-    public function addGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function addAccommodationGroup(AccommodationGroup $accommodationGroup): self
     {
-        if (!$this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
-            $this->groupPeopleAccommodations[] = $groupPeopleAccommodation;
-            $groupPeopleAccommodation->setGroupPeople($this);
+        if (!$this->accommodationGroups->contains($accommodationGroup)) {
+            $this->accommodationGroups[] = $accommodationGroup;
+            $accommodationGroup->setGroupPeople($this);
         }
 
         return $this;
     }
 
-    public function removeGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function removeAccommodationGroup(AccommodationGroup $accommodationGroup): self
     {
-        if ($this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
-            $this->groupPeopleAccommodations->removeElement($groupPeopleAccommodation);
+        if ($this->accommodationGroups->contains($accommodationGroup)) {
+            $this->accommodationGroups->removeElement($accommodationGroup);
             // set the owning side to null (unless already changed)
-            if ($groupPeopleAccommodation->getGroupPeople() === $this) {
-                $groupPeopleAccommodation->setGroupPeople(null);
+            if ($accommodationGroup->getGroupPeople() === $this) {
+                $accommodationGroup->setGroupPeople(null);
             }
         }
 

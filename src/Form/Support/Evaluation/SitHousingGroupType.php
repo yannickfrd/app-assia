@@ -2,7 +2,7 @@
 
 namespace App\Form\Support\Evaluation;
 
-use App\Entity\SitHousing;
+use App\Entity\sitHousingGroup;
 
 use App\Form\Utils\Choices;
 use App\Form\Utils\SelectList;
@@ -13,13 +13,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SitHousingType extends AbstractType
+class SitHousingGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add("housingStatus", ChoiceType::class, [
-                "choices" => Choices::getChoices(sitHousing::HOUSING_STATUS),
+                "choices" => Choices::getChoices(sitHousingGroup::HOUSING_STATUS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -137,7 +137,7 @@ class SitHousingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitHousing::class,
+            "data_class" => sitHousingGroup::class,
             "translation_domain" => "sitHousing"
         ]);
     }

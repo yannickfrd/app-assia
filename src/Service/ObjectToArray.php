@@ -12,15 +12,15 @@ class ObjectToArray
 {
     protected $translator;
     protected $nameObject;
-    protected $sitSocial = null;
-    protected $sitAdm = null;
-    protected $sitFamily = null;
+    protected $translation;
+    protected $sitSocialGroup = null;
+    protected $sitAdmPerson = null;
     protected $sitFamilyGroup = null;
     protected $sitFamilyPerson = null;
-    protected $sitProf = null;
+    protected $sitProfPerson = null;
     protected $sitBudgetGroup = null;
-    protected $sitBudget = null;
-    protected $sitHousing = null;
+    protected $sitBudgetPerson = null;
+    protected $sitHousingGroup = null;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -28,9 +28,10 @@ class ObjectToArray
     }
 
     // Retourne l'objet en array
-    public function getArray($emtpyObject, $object, $nameObject = null)
+    public function getArray($emtpyObject, $object, $nameObject = null, $translation = null)
     {
         $this->nameObject = $nameObject;
+        $this->translation = $translation;
 
         if ($this->{$this->nameObject}) {
             $objectKeys = $this->{$this->nameObject};
@@ -63,7 +64,7 @@ class ObjectToArray
         $content = preg_replace("#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#", $separator . "$1", $content);
         $content = ucfirst(strtolower($content));
 
-        return $this->translator->trans($content, [], $this->nameObject);
+        return $this->translator->trans($content, [], $this->translation);
     }
 
     // Retourne les valeurs d'un objet
@@ -74,7 +75,8 @@ class ObjectToArray
 
         foreach ($array as $key => $value) {
             if (is_int($value)) {
-                $key = array_pop(explode("\x00", $key));
+                $key = explode("\x00", $key);
+                $key = array_pop($key);
                 $method = "get" . ucfirst($key) . "List";
                 if (method_exists($object, $method)) {
                     $values[] = $object->$method($value);

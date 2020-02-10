@@ -120,7 +120,7 @@ class SupportController extends AbstractController
             $this->tryEditSupportGroup($form, $supportGroup);
         }
 
-        if (!$form->isSubmitted() && $supportGroup->getService()->getAccommodation() && count($supportGroup->getGroupPeopleAccommodations()) == 0) {
+        if (!$form->isSubmitted() && $supportGroup->getService()->getAccommodation() && count($supportGroup->getAccommodationGroups()) == 0) {
             $this->addFlash("warning", "Attention, aucun hébergement enregistré pour ce suivi.");
         }
 
@@ -403,11 +403,11 @@ class SupportController extends AbstractController
             }
             $supportPerson->setUpdatedAt(new \DateTime());
 
-            $sitBudget = $supportPerson->getSitBudget();
-            $ressourcesGroupAmt += $sitBudget->getRessourcesAmt();
-            $chargesGroupAmt += $sitBudget->getChargesAmt();
-            $debtsGroupAmt += $sitBudget->getDebtsAmt();
-            $monthlyRepaymentAmt += $sitBudget->getMonthlyRepaymentAmt();
+            $sitBudgetPerson = $supportPerson->getSitBudgetPerson();
+            $ressourcesGroupAmt += $sitBudgetPerson->getRessourcesAmt();
+            $chargesGroupAmt += $sitBudgetPerson->getChargesAmt();
+            $debtsGroupAmt += $sitBudgetPerson->getDebtsAmt();
+            $monthlyRepaymentAmt += $sitBudgetPerson->getMonthlyRepaymentAmt();
         };
 
         $sitBudgetGroup = $supportGroup->getSitBudgetGroup();

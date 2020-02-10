@@ -18,8 +18,8 @@ use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use App\Repository\ServiceDeviceRepository;
 
-use App\Form\Support\Evaluation\SitSocialType;
-use App\Form\Support\Evaluation\SitHousingType;
+use App\Form\Support\Evaluation\SitSocialGroupType;
+use App\Form\Support\Evaluation\SitHousingGroupType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Form\Support\Evaluation\SitBudgetGroupType;
@@ -90,10 +90,10 @@ class SupportGroupType extends AbstractType
                 "widget" => "single_text",
                 "required" => false
             ])
-            ->add("sitSocial", SitSocialType::class)
+            ->add("sitSocialGroup", SitSocialGroupType::class)
             ->add("sitFamilyGroup", SitFamilyGroupType::class)
             ->add("sitBudgetGroup", SitBudgetGroupType::class)
-            ->add("sitHousing", SitHousingType::class)
+            ->add("sitHousingGroup", SitHousingGroupType::class)
             ->add("supportPerson", CollectionType::class, [
                 "entry_type"   => SupportSitType::class,
                 "allow_add"    => false,

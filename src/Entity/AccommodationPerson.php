@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\PersonAccommodationRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\AccommodationPersonRepository")
  */
-class PersonAccommodation
+class AccommodationPerson
 {
     /**
      * @ORM\Id()
@@ -37,7 +37,7 @@ class PersonAccommodation
     private $commentEndReason;
 
     // /**
-    //  * @ORM\ManyToOne(targetEntity="App\Entity\Accommodation", inversedBy="PersonAccommodation")
+    //  * @ORM\ManyToOne(targetEntity="App\Entity\Accommodation", inversedBy="AccommodationPerson")
     //  */
     // private $accommodation;
 
@@ -62,12 +62,12 @@ class PersonAccommodation
     private $updatedBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeopleAccommodation", inversedBy="personAccommodations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\AccommodationGroup", inversedBy="accommodationPersons")
      */
-    private $groupPeopleAccommodation;
+    private $accommodationGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="personAccommodations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="accommodationPersons")
      * @ORM\JoinColumn(nullable=false)
      */
     private $person;
@@ -109,7 +109,7 @@ class PersonAccommodation
 
     public function getEndReasonList(): string
     {
-        return GroupPeopleAccommodation::END_REASON[$this->endReason];
+        return AccommodationGroup::END_REASON[$this->endReason];
     }
 
     public function setEndReason(?int $endReason): self
@@ -191,14 +191,14 @@ class PersonAccommodation
         return $this;
     }
 
-    public function getGroupPeopleAccommodation(): ?GroupPeopleAccommodation
+    public function getAccommodationGroup(): ?AccommodationGroup
     {
-        return $this->groupPeopleAccommodation;
+        return $this->accommodationGroup;
     }
 
-    public function setGroupPeopleAccommodation(?GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function setAccommodationGroup(?AccommodationGroup $accommodationGroup): self
     {
-        $this->groupPeopleAccommodation = $groupPeopleAccommodation;
+        $this->accommodationGroup = $accommodationGroup;
 
         return $this;
     }

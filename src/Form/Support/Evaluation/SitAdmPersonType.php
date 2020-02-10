@@ -2,7 +2,7 @@
 
 namespace App\Form\Support\Evaluation;
 
-use App\Entity\SitAdm;
+use App\Entity\SitAdmPerson;
 
 use App\Form\Utils\Choices;
 use App\Form\Utils\SelectList;
@@ -13,13 +13,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SitAdmType extends AbstractType
+class SitAdmPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add("nationality", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitAdm::NATIONALITY),
+                "choices" => Choices::getChoices(SitAdmPerson::NATIONALITY),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -30,12 +30,12 @@ class SitAdmType extends AbstractType
                 "required" => false
             ])
             ->add("paperType", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitAdm::PAPER_TYPE),
+                "choices" => Choices::getChoices(SitAdmPerson::PAPER_TYPE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("rightReside", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitAdm::RIGHT_TO_RESIDE),
+                "choices" => Choices::getChoices(SitAdmPerson::RIGHT_TO_RESIDE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -69,7 +69,7 @@ class SitAdmType extends AbstractType
                 "required" => false
             ])
             ->add("socialSecu", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitAdm::SOCIAL_SECURITY),
+                "choices" => Choices::getChoices(SitAdmPerson::SOCIAL_SECURITY),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -86,7 +86,7 @@ class SitAdmType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitAdm::class,
+            "data_class" => SitAdmPerson::class,
             "translation_domain" => "sitAdm",
         ]);
     }

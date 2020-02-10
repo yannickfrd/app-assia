@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitAdmRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitAdmPersonRepository")
  */
-class SitAdm
+class SitAdmPerson
 {
     public const NATIONALITY = [
         1 => "France",
@@ -142,7 +142,7 @@ class SitAdm
     private $commentSitAdm;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitAdm", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitAdmPerson", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $supportPerson;

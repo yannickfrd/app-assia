@@ -14,15 +14,15 @@ export default class evaluation {
     init() {
         let prefix;
         // Situation sociale
-        prefix = "support_group_sitSocial_";
+        prefix = "support_group_sitSocialGroup_";
         new DisplayInputs(prefix, "speAnimal", "checkbox");
         new DisplayInputs(prefix, "speOther", "checkbox");
-        this.editElt("", "sitSocial_specifity", "d-block");
+        this.editElt("", "sitSocialGroup_specifity", "d-block");
         // Situation familiale
         prefix = "support_group_sitFamilyGroup_";
         new DisplayInputs(prefix, "unbornChild", "select", [1]);
         new DisplayInputs(prefix, "famlReunification", "select", [1, 3, 4, 5]);
-        prefix = "support_group_sitHousing_";
+        prefix = "support_group_sitHousingGroup_";
         // Situation liée au logement
         new DisplayInputs(prefix, "dls", "select", [1]);
         new DisplayInputs(prefix, "syplo", "select", [1]);
@@ -49,20 +49,20 @@ export default class evaluation {
         bthElts.forEach(btnElt => {
             prefix = "support_group_supportPerson_";
             // Situation administrative
-            new DisplayInputs(prefix, i + "_sitAdm_nationality", "select", [2, 3, 4]);
-            new DisplayInputs(prefix, i + "_sitAdm_paper", "select", [1]);
-            new DisplayInputs(prefix, i + "_sitAdm_rightSocialSecu", "select", [1]);
-            this.editElt(i, "_sitAdm_open_rights", "d-block");
+            new DisplayInputs(prefix, i + "_sitAdmPerson_nationality", "select", [2, 3, 4]);
+            new DisplayInputs(prefix, i + "_sitAdmPerson_paper", "select", [1]);
+            new DisplayInputs(prefix, i + "_sitAdmPerson_rightSocialSecu", "select", [1]);
+            this.editElt(i, "_sitAdmPerson_open_rights", "d-block");
             // Situation professionnelle
-            new DisplayInputs(prefix, i + "_sitProf_profStatus", "select", [2, 3]);
+            new DisplayInputs(prefix, i + "_SitProfPerson_profStatus", "select", [2, 3]);
             // Situation budgétaire
-            new DisplayInputs(prefix, i + "_sitBudget_ressources", "select", [1]);
-            new DisplayInputs(prefix, i + "_sitBudget_charges", "select", [1]);
-            new DisplayInputs(prefix, i + "_sitBudget_debts", "select", [1]);
-            new DisplayInputs(prefix, i + "_sitBudget_overIndebtRecord", "select", [1]);
-            this.editElt(i, "_sitBudget_ressources_type", "d-table-row");
-            this.editElt(i, "_sitBudget_charges_type", "d-table-row");
-            this.editElt(i, "_sitBudget_debts_type", "d-block");
+            new DisplayInputs(prefix, i + "_sitBudgetPerson_ressources", "select", [1]);
+            new DisplayInputs(prefix, i + "_sitBudgetPerson_charges", "select", [1]);
+            new DisplayInputs(prefix, i + "_sitBudgetPerson_debts", "select", [1]);
+            new DisplayInputs(prefix, i + "_sitBudgetPerson_overIndebtRecord", "select", [1]);
+            this.editElt(i, "_sitBudgetPerson_ressources_type", "d-table-row");
+            this.editElt(i, "_sitBudgetPerson_charges_type", "d-table-row");
+            this.editElt(i, "_sitBudgetPerson_debts_type", "d-block");
             this.selectTrElts(i, "ressources_type");
             this.selectTrElts(i, "charges_type");
             this.editAmt(prefix, i, "ressources");
@@ -120,11 +120,11 @@ export default class evaluation {
                 this.selectedOptionElt = document.getElementById("js-" + i + eltId + "-" + option.value);
                 this.selectedOptionElt.querySelector("input").checked = "checked";
                 this.selectedOptionElt.classList.replace("d-none", display);
-                if (this.selectedOptionElt.id === "js-sitSocial_specifity-1") {
-                    new DisplayInputs("support_group_sitSocial_", "speAnimal", "checkbox");
+                if (this.selectedOptionElt.id === "js-sitSocialGroup_specifity-1") {
+                    new DisplayInputs("support_group_sitSocialGroup_", "speAnimal", "checkbox");
                 }
-                if (this.selectedOptionElt.id === "js-sitSocial_specifity-98") {
-                    new DisplayInputs("support_group_sitSocial_", "speOther", "checkbox");
+                if (this.selectedOptionElt.id === "js-sitSocialGroup_specifity-98") {
+                    new DisplayInputs("support_group_sitSocialGroup_", "speOther", "checkbox");
                 }
             }
         });
@@ -139,7 +139,7 @@ export default class evaluation {
 
     // Sélectionn toutes les ligne d'un tableau
     selectTrElts(i, type) {
-        let trElts = document.querySelectorAll(".js-" + i + "_sitBudget_" + type);
+        let trElts = document.querySelectorAll(".js-" + i + "_sitBudgetPerson_" + type);
         trElts.forEach(trElt => {
             let labelElt = trElt.querySelector("label");
             if (labelElt && !labelElt.classList.contains("js-noText")) {
@@ -170,7 +170,7 @@ export default class evaluation {
         let inputElts = document.getElementById("collapse-sit_budget-" + i).querySelectorAll("input.js-" + type);
         inputElts.forEach(inputElt => {
             inputElt.addEventListener("input", function () {
-                document.getElementById(prefix + i + "_sitBudget_" + type + "Amt").value = this.getSumAmts(inputElts);
+                document.getElementById(prefix + i + "_sitBudgetPerson_" + type + "Amt").value = this.getSumAmts(inputElts);
                 this.updateAmtGroup(type);
             }.bind(this));
         });
@@ -191,7 +191,7 @@ export default class evaluation {
     // Met à jour la somme des montants de la personne
     updateSumAmt(i, type) {
         let inputElts = document.getElementById("collapse-sit_budget-" + i).querySelectorAll("input.js-" + type);
-        document.getElementById("support_group_supportPerson_" + i + "_sitBudget_" + type + "Amt").value = this.getSumAmts(inputElts);
+        document.getElementById("support_group_supportPerson_" + i + "_sitBudgetPerson_" + type + "Amt").value = this.getSumAmts(inputElts);
     }
 
     // Met à jour le montant total du groupe lorsque modification des montants individuels

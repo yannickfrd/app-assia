@@ -98,9 +98,9 @@ class SupportGroup
     private $service;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitSocial", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\SitSocialGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $sitSocial;
+    private $sitSocialGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
@@ -108,9 +108,9 @@ class SupportGroup
     private $sitFamilyGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitHousing", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\SitHousingGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $sitHousing;
+    private $sitHousingGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
@@ -133,9 +133,9 @@ class SupportGroup
     private $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\GroupPeopleAccommodation", mappedBy="supportGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="supportGroup", orphanRemoval=true)
      */
-    private $groupPeopleAccommodations;
+    private $accommodationGroups;
 
     public function __construct()
     {
@@ -143,7 +143,7 @@ class SupportGroup
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->groupPeopleAccommodations = new ArrayCollection();
+        $this->accommodationGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -333,18 +333,18 @@ class SupportGroup
         return $this;
     }
 
-    public function getSitSocial(): ?SitSocial
+    public function getSitSocialGroup(): ?SitSocialGroup
     {
-        return $this->sitSocial;
+        return $this->sitSocialGroup;
     }
 
-    public function setSitSocial(SitSocial $sitSocial): self
+    public function setSitSocialGroup(SitSocialGroup $sitSocialGroup): self
     {
-        $this->sitSocial = $sitSocial;
+        $this->sitSocialGroup = $sitSocialGroup;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitSocial->getSupportGroup()) {
-            $sitSocial->setSupportGroup($this);
+        if ($this !== $sitSocialGroup->getSupportGroup()) {
+            $sitSocialGroup->setSupportGroup($this);
         }
 
         return $this;
@@ -367,18 +367,18 @@ class SupportGroup
         return $this;
     }
 
-    public function getSitHousing(): ?SitHousing
+    public function getSitHousingGroup(): ?SitHousingGroup
     {
-        return $this->sitHousing;
+        return $this->sitHousingGroup;
     }
 
-    public function setSitHousing(SitHousing $sitHousing): self
+    public function setSitHousingGroup(SitHousingGroup $sitHousingGroup): self
     {
-        $this->sitHousing = $sitHousing;
+        $this->sitHousingGroup = $sitHousingGroup;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitHousing->getSupportGroup()) {
-            $sitHousing->setSupportGroup($this);
+        if ($this !== $sitHousingGroup->getSupportGroup()) {
+            $sitHousingGroup->setSupportGroup($this);
         }
 
         return $this;
@@ -495,30 +495,30 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|GroupPeopleAccommodation[]
+     * @return Collection|AccommodationGroup[]
      */
-    public function getGroupPeopleAccommodations(): Collection
+    public function getAccommodationGroups(): Collection
     {
-        return $this->groupPeopleAccommodations;
+        return $this->accommodationGroups;
     }
 
-    public function addGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function addAccommodationGroup(AccommodationGroup $accommodationGroup): self
     {
-        if (!$this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
-            $this->groupPeopleAccommodations[] = $groupPeopleAccommodation;
-            $groupPeopleAccommodation->setSupportGroup($this);
+        if (!$this->accommodationGroups->contains($accommodationGroup)) {
+            $this->accommodationGroups[] = $accommodationGroup;
+            $accommodationGroup->setSupportGroup($this);
         }
 
         return $this;
     }
 
-    public function removeGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function removeAccommodationGroup(AccommodationGroup $accommodationGroup): self
     {
-        if ($this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
-            $this->groupPeopleAccommodations->removeElement($groupPeopleAccommodation);
+        if ($this->accommodationGroups->contains($accommodationGroup)) {
+            $this->accommodationGroups->removeElement($accommodationGroup);
             // set the owning side to null (unless already changed)
-            if ($groupPeopleAccommodation->getSupportGroup() === $this) {
-                $groupPeopleAccommodation->setSupportGroup(null);
+            if ($accommodationGroup->getSupportGroup() === $this) {
+                $accommodationGroup->setSupportGroup(null);
             }
         }
 

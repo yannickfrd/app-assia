@@ -76,7 +76,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for form_person_accommodation in form.personAccommodations.children %}
+                    {% for form_person_accommodation in form.accommodationPersons.children %}
                     {% set person = form_person_accommodation.vars.data.person %}
                     <tr class="js-tr-person-place">
                         <th scope="row"></th>

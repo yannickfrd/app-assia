@@ -150,15 +150,15 @@ class SupportPersonRepository extends ServiceEntityRepository
         $query = $this->getSupportsQuery();
 
         $query = $query
-            ->leftJoin("sg.sitSocial", "sitSocial")->addselect("sitSocial")
+            ->leftJoin("sg.sitSocialGroup", "sitSocialGroup")->addselect("sitSocialGroup")
             ->leftJoin("sg.sitFamilyGroup", "sitFamilyGroup")->addselect("sitFamilyGroup")
             ->leftJoin("sg.sitBudgetGroup", "sitBudgetGroup")->addselect("sitBudgetGroup")
-            ->leftJoin("sg.sitHousing", "sitHousing")->addselect("sitHousing")
+            ->leftJoin("sg.sitHousingGroup", "sitHousingGroup")->addselect("sitHousingGroup")
 
-            ->leftJoin("sp.sitAdm", "sitAdm")->addselect("sitAdm")
+            ->leftJoin("sp.sitAdmPerson", "sitAdmPerson")->addselect("sitAdmPerson")
             ->leftJoin("sp.sitFamilyPerson", "sitFamilyPerson")->addselect("sitFamilyPerson")
-            ->leftJoin("sp.sitProf", "sitProf")->addselect("sitProf")
-            ->leftJoin("sp.sitBudget", "sitBudget")->addselect("sitBudget");
+            ->leftJoin("sp.sitProfPerson", "sitProfPerson")->addselect("sitProfPerson")
+            ->leftJoin("sp.sitBudgetPerson", "sitBudgetPerson")->addselect("sitBudgetPerson");
 
         if ($supportGroupSearch->getStatus()) {
             $expr = $query->expr();

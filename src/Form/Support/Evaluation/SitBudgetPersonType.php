@@ -2,7 +2,7 @@
 
 namespace App\Form\Support\Evaluation;
 
-use App\Entity\SitBudget;
+use App\Entity\SitBudgetPerson;
 
 use App\Form\Utils\Choices;
 use App\Form\Utils\SelectList;
@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SitBudgetType extends AbstractType
+class SitBudgetPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -204,7 +204,7 @@ class SitBudgetType extends AbstractType
                 "required" => false
             ])
             ->add("overIndebtRecord", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitBudget::OVER_INDEBT_RECCORD),
+                "choices" => Choices::getChoices(SitBudgetPerson::OVER_INDEBT_RECCORD),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -213,7 +213,7 @@ class SitBudgetType extends AbstractType
                 "required" => false
             ])
             ->add("settlementPlan", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitBudget::SETTLEMENT_PLAN),
+                "choices" => Choices::getChoices(SitBudgetPerson::SETTLEMENT_PLAN),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -233,7 +233,7 @@ class SitBudgetType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitBudget::class,
+            "data_class" => SitBudgetPerson::class,
             "translation_domain" => "sitBudget"
         ]);
     }

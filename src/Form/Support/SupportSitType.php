@@ -4,9 +4,9 @@ namespace App\Form\Support;
 
 use App\Entity\SupportPerson;
 
-use App\Form\Support\Evaluation\SitAdmType;
-use App\Form\Support\Evaluation\SitProfType;
-use App\Form\Support\Evaluation\SitBudgetType;
+use App\Form\Support\Evaluation\SitAdmPersonType;
+use App\Form\Support\Evaluation\SitProfPersonType;
+use App\Form\Support\Evaluation\SitBudgetPersonType;
 use App\Form\Support\Evaluation\SitFamilyPersonType;
 
 use Symfony\Component\Form\AbstractType;
@@ -18,10 +18,10 @@ class SupportSitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("sitAdm", SitAdmType::class)
+            ->add("sitAdmPerson", SitAdmPersonType::class)
             ->add("sitFamilyPerson", SitFamilyPersonType::class)
-            ->add("sitProf", SitProfType::class)
-            ->add("sitBudget", SitBudgetType::class);
+            ->add("sitProfPerson", SitProfPersonType::class)
+            ->add("sitBudgetPerson", SitBudgetPersonType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

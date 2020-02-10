@@ -32,8 +32,8 @@ class AccommodationRepository extends ServiceEntityRepository
             ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
             ->innerJoin("a.service", "s")->addSelect("PARTIAL s.{id,name}")
             ->innerJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}")
-            ->leftJoin("a.groupPeopleAccommodations", "gpa")->addSelect("PARTIAL gpa.{id,startDate, endDate}")
-            ->leftJoin("gpa.personAccommodations", "pa")->addSelect("PARTIAL pa.{id,startDate, endDate}");
+            ->leftJoin("a.accommodationGroups", "gpa")->addSelect("PARTIAL gpa.{id,startDate, endDate}")
+            ->leftJoin("gpa.accommodationPersons", "pa")->addSelect("PARTIAL pa.{id,startDate, endDate}");
 
         // $today = new \Datetime();
         // $query->andWhere("gpa.endDate >= :now")

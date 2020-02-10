@@ -6,9 +6,9 @@ use App\Form\Utils\SelectList;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitHousingRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitHousingGroupRepository")
  */
-class SitHousing
+class SitHousingGroup
 {
 
     public const HOUSING_STATUS = [
@@ -252,7 +252,7 @@ class SitHousing
     private $domiciliationDept;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitHousing", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitHousingGroup", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $supportGroup;

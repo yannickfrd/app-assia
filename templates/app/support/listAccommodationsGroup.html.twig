@@ -54,10 +54,10 @@
                     </tr>
                 </thead>
 
-                <tbody id="container-groupPeopleAccommodations" data-support="{{ support.id }}">
+                <tbody id="container-accommodationGroups" data-support="{{ support.id }}">
                     {% for support_group_accommodation in support_group_accommodations %}
 
-                    <tr id="groupPeopleAccommodation-{{ support_group_accommodation.id }}">
+                    <tr id="accommodationGroup-{{ support_group_accommodation.id }}">
                         <th scope="row" class="align-middle text-center">
                             <a href="{{ path('support_accommodation_edit', {'id': support_group_accommodation.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
@@ -69,7 +69,7 @@
                         <td>{{ support_group_accommodation.startDate | date("d/m/Y") }}</td>
                         <td>{% if support_group_accommodation.endDate %}{{ support_group_accommodation.endDate | date("d/m/Y") }}{% endif %}
                         </td>
-                        <td>{{ support_group_accommodation.personAccommodations|length }}</td>
+                        <td>{{ support_group_accommodation.accommodationPersons|length }}</td>
                         <td>{{ support_group_accommodation.accommodation.city }}</td>
                         <td>{{ support_group_accommodation.accommodation.address }}</td>
                         <td class="align-middle text-center">

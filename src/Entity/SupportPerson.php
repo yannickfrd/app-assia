@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\PersonAccommodation;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -79,19 +78,19 @@ class SupportPerson
     private $sitFamilyPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitProf", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\SitProfPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $sitProf;
+    private $sitProfPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitAdm", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\SitAdmPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $sitAdm;
+    private $sitAdmPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudget", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $sitBudget;
+    private $sitBudgetPerson;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportPerson")
@@ -102,7 +101,7 @@ class SupportPerson
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->personAccommodations = new ArrayCollection();
+        $this->accommodationPersons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -228,52 +227,52 @@ class SupportPerson
         return $this;
     }
 
-    public function getSitProf(): ?SitProf
+    public function getSitProfPerson(): ?SitProfPerson
     {
-        return $this->sitProf;
+        return $this->sitProfPerson;
     }
 
-    public function setSitProf(SitProf $sitProf): self
+    public function setSitProfPerson(SitProfPerson $sitProfPerson): self
     {
-        $this->sitProf = $sitProf;
+        $this->sitProfPerson = $sitProfPerson;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitProf->getSupportPerson()) {
-            $sitProf->setSupportPerson($this);
+        if ($this !== $sitProfPerson->getSupportPerson()) {
+            $sitProfPerson->setSupportPerson($this);
         }
 
         return $this;
     }
 
-    public function getSitAdm(): ?SitAdm
+    public function getSitAdmPerson(): ?SitAdmPerson
     {
-        return $this->sitAdm;
+        return $this->sitAdmPerson;
     }
 
-    public function setSitAdm(SitAdm $sitAdm): self
+    public function setSitAdmPerson(SitAdmPerson $sitAdmPerson): self
     {
-        $this->sitAdm = $sitAdm;
+        $this->sitAdmPerson = $sitAdmPerson;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitAdm->getSupportPerson()) {
-            $sitAdm->setSupportPerson($this);
+        if ($this !== $sitAdmPerson->getSupportPerson()) {
+            $sitAdmPerson->setSupportPerson($this);
         }
 
         return $this;
     }
 
-    public function getSitBudget(): ?SitBudget
+    public function getSitBudgetPerson(): ?SitBudgetPerson
     {
-        return $this->sitBudget;
+        return $this->sitBudgetPerson;
     }
 
-    public function setSitBudget(SitBudget $sitBudget): self
+    public function setSitBudgetPerson(SitBudgetPerson $sitBudgetPerson): self
     {
-        $this->sitBudget = $sitBudget;
+        $this->sitBudgetPerson = $sitBudgetPerson;
 
         // set the owning side of the relation if necessary
-        if ($this !== $sitBudget->getSupportPerson()) {
-            $sitBudget->setSupportPerson($this);
+        if ($this !== $sitBudgetPerson->getSupportPerson()) {
+            $sitBudgetPerson->setSupportPerson($this);
         }
 
         return $this;

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\GroupPeopleAccommodation;
+use App\Entity\AccommodationGroup;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -91,19 +91,19 @@ class Accommodation
     private $device;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\GroupPeopleAccommodation", mappedBy="accommodation")
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="accommodation")
      */
-    private $groupPeopleAccommodations;
+    private $accommodationGroups;
 
     // /**
-    //  * @ORM\OneToMany(targetEntity="App\Entity\PersonAccommodation", mappedBy="accommodation")
+    //  * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="accommodation")
     //  */
-    // private $personAccommodations;
+    // private $accommodationPersons;
 
 
     public function __construct()
     {
-        $this->groupPeopleAccommodations = new ArrayCollection();
+        $this->accommodationGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,30 +281,30 @@ class Accommodation
     }
 
     /**
-     * @return Collection|GroupPeopleAccommodation[]
+     * @return Collection|AccommodationGroup[]
      */
-    public function getGroupPeopleAccommodations(): Collection
+    public function getAccommodationGroups(): Collection
     {
-        return $this->groupPeopleAccommodations;
+        return $this->accommodationGroups;
     }
 
-    public function addGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function addAccommodationGroup(AccommodationGroup $accommodationGroup): self
     {
-        if (!$this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
-            $this->groupPeopleAccommodations[] = $groupPeopleAccommodation;
-            $groupPeopleAccommodation->setAccommodation($this);
+        if (!$this->accommodationGroups->contains($accommodationGroup)) {
+            $this->accommodationGroups[] = $accommodationGroup;
+            $accommodationGroup->setAccommodation($this);
         }
 
         return $this;
     }
 
-    public function removeGroupPeopleAccommodation(GroupPeopleAccommodation $groupPeopleAccommodation): self
+    public function removeAccommodationGroup(AccommodationGroup $accommodationGroup): self
     {
-        if ($this->groupPeopleAccommodations->contains($groupPeopleAccommodation)) {
-            $this->groupPeopleAccommodations->removeElement($groupPeopleAccommodation);
+        if ($this->accommodationGroups->contains($accommodationGroup)) {
+            $this->accommodationGroups->removeElement($accommodationGroup);
             // set the owning side to null (unless already changed)
-            if ($groupPeopleAccommodation->getAccommodation() === $this) {
-                $groupPeopleAccommodation->setAccommodation(null);
+            if ($accommodationGroup->getAccommodation() === $this) {
+                $accommodationGroup->setAccommodation(null);
             }
         }
 
@@ -312,30 +312,30 @@ class Accommodation
     }
 
     /**
-     * @return Collection|PersonAccommodation[]
+     * @return Collection|AccommodationPerson[]
      */
-    public function getPersonAccommodations(): Collection
+    public function getAccommodationPersons(): Collection
     {
-        return $this->personAccommodations;
+        return $this->accommodationPersons;
     }
 
-    public function addPersonAccommodation(PersonAccommodation $personAccommodation): self
+    public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if (!$this->personAccommodations->contains($personAccommodation)) {
-            $this->personAccommodations[] = $personAccommodation;
-            $personAccommodation->setAccommodation($this);
+        if (!$this->accommodationPersons->contains($accommodationPerson)) {
+            $this->accommodationPersons[] = $accommodationPerson;
+            $accommodationPerson->setAccommodation($this);
         }
 
         return $this;
     }
 
-    public function removePersonAccommodation(PersonAccommodation $personAccommodation): self
+    public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if ($this->personAccommodations->contains($personAccommodation)) {
-            $this->personAccommodations->removeElement($personAccommodation);
+        if ($this->accommodationPersons->contains($accommodationPerson)) {
+            $this->accommodationPersons->removeElement($accommodationPerson);
             // set the owning side to null (unless already changed)
-            if ($personAccommodation->getAccommodation() === $this) {
-                $personAccommodation->setAccommodation(null);
+            if ($accommodationPerson->getAccommodation() === $this) {
+                $accommodationPerson->setAccommodation(null);
             }
         }
 

@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\GroupPeopleAccommodationRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\AccommodationGroupRepository")
  */
-class GroupPeopleAccommodation
+class AccommodationGroup
 {
     public const END_REASON = [
         1 => "Fin du suivi",
@@ -46,12 +46,12 @@ class GroupPeopleAccommodation
     private $commentEndReason;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Accommodation", inversedBy="groupPeopleAccommodations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Accommodation", inversedBy="accommodationGroups")
      */
     private $accommodation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="groupPeopleAccommodations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="accommodationGroups")
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportGroup;
@@ -77,19 +77,19 @@ class GroupPeopleAccommodation
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PersonAccommodation", mappedBy="groupPeopleAccommodation", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="accommodationGroup", orphanRemoval=true)
      */
-    private $personAccommodations;
+    private $accommodationPersons;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="groupPeopleAccommodations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="accommodationGroups")
      * @ORM\JoinColumn(nullable=false)
      */
     private $groupPeople;
 
     public function __construct()
     {
-        $this->personAccommodations = new ArrayCollection();
+        $this->accommodationPersons = new ArrayCollection();
     }
 
 
@@ -224,30 +224,30 @@ class GroupPeopleAccommodation
     }
 
     /**
-     * @return Collection|PersonAccommodation[]
+     * @return Collection|AccommodationPerson[]
      */
-    public function getPersonAccommodations(): Collection
+    public function getAccommodationPersons(): Collection
     {
-        return $this->personAccommodations;
+        return $this->accommodationPersons;
     }
 
-    public function addPersonAccommodation(PersonAccommodation $personAccommodation): self
+    public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if (!$this->personAccommodations->contains($personAccommodation)) {
-            $this->personAccommodations[] = $personAccommodation;
-            $personAccommodation->setGroupPeopleAccommodation($this);
+        if (!$this->accommodationPersons->contains($accommodationPerson)) {
+            $this->accommodationPersons[] = $accommodationPerson;
+            $accommodationPerson->setAccommodationGroup($this);
         }
 
         return $this;
     }
 
-    public function removePersonAccommodation(PersonAccommodation $personAccommodation): self
+    public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if ($this->personAccommodations->contains($personAccommodation)) {
-            $this->personAccommodations->removeElement($personAccommodation);
+        if ($this->accommodationPersons->contains($accommodationPerson)) {
+            $this->accommodationPersons->removeElement($accommodationPerson);
             // set the owning side to null (unless already changed)
-            if ($personAccommodation->getGroupPeopleAccommodation() === $this) {
-                $personAccommodation->setGroupPeopleAccommodation(null);
+            if ($accommodationPerson->getAccommodationGroup() === $this) {
+                $accommodationPerson->setAccommodationGroup(null);
             }
         }
 

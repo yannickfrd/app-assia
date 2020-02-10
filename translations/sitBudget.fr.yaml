@@ -1,3 +1,5 @@
+Sit budget person: Budget groupe
+Sit budget group: Budget personne
 -- Select --: -- Sélectionner --
 Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
@@ -72,7 +74,6 @@ Ressources comment: Commentaire sur les ressources
 Salary amt: Montant salaire
 Salary: Salaire
 Settlement plan: Plan d'apurement
-Sit budget: Sit. budgétaire
 Solidarity alw amt: Montant ASS
 Solidarity alw: ASS
 Tax income n1: Revenu fiscal n-1
@@ -92,3 +93,9 @@ Water: Eau
 Write a comment about the budget situation : Ecrire un commentaire relatif à la situation budgétaire
 Youth guarantee amt: Montant Garantie jeunes
 Youth guarantee: Garantie jeunes
+Budget balance amt: Reste à vivre
+Charges group amt: Charges totales du groupe
+Debts group amt: Dettes totales du groupe
+Ressources group amt: Ressources totales du groupe
+Tax incomen1amt: Revenu fiscal n-1
+Tax incomen2amt: Revenu fiscal n-2

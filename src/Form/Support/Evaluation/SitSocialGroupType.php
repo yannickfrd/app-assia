@@ -2,7 +2,7 @@
 
 namespace App\Form\Support\Evaluation;
 
-use App\Entity\SitSocial;
+use App\Entity\SitSocialGroup;
 
 use App\Form\Utils\Choices;
 
@@ -11,19 +11,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SitSocialType extends AbstractType
+class SitSocialGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add("reasonRequest", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitSocial::REASON_REQUEST),
+                "choices" => Choices::getChoices(SitSocialGroup::REASON_REQUEST),
                 "placeholder" => "-- Select --",
                 "required" => false
 
             ])
             ->add("wanderingTime", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitSocial::WANDERING_TIME),
+                "choices" => Choices::getChoices(SitSocialGroup::WANDERING_TIME),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -48,7 +48,7 @@ class SitSocialType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitSocial::class,
+            "data_class" => SitSocialGroup::class,
             "translation_domain" => "sitSocial"
         ]);
     }

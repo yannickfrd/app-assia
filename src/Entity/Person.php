@@ -150,16 +150,16 @@ class Person
     private $supports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PersonAccommodation", mappedBy="person", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="person", orphanRemoval=true)
      */
-    private $personAccommodations;
+    private $accommodationPersons;
 
     public function __construct()
     {
         $this->updatedAt = new \DateTime();
         $this->rolesPerson = new ArrayCollection();
         $this->supports = new ArrayCollection();
-        $this->personAccommodations = new ArrayCollection();
+        $this->accommodationPersons = new ArrayCollection();
     }
 
     public function __toString()
@@ -451,30 +451,30 @@ class Person
     }
 
     /**
-     * @return Collection|PersonAccommodation[]
+     * @return Collection|AccommodationPerson[]
      */
-    public function getPersonAccommodations(): Collection
+    public function getAccommodationPersons(): Collection
     {
-        return $this->personAccommodations;
+        return $this->accommodationPersons;
     }
 
-    public function addPersonAccommodation(PersonAccommodation $personAccommodation): self
+    public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if (!$this->personAccommodations->contains($personAccommodation)) {
-            $this->personAccommodations[] = $personAccommodation;
-            $personAccommodation->setPerson($this);
+        if (!$this->accommodationPersons->contains($accommodationPerson)) {
+            $this->accommodationPersons[] = $accommodationPerson;
+            $accommodationPerson->setPerson($this);
         }
 
         return $this;
     }
 
-    public function removePersonAccommodation(PersonAccommodation $personAccommodation): self
+    public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if ($this->personAccommodations->contains($personAccommodation)) {
-            $this->personAccommodations->removeElement($personAccommodation);
+        if ($this->accommodationPersons->contains($accommodationPerson)) {
+            $this->accommodationPersons->removeElement($accommodationPerson);
             // set the owning side to null (unless already changed)
-            if ($personAccommodation->getPerson() === $this) {
-                $personAccommodation->setPerson(null);
+            if ($accommodationPerson->getPerson() === $this) {
+                $accommodationPerson->setPerson(null);
             }
         }
 

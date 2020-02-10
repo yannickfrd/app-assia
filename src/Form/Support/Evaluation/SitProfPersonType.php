@@ -2,7 +2,7 @@
 
 namespace App\Form\Support\Evaluation;
 
-use App\Entity\SitProf;
+use App\Entity\SitProfPerson;
 
 use App\Form\Utils\Choices;
 use App\Form\Utils\SelectList;
@@ -13,24 +13,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class SitProfType extends AbstractType
+class SitProfPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add("profStatus", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitProf::STATUS),
+                "choices" => Choices::getChoices(SitProfPerson::STATUS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
 
             ->add("schoolLevel", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitProf::SCHOOL_LEVEL),
+                "choices" => Choices::getChoices(SitProfPerson::SCHOOL_LEVEL),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("contractType", ChoiceType::class, [
-                "choices" => Choices::getChoices(SitProf::CONTRACT_TYPE),
+                "choices" => Choices::getChoices(SitProfPerson::CONTRACT_TYPE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -71,7 +71,7 @@ class SitProfType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SitProf::class,
+            "data_class" => SitProfPerson::class,
             "translation_domain" => "sitProf",
         ]);
     }

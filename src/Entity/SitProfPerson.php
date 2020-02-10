@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitProfRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitProfPersonRepository")
  */
-class SitProf
+class SitProfPerson
 {
     public const STATUS = [
         1 => "Demandeur/euse d'emploi",
@@ -119,7 +119,7 @@ class SitProf
     private $commentSitProf;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitProf", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitProfPerson", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportPerson;

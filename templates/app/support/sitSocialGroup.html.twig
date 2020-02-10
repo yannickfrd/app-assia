@@ -1,0 +1,75 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sit-social" %}
+
+{% block card_title %}Situation sociale{% endblock %}
+
+{% block card_body %}
+
+<div class="form-group row">
+    <div class="col-md-6"> {{ form_row(form.sitSocialGroup.reasonRequest) }}</div>
+    <div class="col-md-6"> {{ form_row(form.sitSocialGroup.wanderingTime) }}</div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-form-label col-4 mb-3">Spécificités</div>
+                    <div class="col-8">
+                        <select id="js-sitSocialGroup_specifity" name="sitSocialGroup_specifity" class="form-control">
+                            <option class="default" value="">-- Ajouter --</option>
+                            <option value="1">Présence d'un animal</option>
+                            <option value="2">Personne en fauteuil roulant</option>
+                            <option value="3">Personne à mobilité réduite</option>
+                            <option value="4">Personne victime de violence</option>
+                            <option value="5">Femme victime de violence conjugale</option>
+                            <option value="6">Prise en charge ASE</option>
+                            <option value="98">Autre spécificité</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.sitSocialGroup.speComment) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <div id="js-sitSocialGroup_specifity-1" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speAnimal) }}</div>
+                    <div id="js-sitSocialGroup_specifity-2" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speWheelchair) }}</div>
+                    <div id="js-sitSocialGroup_specifity-3" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speReducedMobility) }}</div>
+                    <div id="js-sitSocialGroup_specifity-4" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speViolenceVictim) }}</div>
+                    <div id="js-sitSocialGroup_specifity-5" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speDomViolenceVictim) }}</div>
+                    <div id="js-sitSocialGroup_specifity-6" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speASE) }}</div>
+                    <div id="js-sitSocialGroup_specifity-98" class="col-md-2 js-sitSocialGroup_specifity d-block">
+                        {{ form_widget(form.sitSocialGroup.speOther) }}</div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6 js-speAnimal d-none"> {{ form_row(form.sitSocialGroup.speAnimalName) }}</div>
+                    <div class="col-md-6 js-speOther d-none"> {{ form_row(form.sitSocialGroup.speOtherPrecision) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    {# {{ form_label(form.sitSocialGroup.commentSitSocial) }} #}
+    <div class="col-md-12">
+        {{ form_widget(form.sitSocialGroup.commentSitSocial) }}
+    </div>
+</div>
+{% endblock %}

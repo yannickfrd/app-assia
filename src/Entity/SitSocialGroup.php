@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitSocialRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitSocialGroupRepository")
  */
-class SitSocial
+class SitSocialGroup
 {
     public const REASON_REQUEST = [
         1 => "Absence de ressource",
@@ -122,7 +122,7 @@ class SitSocial
     private $speComment;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitSocial", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="sitSocialGroup", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportGroup;

@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SitBudgetRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SitBudgePersonRepository")
  */
-class SitBudget
+class SitBudgetPerson
 {
     public const OVER_INDEBT_RECCORD = [
         1 => "Oui",
@@ -427,7 +427,7 @@ class SitBudget
     private $commentSitBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitBudget", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="sitBudgetPerson", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportPerson;

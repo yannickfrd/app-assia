@@ -3,14 +3,14 @@
 namespace App\Export;
 
 use App\Entity\SupportPerson;
-use App\Entity\SitSocial;
-use App\Entity\SitAdm;
+use App\Entity\SitSocialGroup;
+use App\Entity\SitAdmPerson;
 use App\Entity\SitFamilyGroup;
 use App\Entity\SitFamilyPerson;
-use App\Entity\SitProf;
+use App\Entity\SitProfPerson;
 use App\Entity\SitBudgetGroup;
-use App\Entity\SitBudget;
-use App\Entity\SitHousing;
+use App\Entity\SitBudgetPerson;
+use App\Entity\SitHousingGroup;
 use App\Service\Export;
 use App\Service\ObjectToArray;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -20,26 +20,26 @@ class SupportPersonFullExport
     protected $arrayData;
     protected $objectToArray;
     protected $datas;
-    protected $sitSocial;
-    protected $sitAdm;
+    protected $sitSocialGroup;
+    protected $sitAdmPerson;
     protected $sitFamilyGroup;
-    protected $sitProf;
+    protected $sitProfPerson;
     protected $sitBudgetGroup;
-    protected $sitBudget;
-    protected $sitHousing;
+    protected $sitBudgetPerson;
+    protected $sitHousingGroup;
 
     public function __construct(ObjectToArray $objectToArray)
     {
         $this->arrayData = [];
         $this->objectToArray = $objectToArray;
-        $this->sitSocial = new SitSocial();
-        $this->sitAdm = new SitAdm();
+        $this->sitSocialGroup = new SitSocialGroup();
+        $this->sitAdmPerson = new SitAdmPerson();
         $this->sitFamilyPerson = new SitFamilyPerson();
         $this->sitFamilyGroup = new SitFamilyGroup();
-        $this->sitProf = new SitProf();
+        $this->sitProfPerson = new SitProfPerson();
         $this->sitBudgetGroup = new SitBudgetGroup();
-        $this->sitBudget = new SitBudget();
-        $this->sitHousing = new SitHousing();
+        $this->sitBudgetPerson = new SitBudgetPerson();
+        $this->sitHousingGroup = new SitHousingGroup();
     }
 
     /**
@@ -96,21 +96,21 @@ class SupportPersonFullExport
             "Pôle" => $supportGroup->getService()->getPole()->getName(),
         ];
 
-        $this->mergeObject($this->sitSocial, $supportGroup->getsitSocial(), "sitSocial");
-        $this->mergeObject($this->sitAdm, $supportPerson->getSitAdm(), "sitAdm");
-        $this->mergeObject($this->sitFamilyGroup, $supportGroup->getSitFamilyGroup(), "sitFamily");
-        $this->mergeObject($this->sitFamilyPerson, $supportPerson->getSitFamilyPerson(), "sitFamilyPerson");
-        $this->mergeObject($this->sitProf, $supportPerson->getSitProf(), "sitProf");
-        $this->mergeObject($this->sitBudgetGroup, $supportGroup->getSitBudgetGroup(), "sitBudgetGroup");
-        $this->mergeObject($this->sitBudget, $supportPerson->getSitBudget(), "sitBudget");
-        $this->mergeObject($this->sitHousing, $supportGroup->getSitHousing(), "sitHousing");
+        $this->mergeObject($this->sitSocialGroup, $supportGroup->getsitSocialGroup(), "sitSocialGroup", "sitSocial");
+        $this->mergeObject($this->sitAdmPerson, $supportPerson->getSitAdmPerson(), "sitAdmPerson", "sitAdm");
+        $this->mergeObject($this->sitFamilyGroup, $supportGroup->getSitFamilyGroup(), "sitFamilyGroup", "sitFamily");
+        $this->mergeObject($this->sitFamilyPerson, $supportPerson->getSitFamilyPerson(), "sitFamilyPerson", "sitFamily");
+        $this->mergeObject($this->sitProfPerson, $supportPerson->getSitProfPerson(), "sitProfPerson", "sitProf");
+        $this->mergeObject($this->sitBudgetGroup, $supportGroup->getSitBudgetGroup(), "sitBudgetGroup", "sitBudget");
+        $this->mergeObject($this->sitBudgetPerson, $supportPerson->getSitBudgetPerson(), "sitBudgetPerson", "sitBudget");
+        $this->mergeObject($this->sitHousingGroup, $supportGroup->getSitHousingGroup(), "sitHousingGroup", "sitHousing");
 
         return $this->datas;
     }
 
-    protected function mergeObject($nameObject, $emtpyObject, $object)
+    protected function mergeObject($nameObject, $emtpyObject, $object, $translation)
     {
-        $array = $this->objectToArray->getArray($nameObject, $emtpyObject, $object);
+        $array = $this->objectToArray->getArray($nameObject, $emtpyObject, $object, $translation);
         $this->datas = array_merge($this->datas, $array);
     }
 }

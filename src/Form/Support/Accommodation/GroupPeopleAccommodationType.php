@@ -4,7 +4,7 @@ namespace App\Form\Support\Accommodation;
 
 use App\Form\Utils\Choices;
 use App\Entity\Accommodation;
-use App\Entity\GroupPeopleAccommodation;
+use App\Entity\AccommodationGroup;
 use Symfony\Component\Form\AbstractType;
 use App\Repository\AccommodationRepository;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,17 +12,17 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use App\Form\Support\Accommodation\PersonAccommodationType;
+use App\Form\Support\Accommodation\AccommodationPersonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class GroupPeopleAccommodationType extends AbstractType
+class AccommodationGroupType extends AbstractType
 {
     protected $service;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $groupPeopleAccommodation = $options["data"];
-        $this->service = $groupPeopleAccommodation->getSupportGroup()->getService();
+        $accommodationGroup = $options["data"];
+        $this->service = $accommodationGroup->getSupportGroup()->getService();
 
         $builder
             ->add("accommodation", EntityType::class, [
@@ -41,14 +41,14 @@ class GroupPeopleAccommodationType extends AbstractType
                 "required" => false
             ])
             ->add("endReason", ChoiceType::class, [
-                "choices" => Choices::getChoices(GroupPeopleAccommodation::END_REASON),
+                "choices" => Choices::getChoices(AccommodationGroup::END_REASON),
                 "required" => false,
                 "placeholder" => "-- Select --",
 
             ])
             ->add("commentEndReason")
-            ->add("personAccommodations", CollectionType::class, [
-                "entry_type"   => PersonAccommodationType::class,
+            ->add("accommodationPersons", CollectionType::class, [
+                "entry_type"   => AccommodationPersonType::class,
                 "label_attr" => [
                     "class" => "sr-only"
                 ],
@@ -62,7 +62,7 @@ class GroupPeopleAccommodationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => GroupPeopleAccommodation::class,
+            "data_class" => AccommodationGroup::class,
             "translation_domain" => "forms"
         ]);
     }

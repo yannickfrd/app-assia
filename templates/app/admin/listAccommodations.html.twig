@@ -78,8 +78,8 @@
                         <td>{{ accommodation.department }}</td>
                         <td>{{ accommodation.address }}</td>
                         <td>
-                            {% for  groupPeopleAccommodation in accommodation.groupPeopleAccommodations|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
-                            Occupé ({{ groupPeopleAccommodation.personAccommodations|length }})<br>
+                            {% for  accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
+                            Occupé ({{ accommodationGroup.accommodationPersons|length }})<br>
                             {% endfor %}
                         </td>
                         <td>
