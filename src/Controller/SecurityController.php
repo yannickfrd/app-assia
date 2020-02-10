@@ -79,7 +79,7 @@ class SecurityController extends AbstractController
         $user = $this->repo->findOneBy(["username" => $lastUsername]);
 
         if ($error) {
-            $this->errorLogin($user);
+            $this->errorLogin($user ?? null);
         }
 
         return $this->render("security/login.html.twig", [
@@ -278,7 +278,7 @@ class SecurityController extends AbstractController
 
         $user->setPassword($hashPassword)
             ->setLoginCount(0)
-            ->setActive(true)
+            ->setEnabled(true)
             ->setCreatedAt($now)
             ->setCreatedBy($this->getUser())
             ->setUpdatedAt($now)
@@ -299,7 +299,7 @@ class SecurityController extends AbstractController
      * 
      * @param User $user
      */
-    protected function errorLogin(User $user)
+    protected function errorLogin(User $user = null)
     {
         if ($user) {
             $user->setFailureLoginCount($user->getFailureLoginCount() + 1);

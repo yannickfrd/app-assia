@@ -81,6 +81,8 @@ class SupportController extends AbstractController
         $groupPeople = $repo->findGroupPeopleById($id);
 
         $supportGroup = new SupportGroup();
+        $supportGroup->setStartDate(new \DateTime());
+        $supportGroup->setReferent($this->getUser());
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
@@ -109,7 +111,7 @@ class SupportController extends AbstractController
      */
     public function editSupportGroup(SupportGroup $supportGroup, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
@@ -138,7 +140,7 @@ class SupportController extends AbstractController
      */
     public function editSupportGroupleWithPeople(SupportGroup $supportGroup, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $form = $this->createForm(SupportGroupWithPeopleType::class, $supportGroup);
         $form->handleRequest($request);

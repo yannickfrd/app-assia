@@ -98,8 +98,8 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere("p.id = :pole_id")
                 ->setParameter("pole_id", $userSearch->getPole());
         }
-        if ($userSearch->getActive()) {
-            $query->andWhere("u.active = TRUE");
+        if ($userSearch->getenabled()) {
+            $query->andWhere("u.enabled = TRUE");
         }
 
         if ($userSearch->getService()->count()) {
@@ -123,21 +123,45 @@ class UserRepository extends ServiceEntityRepository
     /** 
      * Donne la liste des utilisateurs
      */
-    public function getUsersQueryList($currentUser, $allServiceUsers = false)
+    public function getUsersQueryList($currentUser, $user = null)
     {
         $query =  $this->createQueryBuilder("u")
-            ->select("PARTIAL u.{id, firstname, lastname, active}")
-            ->where("u.active = TRUE");
+            ->select("PARTIAL u.{id, firstname, lastname, enabled}");
+
+        $expr = $query->expr();
+        $orX = $expr->orX();
 
         if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
-            if ($currentUser->isRole("ROLE_ADMIN") || $allServiceUsers == true) {
-                $query = $query->leftJoin("u.serviceUser", "r")
-                    ->andWhere("r.service IN (:services)")
-                    ->setParameter("services", $currentUser->getServices());
-            } else {
-                $query = $query->where("u.id = :user")
-                    ->setParameter("user", $currentUser->getUser());
-            }
+            $query = $query->leftJoin("u.serviceUser", "r")
+                ->andWhere("r.service IN (:services)")
+                ->setParameter("services", $currentUser->getServices());
+            $orX->add($expr->eq("u.id", $currentUser->getUser()));
+        }
+
+        // if ($currentUser->isRole("ROLE_ADMIN")) {
+        $orX->add($expr->eq("u.enabled", true));
+        // }
+        if ($user) {
+            $orX->add($expr->eq("u.id", $user));
+        }
+        $query->andWhere($orX);
+
+        return $query->orderBy("u.lastname", "ASC");
+    }
+
+    /** 
+     * Donne la liste des utilisateurs pour les listes déroulantes
+     */
+    public function getAllUsersFromServicesQueryList($currentUser)
+    {
+        $query =  $this->createQueryBuilder("u")
+            ->select("PARTIAL u.{id, firstname, lastname, enabled}")
+            ->where("u.enabled = TRUE");
+
+        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
+            $query = $query->leftJoin("u.serviceUser", "r")
+                ->andWhere("r.service IN (:services)")
+                ->setParameter("services", $currentUser->getServices());
         }
         return $query->orderBy("u.lastname", "ASC");
     }
@@ -150,12 +174,12 @@ class UserRepository extends ServiceEntityRepository
     public function findUsersFromService(Service $service)
     {
         return $this->createQueryBuilder("u")
-            ->select("PARTIAL u.{id, firstname, lastname, status, phone, email, active}")
+            ->select("PARTIAL u.{id, firstname, lastname, status, phone, email, enabled}")
             ->leftJoin("u.serviceUser", "su")->addselect("su")
 
             ->where("su.service = :service")
             ->setParameter("service", $service)
-            ->andWhere("u.active = TRUE")
+            ->andWhere("u.enabled = TRUE")
 
             ->orderBy("u.lastname", "ASC")
 

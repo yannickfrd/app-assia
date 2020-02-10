@@ -95,7 +95,7 @@ class UserSearchType extends AbstractType
                 "placeholder" => "-- Pole --",
                 "required" => false,
             ])
-            ->add("active", CheckBoxType::class, [
+            ->add("enabled", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",

@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 class SupportGroupType extends AbstractType
 {
     private $currentUser;
+    private $data;
 
     public function __construct(CurrentUserService $currentUser)
     {
@@ -41,6 +42,7 @@ class SupportGroupType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->data = $options["data"];
 
         $builder
             ->add("startDate", DateType::class, [
@@ -72,14 +74,14 @@ class SupportGroupType extends AbstractType
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    return $repo->getUsersQueryList($this->currentUser);
-                }
+                    return $repo->getUsersQueryList($this->currentUser, $this->data->getReferent());
+                },
             ])
             ->add("referent2", EntityType::class, [
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    return $repo->getUsersQueryList($this->currentUser, true);
+                    return $repo->getUsersQueryList($this->currentUser, $this->data->getReferent2());
                 },
                 "placeholder" => "-- Select --",
                 "required" => false

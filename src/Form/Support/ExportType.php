@@ -75,7 +75,7 @@ class ExportType extends AbstractType
                 "class" => User::class,
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
-                    return $repo->getUsersQueryList($this->currentUser);
+                    return $repo->getAllUsersFromServicesQueryList($this->currentUser);
                 },
                 "placeholder" => "-- Référent --",
                 "attr" => [

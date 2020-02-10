@@ -181,7 +181,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $active;
+    private $enabled;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -226,10 +226,10 @@ class User implements UserInterface
         $this->rdvs = new ArrayCollection();
     }
 
-    // public function __toString()
-    // {
-    //     return strval($this->id);
-    // }
+    public function __toString()
+    {
+        return strval($this->id);
+    }
 
     public function getId(): ?int
     {
@@ -656,14 +656,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getActive(): ?bool
+    public function getEnabled(): ?bool
     {
-        return $this->active;
+        return $this->enabled;
     }
 
-    public function setActive(?bool $active): self
+    public function setEnabled(?bool $enabled): self
     {
-        $this->active = $active;
+        $this->enabled = $enabled;
 
         return $this;
     }
