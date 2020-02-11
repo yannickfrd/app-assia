@@ -149,16 +149,16 @@ class SupportPersonRepository extends ServiceEntityRepository
     {
         $query = $this->getSupportsQuery();
 
-        $query = $query
-            ->leftJoin("sg.sitSocialGroup", "sitSocialGroup")->addselect("sitSocialGroup")
-            ->leftJoin("sg.sitFamilyGroup", "sitFamilyGroup")->addselect("sitFamilyGroup")
-            ->leftJoin("sg.sitBudgetGroup", "sitBudgetGroup")->addselect("sitBudgetGroup")
-            ->leftJoin("sg.sitHousingGroup", "sitHousingGroup")->addselect("sitHousingGroup")
+        $query = $query->leftJoin("sp.evaluationsPerson", "ep")->addselect("ep")
+            ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
+            ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
+            ->leftJoin("ep.evalProfPerson", "evalProfPerson")->addselect("evalProfPerson")
+            ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
 
-            ->leftJoin("sp.sitAdmPerson", "sitAdmPerson")->addselect("sitAdmPerson")
-            ->leftJoin("sp.sitFamilyPerson", "sitFamilyPerson")->addselect("sitFamilyPerson")
-            ->leftJoin("sp.sitProfPerson", "sitProfPerson")->addselect("sitProfPerson")
-            ->leftJoin("sp.sitBudgetPerson", "sitBudgetPerson")->addselect("sitBudgetPerson");
+            ->leftJoin("ep.evaluationGroup", "eg")->addselect("eg")
+            ->leftJoin("eg.evalSocialGroup", "evalSocialGroup")->addselect("evalSocialGroup")
+            ->leftJoin("eg.evalFamilyGroup", "evalFamilyGroup")->addselect("evalFamilyGroup")
+            ->leftJoin("eg.evalBudgetGroup", "evalBudgetGroup")->addselect("evalBudgetGroup");
 
         if ($supportGroupSearch->getStatus()) {
             $expr = $query->expr();
@@ -218,7 +218,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        return $query->setMaxResults(502)
+        return $query->setMaxResults(500)
             ->orderBy("sp.startDate", "DESC")
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();

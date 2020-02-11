@@ -73,35 +73,21 @@ class SupportPerson
     private $supportGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitFamilyPerson;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitProfPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitProfPerson;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitAdmPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitAdmPerson;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitBudgetPerson;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportPerson")
      */
     private $notes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationPerson", mappedBy="supportPerson", orphanRemoval=true)
+     */
+    private $evaluationsPerson;
 
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->accommodationPersons = new ArrayCollection();
+        $this->evaluationsPerson = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -210,74 +196,6 @@ class SupportPerson
         return $this;
     }
 
-    public function getSitFamilyPerson(): ?SitFamilyPerson
-    {
-        return $this->sitFamilyPerson;
-    }
-
-    public function setSitFamilyPerson(SitFamilyPerson $sitFamilyPerson): self
-    {
-        $this->sitFamilyPerson = $sitFamilyPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitFamilyPerson->getSupportPerson()) {
-            $sitFamilyPerson->setSupportPerson($this);
-        }
-
-        return $this;
-    }
-
-    public function getSitProfPerson(): ?SitProfPerson
-    {
-        return $this->sitProfPerson;
-    }
-
-    public function setSitProfPerson(SitProfPerson $sitProfPerson): self
-    {
-        $this->sitProfPerson = $sitProfPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitProfPerson->getSupportPerson()) {
-            $sitProfPerson->setSupportPerson($this);
-        }
-
-        return $this;
-    }
-
-    public function getSitAdmPerson(): ?SitAdmPerson
-    {
-        return $this->sitAdmPerson;
-    }
-
-    public function setSitAdmPerson(SitAdmPerson $sitAdmPerson): self
-    {
-        $this->sitAdmPerson = $sitAdmPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitAdmPerson->getSupportPerson()) {
-            $sitAdmPerson->setSupportPerson($this);
-        }
-
-        return $this;
-    }
-
-    public function getSitBudgetPerson(): ?SitBudgetPerson
-    {
-        return $this->sitBudgetPerson;
-    }
-
-    public function setSitBudgetPerson(SitBudgetPerson $sitBudgetPerson): self
-    {
-        $this->sitBudgetPerson = $sitBudgetPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitBudgetPerson->getSupportPerson()) {
-            $sitBudgetPerson->setSupportPerson($this);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Note[]
      */
@@ -303,6 +221,37 @@ class SupportPerson
             // set the owning side to null (unless already changed)
             if ($note->getSupportPerson() === $this) {
                 $note->setSupportPerson(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EvaluationPerson[]
+     */
+    public function getEvaluationsPerson(): Collection
+    {
+        return $this->evaluationsPerson;
+    }
+
+    public function addEvaluationsPerson(EvaluationPerson $evaluationsPerson): self
+    {
+        if (!$this->evaluationsPerson->contains($evaluationsPerson)) {
+            $this->evaluationsPerson[] = $evaluationsPerson;
+            $evaluationsPerson->setSupportPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluationsPerson(EvaluationPerson $evaluationsPerson): self
+    {
+        if ($this->evaluationsPerson->contains($evaluationsPerson)) {
+            $this->evaluationsPerson->removeElement($evaluationsPerson);
+            // set the owning side to null (unless already changed)
+            if ($evaluationsPerson->getSupportPerson() === $this) {
+                $evaluationsPerson->setSupportPerson(null);
             }
         }
 

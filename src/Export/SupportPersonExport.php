@@ -39,7 +39,7 @@ class SupportPersonExport
      * @param SupportPerson $supportPerson
      * @return array
      */
-    protected function getDatas(SupportPerson $supportPerson)
+    public function getDatas(SupportPerson $supportPerson)
     {
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
@@ -62,8 +62,8 @@ class SupportPersonExport
             "Date de naissance" => $this->formatDate($person->getBirthdate()),
             "Typologie familiale" => $groupPeople->getFamilyTypologyType(),
             "Nb de personnes" => $groupPeople->getNbPeople(),
-            "Rôle dans le groupe" => $rolePerson->getRoleList(),
-            "DP" => $rolePerson->getHead() ? "Oui" : "Non",
+            "Rôle dans le groupe" => $rolePerson ? $rolePerson->getRoleList() : "NR",
+            "DP" => $rolePerson && $rolePerson->getRoleList() ? "Oui" : "Non",
             "Statut" => $supportPerson->getStatusType(),
             "Date début suivi" => $this->formatDate($supportPerson->getStartDate()),
             "Date Fin suivi" => $this->formatDate($supportPerson->getEndDate()),

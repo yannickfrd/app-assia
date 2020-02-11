@@ -41,14 +41,14 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     Service: Service
     ServiceDevice: Table de jointure entre dispositif et service
     ServiceUser: Table de jointure entre utilisateur et service
-    SitAdmPerson: Situation administrative
-    SitBudgetPerson: Situation budgétaire de la personne
-    SitBudgetGroup: Situation budgétaire du groupe
-    SitFamilyGroup: Situation familiale du groupe
-    SitFamilyPerson: Situation familiale de la personne
-    SitHousingGroup: Situation au regard du logement et de l'hébergement
-    SitProfPerson: Situation professionnelle de la personne
-    SitSocialPerson: Situation sociale de la personne
+    EvalAdmPerson: Evaluation administrative
+    EvalBudgetPerson: Evaluation budgétaire de la personne
+    EvalBudgetGroup: Evaluation budgétaire du groupe
+    EvalFamilyGroup: Evaluation familiale du groupe
+    EvalFamilyPerson: Evaluation familiale de la personne
+    EvalHousingGroup: Evaluation au regard du logement et de l'hébergement
+    EvalProfPerson: Evaluation professionnelle de la personne
+    EvalSocialPerson: Evaluation sociale de la personne
     SupportGroup: Suivi social du groupe
     SupportPerson: Suivi sociale de la personne
     User: Utilisateur
@@ -80,19 +80,19 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     childcareAmt: Montant Garde enfant(s)
     childcareSchool: Garde ou scolarité
     childcareSchoolLocation: Lieu de garde/scolarité
-    childDependance: A charge / Situation enfant
+    childDependance: A charge / Evaluation enfant
     childToHost: A héberger 
     citiesWishes: Communes ou départements souhaités
     city: Ville
     closingDate: Date de fermeture
     comment: Commentaire
-    commentEndSituation: Commentaire sur la situation à la sortie
-    commentSitAdm: Commentaire relatif à la situation administrative
-    commentSitBudget: Commentaire relatif à la situation budgétaire
-    commentSitBudget: Commentaire situation budgétaire du groupe
-    commentSitFamily: Commentaire relatif à la situation familiale
-    commentSitHousing: Commentaire relative au logement et à l'hébergement
-    commentSitProf: Commentaire relatif à la situation professionnelle 
+    commentEndEvaluation: Commentaire sur la situation à la sortie
+    commentEvalAdm: Commentaire relatif à la situation administrative
+    commentEvalBudget: Commentaire relatif à la situation budgétaire
+    commentEvalBudget: Commentaire situation budgétaire du groupe
+    commentEvalFamily: Commentaire relatif à la situation familiale
+    commentEvalHousing: Commentaire relative au logement et à l'hébergement
+    commentEvalProf: Commentaire relatif à la situation professionnelle 
     connectionAt: Date de connexion
     content: Contenu
     contractEndDate: Date de fin du contrat
@@ -150,7 +150,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     endDateMdph: Date de fin MDPH (RQTH)
     endDateRight: Date fin de droit 
     endDateValidPermit: Date de fin de validité du titre
-    endSituation: Situation à la sortie
+    endEvaluation: Evaluation à la sortie
     endTime: Heure de fin durdv
     expDateChildbirth: Date prévisionnelle de l'accouchement
     expulsionComment: Commentaire sur l'expulsion location
@@ -171,7 +171,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     housingDept: Département - hébergement
     housingExpeComment: Commentaire expérience lié au logement
     housingExperience: Expérience de logement autonome
-    housingStatus: Situation résidentielle
+    housingStatus: Evaluation résidentielle
     housingWishes: Type de logement souhaité
     hsgActionDate: Date de dépôt Action Logement
     hsgActionDept: Département
@@ -189,7 +189,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     maidenName: Nom de jeune fille
     maintenance: Pension alimentaire
     maintenanceAmt: Montant Pension alimentaire
-    maritalStatus: Situation matrimoniale
+    maritalStatus: Evaluation matrimoniale
     minIncome: RSA
     minIncomeAmt: Montant RSA
     monthlyRepaymentAmt: Montant du remboursement mensuel

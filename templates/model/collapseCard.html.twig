@@ -1,7 +1,7 @@
 <div class="accordion" id="accordion-parent-{{ id }}">
 	<div id="card-{{ id }}" class="card mb-0 border-bottom">
 		<div class="card-header py-2 collapsed cursor-pointer" id="heading-{{ id }}" data-toggle="collapse" data-target="#collapse-{{ id }}" aria-expanded="true" aria-controls="collapse-{{ id }}">
-			<h2 class="h4 my-2"> {% block card_title %}{% endblock %}
+			<h2 class="h4 my-2"><a class="text-{{ theme_color }}">{% block card_title %}{% endblock %}</a>
 				<div class="float-right">
 					<span class="fa fa-chevron-right"></span>
 				</div>

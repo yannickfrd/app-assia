@@ -1,0 +1,75 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sit-social" %}
+
+{% block card_title %}Social{% endblock %}
+
+{% block card_body %}
+
+<div class="form-group row">
+    <div class="col-md-6"> {{ form_row(form.evalSocialGroup.reasonRequest) }}</div>
+    <div class="col-md-6"> {{ form_row(form.evalSocialGroup.wanderingTime) }}</div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-form-label col-4 mb-3">Spécificités</div>
+                    <div class="col-8">
+                        <select id="js-evalSocialGroup_specifity" name="evalSocialGroup_specifity" class="form-control">
+                            <option class="default" value="">-- Ajouter --</option>
+                            <option value="1">Présence d'un animal</option>
+                            <option value="2">Personne en fauteuil roulant</option>
+                            <option value="3">Personne à mobilité réduite</option>
+                            <option value="4">Personne victime de violence</option>
+                            <option value="5">Femme victime de violence conjugale</option>
+                            <option value="6">Prise en charge ASE</option>
+                            <option value="98">Autre spécificité</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.evalSocialGroup.speComment) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <div id="js-evalSocialGroup_specifity-1" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speAnimal) }}</div>
+                    <div id="js-evalSocialGroup_specifity-2" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speWheelchair) }}</div>
+                    <div id="js-evalSocialGroup_specifity-3" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speReducedMobility) }}</div>
+                    <div id="js-evalSocialGroup_specifity-4" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speViolenceVictim) }}</div>
+                    <div id="js-evalSocialGroup_specifity-5" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speDomViolenceVictim) }}</div>
+                    <div id="js-evalSocialGroup_specifity-6" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speASE) }}</div>
+                    <div id="js-evalSocialGroup_specifity-98" class="col-md-2 js-evalSocialGroup_specifity d-block">
+                        {{ form_widget(form.evalSocialGroup.speOther) }}</div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6 js-speAnimal d-none"> {{ form_row(form.evalSocialGroup.speAnimalName) }}</div>
+                    <div class="col-md-6 js-speOther d-none"> {{ form_row(form.evalSocialGroup.speOtherPrecision) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    {# {{ form_label(form.evalSocialGroup.commentEvalSocial) }} #}
+    <div class="col-md-12">
+        {{ form_widget(form.evalSocialGroup.commentEvalSocial) }}
+    </div>
+</div>
+{% endblock %}

@@ -2,95 +2,75 @@
 
 {# {% form_theme form "form/bootstrap_4_horizontal.html.twig" %} #}
 
-{% block title %}Logement/hébergement | Esperer95-app {% endblock %}
+{% block title %}Logement/hébergement | Esperer95-app
+{% endblock %}
 
 {% block body %}
 
-<div class="container">
-    <section class="mt-0">
-        <h1 class="h2 mb-4">Logement/hébergement</h1>
-        <div>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                            href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span
-                                class="fas fa-users mr-2"></span>Fiche groupe <span
-                                class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
-                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                            href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Historique logements/hébergements</li>
-                </ol>
-            </nav>
-            {% for supportPerson in support.supportPerson %}
-            <span
-                class="btn btn-outline-{{ theme_color }} btn-sm mb-2 shadow-sm">{{ supportPerson.person.fullname }}</span>
-            {% endfor %}
-        </div>
-    </section>
+	<div class="container">
 
-    <hr>
+		{% set title = "Logement/hébergement" %}
+		{% include "app/support/navSuppport.html.twig" %}
 
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <a href="{{ path("support_accommodation_new", {'id':support.id}) }}"
-            class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span
-                class="fas fa-plus-square mr-2"></span>Ajouter une prise en charge</a>
-        {% if support_group_accommodations|length == 0 %}
-        <p>Aucun hébergement.</p>
-        {% else %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="row" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-150">Groupe de places</th>
-                        <th scope="col" class="align-middle th-w-100">Dispositif</th>
-                        <th scope="col" class="align-middle th-date">Date de début</th>
-                        <th scope="col" class="align-middle th-date">Date de fin</th>
-                        <th scope="col" class="align-middle th-w-120">Nb de personnes prises en charge</th>
-                        <th scope="col" class="align-middle th-w-100">Ville</th>
-                        <th scope="col" class="align-middle th-w-150">Adresse</th>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                    </tr>
-                </thead>
+		<section>
+			{% include "model/msgFlash.html.twig" %}
+			<a href="{{ path("support_accommodation_new", {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person">
+				<span class="fas fa-plus-square mr-2"></span>Ajouter une prise en charge</a>
+			{% if support_group_accommodations|length == 0 %}
+				<p>Aucun hébergement.</p>
+			{% else %}
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+						<thead>
+							<tr>
+								<th scope="row" class="align-middle th-w-20"></th>
+								<th scope="col" class="align-middle th-w-150">Groupe de places</th>
+								<th scope="col" class="align-middle th-w-100">Dispositif</th>
+								<th scope="col" class="align-middle th-date">Date de début</th>
+								<th scope="col" class="align-middle th-date">Date de fin</th>
+								<th scope="col" class="align-middle th-w-120">Nb de personnes prises en charge</th>
+								<th scope="col" class="align-middle th-w-100">Ville</th>
+								<th scope="col" class="align-middle th-w-150">Adresse</th>
+								<th scope="col" class="align-middle th-w-20"></th>
+							</tr>
+						</thead>
 
-                <tbody id="container-accommodationGroups" data-support="{{ support.id }}">
-                    {% for support_group_accommodation in support_group_accommodations %}
+						<tbody id="container-accommodationGroups" data-support="{{ support.id }}">
+							{% for support_group_accommodation in support_group_accommodations %}
 
-                    <tr id="accommodationGroup-{{ support_group_accommodation.id }}">
-                        <th scope="row" class="align-middle text-center">
-                            <a href="{{ path('support_accommodation_edit', {'id': support_group_accommodation.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
-                                title="Voir le détail de l'hébergement"><span class="fas fa-eye"></span>
-                            </a>
-                        </th>
-                        <td>{{ support_group_accommodation.accommodation.name }}</td>
-                        <td>{{ support_group_accommodation.accommodation.device.name }}</td>
-                        <td>{{ support_group_accommodation.startDate | date("d/m/Y") }}</td>
-                        <td>{% if support_group_accommodation.endDate %}{{ support_group_accommodation.endDate | date("d/m/Y") }}{% endif %}
-                        </td>
-                        <td>{{ support_group_accommodation.accommodationPersons|length }}</td>
-                        <td>{{ support_group_accommodation.accommodation.city }}</td>
-                        <td>{{ support_group_accommodation.accommodation.address }}</td>
-                        <td class="align-middle text-center">
-                            <a href="{{ path('support_group_people_accommodation_delete', {'id':support_group_accommodation.id}) }}"
-                                class="btn btn-danger btn-sm shadow my-1" data-placement="bottom"
-                                title="Supprimer cette prise en charge"
-                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge?')){return true;}else{return false;}"><span
-                                    class="fas fa-trash-alt"></span>
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
-    </section>
+								<tr id="accommodationGroup-{{ support_group_accommodation.id }}">
+									<th scope="row" class="align-middle text-center">
+										<a href="{{ path('support_accommodation_edit', {'id': support_group_accommodation.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom" title="Voir le détail de l'hébergement">
+											<span class="fas fa-eye"></span>
+										</a>
+									</th>
+									<td>{{ support_group_accommodation.accommodation.name }}</td>
+									<td>{{ support_group_accommodation.accommodation.device.name }}</td>
+									<td>{{ support_group_accommodation.startDate | date("d/m/Y") }}</td>
+									<td>
+										{% if support_group_accommodation.endDate %}
+											{{ support_group_accommodation.endDate | date("d/m/Y") }}
+										{% endif %}
+									</td>
+									<td>{{ support_group_accommodation.accommodationPersons|length }}</td>
+									<td>{{ support_group_accommodation.accommodation.city }}</td>
+									<td>{{ support_group_accommodation.accommodation.address }}</td>
+									<td class="align-middle text-center">
+										<a href="{{ path('support_group_people_accommodation_delete', {'id':support_group_accommodation.id}) }}" class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge?')){return true;}else{return false;}">
+											<span class="fas fa-trash-alt"></span>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</section>
 
-</div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-{# {{ encore_entry_script_tags("") }} #}
+	{# {{ encore_entry_script_tags("") }} #}
 {% endblock javascripts %}

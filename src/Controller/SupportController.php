@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\EvaluationPerson;
 use App\Form\Model\Export;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Support\SupportGroupWithPeopleType;
+use App\Repository\EvaluationGroupRepository;
 use App\Service\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -111,13 +113,15 @@ class SupportController extends AbstractController
      */
     public function editSupportGroup(SupportGroup $supportGroup, Request $request): Response
     {
+        // $supportGroup = $this->repoSupportGroup->findSupportById($id);
+
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $this->tryEditSupportGroup($form, $supportGroup);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->updateSupportGroup($supportGroup);
         }
 
         if (!$form->isSubmitted() && $supportGroup->getService()->getAccommodation() && count($supportGroup->getAccommodationGroups()) == 0) {
@@ -156,7 +160,8 @@ class SupportController extends AbstractController
         }
 
         return $this->render("app/support/supportPerson.html.twig", [
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "edit_mode" => true
         ]);
     }
 
@@ -166,7 +171,7 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET|POST")
      * @param SupportGroup $supportGroup
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo): Response
     {
         $people = [];
 
@@ -197,8 +202,19 @@ class SupportController extends AbstractController
                     ->setUpdatedAt(new \DateTime());
 
                 $this->manager->persist($supportPerson);
-            }
 
+                $evaluationPerson = new EvaluationPerson();
+
+                $evaluationGroup =  $repo->findLastEvaluationFromSupport($supportGroup);
+
+                if ($evaluationGroup) {
+                    $evaluationPerson->setEvaluationGroup($evaluationGroup)
+                        ->setSupportPerson($supportPerson);
+
+                    $this->manager->persist($evaluationPerson);
+                }
+                $this->manager->persist($supportPerson);
+            }
             $this->manager->flush();
         }
         return $this->redirectToRoute("support_pers_edit", [
@@ -263,6 +279,7 @@ class SupportController extends AbstractController
 
     /**
      * Exporte les données
+     * 
      * @param SupportGroupSearch $supportGroupSearch
      */
     protected function exportData(SupportGroupSearch $supportGroupSearch)
@@ -276,6 +293,7 @@ class SupportController extends AbstractController
 
     /**
      * Vérifie si un suivi social est déjà en cours dans le même service
+     * 
      * @param GroupPeople $groupPeople
      * @param SupportGroup $supportGroup
      * @return SupportGroup|null
@@ -291,6 +309,7 @@ class SupportController extends AbstractController
 
     /**
      * Crée un suivi
+     * 
      * @param GroupPeople $groupPeople
      * @param SupportGroup $supportGroup
      * @return SupportGroup|null
@@ -325,6 +344,7 @@ class SupportController extends AbstractController
 
     /**
      * Crée un suivi individuel
+     * 
      * @param GroupPeople $groupPeople
      * @param SupportGroup $supportGroup
      */
@@ -349,73 +369,18 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Tente de mettre à jour le suivi
-     * @param  $form
-     * @param SupportGroup $supportGroup
-     */
-    protected function tryEditSupportGroup($form, SupportGroup $supportGroup)
-    {
-        if ($form->isValid()) {
-            return $this->updateSupportGroup($supportGroup);
-        }
-        $errors = $form->getErrors(true);
-        foreach ($errors as $error) {
-            $errorOrigin = $error->getOrigin();
-            $this->addFlash("danger", $errorOrigin->getName() . " : " . $error->getMessage());
-        }
-    }
-
-    /**
      * Met à jour le suivi social
+     * 
      * @param SupportGroup $supportGroup
      */
     protected function updateSupportGroup(SupportGroup $supportGroup)
     {
-        $supportGroup
-            ->setUpdatedAt(new \DateTime())
+        $supportGroup->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->getUser());
-
-        $this->updateSupportPerson($supportGroup);
 
         $this->manager->flush();
 
-        $this->addFlash("success", "Le suivi social a été modifié.");
-    }
-
-    /**
-     * Met à jour les suivis individuelles
-     * @param SupportGroup $supportGroup
-     */
-    protected function  updateSupportPerson(SupportGroup $supportGroup)
-    {
-        $ressourcesGroupAmt = 0;
-        $chargesGroupAmt = 0;
-        $debtsGroupAmt = 0;
-        $monthlyRepaymentAmt = 0;
-
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-
-            if ($supportPerson->getEndDate() == null) {
-                $supportPerson->setEndDate($supportGroup->getEndDate());
-            }
-            if ($supportPerson->getStatus() == 2) {
-                $supportPerson->setStatus($supportGroup->getStatus());
-            }
-            $supportPerson->setUpdatedAt(new \DateTime());
-
-            $sitBudgetPerson = $supportPerson->getSitBudgetPerson();
-            $ressourcesGroupAmt += $sitBudgetPerson->getRessourcesAmt();
-            $chargesGroupAmt += $sitBudgetPerson->getChargesAmt();
-            $debtsGroupAmt += $sitBudgetPerson->getDebtsAmt();
-            $monthlyRepaymentAmt += $sitBudgetPerson->getMonthlyRepaymentAmt();
-        };
-
-        $sitBudgetGroup = $supportGroup->getSitBudgetGroup();
-        $sitBudgetGroup->setRessourcesGroupAmt($ressourcesGroupAmt);
-        $sitBudgetGroup->setChargesGroupAmt($chargesGroupAmt);
-        $sitBudgetGroup->setDebtsGroupAmt($debtsGroupAmt);
-        $sitBudgetGroup->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
-        $sitBudgetGroup->setBudgetBalanceAmt($ressourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt);
+        return $this->addFlash("success", "Le suivi social a été modifié.");
     }
 
     /**

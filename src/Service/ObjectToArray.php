@@ -13,14 +13,14 @@ class ObjectToArray
     protected $translator;
     protected $nameObject;
     protected $translation;
-    protected $sitSocialGroup = null;
-    protected $sitAdmPerson = null;
-    protected $sitFamilyGroup = null;
-    protected $sitFamilyPerson = null;
-    protected $sitProfPerson = null;
-    protected $sitBudgetGroup = null;
-    protected $sitBudgetPerson = null;
-    protected $sitHousingGroup = null;
+    protected $evalSocialGroup = null;
+    protected $evalAdmPerson = null;
+    protected $evalFamilyGroup = null;
+    protected $evalFamilyPerson = null;
+    protected $evalProfPerson = null;
+    protected $evalBudgetGroup = null;
+    protected $evalBudgetPerson = null;
+    protected $evalHousingGroup = null;
 
     public function __construct(TranslatorInterface $translator)
     {

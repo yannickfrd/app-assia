@@ -59,32 +59,32 @@ class Export
     /**
      * @var bool|null
      */
-    private $sitAdm;
+    private $evalAdm;
 
     /**
      * @var bool|null
      */
-    private $sitBudget;
+    private $evalBudget;
 
     /**
      * @var bool|null
      */
-    private $sitFamily;
+    private $evalFamily;
 
     /**
      * @var bool|null
      */
-    private $sitHousing;
+    private $evalHousing;
 
     /**
      * @var bool|null
      */
-    private $sitProf;
+    private $evalProf;
 
     /**
      * @var bool|null
      */
-    private $sitSocial;
+    private $evalSocial;
 
 
 
@@ -207,74 +207,74 @@ class Export
         return $this;
     }
 
-    public function getSitAdm(): ?bool
+    public function getEvalAdm(): ?bool
     {
-        return $this->sitAdm;
+        return $this->evalAdm;
     }
 
-    public function setSitAdm(bool $sitAdm): self
+    public function setEvalAdm(bool $evalAdm): self
     {
-        $this->sitAdm = $sitAdm;
+        $this->evalAdm = $evalAdm;
 
         return $this;
     }
 
-    public function getSitBudget(): ?bool
+    public function getEvalBudget(): ?bool
     {
-        return $this->sitBudget;
+        return $this->evalBudget;
     }
 
-    public function setSitBudget(bool $sitBudget): self
+    public function setEvalBudget(bool $evalBudget): self
     {
-        $this->sitBudget = $sitBudget;
+        $this->evalBudget = $evalBudget;
 
         return $this;
     }
 
-    public function getSitFamily(): ?bool
+    public function getEvalFamily(): ?bool
     {
-        return $this->sitFamily;
+        return $this->evalFamily;
     }
 
-    public function setSitFamily(bool $sitFamily): self
+    public function setEvalFamily(bool $evalFamily): self
     {
-        $this->sitFamily = $sitFamily;
+        $this->evalFamily = $evalFamily;
 
         return $this;
     }
 
-    public function getSitHousing(): ?bool
+    public function getEvalHousing(): ?bool
     {
-        return $this->sitHousing;
+        return $this->evalHousing;
     }
 
-    public function setSitHousing(bool $sitHousing): self
+    public function setEvalHousing(bool $evalHousing): self
     {
-        $this->sitHousing = $sitHousing;
+        $this->evalHousing = $evalHousing;
 
         return $this;
     }
 
-    public function getSitProf(): ?bool
+    public function getEvalProf(): ?bool
     {
-        return $this->sitProf;
+        return $this->evalProf;
     }
 
-    public function setSitProf(bool $sitProf): self
+    public function setEvalProf(bool $evalProf): self
     {
-        $this->sitProf = $sitProf;
+        $this->evalProf = $evalProf;
 
         return $this;
     }
 
-    public function getSitSocial(): ?bool
+    public function getEvalSocial(): ?bool
     {
-        return $this->sitSocial;
+        return $this->evalSocial;
     }
 
-    public function setSitSocial(bool $sitSocial): self
+    public function setEvalSocial(bool $evalSocial): self
     {
-        $this->sitSocial = $sitSocial;
+        $this->evalSocial = $evalSocial;
 
         return $this;
     }

@@ -2,89 +2,52 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Evaluation sociale | Esperer95-app{% endblock %}
+{% block title %}Évaluation sociale | Esperer95-app
+{% endblock %}
 
 {% block body %}
 
-<div class="container">
+	<div class="container">
 
-  {% if group_people is not defined %}
-  {% set group_people = form.vars.value.groupPeople %}
-  {% endif %}
+		{% set evaluationGroup = form.vars.value %}
+		{% set support = evaluationGroup.supportGroup %}
+		{% set typo = support.groupPeople.familyTypology %}
 
-  {% set typo = group_people.familyTypology %}
-  {% set support = form.vars.value %}
+		{% set title = "Évaluation sociale" %}
+		{% include "app/support/navSuppport.html.twig" %}
 
-  <h1 class="h2 mb-3">Evaluation sociale</h1>
-  {% if edit_mode %}
-  <div class="small text-secondary">
-    <p>
-      Créé le {{support.createdAt | date("d/m/Y à H:i") }}
-      {% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
-      <span id="js-social-support-updated">
-        (modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})
-      </span>
-    </p>
-  </div>
-  {% else %}
-  <div class="mb-4"></div>
-  {% endif %}
-  {% if edit_mode %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-          href="{{ path('group_people_show', {'id': group_people.id}) }}"><span class="fas fa-users mr-2"></span>Fiche
-          groupe <span class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
-      <li class="breadcrumb-item active" aria-current="page">Suivi social</li>
-    </ol>
-  </nav>
-  {% for form_support_pers in form.supportPerson.children %}
-  {% set person = form_support_pers.vars.data.person %}
-  <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-    class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.fullname }}</a>
-  {% endfor %}
-  {% endif %}
+		{{ form_start(form) }}
 
-  <hr>
+		<section>
+			{% include "model/msgFlash.html.twig" %}
+			<div id="js-msg-flash-content"></div>
 
-  {{ form_start(form) }}
+			<div
+				class="mb-4">
+				{# {% include "app/support/evalSummary.html.twig" %} #}
+				{% include "app/support/evaluationSocial.html.twig" %}
+				{% include "app/support/evaluationAdm.html.twig" %}
+				{% include "app/support/evaluationFamily.html.twig" %}
+				{% include "app/support/evaluationProf.html.twig" %}
+				{% include "app/support/evaluationBudget.html.twig" %}
+				{% include "app/support/evaluationHousing.html.twig" %}
+			</div>
+			if
+			<div class="form-group row">
+				<div class="col-md-12">
+					<div class="mb-4 float-right">
+						<input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}">
+					</div>
+				</div>
+			</div>
 
-  <section>
-    {% include "model/msgFlash.html.twig" %}
-    <div id="js-msg-flash-content"></div>
+		</section>
 
-    <div class="mb-4">
-      {# {% include "app/support/sitSummary.html.twig" %} #}
-      {% include "app/support/sitSocialGroup.html.twig" %}
-      {% include "app/support/sitAdmPerson.html.twig" %}
-      {% include "app/support/sitFamily.html.twig" %}
-      {% include "app/support/sitProfPerson.html.twig" %}
-      {% include "app/support/sitBudget.html.twig" %}
-      {% include "app/support/sitHousingGroup.html.twig" %}
-    </div>
+		{{ form_row(form._token) }}
+		{{ form_end(form, {"render_rest": false}) }}
 
-    {% endif %}
-
-    <div class="form-group row">
-      <div class="col-md-12">
-        <div class="mb-4 float-right">
-          {% if edit_mode %}
-          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Mettre à jour">
-          {% else %}
-          <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="Enregistrer">
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  {{ form_row(form._token) }}
-  {{ form_end(form, {"render_rest": false}) }}
-
-</div>
+	</div>
 {% endblock %}
-
 {% block javascripts %}
-{{ encore_entry_script_tags("support") }}
+	{{ encore_entry_script_tags("evaluation") }}
 {% endblock javascripts %}

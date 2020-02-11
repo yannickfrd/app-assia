@@ -96,7 +96,7 @@ class ExportType extends AbstractType
                 ],
                 "required" => false
             ])
-            ->add("sitSocial", CheckBoxType::class, [
+            ->add("evalSocial", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
@@ -105,7 +105,7 @@ class ExportType extends AbstractType
                     "class" => "custom-control-input checkbox"
                 ]
             ])
-            ->add("sitAdm", CheckBoxType::class, [
+            ->add("evalAdm", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
@@ -114,7 +114,7 @@ class ExportType extends AbstractType
                     "class" => "custom-control-input checkbox"
                 ]
             ])
-            ->add("sitFamily", CheckBoxType::class, [
+            ->add("evalFamily", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
@@ -123,7 +123,7 @@ class ExportType extends AbstractType
                     "class" => "custom-control-input checkbox"
                 ]
             ])
-            ->add("sitBudget", CheckBoxType::class, [
+            ->add("evalBudget", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
@@ -132,7 +132,7 @@ class ExportType extends AbstractType
                     "class" => "custom-control-input checkbox"
                 ]
             ])
-            ->add("sitProf", CheckBoxType::class, [
+            ->add("evalProf", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",
@@ -141,7 +141,7 @@ class ExportType extends AbstractType
                     "class" => "custom-control-input checkbox"
                 ]
             ])
-            ->add("sitHousing", CheckBoxType::class, [
+            ->add("evalHousing", CheckBoxType::class, [
                 "required" => false,
                 "label_attr" => [
                     "class" => "custom-control-label",

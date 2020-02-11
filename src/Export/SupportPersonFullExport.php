@@ -3,14 +3,17 @@
 namespace App\Export;
 
 use App\Entity\SupportPerson;
-use App\Entity\SitSocialGroup;
-use App\Entity\SitAdmPerson;
-use App\Entity\SitFamilyGroup;
-use App\Entity\SitFamilyPerson;
-use App\Entity\SitProfPerson;
-use App\Entity\SitBudgetGroup;
-use App\Entity\SitBudgetPerson;
-use App\Entity\SitHousingGroup;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvalAdmPerson;
+use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalFamilyPerson;
+use App\Entity\EvalProfPerson;
+use App\Entity\EvalBudgetGroup;
+use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalHousingGroup;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvaluationPerson;
+use App\Form\Support\Evaluation\EvalSocialGroupType;
 use App\Service\Export;
 use App\Service\ObjectToArray;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -20,26 +23,35 @@ class SupportPersonFullExport
     protected $arrayData;
     protected $objectToArray;
     protected $datas;
-    protected $sitSocialGroup;
-    protected $sitAdmPerson;
-    protected $sitFamilyGroup;
-    protected $sitProfPerson;
-    protected $sitBudgetGroup;
-    protected $sitBudgetPerson;
-    protected $sitHousingGroup;
+
+    protected $evaluationPerson;
+    protected $evalAdmPerson;
+    protected $evalBudgetPerson;
+    protected $evalFamilyPerson;
+    protected $evalProfPerson;
+
+    protected $evaluationGroup;
+    protected $evalSocialGroup;
+    protected $evalFamilyGroup;
+    protected $evalBudgetGroup;
+    protected $evalHousingGroup;
 
     public function __construct(ObjectToArray $objectToArray)
     {
         $this->arrayData = [];
         $this->objectToArray = $objectToArray;
-        $this->sitSocialGroup = new SitSocialGroup();
-        $this->sitAdmPerson = new SitAdmPerson();
-        $this->sitFamilyPerson = new SitFamilyPerson();
-        $this->sitFamilyGroup = new SitFamilyGroup();
-        $this->sitProfPerson = new SitProfPerson();
-        $this->sitBudgetGroup = new SitBudgetGroup();
-        $this->sitBudgetPerson = new SitBudgetPerson();
-        $this->sitHousingGroup = new SitHousingGroup();
+
+        $this->evaluationPerson = new EvaluationPerson();
+        $this->evalAdmPerson = new EvalAdmPerson();
+        $this->evalBudgetPerson = new EvalBudgetPerson();
+        $this->evalFamilyPerson = new EvalFamilyPerson();
+        $this->evalProfPerson = new EvalProfPerson();
+
+        $this->evaluationGroup = new EvaluationGroup();
+        $this->evalBudgetGroup = new EvalBudgetGroup();
+        $this->evalFamilyGroup = new EvalFamilyGroup();
+        $this->evalHousingGroup = new EvalHousingGroup();
+        $this->evalSocialGroup = new EvalSocialGroup();
     }
 
     /**
@@ -65,45 +77,22 @@ class SupportPersonFullExport
      */
     protected function getDatas(SupportPerson $supportPerson)
     {
-        $person = $supportPerson->getPerson();
-        $supportGroup = $supportPerson->getSupportGroup();
-        $groupPeople = $supportGroup->getGroupPeople();
-        $rolePerson = null;
+        $supportPersonExport = new SupportPersonExport;
+        $this->datas = $supportPersonExport->getDatas($supportPerson);
 
-        foreach ($person->getRolesPerson() as $role) {
-            if ($role->getGroupPeople() == $groupPeople) {
-                $rolePerson = $role;
-            }
+        foreach ($supportPerson->getEvaluationsPerson() as $evaluation) {
+            $this->evaluationPerson = $evaluation;
+            $this->evaluationGroup = $evaluation->getEvaluationGroup();
         }
 
-        $this->datas = [
-            "N° suivi groupe" => $supportGroup->getId(),
-            "N° suivi personne" => $supportPerson->getId(),
-            "N° groupe" => $groupPeople->getId(),
-            "N° personne" => $person->getId(),
-            "Nom" => $person->getLastname(),
-            "Prénom" => $person->getFirstname(),
-            "Date de naissance" => Date::PHPToExcel($person->getBirthdate()->format("Y-m-d")),
-            "Typologie familiale" => $groupPeople->getFamilyTypologyType(),
-            "Nb de personnes" => $groupPeople->getNbPeople(),
-            "Rôle dans le groupe" => $rolePerson->getRoleList(),
-            "DP" => $rolePerson->getHead() ? "Oui" : "Non",
-            "Statut" => $supportPerson->getStatusType(),
-            "Date début suivi" => Date::PHPToExcel($supportPerson->getStartDate()->format("Y-m-d")),
-            "Date fin suivi" => $supportPerson->getEndDate() ?  Date::PHPToExcel($supportPerson->getEndDate()->format("Y-m-d")) : null,
-            "Référent social" => $supportGroup->getReferent()->getFullname(),
-            "Service" => $supportGroup->getService()->getName(),
-            "Pôle" => $supportGroup->getService()->getPole()->getName(),
-        ];
-
-        $this->mergeObject($this->sitSocialGroup, $supportGroup->getsitSocialGroup(), "sitSocialGroup", "sitSocial");
-        $this->mergeObject($this->sitAdmPerson, $supportPerson->getSitAdmPerson(), "sitAdmPerson", "sitAdm");
-        $this->mergeObject($this->sitFamilyGroup, $supportGroup->getSitFamilyGroup(), "sitFamilyGroup", "sitFamily");
-        $this->mergeObject($this->sitFamilyPerson, $supportPerson->getSitFamilyPerson(), "sitFamilyPerson", "sitFamily");
-        $this->mergeObject($this->sitProfPerson, $supportPerson->getSitProfPerson(), "sitProfPerson", "sitProf");
-        $this->mergeObject($this->sitBudgetGroup, $supportGroup->getSitBudgetGroup(), "sitBudgetGroup", "sitBudget");
-        $this->mergeObject($this->sitBudgetPerson, $supportPerson->getSitBudgetPerson(), "sitBudgetPerson", "sitBudget");
-        $this->mergeObject($this->sitHousingGroup, $supportGroup->getSitHousingGroup(), "sitHousingGroup", "sitHousing");
+        $this->mergeObject($this->evalSocialGroup, $this->evaluationGroup->getEvalSocialGroup(), "evalSocialGroup", "social");
+        $this->mergeObject($this->evalAdmPerson, $this->evaluationPerson->getEvalAdmPerson(), "evalAdmPerson", "adm");
+        $this->mergeObject($this->evalFamilyGroup, $this->evaluationGroup->getEvalFamilyGroup(), "evalFamilyGroup", "family");
+        $this->mergeObject($this->evalFamilyPerson, $this->evaluationPerson->getEvalFamilyPerson(), "evalFamilyPerson", "family");
+        $this->mergeObject($this->evalProfPerson, $this->evaluationPerson->getEvalProfPerson(), "evalProfPerson", "prof");
+        $this->mergeObject($this->evalBudgetGroup, $this->evaluationGroup->getEvalBudgetGroup(), "evalBudgetGroup", "budget");
+        $this->mergeObject($this->evalBudgetPerson, $this->evaluationPerson->getEvalBudgetPerson(), "evalBudgetPerson", "budget");
+        $this->mergeObject($this->evalHousingGroup, $this->evaluationGroup->getEvalHousingGroup(), "evalHousingGroup", "housing");
 
         return $this->datas;
     }

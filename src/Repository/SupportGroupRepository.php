@@ -37,19 +37,22 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("sg")
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
-            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
-            ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
-            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            // ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
+            // ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
+            // ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
+            // ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            // ->leftJoin("sg.evaluationsGroup", "eg")->addselect("PARTIAL eg.{id}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id}")
-            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
-            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
-            ->leftJoin("r.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")
+            // ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
+            // ->leftJoin("r.person", "person")->addselect("PARTIAL person.{id, firstname, lastname, birthdate}")
 
             ->andWhere("sg.id = :id")
             ->setParameter("id", $id)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            // ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 

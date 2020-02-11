@@ -28,7 +28,7 @@ export default class Calendar {
         this.loader = new Loader("#modal-block");
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.supportElt = document.getElementById("support");
-        // this.supportId;
+        this.supportPeopleElt = document.getElementById("support-people");
         this.init();
     }
 
@@ -76,13 +76,14 @@ export default class Calendar {
         if (this.supportElt) {
             this.supportId = this.supportElt.getAttribute("data");
             this.modalForm.querySelector("form").action = "/support/" + this.supportId + "/rdv/new";
+            let fullname = this.supportPeopleElt.querySelector(".btn").textContent;
+            this.modalForm.querySelector("#rdv_title").value = "RDV " + fullname;
+            this.supportFullNameElt.textContent = fullname;
         } else {
             this.modalForm.querySelector("form").action = "/rdv/new";
+            this.modalForm.querySelector("#rdv_title").value = "";
+            this.supportFullNameElt.textContent = "";
         }
-
-        this.modalForm.querySelector("#rdv_title").value = "";
-
-        this.supportFullNameElt.textContent = "";
 
         let dateFormat = new DateFormat();
         this.dateInput.value = dateFormat.getDateNow();

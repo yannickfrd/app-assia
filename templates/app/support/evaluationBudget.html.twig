@@ -1,0 +1,564 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sit_budget" %}
+
+{% block card_title %}Budgétaire{% endblock %}
+
+{% block card_body %}
+
+<div class="form-group row">
+	<div class="col-md-10 col-lg-6 mx-auto">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<th scope="col" class="align-middle th-w-140">Situation budgétaire du groupe</th>
+					<th scope="col" class="align-middle th-w-100">Montant</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Total ressources</td>
+					<td class="pr-3 text-right">
+						<span id="ressourcesGroupAmt">{% if evaluationGroup.evalBudgetGroup.ressourcesGroupAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.ressourcesGroupAmt }}{% else %}0{% endif %}</span> €</td>
+				</tr>
+				<tr>
+					<td>Total charges</td>
+					<td class="pr-3 text-right">
+						<span id="chargesGroupAmt">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</span> €</td>
+				</tr>
+				<tr>
+					<td>Total remboursement mensuel</td>
+					<td class="pr-3 text-right">
+						<span id="repaymentGroupAmt">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €</td>
+				</tr>
+				<tr class="table-dark text-dark font-weight-bold">
+					<td>Reste à vivre</td>
+					<td class="pr-3 text-right">
+						<span id="budgetBalanceGroupAmt">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</span> €</td>
+				</tr>
+				<tr>
+					<td>Total dettes</td>
+					<td class="pr-3 text-right">
+						<span id="debtsGroupAmt">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</span> €</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 accordion" id="accordion-sit_budget">
+		<div class="mb-4">
+			{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
+				{% set person = evalPerson.vars.value.supportPerson.person %}
+			<button type="button" id="heading-sit_budget-{{ loop.index0 }}"
+				class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
+				data-toggle="collapse" data-target="#collapse-sit_budget-{{ loop.index0 }}" aria-expanded="false"
+				aria-controls="collapse-sit_budget-{{ loop.index0 }}">{{ person.fullname}}</button>
+			{% endfor %}
+		</div>
+
+		{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
+
+		<div id="collapse-sit_budget-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+			aria-labelledby="heading-sit_budget-{{ loop.index0 }}" data-parent="#accordion-sit_budget">
+			<div class="row">
+				{# Ressources #}
+				<div class="col-md-6">
+					<div class="form-group row">
+						<div class="col-md-12">{{ form_row(evalPerson.evalBudgetPerson.ressources) }}</div>
+						<div class="col-md-12 js-{{ loop.index0 }}_evalBudgetPerson_ressources d-block">
+							<div class="row">
+								<div class="col-form-label col-sm-4 js-ressources d-block">Type de ressources</div>
+								<div class="col-sm-8">
+									<select id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type"
+										name="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type" class="form-control">
+										<option class="default" value="">-- Ajouter --</option>
+										<option value="1">Allocation adulte handicapé</option>
+										<option value="2">Allocation d'éducation de l'enfant handicapé (AEEH)</option>
+										<option value="3">Allocation chômage (ARE)</option>
+										<option value="4">Allocation pour demandeur d'asile (ADA)</option>
+										<option value="5">Allocation temporaire d'attente</option>
+										<option value="6">Allocations familiales</option>
+										<option value="7">Allocation de solidarité spécifique (ASS)</option>
+										<option value="8">Formation rémunérée</option>
+										<option value="9">Garantie jeunes</option>
+										<option value="10">Pension alimentaire</option>
+										<option value="11">Prime d'activité</option>
+										<option value="12">Retraite</option>
+										<option value="13">RSA</option>
+										<option value="14">Salaire</option>
+										<option value="98">Autre ressource</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 mt-3">
+							<div class="table-responsive js-{{ loop.index0 }}_evalBudgetPerson_ressources d-block">
+								<table class="table table-sm table-hover text-dark">
+									<thead>
+										<tr>
+											<th scope="col" class="align-middle th-w-20"></th>
+											<th scope="col" class="align-middle th-w-140">Type de ressources</th>
+											<th scope="col" class="align-middle th-w-150">Montant</th>
+											<th scope="col" class="align-middle th-w-20"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-1"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span class="sr-only">
+													{{ form_widget(evalPerson.evalBudgetPerson.disAdultAlw) }}</span></th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.disAdultAlwAmt) }}</td>
+											<td><button class="btn btn-danger js-remove"><i
+														class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-2"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span class="sr-only">
+													{{ form_widget(evalPerson.evalBudgetPerson.disChildAlw) }}</span></th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.disChildAlwAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-3"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span class="sr-only">
+													{{ form_widget(evalPerson.evalBudgetPerson.unemplBenf) }}</span></th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.unemplBenfAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-4"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.asylumSeekerAlw) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.asylumSeekerAlwAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-5"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.tempWaitingAlw) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.tempWaitingAlwAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-6"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.familyAlw) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.familyAlwAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-7"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.solidarityAlw) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.solidarityAlwAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-8"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.paidTraining) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.paidTrainingAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-9"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.youthGuarantee) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.youthGuaranteeAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-10"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.maintenance) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.maintenanceAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-11"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.activityBonus) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.activityBonusAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-12"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.pensionBenf) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.pensionBenfAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-13"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.minIncome) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.minIncomeAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-14"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.salary) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.salaryAmt) }}
+											</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type-98"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.ressourceOther) }}</span>
+											</th>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.ressourceOtherPrecision) }}
+											</td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.ressourceOtherAmt) }}
+											</td>
+											<td class="align-middle"><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_ressourcesAmt" class="font-weight-bold">
+											<th scope="row"></th>
+											<td class="align-middle">Total des ressources</td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.ressourcesAmt) }}</td>
+											<td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{# Charges #}
+				<div class="col-md-6">
+					<div class="form-group row">
+						<div class="col-md-12">{{ form_row(evalPerson.evalBudgetPerson.charges) }}</div>
+						<div class="col-md-12  js-{{ loop.index0 }}_evalBudgetPerson_charges d-block">
+							<div class="row">
+								<div class="col-form-label col-sm-4">Type de charges</div>
+								<div class="col-sm-8">
+									<select id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type"
+										name="js-{{ loop.index0 }}_evalBudgetPerson_charges_type" class="form-control">
+										<option class="default" value="">-- Ajouter --</option>
+										<option value="1">Loyer</option>
+										<option value="2">Electricité / Gaz</option>
+										<option value="3">Eau</option>
+										<option value="4">Assurance(s)</option>
+										<option value="5">Mutuelle(s)</option>
+										<option value="6">Impôts</option>
+										<option value="7">Transport</option>
+										<option value="8">Garde d'enfant(s)</option>
+										<option value="9">Pension alimentaire</option>
+										<option value="10">Téléphone</option>
+										<option value="98">Autre charge</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 mt-3">
+							<div class="table-responsive js-{{ loop.index0 }}_evalBudgetPerson_charges d-block">
+								<table class="table table-sm table-hover text-dark">
+									<thead>
+										<tr>
+											<th scope="col" class="align-middle th-w-20"></th>
+											<th scope="col" class="align-middle th-w-140">Type de charges</th>
+											<th scope="col" class="align-middle th-w-150">Montant</th>
+											<th scope="col" class="align-middle th-w-20"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-1"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.rent) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.rentAmt) }}</td>
+											<td><button class="btn btn-danger js-remove"><i
+														class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-2"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.electricityGas) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.electricityGasAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-3"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.water) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.waterAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-4"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.insurance) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.insuranceAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-5"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.mutual) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.mutualAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-6"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.taxes) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.taxesAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-7"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.transport) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.transportAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-8"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.childcare) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.childcareAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-9"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.alimony) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.alimonyAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-10"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.phone) }}</span>
+											</th>
+											<td class="align-middle"></td>
+											<td>{{ form_widget(evalPerson.evalBudgetPerson.phoneAmt) }}</td>
+											<td><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button>
+											</td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_charges_type-98"
+											class="js-{{ loop.index0 }}_evalBudgetPerson_ressources_type d-table-row">
+											<th scope="row"><span
+													class="sr-only">{{ form_widget(evalPerson.evalBudgetPerson.chargeOther) }}</span>
+											</th>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.chargeOtherPrecision) }}</td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.chargeOtherAmt) }}
+											</td>
+											<td class="align-middle"><button class="btn btn-danger js-remove">
+													<i class="fas fa-trash-alt"></i></button></td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_chargesAmt" class="font-weight-bold">
+											<th scope="row"></th>
+											<td class="align-middle">Total des charges</td>
+											<td class="align-middle">
+												{{ form_widget(evalPerson.evalBudgetPerson.chargesAmt) }}
+											</td>
+											<td></td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr>
+
+			<div class="form-group row">
+				<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.debts) }}</div>
+				<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.debtsAmt) }}</div>
+				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+					<div class="row">
+						<div class="col-form-label col-sm-4">Type de dettes</div>
+						<div class="col-sm-8">
+							<select id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type"
+								name="js-{{ loop.index0 }}_evalBudgetPerson_debts_type" class="form-control">
+								<option class="default" value="">-- Ajouter --</option>
+								<option value="1">Dettes locatives</option>
+								<option value="2">Dette de crédits à la consommation</option>
+								<option value="3">Dettes de crédits immobiliers</option>
+								<option value="4">Amendes</option>
+								<option value="5">Retards d'impôts</option>
+								<option value="6">Découverts bancaires</option>
+								<option value="98">Autres dettes</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-1"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtRental) }}</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-2"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtConsrCredit) }}</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-3"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtMortgage) }}</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-4"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtFines) }}</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-5"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtTaxDelays) }}</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-6"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtBankOverdrafts) }}</div>
+				<div id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-98"
+					class="col-md-2 js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-block">
+					{{ form_widget(evalPerson.evalBudgetPerson.debtOther) }}
+				</div>
+			</div>
+			<div class="js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+				<div class="form-group row">
+
+				</div>
+			</div>
+			<div class="js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+				<div class="row">
+					<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.monthlyRepaymentAmt) }}</div>
+					<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.debtComment) }}</div>
+				</div>
+				<div class="form-group row">
+				</div>
+				<div class="form-group row">
+					<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.overIndebtRecord) }}</div>
+					<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_overIndebtRecord d-block">
+						{{ form_row(evalPerson.evalBudgetPerson.overIndebtRecordDate) }}</div>
+					<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.settlementPlan) }}</div>
+					<div class="col-md-6">{{ form_row(evalPerson.evalBudgetPerson.moratorium) }}</div>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<div class="col-md-12">{{ form_widget(evalPerson.evalBudgetPerson.commentEvalBudget) }}</div>
+			</div>
+
+		</div>
+
+
+
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

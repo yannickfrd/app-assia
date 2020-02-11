@@ -3,32 +3,18 @@
 namespace App\Form\Support;
 
 use App\Entity\User;
-use App\Entity\Device;
 use App\Entity\Service;
-
 use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
-use App\Entity\ServiceDevice;
 use App\Repository\UserRepository;
-use App\Form\Support\SupportSitType;
 use App\Security\CurrentUserService;
-
 use App\Repository\ServiceRepository;
-
 use Symfony\Component\Form\AbstractType;
-use App\Repository\ServiceDeviceRepository;
-
-use App\Form\Support\Evaluation\SitSocialGroupType;
-use App\Form\Support\Evaluation\SitHousingGroupType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Form\Support\Evaluation\SitBudgetGroupType;
-use App\Form\Support\Evaluation\SitFamilyGroupType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-
 
 class SupportGroupType extends AbstractType
 {
@@ -88,16 +74,6 @@ class SupportGroupType extends AbstractType
             ])
             ->add("endDate", DateType::class, [
                 "widget" => "single_text",
-                "required" => false
-            ])
-            ->add("sitSocialGroup", SitSocialGroupType::class)
-            ->add("sitFamilyGroup", SitFamilyGroupType::class)
-            ->add("sitBudgetGroup", SitBudgetGroupType::class)
-            ->add("sitHousingGroup", SitHousingGroupType::class)
-            ->add("supportPerson", CollectionType::class, [
-                "entry_type"   => SupportSitType::class,
-                "allow_add"    => false,
-                "allow_delete" => false,
                 "required" => false
             ])
             ->add("comment", null, [

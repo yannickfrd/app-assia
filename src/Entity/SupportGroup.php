@@ -98,26 +98,6 @@ class SupportGroup
     private $service;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitSocialGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitSocialGroup;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitFamilyGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitFamilyGroup;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitHousingGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitHousingGroup;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\SitBudgetGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $sitBudgetGroup;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportGroup")
      */
     private $notes;
@@ -137,6 +117,11 @@ class SupportGroup
      */
     private $accommodationGroups;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationGroup", mappedBy="supportGroup")
+     */
+    private $evaluationsGroup;
+
     public function __construct()
     {
         $this->supportPerson = new ArrayCollection();
@@ -144,6 +129,7 @@ class SupportGroup
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->accommodationGroups = new ArrayCollection();
+        $this->evaluationsGroup = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -333,74 +319,6 @@ class SupportGroup
         return $this;
     }
 
-    public function getSitSocialGroup(): ?SitSocialGroup
-    {
-        return $this->sitSocialGroup;
-    }
-
-    public function setSitSocialGroup(SitSocialGroup $sitSocialGroup): self
-    {
-        $this->sitSocialGroup = $sitSocialGroup;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitSocialGroup->getSupportGroup()) {
-            $sitSocialGroup->setSupportGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function getsitFamilyGroup(): ?sitFamilyGroup
-    {
-        return $this->sitFamilyGroup;
-    }
-
-    public function setsitFamilyGroup(sitFamilyGroup $sitFamilyGroup): self
-    {
-        $this->sitFamilyGroup = $sitFamilyGroup;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitFamilyGroup->getSupportGroup()) {
-            $sitFamilyGroup->setSupportGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function getSitHousingGroup(): ?SitHousingGroup
-    {
-        return $this->sitHousingGroup;
-    }
-
-    public function setSitHousingGroup(SitHousingGroup $sitHousingGroup): self
-    {
-        $this->sitHousingGroup = $sitHousingGroup;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitHousingGroup->getSupportGroup()) {
-            $sitHousingGroup->setSupportGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function getSitBudgetGroup(): ?SitBudgetGroup
-    {
-        return $this->sitBudgetGroup;
-    }
-
-    public function setSitBudgetGroup(SitBudgetGroup $sitBudgetGroup): self
-    {
-        $this->sitBudgetGroup = $sitBudgetGroup;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $sitBudgetGroup->getSupportGroup()) {
-            $sitBudgetGroup->setSupportGroup($this);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Note[]
      */
@@ -519,6 +437,37 @@ class SupportGroup
             // set the owning side to null (unless already changed)
             if ($accommodationGroup->getSupportGroup() === $this) {
                 $accommodationGroup->setSupportGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EvaluationGroup[]
+     */
+    public function getEvaluationsGroup(): Collection
+    {
+        return $this->evaluationsGroup;
+    }
+
+    public function addEvaluationGroup(EvaluationGroup $evaluationGroup): self
+    {
+        if (!$this->evaluationsGroup->contains($evaluationGroup)) {
+            $this->evaluationsGroup[] = $evaluationGroup;
+            $evaluationGroup->setSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluationGroup(EvaluationGroup $evaluationGroup): self
+    {
+        if ($this->evaluationsGroup->contains($evaluationGroup)) {
+            $this->evaluationsGroup->removeElement($evaluationGroup);
+            // set the owning side to null (unless already changed)
+            if ($evaluationGroup->getSupportGroup() === $this) {
+                $evaluationGroup->setSupportGroup(null);
             }
         }
 

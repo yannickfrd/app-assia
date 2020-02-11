@@ -60,36 +60,12 @@ class DeviceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            return $this->createDevice($device);
         }
 
         return $this->render("app/admin/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
-        ]);
-    }
-
-    /**
-     * Modification d'un dispositif
-     * 
-     * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
-     * @param Device $device
-     * @param Request $request
-     * @return Response
-     */
-    public function editDevice(Device $device, Request $request): Response
-    {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
-
-        $form = $this->createForm(DeviceType::class, $device);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->updateDevice($device);
-        }
-        return $this->render("app/admin/device.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
         ]);
     }
 
@@ -113,6 +89,30 @@ class DeviceController extends AbstractController
         $this->addFlash("success", "Le dispositif a été créé.");
 
         return $this->redirectToRoute("admin_devices");
+    }
+
+    /**
+     * Modification d'un dispositif
+     * 
+     * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
+     * @param Device $device
+     * @param Request $request
+     * @return Response
+     */
+    public function editDevice(Device $device, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+
+        $form = $this->createForm(DeviceType::class, $device);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->updateDevice($device);
+        }
+        return $this->render("app/admin/device.html.twig", [
+            "form" => $form->createView(),
+            "edit_mode" => true
+        ]);
     }
 
     /**

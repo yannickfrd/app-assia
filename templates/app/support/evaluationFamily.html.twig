@@ -1,0 +1,66 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sit-family" %}
+
+{% block card_title %}Familial{% endblock %}
+
+{% block card_body %}
+
+
+{% if typo in [4, 5, 6, 8] %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-80">Prénom et Nom</th>
+                        <th scope="col" class="align-middle th-w-100">Garde ou scolarité</th>
+                        <th scope="col" class="align-middle th-w-100">Lieu de garde/scolarité</th>
+                        <th scope="col" class="align-middle th-w-100">À héberger </th>
+                        <th scope="col" class="align-middle th-w-100">À charge / Evaluation enfant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age < 18) %}
+					{% set person = evalPerson.vars.value.supportPerson.person %}
+                    <tr>
+                        <th scope="row"></th>
+                        <td class="px-1 align-middle">{{ person.firstname }} {{ person.lastname }}</td>
+                        <td class="px-1 w-min-150">{{ form_widget(evalPerson.evalFamilyPerson.childcareSchool) }}</td>
+                        <td class="px-1 w-min-150">
+                            {{ form_widget(evalPerson.evalFamilyPerson.childcareSchoolLocation) }}</td>
+                        <td class="px-1 w-min-200">{{ form_widget(evalPerson.evalFamilyPerson.childToHost) }}</td>
+                        <td class="px-1 w-min-200">{{ form_widget(evalPerson.evalFamilyPerson.childDependance) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if typo not in [2, 5] %}
+<div class="form-group row">
+    {# <div class="col-md-6">{{ form_row(form.evalFamilyGroup.nbDependentChildren) }}</div> #}
+    <div class="col-md-6">{{ form_row(form.evalFamilyGroup.unbornChild) }}</div>
+    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.evalFamilyGroup.expDateChildbirth) }}</div>
+    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.evalFamilyGroup.pregnancyType) }}</div>
+</div>
+{% endif %}
+
+<div class="form-group row">
+    <div class="col-md-6 js-0_evalAdmPerson_nationality d-block">
+        {{ form_row(form.evalFamilyGroup.famlReunification) }}</div>
+    <div class="col-md-6 js-famlReunification d-block">{{ form_row(form.evalFamilyGroup.nbPeopleReunification) }}</div>
+    <div class="col-md-6">{{ form_row(form.evalFamilyGroup.cafId) }}</div>
+</div>
+
+<div class="form-group row">
+    {# {{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }} #}
+    <div class="col-md-12">{{ form_widget(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
+</div>
+
+{% endblock %}
