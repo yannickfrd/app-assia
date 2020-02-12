@@ -89,6 +89,15 @@ section {
     color: var(--primary);
 }
 
+.sortable {
+    color: var(--gray) !important;
+}
+
+.sortable:hover {
+    color: white !important;
+}
+
+//
 #logo-mail {
     max-width: 200px;
 }

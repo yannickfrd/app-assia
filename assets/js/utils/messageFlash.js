@@ -18,7 +18,7 @@ export default class MessageFlash {
             `<div id="js-msg-flash" class="msg-flash alert alert-${this.alert} alert-dismissible fade show align-items-center"
         role="alert" aria-live="assertive" aria-atomic="true">
         <div class="">
-        <i class="fas fa-info-circle mr-2"></i>
+        <span class="fas fa-info-circle mr-2"></class>
         <span>${this.message}</span>
         </div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

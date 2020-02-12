@@ -53,9 +53,6 @@ class DocumentType extends AbstractType
                         "mimeTypesMessage" => "Merci de télécharger un fichier au format valide (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip).",
                     ])
                 ],
-                "attr" => [
-                    "placeholder" => "Choisir un fichier..."
-                ],
                 "help" => "5Mo maximum. Formats acceptés : doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip.",
             ]);
     }

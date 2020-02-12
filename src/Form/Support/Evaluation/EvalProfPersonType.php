@@ -37,16 +37,12 @@ class EvalProfPersonType extends AbstractType
             ->add("jobType")
             ->add("contractStartDate", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [
-                    "placeholder" => "jj/mm/aaaa",
-                ],
+                "attr" => [],
                 "required" => false
             ])
             ->add("contractEndDate", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [
-                    "placeholder" => "jj/mm/aaaa",
-                ],
+                "attr" => [],
                 "required" => false
             ])
             ->add("nbWorkingHours")

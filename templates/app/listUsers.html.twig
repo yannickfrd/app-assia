@@ -7,6 +7,7 @@
 {% block body %}
 
 <section class="mt-0 mb-4">
+
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Utilisateurs</h1>
@@ -15,7 +16,9 @@
     {% include "app/search/searchUsers.html.twig" %}
 
     {% if users %}
+
     <div class="container">
+
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
                 <p class="align-middle">Total : {{ users.getTotalItemCount | number_format(0,'', ' ')}} utilisateurs.</p>
@@ -36,26 +39,15 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Fonction
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Téléphone
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Email
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Service
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Pôle
-                        </th>
+                        <th scope="col" class="align-middle th-w-120">Fonction</th>
+                        <th scope="col" class="align-middle th-w-120">Téléphone</th>
+                        <th scope="col" class="align-middle th-w-150">Email</th>
+                        <th scope="col" class="align-middle th-w-150">Service</th>
+                        <th scope="col" class="align-middle th-w-150">Pôle</th>
                     </tr>
                 </thead>
 
                 <tbody>
-
                     {% for user in users %}
                     {#{% cache "user" ~ app.user.id ~ user.id user.updatedAt.timestamp %}#}
                     <tr>
@@ -99,9 +91,7 @@
             </table>
         </div>
 
-        <div class="navigation">
-            {{ knp_pagination_render(users) }}
-        </div>
+        <div class="navigation">{{ knp_pagination_render(users) }}</div>
 
         <div class="row">
             <div class="col-md-12">
@@ -109,7 +99,11 @@
                         <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a></p>
             </div>
         </div>
-        {% endif %}
+
+    </div>
+
+    {% endif %}
+
 </section>
 
 {% endblock %}

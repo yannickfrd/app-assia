@@ -11,6 +11,7 @@ use App\Export\SupportPersonExport;
 use App\Repository\EvaluationPersonRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,13 +24,15 @@ class AppController extends AbstractController
      * @Route("/")
      * @return Response
      */
-    public function home(SupportGroupRepository $repoSupport, NoteRepository $repoNote, RdvRepository $repoRdv): Response
+    public function home(SupportGroupRepository $repoSupport, NoteRepository $repoNote, RdvRepository $repoRdv, UserRepository $repo): Response
     {
-        $supports = $repoSupport->findAllSupportsFromUser($this->getUser());
-        $notes = $repoNote->findAllNotesFromUser($this->getUser(), 10);
-        $rdvs = $repoRdv->findAllRdvsFromUser($this->getUser(), 10);
+        $user = $repo->findOneBy(["username" => "r.madelaine"]);
+        $supports = $repoSupport->findAllSupportsFromUser($user);
+        $notes = $repoNote->findAllNotesFromUser($user, 10);
+        $rdvs = $repoRdv->findAllRdvsFromUser($user, 10);
 
         return $this->render("app/home.html.twig", [
+            "user" => $user,
             "supports" => $supports,
             "notes" => $notes,
             "rdvs" => $rdvs

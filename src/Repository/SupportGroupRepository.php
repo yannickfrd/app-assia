@@ -37,7 +37,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("sg")
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
-            // ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
+            ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
             // ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
             // ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
             // ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")

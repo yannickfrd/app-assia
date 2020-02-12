@@ -7,6 +7,7 @@
 {% block body %}
 
 <section class="my-0">
+
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Les suivis</h1>
@@ -18,8 +19,7 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ supports.getTotalItemCount | number_format(0,'', ' ')  }}
-                    suivis.</span>
+                <span class="align-middle">Résultat : {{ supports.getTotalItemCount | number_format(0,'', ' ')  }}suivis.</span>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -109,10 +109,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="navigation">
-            {{ knp_pagination_render(supports) }}
-        </div>
+        
+        <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+
+    </div>
+
 </section>
+
 {% endblock %}
 
 {% block javascripts %}

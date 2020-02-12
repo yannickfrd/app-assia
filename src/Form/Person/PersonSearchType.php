@@ -3,16 +3,12 @@
 namespace App\Form\Person;
 
 use App\Entity\Person;
-
 use App\Form\Utils\Choices;
-
 use App\Form\Model\PersonSearch;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class PersonSearchType extends AbstractType
@@ -21,7 +17,9 @@ class PersonSearchType extends AbstractType
     {
         $builder
             ->add("lastname", null, [
-                "label" => false,
+                "label_attr" => [
+                    "class" => "sr-only",
+                ],
                 "attr" => [
                     "class" => "w-max-140 text-uppercase",
                     "placeholder" => "Nom",
@@ -47,7 +45,6 @@ class PersonSearchType extends AbstractType
                 // "format" => "dd/MM/yyyy",
                 "attr" => [
                     "class" => "w-max-180",
-                    "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],
                 "required" => false

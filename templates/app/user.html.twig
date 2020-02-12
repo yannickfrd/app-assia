@@ -127,7 +127,9 @@
     </section>
 
     <hr>
+
     <section>
+
         <h2 class="h4 my-4">Suivis sociaux en cours</h2>
         <div class="table-responsive">
             <table class="table table-striped table-hover text-dark">
@@ -170,11 +172,13 @@
         <a href="{{ path('new_support_search_person') }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
             <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
         <br />
+
     </section>
 
     <hr>
 
     <section>
+
         <h2 class="h4 my-4">Services rattachés</h2>
         {% if app.user.serviceUser %}
         <div class="table-responsive">
@@ -213,12 +217,14 @@
             </table>
         </div>
         {% endif %}
+
     </section>
+
 </div>
 
 {% endblock %}
 
 {% block javascripts %}
-{# {{ encore_entry_script_tags("user") }} #}
 {{ encore_entry_script_tags("login") }}
+{# {{ encore_entry_script_tags("user") }} #}
 {% endblock javascripts %}

@@ -10,6 +10,10 @@
 
 <div class="container">
 
+    {{ form_start(form) }}
+    
+    <section>
+
     <h1 class="h2 mb-3">{% if edit_mode %}{{ service.name }}{% else %}Nouveau service{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
@@ -25,8 +29,7 @@
     {% endif %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des
-                    services</a></li>
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des services</a></li>
             <li class="breadcrumb-item active" aria-current="page">Fiche service</li>
         </ol>
     </nav>
@@ -34,8 +37,8 @@
 
     {% include "model/msgFlash.html.twig" %}
     <div id="js-msg-flash-content"></div>
-    {{ form_start(form) }}
-    <section>
+
+
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.name) }}</div>
             <div class="col-md-6">{{ form_row(form.pole) }}</div>
@@ -68,11 +71,13 @@
                 </div>
             </div>
         </div>
+
     </section>
 
     <hr>
 
     <section>
+
         <h2 class="h4 mb-4">Dispositif(s) rattaché(s)</h2>
         <div class="row">
             <div class="col-md-6">
@@ -95,7 +100,7 @@
                                     <td>{{ form_widget(serviceDevice.device) }}</td>
                                     <td class="align-middle">
                                         <button class="btn btn-danger js-remove"><i
-                                                class="fas fa-trash-alt"></i></button>
+                                                class="fas fa-trash-alt"></class></button>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -118,10 +123,11 @@
                 </div>
             </div>
         </div>
-        {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
 
     </section>
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {"render_rest": false}) }}
 
     {% if edit_mode %}
 
@@ -219,7 +225,9 @@
                         class="fas fa-plus-square pr-2"></span>Créer un nouvel utilisateur</a>
             </div>
         </div>
+
     </section>
+
 </div>
 
 {% endif %}

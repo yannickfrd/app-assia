@@ -5,14 +5,15 @@
 {% block body %}
 
 <section class="mt-0 mb-4">
+
     <div class="container">
+
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-4">Pôles</h1>
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">{{ poles.getTotalItemCount | number_format(0,'', ' ')}}
-                    pôles.</p>
+                <p class="align-middle">{{ poles.getTotalItemCount | number_format(0,'', ' ')}}pôles.</p>
             </div>
         </div>
 
@@ -24,15 +25,9 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(poles, "Nom du pôle", "p.name") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Téléphone
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Email
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Adresse
-                        </th>
+                        <th scope="col" class="align-middle th-w-120">Téléphone</th>
+                        <th scope="col" class="align-middle th-w-150">Email</th>
+                        <th scope="col" class="align-middle th-w-120">Adresse</th>
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(poles, "Ville", "p.city") }}
                         </th>
@@ -69,6 +64,9 @@
                 <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
         </p>
         {% endif %}
+        
+     </div>
+
 </section>
 
 {% endblock %}

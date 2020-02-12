@@ -42,8 +42,8 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbar">
+					{# {% if is_granted("ROLE_USER") %} #}
 					<ul class="navbar-nav mr-auto">
-						{% if is_granted("ROLE_USER") %}
 						<li class="nav-item">
 							<a class="nav-link text-light " href="{{ path("home") }}">
 								<span class="fas fa-home mr-1"></span>Mon espace
@@ -54,7 +54,7 @@
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								Suivis
 							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
+							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuSupports">
 								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
 								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau
 									suivi</a>
@@ -130,7 +130,8 @@
 						<a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
 						{% endif %}
 					</div>
-					{% endif %}
+					{# {% endif %} #}
+				</div>
 			</nav>
 		</header>
 
@@ -148,14 +149,15 @@
 
 	<footer class="bg-dark p-4 text-light">
 		<p class="mb-0">
-			<b>Esperer 95 © 2020. Tous droits réservés.</b><br>
+			<strong class="font-weight-bold">Esperer 95 © 2020. Tous droits réservés.</strong><br>
 			<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
 			<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février
 				1979.</span>
 		</p>
 	</footer>
-</body>
 
-</html>
 {{ encore_entry_script_tags("app") }}
 {% block javascripts %}{% endblock %}
+
+</body>
+</html>

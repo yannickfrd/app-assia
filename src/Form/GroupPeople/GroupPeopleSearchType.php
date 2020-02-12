@@ -46,7 +46,6 @@ class GroupPeopleSearchType extends AbstractType
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-180",
-                    "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],
                 "required" => false

@@ -18,20 +18,18 @@ class PersonMinType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("lastname", null, [
-                "label_attr" => ["class" => "sr-only"],
-                "attr" => [
-                    "class" => "w-min-150 text-uppercase",
-                    "placeholder" => "Lastname",
-                    "required" => true
-                ]
-            ])
             ->add("firstname", null, [
                 "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "class" => "text-capitalize",
                     "placeholder" => "Firstname",
-                    "required" => true
+                ]
+            ])
+            ->add("lastname", null, [
+                "label_attr" => ["class" => "sr-only"],
+                "attr" => [
+                    "class" => "w-min-150 text-uppercase",
+                    "placeholder" => "Lastname",
                 ]
             ])
             ->add("birthdate", DateType::class, [
@@ -39,10 +37,8 @@ class PersonMinType extends AbstractType
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
-                    "placeholder" => "jj/mm/aaaa",
                     "autocomplete" => "off"
                 ],
-                "required" => true
             ])
             ->add("gender", ChoiceType::class, [
                 "label_attr" => ["class" => "sr-only"],
@@ -51,7 +47,6 @@ class PersonMinType extends AbstractType
                 ],
                 "choices" => Choices::getChoices(Person::GENDER),
                 "placeholder" => "-- Select --",
-                "required" => true
             ]);
     }
 

@@ -25,7 +25,7 @@ $(document).ready(function () {
 // La fonction qui ajoute un lien de suppression d'une catégorie
 function addDeleteLink($prototype) {
     // Création du lien
-    var $deleteLink = $('<div class="form-group col-sm-1 my-2"><button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>');
+    var $deleteLink = $('<div class="form-group col-sm-1 my-2"><button class="btn btn-danger"><span class="fas fa-trash-alt"></class></button>');
     // Ajout du lien
     $prototype.append($deleteLink);
     // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie

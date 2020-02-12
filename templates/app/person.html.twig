@@ -5,8 +5,10 @@
 
 {% set person = form.vars.value %}
 
-{% block title %}{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} |
-Esperer95-app{% endblock %}
+{% block title %}
+{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} |
+Esperer95-app
+{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -43,7 +45,7 @@ Esperer95-app{% endblock %}
 
     <hr>
 
-    <section id="person" data-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
+    <div id="person" data-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
 
         {% include "model/msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
@@ -102,7 +104,8 @@ Esperer95-app{% endblock %}
         </div>
 
         {{ form_end(form, {"render_rest": false}) }}
-    </section>
+
+    </div>
 
     <hr>
 
@@ -113,6 +116,7 @@ Esperer95-app{% endblock %}
     <hr>
 
     <section>
+
         <h2 class="h4 my-4">Groupes d'appartenance</h2>
         {% if person.rolesPerson %}
         <div class="table-responsive">
@@ -162,10 +166,12 @@ Esperer95-app{% endblock %}
             </table>
         </div>
         {% endif %}
+        
         <button class="m-3 btn btn-{{ theme_color }} btn-sm" data-toggle="modal" data-target="#modal-block"><span
-                class="fas fa-plus-square pr-2"></span>Créer un nouveau
-            groupe</button>
+                class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</button>
+
     </section>
+
     {% endif %}
 
 </div>

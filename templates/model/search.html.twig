@@ -3,15 +3,15 @@
 <div class="container-fluid p-0">
     <div class="accordion" id="accordionSearch">
         <div id="form-search" class="jumbotron mb-0 py-3">
-            <div class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" data-toggle="collapse"
+            <div role="button" class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" data-toggle="collapse"
                 data-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
-                <h2 class="h5">Recherche
-                    <div class="float-right"><span class="fa fa-chevron-down"></span></div>
-                </h2>
+                <h2 class="h5">Recherche<span class="float-right"><span class="fa fa-chevron-down"></span></span></h2>
             </div>
             <div id="collapseSearch" class="collapse show" aria-labelledby="headingSearch"
                 data-parent="#accordionSearch">
+
                 {{ form_start(form) }}
+                
                 <div class="form-inline justify-content-md-center align-items-end">
                     {% block search_form %}{% endblock %}
                     <div class="form-group col-auto my-1 px-1">
@@ -28,7 +28,9 @@
                         </div>
                     </div>
                 </div>
+
                 {{ form_end(form, {"render_rest": false}) }}
+
             </div>
         </div>
     </div>

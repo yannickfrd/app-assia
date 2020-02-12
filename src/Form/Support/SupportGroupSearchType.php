@@ -45,7 +45,6 @@ class SupportGroupSearchType extends AbstractType
             //     "widget" => "single_text",
             //     "attr" => [
             //         "class" => "w-max-165",
-            //         "placeholder" => "jj/mm/aaaa"
             //     ],
             //     "required" => false
             // ])
@@ -85,7 +84,6 @@ class SupportGroupSearchType extends AbstractType
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
-                    "placeholder" => "jj/mm/aaaa"
                 ],
                 "required" => false
             ])
@@ -94,7 +92,6 @@ class SupportGroupSearchType extends AbstractType
                 "widget" => "single_text",
                 "attr" => [
                     "class" => "w-max-165",
-                    "placeholder" => "jj/mm/aaaa"
                 ],
                 "required" => false
             ])

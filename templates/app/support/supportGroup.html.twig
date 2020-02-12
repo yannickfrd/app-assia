@@ -11,8 +11,7 @@
 {% endif %}
 
 {% block title %}
-	{{ title }}
-	| Esperer95-app
+{{ title }}| Esperer95-app
 {% endblock %}
 
 {% block body %}
@@ -20,7 +19,7 @@
 	<div class="container">
 
 		{% if group_people is not defined %}
-			{% set group_people = form.vars.value.groupPeople %}
+		{% set group_people = form.vars.value.groupPeople %}
 		{% endif %}
 
 		{% set typo = group_people.familyTypology %}
@@ -28,23 +27,17 @@
 
 		<h1 class="h2 mb-3">{{ title }}</h1>
 		{% if edit_mode %}
-			<div class="small text-secondary">
-				<p>
-					Créé le
-					{{support.createdAt | date("d/m/Y à H:i") }}
-					{% if support.createdBy %}par
-						{{ support.createdBy.fullname}}
-					{% endif %}
-					<span id="js-social-support-updated">
-						(modifié le
-						{{ support.updatedAt | date("d/m/Y à H:i") }}
-						par
-						{{ support.updatedBy.fullname }})
-					</span>
-				</p>
-			</div>
+		<div class="small text-secondary">
+			<p>
+				Créé le {{support.createdAt | date("d/m/Y à H:i") }}
+				{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
+				<span id="js-social-support-updated">
+					(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }}par{{ support.updatedBy.fullname }})
+				</span>
+			</p>
+		</div>
 		{% else %}
-			<div class="mb-4"></div>
+		<div class="mb-4"></div>
 		{% endif %}
 
 		<nav aria-label="breadcrumb">
@@ -69,70 +62,67 @@
 
 		{{ form_start(form) }}
 
-		<section>
-			{% include "model/msgFlash.html.twig" %}
-			<div id="js-msg-flash-content"></div>
+	
+		{% include "model/msgFlash.html.twig" %}
+		<div id="js-msg-flash-content"></div>
 
-			{% if edit_mode %}
-				<div class="d-flex row justify-content-center my-4">
-					<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-						<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Voir les personnes rattachées au suivi social">Suivi social</a>
-					</div>
-					<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-						<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_evaluation', {'id':support.id}) }}" data-placement="bottom" title="Voir l'évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span>
-						</a>
-					</div>
-					{% if support.service.accommodation %}
-						<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-							<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Voir les modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span>
-							</a>
-						</div>
-					{% endif %}
-					{# <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2"> #}
-					{# <a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a> #}
-					{# </div> #}
-						<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2"> <a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Voir les rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span>
-						</a>
-					</div>
-					<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-						<a href="{{ path('notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Voir les notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span>
-						</a>
-					</div>
-					<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-						<a href="{{ path('documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Voir les documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span>
-						</a>
-					</div>
+		{% if edit_mode %}
+			<div class="d-flex row justify-content-center my-4">
+				<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
+					<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Voir les personnes rattachées au suivi social">Suivi social</a>
 				</div>
-
-			{% endif %}
-
-			<div class="form-group row">
-				<div class="col-md-6">{{ form_row(form.startDate) }}</div>
-				{% if edit_mode %}
-					<div class="col-md-6">{{ form_row(form.endDate) }}</div>
+				<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
+					<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_evaluation', {'id':support.id}) }}" data-placement="bottom" title="Voir l'évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span>
+					</a>
+				</div>
+				{% if support.service.accommodation %}
+					<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
+						<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Voir les modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span>
+						</a>
+					</div>
 				{% endif %}
-				<div class="col-md-6">{{ form_row(form.status) }}</div>
-				<div class="col-md-6">{{ form_row(form.service) }}</div>
-				<div class="col-md-6">{{ form_row(form.referent) }}</div>
-				<div class="col-md-6">{{ form_row(form.referent2) }}</div>
-			</div>
-
-
-			<div class="form-group row">
-				<div class="col-md-12">
-					<div class="mb-4 float-right">
-						<input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}">
-					</div>
+				{#<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
+				<a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a>
+				</div> #}
+					<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2"> <a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Voir les rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span>
+					</a>
+				</div>
+				<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
+					<a href="{{ path('notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Voir les notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span>
+					</a>
+				</div>
+				<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
+					<a href="{{ path('documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Voir les documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span>
+					</a>
 				</div>
 			</div>
+		{% endif %}
 
-		</section>
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.startDate) }}</div>
+			{% if edit_mode %}
+				<div class="col-md-6">{{ form_row(form.endDate) }}</div>
+			{% endif %}
+			<div class="col-md-6">{{ form_row(form.status) }}</div>
+			<div class="col-md-6">{{ form_row(form.service) }}</div>
+			<div class="col-md-6">{{ form_row(form.referent) }}</div>
+			<div class="col-md-6">{{ form_row(form.referent2) }}</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-12">
+				<div class="mb-4 float-right">
+					<input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}">
+				</div>
+			</div>
+		</div>
 
 		{{ form_row(form._token) }}
 		{{ form_end(form, {"render_rest": false}) }}
 
 	</div>
 {% endblock %}
+
 {% block javascripts %}
-	{{ encore_entry_script_tags("support") }}
+{{ encore_entry_script_tags("support") }}
 {% endblock javascripts %}

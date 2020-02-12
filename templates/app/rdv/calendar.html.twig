@@ -15,7 +15,7 @@
 			{% endif %}
 			<div class="d-flex flex-row align-items-center justify-content-between mx-2">
 				<div class="d-flex align-items-center mb-3">
-					<h1 class="h2 mr-3">Agenda</h1>
+					<h2 class="h2 mr-3">Agenda</h2>
 					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous">
 						<span class="far fa-calendar-plus"></span>
 					</button>
@@ -25,18 +25,18 @@
 					{% if support is defined %}
 						<a href="{{ path('support_calendar', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
 						<a href="{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
-							<i class="fas fa-angle-left"></i>
+							<span class="fas fa-angle-left"></class>
 						</a>
 						<a href="{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
-							<i class="fas fa-angle-right"></i>
+							<span class="fas fa-angle-right"></class>
 						</a>
 					{% else %}
 						<a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
 						<a href="{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
-							<i class="fas fa-angle-left"></i>
+							<span class="fas fa-angle-left"></class>
 						</a>
 						<a href="{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
-							<i class="fas fa-angle-right"></i>
+							<span class="fas fa-angle-right"></class>
 						</a>
 					{% endif %}
 				</div>
@@ -68,8 +68,7 @@
 							{% for j in 0..6 %}
 								{% if j < 5 %}
 									{% set day = start_day |date_modify("+" ~ (j + week * 7) ~ " day") %}
-									<div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}
-																																																																																																																																				                        {% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous">
+									<div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}{% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous">
 										<div class="text-dark calendar-day">{{ day| date("d") }}
 											{{ calendar.otherMonth(day) }}
 										</div>

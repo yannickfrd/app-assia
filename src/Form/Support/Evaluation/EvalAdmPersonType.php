@@ -46,16 +46,12 @@ class EvalAdmPersonType extends AbstractType
             ])
             ->add("endDateValidPermit", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [
-                    "placeholder" => "jj/mm/aaaa",
-                ],
+                "attr" => [],
                 "required" => false
             ])
             ->add("renewalDatePermit", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [
-                    "placeholder" => "jj/mm/aaaa",
-                ],
+                "attr" => [],
                 "required" => false
             ])
             ->add("nbRenewals")

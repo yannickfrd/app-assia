@@ -7,11 +7,11 @@
 {{ form_row(form_new_group.groupPeople.familyTypology) }}
 {{ form_row(form_new_group.groupPeople.nbPeople) }}
 {{ form_row(form_new_group.role) }}
-{{ form_row(form_new_group._token) }}
 {% endblock %}
 
 {% block modal_footer %}
 <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau groupe</button>
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+{{ form_row(form_new_group._token) }}
 {{ form_end(form_new_group, {"render_rest": false}) }}
 {% endblock %}
