@@ -4,7 +4,6 @@ namespace App\Export;
 
 use App\Entity\User;
 use App\Service\Export;
-
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class UserExport

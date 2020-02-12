@@ -89,12 +89,12 @@ section {
     color: var(--primary);
 }
 
-.sortable {
-    color: var(--gray) !important;
+.btn>.sortable {
+    color: var(--dark);
 }
 
-.sortable:hover {
-    color: white !important;
+.btn>.sortable:hover {
+    color: white;
 }
 
 //

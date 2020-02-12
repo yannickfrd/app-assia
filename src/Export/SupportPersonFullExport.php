@@ -13,10 +13,8 @@ use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalHousingGroup;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Form\Support\Evaluation\EvalSocialGroupType;
 use App\Service\Export;
 use App\Service\ObjectToArray;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonFullExport
 {
