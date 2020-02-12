@@ -50,7 +50,7 @@ class ServiceController extends AbstractController
 
         $services = $pagination->paginate($this->repo->findAllServicesQuery($serviceSearch), $request);
 
-        return $this->render("app/listServices.html.twig", [
+        return $this->render("app/service/listServices.html.twig", [
             "serviceSearch" => $serviceSearch,
             "form" => $form->createView(),
             "services" => $services ?? null
@@ -76,7 +76,7 @@ class ServiceController extends AbstractController
             return $this->createService($service);
         }
 
-        return $this->render("app/service.html.twig", [
+        return $this->render("app/service/service.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
         ]);
@@ -99,7 +99,7 @@ class ServiceController extends AbstractController
             $this->updateService($service);
         }
 
-        return $this->render("app/service.html.twig", [
+        return $this->render("app/service/service.html.twig", [
             "form" => $form->createView(),
             "users" => $repoUser->findUsersFromService($service),
             "accommodations" => $repoAccommodation->findAccommodationsFromService($service),

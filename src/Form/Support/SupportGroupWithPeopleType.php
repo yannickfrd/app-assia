@@ -3,11 +3,8 @@
 namespace App\Form\Support;
 
 use App\Entity\SupportGroup;
-
 use App\Form\Support\SupportPersonType;
-
 use App\Security\CurrentUserService;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

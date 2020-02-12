@@ -6,15 +6,11 @@ use App\Entity\GroupPeople;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\User;
-
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Utils\Choices;
-
 use App\Repository\UserRepository;
 use App\Repository\ServiceRepository;
-
 use App\Security\CurrentUserService;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

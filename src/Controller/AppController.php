@@ -22,7 +22,7 @@ class AppController extends AbstractController
         $notes = $repoNote->findAllNotesFromUser($this->getUser(), 10);
         $rdvs = $repoRdv->findAllRdvsFromUser($this->getUser(), 10);
 
-        return $this->render("app/home.html.twig", [
+        return $this->render("app/home/home.html.twig", [
             "supports" => $supports,
             "notes" => $notes,
             "rdvs" => $rdvs

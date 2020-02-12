@@ -11,7 +11,7 @@ use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Support\Evaluation\EvaluationGroupType;
+use App\Form\Evaluation\EvaluationGroupType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
@@ -56,7 +56,7 @@ class EvaluationController extends AbstractController
             $this->getErrors($form);
         }
 
-        return $this->render("app/support/evaluation.html.twig", [
+        return $this->render("app/evaluation/evaluation.html.twig", [
             "support" => $supportGroup,
             "form" => $form->createView(),
             "edit_mode" => true

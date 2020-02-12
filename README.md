@@ -15,7 +15,7 @@ https://github.com/RomMad/esperer95-app
 L'application nécessite de disposer au préalable d'un compte créé par un administrateur.
 Pour tester l'application, vous pouvez vous connecter avec les identifiants suivants:
 - Login: j.doe_test
-- Mot de passe: test2020*
+- Mot de passe: test2020
 
 
 # Glossaire

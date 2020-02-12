@@ -3,10 +3,7 @@
 namespace App\Form\Service;
 
 use App\Entity\Device;
-
 use App\Entity\ServiceDevice;
-
-use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

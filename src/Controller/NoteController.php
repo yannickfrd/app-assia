@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Note;
 use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
-use App\Form\Support\Note\NoteType;
-use App\Form\Support\Note\NoteSearchType;
+use App\Form\Note\NoteType;
+use App\Form\Note\NoteSearchType;
 use App\Repository\NoteRepository;
 use App\Repository\SupportGroupRepository;
 use App\Service\Pagination;
@@ -56,7 +56,7 @@ class NoteController extends AbstractController
         $form = $this->createForm(NoteType::class, new Note());
         $form->handleRequest($request);
 
-        return $this->render("note/listNotes.html.twig", [
+        return $this->render("app/note/listNotes.html.twig", [
             "support" => $supportGroup,
             "form_search" => $formSearch->createView(),
             "form" => $form->createView(),

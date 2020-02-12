@@ -49,7 +49,7 @@ class GroupPeopleController extends AbstractController
 
         $groupsPeople = $pagination->paginate($this->repo->findAllGroupPeopleQuery($groupPeopleSearch), $request);
 
-        return $this->render("app/listGroupsPeople.html.twig", [
+        return $this->render("app/groupPeople/listGroupsPeople.html.twig", [
             "groupsPeople" => $groupsPeople,
             "form" => $form->createView()
         ]);
@@ -73,7 +73,7 @@ class GroupPeopleController extends AbstractController
             $this->updateGroupPeople($groupPeople);
         }
 
-        return $this->render("app/groupPeople.html.twig", [
+        return $this->render("app/groupPeople/groupPeople.html.twig", [
             "form" => $formGroupPeople->createView(),
         ]);
     }

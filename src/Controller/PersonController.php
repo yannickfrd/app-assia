@@ -58,7 +58,7 @@ class PersonController extends AbstractController
 
         $people = $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get("search-person")), $request);
 
-        return $this->render("app/listPeople.html.twig", [
+        return $this->render("app/person/listPeople.html.twig", [
             "personSearch" => $personSearch,
             "form" => $form->createView(),
             "people" => $people ?? null
@@ -90,7 +90,7 @@ class PersonController extends AbstractController
             $people = $pagination->paginate($this->repo->findAllPeopleQuery($personSearch), $request);
         }
 
-        return $this->render("app/listPeople.html.twig", [
+        return $this->render("app/person/listPeople.html.twig", [
             "form" => $form->createView(),
             "form_role_person" => $formRolePerson->createView() ?? null,
             "group_people" => $groupPeople,
@@ -116,7 +116,7 @@ class PersonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createPerson($rolePerson);
         }
-        return $this->render("app/person.html.twig", [
+        return $this->render("app/person/person.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
         ]);
@@ -150,7 +150,7 @@ class PersonController extends AbstractController
             $this->createPersonInGroup($person, $rolePerson, $groupPeople);
             return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
         }
-        return $this->render("app/person.html.twig", [
+        return $this->render("app/person/person.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),
             "edit_mode" => false
@@ -185,7 +185,7 @@ class PersonController extends AbstractController
             $this->manager->flush();
         }
 
-        return $this->render("app/person.html.twig", [
+        return $this->render("app/person/person.html.twig", [
             "group_people" => $groupPeople,
             "form" => $form->createView(),
             "form_new_group" => $formNewGroup->createView(),
@@ -235,7 +235,7 @@ class PersonController extends AbstractController
             "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
         ]);
 
-        return $this->render("app/person.html.twig", [
+        return $this->render("app/person/person.html.twig", [
             "form" => $form->createView(),
             "form_new_group" => $formNewGroup->createView(),
             "edit_mode" => true

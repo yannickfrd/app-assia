@@ -4,10 +4,8 @@ namespace App\Form\Service;
 
 use App\Entity\Service;
 use App\Entity\ServiceUser;
-
-use App\Security\CurrentUserService;
-
 use App\Repository\ServiceRepository;
+use App\Security\CurrentUserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

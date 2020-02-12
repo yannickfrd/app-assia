@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Service\Phone;
 
-use App\Form\Utils\SelectList;
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\Collection;

@@ -7,7 +7,7 @@ use App\Form\Model\Export;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Form\Support\ExportType;
+use App\Form\Export\ExportType;
 use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
@@ -61,7 +61,7 @@ class SupportController extends AbstractController
 
         $supports = $pagination->paginate($this->repoSupportGroup->findAllSupportsQuery($supportGroupSearch), $request);
 
-        return $this->render("app/listSupports.html.twig", [
+        return $this->render("app/support/listSupports.html.twig", [
             "supportGroupSearch" => $supportGroupSearch,
             "form" => $form->createView(),
             "supports" => $supports
@@ -159,7 +159,7 @@ class SupportController extends AbstractController
             $this->addFlash("success", "Le suivi social a été modifié.");
         }
 
-        return $this->render("app/support/supportPerson.html.twig", [
+        return $this->render("app/support/supportPeople.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);
@@ -272,7 +272,7 @@ class SupportController extends AbstractController
             return $exportSupport->exportData($supports);
         }
 
-        return $this->render("app/export.html.twig", [
+        return $this->render("app/export/export.html.twig", [
             "form" => $form->createView()
         ]);
     }

@@ -43,7 +43,7 @@ class UserController extends AbstractController
 
         $users = $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request);
 
-        return $this->render("app/listUsers.html.twig", [
+        return $this->render("app/user/listUsers.html.twig", [
             "userSearch" => $userSearch,
             "form" => $form->createView(),
             "users" => $users ?? null
@@ -74,7 +74,7 @@ class UserController extends AbstractController
 
         $users = $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request);
 
-        return $this->render("app/admin/listUsers.html.twig", [
+        return $this->render("app/user/adminListUsers.html.twig", [
             "userSearch" => $userSearch,
             "form" => $form->createView(),
             "users" => $users

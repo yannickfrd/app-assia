@@ -3,9 +3,7 @@
 namespace App\Form\Support;
 
 use App\Entity\SupportPerson;
-
 use App\Form\Utils\Choices;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

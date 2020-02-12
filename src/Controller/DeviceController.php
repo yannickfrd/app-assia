@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Device;
-use App\Form\Service\DeviceType;
+use App\Form\Device\DeviceType;
 use App\Repository\DeviceRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +37,7 @@ class DeviceController extends AbstractController
 
         $devices = $pagination->paginate($this->repo->findAllDevicesQuery(), $request);
 
-        return $this->render("app/admin/listDevices.html.twig", [
+        return $this->render("app/device/listDevices.html.twig", [
             "devices" => $devices ?? null
         ]);
     }
@@ -63,7 +63,7 @@ class DeviceController extends AbstractController
             return $this->createDevice($device);
         }
 
-        return $this->render("app/admin/device.html.twig", [
+        return $this->render("app/device/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
         ]);
@@ -109,7 +109,7 @@ class DeviceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateDevice($device);
         }
-        return $this->render("app/admin/device.html.twig", [
+        return $this->render("app/device/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

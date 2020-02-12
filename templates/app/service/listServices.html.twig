@@ -1,0 +1,98 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Services | Esperer95-app{% endblock %}
+
+{% block body %}
+
+<section class="mt-0 mb-4">
+
+    <div class="container">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-4">Services</h1>
+    </div>
+
+    {% include "app/service/searchServices.html.twig" %}
+
+    {% if services %}
+
+    <div class="container">
+        <div class="row align-items-baseline">
+            <div class="col-md-4 count align-middle">
+                <p class="align-middle">Résultat : {{ services.getTotalItemCount | number_format(0,'', ' ')}}
+                    services.</p>
+            </div>
+            <div class="col-md-8">
+                <div class="navigation">{{ knp_pagination_render(services) }}</div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(services, "Nom du service", "s.name") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(services, "Pôle", "s.name") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-120">Téléphone</th>
+                        <th scope="col" class="align-middle th-w-150">Email</th>
+                        <th scope="col" class="align-middle th-w-120">Adresse</th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(services, "Ville", "s.city") }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    <tr>
+                        <th scope="row">
+                            {% if is_granted("EDIT", service) %}
+                            <a href="{{ path('service_edit', {'id':service.id}) }}"
+                                class="btn btn-{{ theme_color }}  btn-sm shadow" data-placement="bottom"
+                                title="Voir la fiche du service">
+                                <span class="fas fa-eye"></span>
+                            </a>
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                                    class="fas fa-ban"></span></span>
+                            {% endif %}
+                        </th>
+                        <td>{{ service.name }}</td>
+                        <td><a href="{{ path('pole_edit', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">
+                                {{ service.pole.name }}</a>
+                        </td>
+                        <td>{{ service.phone }}</td>
+                        <td>{{ service.email }}</td>
+                        <td>{{ service.address }}</td>
+                        <td>{{ service.city }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="navigation">
+            {{ knp_pagination_render(services) }}
+        </div>
+        {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="{{ path("service_new") }}" class="bnt btn-{{ theme_color }} btn-sm shadow">
+                        <span class="fas fa-plus-square mr-2"></span>Créer un nouveau service</a>
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("directory") }}
+{{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

@@ -16,16 +16,13 @@ export default class MessageFlash {
         this.msg.className = "msg-content rounded";
         this.msg.innerHTML =
             `<div id="js-msg-flash" class="msg-flash alert alert-${this.alert} alert-dismissible fade show align-items-center"
-        role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="">
-        <span class="fas fa-info-circle mr-2"></class>
-        <span>${this.message}</span>
-        </div>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-        <span id="timeline" class="bg-${this.alert}"></span>
-        </div>`
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div>${this.message}</div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <span id="timeline" class="bg-${this.alert}"></span>
+            </div>`
         this.timerID = setInterval(this.timer.bind(this), 1000);
         this.msgFlashContentElt.insertBefore(this.msg, this.msgFlashContentElt.firstChild);
     }

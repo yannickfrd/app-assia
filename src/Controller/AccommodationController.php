@@ -6,7 +6,7 @@ use App\Entity\Service;
 use App\Service\Pagination;
 use App\Entity\Accommodation;
 use App\Form\Model\AccommodationSearch;
-use App\Form\Service\AccommodationType;
+use App\Form\Accommodation\AccommodationType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AccommodationRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +43,7 @@ class AccommodationController extends AbstractController
 
         $accommodations = $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request);
 
-        return $this->render("app/admin/listAccommodations.html.twig", [
+        return $this->render("app/accommodation/listAccommodations.html.twig", [
             "accommodations" => $accommodations ?? null,
             "accommodationSearch" => $accommodationSearch,
             "form" => $form->createView()
@@ -73,7 +73,7 @@ class AccommodationController extends AbstractController
 
             return $this->createAccommodation($accommodation, $service);
         }
-        return $this->render("app/admin/accommodation.html.twig", [
+        return $this->render("app/accommodation/accommodation.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
         ]);
@@ -98,7 +98,7 @@ class AccommodationController extends AbstractController
 
             return $this->updateAccommodation($accommodation);
         }
-        return $this->render("app/admin/accommodation.html.twig", [
+        return $this->render("app/accommodation/accommodation.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

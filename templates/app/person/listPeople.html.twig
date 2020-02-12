@@ -1,0 +1,134 @@
+{% extends "base.html.twig" %}
+
+{% if form_role_person is defined %}
+{% form_theme form_role_person "form/bootstrap_4_horizontal.html.twig" %}
+{% endif %}
+
+{% block title %}
+{% if group_people is defined %}Rechercher une personne
+{% else %}Rechercher une personne{% endif %} | Esperer95-app
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<section class="my-0">
+
+    <div class="container">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-4">{% if group_people is defined %}Rechercher une personne
+            {% else %}Rechercher une personne{% endif %}</h1>
+    </div>
+
+    {% include "app/person/searchPeople.html.twig" %}
+
+    <div class="container">
+
+        {% if app.request.attributes.get("_route") == "new_support_search_person" %}
+        <a href="{{ path("person_new") }}" class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span
+                class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
+        {% endif %}
+
+        {% if people is defined and people %}
+
+        {% if group_people is defined %}
+        <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
+            class="btn btn-{{ theme_color }} btn-sm mb-3 js-create-person"><span
+                class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
+        {% endif %}
+
+        <div class="row align-items-baseline">
+            <div class="col-md-4 count align-middle">
+                <p class="align-middle">Résultat : {{ people.getTotalItemCount | number_format(0,'', ' ')}}personnes.</p>
+            </div>
+            <div class="col-md-8">
+                <div class="navigation">{{ knp_pagination_render(people) }}</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(people, "Nom", "p.lastname") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(people, "Prénom", "p.firstname") }}
+                        </th>
+                        <th scope="col" class="align-middle th-date">
+                            {{ knp_pagination_sortable(people, "Date de naissance", "p.birthdate") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(people, "Sexe", "p.gender") }}
+                        </th>
+                        <th scope="col" class="align-middle th-date">
+                            {{ knp_pagination_sortable(people, "Date de création", "p.createdAt") }}
+                        </th>
+                        <th scope="col" class="align-middle th-date">
+                            {{ knp_pagination_sortable(people, "Date de mise à jour", "p.updatedAt") }}
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for person in people %}
+                    <tr>
+                        <th scope="row">
+                            {% if group_people is defined %}
+                            <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
+                                class="js-add-person" data-toggle="modal" data-target="#modal-block"
+                                data-placement="bottom" title="Ajouter la personne au groupe">
+                                <span class="fas fa-plus-square text-{{ theme_color }} fa-2x"></class>
+                            </a>
+                            {% else %}
+                            <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
+                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                title="Voir la fiche individuelle">
+                                <span class="fas fa-eye"></span>
+                            </a>
+                            {% endif %}
+                        </th>
+                        <td>
+                            <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
+                                class="text-{{ theme_color }} text-uppercase font-weight-bold">{{ person.lastname }}</a>
+                        </td>
+                        <td class="text-capitalize">{{ person.firstname }}</td>
+                        <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />
+                            ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
+                            an{% endif %}){% endif %}</td>
+                        <td>{% if person.gender == 1 %}
+                            <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></class>
+                            {% elseif person.gender == 2 %}
+                            <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></class>
+                            {% endif %} </td>
+                        <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
+                        <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="navigation">{{ knp_pagination_render(people) }}</div>
+
+    {% endif %}
+
+    </div>
+
+</section>
+
+
+{% if form_role_person is defined %}
+{% include "app/groupPeople/addPerson.html.twig" %}
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{{ encore_entry_script_tags("listPeople") }}
+{% endblock javascripts %}

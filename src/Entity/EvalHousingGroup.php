@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Form\Utils\SelectList;
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -276,7 +276,7 @@ class EvalHousingGroup
 
     public function getDlsList()
     {
-        return SelectList::YES_NO[$this->dls];
+        return Choices::YES_NO[$this->dls];
     }
 
     public function getDlsId(): ?string
@@ -365,7 +365,7 @@ class EvalHousingGroup
 
     public function getSyploList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return Choices::YES_NO[$this->syplo];
     }
 
     public function getSyploId(): ?string
@@ -406,7 +406,7 @@ class EvalHousingGroup
 
     public function getDaloCommissionList()
     {
-        return SelectList::YES_NO[$this->daloCommission];
+        return Choices::YES_NO[$this->daloCommission];
     }
 
     public function getDaloRecordDate(): ?\DateTimeInterface
@@ -435,7 +435,7 @@ class EvalHousingGroup
 
     public function getRequalifiedDaloList()
     {
-        return SelectList::YES_NO[$this->requalifiedDalo];
+        return Choices::YES_NO[$this->requalifiedDalo];
     }
 
     public function getDecisionDate(): ?\DateTimeInterface
@@ -464,7 +464,7 @@ class EvalHousingGroup
 
     public function getHsgActionEligibilityList()
     {
-        return SelectList::YES_NO[$this->syplo];
+        return Choices::YES_NO[$this->syplo];
     }
 
     public function getHsgActionRecord(): ?int
@@ -481,7 +481,7 @@ class EvalHousingGroup
 
     public function getHsgActionRecordList()
     {
-        return SelectList::YES_NO[$this->hsgActionRecord];
+        return Choices::YES_NO[$this->hsgActionRecord];
     }
 
     public function getHsgActionDate(): ?\DateTimeInterface
@@ -534,7 +534,7 @@ class EvalHousingGroup
 
     public function getExpulsionInProgressList()
     {
-        return SelectList::YES_NO[$this->expulsionInProgress];
+        return Choices::YES_NO[$this->expulsionInProgress];
     }
 
     public function getPublicForce(): ?int
@@ -551,7 +551,7 @@ class EvalHousingGroup
 
     public function getPublicForceList()
     {
-        return SelectList::YES_NO[$this->publicForce];
+        return Choices::YES_NO[$this->publicForce];
     }
 
     public function getPublicForceDate(): ?\DateTimeInterface
@@ -592,7 +592,7 @@ class EvalHousingGroup
 
     public function getHousingExperienceList()
     {
-        return SelectList::YES_NO[$this->housingExperience];
+        return Choices::YES_NO[$this->housingExperience];
     }
 
     public function getHousingExpeComment(): ?string
@@ -711,7 +711,7 @@ class EvalHousingGroup
 
     public function getHousinglist()
     {
-        return SelectList::YES_NO[$this->housing];
+        return Choices::YES_NO[$this->housing];
     }
 
     public function getHousingAddress(): ?string
@@ -764,7 +764,7 @@ class EvalHousingGroup
 
     public function getDomiciliationlist()
     {
-        return SelectList::YES_NO[$this->domiciliation];
+        return Choices::YES_NO[$this->domiciliation];
     }
 
     public function getDomiciliationAddress(): ?string

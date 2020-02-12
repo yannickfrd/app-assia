@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Document;
 use App\Entity\SupportGroup;
 use App\Form\Model\DocumentSearch;
-use App\Form\Support\Document\DocumentSearchType;
-use App\Form\Support\Document\DocumentType;
+use App\Form\Document\DocumentSearchType;
+use App\Form\Document\DocumentType;
 use App\Service\FileUploader;
 use App\Repository\DocumentRepository;
 use App\Repository\SupportGroupRepository;
@@ -57,7 +57,7 @@ class DocumentController extends AbstractController
         $form = $this->createForm(DocumentType::class, new Document());
         $form->handleRequest($request);
 
-        return $this->render("document/listDocuments.html.twig", [
+        return $this->render("app/document/listDocuments.html.twig", [
             "support" => $supportGroup,
             "form_search" => $formSearch->createView(),
             "form" => $form->createView(),

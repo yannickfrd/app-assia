@@ -39,7 +39,7 @@ class DeviceRepository extends ServiceEntityRepository
     public function getDevicesQueryList($place)
     {
         $query =  $this->createQueryBuilder("d")
-            ->select("PARIAL d.{id, name, serviceDevices}")
+            ->select("PARTIAL d.{id, name}")
             ->leftJoin("d.serviceDevices", "s")
 
             ->where("s.service = :service")

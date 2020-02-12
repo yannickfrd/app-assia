@@ -76,7 +76,9 @@
 											{% for rdv in rdvs[day| date("Y-m-d")] %}
 												<a class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Voir le rendez-vous">
 													<span class="rdv-start">{{ rdv.start| date("H:i") }}</span>
-													<span class="rdv-initiales">{{ rdv.createdBy.initials }}</span>
+													{% if support is not defined %}
+													<span class="rdv-initiales badge badge-light">{{ rdv.createdBy.initials }}</span>
+													{% endif %}	
 													<span class="rdv-title">{{ rdv.title }}</span>
 												</a>
 											{% endfor %}

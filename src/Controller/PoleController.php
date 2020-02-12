@@ -35,7 +35,7 @@ class PoleController extends AbstractController
     {
         $poles =  $pagination->paginate($this->repo->findAllPolesQuery(), $request);
 
-        return $this->render("app/admin/listPoles.html.twig", [
+        return $this->render("app/pole/listPoles.html.twig", [
             "poles" => $poles ?? null
         ]);
     }
@@ -59,7 +59,7 @@ class PoleController extends AbstractController
             return $this->createPole($pole);
         }
 
-        return $this->render("app/admin/pole.html.twig", [
+        return $this->render("app/pole/pole.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
         ]);
@@ -82,7 +82,7 @@ class PoleController extends AbstractController
             $this->updatePole($pole);
         }
 
-        return $this->render("app/admin/pole.html.twig", [
+        return $this->render("app/pole/pole.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true
         ]);

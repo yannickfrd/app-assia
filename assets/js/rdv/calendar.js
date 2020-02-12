@@ -76,7 +76,7 @@ export default class Calendar {
         if (this.supportElt) {
             this.modalForm.querySelector("form").action = "/support/" + this.supportElt.getAttribute("data-support") + "/rdv/new";
             let fullname = this.supportPeopleElt.querySelector(".btn").textContent;
-            this.modalForm.querySelector("#rdv_title").value = "RDV " + fullname;
+            this.modalForm.querySelector("#rdv_title").value = fullname;
             this.supportFullNameElt.textContent = fullname;
         } else {
             this.modalForm.querySelector("form").action = "/rdv/new";

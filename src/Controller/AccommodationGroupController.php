@@ -5,14 +5,14 @@ namespace App\Controller;
 use App\Entity\SupportGroup;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
-use App\Form\Support\Accommodation\AccommodationGroupType;
-use App\Repository\AccommodationGroupRepository;
-use App\Repository\AccommodationPersonRepository;
+use App\Form\Accommodation\AccommodationGroupType;
 use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\AccommodationGroupRepository;
+use App\Repository\AccommodationPersonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -45,7 +45,7 @@ class AccommodationGroupController extends AbstractController
 
         $accommodationGroups = $this->repo->findBy(["supportGroup" => $supportGroup]);
 
-        return $this->render("app/support/listAccommodationsGroup.html.twig", [
+        return $this->render("app/accommodation/listAccommodationsGroup.html.twig", [
             "support" => $supportGroup,
             "support_group_accommodations" => $accommodationGroups,
         ]);
@@ -93,7 +93,7 @@ class AccommodationGroupController extends AbstractController
 
             return $this->createAccommodationGroup($accommodationGroup);
         }
-        return $this->render("app/support/accommodationGroup.html.twig", [
+        return $this->render("app/accommodation/accommodationGroup.html.twig", [
             "support" => $supportGroup,
             "form" => $form->createView(),
             "edit_mode" => false
@@ -122,7 +122,7 @@ class AccommodationGroupController extends AbstractController
 
             return $this->updateAccommodationGroup($accommodationGroup);
         }
-        return $this->render("app/support/accommodationGroup.html.twig", [
+        return $this->render("app/accommodation/accommodationGroup.html.twig", [
             "support" => $supportGroup,
             "form" => $form->createView(),
             "edit_mode" => true

@@ -55,7 +55,7 @@ class SecurityController extends AbstractController
             return $this->createUser($user);
         }
 
-        return $this->render("security/registration.html.twig", [
+        return $this->render("app/security/registration.html.twig", [
             "form" => $form->createView(),
         ]);
     }
@@ -82,7 +82,7 @@ class SecurityController extends AbstractController
             $this->errorLogin($user ?? null);
         }
 
-        return $this->render("security/login.html.twig", [
+        return $this->render("app/security/login.html.twig", [
             "last_username" => $lastUsername,
             "error" => $error
         ]);
@@ -123,7 +123,7 @@ class SecurityController extends AbstractController
             return $this->updatePassword($userInitPassword->getPassword());
         }
 
-        return $this->render("security/initPassword.html.twig", [
+        return $this->render("app/security/initPassword.html.twig", [
             "form" => $form->createView()
         ]);
     }
@@ -161,7 +161,7 @@ class SecurityController extends AbstractController
             $this->addFlash("danger ", "Le mot de passe ou la confirmation sont invalides.");
         }
 
-        return $this->render("app/user.html.twig", [
+        return $this->render("app/user/user.html.twig", [
             "form" => $form->createView(),
             "formPassword" => $formPassword->createView(),
             "supports" => $repoSupport->findAllSupportsFromUser($this->getUser()),
@@ -186,7 +186,7 @@ class SecurityController extends AbstractController
 
             $this->addFlash("success", "Le compte utilisateur a été mis à jour.");
         }
-        return $this->render("security/securityUser.html.twig", [
+        return $this->render("app/security/securityUser.html.twig", [
             "form" => $form->createView(),
         ]);
     }
@@ -215,7 +215,7 @@ class SecurityController extends AbstractController
             }
             $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
         }
-        return $this->render("security/forgotPassword.html.twig", [
+        return $this->render("app/security/forgotPassword.html.twig", [
             "form" => $form->createView()
         ]);
     }
@@ -245,7 +245,7 @@ class SecurityController extends AbstractController
             $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
         }
 
-        return $this->render("security/reinitPassword.html.twig", [
+        return $this->render("app/security/reinitPassword.html.twig", [
             "form" => $form->createView()
         ]);
     }
