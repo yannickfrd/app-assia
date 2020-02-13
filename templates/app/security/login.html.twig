@@ -9,20 +9,19 @@
         <form action="{{ path("security_login") }}" method="post" class="form-signin m-auto text-center">
             {% include "model/msgFlash.html.twig" %}
             <h1 class="h3 mb-4 font-weight-normal">Merci de vous connecter</h1>
-
             <div class="my-2">
-                <label class="sr-only" for="_username">Login</label>
                 <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <div class="input-group-text"><span class="fa fa-user"></span></div>
                     </div>
+                    <label class="sr-only" for="username">Login : </label>
                     <input type="text" name="_username" id="username" class="form-control shadow-sm" placeholder="Login"
                         value="{{ last_username }}" required autofocus>
                 </div>
             </div>
             <div class="my-3">
-                <label for="_password" class="sr-only">Mot de passe</label>
                 <div class="input-group js-password-group">
+                    <label for="password" class="sr-only">Mot de passe : </label>
                     <input type="password" name="_password" id="password" class="form-control shadow-sm js-password"
                         data-toggle="password" placeholder="Mot de passe" required>
                     <div class="input-group-append">
@@ -30,17 +29,11 @@
                     </div>
                 </div>
             </div>
-            <div class="custom-control custom-checkbox mb-4">
-                <input type="checkbox" id="remember" name="remember"
-                    class="custom-control-input checkbox form-check-input" value="true">
-                <label class="custom-control-label form-check-label" for="remember">Se souvenir de moi</label>
-            </div>
             <input type="hidden" name="_target_path" value="{{ path('security_after_login') }}" />
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <input type="submit" value="Se connecter" id="validation"
                 class="btn btn-lg btn-{{ theme_color }} btn-block mb-4 shadow">
-            <a href="{{ path("security_forgot_password") }}" class="text-{{ theme_color }} mb-4">Mot de passe
-                oublié ?</a>
+            <a href="{{ path("security_forgot_password") }}" class="text-{{ theme_color }} mb-4">Mot de passe oublié ?</a>
         </form>
     </section>
 </div>

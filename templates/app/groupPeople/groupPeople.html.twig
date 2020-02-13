@@ -77,17 +77,15 @@
                                 <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
                                 {% set age = person.age %}
                                 <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
-                                <td class="text-center px-1 align-middle">
-                                    {{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
-                                <td class="px-1">
-                                    {{ form_widget(form_person.person.gender) }}</td>
+                                <td class="text-center px-1 align-middle">{{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
+                                <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                 <td class="px-1 align-middle">
                                     <button class="js-remove btn btn-danger shadow"
                                         data-url="{{ path('role_person_remove', {'id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
                                         data-toggle="modal" data-target="#modal-block" data-placement="bottom"
-                                        title="Retirer la personne du groupe"><span
-                                            class="fas fa-user-times"></span></button>
+                                        title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}

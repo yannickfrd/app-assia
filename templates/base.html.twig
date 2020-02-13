@@ -42,7 +42,7 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbar">
-					{# {% if is_granted("ROLE_USER") %} #}
+					{% if is_granted("ROLE_USER") %}
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
 							<a class="nav-link text-light " href="{{ path("home") }}">
@@ -130,7 +130,7 @@
 						<a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
 						{% endif %}
 					</div>
-					{# {% endif %} #}
+					{% endif %}
 				</div>
 			</nav>
 		</header>

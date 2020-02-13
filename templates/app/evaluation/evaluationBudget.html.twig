@@ -19,32 +19,32 @@
 				<tr>
 					<td>Total ressources</td>
 					<td class="pr-3 text-right">
-						<div id="ressourcesGroupAmt">{% if evaluationGroup.evalBudgetGroup.ressourcesGroupAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.ressourcesGroupAmt }}{% else %}0{% endif %}</div> €</td>
+						<span id="ressourcesGroupAmt">{% if evaluationGroup.evalBudgetGroup.ressourcesGroupAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.ressourcesGroupAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total charges</td>
 					<td class="pr-3 text-right">
-						<div id="chargesGroupAmt">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</div> €</td>
+						<span id="chargesGroupAmt">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total remboursement mensuel</td>
 					<td class="pr-3 text-right">
-						<div id="repaymentGroupAmt">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</div> €</td>
+						<span id="repaymentGroupAmt">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr class="table-dark text-dark font-weight-bold">
 					<td>Reste à vivre</td>
 					<td class="pr-3 text-right">
-						<div id="budgetBalanceGroupAmt">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</div> €</td>
+						<span id="budgetBalanceGroupAmt">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 				<tr>
 					<td>Total dettes</td>
 					<td class="pr-3 text-right">
-						<div id="debtsGroupAmt">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</div> €</td>
+						<span id="debtsGroupAmt">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
+							{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</span> €</td>
 				</tr>
 			</tbody>
 		</table>

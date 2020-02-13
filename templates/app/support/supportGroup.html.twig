@@ -31,9 +31,7 @@
 			<p>
 				Créé le {{support.createdAt | date("d/m/Y à H:i") }}
 				{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
-				<span id="js-social-support-updated">
-					(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }}par{{ support.updatedBy.fullname }})
-				</span>
+				<span id="js-social-support-updated">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 			</p>
 		</div>
 		{% else %}
@@ -49,13 +47,13 @@
 					</a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
-					{% if edit_mode %}Suivi social{% else %}Nouveau suivi social
-					{% endif %}
+					{% if edit_mode %}Suivi social{% else %}Nouveau suivi social{% endif %}
 				</li>
 			</ol>
 		</nav>
 		{% for person in people %}
-			<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
+			<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
+				class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
 		{% endfor %}
 
 		<hr>

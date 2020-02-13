@@ -28,20 +28,15 @@
 			</a>
 		</div>
 	</div>
+
 	<div id="support" data-support="{{ support.id }}"></div>
+
 	<div class="small text-secondary">
-		<p>Créé le
-			{{support.createdAt | date("d/m/Y à H:i") }}
-			{% if support.createdBy %}par
-				{{ support.createdBy.fullname}}
-			{% endif %}
-			<span id="js-social-support-updated">(modifié le
-				{{ support.updatedAt | date("d/m/Y à H:i") }}
-				par
-				{{ support.updatedBy.fullname }})
-			</span>
+		<p>Créé le {{support.createdAt | date("d/m/Y à H:i") }}{% if support.createdBy %} par {{ support.createdBy.fullname}}{% endif %}
+			<span id="js-social-support-updated">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
+
 	<div>
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
@@ -64,11 +59,12 @@
 		</nav>
 		<div id="support-people">
 		{% for supportPerson in support.supportPerson %}
-			<span class="btn btn-outline-{{ theme_color }} btn-sm mb-2 shadow-sm">{{ supportPerson.person.fullname }}</span>
+			<a href="{{ path("group_person_show", {"id":support.groupPeople.id, "person_id":supportPerson.person.id, "slug":supportPerson.person.slug}) }}" 
+				class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ supportPerson.person.fullname }}</a>
 		{% endfor %}
 		</div>
 	</div>
 
 </section>
 
-	<hr>
+<hr>
