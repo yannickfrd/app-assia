@@ -18,13 +18,20 @@ class AccommodationPersonType extends AbstractType
         $builder
             ->add("startDate", DateType::class, [
                 "widget" => "single_text",
+                "attr" => [
+                    "class" => "w-max-165",
+                ],
             ])
             ->add("endDate", DateType::class, [
                 "widget" => "single_text",
+                "attr" => [
+                    "class" => "w-max-165",
+                ],
                 "required" => false
             ])
             ->add("endReason", ChoiceType::class, [
                 "choices" => Choices::getChoices(AccommodationGroup::END_REASON),
+                "attr" => ["class" => "w-min-200"],
                 "required" => false,
                 "placeholder" => "-- Select --",
 
