@@ -31,13 +31,11 @@
                 </div>
                 {{ form_row(form._token) }}
             </div>
-            <div class="modal-footer d-block">
-                <div class="float-left d-flex">
+            <div class="modal-footer d-flex justify-content-between">
+                <div class="float-left">
                     <button id="modal-btn-delete"
                         class="mr-3 btn btn-danger d-none" data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span></button>
-                    <div id="js-auto-save" class="text-secondary py-1 d-none">
-                        <span class="fas fa-sync-alt mr-2"></span>Sauvegarde auto.
-                    </div>
+                    <div id="js-auto-save" class="text-secondary py-1 d-none"><span class="fas fa-sync-alt mr-2"></span>Sauv. auto.</div>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary"
