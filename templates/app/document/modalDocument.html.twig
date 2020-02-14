@@ -5,21 +5,15 @@
             {{ form_start(form) }}
 
             <div class="modal-body pb-0">
-                <div class="form-group row">
-                    <div class="col-sm-12" id="modalDocumentLabel">{{ form_widget(form.name) }}</div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-12">{{ form_widget(form.type) }}</div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-12">{{ form_widget(form.content) }}</div>
-                </div>
+                {{ form_row(form.name) }}
+                {{ form_row(form.type) }}
+                {{ form_row(form.content) }}
                 <div class="form-group row js-document-block-file">
+                    <div class="col-sm-12 sr-only">{{ form_label(form.file) }}</div>
                     <div class="col-sm-12">{{ form_widget(form.file) }}</div>
                     <div class="col-sm-12">{{ form_help(form.file) }}</div>
                     <div class="col-sm-12">{{ form_errors(form.file) }}</div>
                 </div>
-                {{ form_row(form._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
@@ -31,6 +25,7 @@
                 </div>
             </div>
 
+            {{ form_row(form._token) }}
             {{ form_end(form) }}
 
         </div>

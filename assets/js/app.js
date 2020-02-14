@@ -1,12 +1,3 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
-
-// any CSS you require will output into a single css file (app.css in this case)
-
 require("../css/app.scss");
 require("../css/table.scss");
 require("../css/calendar.scss");
@@ -17,7 +8,6 @@ const $ = require("jquery");
 
 require("bootstrap");
 require("bootstrap-datepicker");
-
 
 // import MessageFlash from "./utils/messageFlash";
 import AjaxRequest from "./utils/ajaxRequest";
@@ -49,7 +39,7 @@ $(function () {
 let ajaxRequest = new AjaxRequest();
 
 // Recherche instannée d'une personne via Ajax
-let searchPerson = new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time
+new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time
 
 // ! function (a) {
 //     a.fn.datepicker.dates.fr = {

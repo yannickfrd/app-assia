@@ -29,7 +29,6 @@
                         {{ form_widget(form.status) }}
                     </div>
                 </div>
-                {{ form_row(form._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
@@ -44,6 +43,7 @@
                 </div>
             </div>
 
+            {{ form_row(form._token) }}
             {{ form_end(form) }}
 
         </div>

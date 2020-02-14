@@ -65,7 +65,7 @@
                             {% if is_granted("VIEW", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_edit', {'id':support.id}) }} {% endif %}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
-                                title="Modifier la fiche du suivi"><span class="fas fa-eye"></span>
+                                title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                             </a>
                             {% else %}
                             <span class="btn btn-{{ theme_color }} btn-sm shadow my-1">
@@ -74,7 +74,7 @@
                             {% if is_granted("EDIT", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_edit', {'id':support.id}) }} {% endif %}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
-                                title="Voir la fiche du suivi"><span class="fas fa-edit"></span>
+                                title="Modifier la fiche du suivi"><span class="fas fa-edit"></span>
                             </a>
                             {% endif %}
                         </th>

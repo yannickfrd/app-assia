@@ -237,12 +237,14 @@ class SecurityController extends AbstractController
 
         // Vérifie si l'utilisateur existe avec le même token
         $user = $this->userWithTokenExists($userResetPassword, $request->get("token"));
-        if ($user) {
-            if ($form->isSubmitted() && $form->isValid()) {
-                return $this->updatePasswordWithToken($user, $userResetPassword);
+        if ($form->isSubmitted()) {
+            if ($user) {
+                if ($form->isValid()) {
+                    return $this->updatePasswordWithToken($user, $userResetPassword);
+                }
+            } else {
+                $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
             }
-        } else {
-            $this->addFlash("danger", "Le login ou l'adresse email sont incorrects.");
         }
 
         return $this->render("app/security/reinitPassword.html.twig", [
@@ -314,8 +316,10 @@ class SecurityController extends AbstractController
 
     /**
      * Met à jour les coordonnées de l'utilisateur connecté
+
+     * @param UserChangeInfo $userChangeInfo
      */
-    protected function updateInfoCurrentUser($userChangeInfo)
+    protected function updateInfoCurrentUser(UserChangeInfo $userChangeInfo)
     {
         $this->getUser()->setEmail($userChangeInfo->getEmail())
             ->setPhone($userChangeInfo->getPhone())
@@ -331,7 +335,7 @@ class SecurityController extends AbstractController
     /**
      * Met à jour le mot de passe
      *
-     * @param UserInitPassword $userInitPassword
+     * @param string $password
      * @return Response
      */
     protected function updatePassword($password): Response
@@ -395,12 +399,20 @@ class SecurityController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash("success", "Votre mot de passe a été réinitialisé !");
-        } else {
-            return $this->addFlash("danger", "Le lien de réinitialisation est périmé.");
+
+            return $this->redirectToRoute("security_login");
         }
-        return $this->redirectToRoute("security_login");
+        $this->addFlash("danger", "Le lien de réinitialisation est périmé.");
+
+        return $this->redirectToRoute("security_reinit_password");
     }
 
+    /**
+     * Envoie l'email de réinitialisation
+     *
+     * @param User $user
+     * @param MailNotification $notification
+     */
     protected function sendEmailReinitPassword(User $user, MailNotification $notification)
     {
         $user->setToken(bin2hex(random_bytes(32))) // Enregistre le token dans la base
@@ -415,5 +427,6 @@ class SecurityController extends AbstractController
         if ($message) {
             return $this->redirectToRoute("security_login");
         }
+        return;
     }
 }

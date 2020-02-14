@@ -326,6 +326,11 @@ th.required:after {
     background: linear-gradient(rgba(255, 255, 255, 0), white);
 }
 
+// Document 
+label.custom-file-label::after {
+    content: "Dossier";
+}
+
 // Modification des couleurs des liens de tri de Paginator
 thead a {
     color: var(--dark) !important;

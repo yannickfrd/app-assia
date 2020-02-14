@@ -206,15 +206,17 @@ export default class ListDocuments {
     // Réponse du serveur
     responseAjax(data) {
         if (data.code === 200) {
-            if (data.action === "create") {
-                this.createDocument(data.data);
-            }
-            if (data.action === "update") {
-                this.updateDocument(data.data);
-            }
-            if (data.action === "delete") {
-                document.getElementById("document-" + this.documentId).remove();
-                this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) - 1;
+            switch (data.action) {
+                case "create":
+                    this.createDocument(data.data);
+                    break;
+                case "update":
+                    this.updateDocument(data.data);
+                    break;
+                case "delete":
+                    document.getElementById("document-" + this.documentId).remove();
+                    this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) - 1;
+                    break;
             }
         }
         new MessageFlash(data.alert, data.msg);
@@ -226,20 +228,8 @@ export default class ListDocuments {
         let documentElt = document.createElement("tr");
         documentElt.id = "document-" + data.documentId;
         documentElt.className = "js-document";
-        let size = Math.floor(data.size / 1000) + " Ko";
 
-        documentElt.innerHTML =
-            `<th scope="row" class="align-middle text-center">
-                <a href="/uploads/documents/${data.path}" target="_blank" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
-            </th>
-            <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
-            <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.typeList}</td>
-            <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
-            <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
-            <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
-            <td class="align-middle text-center">
-                <button data-url="/document/${data.documentId}/delete" class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span></button>
-            </td>`
+        documentElt.innerHTML = this.getPrototypeDocument(data);
 
         let containerDocumentsElt = document.getElementById("container-documents");
         containerDocumentsElt.insertBefore(documentElt, containerDocumentsElt.firstChild);
@@ -258,5 +248,21 @@ export default class ListDocuments {
         documentTypeInput.textContent = data.typeList;
         documentTypeInput.setAttribute("data-value", this.getOption(this.documentTypeInput));
         this.documentElt.querySelector(".js-document-content").textContent = this.documentContentInput.value;
+    }
+
+    getPrototypeDocument(data) {
+        let size = Math.floor(data.size / 1000) + " Ko";
+
+        return `<th scope="row" class="align-middle text-center">
+                <a href="/uploads/documents/${data.path}" target="_blank" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
+            </th>
+            <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
+            <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.typeList}</td>
+            <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
+            <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
+            <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
+            <td class="align-middle text-center">
+                <button data-url="/document/${data.documentId}/delete" class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span></button>
+            </td>`
     }
 }

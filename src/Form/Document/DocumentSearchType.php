@@ -18,17 +18,13 @@ class DocumentSearchType extends AbstractType
     {
         $builder
             ->add("name", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "placeholder" => "Search"
                 ]
             ])
             ->add("type", ChoiceType::class, [
-                "label_attr" => [
-                    "class" => "sr-only"
-                ],
+                "label_attr" => ["class" => "sr-only"],
                 "choices" => Choices::getchoices(Document::TYPE),
                 "attr" => [
                     "class" => "w-max-150",

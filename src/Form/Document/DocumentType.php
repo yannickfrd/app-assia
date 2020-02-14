@@ -19,17 +19,20 @@ class DocumentType extends AbstractType
     {
         $builder
             ->add("name", null, [
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
-                    "placeholder" => "Nom du fichier",
+                    "placeholder" => "File name",
                 ]
             ])
             ->add("content", null, [
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 4,
-                    "placeholder" => "Ajouter une description"
+                    "placeholder" => "Add a comment"
                 ]
             ])
             ->add("type", ChoiceType::class, [
+                "label_attr" => ["class" => "sr-only"],
                 "choices" => Choices::getchoices(Document::TYPE),
                 "placeholder" => "-- Type --"
             ])
@@ -50,8 +53,11 @@ class DocumentType extends AbstractType
                             "application/vnd.ms-excel",
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         ],
-                        "mimeTypesMessage" => "Merci de télécharger un fichier au format valide (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip).",
+                        "mimeTypesMessage" => "Thank to upload a valid file (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip)",
                     ])
+                ],
+                "attr" => [
+                    "class" => "cursor-pointer",
                 ],
                 "help" => "5Mo maximum. Formats acceptés : doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip.",
             ]);

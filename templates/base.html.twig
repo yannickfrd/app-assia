@@ -3,7 +3,7 @@
 
 <head>
 	<title>
-		{% block title %}E95-app{% endblock %}
+		{% block title %}Esperer95-app{% endblock %}
 	</title>
 	<meta charset="utf-8" />
 	<meta name="robots" content="noindex">
@@ -33,7 +33,7 @@
 
 	<main class="min-vh-100">
 		<header id="header" data-color="{{ theme_color }}">
-			<nav class=" navbar fixed-top navbar-expand-lg navbar-light bg-{{ theme_color }} mb-0 shadow">
+			<nav class=" navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
 				<a class="navbar-brand text-light" href="{{ path("home") }}">
 					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app">
 				</a>
@@ -110,7 +110,7 @@
 							<div id="results_search" class="w-100 list-group pr-sm-2 d-block fade-in"></div>
 						</div>
 						<button class="btn btn-{{ theme_color }} border-light my-2 my-sm-0" type="submit">
-							<span class="fas fa-search" data-placement="bottom" title="Rechercher"></span>
+							<span class="fas fa-search" data-placement="bottom" title="Rechercher"><span class="sr-only">Rechercher</span></span>
 						</button>
 					</form>
 					<div class="text-light">
