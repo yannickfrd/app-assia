@@ -31,10 +31,11 @@
 			{% include "app/evaluation/evaluationBudget.html.twig" %}
 			{% include "app/evaluation/evaluationHousing.html.twig" %}
 		</div>
+
 		<div class="form-group row">
 			<div class="col-md-12">
 				<div class="mb-4 float-right">
-					<input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}">
+					<input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow" value="{% if form.vars.value.evalSocialGroup %}Mettre à jour{% else %}Enregistrer{% endif %}">
 				</div>
 			</div>
 		</div>

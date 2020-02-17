@@ -57,6 +57,11 @@ class SupportGroup
     private $referent2;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $agreement;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -200,6 +205,18 @@ class SupportGroup
     public function setReferent2(?User $referent2): self
     {
         $this->referent2 = $referent2;
+
+        return $this;
+    }
+
+    public function getAgreement(): ?bool
+    {
+        return $this->agreement;
+    }
+
+    public function setAgreement(?bool $agreement): self
+    {
+        $this->agreement = $agreement;
 
         return $this;
     }

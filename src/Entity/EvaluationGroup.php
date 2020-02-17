@@ -49,7 +49,6 @@ class EvaluationGroup
      */
     private $evaluationPeople;
 
-
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvalSocialGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */

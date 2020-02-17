@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class SupportGroupType extends AbstractType
 {
@@ -75,6 +76,15 @@ class SupportGroupType extends AbstractType
             ->add("endDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
+            ])
+            ->add("agreement", CheckboxType::class, [
+                "required" => true,
+                "label_attr" => [
+                    "class" => "custom-control-label",
+                ],
+                "attr" => [
+                    "class" => "custom-control-input checkbox"
+                ]
             ])
             ->add("comment", null, [
                 "attr" => [

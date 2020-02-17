@@ -32,7 +32,6 @@ class ExportType extends AbstractType
     {
         $builder
             ->add("status", ChoiceType::class, [
-
                 "multiple" => true,
                 "choices" => Choices::getChoices(SupportGroup::STATUS),
                 "attr" => [

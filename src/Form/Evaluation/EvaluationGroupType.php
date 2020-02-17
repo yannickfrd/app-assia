@@ -9,6 +9,7 @@ use App\Form\Evaluation\EvalBudgetGroupType;
 use App\Form\Evaluation\EvalFamilyGroupType;
 use App\Form\Evaluation\EvalSocialGroupType;
 use App\Form\Evaluation\EvalHousingGroupType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
