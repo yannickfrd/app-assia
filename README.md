@@ -1,10 +1,12 @@
-# Esperer95-app
+# Esperer95.app
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
+# Versions
+1.0.0 17/02/2020
 
-# Développement
+
+# Développeur
 Romain MADELAINE
-10/02/2020
 
 
 # Repository Git

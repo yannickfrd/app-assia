@@ -30,8 +30,10 @@
                      </th>
                      <td class="align-middle">{{ note.title }}</td>
                      <td class="align-middle">
-                         {{ note.supportGroup.groupPeople.rolePerson|first.person.fullname }}<br>
-                     </td>
+                    {% for supportPerson in note.supportGroup.supportPerson|filter(supportPerson => supportPerson.head == true) %}
+                    {{ supportPerson.person.fullname }}
+                    {% endfor %}                     
+                    </td>
                      <td class="align-middle">{{ note.statusList }}</td>
                      <td class="align-middle">{{ note.createdAt| date("d/m/Y") }}</td>
                      <td class="align-middle">{{ note.updatedAt| date("d/m/Y") }}</td>

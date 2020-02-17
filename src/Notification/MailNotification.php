@@ -42,7 +42,7 @@ class MailNotification
     {
         try {
             //Recipients
-            $this->mail->setFrom("noreply@romain-mad.fr", "Esperer95-app");
+            $this->mail->setFrom("noreply@romain-mad.fr", "Esperer95.app");
             $this->mail->addAddress($to["email"], $to["name"]); // Add a recipient
             // $this->mail->addAddress("ellen@example.com"); // Name is optional
             // $this->mail->addReplyTo("info@example.com", "Information");
@@ -74,10 +74,10 @@ class MailNotification
         $headers = [
             "MIME-Version" => "1.0",
             "Content-type" => "text/html;charset=UTF-8",
-            "From" => "Esperer95-app <noreply@esperer95-app.fr>",
+            "From" => "Esperer95.app <noreply@esperer95-app.fr>",
             // "CC" => $cc,
             // "Bcc" => $bcc,
-            // "Reply-To" => "Esperer95-app <romain.madelaine@esperer-95.org>",
+            // "Reply-To" => "Esperer95.app <romain.madelaine@esperer-95.org>",
             "X-Mailer" => "PHP/" . phpversion()
         ];
         mail($to, $subject, $htmlBody, $headers);
@@ -95,7 +95,7 @@ class MailNotification
             "name" =>  $user->getFullname()
         ];
 
-        $subject = "Esperer95-app : Réinitialisation du mot de passe";
+        $subject = "Esperer95.app : Réinitialisation du mot de passe";
 
         $htmlBody = $this->renderer->render(
             "emails/reinitPassword.html.twig",

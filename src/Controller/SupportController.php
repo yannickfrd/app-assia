@@ -195,6 +195,8 @@ class SupportController extends AbstractController
 
                 $supportPerson->setSupportGroup($supportGroup)
                     ->setPerson($role->getPerson())
+                    ->setHead($role->getHead())
+                    ->setRole($role->getRole())
                     ->setStartDate(new \DateTime())
                     ->setEndDate($supportGroup->getEndDate())
                     ->setStatus($supportGroup->getStatus())

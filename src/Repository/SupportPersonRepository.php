@@ -41,15 +41,13 @@ class SupportPersonRepository extends ServiceEntityRepository
     protected function getSupportsQuery()
     {
         return $this->createQueryBuilder("sp")
-            ->select("PARTIAL sp.{id, status, startDate, endDate}")
+            ->select("PARTIAL sp.{id, status, startDate, endDate, head, role}")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
             ->leftJoin("sp.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
             ->leftJoin("sg.referent", "u")->addselect("PARTIAL u.{id, firstname, lastname}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
-            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
-            ->leftJoin("p.rolesPerson", "r")->addselect("PARTIAL r.{id, role, head}")
-            ->leftJoin("r.groupPeople", "gp")->addselect("PARTIAL gp.{id, familyTypology, nbPeople}");
+            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}");
     }
 
     protected function filter($query, $supportGroupSearch)

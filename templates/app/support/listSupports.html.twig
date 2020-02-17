@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Les suivis | Esperer95-app{% endblock %}
+{% block title %}Les suivis | Esperer95.app{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -79,14 +79,14 @@
                             {% endif %}
                         </th>
                         <td class="align-middle">
-                            {% for rolePerson in support.groupPeople.rolePerson %}
+                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
                             <a href="{% if support.groupPeople %}{{ path('group_people_show', {'id':support.groupPeople.id}) }} {% endif %}"
-                                class="text-{{ theme_color }} font-weight-bold">{{ rolePerson.person.fullname }}</a>
+                                class="text-{{ theme_color }} font-weight-bold">{{ supportPerson.person.fullname }}</a>                            
                             {% endfor %}
                         </td>
                         <td class="align-middle">
-                            {% for rolePerson in support.groupPeople.rolePerson %}
-                            {{ rolePerson.person.birthdate | date("d/m/Y") }}
+                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
+                            {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />                           
                             {% endfor %}
                         </td>
                         <td class="align-middle">

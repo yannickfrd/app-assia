@@ -2,12 +2,14 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Person;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use PhpParser\Node\Stmt\Foreach_;
 
 class D_SupportGroupFixtures extends Fixture
 {
@@ -91,14 +93,22 @@ class D_SupportGroupFixtures extends Fixture
 
         $this->manager->persist($this->supportGroup);
     }
+
     // Crée le suivi social du groupe
-    public function addSupportPerson($person)
+    public function addSupportPerson(Person $person)
     {
+        $rolePerson = null;
+        foreach ($person->getRolesPerson() as  $role) {
+            $rolePerson = $role;
+        }
+
         $supportPerson = new SupportPerson();
 
         $supportPerson->setStartDate($this->startDate)
             ->setEndDate($this->endDate ?? null)
             ->setStatus($this->status)
+            ->setHead($rolePerson->getHead())
+            ->setRole($rolePerson->getRole())
             ->setCreatedAt($this->startDate)
             ->setUpdatedAt($this->groupPeople->getUpdatedAt())
             ->setPerson($person)

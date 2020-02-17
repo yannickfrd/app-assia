@@ -23,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                	{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age < 18) %}
+                	{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role == 3) %}
 					{% set person = evalPerson.vars.value.supportPerson.person %}
                     <tr>
                         <th scope="row"></th>

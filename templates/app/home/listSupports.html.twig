@@ -35,7 +35,10 @@
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
                     </th>
-                    <td class="align-middle">{{ support.groupPeople.rolePerson|first.person.fullname }}<br>
+                    <td class="align-middle">
+                    {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
+                    {{ supportPerson.person.fullname }}
+                    {% endfor %}
                     <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
                         {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
                     </td>

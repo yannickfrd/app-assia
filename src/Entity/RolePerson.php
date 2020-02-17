@@ -107,7 +107,6 @@ class RolePerson
         return $this;
     }
 
-
     public function getRoleList()
     {
         return self::ROLE[$this->role];

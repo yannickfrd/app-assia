@@ -1,7 +1,8 @@
 // Sélection d'un bouton Radio
 export default class SelectRadioJS {
-    constructor() {
-        this.checkboxElts = document.querySelectorAll("table .checkbox.form-check-input");
+    constructor(containerElt) {
+        this.containerElt = document.getElementById(containerElt);
+        this.checkboxElts = this.containerElt.querySelectorAll(".checkbox.form-check-input");
         this.init();
     }
 

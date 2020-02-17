@@ -3,7 +3,7 @@
 
 <head>
 	<title>
-		{% block title %}Esperer95-app{% endblock %}
+		{% block title %}Esperer95.app{% endblock %}
 	</title>
 	<meta charset="utf-8" />
 	<meta name="robots" content="noindex">
@@ -16,7 +16,7 @@
 	<link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
 	<meta property="og:title" content="AppE95" />
 	<meta property="og:type" content="application" />
-	<meta property="og:url" content="https://esperer95-app.romain-mad.fr" />
+	<meta property="og:url" content="https://Esperer95.app.romain-mad.fr" />
 	<meta property="og:image" content="" />
 	<meta name="description" content="Application de gestion de l'accompagnement social d'ESPERER 95" />
 
@@ -35,7 +35,7 @@
 		<header id="header" data-color="{{ theme_color }}">
 			<nav class=" navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
 				<a class="navbar-brand text-light" href="{{ path("home") }}">
-					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95-app">
+					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95.app">
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
 					aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -147,15 +147,17 @@
 
 	</main>
 
-	<footer class="bg-dark p-4 text-light">
-		<p class="mb-0">
-			<strong class="font-weight-bold">Esperer 95 © 2020. Tous droits réservés.</strong><br>
-			<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
-			<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février
-				1979.</span>
-		</p>
-	</footer>
+	<footer class="p-3 bg-dark text-light">
+		<div class="d-md-flex justify-content-md-between">
+			<p>
+				<strong class="font-weight-bold">Esperer 95 © 2020. Tous droits réservés.</strong><br>
+				<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
+				<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février 1979.</span>
+			</p>
+			<p>Version 1.0.0 - 17/02/2020</p>
+		</div>
 
+	</footer>
 {{ encore_entry_script_tags("app") }}
 {% block javascripts %}{% endblock %}
 

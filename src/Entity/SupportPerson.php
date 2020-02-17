@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\RolePerson;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -81,6 +82,16 @@ class SupportPerson
      * @ORM\OneToMany(targetEntity="App\Entity\EvaluationPerson", mappedBy="supportPerson", orphanRemoval=true)
      */
     private $evaluationsPerson;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $role;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $head;
 
 
     public function __construct()
@@ -254,6 +265,35 @@ class SupportPerson
                 $evaluationsPerson->setSupportPerson(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRole(): ?int
+    {
+        return $this->role;
+    }
+
+    public function setRole(?int $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getRoleList()
+    {
+        return RolePerson::ROLE[$this->role];
+    }
+
+    public function getHead(): ?bool
+    {
+        return $this->head;
+    }
+
+    public function setHead(?bool $head): self
+    {
+        $this->head = $head;
 
         return $this;
     }

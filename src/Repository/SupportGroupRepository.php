@@ -42,11 +42,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             // ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
             // ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
             // ->leftJoin("sg.evaluationsGroup", "eg")->addselect("PARTIAL eg.{id}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
-            // ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
-            // ->leftJoin("r.person", "person")->addselect("PARTIAL person.{id, firstname, lastname, birthdate}")
 
             ->andWhere("sg.id = :id")
             ->setParameter("id", $id)
@@ -66,13 +64,10 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query =  $this->createQueryBuilder("sg")
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
-            ->leftJoin("sg.referent", "u")->addselect("PARTIAL u.{id, firstname, lastname}")
-            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
-            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
-
-            ->andWhere("r.head = TRUE");
+            ->leftJoin("sg.referent", "u")->addselect("PARTIAL u.{id, firstname, lastname}");
 
         $query = $this->filter($query, $supportGroupSearch);
 
@@ -87,11 +82,10 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("sg.service", "s")->addSelect("PARTIAL s.{id,name}")
             ->leftJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
+            ->leftJoin("so.person", "p")->addselect("p")
             ->leftJoin("sg.groupPeople", "g")->addselect("g")
-            ->leftJoin("g.rolePerson", "r")->addselect("r")
-            ->leftJoin("r.person", "p")->addselect("p")
             ->leftJoin("sg.referent", "u")->addSelect("PARTIAL u.{id,fullname}")
-            ->andWhere("r.head = TRUE");
+            ->andWhere("sp.head = TRUE");
 
         $query = $this->filter($query, $supportGroupSearch);
 
@@ -181,7 +175,7 @@ class SupportGroupRepository extends ServiceEntityRepository
                 ->setParameter("referent", $supportGroupSearch->getReferent());
         }
 
-        if ($supportGroupSearch->getService()) {
+        if ($supportGroupSearch->getService() && count($supportGroupSearch->getService())) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($supportGroupSearch->getService() as $service) {
@@ -203,13 +197,12 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
-            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, head}")
-            ->leftJoin("r.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
+            ->leftJoin("sp.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")
 
             ->andWhere("sg.referent = :referent")
             ->setParameter("referent", $user)
             ->andWhere("sg.status = 2")
-            ->andWhere("r.head = TRUE")
 
             ->orderBy("sg.startDate", "DESC")
 

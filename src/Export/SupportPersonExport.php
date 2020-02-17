@@ -44,13 +44,6 @@ class SupportPersonExport
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
         $groupPeople = $supportGroup->getGroupPeople();
-        $rolePerson = null;
-
-        foreach ($person->getRolesPerson() as $role) {
-            if ($role->getGroupPeople() == $groupPeople) {
-                $rolePerson = $role;
-            }
-        }
 
         return [
             "N° Suivi groupe" => $supportGroup->getId(),
@@ -62,8 +55,8 @@ class SupportPersonExport
             "Date de naissance" => $this->formatDate($person->getBirthdate()),
             "Typologie familiale" => $groupPeople->getFamilyTypologyType(),
             "Nb de personnes" => $groupPeople->getNbPeople(),
-            "Rôle dans le groupe" => $rolePerson ? $rolePerson->getRoleList() : "NR",
-            "DP" => $rolePerson && $rolePerson->getRoleList() ? "Oui" : "Non",
+            "Rôle dans le groupe" => $supportPerson->getRoleList(),
+            "DP" => $supportPerson->getHead() ? "Oui" : "Non",
             "Statut" => $supportPerson->getStatusType(),
             "Date début suivi" => $this->formatDate($supportPerson->getStartDate()),
             "Date Fin suivi" => $this->formatDate($supportPerson->getEndDate()),

@@ -116,13 +116,12 @@ class RdvRepository extends ServiceEntityRepository
             ->addselect("PARTIAL rdv.{id, title, start, end, location}")
 
             ->leftJoin("rdv.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
-            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id}")
-            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, head}")
-            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
 
             ->andWhere("rdv.createdBy = :createdBy")
             ->setParameter("createdBy", $user)
-            ->andWhere("r.head = TRUE")
+            ->andWhere("sp.head = TRUE")
 
             ->orderBy("rdv.start", "DESC")
 
