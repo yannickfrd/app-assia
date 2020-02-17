@@ -6,6 +6,19 @@
 
 {% block card_body %}
 
+<div class="form-group row">
+    {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
+    <div class="col-md-6">
+		<div class="mb-3">
+            <button type="button" class="btn btn-outline-{{ theme_color }} active mr-2">{{ evalPerson.vars.value.supportPerson.person.fullname}}</button>
+            <span>{{ evalPerson.vars.value.supportPerson.roleList }}</span>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 
 {% if typo in [4, 5, 6, 8] %}
 <div class="row">
