@@ -1,0 +1,40 @@
+<section>
+    <h2 class="h4 my-4">Service(s) social(s) référent(s)</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-dark">
+            <thead>
+                <tr>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                    <th scope="col" class="align-middle th-w-150">Service référent</th>
+                    <th scope="col" class="align-middle th-w-100">Type de service</th>
+                    <th scope="col" class="align-middle th-w-150">Travailleur social</th>
+                    <th scope="col" class="align-middle th-w-100">Adresse email</th>
+                    <th scope="col" class="align-middle th-w-100">Téléphone</th>
+                    <th scope="col" class="align-middle th-w-100">Ville</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for referent in group_people.referents|reverse %}
+                <tr>
+                    <th scope="row">
+                        <a href="{{ path('referent_edit', {'id':referent.id}) }}"
+                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                            title="Voir le service référent"><span class="fas fa-eye"></span>
+                        </a>
+                    </th>
+                    <td class="align-middle">{{ referent.name }}</td>
+                    <td class="align-middle">{{ referent.typeList }}</td>
+                    <td class="align-middle">{{ referent.socialWorker }}</td>
+                    <td class="align-middle">{{ referent.email }}</td>
+                    <td class="align-middle">{{ referent.phone1 }}<br />{{ referent.phone2 }}</td>
+                    <td class="align-middle">{{ referent.city }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('referent_new', {'id':group_people.id}) }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
+        <span class="fas fa-plus-square mr-2"></span>Ajouter un nouveau service référent</a>
+</section>

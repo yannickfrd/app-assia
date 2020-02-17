@@ -109,6 +109,9 @@ class DeviceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateDevice($device);
         }
+
+        $this->addFlash("success", "Le dispositif a été mis à jour.");
+
         return $this->render("app/device/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => true

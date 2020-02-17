@@ -1,0 +1,82 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{% set referent = form.vars.value %}
+
+{% if edit_mode %}
+{% set title = referent.name %}
+{% else %}
+{% set title = "Nouveau service social référent" %}
+{% endif %}
+
+{% block title %} | Esperer95.app{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1 class="h2 mb-3">{{ title }}</h1>
+    {% if edit_mode %}
+    <div class="small text-secondary">
+        <p> Créé le {{referent.createdAt | date("d/m/Y à H:i") }}
+            {% if referent.createdBy %}par {{ referent.createdBy.fullname }}{% endif %}
+            (modifié le {{ referent.updatedAt | date("d/m/Y à H:i") }}
+            {% if referent.updatedBy %}par {{ referent.updatedBy.fullname }}{% endif %})
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-4"></div>
+    {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        	<li class="breadcrumb-item">
+				<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
+					<span class="fas fa-users mr-2"></span>Fiche groupe
+					<span class="small">{{ group_people.familyTypologyType }}</span>
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">
+				{% if edit_mode %}Service social référent{% else %}Nouveau service social{% endif %}
+			</li>
+        </ol>
+    </nav>
+
+    <hr>
+
+    <section>
+        {% include "model/msgFlash.html.twig" %}
+        <div id="js-msg-flash-content"></div>
+
+        {{ form_start(form) }}
+
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.name) }}</div>
+            <div class="col-md-6">{{ form_row(form.type) }}</div>
+            <div class="col-md-6">{{ form_row(form.socialWorker) }}</div>
+            <div class="col-md-6">{{ form_row(form.email) }}</div>
+            <div class="col-md-6">{{ form_row(form.phone1) }}</div>
+            <div class="col-md-6">{{ form_row(form.phone2) }}</div>
+            <div class="col-md-6">{{ form_row(form.address) }}</div>
+            <div class="col-md-6">{{ form_row(form.city) }}</div>
+            <div class="col-md-6">{{ form_row(form.departement) }}</div>
+            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+        </div>
+
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12"> 
+                <div class="mb-4 float-right">
+                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
+                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}">
+                </div>
+            </div>
+        </div>
+        {{ form_end(form, {"render_rest": false}) }}
+    </section>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("directory") }}{% endblock javascripts %}

@@ -2,16 +2,6 @@ table {
     font-size: 0.9rem;
 }
 
-.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-    /* background-color: #00aeef; */
-    border-radius: 4px;
-}
-
-.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--brown);
-    border-radius: 4px;
-}
-
 .table-admin .badge {
     font-size: 0.4em;
 }

@@ -179,6 +179,35 @@ th.required:after {
 }
 
 
+// Bouton case à cocher
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+    /* background-color: #00aeef; */
+    border-radius: 4px;
+}
+
+.custom-checkbox-dark .custom-control-input:checked~.custom-control-label::after {
+    background-color: var(--dark);
+}
+
+.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after {
+    background-color: var(--brown);
+}
+
+// Bouton radio
+.custom-radio .custom-control-input:checked~.custom-control-label::after {
+    border-radius: 8px;
+}
+
+.custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
+    background-color: var(--brown);
+}
+
+.custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
+    background-color: var(--brown);
+}
+
+
+
 .font-size-10 {
     font-size: 1rem;
 }

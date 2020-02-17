@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\EvaluationPerson;
 use App\Form\Model\Export;
 use App\Entity\GroupPeople;
+use App\Entity\RolePerson;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Form\Export\ExportType;
@@ -173,37 +174,22 @@ class SupportController extends AbstractController
      */
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo): Response
     {
+        $supportGroup->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->getUser());
+
         $people = [];
 
         foreach ($supportGroup->getSupportPerson() as $supportPerson) {
             $people[] = $supportPerson->getPerson()->getId();
         }
 
-        foreach ($supportGroup->getGroupPeople()->getrolePerson() as $role) {
+        foreach ($supportGroup->getGroupPeople()->getrolePerson() as $rolePerson) {
 
-            $personId = $role->getPerson()->getId();
+            $personId = $rolePerson->getPerson()->getId();
 
             if (!in_array($personId, $people)) {
-
-                $supportGroup->setUpdatedAt(new \DateTime())
-                    ->setUpdatedBy($this->getUser());
-
-                $this->manager->persist($supportGroup);
-
                 // Crée un suivi social individuel
-                $supportPerson = new SupportPerson();
-
-                $supportPerson->setSupportGroup($supportGroup)
-                    ->setPerson($role->getPerson())
-                    ->setHead($role->getHead())
-                    ->setRole($role->getRole())
-                    ->setStartDate(new \DateTime())
-                    ->setEndDate($supportGroup->getEndDate())
-                    ->setStatus($supportGroup->getStatus())
-                    ->setCreatedAt(new \DateTime())
-                    ->setUpdatedAt(new \DateTime());
-
-                $this->manager->persist($supportPerson);
+                $this->createSupportPerson($rolePerson, $supportGroup);
 
                 $evaluationPerson = new EvaluationPerson();
 
@@ -215,7 +201,6 @@ class SupportController extends AbstractController
 
                     $this->manager->persist($evaluationPerson);
                 }
-                $this->manager->persist($supportPerson);
             }
             $this->manager->flush();
         }
@@ -328,7 +313,10 @@ class SupportController extends AbstractController
 
         $this->manager->persist($supportGroup);
 
-        $this->createSupportPerson($groupPeople, $supportGroup);
+        // Créé un suivi social individuel pour chaque personne du groupe
+        foreach ($groupPeople->getRolePerson() as $rolePerson) {
+            $this->createSupportPerson($rolePerson, $supportGroup);
+        };
 
         $this->manager->flush();
 
@@ -347,27 +335,25 @@ class SupportController extends AbstractController
     /**
      * Crée un suivi individuel
      * 
-     * @param GroupPeople $groupPeople
+     * @param RolePerson $rolePerson
      * @param SupportGroup $supportGroup
      */
-    protected function createSupportPerson(GroupPeople $groupPeople, SupportGroup $supportGroup)
+    protected function createSupportPerson(RolePerson $rolePerson, SupportGroup $supportGroup)
     {
         $now = new \DateTime();
-        // Créé un suivi social individuel pour chaque personne du groupe
-        foreach ($groupPeople->getRolePerson() as $rolePerson) {
+        $supportPerson = new SupportPerson();
 
-            $supportPerson = new SupportPerson();
+        $supportPerson->setSupportGroup($supportGroup)
+            ->setPerson($rolePerson->getPerson())
+            ->setHead($rolePerson->getHead())
+            ->setRole($rolePerson->getRole())
+            ->setStartDate($supportGroup->getStartDate())
+            ->setEndDate($supportGroup->getEndDate())
+            ->setStatus($supportGroup->getStatus())
+            ->setCreatedAt($now)
+            ->setUpdatedAt($now);
 
-            $supportPerson->setSupportGroup($supportGroup)
-                ->setPerson($rolePerson->getPerson())
-                ->setStartDate($supportGroup->getStartDate())
-                ->setEndDate($supportGroup->getEndDate())
-                ->setStatus($supportGroup->getStatus())
-                ->setCreatedAt($now)
-                ->setUpdatedAt($now);
-
-            $this->manager->persist($supportPerson);
-        };
+        $this->manager->persist($supportPerson);
     }
 
     /**

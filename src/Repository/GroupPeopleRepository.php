@@ -36,6 +36,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname, email, phone}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
             ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+            ->leftJoin("g.referents", "referents")->addselect("referents")
 
             ->andWhere("g.id = :id")
             ->setParameter("id", $id)

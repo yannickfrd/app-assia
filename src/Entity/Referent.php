@@ -9,6 +9,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Referent
 {
+    public const TYPE = [
+        1 => "115/AMH",
+        2 => "Accueil de jour",
+        3 => "AVDL",
+        4 => "CCAS",
+        5 => "Centre d'hébergement",
+        6 => "Conseil Départemental",
+        7 => "Dispositif asile",
+        8 => "Dispositif logement adapté",
+        9 => "Service de tutelle",
+        10 => "Service hospitalier",
+        98 => "Autre",
+        99 => "Non renseigné"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -34,15 +49,20 @@ class Referent
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
+    private $socialWorker2;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phone1;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phone2;
 
@@ -65,6 +85,26 @@ class Referent
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
+     */
+    private $updatedBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="referents")
@@ -101,6 +141,11 @@ class Referent
         return $this;
     }
 
+    public function getTypeList()
+    {
+        return self::TYPE[$this->type];
+    }
+
     public function getSocialWorker(): ?string
     {
         return $this->socialWorker;
@@ -109,6 +154,18 @@ class Referent
     public function setSocialWorker(?string $socialWorker): self
     {
         $this->socialWorker = $socialWorker;
+
+        return $this;
+    }
+
+    public function getSocialWorker2(): ?string
+    {
+        return $this->socialWorker2;
+    }
+
+    public function setSocialWorker2(?string $socialWorker2): self
+    {
+        $this->socialWorker2 = $socialWorker2;
 
         return $this;
     }
@@ -193,6 +250,55 @@ class Referent
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }
