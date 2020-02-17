@@ -125,9 +125,9 @@ class ReferentController extends AbstractController
         $this->manager->remove($referent);
         $this->manager->flush();
 
-        $this->addFlash("success", "Le service social \"" . $name . "\" a été supprimé.");
+        $this->addFlash("danger", "Le service social \"" . $name . "\" a été supprimé.");
 
-        return $this->redirectToRoute("group_pople_edit", [
+        return $this->redirectToRoute("group_people_show", [
             "id" => $referent->getGroupPeople()->getId()
         ]);
     }

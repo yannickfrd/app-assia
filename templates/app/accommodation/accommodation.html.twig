@@ -59,7 +59,6 @@ Esperer95.app{% endblock %}
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
 
-        {{ form_row(form._token) }}
         <div class="form-group row">
             <div class="col-md-12">
                 {% if edit_mode %}
@@ -67,7 +66,7 @@ Esperer95.app{% endblock %}
                     <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block"
                         href="{{ path('admin_accommodation_delete', {'id':accommodation.id}) }}"
                         title="Supprimer le groupe de places" data-placement="bottom"
-                        onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places?')){return true;}else{return false;}"><span
+                        onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?')){return true;}else{return false;}"><span
                             class="fas fa-trash-alt"></span><span class="sr-only">Supprimer</span></a>
                 </div>
                 {% endif %}
@@ -77,7 +76,10 @@ Esperer95.app{% endblock %}
                 </div>
             </div>
         </div>
+
+        {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
+
     </section>
 </div>
 
