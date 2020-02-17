@@ -54,7 +54,6 @@ class NoteController extends AbstractController
         $notes =  $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request);
 
         $form = $this->createForm(NoteType::class, new Note());
-        $form->handleRequest($request);
 
         return $this->render("app/note/listNotes.html.twig", [
             "support" => $supportGroup,

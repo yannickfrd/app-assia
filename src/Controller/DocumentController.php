@@ -54,7 +54,6 @@ class DocumentController extends AbstractController
         $documents = $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $documentSearch), $request);
 
         $form = $this->createForm(DocumentType::class, new Document());
-        $form->handleRequest($request);
 
         return $this->render("app/document/listDocuments.html.twig", [
             "support" => $supportGroup,

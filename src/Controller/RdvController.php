@@ -35,17 +35,15 @@ class RdvController extends AbstractController
      * @Route("/calendar", name="calendar")
      * @param int $year
      * @param int $month
-     * @param Request $request
      * @return Response
      */
-    public function showCalendar($year = null, $month = null, Request $request): Response
+    public function showCalendar($year = null, $month = null): Response
     {
         $calendar = new Calendar($year, $month);
 
         $rdvs = $this->repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
 
         $form = $this->createForm(RdvType::class, new Rdv());
-        $form->handleRequest($request);
 
         return $this->render("app/rdv/calendar.html.twig", [
             "calendar" => $calendar,
@@ -63,10 +61,9 @@ class RdvController extends AbstractController
      * @param SupportGroupRepository $supportRepo
      * @param int $year
      * @param int $month
-     * @param Request $request
      * @return Response
      */
-    public function showSupportCalendar($id, SupportGroupRepository $repoSupport, $year = null, $month = null, Request $request): Response
+    public function showSupportCalendar($id, SupportGroupRepository $repoSupport, $year = null, $month = null): Response
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
@@ -79,7 +76,6 @@ class RdvController extends AbstractController
         $rdv = new Rdv();
 
         $form = $this->createForm(RdvType::class, $rdv);
-        $form->handleRequest($request);
 
         return $this->render("app/rdv/calendar.html.twig", [
             "support" => $supportGroup,
