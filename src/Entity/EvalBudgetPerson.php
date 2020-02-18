@@ -422,6 +422,11 @@ class EvalBudgetPerson
     private $moratorium;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $endRightsDate;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalBudget;
@@ -1379,6 +1384,18 @@ class EvalBudgetPerson
     public function setMoratorium(?float $moratorium): self
     {
         $this->moratorium = $moratorium;
+
+        return $this;
+    }
+
+    public function getEndRightsDate(): ?\DateTimeInterface
+    {
+        return $this->endRightsDate;
+    }
+
+    public function setEndRightsDate(?\DateTimeInterface $endRightsDate): self
+    {
+        $this->endRightsDate = $endRightsDate;
 
         return $this;
     }

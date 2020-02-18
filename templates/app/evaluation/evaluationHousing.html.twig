@@ -2,26 +2,51 @@
 
 {% set id = "sit-housing" %}
 
-{% block card_title %}Logement/hébergement{% endblock %}
+{% block card_title %}Logement - Hébergement{% endblock %}
 
 {% block card_body %}
 
 <div class="form-group row">
     <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
-    <div class="col-md-6">{{ form_row(form.evalHousingGroup.dls) }}</div>
-    <div class="col-md-6 js-dls d-block">{{ form_row(form.evalHousingGroup.dlsId) }}</div>
-    <div class="col-md-6 js-dls d-block">{{ form_row(form.evalHousingGroup.housingWishes) }}</div>
-    <div class="col-md-6 js-dls d-block">{{ form_row(form.evalHousingGroup.citiesWishes) }}</div>
-    <div class="col-md-6 js-dls d-block">{{ form_row(form.evalHousingGroup.specificities) }}</div>
-    <div class="col-md-6 js-dls d-block">{{ form_row(form.evalHousingGroup.syplo) }}</div>
+    {# <div class="col-md-6 js-housingAccessType d-block">{{ form_row(form.evalHousingGroup.housingAccessType) }}</div> #}
+    <div class="col-md-6 js-housingStatus d-block">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
+</div>
+<div class="js-housingStatus d-block">
+    <div class="form-group row">
+        <div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
+        <div class="col-md-6 js-expulsionInProgress d-block">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
+        <div class="col-md-6 js-expulsionInProgress d-block">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
+        <div class="col-md-6 js-expulsionInProgress d-block">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
+    <div class="col-md-6 js-siaoRequest d-block">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
+    <div class="col-md-6 js-siaoRequest d-block">{{ form_row(form.evalHousingGroup.siaoUpdatedRequestDate) }}</div>
+</div>
+<div class="form-group row">
+    <div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequest) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.socialHousingRequestId) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.socialHousingRequestDate) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.socialHousingUpdatedRequestDate) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.housingWishes) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.citiesWishes) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.specificities) }}</div>
+    <div class="col-md-6 js-socialHousingRequest d-block">{{ form_row(form.evalHousingGroup.syplo) }}</div>
     <div class="col-md-6 js-syplo d-block">{{ form_row(form.evalHousingGroup.syploId) }}</div>
     <div class="col-md-6 js-syplo d-block">{{ form_row(form.evalHousingGroup.syploDate) }}</div>
 </div>
 <div class="form-group row">
     <div class="col-md-6">{{ form_row(form.evalHousingGroup.daloCommission) }}</div>
     <div class="col-md-6 js-daloCommission d-block">{{ form_row(form.evalHousingGroup.daloRecordDate) }}</div>
-    <div class="col-md-6 js-daloCommission d-block">{{ form_row(form.evalHousingGroup.requalifiedDalo) }}</div>
-    <div class="col-md-6 js-daloCommission d-block">{{ form_row(form.evalHousingGroup.decisionDate) }}</div>
+    <div class="col-md-6 js-daloCommission d-block">{{ form_row(form.evalHousingGroup.daloRequalifiedDaho) }}</div>
+    <div class="col-md-6 js-daloCommission d-block">{{ form_row(form.evalHousingGroup.daloDecisionDate) }}</div>
+    <div class="col-md-6 js-daloCommission d-block">{{ form_row(form.evalHousingGroup.daloTribunalAction) }}</div>
+    <div class="col-md-6 js-daloTribunalAction d-block">{{ form_row(form.evalHousingGroup.daloTribunalActionDate) }}</div>
+</div>
+<div class="form-group row">
+    <div class="col-md-6">{{ form_row(form.evalHousingGroup.collectiveAgreementHousing) }}</div>
+    <div class="col-md-6 js-collectiveAgreementHousing d-block">{{ form_row(form.evalHousingGroup.collectiveAgreementHousingDate) }}</div>
 </div>
 <div class="js-0_evalProfPerson_profStatus js-1_evalProfPerson_profStatus d-block">
     <div class="form-group row">
@@ -30,14 +55,6 @@
         <div class="col-md-6 js-hsgActionEligibility d-block">{{ form_row(form.evalHousingGroup.hsgActionDate) }}</div>
         <div class="col-md-6 js-hsgActionEligibility d-block">{{ form_row(form.evalHousingGroup.hsgActionDept) }}</div>
         <div class="col-md-6 js-hsgActionEligibility d-block">{{ form_row(form.evalHousingGroup.hsgActionRecordId) }}</div>
-    </div>
-</div>
-<div class="js-housingStatus d-block">
-    <div class="form-group row">
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
-        <div class="col-md-6 js-expulsionInProgress d-block">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
-        <div class="col-md-6 js-expulsionInProgress d-block">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
-        <div class="col-md-6 js-expulsionInProgress d-block">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
     </div>
 </div>
 <div class="form-group row">
@@ -72,6 +89,8 @@
 </div>
 <div class="form-group row">
     <div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
+    <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
+    <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>
     <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationAddress) }}</div>
     <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationCity) }}</div>
     <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationDept) }}</div>

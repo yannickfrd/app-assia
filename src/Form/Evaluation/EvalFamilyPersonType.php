@@ -2,11 +2,12 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalFamilyPerson;
 use App\Form\Utils\Choices;
+use App\Entity\EvalFamilyPerson;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalFamilyPersonType extends AbstractType
@@ -16,6 +17,30 @@ class EvalFamilyPersonType extends AbstractType
         $builder
             ->add("maritalStatus", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalFamilyPerson::MARITAL_STATUS),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("unbornChild", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("expDateChildbirth", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("pregnancyType", ChoiceType::class, [
+                "choices" => Choices::getChoices(EvalFamilyPerson::PREGNANCY_TYPE),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("protectiveMeasure", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("protectiveMeasureType", ChoiceType::class, [
+                "choices" => Choices::getChoices(EvalFamilyPerson::PROTECTIVE_MEASURE_TYPE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -34,6 +59,13 @@ class EvalFamilyPersonType extends AbstractType
                 "choices" => Choices::getChoices(EvalFamilyPerson::CHILD_DEPENDANCE),
                 "placeholder" => "-- Select --",
                 "required" => false
+            ])
+            ->add("commentEvalFamilyPerson", null, [
+                "label_attr" => ["class" => "sr-only"],
+                "attr" => [
+                    "rows" => 4,
+                    "placeholder" => "Write a comment about the family situation of the person"
+                ]
             ]);
     }
 

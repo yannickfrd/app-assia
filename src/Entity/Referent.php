@@ -20,7 +20,7 @@ class Referent
         8 => "Dispositif logement adapté",
         9 => "Service de tutelle",
         10 => "Service hospitalier",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
@@ -54,7 +54,11 @@ class Referent
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $email;
+    private $email1;
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $email2;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
@@ -170,14 +174,25 @@ class Referent
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail1(): ?string
     {
-        return $this->email;
+        return $this->email1;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail1(?string $email1): self
     {
-        $this->email = $email;
+        $this->email1 = $email1;
+
+        return $this;
+    }
+    public function getEmail2(): ?string
+    {
+        return $this->email2;
+    }
+
+    public function setEmail2(?string $email2): self
+    {
+        $this->email2 = $email2;
 
         return $this;
     }

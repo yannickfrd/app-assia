@@ -7,11 +7,10 @@ use Tinify\Tinify;
 // Une classe pour compresser et optimiser les images avec Tinify
 class OptimizeImage
 {
-    private $tinify,
+    protected $tinify,
         $file,
         $fileName,
         $fileExtension,
-        $fileSize,
         $toFolder,
         $originalFile,
         $optimizedFile;
@@ -23,7 +22,7 @@ class OptimizeImage
         $this->init();
     }
 
-    private function init()
+    protected function init()
     {
         try {
             // Use the Tinify API client.

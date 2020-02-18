@@ -20,7 +20,7 @@ class EvalProfPersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-
+            ->add("jobCenterId")
             ->add("schoolLevel", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalProfPerson::SCHOOL_LEVEL),
                 "placeholder" => "-- Select --",
@@ -34,12 +34,10 @@ class EvalProfPersonType extends AbstractType
             ->add("jobType")
             ->add("contractStartDate", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [],
                 "required" => false
             ])
             ->add("contractEndDate", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [],
                 "required" => false
             ])
             ->add("nbWorkingHours")
@@ -52,8 +50,12 @@ class EvalProfPersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("endRqthDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
             ->add("commentEvalProf", null, [
-                "label_attr" => ["class" => "col-sm-12"],
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the professional situation"

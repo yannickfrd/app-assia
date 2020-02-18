@@ -26,6 +26,11 @@ class EvalAdmPersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("asylumBackground", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
             ->add("paperType", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 "placeholder" => "-- Select --",
@@ -36,19 +41,17 @@ class EvalAdmPersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("applResidPermit", ChoiceType::class, [
+            ->add("residPermitRequest", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("endDateValidPermit", DateType::class, [
+            ->add("endValidPermitDate", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [],
                 "required" => false
             ])
-            ->add("renewalDatePermit", DateType::class, [
+            ->add("renewalPermitDate", DateType::class, [
                 "widget" => "single_text",
-                "attr" => [],
                 "required" => false
             ])
             ->add("nbRenewals")
@@ -56,19 +59,8 @@ class EvalAdmPersonType extends AbstractType
             ->add("rightWork")
             ->add("rightSocialBenf")
             ->add("housingAlw")
-            ->add("rightSocialSecu", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
-                "placeholder" => "-- Select --",
-                "required" => false
-            ])
-            ->add("socialSecu", ChoiceType::class, [
-                "choices" => Choices::getChoices(EvalAdmPerson::SOCIAL_SECURITY),
-                "placeholder" => "-- Select --",
-                "required" => false
-            ])
-            ->add("socialSecuOffice")
-            ->add("commentEvalAdm", null, [
-                "label_attr" => ["class" => "col-sm-12"],
+            ->add("commentEvalAdmPerson", null, [
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the administrative situation"

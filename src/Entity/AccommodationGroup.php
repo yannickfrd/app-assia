@@ -14,7 +14,7 @@ class AccommodationGroup
     public const END_REASON = [
         1 => "Fin du suivi",
         2 => "Changement de logement/hébergement",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 

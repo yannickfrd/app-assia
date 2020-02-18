@@ -10,6 +10,13 @@ class Choices
         99 => "Non renseigné"
     ];
 
+    public const YES_NO_IN_PROGRESS = [
+        1 => "Oui",
+        2 => "Non",
+        3 => "En cours",
+        99 => "Non renseigné"
+    ];
+
     public static function getchoices($const)
     {
         foreach ($const as $key => $value) {

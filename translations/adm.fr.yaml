@@ -1,20 +1,18 @@
 Eval adm person: Administratif
 -- Select --: -- Sélectionner --
-Appl resid permit: Demande de titre de séjour
-Comment sit adm: Commentaire relatif à la situation administrative
+Asylum background: Parcours asile
+Comment eval adm: Commentaire relatif à la situation administrative
 Country: Pays
-End date valid permit: Date de fin de validité du titre
+End valid permit date: Date de fin de validité du titre
 Housing alw: Aide au logement
 Nationality: Nationalité 
 Nb renewals: Nombre de renouvellements
 No rights open: Aucun droit ouvert
-Paper type: Type de papier
 Paper: Papier d'identité
-Renewal date permit: Date de renouvellement du titre
+Paper type: Type de papier
+Renewal permit date: Date de renouvellement du titre
+Resid permit request: Demande de titre de séjour
 Right reside: Droit de séjour
 Right social benf: Droit aux prestations sociales et familiales
-Right social secu: Droits ouverts Sécurité sociale
 Right work: Autorisation de travail
-Social secu office: Caisse de Sécurité sociale
-Social secu: Sécurité sociale
 Write a comment about the administrative situation: Ecrire un commentaire relatif à la situation administrative

@@ -13,34 +13,34 @@ class EvalHousingGroup
 
     public const HOUSING_STATUS = [
         1 => "A la rue - abri de fortune",
-        2 => "CADA",
-        3 => "CHUDA",
-        4 => "Colocation",
+        400 => "CADA",
+        302 => "Colocation",
         5 => "Détention",
-        6 => "Dispositif hivernal",
-        7 => "Dispositif médical (LHSS, LAM, autre)",
-        8 => "Errance résidentielle",
-        9 => "Hébergé chez des tiers",
-        10 => "Hébergé chez famille",
-        11 => "Hôtel 115",
-        12 => "Hôtel (hors 115)",
-        13 => "Hébergement d’urgence",
-        14 => "Hébergement de stabilisation",
-        15 => "Hébergement d’insertion",
-        16 => "Hôpital",
-        17 => "Logement accompagné - ALT",
-        18 => "Logement accompagné - FJT",
-        19 => "Logement accompagné - FTM",
-        20 => "Logement accompagné - RHVS",
-        21 => "Logement accompagné - Solibail/IML",
-        22 => "Logement foyer",
-        23 => "Logement privé",
-        24 => "Logement social",
-        25 => "Résidence sociale",
-        26 => "Maison relais",
-        27 => "PEC- ASE",
-        28 => "Squat",
-        98 => "Autre",
+        105 => "Dispositif hivernal",
+        502 => "Dispositif médical (LAM, autre)",
+        3 => "Errance résidentielle",
+        10 => "Hébergé chez des tiers",
+        11 => "Hébergé chez famille",
+        100 => "Hôtel 115",
+        101 => "Hôtel (hors 115)",
+        102 => "Hébergement d’urgence",
+        103 => "Hébergement de stabilisation",
+        104 => "Hébergement d’insertion",
+        500 => "Hôpital",
+        401 => "HUDA",
+        501 => "LHSS",
+        200 => "Logement adapté - ALT",
+        201 => "Logement adapté - FJT",
+        202 => "Logement adapté - FTM",
+        203 => "Logement adapté - Maison relais",
+        204 => "Logement adapté - Résidence sociale",
+        205 => "Logement adapté - RHVS",
+        206 => "Logement adapté - Solibail/IML",
+        207 => "Logement foyer",
+        300 => "Logement privé",
+        301 => "Logement social",
+        2 => "Squat",
+        97 => "Autre",
         99 => "Non renseignée"
     ];
 
@@ -54,22 +54,37 @@ class EvalHousingGroup
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $dls;
+    private $siaoRequest;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $siaoRequestDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $siaoUpdatedRequestDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $socialHousingRequest;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $dlsId;
+    private $socialHousingRequestId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $dlsDate;
+    private $socialHousingRequestDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $dlsRenewalDate;
+    private $socialHousingUpdatedRequestDate;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -114,12 +129,32 @@ class EvalHousingGroup
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $requalifiedDalo;
+    private $daloTribunalAction;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $decisionDate;
+    private $daloTribunalActionDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $daloRequalifiedDaho;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $daloDecisionDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $collectiveAgreementHousing;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $collectiveAgreementHousingDate;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -237,6 +272,16 @@ class EvalHousingGroup
     private $domiciliation;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $startDomiciliationDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $endDomiciliationDate;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $domiciliationAddress;
@@ -252,65 +297,112 @@ class EvalHousingGroup
     private $domiciliationDept;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $housingAccessType;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $housingArrivalDate;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvaluationGroup", inversedBy="evalHousingGroup", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationGroup;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDls(): ?int
+    public function getSiaoRequest(): ?int
     {
-        return $this->dls;
+        return $this->siaoRequest;
     }
 
-    public function setDls(?int $dls): self
+    public function setSiaoRequest(?int $siaoRequest): self
     {
-        $this->dls = $dls;
+        $this->siaoRequest = $siaoRequest;
 
         return $this;
     }
 
-    public function getDlsList()
+    public function getSiaoRequestDate(): ?\DateTimeInterface
     {
-        return Choices::YES_NO[$this->dls];
+        return $this->siaoRequestDate;
     }
 
-    public function getDlsId(): ?string
+    public function setSiaoRequestDate(?\DateTimeInterface $siaoRequestDate): self
     {
-        return $this->dlsId;
-    }
-
-    public function setDlsId(?string $dlsId): self
-    {
-        $this->dlsId = $dlsId;
+        $this->siaoRequestDate = $siaoRequestDate;
 
         return $this;
     }
 
-    public function getDlsDate(): ?\DateTimeInterface
+    public function getSiaoUpdatedRequestDate(): ?\DateTimeInterface
     {
-        return $this->dlsDate;
+        return $this->siaoUpdatedRequestDate;
     }
 
-    public function setDlsDate(?\DateTimeInterface $dlsDate): self
+    public function setSiaoUpdatedRequestDate(?\DateTimeInterface $siaoUpdatedRequestDate): self
     {
-        $this->dlsDate = $dlsDate;
+        $this->siaoUpdatedRequestDate = $siaoUpdatedRequestDate;
 
         return $this;
     }
 
-    public function getDlsRenewalDate(): ?\DateTimeInterface
+    public function getSocialHousingRequest(): ?int
     {
-        return $this->dlsRenewalDate;
+        return $this->socialHousingRequest;
     }
 
-    public function setDlsRenewalDate(?\DateTimeInterface $dlsRenewalDate): self
+    public function setSocialHousingRequest(?int $socialHousingRequest): self
     {
-        $this->dlsRenewalDate = $dlsRenewalDate;
+        $this->socialHousingRequest = $socialHousingRequest;
+
+        return $this;
+    }
+
+    public function getSocialHousingRequestList()
+    {
+        return Choices::YES_NO[$this->socialHousingRequest];
+    }
+
+    public function getSocialHousingRequestId(): ?string
+    {
+        return $this->socialHousingRequestId;
+    }
+
+    public function setSocialHousingRequestId(?string $socialHousingRequestId): self
+    {
+        $this->socialHousingRequestId = $socialHousingRequestId;
+
+        return $this;
+    }
+
+    public function getSocialHousingRequestDate(): ?\DateTimeInterface
+    {
+        return $this->socialHousingRequestDate;
+    }
+
+    public function setSocialHousingRequestDate(?\DateTimeInterface $socialHousingRequestDate): self
+    {
+        $this->socialHousingRequestDate = $socialHousingRequestDate;
+
+        return $this;
+    }
+
+    public function getSocialHousingUpdatedRequestDate(): ?\DateTimeInterface
+    {
+        return $this->socialHousingUpdatedRequestDate;
+    }
+
+    public function setSocialHousingUpdatedRequestDate(?\DateTimeInterface $socialHousingUpdatedRequestDate): self
+    {
+        $this->socialHousingUpdatedRequestDate = $socialHousingUpdatedRequestDate;
 
         return $this;
     }
@@ -421,31 +513,79 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getRequalifiedDalo(): ?int
+    public function getDaloRequalifiedDaho(): ?int
     {
-        return $this->requalifiedDalo;
+        return $this->daloRequalifiedDaho;
     }
 
-    public function setRequalifiedDalo(?int $requalifiedDalo): self
+    public function setDaloRequalifiedDaho(?int $daloRequalifiedDaho): self
     {
-        $this->requalifiedDalo = $requalifiedDalo;
+        $this->daloRequalifiedDaho = $daloRequalifiedDaho;
 
         return $this;
     }
 
-    public function getRequalifiedDaloList()
+    public function getDaloRequalifiedDahoList()
     {
-        return Choices::YES_NO[$this->requalifiedDalo];
+        return Choices::YES_NO[$this->daloRequalifiedDaho];
     }
 
-    public function getDecisionDate(): ?\DateTimeInterface
+    public function getDaloDecisionDate(): ?\DateTimeInterface
     {
-        return $this->decisionDate;
+        return $this->daloDecisionDate;
     }
 
-    public function setDecisionDate(?\DateTimeInterface $decisionDate): self
+    public function setDaloDecisionDate(?\DateTimeInterface $daloDecisionDate): self
     {
-        $this->decisionDate = $decisionDate;
+        $this->daloDecisionDate = $daloDecisionDate;
+
+        return $this;
+    }
+
+    public function getDaloTribunalAction(): ?int
+    {
+        return $this->daloTribunalAction;
+    }
+
+    public function setDaloTribunalAction(?int $daloTribunalAction): self
+    {
+        $this->daloTribunalAction = $daloTribunalAction;
+
+        return $this;
+    }
+
+    public function getDaloTribunalActionDate(): ?\DateTimeInterface
+    {
+        return $this->daloTribunalActionDate;
+    }
+
+    public function setDaloTribunalActionDate(?\DateTimeInterface $daloTribunalActionDate): self
+    {
+        $this->daloTribunalActionDate = $daloTribunalActionDate;
+
+        return $this;
+    }
+
+    public function getCollectiveAgreementHousing(): ?int
+    {
+        return $this->collectiveAgreementHousing;
+    }
+
+    public function setCollectiveAgreementHousing(?int $collectiveAgreementHousing): self
+    {
+        $this->collectiveAgreementHousing = $collectiveAgreementHousing;
+
+        return $this;
+    }
+
+    public function getCollectiveAgreementHousingDate(): ?\DateTimeInterface
+    {
+        return $this->collectiveAgreementHousingDate;
+    }
+
+    public function setCollectiveAgreementHousingDate(?\DateTimeInterface $collectiveAgreementHousingDate): self
+    {
+        $this->collectiveAgreementHousingDate = $collectiveAgreementHousingDate;
 
         return $this;
     }
@@ -762,6 +902,29 @@ class EvalHousingGroup
         return $this;
     }
 
+    public function getStartDomiciliationDate(): ?\DateTimeInterface
+    {
+        return $this->startDomiciliationDate;
+    }
+
+    public function setStartDomiciliationDate(?\DateTimeInterface $startDomiciliationDate): self
+    {
+        $this->startDomiciliationDate = $startDomiciliationDate;
+
+        return $this;
+    }
+    public function getEndDomiciliationDate(): ?\DateTimeInterface
+    {
+        return $this->endDomiciliationDate;
+    }
+
+    public function setEndDomiciliationDate(?\DateTimeInterface $endDomiciliationDate): self
+    {
+        $this->endDomiciliationDate = $endDomiciliationDate;
+
+        return $this;
+    }
+
     public function getDomiciliationlist()
     {
         return Choices::YES_NO[$this->domiciliation];
@@ -799,6 +962,29 @@ class EvalHousingGroup
     public function setDomiciliationDept(?string $domiciliationDept): self
     {
         $this->domiciliationDept = $domiciliationDept;
+
+        return $this;
+    }
+
+    public function getHousingAccessType(): ?int
+    {
+        return $this->housingAccessType;
+    }
+
+    public function setHousingAccessType(?int $housingAccessType): self
+    {
+        $this->housingAccessType = $housingAccessType;
+
+        return $this;
+    }
+    public function getHousingArrivalDate(): ?\DateTimeInterface
+    {
+        return $this->housingArrivalDate;
+    }
+
+    public function setHousingArrivalDate(?\DateTimeInterface $housingArrivalDate): self
+    {
+        $this->housingArrivalDate = $housingArrivalDate;
 
         return $this;
     }

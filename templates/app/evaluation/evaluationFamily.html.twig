@@ -2,26 +2,48 @@
 
 {% set id = "sit-family" %}
 
-{% block card_title %}Familial{% endblock %}
+{% block card_title %}Famille{% endblock %}
 
 {% block card_body %}
 
-<div class="form-group row">
-    {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
-    <div class="col-md-6">
-		<div class="mb-3">
-            <button type="button" class="btn btn-outline-{{ theme_color }} active mr-2">{{ evalPerson.vars.value.supportPerson.person.fullname}}</button>
-            {# <span>{{ evalPerson.vars.value.supportPerson.roleList }}</span> #}
+<div class="row mb-3">
+    <div class="col-md-12 accordion" id="accordion-eval_family">
+        <div class="mb-4">
+            {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
+			{% set person = evalPerson.vars.value.supportPerson.person %}
+            <button type="button" id="heading-eval_family-{{ loop.index0 }}"
+                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
+                data-toggle="collapse" data-target="#collapse-eval_family-{{ loop.index0 }}" aria-expanded="false"
+                aria-controls="collapse-eval_family-{{ loop.index0 }}">{{ person.fullname}}</button>
+            {% endfor %}
         </div>
-        <div class="form-group row">
-            <div class="col-md-12">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
+
+        {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
+        <div id="collapse-eval_family-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+            aria-labelledby="heading-eval_family-{{ loop.index0 }}" data-parent="#accordion-eval_family">
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
+                {% if evalPerson.vars.value.supportPerson.person.gender == 1 %}
+                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalFamilyPerson_unbornChild d-block">{{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalFamilyPerson_unbornChild d-block">{{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasure) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalFamilyPerson_protectiveMeasure d-block">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_label(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+                <div class="col-md-12">{{ form_widget(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 
 {% if typo in [4, 5, 6, 8] %}
-<div class="row">
+<div class="form-group row">
     <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-sm table-striped table-hover text-dark shadow-sm">
@@ -55,16 +77,9 @@
 </div>
 {% endif %}
 
-{% if typo not in [2, 5] %}
 <div class="form-group row">
-    {# <div class="col-md-6">{{ form_row(form.evalFamilyGroup.nbDependentChildren) }}</div> #}
-    <div class="col-md-6">{{ form_row(form.evalFamilyGroup.unbornChild) }}</div>
-    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.evalFamilyGroup.expDateChildbirth) }}</div>
-    <div class="col-md-6 js-unbornChild d-block">{{ form_row(form.evalFamilyGroup.pregnancyType) }}</div>
-</div>
-{% endif %}
-
-<div class="form-group row">
+    <div class="col-md-6 js-0_evalAdmPerson_nationality d-block">
+        {{ form_row(form.evalFamilyGroup.childrenBehind) }}</div>
     <div class="col-md-6 js-0_evalAdmPerson_nationality d-block">
         {{ form_row(form.evalFamilyGroup.famlReunification) }}</div>
     <div class="col-md-6 js-famlReunification d-block">{{ form_row(form.evalFamilyGroup.nbPeopleReunification) }}</div>
@@ -72,7 +87,7 @@
 </div>
 
 <div class="form-group row">
-    {# {{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }} #}
+    <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
     <div class="col-md-12">{{ form_widget(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
 </div>
 

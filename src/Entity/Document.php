@@ -18,7 +18,7 @@ class Document
         6 => "Logement",
         7 => "Santé",
         8 => "Orientation",
-        98 => "Autre"
+        97 => "Autre"
     ];
 
     /**

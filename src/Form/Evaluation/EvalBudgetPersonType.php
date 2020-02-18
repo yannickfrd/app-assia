@@ -219,7 +219,13 @@ class EvalBudgetPersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("endRightsDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false,
+                "help" => "Date de fin des prestations ou des allocations"
+            ])
             ->add("commentEvalBudget", null, [
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the budget situation"

@@ -35,10 +35,11 @@ class EvalSocialGroupType extends AbstractType
             ->add("speOther")
             ->add("speOtherPrecision")
             ->add("speComment")
-            ->add("commentEvalSocial", null, [
+            ->add("commentEvalSocialGroup", null, [
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 5,
-                    "placeholder" => "Write a comment about the social situation"
+                    "placeholder" => "Write a comment about the social situation of the group"
                 ]
             ]);
     }

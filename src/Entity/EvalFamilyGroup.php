@@ -9,13 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EvalFamilyGroup
 {
-    public const PREGNANCY_TYPE = [
-        1 => "Simple",
-        2 => "Jumeaux",
-        3 => "Multiple",
-        99 => "Non renseigné"
-    ];
-
     public const FAML_REUNIFICATION = [
         1 => "Oui",
         2 => "Non",
@@ -40,17 +33,7 @@ class EvalFamilyGroup
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $unbornChild;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $expDateChildbirth;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $pregnancyType;
+    private $childrenBehind;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -78,6 +61,7 @@ class EvalFamilyGroup
      */
     private $evaluationGroup;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -95,45 +79,16 @@ class EvalFamilyGroup
         return $this;
     }
 
-    public function getUnbornChild(): ?int
+    public function getChildrenBehind(): ?int
     {
-        return $this->unbornChild;
+        return $this->childrenBehind;
     }
 
-    public function setUnbornChild(?int $unbornChild): self
+    public function setChildrenBehind(?int $childrenBehind): self
     {
-        $this->unbornChild = $unbornChild;
+        $this->childrenBehind = $childrenBehind;
 
         return $this;
-    }
-
-    public function getExpDateChildbirth(): ?\DateTimeInterface
-    {
-        return $this->expDateChildbirth;
-    }
-
-    public function setExpDateChildbirth(?\DateTimeInterface $expDateChildbirth): self
-    {
-        $this->expDateChildbirth = $expDateChildbirth;
-
-        return $this;
-    }
-
-    public function getPregnancyType(): ?int
-    {
-        return $this->pregnancyType;
-    }
-
-    public function setPregnancyType(?int $pregnancyType): self
-    {
-        $this->pregnancyType = $pregnancyType;
-
-        return $this;
-    }
-
-    public function getPregnancyTypeList()
-    {
-        return self::PREGNANCY_TYPE[$this->pregnancyType];
     }
 
     public function getFamlReunification(): ?int

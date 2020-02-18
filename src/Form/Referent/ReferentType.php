@@ -29,11 +29,21 @@ class ReferentType extends AbstractType
                     "placeholder" => "Social worker name",
                 ]
             ])
-            // ->add("socialWorker2", null, [
-            //     "attr" => [
-            //         "placeholder" => "Social worker name 2",
-            //     ]
-            // ])
+            ->add("socialWorker2", null, [
+                "attr" => [
+                    "placeholder" => "Social worker name 2",
+                ]
+            ])
+            ->add("email1", null, [
+                "attr" => [
+                    "placeholder" => "Email1"
+                ]
+            ])
+            ->add("email2", null, [
+                "attr" => [
+                    "placeholder" => "Email2"
+                ]
+            ])
             ->add("phone1", null, [
                 "attr" => [
                     "class" => "js-phone",
@@ -44,11 +54,6 @@ class ReferentType extends AbstractType
                 "attr" => [
                     "class" => "js-phone",
                     "placeholder" => "Phone2"
-                ]
-            ])
-            ->add("email", null, [
-                "attr" => [
-                    "placeholder" => "Email"
                 ]
             ])
             ->add("address")

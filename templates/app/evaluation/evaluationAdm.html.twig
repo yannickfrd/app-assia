@@ -1,24 +1,24 @@
 {% extends "model/collapseCard.html.twig" %}
 
-{% set id = "sit_adm" %}
+{% set id = "eval_adm" %}
 
-{% block card_title %}Administratif{% endblock %}
+{% block card_title %}Papier - Identité{% endblock %}
 
 {% block card_body %}
 
 	<div class="row">
-		<div class="col-md-12 accordion" id="accordion-sit_adm">
+		<div class="col-md-12 accordion" id="accordion-eval_adm">
 			<div class="mb-4">
 				{% for evalPerson in form.evaluationPeople %}
 					{% set person = evalPerson.vars.value.supportPerson.person %}
-					<button type="button" id="heading-sit_adm-{{ loop.index0 }}"
+					<button type="button" id="heading-eval_adm-{{ loop.index0 }}"
 						class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
-						data-toggle="collapse" data-target="#collapse-sit_adm-{{ loop.index0 }}" aria-expanded="false"
-						aria-controls="collapse-sit_adm-{{ loop.index0 }}">{{ person.fullname}}</button>
+						data-toggle="collapse" data-target="#collapse-eval_adm-{{ loop.index0 }}" aria-expanded="false"
+						aria-controls="collapse-eval_adm-{{ loop.index0 }}">{{ person.fullname}}</button>
 				{% endfor %}
 			</div>
 				{% for evalPerson in form.evaluationPeople %}
-				<div id="collapse-sit_adm-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3" aria-labelledby="heading-sit_adm-{{ loop.index0 }}" data-parent="#accordion-sit_adm">
+				<div id="collapse-eval_adm-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3" aria-labelledby="heading-eval_adm-{{ loop.index0 }}" data-parent="#accordion-eval_adm">
 					<div class="form-group row">
 						<div class="col-md-6">{{ form_row(evalPerson.evalAdmPerson.nationality) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
@@ -31,13 +31,15 @@
 					</div>
 					<div class="form-group row">
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
+							{{ form_row(evalPerson.evalAdmPerson.asylumBackground) }}</div>
+						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
 							{{ form_row(evalPerson.evalAdmPerson.rightReside) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
-							{{ form_row(evalPerson.evalAdmPerson.applResidPermit) }}</div>
+							{{ form_row(evalPerson.evalAdmPerson.residPermitRequest) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
-							{{ form_row(evalPerson.evalAdmPerson.endDateValidPermit) }}</div>
+							{{ form_row(evalPerson.evalAdmPerson.endValidPermitDate) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
-							{{ form_row(evalPerson.evalAdmPerson.renewalDatePermit) }}</div>
+							{{ form_row(evalPerson.evalAdmPerson.renewalPermitDate) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
 							{{ form_row(evalPerson.evalAdmPerson.nbRenewals) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
@@ -66,14 +68,7 @@
 							{{ form_widget(evalPerson.evalAdmPerson.housingAlw) }}</div>
 					</div>
 					<div class="form-group row">
-						<div class="col-md-6">{{ form_row(evalPerson.evalAdmPerson.rightSocialSecu) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_rightSocialSecu d-block">
-							{{ form_row(evalPerson.evalAdmPerson.socialSecu) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_rightSocialSecu d-block">
-							{{ form_row(evalPerson.evalAdmPerson.socialSecuOffice) }}</div>
-					</div>
-					<div class="form-group row">
-						<div class="col-md-12">{{ form_widget(evalPerson.evalAdmPerson.commentEvalAdm) }}</div>
+						<div class="col-md-12">{{ form_widget(evalPerson.evalAdmPerson.commentEvalAdmPerson) }}</div>
 					</div>
 				</div>
 			{% endfor %}

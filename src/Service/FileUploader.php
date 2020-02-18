@@ -8,13 +8,14 @@ use Tinify\Tinify;
 
 class FileUploader
 {
-    private $targetDirectory;
-    private $tinifyKey;
+    protected $targetDirectory;
+    protected $tinify;
 
-    public function __construct($targetDirectory, $tinifyKey)
+    public function __construct($targetDirectory, Tinify $tinify, $tinifyKey)
     {
         $this->targetDirectory = $targetDirectory;
-        $this->tinifyKey = $tinifyKey;
+        $this->tinify = $tinify;
+        $this->tinify->setKey($tinifyKey);
     }
 
     public function upload(UploadedFile $file, $path = null)
@@ -46,8 +47,7 @@ class FileUploader
         $pathFile = $this->getTargetDirectory() . $path . "/" . $newFilename;
         $pathParts = pathinfo($pathFile);
 
-        if (in_array($pathParts["extension"], $imageExtensions)) {
-            \Tinify\setKey($this->tinifyKey);
+        if (in_array($pathParts["extension"], $imageExtensions) && $this->tinify->getCompressionCount() < 450) {
             $source = \Tinify\fromFile($pathFile);
             $source->toFile($pathFile);
         }

@@ -1,11 +1,13 @@
 Eval prof person: Professionnel
 -- Select --: -- Sélectionner --
-Comment sit prof:  Commentaire relatif la situation professionnelle
+Comment eval prof:  Commentaire relatif la situation professionnelle
 Contract start date: Date de début du contrat
 Contract end date: Date de fin du contrat
 Contract type: Type de contrat
 Employer name: Nom de l'employeur
+End rqth date : Date de fin de validité RQTH
 Job type: Type d'emploi
+Job center id: Numéro Pôle Emploi
 Nb working hours: Nombre d'heures de travail
 Prof status: Statut professionnel
 Rqth: RQTH

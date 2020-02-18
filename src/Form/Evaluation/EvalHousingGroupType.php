@@ -20,17 +20,30 @@ class EvalHousingGroupType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("dls", ChoiceType::class, [
+            ->add("siaoRequest", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("dlsId")
-            ->add("dlsDate", DateType::class, [
+            ->add("siaoRequestDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
             ])
-            ->add("dlsRenewalDate", DateType::class, [
+            ->add("siaoUpdatedRequestDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("socialHousingRequest", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("socialHousingRequestId")
+            ->add("socialHousingRequestDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("socialHousingUpdatedRequestDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
             ])
@@ -56,12 +69,30 @@ class EvalHousingGroupType extends AbstractType
                 "widget" => "single_text",
                 "required" => false
             ])
-            ->add("requalifiedDalo", ChoiceType::class, [
+            ->add("daloRequalifiedDaho", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("decisionDate", DateType::class, [
+            ->add("daloDecisionDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("daloTribunalAction", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("daloTribunalActionDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("collectiveAgreementHousing", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("collectiveAgreementHousingDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
             ])
@@ -116,6 +147,14 @@ class EvalHousingGroupType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("startDomiciliationDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("endDomiciliationDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
             ->add("domiciliationAddress")
             ->add("domiciliationCity")
             ->add("domiciliationDept", null, [
@@ -123,7 +162,17 @@ class EvalHousingGroupType extends AbstractType
                     "class" => "js-dept-code",
                 ]
             ])
+            ->add("housingAccessType", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("housingArrivalDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
             ->add("commentEvalHousing", null, [
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the housing situation"

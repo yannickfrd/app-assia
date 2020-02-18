@@ -37,7 +37,7 @@ class EvalSocialGroup
         25 => "Sortie dispositif asile",
         26 => "Traite humaine",
         27 => "Violences familiales-conjugales",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
@@ -50,7 +50,7 @@ class EvalSocialGroup
         6 => "2 ans - 5 ans",
         7 => "5 ans - 10 ans",
         8 => "Plus de 10 ans",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
@@ -104,7 +104,7 @@ class EvalSocialGroup
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $speASE;
+    private $speChildWelfare;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -130,7 +130,7 @@ class EvalSocialGroup
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $commentEvalSocial;
+    private $commentEvalSocialGroup;
 
     public function getId(): ?int
     {
@@ -243,14 +243,14 @@ class EvalSocialGroup
         return $this;
     }
 
-    public function getSpeASE(): ?bool
+    public function getSpeChildWelfare(): ?bool
     {
-        return $this->speASE;
+        return $this->speChildWelfare;
     }
 
-    public function setSpeASE(?bool $speASE): self
+    public function setSpeChildWelfare(?bool $speChildWelfare): self
     {
-        $this->speASE = $speASE;
+        $this->speChildWelfare = $speChildWelfare;
 
         return $this;
     }
@@ -303,14 +303,14 @@ class EvalSocialGroup
         return $this;
     }
 
-    public function getCommentEvalSocial(): ?string
+    public function getCommentEvalSocialGroup(): ?string
     {
-        return $this->commentEvalSocial;
+        return $this->commentEvalSocialGroup;
     }
 
-    public function setCommentEvalSocial(?string $commentEvalSocial): self
+    public function setCommentEvalSocialGroup(?string $commentEvalSocialGroup): self
     {
-        $this->commentEvalSocial = $commentEvalSocial;
+        $this->commentEvalSocialGroup = $commentEvalSocialGroup;
 
         return $this;
     }

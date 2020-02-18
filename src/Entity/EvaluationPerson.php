@@ -29,6 +29,16 @@ class EvaluationPerson
     private $supportPerson;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\Entity\EvalAdmPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     */
+    private $evalAdmPerson;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\EvalBudgetPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     */
+    private $evalBudgetPerson;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvalFamilyPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $evalFamilyPerson;
@@ -39,14 +49,9 @@ class EvaluationPerson
     private $evalProfPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\EvalAdmPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\EvalSocialPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $evalAdmPerson;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\EvalBudgetPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     */
-    private $evalBudgetPerson;
+    private $evalSocialPerson;
 
     public function getId(): ?int
     {
@@ -141,6 +146,23 @@ class EvaluationPerson
         // set the owning side of the relation if necessary
         if ($this !== $evalBudgetPerson->getEvaluationPerson()) {
             $evalBudgetPerson->setEvaluationPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function getEvalSocialPerson(): ?EvalSocialPerson
+    {
+        return $this->evalSocialPerson;
+    }
+
+    public function setEvalSocialPerson(EvalSocialPerson $evalSocialPerson): self
+    {
+        $this->evalSocialPerson = $evalSocialPerson;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $evalSocialPerson->getEvaluationPerson()) {
+            $evalSocialPerson->setEvaluationPerson($this);
         }
 
         return $this;

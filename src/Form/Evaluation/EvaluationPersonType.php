@@ -7,6 +7,7 @@ use App\Form\Evaluation\EvalAdmPersonType;
 use App\Form\Evaluation\EvalProfPersonType;
 use App\Form\Evaluation\EvalBudgetPersonType;
 use App\Form\Evaluation\EvalFamilyPersonType;
+use App\Form\Evaluation\EvalSocialPersonType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,9 +18,10 @@ class EvaluationPersonType extends AbstractType
     {
         $builder
             ->add("evalAdmPerson", EvalAdmPersonType::class)
+            ->add("evalBudgetPerson", EvalBudgetPersonType::class)
             ->add("evalFamilyPerson", EvalFamilyPersonType::class)
             ->add("evalProfPerson", EvalProfPersonType::class)
-            ->add("evalBudgetPerson", EvalBudgetPersonType::class);
+            ->add("evalSocialPerson", EvalSocialPersonType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

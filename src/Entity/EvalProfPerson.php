@@ -10,13 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
 class EvalProfPerson
 {
     public const STATUS = [
-        1 => "Demandeur/euse d'emploi",
-        2 => "En emploi",
-        3 => "En formation",
-        4 => "En invalidité",
-        5 => "Étudiant·e",
-        6 => "Retraité·e",
-        98 => "Autre",
+        1 => "Auto-entrepreneur/euse",
+        2 => "Demandeur/euse d'emploi",
+        3 => "En emploi",
+        4 => "En formation",
+        5 => "En invalidité",
+        6 => "Étudiant·e",
+        7 => "Indépendant·e",
+        8 => "Retraité·e",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
@@ -30,19 +32,19 @@ class EvalProfPerson
         7 => "Bac +2",
         8 => "Bac +3 (licence)",
         9 => "Bac +5 (master) et plus",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
     public const CONTRACT_TYPE = [
-        1 => "Apprenti",
+        1 => "Apprentissage",
         2 => "CDD",
         3 => "CDI",
         4 => "Contrat aidé",
-        5 => "Fonctionnaire",
-        6 => "Intérimaire",
-        7 => "Stagiaire",
-        98 => "Autre",
+        5 => "Fonction publique",
+        6 => "Intérim",
+        7 => "Stage",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
@@ -119,10 +121,21 @@ class EvalProfPerson
     private $commentEvalProf;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $jobCenterId;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $endRqthDate;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvaluationPerson", inversedBy="evalProfPerson", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationPerson;
+
 
     public function getId(): ?int
     {
@@ -297,6 +310,30 @@ class EvalProfPerson
     public function setCommentEvalProf(?string $commentEvalProf): self
     {
         $this->commentEvalProf = $commentEvalProf;
+
+        return $this;
+    }
+
+    public function getJobCenterId(): ?string
+    {
+        return $this->jobCenterId;
+    }
+
+    public function setJobCenterId(?string $jobCenterId): self
+    {
+        $this->jobCenterId = $jobCenterId;
+
+        return $this;
+    }
+
+    public function getEndRqthDate(): ?\DateTimeInterface
+    {
+        return $this->endRqthDate;
+    }
+
+    public function setEndRqthDate(?\DateTimeInterface $endRqthDate): self
+    {
+        $this->endRqthDate = $endRqthDate;
 
         return $this;
     }

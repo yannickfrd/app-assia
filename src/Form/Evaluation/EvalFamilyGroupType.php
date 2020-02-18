@@ -16,17 +16,8 @@ class EvalFamilyGroupType extends AbstractType
     {
         $builder
             ->add("nbDependentChildren")
-            ->add("unbornChild", ChoiceType::class, [
+            ->add("childrenBehind", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
-                "placeholder" => "-- Select --",
-                "required" => false
-            ])
-            ->add("expDateChildbirth", DateType::class, [
-                "widget" => "single_text",
-                "required" => false
-            ])
-            ->add("pregnancyType", ChoiceType::class, [
-                "choices" => Choices::getChoices(EvalFamilyGroup::PREGNANCY_TYPE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -38,10 +29,10 @@ class EvalFamilyGroupType extends AbstractType
             ->add("nbPeopleReunification")
             ->add("cafId")
             ->add("commentEvalFamilyGroup", null, [
-                "label_attr" => ["class" => "col-sm-12"],
+                "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 5,
-                    "placeholder" => "Write a comment about the family situation"
+                    "placeholder" => "Write a comment about the family situation of the group"
                 ]
             ]);
     }

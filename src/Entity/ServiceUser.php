@@ -17,7 +17,7 @@ class ServiceUser
         5 => "Administratif",
         6 => "Chargé·e de mission",
         7 => "Stagiaire",
-        98 => "Autre",
+        97 => "Autre",
     ];
 
     /**

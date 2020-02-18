@@ -26,7 +26,7 @@ class EvalAdmPerson
         2 => "Passeport",
         6 => "Récépissé asile",
         7 => "Récépissé renouvellemt de titre",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
 
@@ -34,20 +34,9 @@ class EvalAdmPerson
         1 => "Débouté du droit d'asile",
         2 => "Demandeur d'asile",
         3 => "Réfugié",
-        98 => "Autre",
+        97 => "Autre",
         99 => "Non renseigné"
     ];
-
-    public const SOCIAL_SECURITY = [
-        5 => "AME",
-        3 => "CMU",
-        4 => "CMU complémentaire",
-        2 => "Mutuelle",
-        1 => "Régime général",
-        98 => "Autre régime",
-        99 => "Non renseignée"
-    ];
-
 
     /**
      * @ORM\Id()
@@ -79,22 +68,27 @@ class EvalAdmPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $asylumBackground;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $rightReside;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $applResidPermit;
+    private $residPermitRequest;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $endDateValidPermit;
+    private $endValidPermitDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $renewalDatePermit;
+    private $renewalPermitDate;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -122,24 +116,9 @@ class EvalAdmPerson
     private $housingAlw;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $rightSocialSecu;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $socialSecu;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $socialSecuOffice;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $commentEvalAdm;
+    private $commentEvalAdmPerson;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvaluationPerson", inversedBy="evalAdmPerson", cascade={"persist", "remove"})
@@ -211,6 +190,19 @@ class EvalAdmPerson
         return self::PAPER_TYPE[$this->paperType];
     }
 
+
+    public function getAsylumBackground(): ?int
+    {
+        return $this->asylumBackground;
+    }
+
+    public function setAsylumBackground(?int $asylumBackground): self
+    {
+        $this->asylumBackground = $asylumBackground;
+
+        return $this;
+    }
+
     public function getRightReside(): ?int
     {
         return $this->rightReside;
@@ -229,38 +221,38 @@ class EvalAdmPerson
     }
 
 
-    public function getApplResidPermit(): ?int
+    public function getResidPermitRequest(): ?int
     {
-        return $this->applResidPermit;
+        return $this->residPermitRequest;
     }
 
-    public function setApplResidPermit(?int $applResidPermit): self
+    public function setResidPermitRequest(?int $residPermitRequest): self
     {
-        $this->applResidPermit = $applResidPermit;
+        $this->residPermitRequest = $residPermitRequest;
 
         return $this;
     }
 
-    public function getEndDateValidPermit(): ?\DateTimeInterface
+    public function getEndValidPermitDate(): ?\DateTimeInterface
     {
-        return $this->endDateValidPermit;
+        return $this->endValidPermitDate;
     }
 
-    public function setEndDateValidPermit(?\DateTimeInterface $endDateValidPermit): self
+    public function setEndValidPermitDate(?\DateTimeInterface $endValidPermitDate): self
     {
-        $this->endDateValidPermit = $endDateValidPermit;
+        $this->endValidPermitDate = $endValidPermitDate;
 
         return $this;
     }
 
-    public function getRenewalDatePermit(): ?\DateTimeInterface
+    public function getRenewalPermitDate(): ?\DateTimeInterface
     {
-        return $this->renewalDatePermit;
+        return $this->renewalPermitDate;
     }
 
-    public function setRenewalDatePermit(?\DateTimeInterface $renewalDatePermit): self
+    public function setRenewalPermitDate(?\DateTimeInterface $renewalPermitDate): self
     {
-        $this->renewalDatePermit = $renewalDatePermit;
+        $this->renewalPermitDate = $renewalPermitDate;
 
         return $this;
     }
@@ -325,55 +317,14 @@ class EvalAdmPerson
         return $this;
     }
 
-    public function getRightSocialSecu(): ?int
+    public function getCommentEvalAdmPerson(): ?string
     {
-        return $this->rightSocialSecu;
+        return $this->commentEvalAdmPerson;
     }
 
-    public function setRightSocialSecu(?int $rightSocialSecu): self
+    public function setCommentEvalAdmPerson(?string $commentEvalAdmPerson): self
     {
-        $this->rightSocialSecu = $rightSocialSecu;
-
-        return $this;
-    }
-
-    public function getSocialSecu(): ?int
-    {
-        return $this->socialSecu;
-    }
-
-    public function setSocialSecu(?int $socialSecu): self
-    {
-        $this->socialSecu = $socialSecu;
-
-        return $this;
-    }
-
-    public function getSocialSecuList()
-    {
-        return self::SOCIAL_SECURITY[$this->socialSecu];
-    }
-
-    public function getSocialSecuOffice(): ?string
-    {
-        return $this->socialSecuOffice;
-    }
-
-    public function setSocialSecuOffice(?string $socialSecuOffice): self
-    {
-        $this->socialSecuOffice = $socialSecuOffice;
-
-        return $this;
-    }
-
-    public function getCommentEvalAdm(): ?string
-    {
-        return $this->commentEvalAdm;
-    }
-
-    public function setCommentEvalAdm(?string $commentEvalAdm): self
-    {
-        $this->commentEvalAdm = $commentEvalAdm;
+        $this->commentEvalAdmPerson = $commentEvalAdmPerson;
 
         return $this;
     }

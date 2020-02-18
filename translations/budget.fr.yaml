@@ -15,7 +15,7 @@ Charges amt: Montant total des charges
 Charges: Charges
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
-Comment sit budget: Commentaire relatif à la situation budgétaire
+Comment eval budget: Commentaire relatif à la situation budgétaire
 Debt amt: Montant total des dettes
 Debt bank old amt: Montant découverts bancaires
 Debt bank overdrafts: Découverts bancaires
@@ -43,6 +43,7 @@ Dis child alw amt: Montant AAEH
 Dis child alw: AEEH
 Electricity gas amt: Montant électricité / Gaz
 Electricity gas: Electricité / Gaz
+End rights date: Date de fin de droits
 Family alw amt: Montant allocations familiales
 Family alw: Allocations familiales
 Insurance amt: Montant assurance(s)

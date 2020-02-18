@@ -6,6 +6,58 @@
 
 {% block card_body %}
 
+<div class="row">
+    <div class="col-md-12 accordion" id="accordion-eval_social">
+        <div class="mb-4">
+            {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
+			{% set person = evalPerson.vars.value.supportPerson.person %}
+            <button type="button" id="heading-eval_social-{{ loop.index0 }}"
+                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
+                data-toggle="collapse" data-target="#collapse-eval_social-{{ loop.index0 }}" aria-expanded="false"
+                aria-controls="collapse-eval_social-{{ loop.index0 }}">{{ person.fullname}}</button>
+            {% endfor %}
+        </div>
+
+        {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
+        <div id="collapse-eval_social-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+            aria-labelledby="heading-eval_social-{{ loop.index0 }}" data-parent="#accordion-eval_social">
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.rightSocialSecurity) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_rightSocialSecurity d-block">
+                    {{ form_row(evalPerson.evalSocialPerson.socialSecurity) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_rightSocialSecurity d-block">
+                    {{ form_row(evalPerson.evalSocialPerson.endRightsSocialSecurityDate) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_rightSocialSecurity d-block">
+                    {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.physicalHealthProblem) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.mentalHealthProblem) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.addictionProblem) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_careSupport d-block">{{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.childWelfareBackground) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.familyBreakdown) }}</div>
+                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.friendshipBreakdown) }}</div>
+            </div>
+            <div class="form-group row">
+                {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                <div class="col-md-12">
+                    {{ form_widget(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
+
 <div class="form-group row">
     <div class="col-md-6"> {{ form_row(form.evalSocialGroup.reasonRequest) }}</div>
     <div class="col-md-6"> {{ form_row(form.evalSocialGroup.wanderingTime) }}</div>
@@ -67,9 +119,9 @@
 </div>
 
 <div class="form-group row">
-    {# {{ form_label(form.evalSocialGroup.commentEvalSocial) }} #}
+    {{ form_label(form.evalSocialGroup.commentEvalSocialGroup) }}
     <div class="col-md-12">
-        {{ form_widget(form.evalSocialGroup.commentEvalSocial) }}
+        {{ form_widget(form.evalSocialGroup.commentEvalSocialGroup) }}
     </div>
 </div>
 {% endblock %}
