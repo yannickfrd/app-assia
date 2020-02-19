@@ -30,6 +30,7 @@ export default class ListNotes {
     init() {
         this.ckEditor();
 
+        console.log(this.modalForm);
         this.newNoteBtn.addEventListener("click", this.newNote.bind(this));
 
         this.noteElts.forEach(noteElt => {

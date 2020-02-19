@@ -13,6 +13,7 @@ require("bootstrap-datepicker");
 import AjaxRequest from "./utils/ajaxRequest";
 import SearchPerson from "./searchPerson";
 import autoLogout from "./autoLogout";
+import checkSave from "./checkSave";
 
 // Masque le loader lorsque le DOM est chargé
 window.onload = function () {
@@ -44,3 +45,4 @@ new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time
 
 // Déconnexion automatique de l'utilisateur
 new autoLogout(ajaxRequest, 20); // minutes
+// new checkSave();
