@@ -56,6 +56,13 @@ Esperer95.app{% endblock %}
             <div class="col-md-6">{{ form_row(form.city) }}</div>
             <div class="col-md-6">{{ form_row(form.department) }}</div>
             <div class="col-md-6">{{ form_row(form.address) }}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.accommodationType) }}</div>
+            <div class="col-md-6">{{ form_row(form.configuration) }}</div>
+            <div class="col-md-6">{{ form_row(form.individualCollective) }}</div>
+        </div>
+        <div class="form-group row">
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
 
@@ -88,5 +95,5 @@ Esperer95.app{% endblock %}
 {% endblock %}
 
 {% block javascripts %}
-{# {{ encore_entry_script_tags("accommodation") }} #}
+{{ encore_entry_script_tags("accommodation") }}
 {% endblock javascripts %}

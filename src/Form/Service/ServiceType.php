@@ -3,15 +3,18 @@
 namespace App\Form\Service;
 
 use App\Entity\Pole;
+use App\Entity\User;
 use App\Entity\Service;
 use App\Form\Utils\Choices;
+use App\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ServiceType extends AbstractType
 {
@@ -39,12 +42,39 @@ class ServiceType extends AbstractType
                     "placeholder" => "Email"
                 ]
             ])
+            ->add("chief", EntityType::class, [
+                "class" => User::class,
+                "choice_label" => "fullname",
+                "query_builder" => function (UserRepository $repo) {
+                    return $repo->createQueryBuilder("u")
+                        ->where("u.status = 3")
+                        ->andWhere("u.enabled = TRUE")
+                        ->orderBy("u.lastname", "ASC");
+                },
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
             ->add("address")
             ->add("city")
             ->add("zipCode", null, [
                 "attr" => [
-                    "class" => "js-zip-code ",
+                    "class" => "js-zip-code",
                 ]
+            ])
+            ->add("finessId")
+            ->add("siretId")
+            ->add("openingDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("closingDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
+            ->add("enabled", CheckBoxType::class, [
+                "label_attr" => ["class" => "custom-control-label"],
+                "attr" => ["class" => "custom-control-input checkbox"],
+                "required" => false
             ])
             ->add("supportAccess", ChoiceType::class, [
                 "choices" => Choices::getChoices(Service::SUPPORT_ACCESS),

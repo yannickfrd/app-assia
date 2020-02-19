@@ -1,3 +1,4 @@
 import DeleteAccommodation from "./deleteAccommodation";
+import "../utils/maskZipCode";
 
-let deleteAccommodation = new DeleteAccommodation();
+new DeleteAccommodation();

@@ -74,11 +74,6 @@ class Pole
     private $zipCode;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $director;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -107,6 +102,11 @@ class Pole
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $updatedBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $chief;
 
 
     public function __construct()
@@ -188,18 +188,6 @@ class Pole
     public function setZipCode(?string $zipCode): self
     {
         $this->zipCode = $zipCode;
-
-        return $this;
-    }
-
-    public function getDirector(): ?string
-    {
-        return $this->director;
-    }
-
-    public function setDirector(?string $director): self
-    {
-        $this->director = $director;
 
         return $this;
     }
@@ -303,6 +291,18 @@ class Pole
                 $service->setPole(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getChief(): ?User
+    {
+        return $this->chief;
+    }
+
+    public function setChief(?User $chief): self
+    {
+        $this->chief = $chief;
 
         return $this;
     }

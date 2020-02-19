@@ -76,3 +76,13 @@ Social worker name: Nom du travailleur social
 Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
 Write a comment about the referent service social: Ecrire un commentaire sur le service social référent
+
+Chief: Responsable
+Siret id: Numéro SIRET
+Finess id: Numéro FINESS
+Opening date: Date d'ouverture
+Closing date: Date de fermeture
+
+Accommodation type: Type de logement ou d'hébergement
+Configuration: Configuration
+Individual collective: Individuel ou collectif

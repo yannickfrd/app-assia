@@ -1,5 +1,7 @@
 import "../utils/maskPhone";
+import "../utils/maskZipCode";
+
 import DeleteTr from "../utils/deleteTr";
 import addCollectionWidget from "../utils/addCollectionWidget";
 
-let deleteTr = new DeleteTr("function-table");
+new DeleteTr("function-table");

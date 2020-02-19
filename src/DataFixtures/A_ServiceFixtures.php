@@ -150,6 +150,7 @@ class A_ServiceFixtures extends Fixture
         $this->service->setName($service)
             ->setAccommodation(true)
             ->setPole($this->pole)
+            ->setEnabled(true)
             ->setCreatedAt(new \DateTime());
 
         $this->services[] = $this->service;

@@ -12,6 +12,35 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Accommodation
 {
+    public const ACCOMMODATION_TYPE = [
+        1 =>  "Chambre individuelle",
+        2 =>  "Chambre collective",
+        3 =>  "Chambre d'hôtel",
+        4 =>  "Dortoir",
+        5 =>  "Logement T1",
+        6 =>  "Logement T2",
+        7 =>  "Logement T3",
+        8 =>  "Logement T4",
+        9 =>  "Logement T5",
+        10 =>  "Logement T6",
+        11 =>  "Logement T7",
+        12 =>  "Logement T8",
+        13 =>  "Logement T9",
+        97 =>  "Autre",
+        99 =>  "Non renseigné"
+    ];
+
+    public const CONFIGURATION = [
+        1 => "Diffus",
+        2 => "Regroupé"
+    ];
+
+    public const INDIVIDUAL_COLLECTIVE = [
+        1 => "Individuel",
+        2 => "Collectif",
+        97 => "Autre"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -53,6 +82,21 @@ class Accommodation
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $accommodationType;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $configuration;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $individualCollective;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -170,6 +214,57 @@ class Accommodation
         $this->department = $department;
 
         return $this;
+    }
+
+    public function getAccommodationType(): ?int
+    {
+        return $this->accommodationType;
+    }
+
+    public function setAccommodationType(?int $accommodationType): self
+    {
+        $this->accommodationType = $accommodationType;
+
+        return $this;
+    }
+
+    public function getAccommodationTypeList()
+    {
+        return self::ACCOMMODATION_TYPE[$this->accommodationType];
+    }
+
+    public function getConfiguration(): ?int
+    {
+        return $this->configuration;
+    }
+
+    public function setConfiguration(?int $configuration): self
+    {
+        $this->configuration = $configuration;
+
+        return $this;
+    }
+
+    public function getConfigurationList()
+    {
+        return self::CONFIGURATION[$this->configuration];
+    }
+
+    public function getIndividualCollective(): ?int
+    {
+        return $this->individualCollective;
+    }
+
+    public function setIndividualCollective(?int $individualCollective): self
+    {
+        $this->individualCollective = $individualCollective;
+
+        return $this;
+    }
+
+    public function getIndividualCollectiveList()
+    {
+        return self::INDIVIDUAL_COLLECTIVE[$this->individualCollective];
     }
 
     public function getComment(): ?string

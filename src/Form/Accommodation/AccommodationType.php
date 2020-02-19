@@ -2,14 +2,16 @@
 
 namespace App\Form\Accommodation;
 
-use App\Entity\Accommodation;
 use App\Entity\Device;
+use App\Form\Utils\Choices;
+use App\Entity\Accommodation;
 use App\Repository\DeviceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AccommodationType extends AbstractType
 {
@@ -44,8 +46,25 @@ class AccommodationType extends AbstractType
             ->add("city")
             ->add("department", null, [
                 "attr" => [
-                    "class" => "js-dept-code"
+                    "class" => "js-zip-code ",
                 ]
+            ])
+            ->add("accommodationType", ChoiceType::class, [
+                "choices" => Choices::getChoices(Accommodation::ACCOMMODATION_TYPE),
+                "placeholder" => "-- Select --",
+                "help" => "Chambre, T1, T2, T3...",
+                "required" => false
+            ])
+            ->add("configuration", ChoiceType::class, [
+                "choices" => Choices::getChoices(Accommodation::CONFIGURATION),
+                "placeholder" => "-- Select --",
+                "help" => "Diffus ou regroupé",
+                "required" => false
+            ])
+            ->add("individualCollective", ChoiceType::class, [
+                "choices" => Choices::getChoices(Accommodation::INDIVIDUAL_COLLECTIVE),
+                "placeholder" => "-- Select --",
+                "required" => false
             ])
             ->add("address")
             ->add("comment", null, [

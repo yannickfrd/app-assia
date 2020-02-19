@@ -80,11 +80,6 @@ class Service
     private $zipCode;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $chief;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $supportAccess;
@@ -103,6 +98,31 @@ class Service
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $justice;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $finessId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $siretId;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $openingDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $closingDate;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enabled;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -143,6 +163,11 @@ class Service
      * @ORM\ManyToMany(targetEntity="App\Entity\Organization", mappedBy="service")
      */
     private $organizations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $chief;
 
 
     public function __construct()
@@ -358,18 +383,6 @@ class Service
         return $this;
     }
 
-    public function getChief(): ?string
-    {
-        return $this->chief;
-    }
-
-    public function setChief(?string $chief): self
-    {
-        $this->chief = $chief;
-
-        return $this;
-    }
-
     public function getSupportAccess(): ?int
     {
         return $this->supportAccess;
@@ -419,6 +432,66 @@ class Service
     public function setJustice(?bool $justice): self
     {
         $this->justice = $justice;
+
+        return $this;
+    }
+
+    public function getFinessId(): ?string
+    {
+        return $this->finessId;
+    }
+
+    public function setFinessId(?string $finessId): self
+    {
+        $this->finessId = $finessId;
+
+        return $this;
+    }
+
+    public function getSiretId(): ?string
+    {
+        return $this->siretId;
+    }
+
+    public function setSiretId(?string $siretId): self
+    {
+        $this->siretId = $siretId;
+
+        return $this;
+    }
+
+    public function getOpeningDate(): ?\DateTimeInterface
+    {
+        return $this->openingDate;
+    }
+
+    public function setOpeningDate(?\DateTimeInterface $openingDate): self
+    {
+        $this->openingDate = $openingDate;
+
+        return $this;
+    }
+
+    public function getClosingDate(): ?\DateTimeInterface
+    {
+        return $this->closingDate;
+    }
+
+    public function setClosingDate(?\DateTimeInterface $closingDate): self
+    {
+        $this->closingDate = $closingDate;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(?bool $enabled): self
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }
@@ -521,6 +594,18 @@ class Service
             $this->organizations->removeElement($organization);
             $organization->removeService($this);
         }
+
+        return $this;
+    }
+
+    public function getChief(): ?User
+    {
+        return $this->chief;
+    }
+
+    public function setChief(?User $chief): self
+    {
+        $this->chief = $chief;
 
         return $this;
     }
