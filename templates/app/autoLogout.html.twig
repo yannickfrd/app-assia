@@ -1,0 +1,19 @@
+<div id="modal-autoLogout" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAutoLogout" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAutoLogout">Déconnexion automatique</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <p>Atttention, en raison d'une longue inactivité sur cette session, vous allez être automatiquement déconnecté·e. Pour la renouvellement, cliquez sur le bouton.</p>
+            <p class="font-weight-bold">Temps restant : <span id="timer-logout"></span></p>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" id="cancel-logout" class="btn btn-{{ theme_color }} text-white" data-dismiss="modal">Renouveller session</button>
+            </div>
+        </div>
+    </div>
+</div>
