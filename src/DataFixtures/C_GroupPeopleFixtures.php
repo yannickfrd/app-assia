@@ -29,6 +29,11 @@ class C_GroupPeopleFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $this->init(); //
+    }
+
+    protected function init()
+    {
         $users = $this->repo->findAll();
 
         foreach ($users as $user) {
@@ -50,6 +55,7 @@ class C_GroupPeopleFixtures extends Fixture
         }
         $this->manager->flush();
     }
+
 
     // Définit la typologie familiale et le nombre de personnes
     protected function setTypology()

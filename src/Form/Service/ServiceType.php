@@ -51,14 +51,20 @@ class ServiceType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("preAdmission", CheckBoxType::class, [
+                "label_attr" => ["class" => "custom-control-label"],
+                "attr" => ["class" => "custom-control-input checkbox"],
+                "required" => false
+            ])
             ->add("accommodation", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
-                ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
+                "label_attr" => ["class" => "custom-control-label"],
+                "attr" => ["class" => "custom-control-input checkbox"],
+                "required" => false
+            ])
+            ->add("justice", CheckBoxType::class, [
+                "label_attr" => ["class" => "custom-control-label"],
+                "attr" => ["class" => "custom-control-input checkbox"],
+                "required" => false
             ])
             ->add("comment", null, [
                 "attr" => [

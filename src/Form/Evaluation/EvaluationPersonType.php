@@ -3,12 +3,13 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\EvaluationPerson;
+use App\Form\EvalJusticePersonType;
+use Symfony\Component\Form\AbstractType;
 use App\Form\Evaluation\EvalAdmPersonType;
 use App\Form\Evaluation\EvalProfPersonType;
 use App\Form\Evaluation\EvalBudgetPersonType;
 use App\Form\Evaluation\EvalFamilyPersonType;
 use App\Form\Evaluation\EvalSocialPersonType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,6 +21,7 @@ class EvaluationPersonType extends AbstractType
             ->add("evalAdmPerson", EvalAdmPersonType::class)
             ->add("evalBudgetPerson", EvalBudgetPersonType::class)
             ->add("evalFamilyPerson", EvalFamilyPersonType::class)
+            ->add("evalJusticePerson", EvalJusticePersonType::class)
             ->add("evalProfPerson", EvalProfPersonType::class)
             ->add("evalSocialPerson", EvalSocialPersonType::class);
     }

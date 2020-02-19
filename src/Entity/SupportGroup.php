@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SupportGroup
 {
     public const STATUS = [
-        1 => "À venir",
+        1 => "Orientation / Pré-admission",
         2 => "En cours",
         3 => "Suspendu",
         4 => "Terminé",
@@ -29,8 +29,7 @@ class SupportGroup
     private $id;
 
     /**
-     * @ORM\Column(type="date")
-     * @Assert\NotNull(message="La date de début ne doit pas être vide.")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
 
@@ -55,6 +54,12 @@ class SupportGroup
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="referent2Support")
      */
     private $referent2;
+
+    /**
+     * @ORM\Column(type="float", nullable=true, options={"default":1})
+     * @Assert\Range(min = 0, max = 10, minMessage="Le coefficient ne peut être inférieur à 0",  maxMessage="Le coefficient ne peut être supérieur à 10")
+     */
+    private $coefficient = 1;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -126,6 +131,11 @@ class SupportGroup
      * @ORM\OneToMany(targetEntity="App\Entity\EvaluationGroup", mappedBy="supportGroup")
      */
     private $evaluationsGroup;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"})
+     */
+    private $originRequest;
 
     public function __construct()
     {
@@ -205,6 +215,18 @@ class SupportGroup
     public function setReferent2(?User $referent2): self
     {
         $this->referent2 = $referent2;
+
+        return $this;
+    }
+
+    public function getCoefficient(): ?float
+    {
+        return $this->coefficient;
+    }
+
+    public function setCoefficient(?float $coefficient): self
+    {
+        $this->coefficient = $coefficient;
 
         return $this;
     }
@@ -486,6 +508,23 @@ class SupportGroup
             if ($evaluationGroup->getSupportGroup() === $this) {
                 $evaluationGroup->setSupportGroup(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getOriginRequest(): ?OriginRequest
+    {
+        return $this->originRequest;
+    }
+
+    public function setOriginRequest(OriginRequest $originRequest): self
+    {
+        $this->originRequest = $originRequest;
+
+        // set the owning side of the relation if necessary
+        if ($originRequest->getSupportGroup() !== $this) {
+            $originRequest->setSupportGroup($this);
         }
 
         return $this;

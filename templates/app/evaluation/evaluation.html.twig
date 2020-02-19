@@ -2,7 +2,8 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Évaluation sociale | Esperer95.app
+{% block title %}
+Évaluation sociale | Esperer95.app
 {% endblock %}
 
 {% block body %}
@@ -24,6 +25,9 @@
 		<div
 			class="mb-4">
 			{# {% include "app/support/evalSummary.html.twig" %} #}
+			{% if support.service.justice %}
+			{% include "app/evaluation/evaluationJustice.html.twig" %}
+			{% endif %}
 			{% include "app/evaluation/evaluationSocial.html.twig" %}
 			{% include "app/evaluation/evaluationAdm.html.twig" %}
 			{% include "app/evaluation/evaluationFamily.html.twig" %}
@@ -44,7 +48,9 @@
 		{{ form_end(form, {"render_rest": false}) }}
 
 	</div>
+
 {% endblock %}
+
 {% block javascripts %}
 	{{ encore_entry_script_tags("evaluation") }}
 {% endblock javascripts %}

@@ -37,12 +37,12 @@ class EvalSocialPersonType extends AbstractType
                 "help" => "Aide sociale à l'enfance, PJJ…"
             ])
             ->add("familyBreakdown", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_PARTIAL),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("friendshipBreakdown", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_PARTIAL),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

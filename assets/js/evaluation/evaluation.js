@@ -64,7 +64,7 @@ export default class evaluation {
         i = 0;
         document.getElementById("accordion-eval_family").querySelectorAll("button.js-person").forEach(btnElt => {
             new DisplayInputs(evalPerson, i + "_evalFamilyPerson_unbornChild", "select", [1]);
-            new DisplayInputs(evalPerson, i + "_evalFamilyPerson_protectiveMeasure", "select", [1]);
+            new DisplayInputs(evalPerson, i + "_evalFamilyPerson_protectiveMeasure", "select", [1, 3]);
             i++;
         });
         // Evaluation professionnelle individuelle

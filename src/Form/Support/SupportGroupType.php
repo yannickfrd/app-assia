@@ -3,10 +3,12 @@
 namespace App\Form\Support;
 
 use App\Entity\User;
+use App\Entity\Device;
 use App\Entity\Service;
 use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
 use App\Repository\UserRepository;
+use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
@@ -32,13 +34,6 @@ class SupportGroupType extends AbstractType
         $this->data = $options["data"];
 
         $builder
-            ->add("startDate", DateType::class, [
-                "widget" => "single_text",
-            ])
-            ->add("status", ChoiceType::class, [
-                "choices" => Choices::getChoices(SupportGroup::STATUS),
-                "placeholder" => "-- Select --",
-            ])
             ->add("service", EntityType::class, [
                 "class" => Service::class,
                 "choice_label" => "name",
@@ -46,17 +41,27 @@ class SupportGroupType extends AbstractType
                     return $repo->getServicesQueryList($this->currentUser);
                 }
             ])
-            // ->add("device", EntityType::class, [
-            //     "class" => ServiceDevice::class,
-            //     "mapped" => false,
-            //     "choice_label" => "device.name",
-            //     "query_builder" => function (ServiceDeviceRepository $repo) {
-            //         return $repo->createQueryBuilder("sd")
-            //             // ->where("sd.service IN (:services)")
-            //             // ->setParameter("services", $this->currentUser->getServices())
-            //             ->orderBy("sd.device", "ASC");
-            //     }
-            // ])
+            ->add("device", EntityType::class, [
+                "class" => Device::class,
+                "mapped" => false,
+                "choice_label" => "name",
+                "query_builder" => function (DeviceRepository $repo) {
+                    return $repo->createQueryBuilder("d")
+                        ->select("d")
+                        ->leftJoin("d.serviceDevices", "sd")->addSelect("sd")
+                        ->where("sd.service IN (:services)")
+                        ->setParameter("services", $this->currentUser->getServices())
+                        ->orderBy("d.name", "ASC");
+                }
+            ])
+            ->add("status", ChoiceType::class, [
+                "choices" => Choices::getChoices(SupportGroup::STATUS),
+                "placeholder" => "-- Select --",
+            ])
+            ->add("startDate", DateType::class, [
+                "widget" => "single_text",
+                "required" => false
+            ])
             ->add("referent", EntityType::class, [
                 "class" => User::class,
                 "choice_label" => "fullname",

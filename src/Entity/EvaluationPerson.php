@@ -53,6 +53,11 @@ class EvaluationPerson
      */
     private $evalSocialPerson;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\EvalJusticePerson", mappedBy="evaluationPerson", cascade={"persist", "remove"})
+     */
+    private $evalJusticePerson;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,6 +168,23 @@ class EvaluationPerson
         // set the owning side of the relation if necessary
         if ($this !== $evalSocialPerson->getEvaluationPerson()) {
             $evalSocialPerson->setEvaluationPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function getEvalJusticePerson(): ?EvalJusticePerson
+    {
+        return $this->evalJusticePerson;
+    }
+
+    public function setEvalJusticePerson(EvalJusticePerson $evalJusticePerson): self
+    {
+        $this->evalJusticePerson = $evalJusticePerson;
+
+        // set the owning side of the relation if necessary
+        if ($evalJusticePerson->getEvaluationPerson() !== $this) {
+            $evalJusticePerson->setEvaluationPerson($this);
         }
 
         return $this;

@@ -21,7 +21,7 @@ class EvalHousingGroupType extends AbstractType
                 "required" => false
             ])
             ->add("siaoRequest", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -34,7 +34,7 @@ class EvalHousingGroupType extends AbstractType
                 "required" => false
             ])
             ->add("socialHousingRequest", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -51,7 +51,7 @@ class EvalHousingGroupType extends AbstractType
             ->add("citiesWishes")
             ->add("specificities")
             ->add("syplo", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -61,7 +61,7 @@ class EvalHousingGroupType extends AbstractType
                 "required" => false
             ])
             ->add("daloCommission", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -79,7 +79,7 @@ class EvalHousingGroupType extends AbstractType
                 "required" => false
             ])
             ->add("daloTribunalAction", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -143,7 +143,7 @@ class EvalHousingGroupType extends AbstractType
             ->add("otherHelps")
             ->add("hepsPrecision")
             ->add("domiciliation", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

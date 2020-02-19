@@ -18,8 +18,10 @@ class Referent
         6 => "Conseil Départemental",
         7 => "Dispositif asile",
         8 => "Dispositif logement adapté",
-        9 => "Service de tutelle",
-        10 => "Service hospitalier",
+        9 => "ESPERER 95",
+        10 => "Service de tutelle",
+        11 => "Service hospitalier",
+        12 => "Service Justice",
         97 => "Autre",
         99 => "Non renseigné"
     ];
@@ -268,7 +270,6 @@ class Referent
 
         return $this;
     }
-
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

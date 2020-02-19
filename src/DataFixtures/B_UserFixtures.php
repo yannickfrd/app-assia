@@ -35,7 +35,7 @@ class B_UserFixtures extends Fixture
 
         foreach ($serviceUsers as $serviceUser) {
             $serviceUser = $serviceUser;
-            $this->addUser($serviceUser);
+            $this->addUser($serviceUser); //
         }
 
         $this->createSuperAdmin();

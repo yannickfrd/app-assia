@@ -46,7 +46,7 @@ class EvalProfPersonType extends AbstractType
             ->add("employerName")
             ->add("transportMeans")
             ->add("rqth", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

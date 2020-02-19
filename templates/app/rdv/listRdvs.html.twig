@@ -37,15 +37,11 @@
             <div class="col-md-6 mb-1">
                 {% if support is defined %}
                 <a href="{{ path('support_calendar', {'id':support.id}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Vue agenda"><i
-                        class="fas fa-calendar-alt"></class></a>
+                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Vue agenda"><span class="fas fa-calendar-alt"></class></a>
                 {% endif %}
                 <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal"
-                    data-target="#modal-block" data-placement="bottom" title="Créer un nouveau rdv"><span
-                        class="far fa-calendar-plus mr-2"></span>Nouveau rdv</button>
-                <div class="d-inline align-middle">Total :
-                    <span id="count-rdvs">{{ rdvs.getTotalItemCount | number_format(0,'', ' ')}}</span>
-                    rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
+                    data-target="#modal-block" data-placement="bottom" title="Créer un nouveau rdv"><span class="far fa-calendar-plus mr-2"></span>Nouveau rdv</button>
+                <div class="d-inline align-middle">Total : <span id="count-rdvs">{{ rdvs.getTotalItemCount | number_format(0,'', ' ')}}</span> rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
                 </div>
             </div>
             <div class="col-md-6">
@@ -85,10 +81,8 @@
                                 <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
                                 <div class="form-group col-auto my-1 px-1">
                                     <div class="form-group">
-                                        <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><i
-                                                class="fas fa-search"></class></button>
-                                        <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><i
-                                                class="fas fa-eraser"></class></button>
+                                        <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-search"></span></button>
+                                        <button id="js-btn-clear" class="btn btn-secondary ml-2 shadow"><span class="fas fa-eraser"></span></button>
                                     </div>
                                 </div>
                             </div>

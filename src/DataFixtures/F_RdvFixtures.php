@@ -24,20 +24,17 @@ class F_RdvFixtures extends Fixture
 
         foreach ($supports as $support) {
 
-            for ($i = 0; $i < mt_rand(6, 12); $i++) {
+            for ($i = 0; $i < mt_rand(6, 10); $i++) {
 
                 $rdv = new Rdv();
 
-                $content = join($this->faker->paragraphs(mt_rand(0, 3)));
-
-                $rdvCreatedAt = AppFixtures::getDateTimeBeetwen("-3 months", "+3 months");
+                $rdvCreatedAt = AppFixtures::getDateTimeBeetwen("-2 months", "+2 months");
                 $rdvUpdatedAt = $rdvCreatedAt;
 
                 $start = $rdvCreatedAt;
                 $end = $this->faker->dateTimeInInterval($start, "+1 hours");
 
                 $rdv->setTitle($this->faker->sentence($nbWords = mt_rand(5, 10), $variableNbWords = true))
-                    ->setContent($content)
                     ->setStart($start)
                     ->setEnd($end)
                     ->setLocation("Cergy-Pontoise")
