@@ -46,7 +46,9 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
             ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
             ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
+            ->leftJoin("ep.evalJusticePerson", "evalJusticePerson")->addselect("evalJusticePerson")
             ->leftJoin("ep.evalProfPerson", "evalProfPerson")->addselect("evalProfPerson")
+            ->leftJoin("ep.evalSocialPerson", "evalSocialPerson")->addselect("evalSocialPerson")
 
             ->andWhere("eg.supportGroup = :supportGroup")
             ->setParameter("supportGroup", $id)

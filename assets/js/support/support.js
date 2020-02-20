@@ -1,12 +1,11 @@
 import ValidationSupport from "./validationSupport";
 import RemoveSupportPerson from "./removeSupportPerson";
+import CheckChange from "../utils/checkChange";
 
 import "select2";
 import "../utils/maskDeptCode";
 import "../utils/maskPhone";
 
-new ValidationSupport();
-new RemoveSupportPerson();
 
 $("select.multi-select").select2({
     // theme: "bootstrap4",
@@ -22,4 +21,10 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
             spanFaElt.classList.replace("fa-chevron-down", "fa-chevron-right");
         }
     });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    new ValidationSupport();
+    new RemoveSupportPerson();
+    new CheckChange("support_group"); // form name
 });

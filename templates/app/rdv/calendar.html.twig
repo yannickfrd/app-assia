@@ -16,7 +16,7 @@
 			<div class="d-flex flex-row align-items-center justify-content-between mx-2">
 				<div class="d-flex align-items-center mb-3">
 					<h2 class="h2 mr-3">Agenda</h2>
-					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous">
+					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" title="Ajouter un rendez-vous">
 						<span class="far fa-calendar-plus"></span>
 					</button>
 				</div>
@@ -68,13 +68,13 @@
 							{% for j in 0..6 %}
 								{% if j < 5 %}
 									{% set day = start_day |date_modify("+" ~ (j + week * 7) ~ " day") %}
-									<div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}{% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter un rendez-vous">
+									<div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}{% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" title="Ajouter un rendez-vous">
 										<div class="text-dark calendar-day">{{ day| date("d") }}
 											{{ calendar.otherMonth(day) }}
 										</div>
 										{% if day| date("Y-m-d") in rdvs %}
 											{% for rdv in rdvs[day| date("Y-m-d")] %}
-												<a class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Voir le rendez-vous">
+												<a class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" title="Voir le rendez-vous">
 													<span class="rdv-start">{{ rdv.start| date("H:i") }}</span>
 													{% if support is not defined %}
 													<span class="rdv-initiales badge badge-light">{{ rdv.createdBy.initials }}</span>

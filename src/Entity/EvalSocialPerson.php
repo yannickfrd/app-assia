@@ -57,17 +57,6 @@ class EvalSocialPerson
     private $endRightsSocialSecurityDate;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $commentEvalSocialPerson;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\EvaluationPerson", inversedBy="evalSocialPerson", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $evaluationPerson;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $childWelfareBackground;
@@ -112,6 +101,16 @@ class EvalSocialPerson
      */
     private $careSupportType;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentEvalSocialPerson;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\EvaluationPerson", inversedBy="evalSocialPerson", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $evaluationPerson;
 
     public function getId(): ?int
     {

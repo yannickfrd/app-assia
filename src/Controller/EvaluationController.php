@@ -118,6 +118,8 @@ class EvaluationController extends AbstractController
 
         $this->updateBudgetGroup($evaluationGroup);
 
+        $this->manager->persist($evaluationGroup);
+        // dd($evaluationGroup);
         $this->manager->flush();
 
         $this->addFlash("success", "L'évaluation sociale a été mis à jour.");

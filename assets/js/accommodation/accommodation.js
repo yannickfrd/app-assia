@@ -1,4 +1,9 @@
 import DeleteAccommodation from "./deleteAccommodation";
+import CheckChange from "../utils/checkChange";
 import "../utils/maskZipCode";
 
-new DeleteAccommodation();
+
+document.addEventListener("DOMContentLoaded", function () {
+    new DeleteAccommodation();
+    new CheckChange("evaluation_group"); // form name
+});

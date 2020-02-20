@@ -31,7 +31,7 @@ class EvalSocialGroupType extends AbstractType
             ->add("speReducedMobility")
             ->add("speViolenceVictim")
             ->add("speDomViolenceVictim")
-            ->add("speASE")
+            ->add("speChildWelfare")
             ->add("speOther")
             ->add("speOtherPrecision")
             ->add("speComment")

@@ -20,7 +20,7 @@ class EvalJusticePersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("commentEvalJusticePerson", TextareaType::class, [
+            ->add("commentEvalJustice", TextareaType::class, [
                 "label_attr" => ["class" => "sr-only"],
                 "attr" => [
                     "rows" => 4,

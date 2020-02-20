@@ -28,7 +28,7 @@
 <body>
 	<div id="loader" role="status">
 		<span class="fas fa-circle-notch text-{{ theme_color }}"></span>
-		<span class="sr-only">Loading...</span>
+		<span class="sr-only">Chargement...</span>
 	</div>
 
 	<main class="min-vh-100">
@@ -45,12 +45,12 @@
 					{% if is_granted("ROLE_USER") %}
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link text-light " href="{{ path("home") }}">
+							<a class="nav-link text-light" href="{{ path("home") }}">
 								<span class="fas fa-home mr-1"></span>Mon espace
 							</a>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuSupports"
+							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuSupports"
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								Suivis
 							</a>
@@ -64,7 +64,7 @@
 							<a class="nav-link text-light" href="{{ path("calendar") }}">Agenda</a>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuDirectory"
+							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
 								role="button" data-toggle="dropdown" aria-haspopup="true"
 								aria-expanded="false">Répertoire
 							</a>
@@ -77,17 +77,15 @@
 						</li>
 						{% if is_granted("ROLE_ADMIN") %}
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuAdmin"
+							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuAdmin"
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
-								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel
-									utilisateur</a>
+								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel utilisateur</a>
 								{% if is_granted("ROLE_SUPER_ADMIN") %}
 								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
 								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
-								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter d'un
-									dispositif</a>
+								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter d'un dispositif</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{ path("admin_users") }}">Liste des utilisateurs</a>
 								<a class="dropdown-item" href="{{ path("admin_devices") }}">Liste des dispositifs</a>
@@ -160,6 +158,7 @@
 		</div>
 
 	</footer>
+
 {{ encore_entry_script_tags("app") }}
 {% block javascripts %}{% endblock %}
 

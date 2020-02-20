@@ -1,7 +1,10 @@
+import DeleteTr from "../utils/deleteTr";
+import CheckChange from "../utils/checkChange";
+import "../utils/addCollectionWidget";
 import "../utils/maskPhone";
 import "../utils/maskZipCode";
 
-import DeleteTr from "../utils/deleteTr";
-import addCollectionWidget from "../utils/addCollectionWidget";
-
-new DeleteTr("function-table");
+document.addEventListener("DOMContentLoaded", function () {
+    new DeleteTr("function-table");
+    new CheckChange("service"); // form name
+});

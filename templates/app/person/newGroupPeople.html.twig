@@ -10,8 +10,10 @@
 {% endblock %}
 
 {% block modal_footer %}
-<button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau groupe</button>
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+<button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau groupe</button>
+
 {{ form_row(form_new_group._token) }}
 {{ form_end(form_new_group, {"render_rest": false}) }}
+
 {% endblock %}

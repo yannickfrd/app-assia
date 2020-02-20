@@ -12,8 +12,18 @@ require("bootstrap-datepicker");
 // import MessageFlash from "./utils/messageFlash";
 import AjaxRequest from "./utils/ajaxRequest";
 import SearchPerson from "./searchPerson";
-import autoLogout from "./autoLogout";
-import checkSave from "./checkSave";
+import autoLogout from "./utils/autoLogout";
+
+// Requête Ajax
+let ajaxRequest = new AjaxRequest();
+
+$(function () {
+    $("[data-toggle='tooltip']").tooltip();
+});
+
+$(function () {
+    $("[data-toggle='popover']").popover();
+});
 
 // Masque le loader lorsque le DOM est chargé
 window.onload = function () {
@@ -27,22 +37,10 @@ window.onload = function () {
             scrollTop: $(target).height()
         }, 1000);
     });
+
+    // Recherche instannée d'une personne via Ajax
+    new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time
+
+    // Déconnexion automatique de l'utilisateur
+    new autoLogout(ajaxRequest, 20); // minutes
 };
-
-$(function () {
-    $("[data-toggle='tooltip']").tooltip();
-});
-
-$(function () {
-    $("[data-toggle='popover']").popover();
-});
-
-// Requête Ajax
-let ajaxRequest = new AjaxRequest();
-
-// Recherche instannée d'une personne via Ajax
-new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time
-
-// Déconnexion automatique de l'utilisateur
-new autoLogout(ajaxRequest, 20); // minutes
-// new checkSave();

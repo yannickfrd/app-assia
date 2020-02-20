@@ -261,7 +261,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     solidarityAlwAmt: Montant ASS
     speAnimal: Spécificité - Présence d'un animal
     speAnimalName: Spécificité - Précision animal
-    speASE: Spécificité - Prise en charge ASE
+    speChildWelfare: Spécificité - Prise en charge ASE
     specificities: Spécificités à prendre en considération
     speComment: Commentaire sur les spécificités
     speDomViolenceVictim: Spécificité - Femme victime de violence conjugale

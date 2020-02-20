@@ -1,4 +1,8 @@
 import "../utils/maskPhone";
+import CheckChange from "../utils/checkChange";
 import Username from "../security/username";
 
-let username = new Username("user");
+document.addEventListener("DOMContentLoaded", function () {
+    new CheckChange("user_change_info"); // form name
+    new Username("user");
+});

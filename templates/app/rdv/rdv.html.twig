@@ -73,22 +73,21 @@
         <div class="form-group row">
             <div class="col-md-12">{{ form_widget(form.content) }}</div>
         </div>
-        {{ form_row(form._token) }}
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
-                    <input type="submit" id="submit" name="submit" class="btn btn-{{ theme_color }} shadow"
-                        value="Enregistrer">
+                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                 </div>
             </div>
         </div>
+
+        {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
+
     </section>
 </div>
 
 {% endblock %}
 
 {% block javascripts %}
-<!-- <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script> -->
-<!-- {{ encore_entry_script_tags("note") }} -->
 {% endblock javascripts %}

@@ -31,8 +31,8 @@
             </div>
             <input type="hidden" name="_target_path" value="{{ path('security_after_login') }}" />
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <input type="submit" value="Se connecter" id="validation"
-                class="btn btn-lg btn-{{ theme_color }} btn-block mb-4 shadow">
+            <button type="submit" id="send" name="send" class="btn btn-lg btn-{{ theme_color }} btn-block shadow mb-4">Se connecter</button>
+
             <a href="{{ path("security_forgot_password") }}" class="text-{{ theme_color }} mb-4">Mot de passe oublié ?</a>
         </form>
     </section>

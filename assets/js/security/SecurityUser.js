@@ -1,9 +1,14 @@
-import "../utils/maskPhone";
 // import Username from "./username";
 import SeePassword from "./seePassword";
-import addCollectionWidget from "../utils/addCollectionWidget";
 import DeleteTr from "../utils/deleteTr";
+import CheckChange from "../utils/checkChange";
+import "../utils/maskPhone";
+import "../utils/addCollectionWidget";
 
-// let username = new Username("security_user");
-let seePassword = new SeePassword();
-let deleteTr = new DeleteTr("function-table");
+
+document.addEventListener("DOMContentLoaded", function () {
+    // let username = new Username("security_user");
+    new SeePassword();
+    new DeleteTr("function-table");
+    new CheckChange("security_user"); // form name
+});

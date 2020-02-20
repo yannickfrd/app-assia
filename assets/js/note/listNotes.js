@@ -7,16 +7,18 @@ export default class ListNotes {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
-        this.noteElts = document.querySelectorAll(".js-note");
-        this.modalForm = document.querySelector(".modal-content");
-        this.noteContentElt = document.getElementById("note_content");
-        this.editorElt = document.getElementById("editor");
         this.newNoteBtn = document.getElementById("js-new-note");
-        this.formNoteElt = document.querySelector("form[name=note]");
-        this.btnSaveElt = document.getElementById("js-btn-save");
-        this.btnCancelElt = document.getElementById("js-btn-cancel");
-        this.btnDeleteElt = document.getElementById("modal-btn-delete");
-        this.loader = new Loader("#modal-block");
+        this.noteElts = document.querySelectorAll(".js-note");
+
+        this.modalNoteElt = document.getElementById("modal-note");
+        this.formNoteElt = this.modalNoteElt.querySelector("form[name=note]");
+        this.noteContentElt = this.modalNoteElt.querySelector("#note_content");
+        this.editorElt = this.modalNoteElt.querySelector("#editor");
+        this.btnSaveElt = this.modalNoteElt.querySelector("#js-btn-save");
+        this.btnCancelElt = this.modalNoteElt.querySelector("#js-btn-cancel");
+        this.btnDeleteElt = this.modalNoteElt.querySelector("#modal-btn-delete");
+
+        this.loader = new Loader("#modal-note");
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.autoSaveElt = document.getElementById("js-auto-save");
         this.countNotesElt = document.getElementById("count-notes");
@@ -30,7 +32,6 @@ export default class ListNotes {
     init() {
         this.ckEditor();
 
-        console.log(this.modalForm);
         this.newNoteBtn.addEventListener("click", this.newNote.bind(this));
 
         this.noteElts.forEach(noteElt => {
@@ -77,8 +78,8 @@ export default class ListNotes {
 
     // Affiche un formulaire modal vierge
     newNote() {
-        this.modalForm.querySelector("form").action = "/support/" + this.supportId + "/note/new";
-        this.modalForm.querySelector("#note_title").value = "";
+        this.modalNoteElt.querySelector("form").action = "/support/" + this.supportId + "/note/new";
+        this.modalNoteElt.querySelector("#note_title").value = "";
         this.editor.setData("");
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.editorElt.addEventListener("keydown", this.countKeyDown.bind(this));
@@ -91,16 +92,16 @@ export default class ListNotes {
         this.contentNoteElt = noteElt.querySelector(".card-text");
 
         this.cardId = Number(noteElt.id.replace("note-", ""));
-        this.modalForm.querySelector("form").action = "/note/" + this.cardId + "/edit";
+        this.modalNoteElt.querySelector("form").action = "/note/" + this.cardId + "/edit";
 
         this.titleNoteElt = noteElt.querySelector(".card-title");
-        this.modalForm.querySelector("#note_title").value = this.titleNoteElt.textContent;
+        this.modalNoteElt.querySelector("#note_title").value = this.titleNoteElt.textContent;
 
         let typeValue = noteElt.querySelector(".js-note-type").getAttribute("data-value");
-        this.selectOption(this.modalForm.querySelector("#note_type"), typeValue);
+        this.selectOption(this.modalNoteElt.querySelector("#note_type"), typeValue);
 
         let statusValue = noteElt.querySelector(".js-note-status").getAttribute("data-value");
-        this.selectOption(this.modalForm.querySelector("#note_status"), statusValue);
+        this.selectOption(this.modalNoteElt.querySelector("#note_status"), statusValue);
 
         this.editor.setData(this.contentNoteElt.innerHTML);
 
@@ -211,25 +212,25 @@ export default class ListNotes {
     createNote(data) {
         let noteElt = document.createElement("div");
         noteElt.id = "note-" + data.noteId;
-        this.modalForm.querySelector("form").action = "/note/" + data.noteId + "/edit";
+        this.modalNoteElt.querySelector("form").action = "/note/" + data.noteId + "/edit";
         this.btnDeleteElt.classList.replace("d-none", "d-block");
-        let title = this.modalForm.querySelector("#note_title").value;
+        let title = this.modalNoteElt.querySelector("#note_title").value;
 
         noteElt.className = "col-sm-12 col-lg-6 mb-4 js-note";
         noteElt.innerHTML =
             `<div class="card h-100 shadow">
-        <div class="card-header">
-        <h3 class="card-title h5 text-${this.themeColor}">${title}</h3>
-        <span class="js-note-type" data-value="1">${data.type}</span>
-        <span class="js-note-status" data-value="1">(${data.status})</span>
+                <div class="card-header">
+                    <h3 class="card-title h5 text-${this.themeColor}">${title}</h3>
+                    <span class="js-note-type" data-value="1">${data.type}</span>
+                    <span class="js-note-status" data-value="1">(${data.status})</span>
                     <span class="small text-secondary js-note-created">${data.editInfo}</span>
                     <span class="small text-secondary js-note-updated"></span>
                 </div>
-                <div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Modifier la note">
-                <div class="card-text">${this.editor.getData()}</div>
-                <span class="note-fadeout"></span>
+                <div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-note" data-placement="bottom" title="Modifier la note">
+                    <div class="card-text">${this.editor.getData()}</div>
+                    <span class="note-fadeout"></span>
                 </div>
-                </div>`
+            </div>`
 
         let containerNotesElt = document.getElementById("container-notes");
         containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild);
@@ -240,17 +241,17 @@ export default class ListNotes {
 
     // Met à jour la note dans le container
     updateNote(data) {
-        this.titleNoteElt.textContent = this.modalForm.querySelector("#note_title").value;
+        this.titleNoteElt.textContent = this.modalNoteElt.querySelector("#note_title").value;
         this.contentNoteElt.innerHTML = this.editor.getData();
 
         let noteTypeElt = this.noteElt.querySelector(".js-note-type");
         noteTypeElt.textContent = data.type;
 
-        noteTypeElt.setAttribute("data-value", this.getOption(this.modalForm.querySelector("#note_type")));
+        noteTypeElt.setAttribute("data-value", this.getOption(this.modalNoteElt.querySelector("#note_type")));
 
         let noteStatusElt = this.noteElt.querySelector(".js-note-status");
         noteStatusElt.textContent = "(" + data.status + ")";
-        noteStatusElt.setAttribute("data-value", this.getOption(this.modalForm.querySelector("#note_status")));
+        noteStatusElt.setAttribute("data-value", this.getOption(this.modalNoteElt.querySelector("#note_status")));
 
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
     }

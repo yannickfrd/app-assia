@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\EvalSocialPerson;
 use Doctrine\ORM\Mapping as ORM;
+use App\Form\Evaluation\EvalSocialPersonType;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvaluationPersonRepository")
@@ -54,7 +56,7 @@ class EvaluationPerson
     private $evalSocialPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\EvalJusticePerson", mappedBy="evaluationPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\EvalJusticePerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $evalJusticePerson;
 
@@ -172,6 +174,7 @@ class EvaluationPerson
 
         return $this;
     }
+
 
     public function getEvalJusticePerson(): ?EvalJusticePerson
     {

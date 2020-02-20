@@ -1,8 +1,7 @@
 import Evaluation from "./evaluation";
 import "../utils/maskDeptCode";
 import "../utils/maskPhone";
-
-new Evaluation();
+import CheckChange from "../utils/checkChange";
 
 document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
     let spanFaElt = cardHeaderElt.querySelector("span.fa");
@@ -13,4 +12,9 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
             spanFaElt.classList.replace("fa-chevron-down", "fa-chevron-right");
         }
     });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    new Evaluation();
+    new CheckChange("evaluation_group"); // form name
 });

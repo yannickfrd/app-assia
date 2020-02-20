@@ -4,15 +4,15 @@ import Loader from "../utils/loader";
 export default class ListDocuments {
 
     constructor() {
-        this.modalForm = document.querySelector(".modal-content");
-        this.formDocumentElt = document.querySelector("form[name=document]");
-        this.documentNameInput = document.getElementById("document_name");
-        this.documentTypeInput = document.getElementById("document_type");
-        this.documentContentInput = document.getElementById("document_content");
-        this.documentFileInput = document.getElementById("document_file");
-        this.documentFileLabelElt = document.querySelector(".custom-file-label");
-        this.btnSaveElt = document.getElementById("js-btn-save");
-        this.btnDeleteElt = document.getElementById("modal-btn-delete");
+        this.modalDocumentElt = document.getElementById("modal-document");
+        this.formDocumentElt = this.modalDocumentElt.querySelector("form[name=document]");
+        this.documentNameInput = this.modalDocumentElt.querySelector("#document_name");
+        this.documentTypeInput = this.modalDocumentElt.querySelector("#document_type");
+        this.documentContentInput = this.modalDocumentElt.querySelector("#document_content");
+        this.documentFileInput = this.modalDocumentElt.querySelector("#document_file");
+        this.documentFileLabelElt = this.modalDocumentElt.querySelector(".custom-file-label");
+        this.btnSaveElt = this.modalDocumentElt.querySelector("#js-btn-save");
+        this.btnDeleteElt = this.modalDocumentElt.querySelector("#modal-btn-delete");
 
         this.modalConfirmElt = document.getElementById("modal-confirm");
 
@@ -60,11 +60,11 @@ export default class ListDocuments {
 
     // Affiche un formulaire modal vierge
     newDocument() {
-        this.modalForm.querySelector("form").action = "/support/" + this.supportId + "/document/new";
+        this.modalDocumentElt.querySelector("form").action = "/support/" + this.supportId + "/document/new";
         this.documentNameInput.value = "";
         this.selectOption(this.documentTypeInput, null)
         this.documentContentInput.value = "";
-        this.modalForm.querySelector(".js-document-block-file").classList.remove("d-none");
+        this.modalDocumentElt.querySelector(".js-document-block-file").classList.remove("d-none");
         this.documentFileInput.value = null;
         this.documentFileLabelElt.textContent = "Choisir un fichier...";
         this.documentFileLabelElt.classList.remove("small");
@@ -79,7 +79,7 @@ export default class ListDocuments {
         this.contentDocumentElt = documentElt.querySelector(".document-content");
 
         this.documentId = Number(documentElt.id.replace("document-", ""));
-        this.modalForm.querySelector("form").action = "/document/" + this.documentId + "/edit";
+        this.modalDocumentElt.querySelector("form").action = "/document/" + this.documentId + "/edit";
 
         this.nameDocumentElt = documentElt.querySelector(".js-document-name");
         this.documentNameInput.value = this.nameDocumentElt.textContent;
@@ -90,7 +90,7 @@ export default class ListDocuments {
         this.contentDocumentElt = documentElt.querySelector(".js-document-content");
         this.documentContentInput.value = this.contentDocumentElt.textContent;
 
-        this.modalForm.querySelector(".js-document-block-file").classList.add("d-none");
+        this.modalDocumentElt.querySelector(".js-document-block-file").classList.add("d-none");
 
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         this.btnDeleteElt.href = "/document/" + this.documentId + "/delete";
@@ -254,15 +254,15 @@ export default class ListDocuments {
         let size = Math.floor(data.size / 1000) + " Ko";
 
         return `<th scope="row" class="align-middle text-center">
-                <a href="/uploads/documents/${data.path}" target="_blank" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
-            </th>
-            <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
-            <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.typeList}</td>
-            <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
-            <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
-            <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
-            <td class="align-middle text-center">
-                <button data-url="/document/${data.documentId}/delete" class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-block"><span class="fas fa-trash-alt"></span></button>
-            </td>`
+                    <a href="/uploads/documents/${data.path}" target="_blank" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
+                </th>
+                    <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
+                    <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.typeList}</td>
+                    <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
+                    <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
+                    <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
+                    <td class="align-middle text-center">
+                        <button data-url="/document/${data.documentId}/delete" class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-document"><span class="fas fa-trash-alt"></span></button>
+                </td>`
     }
 }

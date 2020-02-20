@@ -77,8 +77,7 @@
                 </div>
                 {% endif %}
                 <div class="mb-4 float-right">
-                    <input type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"
-                        value="{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}">
+                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                 </div>
             </div>
         </div>

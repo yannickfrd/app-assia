@@ -8,7 +8,6 @@ body {
 .container {
     padding-top: 24px;
     // padding-bottom: 1px;
-    // background-color: white;
 }
 
 .min-vh-100 {
@@ -427,6 +426,13 @@ button.btn-outline-secondary a:hover {
 
 
 
+@media (min-width: 992px) {
+
+    // Navbar
+    ul.navbar-nav li.dropdown:hover>.dropdown-menu {
+        display: block;
+    }
+}
 
 // Extra large devices (large desktops, 1200px and up)
 @media (max-width: 1200px) {}
