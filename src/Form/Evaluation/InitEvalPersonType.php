@@ -20,6 +20,7 @@ class InitEvalPersonType extends AbstractType
         $builder
             ->add("paperType", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
+                "attr" => ["class" => "border-warning"],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -44,6 +45,7 @@ class InitEvalPersonType extends AbstractType
                 "required" => false
             ])
             ->add("profStatus", ChoiceType::class, [
+                "attr" => ["class" => "border-warning"],
                 "choices" => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 "placeholder" => "-- Select --",
                 "required" => false
@@ -54,6 +56,7 @@ class InitEvalPersonType extends AbstractType
                 "required" => false
             ])
             ->add("resources", ChoiceType::class, [
+                "attr" => ["class" => "border-warning"],
                 "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false

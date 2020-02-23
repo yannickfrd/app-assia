@@ -9,7 +9,7 @@
 			<a class="btn btn-{{ theme_color }} shadow" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Personnes rattachées au suivi social">
 				<span class="fas fa-users"></class><span class="sr-only">Personnes accompagnées</span>
 			</a>
-			<a class="btn btn-{{ theme_color }} shadow" href="{{ path('support_evaluation', {'id':support.id}) }}" data-placement="bottom" title="Evaluation sociale">
+			<a class="btn btn-{{ theme_color }} shadow" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Evaluation sociale">
 				<span class="fas fa-clipboard"></class><span class="sr-only">Évaluation</span>
 			</a>
 			{% if support.service.accommodation %}
@@ -33,7 +33,7 @@
 
 	<div class="small text-secondary">
 		<p>Créé le {{support.createdAt | date("d/m/Y à H:i") }}{% if support.createdBy %} par {{ support.createdBy.fullname}}{% endif %}
-			<span id="js-social-support-updated">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
+			<span id="js-updatedSupport">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
 

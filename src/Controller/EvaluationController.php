@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\SupportGroup;
+use App\Entity\InitEvalGroup;
 use App\Entity\SupportPerson;
+use App\Entity\InitEvalPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Form\Evaluation\EvaluationGroupType;
@@ -30,9 +30,38 @@ class EvaluationController extends AbstractController
     }
 
     /**
+     * Voir une évaluation sociale
+     * 
+     * @Route("/support/{id}/evaluation", name="support_evaluation_show", methods="GET|POST")
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    public function showEvaluation(int $id, Request $request): Response
+    {
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+
+        $evaluationGroup = $this->repo->findEvaluationById($id);
+
+        if (!$evaluationGroup) {
+            return $this->createEvaluationGroup($supportGroup);
+        }
+
+        $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup);
+        $form->handleRequest($request);
+
+        return $this->render("app/evaluation/evaluation.html.twig", [
+            "support" => $supportGroup,
+            "form" => $form->createView(),
+            "edit_mode" => true
+        ]);
+    }
+
+    /**
      * Modification d'une évaluation sociale
      * 
-     * @Route("/support/{id}/evaluation", name="support_evaluation", methods="GET|POST")
+     * @Route("/support/{id}/evaluation_edit", name="support_evaluation_edit", methods="GET|POST")
      * @param int $id
      * @param Request $request
      * @return Response
@@ -44,26 +73,15 @@ class EvaluationController extends AbstractController
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
-        if (!$evaluationGroup) {
-            return $this->createEvaluationGroup($supportGroup);
-        }
 
         $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateEvaluationGroup($evaluationGroup);
-        }
-        // Vérifie si erreurs
-        if ($form->getErrors(true)) {
-            $this->getErrors($form);
+            return $this->updateEvaluationGroup($evaluationGroup);
         }
 
-        return $this->render("app/evaluation/evaluation.html.twig", [
-            "support" => $supportGroup,
-            "form" => $form->createView(),
-            "edit_mode" => true
-        ]);
+        return $this->errorMessage($form);
     }
 
     /**
@@ -91,7 +109,7 @@ class EvaluationController extends AbstractController
 
         $this->manager->flush();
 
-        return $this->redirectToRoute("support_evaluation", ["id" => $supportGroup->getId()]);
+        return $this->redirectToRoute("support_evaluation_show", ["id" => $supportGroup->getId()]);
     }
 
     /**
@@ -120,7 +138,9 @@ class EvaluationController extends AbstractController
      */
     protected function updateEvaluationGroup(EvaluationGroup $evaluationGroup)
     {
-        $evaluationGroup->getSupportGroup()->setUpdatedAt(new \DateTime())
+        $now = new \DateTime();
+
+        $evaluationGroup->getSupportGroup()->setUpdatedAt($now)
             ->setUpdatedBy($this->getUser());
 
         $this->updateBudgetGroup($evaluationGroup);
@@ -128,7 +148,13 @@ class EvaluationController extends AbstractController
         $this->manager->persist($evaluationGroup);
         $this->manager->flush();
 
-        $this->addFlash("success", "L'évaluation sociale a été mis à jour.");
+        return $this->json([
+            "code" => 200,
+            "alert" => "success",
+            "msg" =>  "Les modifications ont été enregistrées.",
+            "date" => date_format($now, "d/m/Y à H:i"),
+            "user" => $this->getUser()->getFullName()
+        ], 200);
     }
 
     /**
@@ -136,7 +162,7 @@ class EvaluationController extends AbstractController
      * 
      * @param EvaluationGroup $evaluationGroup
      */
-    protected function  updateBudgetGroup(EvaluationGroup $evaluationGroup)
+    protected function updateBudgetGroup(EvaluationGroup $evaluationGroup)
     {
         $resourcesGroupAmt = 0;
         $chargesGroupAmt = 0;
@@ -162,11 +188,22 @@ class EvaluationController extends AbstractController
         $evalBudgetGroup->setBudgetBalanceAmt($resourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt);
     }
 
-    protected function getErrors($form)
+    /**
+     * Retourne un message d'erreur au format JSON
+     * 
+     * @return Response
+     */
+    protected function errorMessage($form): Response
     {
+        $msg = [];
         foreach ($form->getErrors(true) as $error) {
-            $errorOrigin = $error->getOrigin();
-            $this->addFlash("danger", $errorOrigin->getName() . " : " . $error->getMessage());
+            $msg[] = $error->getOrigin()->getName() . " : " . $error->getMessage();
         }
+
+        return $this->json([
+            "code" => 403,
+            "alert" => "danger",
+            "msg" => "Une erreur s'est produite : " . join($msg, " ")
+        ], 200);
     }
 }

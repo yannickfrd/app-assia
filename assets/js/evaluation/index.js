@@ -1,7 +1,11 @@
+import AjaxRequest from "../utils/ajaxRequest";
 import Evaluation from "./evaluation";
+import UpdateEvaluation from "./updateEvaluation";
+import CheckChange from "../utils/checkChange";
 import "../utils/maskDeptCode";
 import "../utils/maskPhone";
-import CheckChange from "../utils/checkChange";
+
+let ajaxRequest = new AjaxRequest();
 
 document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
     let spanFaElt = cardHeaderElt.querySelector("span.fa");
@@ -16,5 +20,6 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
 
 document.addEventListener("DOMContentLoaded", function () {
     new Evaluation();
+    new UpdateEvaluation(ajaxRequest);
     new CheckChange("evaluation_group"); // form name
 });

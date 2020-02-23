@@ -31,7 +31,7 @@
 		<p>
 			Créé le {{support.createdAt | date("d/m/Y à H:i") }}
 			{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
-			<span id="js-social-support-updated">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
+			<span id="js-updatedSupport">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
 	{% else %}
@@ -75,7 +75,7 @@
 				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Voir les personnes rattachées au suivi social">Suivi social</a>
 			</div>
 			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_evaluation', {'id':support.id}) }}" data-placement="bottom" title="Voir l'évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
+				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Voir l'évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
 			</div>
 			{% if support.service.accommodation %}
 			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">

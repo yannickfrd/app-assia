@@ -36,7 +36,6 @@ class EvaluationGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvaluationGroup::class,
-            // "translation_domain" => "forms"
         ]);
     }
 }
