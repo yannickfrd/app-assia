@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
+use App\Entity\EvaluationPerson;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,25 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EvalProfPerson
 {
-    public const STATUS = [
-        1 => "Auto-entrepreneur/euse",
-        2 => "Demandeur/euse d'emploi",
-        3 => "En emploi",
-        4 => "En formation",
-        5 => "En invalidité",
-        6 => "Étudiant·e",
-        7 => "Indépendant·e",
-        8 => "Retraité·e",
-        97 => "Autre",
-        99 => "Non renseigné"
-    ];
 
     public const SCHOOL_LEVEL = [
         1 => "Savoir de base non acquis, illettrisme",
         2 => "Avant 3ème",
         3 => "Fin de scolarité obligatoire",
         4 => "BEP / CAP",
-        5 => "Bac pro.",
+        5 => "Bac pro",
         6 => "Bac général",
         7 => "Bac +2",
         8 => "Bac +3 (licence)",
@@ -36,14 +26,36 @@ class EvalProfPerson
         99 => "Non renseigné"
     ];
 
+    public const PROF_EXPERIENCE = [
+        1 => "Jamais travaillé",
+        2 => "Très peu travaillé",
+        3 => "Alternance emploi et chômage",
+        4 => "A toujours travaillé",
+        99 => "Non renseigné"
+    ];
+
+    public const PROF_STATUS = [
+        1 => "Auto-entrepreneur/euse",
+        2 => "Demandeur/euse d'emploi",
+        3 => "En formation",
+        4 => "En invalidité",
+        5 => "Étudiant·e",
+        6 => "Indépendant·e",
+        7 => "Retraité·e",
+        8 => "Salarié·e",
+        97 => "Autre",
+        99 => "Non renseigné"
+    ];
+
     public const CONTRACT_TYPE = [
-        1 => "Apprentissage",
-        2 => "CDD",
-        3 => "CDI",
-        4 => "Contrat aidé",
-        5 => "Fonction publique",
-        6 => "Intérim",
-        7 => "Stage",
+        1 => "CDD",
+        2 => "CDI",
+        3 => "Contrat aidé",
+        4 => "Contrat d'apprentissage",
+        5 => "Contrat de professionnalisation",
+        6 => "Fonction publique",
+        7 => "Intérim (CTT)",
+        8 => "Stage",
         97 => "Autre",
         99 => "Non renseigné"
     ];
@@ -58,12 +70,17 @@ class EvalProfPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $profStatus;
+    private $schoolLevel;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $schoolLevel;
+    private $profExperience;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $profStatus;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -142,23 +159,6 @@ class EvalProfPerson
         return $this->id;
     }
 
-    public function getProfStatus(): ?int
-    {
-        return $this->profStatus;
-    }
-
-    public function setProfStatus(?int $profStatus): self
-    {
-        $this->profStatus = $profStatus;
-
-        return $this;
-    }
-
-    public function getProfStatusList()
-    {
-        return self::STATUS[$this->profStatus];
-    }
-
     public function getSchoolLevel(): ?int
     {
         return $this->schoolLevel;
@@ -174,6 +174,40 @@ class EvalProfPerson
     public function getSchoolLevelList()
     {
         return self::SCHOOL_LEVEL[$this->schoolLevel];
+    }
+
+    public function getProfExperience(): ?int
+    {
+        return $this->profExperience;
+    }
+
+    public function setProfExperience(?int $profExperience): self
+    {
+        $this->profExperience = $profExperience;
+
+        return $this;
+    }
+
+    public function getProfExperienceList()
+    {
+        return self::PROF_EXPERIENCE[$this->profExperience];
+    }
+
+    public function getProfStatus(): ?int
+    {
+        return $this->profStatus;
+    }
+
+    public function setProfStatus(?int $profStatus): self
+    {
+        $this->profStatus = $profStatus;
+
+        return $this;
+    }
+
+    public function getProfStatusList()
+    {
+        return self::PROF_STATUS[$this->profStatus];
     }
 
     public function getJobType(): ?string
@@ -301,6 +335,12 @@ class EvalProfPerson
 
         return $this;
     }
+
+    public function getRqthList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->rqth];
+    }
+
 
     public function getCommentEvalProf(): ?string
     {

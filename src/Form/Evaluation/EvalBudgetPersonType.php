@@ -16,89 +16,89 @@ class EvalBudgetPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("ressources", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+            ->add("resources", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("ressourcesAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressourcesAmt text-right"],
+            ->add("resourcesAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resourcesAmt text-right"],
                 "required" => false
             ])
-            ->add("disAdultAlw")
-            ->add("disChildAlw")
-            ->add("unemplBenf")
-            ->add("asylumSeekerAlw")
-            ->add("tempWaitingAlw")
-            ->add("familyAlw")
-            ->add("solidarityAlw")
+            ->add("disAdultAllowance")
+            ->add("disChildAllowance")
+            ->add("unemplBenefit")
+            ->add("asylumAllowance")
+            ->add("tempWaitingAllowance")
+            ->add("familyAllowance")
+            ->add("solidarityAllowance")
             ->add("paidTraining")
             ->add("youthGuarantee")
             ->add("maintenance")
             ->add("activityBonus")
-            ->add("pensionBenf")
-            ->add("minIncome")
+            ->add("pensionBenefit")
+            ->add("minimumIncome")
             ->add("salary")
             ->add("ressourceOther", null, ["label_attr" => ["class" => "js-noText"]])
             ->add("ressourceOtherPrecision", null, ["attr" => ["placeholder" => "Autre ressource..."]])
-            ->add("disAdultAlwAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("disAdultAllowanceAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("disChildAlwAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("disChildAllowanceAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("unemplBenfAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("unemplBenefitAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("asylumSeekerAlwAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("asylumAllowanceAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("tempWaitingAlwAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("tempWaitingAllowanceAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("familyAlwAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("familyAllowanceAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("solidarityAlwAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("solidarityAllowanceAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("paidTrainingAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("youthGuaranteeAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("maintenanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("activityBonusAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("pensionBenfAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("pensionBenefitAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
-            ->add("minIncomeAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+            ->add("minimumIncomeAmt", MoneyType::class, [
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("salaryAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("ressourceOtherAmt", MoneyType::class, [
-                "attr" => ["class" => "js-ressources text-right"],
+                "attr" => ["class" => "js-resources text-right"],
                 "required" => false
             ])
             ->add("taxIncomeN1", MoneyType::class, [
@@ -109,7 +109,7 @@ class EvalBudgetPersonType extends AbstractType
                 "attr" => ["class" => "text-right"],
                 "required" => false
             ])
-            ->add("ressourcesComment")
+            ->add("resourcesComment")
             ->add("charges", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
                 "placeholder" => "-- Select --",
@@ -201,7 +201,7 @@ class EvalBudgetPersonType extends AbstractType
                 "required" => false
             ])
             ->add("overIndebtRecord", ChoiceType::class, [
-                "choices" => Choices::getChoices(EvalBudgetPerson::OVER_INDEBT_RECCORD),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

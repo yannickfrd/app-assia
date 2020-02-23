@@ -14,6 +14,7 @@ class ObjectToArray
     protected $nameObject;
     protected $translation;
     protected $evalSocialGroup = null;
+    protected $evalSocialPerson = null;
     protected $evalAdmPerson = null;
     protected $evalFamilyGroup = null;
     protected $evalFamilyPerson = null;
@@ -28,20 +29,15 @@ class ObjectToArray
     }
 
     // Retourne l'objet en array
-    public function getArray($emtpyObject, $object, $nameObject = null, $translation = null)
+    public function getArray($object, $nameObject = null, $translation = null)
     {
         $this->nameObject = $nameObject;
         $this->translation = $translation;
 
-        if ($this->{$this->nameObject}) {
-            $objectKeys = $this->{$this->nameObject};
-        } else {
-            $objectKeys = $this->getKeys($emtpyObject);
-        }
-
-        $objectValues = $this->getValues($object ?? $emtpyObject);
-
-        return array_combine($objectKeys, $objectValues);
+        return array_combine(
+            $this->{$this->nameObject} ? $this->{$this->nameObject} :  $this->getKeys($object),
+            $this->getValues($object)
+        );
     }
 
     // Retourne les clés d'un object
@@ -74,37 +70,30 @@ class ObjectToArray
         $values = [];
 
         foreach ($array as $key => $value) {
-            if (is_int($value)) {
-                $key = explode("\x00", $key);
-                $key = array_pop($key);
-                $method = "get" . ucfirst($key) . "List";
-                if (method_exists($object, $method)) {
-                    $values[] = $object->$method($value);
-                } else {
-                    $values[] = $value;
-                }
-            } elseif (is_object($value)) {
-                if (method_exists($value, "getId")) {
-                    $values[] = $value->getId();
-                } else {
-                    $values[] = Date::PHPToExcel($value->format("Y-m-d"));
-                }
-            } elseif (is_bool($value)) {
-                switch ($value) {
-                    case true:
-                        $values[] = "Oui";
-                        break;
-                    case false:
-                        $values[] = "Non";
-                        break;
-                    default:
-                        $values[] = "";
-                        break;
-                }
-            } else {
-                $values[] = $value;
-            }
+            $values[] = $this->getValue($object, $key, $value);
         }
         return $values;
+    }
+
+    protected function getValue($object, $key, $value)
+    {
+        if (is_int($value)) {
+            $key = explode("\x00", $key);
+            $key = array_pop($key);
+            $method = "get" . ucfirst($key) . "List";
+            if (method_exists($object, $method)) {
+                return  $object->$method($value);
+            }
+        }
+        if (is_object($value)) {
+            if (method_exists($value, "getId")) {
+                return $value->getId();
+            }
+            return Date::PHPToExcel($value->format("Y-m-d"));
+        }
+        if (is_bool($value) && $value) {
+            return "Oui";
+        }
+        return $value;
     }
 }

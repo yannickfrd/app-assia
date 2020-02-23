@@ -38,11 +38,13 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->join("ep.supportPerson", "sp")->addselect("PARTIAL sp.{id, person, head, role}")
             ->join("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
 
+            ->leftJoin("eg.initEvalGroup", "initEvalGroup")->addselect("initEvalGroup")
             ->leftJoin("eg.evalSocialGroup", "evalSocialGroup")->addselect("evalSocialGroup")
             ->leftJoin("eg.evalBudgetGroup", "evalBudgetGroup")->addselect("evalBudgetGroup")
             ->leftJoin("eg.evalFamilyGroup", "evalFamilyGroup")->addselect("evalFamilyGroup")
             ->leftJoin("eg.evalHousingGroup", "evalHousingGroup")->addselect("evalHousingGroup")
 
+            ->leftJoin("ep.initEvalPerson", "initEvalPerson")->addselect("initEvalPerson")
             ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
             ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
             ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")

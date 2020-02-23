@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\SupportGroup;
+use App\Entity\SupportPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
+use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Evaluation\EvaluationGroupType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
@@ -30,12 +33,12 @@ class EvaluationController extends AbstractController
      * Modification d'une évaluation sociale
      * 
      * @Route("/support/{id}/evaluation", name="support_evaluation", methods="GET|POST")
-     * @param SupportGroup $supportGroup
+     * @param int $id
      * @param Request $request
      * @return Response
      */
 
-    public function editEvaluation($id, Request $request): Response
+    public function editEvaluation(int $id, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
@@ -77,9 +80,14 @@ class EvaluationController extends AbstractController
             ->setDate($now)
             ->setCreatedAt($now);
 
+        $supportGroup->setInitEvalGroup(new InitEvalGroup());
+        $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());
+
         $this->manager->persist($evaluationGroup);
 
-        $this->createEvaluationPeople($supportGroup, $evaluationGroup);
+        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+            $this->createEvaluationPerson($supportPerson, $evaluationGroup);
+        };
 
         $this->manager->flush();
 
@@ -87,28 +95,27 @@ class EvaluationController extends AbstractController
     }
 
     /**
-     * Crée l'évaluation sociale de toutes les personnes du groupe
+     * Crée l'évaluation sociale d'une personne du groupe
      *
-     * @param SupportGroup $supportGroup
+     * @param SupportPerson $supportPerson
      * @param EvaluationGroup $evaluationGroup
      */
-    public function createEvaluationPeople(SupportGroup $supportGroup, EvaluationGroup $evaluationGroup)
+    protected function createEvaluationPerson(SupportPerson $supportPerson, EvaluationGroup $evaluationGroup)
     {
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+        $evaluationPerson = new EvaluationPerson();
 
-            $evaluationPerson = new EvaluationPerson();
+        $evaluationPerson->setEvaluationGroup($evaluationGroup)
+            ->setSupportPerson($supportPerson);
 
-            $evaluationPerson->setEvaluationGroup($evaluationGroup)
-                ->setSupportPerson($supportPerson);
+        $supportPerson->setInitEvalPerson(new InitEvalPerson());
+        $evaluationPerson->setInitEvalPerson($supportPerson->getInitEvalPerson());
 
-            $this->manager->persist($evaluationPerson);
-        };
+        $this->manager->persist($evaluationPerson);
     }
 
     /**
      * Met à jour l'évaluation sociale du groupe
      * 
-     * @param SupportGroup $supportGroup
      * @param EvaluationGroup $evaluationGroup
      */
     protected function updateEvaluationGroup(EvaluationGroup $evaluationGroup)
@@ -119,7 +126,6 @@ class EvaluationController extends AbstractController
         $this->updateBudgetGroup($evaluationGroup);
 
         $this->manager->persist($evaluationGroup);
-        // dd($evaluationGroup);
         $this->manager->flush();
 
         $this->addFlash("success", "L'évaluation sociale a été mis à jour.");
@@ -132,7 +138,7 @@ class EvaluationController extends AbstractController
      */
     protected function  updateBudgetGroup(EvaluationGroup $evaluationGroup)
     {
-        $ressourcesGroupAmt = 0;
+        $resourcesGroupAmt = 0;
         $chargesGroupAmt = 0;
         $debtsGroupAmt = 0;
         $monthlyRepaymentAmt = 0;
@@ -140,18 +146,20 @@ class EvaluationController extends AbstractController
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
 
             $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
-            $ressourcesGroupAmt += $evalBudgetPerson->getRessourcesAmt();
-            $chargesGroupAmt += $evalBudgetPerson->getChargesAmt();
-            $debtsGroupAmt += $evalBudgetPerson->getDebtsAmt();
-            $monthlyRepaymentAmt += $evalBudgetPerson->getMonthlyRepaymentAmt();
+            if ($evalBudgetPerson) {
+                $resourcesGroupAmt += $evalBudgetPerson->getResourcesAmt();
+                $chargesGroupAmt += $evalBudgetPerson->getChargesAmt();
+                $debtsGroupAmt += $evalBudgetPerson->getDebtsAmt();
+                $monthlyRepaymentAmt += $evalBudgetPerson->getMonthlyRepaymentAmt();
+            }
         };
 
         $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
-        $evalBudgetGroup->setRessourcesGroupAmt($ressourcesGroupAmt);
+        $evalBudgetGroup->setResourcesGroupAmt($resourcesGroupAmt);
         $evalBudgetGroup->setChargesGroupAmt($chargesGroupAmt);
         $evalBudgetGroup->setDebtsGroupAmt($debtsGroupAmt);
         $evalBudgetGroup->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
-        $evalBudgetGroup->setBudgetBalanceAmt($ressourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt);
+        $evalBudgetGroup->setBudgetBalanceAmt($resourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt);
     }
 
     protected function getErrors($form)

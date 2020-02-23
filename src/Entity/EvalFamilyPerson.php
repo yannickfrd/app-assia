@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -263,7 +264,7 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getChildDependancelist()
+    public function getChildDependanceList()
     {
         return self::CHILD_DEPENDANCE[$this->childDependance];
     }
@@ -278,6 +279,11 @@ class EvalFamilyPerson
         $this->protectiveMeasure = $protectiveMeasure;
 
         return $this;
+    }
+
+    public function getProtectiveMeasureList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->protectiveMeasure];
     }
 
     public function getProtectiveMeasureType(): ?int

@@ -24,6 +24,19 @@ class EvalJusticePerson
         99 => "Non renseigné"
     ];
 
+    public const JUSTICE_ACT = [
+        1 => "PSE",
+        2 => "PSEM",
+        3 => "Libération conditionnelle",
+        4 => "Réduction conditionnelle de peine",
+        5 => "Suivi socio-judiciaire",
+        6 => "Sursis de mise à l'épreuce",
+        7 => "Travail d'intérêt général",
+        97 => "Autre",
+        98 => "Non concerné",
+        99 => "Non renseigné"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -35,6 +48,11 @@ class EvalJusticePerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $justiceStatus;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $justiceAct;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -67,6 +85,23 @@ class EvalJusticePerson
     public function getJusticeStatusList()
     {
         return self::JUSTICE_STATUS[$this->justiceStatus];
+    }
+
+    public function getJusticeAct(): ?int
+    {
+        return $this->justiceAct;
+    }
+
+    public function setJusticeAct(?int $justiceAct): self
+    {
+        $this->justiceAct = $justiceAct;
+
+        return $this;
+    }
+
+    public function getJusticeActList()
+    {
+        return self::JUSTICE_ACT[$this->justiceAct];
     }
 
     public function getCommentEvalJustice(): ?string

@@ -12,23 +12,24 @@ class EvalHousingGroup
 {
 
     public const HOUSING_STATUS = [
-        1 => "A la rue - abri de fortune",
+        001 => "A la rue - abri de fortune",
         400 => "CADA",
-        302 => "Colocation",
-        5 => "Détention",
+        304 => "Colocation",
+        500 => "Détention",
         105 => "Dispositif hivernal",
-        502 => "Dispositif médical (LAM, autre)",
-        3 => "Errance résidentielle",
-        10 => "Hébergé chez des tiers",
-        11 => "Hébergé chez famille",
+        602 => "Dispositif médical (LAM, autre)",
+        003 => "Errance résidentielle",
+        502 => "DLSAP",
+        010 => "Hébergé chez des tiers",
+        011 => "Hébergé chez famille",
         100 => "Hôtel 115",
         101 => "Hôtel (hors 115)",
         102 => "Hébergement d’urgence",
         103 => "Hébergement de stabilisation",
         104 => "Hébergement d’insertion",
-        500 => "Hôpital",
+        600 => "Hôpital",
         401 => "HUDA",
-        501 => "LHSS",
+        601 => "LHSS",
         200 => "Logement adapté - ALT",
         201 => "Logement adapté - FJT",
         202 => "Logement adapté - FTM",
@@ -39,7 +40,10 @@ class EvalHousingGroup
         207 => "Logement foyer",
         300 => "Logement privé",
         301 => "Logement social",
-        2 => "Squat",
+        501 => "Placement extérieur",
+        303 => "Propriétaire d'un logement",
+        302 => "Sous-location",
+        002 => "Squat",
         97 => "Autre",
         99 => "Non renseignée"
     ];
@@ -212,22 +216,22 @@ class EvalHousingGroup
     private $housingExpeComment;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $fsl;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $fslEligibility;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $cafEligibility;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $otherHelps;
 
@@ -330,6 +334,11 @@ class EvalHousingGroup
         return $this;
     }
 
+    public function getSiaoRequestList()
+    {
+        return Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest];
+    }
+
     public function getSiaoRequestDate(): ?\DateTimeInterface
     {
         return $this->siaoRequestDate;
@@ -368,7 +377,7 @@ class EvalHousingGroup
 
     public function getSocialHousingRequestList()
     {
-        return Choices::YES_NO[$this->socialHousingRequest];
+        return Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest];
     }
 
     public function getSocialHousingRequestId(): ?string
@@ -747,48 +756,48 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getFsl(): ?bool
+    public function getFsl(): ?int
     {
         return $this->fsl;
     }
 
-    public function setFsl(?bool $fsl): self
+    public function setFsl(?int $fsl): self
     {
         $this->fsl = $fsl;
 
         return $this;
     }
 
-    public function getFslEligibility(): ?bool
+    public function getFslEligibility(): ?int
     {
         return $this->fslEligibility;
     }
 
-    public function setFslEligibility(?bool $fslEligibility): self
+    public function setFslEligibility(?int $fslEligibility): self
     {
         $this->fslEligibility = $fslEligibility;
 
         return $this;
     }
 
-    public function getCafEligibility(): ?bool
+    public function getCafEligibility(): ?int
     {
         return $this->cafEligibility;
     }
 
-    public function setCafEligibility(?bool $cafEligibility): self
+    public function setCafEligibility(?int $cafEligibility): self
     {
         $this->cafEligibility = $cafEligibility;
 
         return $this;
     }
 
-    public function getOtherHelps(): ?bool
+    public function getOtherHelps(): ?int
     {
         return $this->otherHelps;
     }
 
-    public function setOtherHelps(?bool $otherHelps): self
+    public function setOtherHelps(?int $otherHelps): self
     {
         $this->otherHelps = $otherHelps;
 
@@ -849,7 +858,7 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getHousinglist()
+    public function getHousingList()
     {
         return Choices::YES_NO[$this->housing];
     }
@@ -925,7 +934,7 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getDomiciliationlist()
+    public function getDomiciliationList()
     {
         return Choices::YES_NO[$this->domiciliation];
     }

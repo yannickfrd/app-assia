@@ -2,8 +2,8 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalAdmPerson;
 use App\Form\Utils\Choices;
+use App\Entity\EvalAdmPerson;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,12 +22,7 @@ class EvalAdmPersonType extends AbstractType
             ])
             ->add("country")
             ->add("paper", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
-                "placeholder" => "-- Select --",
-                "required" => false
-            ])
-            ->add("asylumBackground", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -36,13 +31,13 @@ class EvalAdmPersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("rightReside", ChoiceType::class, [
-                "choices" => Choices::getChoices(EvalAdmPerson::RIGHT_TO_RESIDE),
+            ->add("asylumBackground", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("residPermitRequest", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO),
+            ->add("asylumStatus", ChoiceType::class, [
+                "choices" => Choices::getChoices(EvalAdmPerson::RIGHT_TO_RESIDE),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -55,10 +50,11 @@ class EvalAdmPersonType extends AbstractType
                 "required" => false
             ])
             ->add("nbRenewals")
-            ->add("noRightsOpen")
-            ->add("rightWork")
-            ->add("rightSocialBenf")
-            ->add("housingAlw")
+            ->add("workRight", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
             ->add("commentEvalAdmPerson", null, [
                 "label_attr" => ["class" => "sr-only"],
                 "attr" => [

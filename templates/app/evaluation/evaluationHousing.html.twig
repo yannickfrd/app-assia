@@ -1,6 +1,6 @@
 {% extends "model/collapseCard.html.twig" %}
 
-{% set id = "sit-housing" %}
+{% set id = "eval_housing" %}
 
 {% block card_title %}Logement - Hébergement{% endblock %}
 
@@ -61,32 +61,52 @@
     <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingExperience) }}</div>
     <div class="col-md-6 js-housingExperience d-block">{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
 </div>
-<div class="js-housingStatus d-block">
-    <div class="form-group row ">
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-form-label col-sm-4">Aides liées au logement</div>
-                <div class="col-sm-8">
-                    <select id="js-hsgHelps" name="hsgHelps" class="form-control">
-                        <option class="default" value="">-- Ajouter --</option>
-                        <option value="1">FSL</option>
-                        <option value="2">Eligibité aide à l'installation FSL</option>
-                        <option value="3">Eligibililité CAF</option>
-                        <option value="4">Autre(s) aide(s)</option>
-                    </select>
-                </div>
+
+<div class="form-group row js-housingStatus d-block">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-form-label col-sm-4">Type d'aides liées au logement</div>
+            <div class="col-sm-8">
+                <select id="js-hsgHelps" name="hsgHelps" class="form-control">
+                    <option class="default" value="">-- Ajouter --</option>
+                    <option value="fsl">Fonds de solidarité pour le logement (FSL)</option>
+                    <option value="fslEligibility">Eligibilité aide à l'installation FSL</option>
+                    <option value="cafEligibility">Eligibilité CAF</option>
+                    <option value="otherHelps">Autre(s) aide(s)</option>
+                </select>
             </div>
-        </div>
-        <div id="js-hsgHelps-1" class="col-md-2 js-hsgHelps d-block">{{ form_widget(form.evalHousingGroup.fsl) }}</div>
-        <div id="js-hsgHelps-2" class="col-md-2 js-hsgHelps d-block">{{ form_widget(form.evalHousingGroup.fslEligibility) }}
-        </div>
-        <div id="js-hsgHelps-3" class="col-md-2 js-hsgHelps d-block">{{ form_widget(form.evalHousingGroup.cafEligibility) }}
-        </div>
-        <div id="js-hsgHelps-4" class="col-md-2 js-hsgHelps d-block">{{ form_widget(form.evalHousingGroup.otherHelps) }}</div>
-        <div id="js-hsgHelps-5" class="col-md-6 js-otherHelps d-block">{{ form_row(form.evalHousingGroup.hepsPrecision) }}
+            <div class="col-md-12 mt-3">
+                <div class="table-responsive js-_evalSocialPerson_healthProblemType d-block">
+                    <table class="table table-sm table-hover text-dark">
+                        <tbody>
+                            <tr id="js-hsgHelps-fsl" class="js-_evalHousingGroup_hsgHelps d-table-row">
+                                <th scope="row"><div class="sr-only">{{ form_widget(form.evalHousingGroup.fsl) }}</div></th>
+                                <td class="align-middle">Fonds de solidarité pour le logement (FSL)</td>
+                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                            <tr id="js-hsgHelps-fslEligibility" class="js-_evalHousingGroup_hsgHelps d-table-row">
+                                <th scope="row"><div class="sr-only">{{ form_widget(form.evalHousingGroup.fslEligibility) }}</div></th>
+                                <td class="align-middle">Eligibilité aide à l'installation FSL</td>
+                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                            <tr id="js-hsgHelps-cafEligibility" class="js-_evalHousingGroup_hsgHelps d-table-row">
+                                <th scope="row"><div class="sr-only">{{ form_widget(form.evalHousingGroup.cafEligibility) }}</div></th>
+                                <td class="align-middle">Eligibilité CAF</td>
+                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                            <tr id="js-hsgHelps-otherHelps" class="js-_evalHousingGroup_hsgHelps d-table-row">
+                                <th scope="row"><div class="sr-only">{{ form_widget(form.evalHousingGroup.otherHelps) }}</div></th>
+                                <td class="align-middle">{{ form_widget(form.evalHousingGroup.hepsPrecision) }}</td>
+                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>		
         </div>
     </div>
 </div>
+
 <div class="form-group row">
     <div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
     <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>

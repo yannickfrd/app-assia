@@ -45,7 +45,7 @@ class D_SupportGroupFixtures extends Fixture
 
             //Crée des faux suivis sociaux 
             $this->nbSupports = mt_rand(1, 2);
-            for ($i = 1; $i <= $this->nbSupports; $i++) {
+            for ($i = 1; $i <= 1; $i++) {
                 $this->addSupportGroup($i);
 
                 foreach ($this->groupPeople->getRolePerson() as $rolePerson) {

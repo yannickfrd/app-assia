@@ -2,20 +2,15 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Choice;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalBudgePersonRepository")
  */
 class EvalBudgetPerson
 {
-    public const OVER_INDEBT_RECCORD = [
-        1 => "Oui",
-        2 => "Non",
-        3 => "En cours",
-        99 => "Non renseigné"
-    ];
-
     public const SETTLEMENT_PLAN = [
         1 => "Proposé",
         2 => "Accepté",
@@ -34,85 +29,85 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $ressources;
+    private $resources;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $ressourcesAmt;
+    private $resourcesAmt;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $disAdultAlw;
+    private $disAdultAllowance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $disChildAlw;
+    private $disChildAllowance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $unemplBenf;
+    private $unemplBenefit;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $asylumSeekerAlw;
+    private $asylumAllowance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $tempWaitingAlw;
+    private $tempWaitingAllowance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $familyAlw;
+    private $familyAllowance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $solidarityAlw;
+    private $solidarityAllowance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $paidTraining;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $youthGuarantee;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $maintenance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $activityBonus;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $pensionBenf;
+    private $pensionBenefit;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $minIncome;
+    private $minimumIncome;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $salary;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $ressourceOther;
 
@@ -124,37 +119,37 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $disAdultAlwAmt;
+    private $disAdultAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $disChildAlwAmt;
+    private $disChildAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $unemplBenfAmt;
+    private $unemplBenefitAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $asylumSeekerAlwAmt;
+    private $asylumAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $tempWaitingAlwAmt;
+    private $tempWaitingAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $familyAlwAmt;
+    private $familyAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $solidarityAlwAmt;
+    private $solidarityAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -179,12 +174,12 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $pensionBenfAmt;
+    private $pensionBenefitAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $minIncomeAmt;
+    private $minimumIncomeAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -209,7 +204,7 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $ressourcesComment;
+    private $resourcesComment;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -222,57 +217,57 @@ class EvalBudgetPerson
     private $chargesAmt;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $rent;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $electricityGas;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $water;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $insurance;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $mutual;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $taxes;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $transport;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $childcare;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $alimony;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $phone;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $chargeOther;
 
@@ -347,37 +342,37 @@ class EvalBudgetPerson
     private $debts;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtRental;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtConsrCredit;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtMortgage;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtFines;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtTaxDelays;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtBankOverdrafts;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtOther;
 
@@ -442,208 +437,288 @@ class EvalBudgetPerson
         return $this->id;
     }
 
-    public function getRessources(): ?int
+    public function getResources(): ?int
     {
-        return $this->ressources;
+        return $this->resources;
     }
 
-    public function setRessources(?int $ressources): self
+    public function setResources(?int $resources): self
     {
-        $this->ressources = $ressources;
+        $this->resources = $resources;
 
         return $this;
     }
 
-    public function getRessourcesAmt(): ?float
+    public function getResourcesList()
     {
-        return $this->ressourcesAmt;
+        return Choices::YES_NO_IN_PROGRESS[$this->resources];
     }
 
-    public function setRessourcesAmt(?float $ressourcesAmt): self
+    public function getResourcesAmt(): ?float
     {
-        $this->ressourcesAmt = $ressourcesAmt;
+        return $this->resourcesAmt;
+    }
+
+    public function setResourcesAmt(?float $resourcesAmt): self
+    {
+        $this->resourcesAmt = $resourcesAmt;
 
         return $this;
     }
 
-    public function getDisAdultAlw(): ?bool
+    public function getDisAdultAllowance(): ?int
     {
-        return $this->disAdultAlw;
+        return $this->disAdultAllowance;
     }
 
-    public function setDisAdultAlw(?bool $disAdultAlw): self
+    public function setDisAdultAllowance(?int $disAdultAllowance): self
     {
-        $this->disAdultAlw = $disAdultAlw;
+        $this->disAdultAllowance = $disAdultAllowance;
 
         return $this;
     }
 
-    public function getDisChildAlw(): ?bool
+    public function getDisAdultAllowanceList()
     {
-        return $this->disChildAlw;
+        return Choices::YES_NO[$this->disAdultAllowance];
     }
 
-    public function setDisChildAlw(?bool $disChildAlw): self
+    public function getDisChildAllowance(): ?int
     {
-        $this->disChildAlw = $disChildAlw;
+        return $this->disChildAllowance;
+    }
+
+    public function setDisChildAllowance(?int $disChildAllowance): self
+    {
+        $this->disChildAllowance = $disChildAllowance;
 
         return $this;
     }
 
-    public function getUnemplBenf(): ?bool
+    public function getDisChildAllowanceList()
     {
-        return $this->unemplBenf;
+        return Choices::YES_NO[$this->disChildAllowance];
     }
 
-    public function setUnemplBenf(?bool $unemplBenf): self
+    public function getUnemplBenefit(): ?int
     {
-        $this->unemplBenf = $unemplBenf;
+        return $this->unemplBenefit;
+    }
+
+    public function setUnemplBenefit(?int $unemplBenefit): self
+    {
+        $this->unemplBenefit = $unemplBenefit;
 
         return $this;
     }
 
-    public function getAsylumSeekerAlw(): ?bool
+    public function getUnemplBenefitList()
     {
-        return $this->asylumSeekerAlw;
+        return Choices::YES_NO[$this->unemplBenefit];
     }
 
-    public function setAsylumSeekerAlw(?bool $asylumSeekerAlw): self
+    public function getAsylumAllowance(): ?int
     {
-        $this->asylumSeekerAlw = $asylumSeekerAlw;
+        return $this->asylumAllowance;
+    }
+
+    public function setAsylumAllowance(?int $asylumAllowance): self
+    {
+        $this->asylumAllowance = $asylumAllowance;
 
         return $this;
     }
 
-    public function getTempWaitingAlw(): ?bool
+    public function getAsylumAllowanceList()
     {
-        return $this->tempWaitingAlw;
+        return Choices::YES_NO[$this->asylumAllowance];
     }
 
-    public function setTempWaitingAlw(?bool $tempWaitingAlw): self
+    public function getTempWaitingAllowance(): ?int
     {
-        $this->tempWaitingAlw = $tempWaitingAlw;
+        return $this->tempWaitingAllowance;
+    }
+
+    public function setTempWaitingAllowance(?int $tempWaitingAllowance): self
+    {
+        $this->tempWaitingAllowance = $tempWaitingAllowance;
 
         return $this;
     }
 
-    public function getFamilyAlw(): ?bool
+    public function getTempWaitingAllowanceList()
     {
-        return $this->familyAlw;
+        return Choices::YES_NO[$this->tempWaitingAllowance];
     }
 
-    public function setFamilyAlw(?bool $familyAlw): self
+    public function getFamilyAllowance(): ?int
     {
-        $this->familyAlw = $familyAlw;
+        return $this->familyAllowance;
+    }
+
+    public function setFamilyAllowance(?int $familyAllowance): self
+    {
+        $this->familyAllowance = $familyAllowance;
 
         return $this;
     }
 
-    public function getSolidarityAlw(): ?bool
+    public function getFamilyAllowanceList()
     {
-        return $this->solidarityAlw;
+        return Choices::YES_NO[$this->familyAllowanceAmt];
     }
 
-    public function setSolidarityAlw(?bool $solidarityAlw): self
+    public function getSolidarityAllowance(): ?int
     {
-        $this->solidarityAlw = $solidarityAlw;
+        return $this->solidarityAllowance;
+    }
+
+    public function setSolidarityAllowance(?int $solidarityAllowance): self
+    {
+        $this->solidarityAllowance = $solidarityAllowance;
 
         return $this;
     }
 
-    public function getPaidTraining(): ?bool
+    public function getSolidarityAllowanceList()
+    {
+        return Choices::YES_NO[$this->solidarityAllowance];
+    }
+
+    public function getPaidTraining(): ?int
     {
         return $this->paidTraining;
     }
 
-    public function setPaidTraining(?bool $paidTraining): self
+    public function setPaidTraining(?int $paidTraining): self
     {
         $this->paidTraining = $paidTraining;
 
         return $this;
     }
 
-    public function getYouthGuarantee(): ?bool
+    public function getPaidTrainingList()
+    {
+        return Choices::YES_NO[$this->paidTraining];
+    }
+
+    public function getYouthGuarantee(): ?int
     {
         return $this->youthGuarantee;
     }
 
-    public function setYouthGuarantee(?bool $youthGuarantee): self
+    public function setYouthGuarantee(?int $youthGuarantee): self
     {
         $this->youthGuarantee = $youthGuarantee;
 
         return $this;
     }
 
-    public function getMaintenance(): ?bool
+    public function getYouthGuaranteeList()
+    {
+        return Choices::YES_NO[$this->youthGuarantee];
+    }
+
+    public function getMaintenance(): ?int
     {
         return $this->maintenance;
     }
 
-    public function setMaintenance(?bool $maintenance): self
+    public function setMaintenance(?int $maintenance): self
     {
         $this->maintenance = $maintenance;
 
         return $this;
     }
 
-    public function getActivityBonus(): ?bool
+    public function getMaintenanceList()
+    {
+        return Choices::YES_NO[$this->maintenance];
+    }
+
+    public function getActivityBonus(): ?int
     {
         return $this->activityBonus;
     }
 
-    public function setActivityBonus(?bool $activityBonus): self
+    public function setActivityBonus(?int $activityBonus): self
     {
         $this->activityBonus = $activityBonus;
 
         return $this;
     }
 
-    public function getPensionBenf(): ?bool
+    public function getActivityBonusList()
     {
-        return $this->pensionBenf;
+        return Choices::YES_NO[$this->activityBonus];
     }
 
-    public function setPensionBenf(?bool $pensionBenf): self
+    public function getPensionBenefit(): ?int
     {
-        $this->pensionBenf = $pensionBenf;
+        return $this->pensionBenefit;
+    }
+
+    public function setPensionBenefit(?int $pensionBenefit): self
+    {
+        $this->pensionBenefit = $pensionBenefit;
 
         return $this;
     }
 
-    public function getMinIncome(): ?bool
+    public function getPensionBenefitList()
     {
-        return $this->minIncome;
+        return Choices::YES_NO[$this->pensionBenefit];
     }
 
-    public function setMinIncome(?bool $minIncome): self
+    public function getMinimumIncome(): ?int
     {
-        $this->minIncome = $minIncome;
+        return $this->minimumIncome;
+    }
+
+    public function setMinimumIncome(?int $minimumIncome): self
+    {
+        $this->minimumIncome = $minimumIncome;
 
         return $this;
     }
 
-    public function getSalary(): ?bool
+    public function getMinimumIncomeList()
+    {
+        return Choices::YES_NO[$this->minimumIncome];
+    }
+
+    public function getSalary(): ?int
     {
         return $this->salary;
     }
 
-    public function setSalary(?bool $salary): self
+    public function setSalary(?int $salary): self
     {
         $this->salary = $salary;
 
         return $this;
     }
 
-    public function getRessourceOther(): ?bool
+    public function getSalaryList()
+    {
+        return Choices::YES_NO[$this->salary];
+    }
+
+    public function getRessourceOther(): ?int
     {
         return $this->ressourceOther;
     }
 
-    public function setRessourceOther(?bool $ressourceOther): self
+    public function setRessourceOther(?int $ressourceOther): self
     {
         $this->ressourceOther = $ressourceOther;
 
         return $this;
+    }
+
+    public function getRessourceOtherList()
+    {
+        return Choices::YES_NO[$this->ressourceOther];
     }
 
     public function getRessourceOtherPrecision(): ?string
@@ -658,86 +733,86 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDisAdultAlwAmt(): ?float
+    public function getDisAdultAllowanceAmt(): ?float
     {
-        return $this->disAdultAlwAmt;
+        return $this->disAdultAllowanceAmt;
     }
 
-    public function setDisAdultAlwAmt(?float $disAdultAlwAmt): self
+    public function setDisAdultAllowanceAmt(?float $disAdultAllowanceAmt): self
     {
-        $this->disAdultAlwAmt = $disAdultAlwAmt;
+        $this->disAdultAllowanceAmt = $disAdultAllowanceAmt;
 
         return $this;
     }
 
-    public function getDisChildAlwAmt(): ?float
+    public function getDisChildAllowanceAmt(): ?float
     {
-        return $this->disChildAlwAmt;
+        return $this->disChildAllowanceAmt;
     }
 
-    public function setDisChildAlwAmt(?float $disChildAlwAmt): self
+    public function setDisChildAllowanceAmt(?float $disChildAllowanceAmt): self
     {
-        $this->disChildAlwAmt = $disChildAlwAmt;
+        $this->disChildAllowanceAmt = $disChildAllowanceAmt;
 
         return $this;
     }
 
-    public function getUnemplBenfAmt(): ?float
+    public function getUnemplBenefitAmt(): ?float
     {
-        return $this->unemplBenfAmt;
+        return $this->unemplBenefitAmt;
     }
 
-    public function setUnemplBenfAmt(?float $unemplBenfAmt): self
+    public function setUnemplBenefitAmt(?float $unemplBenefitAmt): self
     {
-        $this->unemplBenfAmt = $unemplBenfAmt;
+        $this->unemplBenefitAmt = $unemplBenefitAmt;
 
         return $this;
     }
 
-    public function getAsylumSeekerAlwAmt(): ?float
+    public function getAsylumAllowanceAmt(): ?float
     {
-        return $this->asylumSeekerAlwAmt;
+        return $this->asylumAllowanceAmt;
     }
 
-    public function setAsylumSeekerAlwAmt(?float $asylumSeekerAlwAmt): self
+    public function setAsylumAllowanceAmt(?float $asylumAllowanceAmt): self
     {
-        $this->asylumSeekerAlwAmt = $asylumSeekerAlwAmt;
+        $this->asylumAllowanceAmt = $asylumAllowanceAmt;
 
         return $this;
     }
 
-    public function getTempWaitingAlwAmt(): ?float
+    public function getTempWaitingAllowanceAmt(): ?float
     {
-        return $this->tempWaitingAlwAmt;
+        return $this->tempWaitingAllowanceAmt;
     }
 
-    public function setTempWaitingAlwAmt(?float $tempWaitingAlwAmt): self
+    public function setTempWaitingAllowanceAmt(?float $tempWaitingAllowanceAmt): self
     {
-        $this->tempWaitingAlwAmt = $tempWaitingAlwAmt;
+        $this->tempWaitingAllowanceAmt = $tempWaitingAllowanceAmt;
 
         return $this;
     }
 
-    public function getFamilyAlwAmt(): ?float
+    public function getFamilyAllowanceAmt(): ?float
     {
-        return $this->familyAlwAmt;
+        return $this->familyAllowanceAmt;
     }
 
-    public function setFamilyAlwAmt(?float $familyAlwAmt): self
+    public function setFamilyAllowanceAmt(?float $familyAllowanceAmt): self
     {
-        $this->familyAlwAmt = $familyAlwAmt;
+        $this->familyAllowanceAmt = $familyAllowanceAmt;
 
         return $this;
     }
 
-    public function getSolidarityAlwAmt(): ?float
+    public function getSolidarityAllowanceAmt(): ?float
     {
-        return $this->solidarityAlwAmt;
+        return $this->solidarityAllowanceAmt;
     }
 
-    public function setSolidarityAlwAmt(?float $solidarityAlwAmt): self
+    public function setSolidarityAllowanceAmt(?float $solidarityAllowanceAmt): self
     {
-        $this->solidarityAlwAmt = $solidarityAlwAmt;
+        $this->solidarityAllowanceAmt = $solidarityAllowanceAmt;
 
         return $this;
     }
@@ -790,26 +865,26 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getPensionBenfAmt(): ?float
+    public function getPensionBenefitAmt(): ?float
     {
-        return $this->pensionBenfAmt;
+        return $this->pensionBenefitAmt;
     }
 
-    public function setPensionBenfAmt(?float $pensionBenfAmt): self
+    public function setPensionBenefitAmt(?float $pensionBenefitAmt): self
     {
-        $this->pensionBenfAmt = $pensionBenfAmt;
+        $this->pensionBenefitAmt = $pensionBenefitAmt;
 
         return $this;
     }
 
-    public function getMinIncomeAmt(): ?float
+    public function getMinimumIncomeAmt(): ?float
     {
-        return $this->minIncomeAmt;
+        return $this->minimumIncomeAmt;
     }
 
-    public function setMinIncomeAmt(?float $minIncomeAmt): self
+    public function setMinimumIncomeAmt(?float $minimumIncomeAmt): self
     {
-        $this->minIncomeAmt = $minIncomeAmt;
+        $this->minimumIncomeAmt = $minimumIncomeAmt;
 
         return $this;
     }
@@ -862,14 +937,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getRessourcesComment(): ?string
+    public function getResourcesComment(): ?string
     {
-        return $this->ressourcesComment;
+        return $this->resourcesComment;
     }
 
-    public function setRessourcesComment(?string $ressourcesComment): self
+    public function setResourcesComment(?string $resourcesComment): self
     {
-        $this->ressourcesComment = $ressourcesComment;
+        $this->resourcesComment = $resourcesComment;
 
         return $this;
     }
@@ -886,6 +961,11 @@ class EvalBudgetPerson
         return $this;
     }
 
+    public function getChargesList()
+    {
+        return Choices::YES_NO[$this->charges];
+    }
+
     public function getChargesAmt(): ?float
     {
         return $this->chargesAmt;
@@ -898,132 +978,132 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getRent(): ?bool
+    public function getRent(): ?int
     {
         return $this->rent;
     }
 
-    public function setRent(?bool $rent): self
+    public function setRent(?int $rent): self
     {
         $this->rent = $rent;
 
         return $this;
     }
 
-    public function getElectricityGas(): ?bool
+    public function getElectricityGas(): ?int
     {
         return $this->electricityGas;
     }
 
-    public function setElectricityGas(?bool $electricityGas): self
+    public function setElectricityGas(?int $electricityGas): self
     {
         $this->electricityGas = $electricityGas;
 
         return $this;
     }
 
-    public function getWater(): ?bool
+    public function getWater(): ?int
     {
         return $this->water;
     }
 
-    public function setWater(?bool $water): self
+    public function setWater(?int $water): self
     {
         $this->water = $water;
 
         return $this;
     }
 
-    public function getInsurance(): ?bool
+    public function getInsurance(): ?int
     {
         return $this->insurance;
     }
 
-    public function setInsurance(?bool $insurance): self
+    public function setInsurance(?int $insurance): self
     {
         $this->insurance = $insurance;
 
         return $this;
     }
 
-    public function getMutual(): ?bool
+    public function getMutual(): ?int
     {
         return $this->mutual;
     }
 
-    public function setMutual(?bool $mutual): self
+    public function setMutual(?int $mutual): self
     {
         $this->mutual = $mutual;
 
         return $this;
     }
 
-    public function getTaxes(): ?bool
+    public function getTaxes(): ?int
     {
         return $this->taxes;
     }
 
-    public function setTaxes(?bool $taxes): self
+    public function setTaxes(?int $taxes): self
     {
         $this->taxes = $taxes;
 
         return $this;
     }
 
-    public function getTransport(): ?bool
+    public function getTransport(): ?int
     {
         return $this->transport;
     }
 
-    public function setTransport(?bool $transport): self
+    public function setTransport(?int $transport): self
     {
         $this->transport = $transport;
 
         return $this;
     }
 
-    public function getChildcare(): ?bool
+    public function getChildcare(): ?int
     {
         return $this->childcare;
     }
 
-    public function setChildcare(?bool $childcare): self
+    public function setChildcare(?int $childcare): self
     {
         $this->childcare = $childcare;
 
         return $this;
     }
 
-    public function getAlimony(): ?bool
+    public function getAlimony(): ?int
     {
         return $this->alimony;
     }
 
-    public function setAlimony(?bool $alimony): self
+    public function setAlimony(?int $alimony): self
     {
         $this->alimony = $alimony;
 
         return $this;
     }
 
-    public function getPhone(): ?bool
+    public function getPhone(): ?int
     {
         return $this->phone;
     }
 
-    public function setPhone(?bool $phone): self
+    public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-    public function getChargeOther(): ?bool
+    public function getChargeOther(): ?int
     {
         return $this->chargeOther;
     }
 
-    public function setChargeOther(?bool $chargeOther): self
+    public function setChargeOther(?int $chargeOther): self
     {
         $this->chargeOther = $chargeOther;
 
@@ -1198,84 +1278,89 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDebtRental(): ?bool
+    public function getDebtsList()
+    {
+        return Choices::YES_NO[$this->debts];
+    }
+
+    public function getDebtRental(): ?int
     {
         return $this->debtRental;
     }
 
-    public function setDebtRental(?bool $debtRental): self
+    public function setDebtRental(?int $debtRental): self
     {
         $this->debtRental = $debtRental;
 
         return $this;
     }
 
-    public function getDebtConsrCredit(): ?bool
+    public function getDebtConsrCredit(): ?int
     {
         return $this->debtConsrCredit;
     }
 
-    public function setDebtConsrCredit(?bool $debtConsrCredit): self
+    public function setDebtConsrCredit(?int $debtConsrCredit): self
     {
         $this->debtConsrCredit = $debtConsrCredit;
 
         return $this;
     }
 
-    public function getDebtMortgage(): ?bool
+    public function getDebtMortgage(): ?int
     {
         return $this->debtMortgage;
     }
 
-    public function setDebtMortgage(bool $debtMortgage): self
+    public function setDebtMortgage(int $debtMortgage): self
     {
         $this->debtMortgage = $debtMortgage;
 
         return $this;
     }
 
-    public function getDebtFines(): ?bool
+    public function getDebtFines(): ?int
     {
         return $this->debtFines;
     }
 
-    public function setDebtFines(?bool $debtFines): self
+    public function setDebtFines(?int $debtFines): self
     {
         $this->debtFines = $debtFines;
 
         return $this;
     }
 
-    public function getDebtTaxDelays(): ?bool
+    public function getDebtTaxDelays(): ?int
     {
         return $this->debtTaxDelays;
     }
 
-    public function setDebtTaxDelays(?bool $debtTaxDelays): self
+    public function setDebtTaxDelays(?int $debtTaxDelays): self
     {
         $this->debtTaxDelays = $debtTaxDelays;
 
         return $this;
     }
 
-    public function getDebtBankOverdrafts(): ?bool
+    public function getDebtBankOverdrafts(): ?int
     {
         return $this->debtBankOverdrafts;
     }
 
-    public function setDebtBankOverdrafts(?bool $debtBankOverdrafts): self
+    public function setDebtBankOverdrafts(?int $debtBankOverdrafts): self
     {
         $this->debtBankOverdrafts = $debtBankOverdrafts;
 
         return $this;
     }
 
-    public function getDebtOther(): ?bool
+    public function getDebtOther(): ?int
     {
         return $this->debtOther;
     }
 
-    public function setDebtOther(?bool $debtOther): self
+    public function setDebtOther(?int $debtOther): self
     {
         $this->debtOther = $debtOther;
 
@@ -1330,12 +1415,12 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getOverIndebtRecord(): ?float
+    public function getOverIndebtRecord(): ?int
     {
         return $this->overIndebtRecord;
     }
 
-    public function setOverIndebtRecord(?float $overIndebtRecord): self
+    public function setOverIndebtRecord(?int $overIndebtRecord): self
     {
         $this->overIndebtRecord = $overIndebtRecord;
 
@@ -1344,7 +1429,7 @@ class EvalBudgetPerson
 
     public function getOverIndebtRecordList()
     {
-        return self::OVER_INDEBT_RECCORD[$this->overIndebtRecord];
+        return Choices::YES_NO_IN_PROGRESS[$this->overIndebtRecord];
     }
 
     public function getOverIndebtRecordDate(): ?\DateTimeInterface
@@ -1359,12 +1444,12 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getSettlementPlan(): ?float
+    public function getSettlementPlan(): ?int
     {
         return $this->settlementPlan;
     }
 
-    public function setSettlementPlan(?float $settlementPlan): self
+    public function setSettlementPlan(?int $settlementPlan): self
     {
         $this->settlementPlan = $settlementPlan;
 
@@ -1376,16 +1461,21 @@ class EvalBudgetPerson
         return self::SETTLEMENT_PLAN[$this->settlementPlan];
     }
 
-    public function getMoratorium(): ?float
+    public function getMoratorium(): ?int
     {
         return $this->moratorium;
     }
 
-    public function setMoratorium(?float $moratorium): self
+    public function setMoratorium(?int $moratorium): self
     {
         $this->moratorium = $moratorium;
 
         return $this;
+    }
+
+    public function getMoratoriumList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->moratorium];
     }
 
     public function getEndRightsDate(): ?\DateTimeInterface

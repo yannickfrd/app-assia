@@ -3,12 +3,13 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\EvaluationGroup;
+use App\Form\InitEvalGroupType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\Evaluation\EvalBudgetGroupType;
 use App\Form\Evaluation\EvalFamilyGroupType;
 use App\Form\Evaluation\EvalSocialGroupType;
 use App\Form\Evaluation\EvalHousingGroupType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -18,6 +19,7 @@ class EvaluationGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add("initEvalGroup", InitEvalGroupType::class)
             ->add("evalSocialGroup", EvalSocialGroupType::class)
             ->add("evalFamilyGroup", EvalFamilyGroupType::class)
             ->add("evalBudgetGroup", EvalBudgetGroupType::class)
@@ -34,7 +36,7 @@ class EvaluationGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvaluationGroup::class,
-            "translation_domain" => "forms"
+            // "translation_domain" => "forms"
         ]);
     }
 }

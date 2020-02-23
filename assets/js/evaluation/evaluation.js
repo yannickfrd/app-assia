@@ -5,6 +5,7 @@ export default class evaluation {
 
     constructor() {
         this.selectedOptionElt;
+        this.evalBudgetElt = document.getElementById("accordion-parent-eval_budget");
         this.init();
     }
 
@@ -13,16 +14,14 @@ export default class evaluation {
         let prefix;
         // Evaluation sociale
         prefix = $evalGroup + "evalSocialGroup_";
-        new DisplayInputs(prefix, "speAnimal", "checkbox");
-        new DisplayInputs(prefix, "speOther", "checkbox");
-        this.editElt("", "evalSocialGroup_specifity", "d-block");
+        new DisplayInputs(prefix, "animal", "select", [1]);
         // Evaluation familiale
         prefix = $evalGroup + "evalFamilyGroup_";
         new DisplayInputs(prefix, "famlReunification", "select", [1, 3, 4, 5]);
         prefix = $evalGroup + "evalHousingGroup_";
         // Evaluation liée au logement
         // new DisplayInputs(prefix, "housingAccessType", "select", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        new DisplayInputs(prefix, "housingStatus", "select", [200, 201, 202, 203, 204, 205, 206, 208, 300, 301]);
+        new DisplayInputs(prefix, "housingStatus", "select", [200, 201, 202, 203, 204, 205, 206, 207, 300, 301, 302, 303, 304]);
         new DisplayInputs(prefix, "siaoRequest", "select", [1]);
         new DisplayInputs(prefix, "socialHousingRequest", "select", [1]);
         new DisplayInputs(prefix, "syplo", "select", [1]);
@@ -34,22 +33,26 @@ export default class evaluation {
         new DisplayInputs(prefix, "housingExperience", "select", [1]);
         new DisplayInputs(prefix, "housing", "select", [1]);
         new DisplayInputs(prefix, "domiciliation", "select", [1]);
-        new DisplayInputs(prefix, "otherHelps", "checkbox");
-        this.editElt("", "hsgHelps", "d-block");
+        this.editElt("", "hsgHelps", "d-table-row");
+        this.selectTrElts("eval_housing", "evalHousingGroup", "", "hsgHelps");
 
         // Evaluation budgétaire
-        this.editAmtPers("ressources");
+        this.editAmtPers("resources");
         this.editAmtPers("charges");
         this.editAmtPers("debts");
         this.editAmtPers("repayment");
 
         let evalPerson = "evaluation_group_evaluationPeople_";
         let i = 0; // index person
-        // Evaluation administrative individuelle
-        document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(btnElt => {
-            new DisplayInputs(evalPerson, i + "_evalAdmPerson_nationality", "select", [2, 3, 4]);
-            new DisplayInputs(evalPerson, i + "_evalAdmPerson_paper", "select", [1]);
-            this.editElt(i, "_evalAdmPerson_open_rights", "d-block");
+        // Evaluation situation initiale individuelle
+        document.getElementById("accordion-init_eval").querySelectorAll("button.js-person").forEach(btnElt => {
+            new DisplayInputs(evalPerson, i + "_initEvalPerson_rightSocialSecurity", "select", [1, 3]);
+            new DisplayInputs(evalPerson, i + "_initEvalPerson_profStatus", "select", [3, 5, 8]);
+            new DisplayInputs(evalPerson, i + "_initEvalPerson_resources", "select", [1, 3]);
+            new DisplayInputs(evalPerson, i + "_initEvalPerson_debts", "select", [1]);
+            this.editElt(i, "_initEvalPerson_resources_type", "d-table-row");
+            this.selectTrElts("init_eval", "initEvalPerson", i, "resources_type");
+            this.editAmt(evalPerson, "init_eval", "initEvalPerson", i, "resources");
             i++;
         });
         // Evaluation sociale individuelle
@@ -58,6 +61,18 @@ export default class evaluation {
             new DisplayInputs(evalPerson, i + "_evalSocialPerson_rightSocialSecurity", "select", [1, 3]);
             new DisplayInputs(evalPerson, i + "_evalSocialPerson_healthProblem", "select", [1]);
             new DisplayInputs(evalPerson, i + "_evalSocialPerson_careSupport", "select", [1]);
+            new DisplayInputs(evalPerson, i + "_evalSocialPerson_violenceVictim", "select", [1]);
+            this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row");
+            this.selectTrElts("eval_social", "evalSocialPerson", i, "healthProblemType");
+            i++;
+        });
+        // Evaluation administrative individuelle
+        i = 0;
+        document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(btnElt => {
+            new DisplayInputs(evalPerson, i + "_evalAdmPerson_nationality", "select", [2, 3, 4]);
+            new DisplayInputs(evalPerson, i + "_evalAdmPerson_paper", "select", [1, 3]);
+            new DisplayInputs(evalPerson, i + "_evalAdmPerson_paperType", "select", [20, 21, 22, 30, 31, 97]);
+            new DisplayInputs(evalPerson, i + "_evalAdmPerson_asylumBackground", "select", [1]);
             i++;
         });
         // Evaluation familiale individuelle
@@ -70,24 +85,25 @@ export default class evaluation {
         // Evaluation professionnelle individuelle
         i = 0;
         document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").forEach(btnElt => {
-            new DisplayInputs(evalPerson, i + "_evalProfPerson_profStatus", "select", [2, 3]);
+            new DisplayInputs(evalPerson, i + "_evalProfPerson_profStatus", "select", [3, 5, 8]);
             new DisplayInputs(evalPerson, i + "_evalProfPerson_rqth", "select", [1]);
             i++;
         });
         // Evaluation budgétaire individuelle
         i = 0;
-        document.getElementById("accordion-eval_budget").querySelectorAll("button.js-person").forEach(btnElt => {
-            new DisplayInputs(evalPerson, i + "_evalBudgetPerson_ressources", "select", [1]);
+        document.getElementById("accordion-" + "eval_budget").querySelectorAll("button.js-person").forEach(btnElt => {
+            new DisplayInputs(evalPerson, i + "_evalBudgetPerson_resources", "select", [1, 3]);
             new DisplayInputs(evalPerson, i + "_evalBudgetPerson_charges", "select", [1]);
             new DisplayInputs(evalPerson, i + "_evalBudgetPerson_debts", "select", [1]);
             new DisplayInputs(evalPerson, i + "_evalBudgetPerson_overIndebtRecord", "select", [1]);
-            this.editElt(i, "_evalBudgetPerson_ressources_type", "d-table-row");
+            this.editElt(i, "_evalBudgetPerson_resources_type", "d-table-row");
             this.editElt(i, "_evalBudgetPerson_charges_type", "d-table-row");
-            this.editElt(i, "_evalBudgetPerson_debts_type", "d-block");
-            this.selectTrElts(i, "ressources_type");
-            this.selectTrElts(i, "charges_type");
-            this.editAmt(evalPerson, i, "ressources");
-            this.editAmt(evalPerson, i, "charges");
+            this.editElt(i, "_evalBudgetPerson_debts_type", "d-table-row");
+            this.selectTrElts("eval_budget", "evalBudgetPerson", i, "resources_type");
+            this.selectTrElts("eval_budget", "evalBudgetPerson", i, "charges_type");
+            this.selectTrElts("eval_budget", "evalBudgetPerson", i, "debts_type");
+            this.editAmt(evalPerson, "eval_budget", "evalBudgetPerson", i, "resources");
+            this.editAmt(evalPerson, "eval_budget", "evalBudgetPerson", i, "charges");
             i++;
         });
 
@@ -102,20 +118,20 @@ export default class evaluation {
     // Masque ou affiche un élement
     editElt(i, eltId, display) {
         let selectElt = document.getElementById("js-" + i + eltId);
-        let checkboxElts = document.querySelectorAll(".js-" + i + eltId);
+        let inputElts = document.querySelectorAll(".js-" + i + eltId);
         selectElt.addEventListener("input", this.addOption.bind(this, selectElt, i, eltId, display));
-        checkboxElts.forEach(checkbox => {
-            checkbox.addEventListener("click", function () {
-                this.displayNone(checkbox, display);
+        inputElts.forEach(inputElt => {
+            inputElt.addEventListener("click", function () {
+                this.displayNone(inputElt, display);
             }.bind(this));
-            this.displayNone(checkbox, display);
+            this.displayNone(inputElt, display);
         })
     }
 
     // Masque l'affichage de l'input
-    displayNone(checkbox, display) {
-        if (!checkbox.querySelector("input").checked) {
-            checkbox.classList.replace(display, "d-none");
+    displayNone(inputElt, display) {
+        if (inputElt.querySelector("input").value != 1) {
+            inputElt.classList.replace(display, "d-none");
         }
     }
 
@@ -139,59 +155,49 @@ export default class evaluation {
         optionElts.forEach(option => {
             if (option.selected) {
                 this.selectedOptionElt = document.getElementById("js-" + i + eltId + "-" + option.value);
-                this.selectedOptionElt.querySelector("input").checked = "checked";
+                this.selectedOptionElt.querySelector("input").value = 1;
                 this.selectedOptionElt.classList.replace("d-none", display);
-                if (this.selectedOptionElt.id === "js-evalSocialGroup_specifity-1") {
-                    new DisplayInputs("support_group_evalSocialGroup_", "speAnimal", "checkbox");
-                }
-                if (this.selectedOptionElt.id === "js-evalSocialGroup_specifity-98") {
-                    new DisplayInputs("support_group_evalSocialGroup_", "speOther", "checkbox");
-                }
             }
         });
-        // Replace le select sur l'option par défaut
+        // Remplace le select sur l'option par défaut
         window.setTimeout(function () {
             selectElt.querySelector("option").selected = "selected";
-            if (display === "d-table-row") {
-                this.selectedOptionElt.querySelector("input[type='text']").focus();
+            let inputTextElt = this.selectedOptionElt.querySelector("input[type='text']");
+            if (display === "d-table-row" && inputTextElt) {
+                inputTextElt.focus();
             }
         }.bind(this), 200);
     }
 
-    // Sélectionn toutes les ligne d'un tableau
-    selectTrElts(i, type) {
-        let trElts = document.querySelectorAll(".js-" + i + "_evalBudgetPerson_" + type);
+    // Sélectionne toutes les lignes d'un tableau
+    selectTrElts(collapseId, entity, i, type) {
+        let trElts = document.querySelectorAll(".js-" + i + "_" + entity + "_" + type);
         trElts.forEach(trElt => {
-            let labelElt = trElt.querySelector("label");
-            if (labelElt && !labelElt.classList.contains("js-noText")) {
-                trElt.querySelector("td").innerHTML += labelElt.textContent;
-            }
             trElt.querySelector("button.js-remove").addEventListener("click", function (e) {
                 e.preventDefault();
-                this.deleteTr(trElt, i);
+                this.deleteTr(collapseId, entity, i, trElt);
             }.bind(this));
         });
     }
 
     // Supprime la ligne correspondant dans le tableau
-    deleteTr(trElt, i) {
-        let checkboxElt = trElt.querySelector("input[type='checkbox']");
-        checkboxElt.removeAttribute("checked");
-        checkboxElt.value = "0";
-        trElt.querySelectorAll("input[type='text']").forEach(inputElt => {
+    deleteTr(collapseId, entity, i, trElt) {
+        trElt.querySelectorAll("input").forEach(inputElt => {
             inputElt.value = null;
         });
         trElt.classList.replace("d-table-row", "d-none");
-        this.updateSumAmt(i, "ressources");
-        this.updateSumAmt(i, "charges");
+        if (entity === "evalBudgetPerson") {
+            this.updateSumAmt(collapseId, entity, i, "resources");
+            this.updateSumAmt(collapseId, entity, i, "charges");
+        }
     }
 
     // Met à jour la somme des montants après la saisie d'un input
-    editAmt(prefix, i, type) {
-        let inputElts = document.getElementById("collapse-eval_budget-" + i).querySelectorAll("input.js-" + type);
+    editAmt(prefix, collapseId, entity, i, type) {
+        let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type);
         inputElts.forEach(inputElt => {
             inputElt.addEventListener("input", function () {
-                document.getElementById(prefix + i + "_evalBudgetPerson_" + type + "Amt").value = this.getSumAmts(inputElts);
+                document.getElementById(prefix + i + "_" + entity + "_" + type + "Amt").value = this.getSumAmts(inputElts);
                 this.updateAmtGroup(type);
             }.bind(this));
         });
@@ -210,35 +216,36 @@ export default class evaluation {
     }
 
     // Met à jour la somme des montants de la personne
-    updateSumAmt(i, type) {
-        let inputElts = document.getElementById("collapse-eval_budget-" + i).querySelectorAll("input.js-" + type);
-        document.getElementById("support_group_supportPerson_" + i + "_evalBudgetPerson_" + type + "Amt").value = this.getSumAmts(inputElts);
+    updateSumAmt(collapseId, entity, i, type) {
+        let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type);
+        document.getElementById("evaluation_group_evaluationPeople_" + i + "_" + entity + "_" + type + "Amt").value = this.getSumAmts(inputElts);
+        this.updateAmtGroup(type);
     }
 
     // Met à jour le montant total du groupe lorsque modification des montants individuels
     editAmtPers(type) {
-        let amountElts = document.querySelectorAll(".js-" + type + "Amt");
-        amountElts.forEach(amountElt => {
+        this.evalBudgetElt.querySelectorAll(".js-" + type + "Amt").forEach(amountElt => {
             amountElt.addEventListener("input", this.updateAmtGroup.bind(this, type));
         });
     }
 
-    // Met à jour le montant total du groupe (ressources, charges ou dettes)
+    // Met à jour le montant total du groupe (resources, charges ou dettes)
     updateAmtGroup(type) {
         let amountGroup = 0;
-        let amountElts = document.querySelectorAll(".js-" + type + "Amt");
-        amountElts.forEach(amountElt => {
+        this.evalBudgetElt.querySelectorAll(".js-" + type + "Amt").forEach(amountElt => {
             let amountInt = parseInt(amountElt.value);
             if (amountInt > 0) {
                 amountGroup += amountInt;
             }
         });
+
         document.getElementById(type + "GroupAmt").textContent = amountGroup;
 
-        let ressourcesGroupAmt = parseInt(document.getElementById("ressourcesGroupAmt").textContent);
+        let resourcesGroupAmt = parseInt(document.getElementById("resourcesGroupAmt").textContent);
         let chargesGroupAmt = parseInt(document.getElementById("chargesGroupAmt").textContent);
         let repaymentGroupAmt = parseInt(document.getElementById("repaymentGroupAmt").textContent);
-        let budgetBalanceGroupAmt = ressourcesGroupAmt - chargesGroupAmt - repaymentGroupAmt;
+        let budgetBalanceGroupAmt = resourcesGroupAmt - chargesGroupAmt - repaymentGroupAmt;
+
         document.getElementById("budgetBalanceGroupAmt").textContent = budgetBalanceGroupAmt;
     }
 }

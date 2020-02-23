@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Security\CurrentUserService;
+use App\Form\Model\SupportGroupSearch;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -38,10 +39,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
             ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
-            // ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
-            // ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
-            // ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
-            // ->leftJoin("sg.evaluationsGroup", "eg")->addselect("PARTIAL eg.{id}")
+            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name, accommodation}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
@@ -50,7 +48,41 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter("id", $id)
 
             ->getQuery()
-            // ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Donne le suivi social avec le groupe et les personnes rattachées
+     *
+     * @param int $id
+     * @return SupportGroup|null
+     */
+    public function findFullSupportById(int $id): ?SupportGroup
+    {
+        return $this->createQueryBuilder("sg")
+            ->select("sg")
+            ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
+            ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
+            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
+            ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
+
+            ->leftJoin("sg.accommodationGroups", "ag")->addselect("PARTIAL ag.{id}")
+            ->leftJoin("sg.evaluationsGroup", "eg")->addselect("PARTIAL eg.{id}")
+            ->leftJoin("sg.rdvs", "rdvs")->addselect("PARTIAL rdvs.{id}")
+            ->leftJoin("sg.notes", "notes")->addselect("PARTIAL notes.{id}")
+            ->leftJoin("sg.documents", "docs")->addselect("PARTIAL docs.{id}")
+
+            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name, accommodation}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+
+            ->andWhere("sg.id = :id")
+            ->setParameter("id", $id)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -59,7 +91,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      * 
      * @return Query
      */
-    public function findAllSupportsQuery($supportGroupSearch): Query
+    public function findAllSupportsQuery(SupportGroupSearch $supportGroupSearch): Query
     {
         $query =  $this->createQueryBuilder("sg")
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
@@ -75,7 +107,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
-    public function getSupports($supportGroupSearch)
+    public function getSupports(SupportGroupSearch $supportGroupSearch)
     {
         $query =  $this->createQueryBuilder("sg")
             ->select("sg")
@@ -94,7 +126,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    protected function filter($query, $supportGroupSearch)
+    protected function filter($query, SupportGroupSearch $supportGroupSearch)
     {
         if (!$this->currentUserService->isRole("ROLE_SUPER_ADMIN")) {
             // if ($this->currentUserService->isRole("ROLE_ADMIN")) {

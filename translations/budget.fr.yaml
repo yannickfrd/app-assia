@@ -1,12 +1,12 @@
-Eval budget person: Budget groupe
-Eval budget group: Budget personne
+Eval budget person: Budget
+Eval budget group: Budget
 -- Select --: -- Sélectionner --
 Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
 Alimony amt: Montant Pension alimentaire
 Alimony: Pension alimentaire
-Asylum seeker alw amt: Montant ADA
-Asylum seeker alw: ADA
+Asylum allowance amt: Montant ADA
+Asylum allowance: ADA
 Charge comment: Commentaire sur les charges
 Charge other amt: Montant autre charge
 Charge other precision: Précision Autre charge
@@ -37,21 +37,21 @@ Debt unpaid maint amt: Montant pension alimentaire non réglée
 Debt unpaid maint: Pension alimentaire non réglée
 Debts amt: Montant des dettes
 Debts: Dettes
-Dis adult alw amt: Montant AAH
-Dis adult alw: AAH
-Dis child alw amt: Montant AAEH
-Dis child alw: AEEH
+Dis adult allowance amt: Montant AAH
+Dis adult allowance: AAH
+Dis child allowance amt: Montant AAEH
+Dis child allowance: AEEH
 Electricity gas amt: Montant électricité / Gaz
 Electricity gas: Electricité / Gaz
 End rights date: Date de fin de droits
-Family alw amt: Montant allocations familiales
-Family alw: Allocations familiales
+Family allowance amt: Montant allocations familiales
+Family allowance: Allocations familiales
 Insurance amt: Montant assurance(s)
 Insurance: Assurance(s)
 Maintenance amt: Montant pension alimentaire
 Maintenance: Pension alimentaire
-Min income amt: Montant RSA
-Min income: RSA
+Minimum income amt: Montant RSA
+Minimum income: RSA
 Monthly repayment amt: Montant du remboursement mensuel
 Moratorium: Moratoire
 Mutual amt: Montant mutuelle(s)
@@ -60,8 +60,8 @@ Over indebt record date: Date de dépôt du dossier
 Over indebt record: Dossier de surendettement
 Paid training amt: Montant formation rémunérée
 Paid training: Formation rémunérée
-Pension benf amt: Montant retraire
-Pension benf: Retraite
+Pension benefit amt: Montant retraire
+Pension benefit: Retraite
 Phone amt: Montant téléphone
 Phone: Téléphone
 Rent amt: Montant loyer
@@ -70,25 +70,25 @@ Resources: Ressources
 Ressource other amt: Montant autre ressource
 Ressource other precision: Précision autres revenus
 Ressource other: Autre ressource
-Ressources amt: Montant total des ressources
-Ressources comment: Commentaire sur les ressources
+Resources amt: Montant total des ressources
+Resources comment: Commentaire sur les ressources
 Salary amt: Montant salaire
 Salary: Salaire
 Settlement plan: Plan d'apurement
-Solidarity alw amt: Montant ASS
-Solidarity alw: ASS
+Solidarity allowance amt: Montant ASS
+Solidarity allowance: ASS
 Tax income n1: Revenu fiscal n-1
 Tax income n2: Revenu fiscal n-2
 Tax incomen1: Revenu fiscal n-1
 Tax incomen2: Revenu fiscal n-2
 Taxes amt: Montant impôts
 Taxes: Impôts
-Temp waiting alw amt: Montant allocation temporaire d'attente
-Temp waiting alw: ATA
+Temp waiting allowance amt: Montant allocation temporaire d'attente
+Temp waiting allowance: ATA
 Transport amt: Montant transport
 Transport: Transport
-Unempl benf amt: Montant ARE
-Unempl benf: ARE
+Unempl benefit amt: Montant ARE
+Unempl benefit: ARE
 Water amt: Montant Eau
 Water: Eau
 Write a comment about the budget situation : Ecrire un commentaire relatif à la situation budgétaire
@@ -97,6 +97,6 @@ Youth guarantee: Garantie jeunes
 Budget balance amt: Reste à vivre
 Charges group amt: Charges totales du groupe
 Debts group amt: Dettes totales du groupe
-Ressources group amt: Ressources totales du groupe
+Resources group amt: Ressources totales du groupe
 Tax incomen1amt: Revenu fiscal n-1
 Tax incomen2amt: Revenu fiscal n-2

@@ -1,0 +1,85 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "init_eval" %}
+
+{% block card_title %}Situation initiale{% endblock %}
+
+{% block card_body %}
+
+<div class="form-group row">
+    <div class="col-md-6">{{ form_row(form.initEvalGroup.housingStatus) }}</div>
+</div>
+<div class="form-group row">
+    <div class="col-md-6">{{ form_row(form.initEvalGroup.siaoRequest) }}</div>
+    <div class="col-md-6">{{ form_row(form.initEvalGroup.socialHousingRequest) }}</div>
+</div>
+
+{% if form.supportPerson is defined %}
+{% set form_evaluation_people = form.supportPerson|filter(a => a.vars.value.role != 3) %}
+{% else %}
+{% set form_evaluation_people = form.evaluationPeople|filter(a => a.vars.value.supportPerson.role != 3) %}
+{% endif %}
+
+<div class="row">
+	<div class="col-md-12 accordion" id="accordion-init_eval">
+		<div class="mb-4">
+			{% for evalPerson in form_evaluation_people %}
+
+			{% if form.supportPerson is defined %}
+			{% set person = evalPerson.vars.value.person %}
+			{% else %}
+			{% set person = evalPerson.vars.value.supportPerson.person %}
+			{% endif %}
+
+			<button type="button" id="heading-init_eval-{{ loop.index0 }}"
+				class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
+				data-toggle="collapse" data-target="#collapse-init_eval-{{ loop.index0 }}" aria-expanded="false"
+				aria-controls="collapse-init_eval-{{ loop.index0 }}">{{ person.fullname }}</button>
+			{% endfor %}
+		</div>
+
+		{% for evalPerson in form_evaluation_people %}
+		{% set evalBudgetPerson = evalPerson.initEvalPerson %}
+		{% set entity_name = "initEvalPerson" %}
+
+		<div id="collapse-init_eval-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+			aria-labelledby="heading-init_eval-{{ loop.index0 }}" data-parent="#accordion-init_eval">
+
+			<div class="form-group row">
+				<div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_paper d-block">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
+			</div>			
+		    <div class="form-group row mb-0">
+                <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.rightSocialSecurity) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_rightSocialSecurity d-block">
+                    {{ form_row(evalPerson.initEvalPerson.socialSecurity) }}
+				</div>
+            </div>		
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.familyBreakdown) }}</div>
+                <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.friendshipBreakdown) }}</div>
+            </div>
+			
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.profStatus) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_profStatus d-block">
+                    {{ form_row(evalPerson.initEvalPerson.contractType) }}
+                </div>
+			</div>
+
+			<div class="form-group row">
+				{% include "app/evaluation/evalResources.html.twig" %}
+				<div class="col-md-6">
+					<div class="form-group row">
+						<div class="col-md-12">{{ form_row(evalBudgetPerson.debts) }}</div>
+						<div class="col-md-12 js-{{ loop.index0 }}_initEvalPerson_debts d-block">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

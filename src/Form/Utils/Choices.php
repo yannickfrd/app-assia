@@ -13,7 +13,15 @@ class Choices
     public const YES_NO_IN_PROGRESS = [
         1 => "Oui",
         2 => "Non",
-        3 => "En cours de démarche",
+        3 => "Démarche en cours",
+        99 => "Non renseigné"
+    ];
+
+    public const YES_NO_IN_PROGRESS_NC = [
+        1 => "Oui",
+        2 => "Non",
+        3 => "Démarche en cours",
+        98 => "Non concerné",
         99 => "Non renseigné"
     ];
 

@@ -1,6 +1,6 @@
 {% extends "model/collapseCard.html.twig" %}
 
-{% set id = "sit-social" %}
+{% set id = "eval_social" %}
 
 {% block card_title %}Social{% endblock %}
 
@@ -30,20 +30,74 @@
                 <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_rightSocialSecurity d-block">
                     {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
             </div>
+
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.physicalHealthProblem) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.mentalHealthProblem) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.addictionProblem) }}</div>
+				<div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">
+					<div class="row">
+						<div class="col-form-label col-sm-4">Type de problématiques de santé</div>
+						<div class="col-sm-8">
+							<select id="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType"
+								name="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType" class="form-control">
+                                <option class="default" value="">-- Ajouter --</option>
+                                <option value="physicalHealthProblem">Problématique de santé physique</option>
+                                <option value="mentalHealthProblem">Problématique de santé mentale</option>
+                                <option value="addictionProblem">Problématique d'addiction</option>
+                                <option value="reducedMobility">Personne à mobilité réduite</option>
+							</select>
+						</div>
+						<div class="col-md-12 mt-3">
+							<div class="table-responsive js-{{ loop.index0 }}_evalSocialPerson_healthProblemType d-block">
+								<table class="table table-sm table-hover text-dark">
+									<tbody>
+										<tr id="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType-physicalHealthProblem" class="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.physicalHealthProblem) }}</div></th>
+											<td class="align-middle">Problématique de santé physique</td>
+											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType-mentalHealthProblem" class="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.mentalHealthProblem) }}</div></th>
+											<td class="align-middle">Problématique de santé mentale</td>
+											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType-addictionProblem" class="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.addictionProblem) }}</div></th>
+											<td class="align-middle">Problématique d'addiction</td>
+											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType-wheelchair" class="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.wheelchair) }}</div></th>
+											<td class="align-middle">Personne en fauteuil roulant</td>
+											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+										</tr>
+										<tr id="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType-reducedMobility" class="js-{{ loop.index0 }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.reducedMobility) }}</div></th>
+											<td class="align-middle">Personne à mobilité réduite</td>
+											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+        				</div>		
+					</div>
+				</div>
+			</div>
+
+            <div class="form-group row">
                 <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
                 <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_careSupport d-block">{{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
             </div>
+
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.childWelfareBackground) }}</div>
             </div>
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.familyBreakdown) }}</div>
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.friendshipBreakdown) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_violenceVictim d-block">{{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
             </div>
             <div class="form-group row">
                 {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
@@ -62,60 +116,9 @@
     <div class="col-md-6"> {{ form_row(form.evalSocialGroup.reasonRequest) }}</div>
     <div class="col-md-6"> {{ form_row(form.evalSocialGroup.wanderingTime) }}</div>
 </div>
-
 <div class="form-group row">
-    <div class="col-md-12">
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-form-label col-4 mb-3">Spécificités</div>
-                    <div class="col-8">
-                        <select id="js-evalSocialGroup_specifity" name="evalSocialGroup_specifity" class="form-control">
-                            <option class="default" value="">-- Ajouter --</option>
-                            <option value="1">Présence d'un animal</option>
-                            <option value="2">Personne en fauteuil roulant</option>
-                            <option value="3">Personne à mobilité réduite</option>
-                            <option value="4">Personne victime de violence</option>
-                            <option value="5">Femme victime de violence conjugale</option>
-                            <option value="6">Prise en charge ASE</option>
-                            <option value="98">Autre spécificité</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                {{ form_row(form.evalSocialGroup.speComment) }}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group row">
-                    <div id="js-evalSocialGroup_specifity-1" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speAnimal) }}</div>
-                    <div id="js-evalSocialGroup_specifity-2" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speWheelchair) }}</div>
-                    <div id="js-evalSocialGroup_specifity-3" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speReducedMobility) }}</div>
-                    <div id="js-evalSocialGroup_specifity-4" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speViolenceVictim) }}</div>
-                    <div id="js-evalSocialGroup_specifity-5" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speDomViolenceVictim) }}</div>
-                    <div id="js-evalSocialGroup_specifity-6" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speChildWelfare) }}</div>
-                    <div id="js-evalSocialGroup_specifity-98" class="col-md-2 js-evalSocialGroup_specifity d-block">
-                        {{ form_widget(form.evalSocialGroup.speOther) }}</div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-6 js-speAnimal d-none"> {{ form_row(form.evalSocialGroup.speAnimalName) }}</div>
-                    <div class="col-md-6 js-speOther d-none"> {{ form_row(form.evalSocialGroup.speOtherPrecision) }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="col-md-6"> {{ form_row(form.evalSocialGroup.animal) }}</div>
+    <div class="col-md-6 js-animal d-block"> {{ form_row(form.evalSocialGroup.animalType) }}</div>
 </div>
 
 <div class="form-group row">

@@ -35,6 +35,7 @@ class EvaluationPerson
      */
     private $evalAdmPerson;
 
+
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvalBudgetPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
@@ -59,6 +60,11 @@ class EvaluationPerson
      * @ORM\OneToOne(targetEntity="App\Entity\EvalJusticePerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $evalJusticePerson;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\InitEvalPerson", cascade={"persist", "remove"})
+     */
+    private $initEvalPerson;
 
     public function getId(): ?int
     {
@@ -189,6 +195,18 @@ class EvaluationPerson
         if ($evalJusticePerson->getEvaluationPerson() !== $this) {
             $evalJusticePerson->setEvaluationPerson($this);
         }
+
+        return $this;
+    }
+
+    public function getInitEvalPerson(): ?InitEvalPerson
+    {
+        return $this->initEvalPerson;
+    }
+
+    public function setInitEvalPerson(?InitEvalPerson $initEvalPerson): self
+    {
+        $this->initEvalPerson = $initEvalPerson;
 
         return $this;
     }

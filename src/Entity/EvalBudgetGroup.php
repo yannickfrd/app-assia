@@ -19,7 +19,7 @@ class EvalBudgetGroup
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $ressourcesGroupAmt;
+    private $resourcesGroupAmt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -67,14 +67,14 @@ class EvalBudgetGroup
         return $this->id;
     }
 
-    public function getRessourcesGroupAmt(): ?int
+    public function getResourcesGroupAmt(): ?int
     {
-        return $this->ressourcesGroupAmt;
+        return $this->resourcesGroupAmt;
     }
 
-    public function setRessourcesGroupAmt(?int $ressourcesGroupAmt): self
+    public function setResourcesGroupAmt(?int $resourcesGroupAmt): self
     {
-        $this->ressourcesGroupAmt = $ressourcesGroupAmt;
+        $this->resourcesGroupAmt = $resourcesGroupAmt;
 
         return $this;
     }

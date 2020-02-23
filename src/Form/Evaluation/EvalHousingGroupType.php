@@ -2,7 +2,7 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\evalHousingGroup;
+use App\Entity\EvalHousingGroup;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,12 +16,12 @@ class EvalHousingGroupType extends AbstractType
     {
         $builder
             ->add("housingStatus", ChoiceType::class, [
-                "choices" => Choices::getChoices(evalHousingGroup::HOUSING_STATUS),
+                "choices" => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("siaoRequest", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -34,7 +34,7 @@ class EvalHousingGroupType extends AbstractType
                 "required" => false
             ])
             ->add("socialHousingRequest", ChoiceType::class, [
-                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -183,7 +183,7 @@ class EvalHousingGroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => evalHousingGroup::class,
+            "data_class" => EvalHousingGroup::class,
             "translation_domain" => "housing"
         ]);
     }

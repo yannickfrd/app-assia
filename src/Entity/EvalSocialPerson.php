@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,8 +15,8 @@ class EvalSocialPerson
         5 => "AME",
         4 => "CSC (ex-CMU-C)",
         3 => "PUMA (ex-CMU)",
-        2 => "Mutuelle",
         1 => "Régime général",
+        2 => "Régime général et mutuelle",
         97 => "Autre régime",
         99 => "Non renseignée"
     ];
@@ -94,12 +95,33 @@ class EvalSocialPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $wheelchair;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $reducedMobility;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $careSupport;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $careSupportType;
+
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $violenceVictim;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $domViolenceVictim;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -128,6 +150,11 @@ class EvalSocialPerson
         $this->rightSocialSecurity = $rightSocialSecurity;
 
         return $this;
+    }
+
+    public function getRightSocialSecurityList()
+    {
+        return Choices::YES_NO[$this->rightSocialSecurity];
     }
 
     public function getSocialSecurity(): ?int
@@ -183,29 +210,11 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getFamilyBreakdown(): ?int
+    public function getChildWelfareBackgroundList()
     {
-        return $this->familyBreakdown;
+        return Choices::YES_NO[$this->childWelfareBackground];
     }
 
-    public function setFamilyBreakdown(?int $familyBreakdown): self
-    {
-        $this->familyBreakdown = $familyBreakdown;
-
-        return $this;
-    }
-
-    public function getFriendshipBreakdown(): ?int
-    {
-        return $this->friendshipBreakdown;
-    }
-
-    public function setFriendshipBreakdown(?int $friendshipBreakdown): self
-    {
-        $this->friendshipBreakdown = $friendshipBreakdown;
-
-        return $this;
-    }
 
     public function getHealthProblem(): ?int
     {
@@ -217,6 +226,11 @@ class EvalSocialPerson
         $this->healthProblem = $healthProblem;
 
         return $this;
+    }
+
+    public function getHealthProblemList()
+    {
+        return Choices::YES_NO[$this->healthProblem];
     }
 
     public function getPhysicalHealthProblem(): ?int
@@ -231,6 +245,11 @@ class EvalSocialPerson
         return $this;
     }
 
+    public function getPhysicalHealthProblemList()
+    {
+        return Choices::YES_NO[$this->physicalHealthProblem];
+    }
+
     public function getMentalHealthProblem(): ?int
     {
         return $this->mentalHealthProblem;
@@ -241,6 +260,11 @@ class EvalSocialPerson
         $this->mentalHealthProblem = $mentalHealthProblem;
 
         return $this;
+    }
+
+    public function getMentalHealthProblemList()
+    {
+        return Choices::YES_NO[$this->mentalHealthProblem];
     }
 
     public function getAddictionProblem(): ?int
@@ -255,6 +279,11 @@ class EvalSocialPerson
         return $this;
     }
 
+    public function getAddictionProblemList()
+    {
+        return Choices::YES_NO[$this->addictionProblem];
+    }
+
     public function getCareSupport(): ?int
     {
         return $this->careSupport;
@@ -267,6 +296,11 @@ class EvalSocialPerson
         return $this;
     }
 
+    public function getCareSupportList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->careSupport];
+    }
+
     public function getCareSupportType(): ?int
     {
         return $this->careSupportType;
@@ -275,6 +309,93 @@ class EvalSocialPerson
     public function setCareSupportType(?int $careSupportType): self
     {
         $this->careSupportType = $careSupportType;
+
+        return $this;
+    }
+
+    public function getCareSupportTypeList()
+    {
+        return self::CARE_SUPPORT[$this->careSupport];
+    }
+
+    public function getFamilyBreakdown(): ?int
+    {
+        return $this->familyBreakdown;
+    }
+
+    public function setFamilyBreakdown(?int $familyBreakdown): self
+    {
+        $this->familyBreakdown = $familyBreakdown;
+
+        return $this;
+    }
+
+    public function getFamilyBreakdownList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->familyBreakdown];
+    }
+
+    public function getFriendshipBreakdown(): ?int
+    {
+        return $this->friendshipBreakdown;
+    }
+
+    public function setFriendshipBreakdown(?int $friendshipBreakdown): self
+    {
+        $this->friendshipBreakdown = $friendshipBreakdown;
+
+        return $this;
+    }
+
+    public function getFriendshipBreakdownList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->friendshipBreakdown];
+    }
+
+    public function getWheelchair(): ?int
+    {
+        return $this->wheelchair;
+    }
+
+    public function setWheelchair(?int $wheelchair): self
+    {
+        $this->wheelchair = $wheelchair;
+
+        return $this;
+    }
+
+    public function getReducedMobility(): ?int
+    {
+        return $this->reducedMobility;
+    }
+
+    public function setReducedMobility(?int $reducedMobility): self
+    {
+        $this->reducedMobility = $reducedMobility;
+
+        return $this;
+    }
+
+    public function getViolenceVictim(): ?int
+    {
+        return $this->violenceVictim;
+    }
+
+    public function setViolenceVictim(?int $violenceVictim): self
+    {
+        $this->violenceVictim = $violenceVictim;
+
+        return $this;
+    }
+
+    public function getDomViolenceVictim(): ?int
+    {
+        return $this->domViolenceVictim;
+    }
+
+    public function setDomViolenceVictim(?int $domViolenceVictim): self
+    {
+        $this->domViolenceVictim = $domViolenceVictim;
 
         return $this;
     }

@@ -1,6 +1,7 @@
 import ValidationSupport from "./validationSupport";
 import RemoveSupportPerson from "./removeSupportPerson";
 import CheckChange from "../utils/checkChange";
+// import Evaluation from "./evaluation";
 
 import "select2";
 import "../utils/maskDeptCode";
@@ -26,5 +27,6 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
 document.addEventListener("DOMContentLoaded", function () {
     new ValidationSupport();
     new RemoveSupportPerson();
+    // new Evaluation();
     new CheckChange("support_group"); // form name
 });

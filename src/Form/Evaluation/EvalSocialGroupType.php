@@ -18,23 +18,18 @@ class EvalSocialGroupType extends AbstractType
                 "choices" => Choices::getChoices(EvalSocialGroup::REASON_REQUEST),
                 "placeholder" => "-- Select --",
                 "required" => false
-
             ])
             ->add("wanderingTime", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalSocialGroup::WANDERING_TIME),
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("speAnimal")
-            ->add("speAnimalName")
-            ->add("speWheelchair")
-            ->add("speReducedMobility")
-            ->add("speViolenceVictim")
-            ->add("speDomViolenceVictim")
-            ->add("speChildWelfare")
-            ->add("speOther")
-            ->add("speOtherPrecision")
-            ->add("speComment")
+            ->add("animal", ChoiceType::class, [
+                "choices" => Choices::getChoices(Choices::YES_NO),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
+            ->add("animalType")
             ->add("commentEvalSocialGroup", null, [
                 "label_attr" => ["class" => "sr-only"],
                 "attr" => [

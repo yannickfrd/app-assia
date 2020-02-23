@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -89,6 +90,11 @@ class EvalFamilyGroup
         $this->childrenBehind = $childrenBehind;
 
         return $this;
+    }
+
+    public function getChildrenBehindList()
+    {
+        return Choices::YES_NO[$this->childrenBehind];
     }
 
     public function getFamlReunification(): ?int

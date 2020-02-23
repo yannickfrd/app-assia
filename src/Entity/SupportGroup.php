@@ -133,6 +133,11 @@ class SupportGroup
     private $evaluationsGroup;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\Entity\InitEvalGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     */
+    private $initEvalGroup;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $originRequest;
@@ -508,6 +513,23 @@ class SupportGroup
             if ($evaluationGroup->getSupportGroup() === $this) {
                 $evaluationGroup->setSupportGroup(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getInitEvalGroup(): ?InitEvalGroup
+    {
+        return $this->initEvalGroup;
+    }
+
+    public function setInitEvalGroup(InitEvalGroup $initEvalGroup): self
+    {
+        $this->initEvalGroup = $initEvalGroup;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $initEvalGroup->getSupportGroup()) {
+            $initEvalGroup->setSupportGroup($this);
         }
 
         return $this;

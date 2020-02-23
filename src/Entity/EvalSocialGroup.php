@@ -72,65 +72,25 @@ class EvalSocialGroup
     private $wanderingTime;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $speAnimal;
+    private $animal;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $speAnimalName;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $speWheelchair;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $speReducedMobility;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $speViolenceVictim;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $speDomViolenceVictim;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $speChildWelfare;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $speOther;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $speOtherPrecision;
+    private $animalType;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $speComment;
+    private $commentEvalSocialGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\EvaluationGroup", inversedBy="evalSocialGroup", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationGroup;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $commentEvalSocialGroup;
 
     public function getId(): ?int
     {
@@ -171,129 +131,33 @@ class EvalSocialGroup
         return self::WANDERING_TIME[$this->wanderingTime];
     }
 
-    public function getSpeAnimal(): ?bool
-    {
-        return $this->speAnimal;
-    }
-
-    public function setSpeAnimal(?bool $speAnimal): self
-    {
-        $this->speAnimal = $speAnimal;
-
-        return $this;
-    }
-
-    public function getSpeAnimalName(): ?string
-    {
-        return $this->speAnimalName;
-    }
-
-    public function setSpeAnimalName(?string $speAnimalName): self
-    {
-        $this->speAnimalName = $speAnimalName;
-
-        return $this;
-    }
-
-    public function getSpeWheelchair(): ?bool
-    {
-        return $this->speWheelchair;
-    }
-
-    public function setSpeWheelchair(?bool $speWheelchair): self
-    {
-        $this->speWheelchair = $speWheelchair;
-
-        return $this;
-    }
-
-    public function getSpeReducedMobility(): ?bool
-    {
-        return $this->speReducedMobility;
-    }
-
-    public function setSpeReducedMobility(?bool $speReducedMobility): self
-    {
-        $this->speReducedMobility = $speReducedMobility;
-
-        return $this;
-    }
-
-    public function getSpeViolenceVictim(): ?bool
-    {
-        return $this->speViolenceVictim;
-    }
-
-    public function setSpeViolenceVictim(?bool $speViolenceVictim): self
-    {
-        $this->speViolenceVictim = $speViolenceVictim;
-
-        return $this;
-    }
-
-    public function getSpeDomViolenceVictim(): ?bool
-    {
-        return $this->speDomViolenceVictim;
-    }
-
-    public function setSpeDomViolenceVictim(?bool $speDomViolenceVictim): self
-    {
-        $this->speDomViolenceVictim = $speDomViolenceVictim;
-
-        return $this;
-    }
-
-    public function getSpeChildWelfare(): ?bool
-    {
-        return $this->speChildWelfare;
-    }
-
-    public function setSpeChildWelfare(?bool $speChildWelfare): self
-    {
-        $this->speChildWelfare = $speChildWelfare;
-
-        return $this;
-    }
-
-    public function getSpeOther(): ?bool
-    {
-        return $this->speOther;
-    }
-
-    public function setSpeOther(?bool $speOther): self
-    {
-        $this->speOther = $speOther;
-
-        return $this;
-    }
-
-    public function getSpeOtherPrecision(): ?string
-    {
-        return $this->speOtherPrecision;
-    }
-
-    public function setSpeOtherPrecision(?string $speOtherPrecision): self
-    {
-        $this->speOtherPrecision = $speOtherPrecision;
-
-        return $this;
-    }
-
-    public function getSpeComment(): ?string
-    {
-        return $this->speComment;
-    }
-
-    public function setSpeComment(?string $speComment): self
-    {
-        $this->speComment = $speComment;
-
-        return $this;
-    }
-
     public function getEvaluationGroup(): ?EvaluationGroup
     {
         return $this->evaluationGroup;
+    }
+
+    public function getAnimal(): ?int
+    {
+        return $this->animal;
+    }
+
+    public function setAnimal(?int $animal): self
+    {
+        $this->animal = $animal;
+
+        return $this;
+    }
+
+    public function getAnimalType(): ?string
+    {
+        return $this->animalType;
+    }
+
+    public function setAnimalType(?string $animalType): self
+    {
+        $this->animalType = $animalType;
+
+        return $this;
     }
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self

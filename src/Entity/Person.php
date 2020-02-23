@@ -23,6 +23,7 @@ class Person
     public const GENDER = [
         1 => "Femme",
         2 => "Homme",
+        3 => "Autre",
         99 => "Non renseigné"
     ];
 

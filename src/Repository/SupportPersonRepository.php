@@ -149,14 +149,16 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         $query = $query->leftJoin("sp.evaluationsPerson", "ep")->addselect("ep")
             ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
+            ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
             ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
             ->leftJoin("ep.evalProfPerson", "evalProfPerson")->addselect("evalProfPerson")
-            ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
+            ->leftJoin("ep.evalSocialPerson", "evalSocialPerson")->addselect("evalSocialPerson")
 
             ->leftJoin("ep.evaluationGroup", "eg")->addselect("eg")
-            ->leftJoin("eg.evalSocialGroup", "evalSocialGroup")->addselect("evalSocialGroup")
+            ->leftJoin("eg.evalBudgetGroup", "evalBudgetGroup")->addselect("evalBudgetGroup")
             ->leftJoin("eg.evalFamilyGroup", "evalFamilyGroup")->addselect("evalFamilyGroup")
-            ->leftJoin("eg.evalBudgetGroup", "evalBudgetGroup")->addselect("evalBudgetGroup");
+            ->leftJoin("eg.evalHousingGroup", "evalHousingGroup")->addselect("evalHousingGroup")
+            ->leftJoin("eg.evalSocialGroup", "evalSocialGroup")->addselect("evalSocialGroup");
 
         if ($supportGroupSearch->getStatus()) {
             $expr = $query->expr();

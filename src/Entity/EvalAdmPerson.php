@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,14 +19,14 @@ class EvalAdmPerson
     ];
 
     public const PAPER_TYPE = [
-        4 => "Carte de résident",
-        5 => "Carte de séjour temporaire",
-        1 => "CNI",
-        8 => "Déclaration de perte",
-        3 => "Papiers étrangers",
-        2 => "Passeport",
-        6 => "Récépissé asile",
-        7 => "Récépissé renouvellemt de titre",
+        22 => "Autorisation provisoire de séjour",
+        20 => "Carte de résident",
+        21 => "Carte de séjour temporaire",
+        01 => "CNI",
+        03 => "Papiers étrangers",
+        02 => "Passeport",
+        30 => "Récépissé asile",
+        31 => "Récépissé renouvellement de titre",
         97 => "Autre",
         99 => "Non renseigné"
     ];
@@ -33,7 +34,8 @@ class EvalAdmPerson
     public const RIGHT_TO_RESIDE = [
         1 => "Débouté du droit d'asile",
         2 => "Demandeur d'asile",
-        3 => "Réfugié",
+        3 => "Protection subsidiaire",
+        4 => "Réfugié",
         97 => "Autre",
         99 => "Non renseigné"
     ];
@@ -73,12 +75,7 @@ class EvalAdmPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $rightReside;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $residPermitRequest;
+    private $asylumStatus;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -96,24 +93,24 @@ class EvalAdmPerson
     private $nbRenewals;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $noRightsOpen;
+    private $workRight;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $rightWork;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $rightSocialBenf;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $housingAlw;
+    private $housingAllowance;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -173,6 +170,11 @@ class EvalAdmPerson
         return $this;
     }
 
+    public function getPaperList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->paper];
+    }
+
     public function getPaperType(): ?int
     {
         return $this->paperType;
@@ -203,34 +205,26 @@ class EvalAdmPerson
         return $this;
     }
 
-    public function getRightReside(): ?int
+    public function getAsylumBackgroundList()
     {
-        return $this->rightReside;
+        return Choices::YES_NO[$this->asylumBackground];
     }
 
-    public function setRightReside(?int $rightReside): self
+    public function getAsylumStatus(): ?int
     {
-        $this->rightReside = $rightReside;
+        return $this->asylumStatus;
+    }
+
+    public function setAsylumStatus(?int $asylumStatus): self
+    {
+        $this->asylumStatus = $asylumStatus;
 
         return $this;
     }
 
-    public function getRightResideList()
+    public function getAsylumStatusList()
     {
-        return self::RIGHT_TO_RESIDE[$this->rightReside];
-    }
-
-
-    public function getResidPermitRequest(): ?int
-    {
-        return $this->residPermitRequest;
-    }
-
-    public function setResidPermitRequest(?int $residPermitRequest): self
-    {
-        $this->residPermitRequest = $residPermitRequest;
-
-        return $this;
+        return self::RIGHT_TO_RESIDE[$this->asylumStatus];
     }
 
     public function getEndValidPermitDate(): ?\DateTimeInterface
@@ -269,52 +263,21 @@ class EvalAdmPerson
         return $this;
     }
 
-    public function getNoRightsOpen(): ?bool
+    public function getWorkRight(): ?int
     {
-        return $this->noRightsOpen;
+        return $this->workRight;
     }
 
-    public function setNoRightsOpen(?bool $noRightsOpen): self
+    public function setWorkRight(?int $workRight): self
     {
-        $this->noRightsOpen = $noRightsOpen;
+        $this->workRight = $workRight;
 
         return $this;
     }
 
-    public function getRightWork(): ?bool
+    public function getWorkRightList()
     {
-        return $this->rightWork;
-    }
-
-    public function setRightWork(?bool $rightWork): self
-    {
-        $this->rightWork = $rightWork;
-
-        return $this;
-    }
-
-    public function getRightSocialBenf(): ?bool
-    {
-        return $this->rightSocialBenf;
-    }
-
-    public function setRightSocialBenf(?bool $rightSocialBenf): self
-    {
-        $this->rightSocialBenf = $rightSocialBenf;
-
-        return $this;
-    }
-
-    public function getHousingAlw(): ?bool
-    {
-        return $this->housingAlw;
-    }
-
-    public function setHousingAlw(?bool $housingAlw): self
-    {
-        $this->housingAlw = $housingAlw;
-
-        return $this;
+        return Choices::YES_NO_IN_PROGRESS[$this->workRight];
     }
 
     public function getCommentEvalAdmPerson(): ?string

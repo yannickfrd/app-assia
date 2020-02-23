@@ -1,0 +1,36 @@
+Init eval group: Initial
+Init eval person: Initial
+-- Select --: -- Sélectionner --
+Housing status: Situation résidentielle
+Reason request: Motif de la demande
+Siao request:	Demande SIAO active
+Social housing request: Demande de logement social
+Nationality: Nationalité 
+Paper: Papier d'identité
+Paper type: Type de papier
+Right social security: Droits ouverts Sécurité sociale
+Social security: Sécurité sociale
+Family breakdown:	Rupture des liens familiaux
+Friendship breakdown:	Rupture des liens amicaux
+Prof status: Statut professionnel
+Contract type: Type de contrat
+Resources: Resources
+Resources amt: Montant total des resources
+Debts:  Dettes
+Debts amt: Montant des dettes
+
+Min income: RSA
+Salary: Salaire
+Unempl benefit: ARE
+Family allowance: Allocations familiales
+Dis adult allowance: AAH
+Dis child allowance: AEEH
+Asylum seeker allowance: ADA
+Temp waiting allowance: ATA
+Paid training: Formation rémunérée
+Youth guarantee: Garantie jeunes
+Maintenance: Pension alimentaire
+Activity bonus: Prime d'activité
+Pension benefit: Retraite
+Ressource other: Autres revenus
+Solidarity allowance: ASS

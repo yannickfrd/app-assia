@@ -3,6 +3,7 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\EvaluationPerson;
+use App\Form\InitEvalPersonType;
 use App\Form\EvalJusticePersonType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Evaluation\EvalAdmPersonType;
@@ -18,6 +19,7 @@ class EvaluationPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add("initEvalPerson", InitEvalPersonType::class)
             ->add("evalAdmPerson", EvalAdmPersonType::class)
             ->add("evalBudgetPerson", EvalBudgetPersonType::class)
             ->add("evalFamilyPerson", EvalFamilyPersonType::class)
@@ -30,6 +32,7 @@ class EvaluationPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvaluationPerson::class,
+            // "translation_domain" => "forms"
         ]);
     }
 }

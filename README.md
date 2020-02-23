@@ -64,8 +64,8 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     alimony: Pension alimentaire
     alimonyAmt: Montant Pension alimentaire
     applResidPermit: Demande de titre de séjour
-    asylumSeekerAlw: Allocation pour demandeur d'asile (ADA)
-    asylumSeekerAlwAmt: Montant Allocation pour demandeur d'asile (ADA)
+    asylumAllowance: Allocation pour demandeur d'asile (ADA)
+    asylumAllowanceAmt: Montant Allocation pour demandeur d'asile (ADA)
     birthdate: Date de naissance
     budgetBalanceAmt: Reste à vivre
     cafEligibility: Eligibililité CAF
@@ -105,7 +105,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     createdBy: Créé par
     daloCommission: Passage en commission DALO
     daloRecordDate: Date de dépôt
-    debtAmt: Montant total des dettes
+    debtsAmt: Montant total des dettes
     debtBankOdAmt: Montant Découverts bancaires
     debtBankOverdrafts: Découverts bancaires
     debtComment: Commentaire sur les dettes
@@ -130,10 +130,10 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     department: Département
     department: Département 
     director: Nom du directeur
-    disAdultAlw: Allocation adulte handicapé
-    disAdultAlwAmt: Montant AAH
-    disChildAlw: Allocation d'éducation de l'enfant handicapé (AEEH)
-    disChildAlwAmt: Allocation d'éducation de l'enfant handicapé (AEEH)
+    disAdultAllowance: Allocation adulte handicapé
+    disAdultAllowanceAmt: Montant AAH
+    disChildAllowance: Allocation d'éducation de l'enfant handicapé (AEEH)
+    disChildAllowanceAmt: Allocation d'éducation de l'enfant handicapé (AEEH)
     dls: Demande de logement social
     dlsDate: Date de demande de logement social
     dlsId: Numéro unique (NUR)
@@ -157,8 +157,8 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     expDateChildbirth: Date prévisionnelle de l'accouchement
     expulsionComment: Commentaire sur l'expulsion location
     expulsionInProgress: Procédure d'expulsion en cours
-    familyAlw: Allocations familiales
-    familyAlwAmt: Montant Allocations familiales
+    familyAllowance: Allocations familiales
+    familyAllowanceAmt: Montant Allocations familiales
     familyTypo: Typologie familiale
     famlReunification: Regroupement familial
     firstname: Prénom
@@ -168,7 +168,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     hepsPrecision: Précision sur les aides et accès au logement
     housing: hébergement ou du logement
     housingAddress: Adresse d'hébergement ou du logement
-    housingAlw: Aide au logement
+    housingAllowance: Aide au logement
     housingCity: Ville d'hébergement
     housingDept: Département - hébergement
     housingExpeComment: Commentaire expérience lié au logement
@@ -192,12 +192,12 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     maintenance: Pension alimentaire
     maintenanceAmt: Montant Pension alimentaire
     maritalStatus: Evaluation matrimoniale
-    minIncome: RSA
-    minIncomeAmt: Montant RSA
+    minimumIncome: RSA
+    minimumIncomeAmt: Montant RSA
     monthlyRepaymentAmt: Montant du remboursement mensuel
     moratorium: Moratoire
     mutual: Mutuelle(s)
-    mutualAmt: Montant Mutuelle(s)
+    mutualAmt: Montant mutuelle(s)
     name: Nom
     nationality: Nationalité
     nbAdults: Nb d’adultes
@@ -207,7 +207,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     nbPeopleReunification: Nombre de personnes concernées par le regroupement
     nbRenewals: Nombre de renouvellements
     nbWorkingHours: Nombre d'heures
-    noRightsOpen: Aucun droit ouvert
+    workRight: Aucun droit ouvert
     openingDate: Date d'ouverture
     otherHelps: Autre(s) aide(s)
     overIndebtRecord: Dossier surendettement
@@ -217,8 +217,8 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     paper: Papier d'identité
     paperType: Type de papier
     password: Mot de passe
-    pensionBenf: Retraite
-    pensionBenfAmt: Montant retraire
+    pensionBenefit: Retraite
+    pensionBenefitAmt: Montant retraire
     phone: Téléphone
     phone1: Téléphone 1
     phone2: Téléphone 2
@@ -239,10 +239,10 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     ressourceOther: Autres revenus
     ressourceOtherAmt: Montant autre ressource
     ressourceOtherPrecision: Précision Autres revenus
-    ressourcesAmt: Montant total des ressources
-    ressourcesComment: Commentaire sur les ressources
-    ressourcesGroup: Ressources du groupe
-    rightReside: Droit de séjour
+    resourcesAmt: Montant total des ressources
+    resourcesComment: Commentaire sur les ressources
+    resourcesGroup: Ressources du groupe
+    asylumStatus: Droit de séjour
     rightSocialBenf: Droit aux prestations sociales et familiales
     rightSocialSecu: Droit ouverts à la sécurité sociale
     rightWork: Autorisation de travail
@@ -257,19 +257,17 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     socialSecu: Sécurité sociale
     socialSecuOffice: Caisse de Securité sociale
     socialWorker: Nom du travailleur social
-    solidarityAlw: Allocation de solidarité spécifique (ASS)
-    solidarityAlwAmt: Montant ASS
+    solidarityAllowance: Allocation de solidarité spécifique (ASS)
+    solidarityAllowanceAmt: Montant ASS
     speAnimal: Spécificité - Présence d'un animal
     speAnimalName: Spécificité - Précision animal
-    speChildWelfare: Spécificité - Prise en charge ASE
     specificities: Spécificités à prendre en considération
-    speComment: Commentaire sur les spécificités
-    speDomViolenceVictim: Spécificité - Femme victime de violence conjugale
+    domViolenceVictim: Spécificité - Femme victime de violence conjugale
     speOther: Spécificité - Autre
     speOtherPrecision: Spécificité - Autre précision
-    speReducedMobility: Spécificité - Personne à mobilité réduite
-    speViolenceVictim: Spécificité - Personne victime de violence
-    speWheelchair: Spécificité - Personne en fauteuil roulant
+    reducedMobility: Spécificité - Personne à mobilité réduite
+    violenceVictim: Spécificité - Personne victime de violence
+    wheelchair: Spécificité - Personne en fauteuil roulant
     startDate: Date de début de prise en charge
     startDate: Date de début du rdv
     startDate: Date de début du suivi
@@ -281,8 +279,8 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     taxesAmt: Montant Impôts
     taxIncomeN1: Revenu fiscal n-1
     taxIncomeN2: Revenu fiscal n-2
-    tempWaitingAlw: Allocation temporaire d'attente
-    tempWaitingAlwAmt: Montant Allocation temporaire d'attente
+    tempWaitingAllowance: Allocation temporaire d'attente
+    tempWaitingAllowanceAmt: Montant Allocation temporaire d'attente
     title: Titre
     token: Token
     transport: Transport
@@ -290,8 +288,8 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     transportMeans: Moyen(s) de transport 
     type: Type
     unbornChild: Enfant à naître
-    unemplBenf: Allocation chômage (ARE)
-    unemplBenfAmt: Montant Allocation chômage (ARE)
+    unemplBenefit: Allocation chômage (ARE)
+    unemplBenefitAmt: Montant Allocation chômage (ARE)
     updatedAt: Date de modification
     updatedBy: Modifié par
     usename: Nom d’usage

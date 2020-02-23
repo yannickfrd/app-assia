@@ -69,6 +69,11 @@ class EvaluationGroup
      */
     private $evalBudgetGroup;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\InitEvalGroup", cascade={"persist", "remove"})
+     */
+    private $initEvalGroup;
+
 
     public function __construct()
     {
@@ -139,7 +144,6 @@ class EvaluationGroup
 
         return $this;
     }
-
 
     public function getEvalSocialGroup(): ?EvalSocialGroup
     {
@@ -236,6 +240,18 @@ class EvaluationGroup
                 $evaluationPerson->setEvaluationGroup(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInitEvalGroup(): ?InitEvalGroup
+    {
+        return $this->initEvalGroup;
+    }
+
+    public function setInitEvalGroup(?InitEvalGroup $initEvalGroup): self
+    {
+        $this->initEvalGroup = $initEvalGroup;
 
         return $this;
     }

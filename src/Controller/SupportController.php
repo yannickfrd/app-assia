@@ -79,7 +79,7 @@ class SupportController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function newSupportGroup($id, GroupPeopleRepository $repo, Request $request): Response
+    public function newSupportGroup(int $id, GroupPeopleRepository $repo, Request $request): Response
     {
         $groupPeople = $repo->findGroupPeopleById($id);
 
@@ -108,13 +108,13 @@ class SupportController extends AbstractController
      * Modification d'un suvi social
      * 
      * @Route("/support/{id}", name="support_edit", methods="GET|POST")
-     * @param SupportGroup $supportGroup
+     * @param int $id
      * @param Request $request
      * @return Response
      */
-    public function editSupportGroup(SupportGroup $supportGroup, Request $request): Response
+    public function editSupportGroup(int $id, Request $request): Response
     {
-        // $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
@@ -139,12 +139,14 @@ class SupportController extends AbstractController
      * Modification des suivis individuels
      * 
      * @Route("/support/{id}/people", name="support_pers_edit", methods="GET|POST")
-     * @param SupportGroup $supportGroup
+     * @param int $id
      * @param Request $request
      * @return Response
      */
-    public function editSupportGroupleWithPeople(SupportGroup $supportGroup, Request $request): Response
+    public function editSupportGroupleWithPeople(int $id, Request $request): Response
     {
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $form = $this->createForm(SupportGroupWithPeopleType::class, $supportGroup);
@@ -188,8 +190,6 @@ class SupportController extends AbstractController
             $personId = $rolePerson->getPerson()->getId();
 
             if (!in_array($personId, $people)) {
-                // Crée un suivi social individuel
-                $this->createSupportPerson($rolePerson, $supportGroup);
 
                 $evaluationPerson = new EvaluationPerson();
 
@@ -197,13 +197,14 @@ class SupportController extends AbstractController
 
                 if ($evaluationGroup) {
                     $evaluationPerson->setEvaluationGroup($evaluationGroup)
-                        ->setSupportPerson($supportPerson);
+                        ->setSupportPerson($this->createSupportPerson($rolePerson, $supportGroup));
 
                     $this->manager->persist($evaluationPerson);
                 }
             }
-            $this->manager->flush();
         }
+        $this->manager->flush();
+
         return $this->redirectToRoute("support_pers_edit", [
             "id" => $supportGroup->getId()
         ]);
@@ -354,6 +355,8 @@ class SupportController extends AbstractController
             ->setUpdatedAt($now);
 
         $this->manager->persist($supportPerson);
+
+        return $supportPerson;
     }
 
     /**

@@ -32,6 +32,7 @@
 
 		<div class="mb-4">
 			{# {% include "app/support/evalSummary.html.twig" %} #}
+			{% include "app/evaluation/initEvaluation.html.twig" %}
 			{% if support.service.justice %}
 			{% include "app/evaluation/evaluationJustice.html.twig" %}
 			{% endif %}

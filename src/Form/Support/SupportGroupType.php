@@ -7,6 +7,7 @@ use App\Entity\Device;
 use App\Entity\Service;
 use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
+use App\Form\InitEvalGroupType;
 use App\Repository\UserRepository;
 use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
@@ -18,6 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SupportGroupType extends AbstractType
 {
@@ -97,6 +99,13 @@ class SupportGroupType extends AbstractType
                     "placeholder" => "Write a comment about the social support"
                 ]
             ]);
+        // ->add("initEvalGroup", InitEvalGroupType::class)
+        // ->add("supportPerson", CollectionType::class, [
+        //     "entry_type"   => SupportPersonInitEvalType::class,
+        //     "allow_add"    => false,
+        //     "allow_delete" => false,
+        //     "required" => false
+        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

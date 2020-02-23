@@ -1,0 +1,162 @@
+{# Resources #}
+<div class="col-md-6">
+    <div class="form-group row">
+        <div class="col-md-12">{{ form_row(evalBudgetPerson.resources) }}</div>
+        <div class="col-md-12 js-{{ loop.index0 }}_{{ entity_name }}_resources d-block">
+            <div class="row">
+                <div class="col-form-label col-sm-4 js-resources d-block">Type de resources</div>
+                <div class="col-sm-8">
+                    <select id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type"
+                        name="js-{{ loop.index0 }}_{{ entity_name }}_resources_type" class="form-control">
+                        <option class="default" value="">-- Ajouter --</option>
+                        <option value="disAdultAllowance">Allocation adulte handicapé (AAH)</option>
+                        <option value="disChildAllowance">Allocation d'éducation de l'enfant handicapé (AEEH)</option>
+                        <option value="unemplBenefit">Allocation chômage (ARE)</option>
+                        <option value="asylumAllowance">Allocation pour demandeur d'asile (ADA)</option>
+                        <option value="tempWaitingAllowance">Allocation temporaire d'attente (ATA)</option>
+                        <option value="familyAllowance">Allocations familiales (AF)</option>
+                        <option value="solidarityAllowance">Allocation de solidarité spécifique (ASS)</option>
+                        <option value="paidTraining">Formation rémunérée</option>
+                        <option value="youthGuarantee">Garantie jeunes</option>
+                        <option value="maintenance">Pension alimentaire</option>
+                        <option value="activityBonus">Prime d'activité</option>
+                        <option value="pensionBenefit">Retraite</option>
+                        <option value="minimumIncome">RSA</option>
+                        <option value="salary">Salaire</option>
+                        <option value="ressourceOther">Autre ressource</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-3">
+            <div class="table-responsive js-{{ loop.index0 }}_{{ entity_name }}_resources d-block">
+                <table class="table table-sm table-hover text-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-140">Type de resources</th>
+                            <th scope="col" class="align-middle th-w-150">Montant</th>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-disAdultAllowance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.disAdultAllowance) }}</div></th>
+                            <td class="align-middle">AAH</td>
+                            <td>{{ form_widget(evalBudgetPerson.disAdultAllowanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-disChildAllowance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.disChildAllowance) }}</div></th>
+                            <td class="align-middle">AEEH</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.disChildAllowanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-unemplBenefit"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.unemplBenefit) }}</div></th>
+                            <td class="align-middle">ARE</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.unemplBenefitAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-asylumAllowance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.asylumAllowance) }}</div></th>
+                            <td class="align-middle">ADA</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.asylumAllowanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-tempWaitingAllowance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.tempWaitingAllowance) }}</div></th>
+                            <td class="align-middle">ATA</td>
+                            <td class="align-middle"> {{ form_widget(evalBudgetPerson.tempWaitingAllowanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-familyAllowance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.familyAllowance) }}</div></th>
+                            <td class="align-middle">AF</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.familyAllowanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-solidarityAllowance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.solidarityAllowance) }}</div></th>
+                            <td class="align-middle">ASS</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.solidarityAllowanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-paidTraining"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.paidTraining) }}</div></th>
+                            <td class="align-middle">Formation rémunérée</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.paidTrainingAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-youthGuarantee"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.youthGuarantee) }}</div></th>
+                            <td class="align-middle">Garantie jeunes</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.youthGuaranteeAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-maintenance"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.maintenance) }}</div></th>
+                            <td class="align-middle">Pension alimentaire</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.maintenanceAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button>
+                            </td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-activityBonus"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.activityBonus) }}</div></th>
+                            <td class="align-middle">Prime d'activité</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.activityBonusAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-pensionBenefit"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.pensionBenefit) }}</div></th>
+                            <td class="align-middle">Retraite</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.pensionBenefitAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-minimumIncome"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.minimumIncome) }}</div></th>
+                            <td class="align-middle">RSA</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.minimumIncomeAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-salary"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.salary) }}</div></th>
+                            <td class="align-middle">Salaire</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.salaryAmt) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resources_type-ressourceOther"
+                            class="js-{{ loop.index0 }}_{{ entity_name }}_resources_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.ressourceOther) }}</div></th>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.ressourceOtherPrecision) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.ressourceOtherAmt) }}</td>
+                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></class></button></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr id="js-{{ loop.index0 }}_{{ entity_name }}_resourcesAmt" class="font-weight-bold">
+                            <th scope="row"></th>
+                            <td class="align-middle">Total des resources</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resourcesAmt) }}</td>
+                            <td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

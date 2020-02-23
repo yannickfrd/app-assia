@@ -79,9 +79,14 @@ class SupportPerson
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationPerson", mappedBy="supportPerson", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationPerson", mappedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $evaluationsPerson;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\InitEvalPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     */
+    private $initEvalPerson;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -207,6 +212,36 @@ class SupportPerson
         return $this;
     }
 
+    public function getRole(): ?int
+    {
+        return $this->role;
+    }
+
+    public function setRole(?int $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getRoleList()
+    {
+        return RolePerson::ROLE[$this->role];
+    }
+
+    public function getHead(): ?bool
+    {
+        return $this->head;
+    }
+
+    public function setHead(?bool $head): self
+    {
+        $this->head = $head;
+
+        return $this;
+    }
+
+
     /**
      * @return Collection|Note[]
      */
@@ -269,31 +304,20 @@ class SupportPerson
         return $this;
     }
 
-    public function getRole(): ?int
+
+    public function getInitEvalPerson(): ?InitEvalPerson
     {
-        return $this->role;
+        return $this->initEvalPerson;
     }
 
-    public function setRole(?int $role): self
+    public function setInitEvalPerson(?InitEvalPerson $initEvalPerson): self
     {
-        $this->role = $role;
+        $this->initEvalPerson = $initEvalPerson;
 
-        return $this;
-    }
-
-    public function getRoleList()
-    {
-        return RolePerson::ROLE[$this->role];
-    }
-
-    public function getHead(): ?bool
-    {
-        return $this->head;
-    }
-
-    public function setHead(?bool $head): self
-    {
-        $this->head = $head;
+        // set the owning side of the relation if necessary
+        if ($this !== $initEvalPerson->getSupportPerson()) {
+            $initEvalPerson->setSupportPerson($this);
+        }
 
         return $this;
     }

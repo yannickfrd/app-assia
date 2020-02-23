@@ -2,19 +2,20 @@
 
 namespace App\Export;
 
-use App\Entity\SupportPerson;
-use App\Entity\EvalSocialGroup;
-use App\Entity\EvalAdmPerson;
-use App\Entity\EvalFamilyGroup;
-use App\Entity\EvalFamilyPerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalHousingGroup;
-use App\Entity\EvaluationGroup;
-use App\Entity\EvaluationPerson;
 use App\Service\Export;
+use App\Entity\EvalAdmPerson;
+use App\Entity\SupportPerson;
+use App\Entity\EvalProfPerson;
 use App\Service\ObjectToArray;
+use App\Entity\EvalBudgetGroup;
+use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalFamilyPerson;
+use App\Entity\EvalHousingGroup;
+use App\Entity\EvalSocialPerson;
+use App\Entity\EvaluationPerson;
 
 class SupportPersonFullExport
 {
@@ -44,6 +45,7 @@ class SupportPersonFullExport
         $this->evalBudgetPerson = new EvalBudgetPerson();
         $this->evalFamilyPerson = new EvalFamilyPerson();
         $this->evalProfPerson = new EvalProfPerson();
+        $this->evalSocialPerson = new EvalSocialPerson();
 
         $this->evaluationGroup = new EvaluationGroup();
         $this->evalBudgetGroup = new EvalBudgetGroup();
@@ -78,26 +80,26 @@ class SupportPersonFullExport
         $supportPersonExport = new SupportPersonExport;
         $this->datas = $supportPersonExport->getDatas($supportPerson);
 
-        foreach ($supportPerson->getEvaluationsPerson() as $evaluation) {
-            $this->evaluationPerson = $evaluation;
-            $this->evaluationGroup = $evaluation->getEvaluationGroup();
-        }
+        $evaluations = $supportPerson->getEvaluationsPerson();
+        $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();
+        $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
 
-        $this->mergeObject($this->evalSocialGroup, $this->evaluationGroup->getEvalSocialGroup(), "evalSocialGroup", "social");
-        $this->mergeObject($this->evalAdmPerson, $this->evaluationPerson->getEvalAdmPerson(), "evalAdmPerson", "adm");
-        $this->mergeObject($this->evalFamilyGroup, $this->evaluationGroup->getEvalFamilyGroup(), "evalFamilyGroup", "family");
-        $this->mergeObject($this->evalFamilyPerson, $this->evaluationPerson->getEvalFamilyPerson(), "evalFamilyPerson", "family");
-        $this->mergeObject($this->evalProfPerson, $this->evaluationPerson->getEvalProfPerson(), "evalProfPerson", "prof");
-        $this->mergeObject($this->evalBudgetGroup, $this->evaluationGroup->getEvalBudgetGroup(), "evalBudgetGroup", "budget");
-        $this->mergeObject($this->evalBudgetPerson, $this->evaluationPerson->getEvalBudgetPerson(), "evalBudgetPerson", "budget");
-        $this->mergeObject($this->evalHousingGroup, $this->evaluationGroup->getEvalHousingGroup(), "evalHousingGroup", "housing");
+        $this->mergeObject($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, "evalSocialGroup", "social");
+        $this->mergeObject($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, "evalSocialPerson", "social");
+        $this->mergeObject($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, "evalAdmPerson", "adm");
+        $this->mergeObject($this->evaluationGroup->getEvalFamilyGroup() ?? $this->evalFamilyGroup, "evalFamilyGroup", "family");
+        $this->mergeObject($this->evaluationPerson->getEvalFamilyPerson() ?? $this->evalFamilyPerson, "evalFamilyPerson", "family");
+        $this->mergeObject($this->evaluationPerson->getEvalProfPerson() ?? $this->evalProfPerson, "evalProfPerson", "prof");
+        $this->mergeObject($this->evaluationGroup->getEvalBudgetGroup() ?? $this->evalBudgetGroup, "evalBudgetGroup", "budget");
+        $this->mergeObject($this->evaluationPerson->getEvalBudgetPerson() ?? $this->evalBudgetPerson, "evalBudgetPerson", "budget");
+        $this->mergeObject($this->evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, "evalHousingGroup", "housing");
 
         return $this->datas;
     }
 
-    protected function mergeObject($nameObject, $emtpyObject, $object, $translation)
+    protected function mergeObject($entity, $entityName, $translation)
     {
-        $array = $this->objectToArray->getArray($nameObject, $emtpyObject, $object, $translation);
+        $array = $this->objectToArray->getArray($entity,  $entityName, $translation);
         $this->datas = array_merge($this->datas, $array);
     }
 }
