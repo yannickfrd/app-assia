@@ -17,11 +17,19 @@ class EvalSocialPersonType extends AbstractType
         $builder
             ->add("rightSocialSecurity", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "rightSocialSecurity"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("socialSecurity", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "socialSecurity"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
@@ -38,11 +46,19 @@ class EvalSocialPersonType extends AbstractType
             ])
             ->add("familyBreakdown", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "familyBreakdown"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("friendshipBreakdown", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "friendshipBreakdown"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

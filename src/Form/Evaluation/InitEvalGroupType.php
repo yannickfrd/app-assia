@@ -17,19 +17,28 @@ class InitEvalGroupType extends AbstractType
         $builder
             ->add("housingStatus", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
-                "attr" => ["class" => "border-warning"],
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "housingStatus"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("siaoRequest", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "siaoRequest"
+                ],
                 "placeholder" => "-- Select --",
-                "attr" => ["class" => "border-warning"],
                 "required" => false
             ])
             ->add("socialHousingRequest", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
-                "attr" => ["class" => "border-warning"],
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "socialHousingRequest"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ]);

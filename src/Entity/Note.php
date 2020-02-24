@@ -12,8 +12,8 @@ class Note
 {
     public const TYPE = [
         1 => "Note",
-        2 => "RDV",
-        3 => "Rapport social"
+        2 => "Rapport social",
+        3 => "Autre"
     ];
 
     public const TYPE_DEFAULT = 1;
@@ -22,7 +22,7 @@ class Note
         1 => "Brouillon",
         2 => "Finalisé",
         3 => "En attente validation",
-        4 => "Validé",
+        4 => "Validé"
     ];
 
     public const STATUS_DEFAULT = 1;

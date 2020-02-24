@@ -35,16 +35,9 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findSupportById($id): ?SupportGroup
     {
-        return $this->createQueryBuilder("sg")
-            ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
-            ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
-            ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
-            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name, accommodation}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
-            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
-            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+        $query = $this->getsupportQuery();
 
-            ->andWhere("sg.id = :id")
+        return $query->andWhere("sg.id = :id")
             ->setParameter("id", $id)
 
             ->getQuery()
@@ -60,11 +53,9 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findFullSupportById(int $id): ?SupportGroup
     {
-        return $this->createQueryBuilder("sg")
-            ->select("sg")
-            ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
-            ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
-            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
+        $query = $this->getsupportQuery();
+
+        return $query->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname}")
             ->leftJoin("sg.referent2", "ref2")->addselect("PARTIAL ref2.{id, firstname, lastname}")
 
             ->leftJoin("sg.accommodationGroups", "ag")->addselect("PARTIAL ag.{id}")
@@ -73,17 +64,24 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("sg.notes", "notes")->addselect("PARTIAL notes.{id}")
             ->leftJoin("sg.documents", "docs")->addselect("PARTIAL docs.{id}")
 
-            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name, accommodation}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
-            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
-            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
-
             ->andWhere("sg.id = :id")
             ->setParameter("id", $id)
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
+    }
+
+    protected function getsupportQuery()
+    {
+        return $this->createQueryBuilder("sg")
+            ->select("sg")
+            ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
+            ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
+            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, preAdmission, accommodation, justice}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}");
     }
 
     /**

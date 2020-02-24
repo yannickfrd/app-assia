@@ -20,7 +20,7 @@
 
         	{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
         <div id="collapse-eval_prof-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-eval_prof-{{ loop.index0 }}" data-parent="#accordion-eval_prof">
+            aria-labelledby="heading-eval_prof-{{ loop.index0 }}" data-parent="#accordion-eval_prof" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.schoolLevel) }}</div>
                 <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>

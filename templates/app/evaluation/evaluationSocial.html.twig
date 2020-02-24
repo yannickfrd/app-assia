@@ -20,7 +20,7 @@
 
         {% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.role != 3) %}
         <div id="collapse-eval_social-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-eval_social-{{ loop.index0 }}" data-parent="#accordion-eval_social">
+            aria-labelledby="heading-eval_social-{{ loop.index0 }}" data-parent="#accordion-eval_social" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.rightSocialSecurity) }}</div>
                 <div class="col-md-6 js-{{ loop.index0 }}_evalSocialPerson_rightSocialSecurity d-block">

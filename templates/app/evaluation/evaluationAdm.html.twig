@@ -18,7 +18,8 @@
 				{% endfor %}
 			</div>
 				{% for evalPerson in form.evaluationPeople %}
-				<div id="collapse-eval_adm-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3" aria-labelledby="heading-eval_adm-{{ loop.index0 }}" data-parent="#accordion-eval_adm">
+				<div id="collapse-eval_adm-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
+					aria-labelledby="heading-eval_adm-{{ loop.index0 }}" data-parent="#accordion-eval_adm" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
 					<div class="form-group row">
 						<div class="col-md-6">{{ form_row(evalPerson.evalAdmPerson.nationality) }}</div>
 						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">

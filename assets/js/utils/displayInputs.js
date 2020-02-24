@@ -1,9 +1,9 @@
 // Masque ou rend visible les champs Input dépendants d'un input parent
 export default class DisplayInputs {
 
-    constructor(prefix, idInput, typeInput, optionValues) {
-        this.inputElt = document.getElementById(prefix + idInput);
-        this.childrenElts = document.querySelectorAll(".js-" + idInput);
+    constructor(prefix, inputId, typeInput, optionValues) {
+        this.inputElt = document.getElementById(prefix + inputId);
+        this.childrenElts = document.querySelectorAll(".js-" + inputId);
         this.typeInput = typeInput;
         this.optionValues = optionValues;
         this.init();
@@ -11,28 +11,9 @@ export default class DisplayInputs {
 
     init() {
         if (this.inputElt) {
-            switch (this.typeInput) {
-                case "select":
-                    this.select();
-                    this.inputElt.addEventListener("input", this.select.bind(this));
-                    break;
-                case "checkbox":
-                    this.checkbox();
-                    this.inputElt.addEventListener("input", this.checkbox.bind(this));
-                    break;
-                default:
-                    break;
-            }
+            this.select();
+            this.inputElt.addEventListener("click", this.select.bind(this))
         }
-    }
-
-    // Vérifie le champ de type Checkbox
-    checkbox() {
-        let visible = false;
-        if (this.inputElt.checked === true) {
-            visible = true;
-        }
-        this.editchildrenElts(visible);
     }
 
     // Vérifie le champ de type Select
@@ -67,4 +48,13 @@ export default class DisplayInputs {
             }
         });
     }
+
+    // Vérifie le champ de type Checkbox
+    // checkbox() {
+    //     let visible = false;
+    //     if (this.inputElt.checked === true) {
+    //         visible = true;
+    //     }
+    //     this.editchildrenElts(visible);
+    // }
 }

@@ -54,7 +54,7 @@
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								Suivis
 							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuSupports">
+							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuSupports">
 								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
 								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau
 									suivi</a>
@@ -68,7 +68,7 @@
 								role="button" data-toggle="dropdown" aria-haspopup="true"
 								aria-expanded="false">Répertoire
 							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuDirectory">
+							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
 								<a class="dropdown-item" href="{{ path("users") }}">Utilisateurs</a>
 								<a class="dropdown-item" href="{{ path("services") }}">Services</a>
 								<a class="dropdown-item" href="{{ path("poles") }}">Pôles</a>
@@ -80,7 +80,7 @@
 							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuAdmin"
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin
 							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuAdmin">
+							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuAdmin">
 								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel utilisateur</a>
 								{% if is_granted("ROLE_SUPER_ADMIN") %}
 								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>

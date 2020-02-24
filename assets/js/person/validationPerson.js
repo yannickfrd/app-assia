@@ -3,40 +3,32 @@ import ValidationInput from "../utils/validationInput";
 // Validation des données de la fiche personne
 export default class ValidationPerson {
     constructor(lastname, firstname, birthdate, gender, email, role, typo, nbPeople) {
-        this.lastname = lastname;
-        this.lastnameInputElt = document.getElementById(this.lastname);
-        this.lastnameLabelElt = document.querySelector("label[for=" + this.lastname + "]");
+        this.lastnameInputElt = document.getElementById(lastname);
+        this.lastnameLabelElt = document.querySelector("label[for=" + lastname + "]");
 
-        this.firstname = firstname;
-        this.firstnameInputElt = document.getElementById(this.firstname);
-        this.firstnameLabelElt = document.querySelector("label[for=" + this.firstname + "]");
+        this.firstnameInputElt = document.getElementById(firstname);
+        this.firstnameLabelElt = document.querySelector("label[for=" + firstname + "]");
 
-        this.birthdate = birthdate;
-        this.birthdateInputElt = document.getElementById(this.birthdate);
-        this.birthdateLabelElt = document.querySelector("label[for=" + this.birthdate + "]");
+        this.birthdateInputElt = document.getElementById(birthdate);
+        this.birthdateLabelElt = document.querySelector("label[for=" + birthdate + "]");
 
-        this.gender = gender;
-        this.genderInputElt = document.getElementById(this.gender);
-        this.genderLabelElt = document.querySelector("label[for=" + this.gender + "]");
+        this.genderInputElt = document.getElementById(gender);
+        this.genderLabelElt = document.querySelector("label[for=" + gender + "]");
         this.genderValue = null;
 
-        this.email = email;
-        this.emailInputElt = document.getElementById(this.email);
-        this.emailLabelElt = document.querySelector("label[for=" + this.email + "]");
+        this.emailInputElt = document.getElementById(email);
+        this.emailLabelElt = document.querySelector("label[for=" + email + "]");
 
-        this.role = role;
-        this.roleInputElt = document.getElementById(this.role);
-        this.roleLabelElt = document.querySelector("label[for=" + this.role + "]");
+        this.roleInputElt = document.getElementById(role);
+        this.roleLabelElt = document.querySelector("label[for=" + role + "]");
         this.roleValue = null;
 
-        this.typo = typo;
-        this.typoInputElt = document.getElementById(this.typo);
-        this.typoLabelElt = document.querySelector("label[for=" + this.typo + "]");
+        this.typoInputElt = document.getElementById(typo);
+        this.typoLabelElt = document.querySelector("label[for=" + typo + "]");
         this.typoValue = null;
 
-        this.nbPeople = nbPeople;
-        this.nbPeopleInputElt = document.getElementById(this.nbPeople);
-        this.nbPeopleLabelElt = document.querySelector("label[for=" + this.nbPeople + "]");
+        this.nbPeopleInputElt = document.getElementById(nbPeople);
+        this.nbPeopleLabelElt = document.querySelector("label[for=" + nbPeople + "]");
 
         this.validationInput = new ValidationInput();
 
@@ -47,14 +39,14 @@ export default class ValidationPerson {
         this.lastnameInputElt.addEventListener("focusout", this.checkLastname.bind(this));
         this.firstnameInputElt.addEventListener("focusout", this.checkFirstname.bind(this));
         this.birthdateInputElt.addEventListener("focusout", this.checkBirthdate.bind(this));
-        this.genderInputElt.addEventListener("input", this.checkGender.bind(this));
+        this.genderInputElt.addEventListener("change", this.checkGender.bind(this));
         this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
         if (this.roleInputElt) {
-            this.roleInputElt.addEventListener("input", this.checkRole.bind(this));
+            this.roleInputElt.addEventListener("change", this.checkRole.bind(this));
         }
         if (this.typoInputElt) {
-            this.typoInputElt.addEventListener("input", this.checkTypo.bind(this));
-            this.nbPeopleInputElt.addEventListener("input", this.checkNbPeople.bind(this));
+            this.typoInputElt.addEventListener("change", this.checkTypo.bind(this));
+            this.nbPeopleInputElt.addEventListener("change", this.checkNbPeople.bind(this));
         }
     }
 

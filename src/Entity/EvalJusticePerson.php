@@ -10,28 +10,40 @@ use Doctrine\ORM\Mapping as ORM;
 class EvalJusticePerson
 {
     public const JUSTICE_STATUS = [
-        2 => "Contrainte pénale",
-        1 => "Contrôle Judiciaire",
-        3 => "Convocation sur procès-verbal en matière pénale",
+        1 => "Contrainte pénale",
+        2 => "Contrôle judiciaire (CJ)", // Sursis probatoire
+        3 => "Convocation sur procès-verbal en matière pénale (CPPV)",
         4 => "Détention",
-        5 => "Placement extérieur",
-        6 => "Placement sous surveillance électronique",
-        8 => "Suivi socio-judiciaire",
-        7 => "Sursis de mise à l'épreuce",
-        9 => "Travail d'intérêt général",
+        5 => "Libération conditionnelle (LC)",
+        6 => "Placement extérieur (PE)",
+        7 => "Placement sous surveillannce électronique (PSE)", // détention à domicile sous surveillance électronique (DDSE) 
+        8 => "Semi-liberté",
+        9 => "Sortie de détention",
+        10 => "Suivi socio-judiciaire (SSJ)",
+        11 => "Sursis de mise à l'épreuve (SME)",
+        12 => "Suspension de peine pour raison médicale",
+        13 => "Travail d'intérêt général (TIG)",
         97 => "Autre",
         98 => "Non concerné",
         99 => "Non renseigné"
     ];
 
     public const JUSTICE_ACT = [
-        1 => "PSE",
-        2 => "PSEM",
-        3 => "Libération conditionnelle",
-        4 => "Réduction conditionnelle de peine",
-        5 => "Suivi socio-judiciaire",
-        6 => "Sursis de mise à l'épreuce",
-        7 => "Travail d'intérêt général",
+        1 => "Composition pénale (CP)",
+        2 => "Contrôle judiciaire socio-éductatif (CJS)", // Sursis probatoire
+        3 => "Enquête de personnalité auteur (EP)",
+        4 => "Enquête de personnalité victime",
+        5 => "Enquête sociale rapide",
+        6 => "Placement extérieur (PE)",
+        7 => "Placement sous surveillannce électronique (PSE)", // détention à domicile sous surveillance électronique (DDSE) 
+        8 => "Placement sous surveillannce électronique mobile (PSEM)", // détention à domicile sous surveillance électronique (DDSE) 
+        9 => "Libération conditionnelle (LC)",
+        10 => "Réduction conditionnelle de peine",
+        11 => "Stage de citoyenneté",
+        12 => "Stage de sensibilisation",
+        13 => "Suivi socio-judiciaire (SSJ)",
+        14 => "Sursis de mise à l'épreuve (SME)",
+        14 => "Travail d'intérêt général (TIG)",
         97 => "Autre",
         98 => "Non concerné",
         99 => "Non renseigné"

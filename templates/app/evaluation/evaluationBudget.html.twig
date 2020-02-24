@@ -9,28 +9,28 @@
 <div class="card mb-4">
   	<div class="card-header font-weight-bold">
 		<div class="row">
-			<div class="col-6 col-sm-2 mb-2 text-center border-right border-gray">Situation budgétaire du groupe</div>
-			<div class="col-6 col-sm-2 mb-2 text-center border-right border-gray">
+			<div class="col-6 col-md-2 mb-2 text-cente border-right border-gray">Situation budgétaire du groupe</div>
+			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Total des resources</span><br/>
 				<span id="resourcesGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.resourcesGroupAmt is defined %}
 					{{ evaluationGroup.evalBudgetGroup.resourcesGroupAmt }}{% else %}0{% endif %}</span> €
 			</div>
-			<div class="col-6 col-sm-2 mb-2 text-center border-right border-gray">
+			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Total des charges</span><br/>
 				<span id="chargesGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
 					{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</span> €
 			</div>
-			<div class="col-6 col-sm-2 mb-2 text-center border-right border-gray">
+			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Remboursemt mensuel</span><br/>
 				<span id="repaymentGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
 					{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €
 			</div>
-			<div class="col-6 col-sm-2 mb-2 text-center border-right border-gray">
+			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Reste à vivre</span><br/>
 					<span id="budgetBalanceGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
 						{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</span> €
 			</div>
-			<div class="col-6 col-sm-2 mb-2 text-center">
+			<div class="col-6 col-md-2 mb-2 text-center">
 				<span>Total des dettes</span><br/>
 					<span id="debtsGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
 						{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</span> €
@@ -54,10 +54,10 @@
 
 		{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
 		{% set evalBudgetPerson = evalPerson.evalBudgetPerson %}
-		{% set entity_name = "evalBudgetPerson" %}
+		{% set entity = "evalBudgetPerson" %}
 
 		<div id="collapse-eval_budget-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-			aria-labelledby="heading-eval_budget-{{ loop.index0 }}" data-parent="#accordion-eval_budget">
+			aria-labelledby="heading-eval_budget-{{ loop.index0 }}" data-parent="#accordion-eval_budget" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="row">
 
 				{% include "app/evaluation/evalResources.html.twig" %}
@@ -67,6 +67,10 @@
 			</div>
 			<div class="form-group row">
 				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
+				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
 			</div>
 
 			<hr>

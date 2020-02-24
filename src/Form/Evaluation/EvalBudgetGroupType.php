@@ -14,11 +14,11 @@ class EvalBudgetGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("taxIncomeN1Amt", MoneyType::class, [
+            ->add("incomeN1Amt", MoneyType::class, [
                 "attr" => ["class" => "text-right"],
                 "required" => false
             ])
-            ->add("taxIncomeN2Amt", MoneyType::class, [
+            ->add("incomeN2Amt", MoneyType::class, [
                 "attr" => ["class" => "text-right"],
                 "required" => false
             ])

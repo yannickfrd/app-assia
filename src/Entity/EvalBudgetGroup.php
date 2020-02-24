@@ -32,14 +32,14 @@ class EvalBudgetGroup
     private $debtsGroupAmt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
-    private $taxIncomeN1Amt;
+    private $incomeN1Amt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
-    private $taxIncomeN2Amt;
+    private $incomeN2Amt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -103,26 +103,26 @@ class EvalBudgetGroup
         return $this;
     }
 
-    public function getTaxIncomeN1Amt(): ?int
+    public function getIncomeN1Amt(): ?float
     {
-        return $this->taxIncomeN1Amt;
+        return $this->incomeN1Amt;
     }
 
-    public function setTaxIncomeN1Amt(?int $taxIncomeN1Amt): self
+    public function setIncomeN1Amt(?float $incomeN1Amt): self
     {
-        $this->taxIncomeN1Amt = $taxIncomeN1Amt;
+        $this->incomeN1Amt = $incomeN1Amt;
 
         return $this;
     }
 
-    public function getTaxIncomeN2Amt(): ?int
+    public function getIncomeN2Amt(): ?float
     {
-        return $this->taxIncomeN2Amt;
+        return $this->incomeN2Amt;
     }
 
-    public function setTaxIncomeN2Amt(?int $taxIncomeN2Amt): self
+    public function setIncomeN2Amt(?float $incomeN2Amt): self
     {
-        $this->taxIncomeN2Amt = $taxIncomeN2Amt;
+        $this->incomeN2Amt = $incomeN2Amt;
 
         return $this;
     }

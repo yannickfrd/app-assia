@@ -194,12 +194,12 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $taxIncomeN1;
+    private $incomeN1Amt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $taxIncomeN2;
+    private $incomeN2Amt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -913,26 +913,26 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getTaxIncomeN1(): ?float
+    public function getIncomeN1Amt(): ?float
     {
-        return $this->taxIncomeN1;
+        return $this->incomeN1Amt;
     }
 
-    public function setTaxIncomeN1(?float $taxIncomeN1): self
+    public function setIncomeN1Amt(?float $incomeN1Amt): self
     {
-        $this->taxIncomeN1 = $taxIncomeN1;
+        $this->incomeN1Amt = $incomeN1Amt;
 
         return $this;
     }
 
-    public function getTaxIncomeN2(): ?float
+    public function getIncomeN2Amt(): ?float
     {
-        return $this->taxIncomeN2;
+        return $this->incomeN2Amt;
     }
 
-    public function setTaxIncomeN2(?float $taxIncomeN2): self
+    public function setIncomeN2Amt(?float $incomeN2Amt): self
     {
-        $this->taxIncomeN2 = $taxIncomeN2;
+        $this->incomeN2Amt = $incomeN2Amt;
 
         return $this;
     }

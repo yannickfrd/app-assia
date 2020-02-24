@@ -27,12 +27,20 @@ class EvalProfPersonType extends AbstractType
             ])
             ->add("profStatus", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalProfPerson::PROF_STATUS),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "profStatus"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("jobCenterId")
             ->add("contractType", ChoiceType::class, [
                 "choices" => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "contractType"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])

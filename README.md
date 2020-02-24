@@ -277,8 +277,8 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     syploId: Numéro SYPLO
     taxes: Impôts
     taxesAmt: Montant Impôts
-    taxIncomeN1: Revenu fiscal n-1
-    taxIncomeN2: Revenu fiscal n-2
+    incomeN1Amt: Revenu fiscal n-1
+    tncomeN2Amt: Revenu fiscal n-2
     tempWaitingAllowance: Allocation temporaire d'attente
     tempWaitingAllowanceAmt: Montant Allocation temporaire d'attente
     title: Titre

@@ -18,94 +18,224 @@ class EvalBudgetPersonType extends AbstractType
         $builder
             ->add("resources", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "resources"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
             ->add("resourcesAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resourcesAmt text-right"],
+                "attr" => [
+                    "class" => "js-resourcesAmt js-initEval text-right",
+                    "data-id" => "resourcesAmt"
+                ],
                 "required" => false
             ])
-            ->add("disAdultAllowance")
-            ->add("disChildAllowance")
-            ->add("unemplBenefit")
-            ->add("asylumAllowance")
-            ->add("tempWaitingAllowance")
-            ->add("familyAllowance")
-            ->add("solidarityAllowance")
-            ->add("paidTraining")
-            ->add("youthGuarantee")
-            ->add("maintenance")
-            ->add("activityBonus")
-            ->add("pensionBenefit")
-            ->add("minimumIncome")
-            ->add("salary")
-            ->add("ressourceOther", null, ["label_attr" => ["class" => "js-noText"]])
-            ->add("ressourceOtherPrecision", null, ["attr" => ["placeholder" => "Autre ressource..."]])
+            ->add("disAdultAllowance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "disAdultAllowance"
+                ],
+            ])
+            ->add("disChildAllowance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "disChildAllowance"
+                ],
+            ])
+            ->add("unemplBenefit", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "unemplBenefit"
+                ],
+            ])
+            ->add("asylumAllowance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "asylumAllowance"
+                ],
+            ])
+            ->add("tempWaitingAllowance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "tempWaitingAllowance"
+                ],
+            ])
+            ->add("familyAllowance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "familyAllowance"
+                ],
+            ])
+            ->add("solidarityAllowance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "solidarityAllowance"
+                ],
+            ])
+            ->add("paidTraining", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "paidTraining"
+                ],
+            ])
+            ->add("youthGuarantee", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "youthGuarantee"
+                ],
+            ])
+            ->add("maintenance", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "maintenance"
+                ],
+            ])
+            ->add("activityBonus", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "activityBonus"
+                ],
+            ])
+            ->add("pensionBenefit", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "pensionBenefit"
+                ],
+            ])
+            ->add("minimumIncome", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "minimumIncome"
+                ],
+            ])
+            ->add("salary", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "salary"
+                ],
+            ])
+            ->add("ressourceOther", null, [
+                "label_attr" => [
+                    "class" => "js-noText"
+                ]
+            ])
+            ->add("ressourceOtherPrecision", null, [
+                "attr" => [
+                    "placeholder" => "Autre ressource..."
+                ]
+            ])
             ->add("disAdultAllowanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "disAdultAllowanceAmt"
+                ],
                 "required" => false
             ])
             ->add("disChildAllowanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "disChildAllowanceAmt"
+                ],
                 "required" => false
             ])
             ->add("unemplBenefitAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "unemplBenefitAmt"
+                ],
                 "required" => false
             ])
             ->add("asylumAllowanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "asylumAllowanceAmt"
+                ],
                 "required" => false
             ])
             ->add("tempWaitingAllowanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "tempWaitingAllowanceAmt"
+                ],
                 "required" => false
             ])
             ->add("familyAllowanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "familyAllowanceAmt"
+                ],
                 "required" => false
             ])
             ->add("solidarityAllowanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "solidarityAllowanceAmt"
+                ],
                 "required" => false
             ])
             ->add("paidTrainingAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "paidTrainingAmt"
+                ],
                 "required" => false
             ])
             ->add("youthGuaranteeAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "youthGuaranteeAmt"
+                ],
                 "required" => false
             ])
             ->add("maintenanceAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "maintenanceAmt"
+                ],
                 "required" => false
             ])
             ->add("activityBonusAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "activityBonusAmt"
+                ],
                 "required" => false
             ])
             ->add("pensionBenefitAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "pensionBenefitAmt"
+                ],
                 "required" => false
             ])
             ->add("minimumIncomeAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "minimumIncomeAmt"
+                ],
                 "required" => false
             ])
             ->add("salaryAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "salaryAmt"
+                ],
                 "required" => false
             ])
             ->add("ressourceOtherAmt", MoneyType::class, [
-                "attr" => ["class" => "js-resources text-right"],
+                "attr" => [
+                    "class" => "js-resources js-initEval text-right",
+                    "data-id" => "ressourceOtherAmt"
+                ],
                 "required" => false
             ])
-            ->add("taxIncomeN1", MoneyType::class, [
+            ->add("incomeN1Amt", MoneyType::class, [
                 "attr" => ["class" => "text-right"],
                 "required" => false
             ])
-            ->add("taxIncomeN2", MoneyType::class, [
+            ->add("incomeN2Amt", MoneyType::class, [
                 "attr" => ["class" => "text-right"],
                 "required" => false
             ])
@@ -180,11 +310,18 @@ class EvalBudgetPersonType extends AbstractType
 
             ->add("debts", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "debts"
+                ],
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
-            ->add("debtsAmt", MoneyType::class, [
-                "attr" => ["class" => "js-debtsAmt text-right"],
+            ->add("debtsAmt", MoneyType::class,  [
+                "attr" => [
+                    "class" => "js-debtsAmt js-initEval text-right",
+                    "data-id" => "debtsAmt"
+                ],
                 "required" => false
             ])
             ->add("debtRental")

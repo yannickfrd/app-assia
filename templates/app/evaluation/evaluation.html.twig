@@ -30,7 +30,7 @@
 			</div>
 		</div>
 
-		<div class="mb-4">
+		<div class="mb-4" data-editMode="{% if form.vars.value.evalSocialGroup%}true{% else %}false{% endif %}">
 			{# {% include "app/support/evalSummary.html.twig" %} #}
 			{% include "app/evaluation/initEvaluation.html.twig" %}
 			{% if support.service.justice %}

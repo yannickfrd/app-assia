@@ -77,10 +77,8 @@ Salary: Salaire
 Settlement plan: Plan d'apurement
 Solidarity allowance amt: Montant ASS
 Solidarity allowance: ASS
-Tax income n1: Revenu fiscal n-1
-Tax income n2: Revenu fiscal n-2
-Tax incomen1: Revenu fiscal n-1
-Tax incomen2: Revenu fiscal n-2
+Income n1 amt: Revenu fiscal n-1
+Income n2 amt: Revenu fiscal n-2
 Taxes amt: Montant impôts
 Taxes: Impôts
 Temp waiting allowance amt: Montant allocation temporaire d'attente
@@ -98,5 +96,3 @@ Budget balance amt: Reste à vivre
 Charges group amt: Charges totales du groupe
 Debts group amt: Dettes totales du groupe
 Resources group amt: Ressources totales du groupe
-Tax incomen1amt: Revenu fiscal n-1
-Tax incomen2amt: Revenu fiscal n-2

@@ -6,12 +6,14 @@
 
 {% block card_body %}
 
-<div class="form-group row">
-    <div class="col-md-6">{{ form_row(form.initEvalGroup.housingStatus) }}</div>
-</div>
-<div class="form-group row">
-    <div class="col-md-6">{{ form_row(form.initEvalGroup.siaoRequest) }}</div>
-    <div class="col-md-6">{{ form_row(form.initEvalGroup.socialHousingRequest) }}</div>
+<div class="js-evalGroup" data-supportId="g-{{form.vars.value.supportGroup.id}}">
+	<div class="form-group row">
+		<div class="col-md-6">{{ form_row(form.initEvalGroup.housingStatus) }}</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-6">{{ form_row(form.initEvalGroup.siaoRequest) }}</div>
+		<div class="col-md-6">{{ form_row(form.initEvalGroup.socialHousingRequest) }}</div>
+	</div>
 </div>
 
 {% if form.supportPerson is defined %}
@@ -40,32 +42,25 @@
 
 		{% for evalPerson in form_evaluation_people %}
 		{% set evalBudgetPerson = evalPerson.initEvalPerson %}
-		{% set entity_name = "initEvalPerson" %}
+		{% set entity = "initEvalPerson" %}
 
 		<div id="collapse-init_eval-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-			aria-labelledby="heading-init_eval-{{ loop.index0 }}" data-parent="#accordion-init_eval">
-
+			aria-labelledby="heading-init_eval-{{ loop.index0 }}" data-parent="#accordion-init_eval" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="form-group row">
 				<div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_paper d-block">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
 			</div>			
 		    <div class="form-group row mb-0">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.rightSocialSecurity) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_rightSocialSecurity d-block">
-                    {{ form_row(evalPerson.initEvalPerson.socialSecurity) }}
-				</div>
+                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_rightSocialSecurity d-block">{{ form_row(evalPerson.initEvalPerson.socialSecurity) }}</div>
             </div>		
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.familyBreakdown) }}</div>
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.friendshipBreakdown) }}</div>
             </div>
-			
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.profStatus) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_profStatus d-block">
-                    {{ form_row(evalPerson.initEvalPerson.contractType) }}
-                </div>
+                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_profStatus d-block">{{ form_row(evalPerson.initEvalPerson.contractType) }}</div>
 			</div>
-
 			<div class="form-group row">
 				{% include "app/evaluation/evalResources.html.twig" %}
 				<div class="col-md-6">

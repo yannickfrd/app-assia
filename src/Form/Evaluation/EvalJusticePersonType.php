@@ -20,6 +20,11 @@ class EvalJusticePersonType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("justiceAct", ChoiceType::class, [
+                "choices" => Choices::getChoices(EvalJusticePerson::JUSTICE_ACT),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
             ->add("commentEvalJustice", TextareaType::class, [
                 "label_attr" => ["class" => "sr-only"],
                 "attr" => [
