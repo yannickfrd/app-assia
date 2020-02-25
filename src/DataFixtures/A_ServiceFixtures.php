@@ -173,7 +173,7 @@ class A_ServiceFixtures extends Fixture
 
                 $this->manager->persist($serviceDevice);
 
-                $this->addAccommodations($device); //
+                $this->addAccommodations($device); // Fixtures
             }
         }
     }

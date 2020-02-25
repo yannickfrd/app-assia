@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Evaluation;
+namespace App\Form\OriginRequest;
 
 use App\Entity\Organization;
 use App\Form\Utils\Choices;
@@ -21,8 +21,10 @@ class OriginRequestType extends AbstractType
         $builder
             ->add("organization", EntityType::class, [
                 "class" => Organization::class,
-                "choice_label" => "name"
+                "choice_label" => "name",
+                "placeholder" => "-- Select --"
             ])
+            ->add("organizationComment")
             ->add("orientationDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
@@ -31,7 +33,7 @@ class OriginRequestType extends AbstractType
                 "widget" => "single_text",
                 "required" => false
             ])
-            ->add("preAdmissionResult", ChoiceType::class, [
+            ->add("resulPreAdmission", ChoiceType::class, [
                 "choices" => Choices::getChoices(OriginRequest::RESULT_PRE_ADMISSION),
                 "placeholder" => "-- Select --",
             ])
@@ -44,7 +46,8 @@ class OriginRequestType extends AbstractType
                 "attr" => [
                     "rows" => 5,
                     "placeholder" => "Write a comment about the origin request"
-                ]
+                ],
+                "required" => false
             ]);
     }
 

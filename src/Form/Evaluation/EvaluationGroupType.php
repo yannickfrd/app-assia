@@ -3,7 +3,7 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\EvaluationGroup;
-use App\Form\InitEvalGroupType;
+use App\Form\Evaluation\InitEvalGroupType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Evaluation\EvalBudgetGroupType;
 use App\Form\Evaluation\EvalFamilyGroupType;

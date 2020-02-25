@@ -3,8 +3,8 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\EvaluationPerson;
-use App\Form\InitEvalPersonType;
-use App\Form\EvalJusticePersonType;
+use App\Form\Evaluation\InitEvalPersonType;
+use App\Form\Evaluation\EvalJusticePersonType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Evaluation\EvalAdmPersonType;
 use App\Form\Evaluation\EvalProfPersonType;

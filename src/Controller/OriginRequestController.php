@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\SupportGroup;
 use App\Entity\OriginRequest;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Evaluation\OriginRequestType;
 use App\Repository\SupportGroupRepository;
 use App\Repository\OriginRequestRepository;
+use App\Form\OriginRequest\OriginRequestType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class OriginRequestController extends AbstractController
 {
     private $manager;
+    private $repoSupportGroup;
     private $repo;
 
     public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, OriginRequestRepository $repo)
@@ -26,10 +27,10 @@ class OriginRequestController extends AbstractController
     }
 
     /**
-     * Modification d'une évaluation sociale
+     * Modification de la pré-admission
      * 
      * @Route("/support/{id}/originRequest", name="support_originRequest", methods="GET|POST")
-     * @param SupportGroup $supportGroup
+     * @param int $id
      * @param Request $request
      * @return Response
      */
@@ -37,15 +38,21 @@ class OriginRequestController extends AbstractController
     public function editOriginRequest($id, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
+
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
-        $originRequestGroup = $this->repo->findOneBy(["supportGroup" => $supportGroup]);
+        $originRequest = $this->repo->findOriginRequest($supportGroup);
 
-        $form = $this->createForm(OriginRequestType::class, $originRequestGroup);
+        if (!$originRequest) {
+            $originRequest = new OriginRequest();
+            $originRequest->setSupportGroup($supportGroup);
+        }
+
+        $form = $this->createForm(OriginRequestType::class, $originRequest);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateOriginRequest($originRequestGroup);
+            $this->updateOriginRequest($originRequest);
         }
 
         return $this->render("app/originRequest/originRequest.html.twig", [
@@ -56,62 +63,18 @@ class OriginRequestController extends AbstractController
     }
 
     /**
-     * Crée l'évaluation sociale du groupe
-     *
-     * @param SupportGroup $supportGroup
-     */
-    protected function createOriginRequest(SupportGroup $supportGroup)
-    {
-        $originRequestGroup = new OriginRequest();
-        $now = new \DateTime();
-
-        $originRequestGroup->setSupportGroup($supportGroup)
-            ->setDate($now)
-            ->setCreatedAt($now);
-
-        $this->manager->persist($originRequestGroup);
-
-        $this->createOriginRequestPeople($supportGroup, $originRequestGroup);
-
-        $this->manager->flush();
-
-        return $this->redirectToRoute("support_originRequest", ["id" => $supportGroup->getId()]);
-    }
-
-    /**
-     * Crée l'évaluation sociale de toutes les personnes du groupe
-     *
-     * @param SupportGroup $supportGroup
-     * @param OriginRequest $originRequestGroup
-     */
-    public function createOriginRequestPeople(SupportGroup $supportGroup, OriginRequest $originRequestGroup)
-    {
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-
-            $originRequestPerson = new OriginRequestPerson();
-
-            $originRequestPerson->setOriginRequest($originRequestGroup)
-                ->setSupportPerson($supportPerson);
-
-            $this->manager->persist($originRequestPerson);
-        };
-    }
-
-    /**
      * Met à jour l'évaluation sociale du groupe
      * 
-     * @param SupportGroup $supportGroup
-     * @param OriginRequest $originRequestGroup
+     * @param OriginRequest $originRequest
      */
-    protected function updateOriginRequest(OriginRequest $originRequestGroup)
+    protected function updateOriginRequest(OriginRequest $originRequest)
     {
-        $originRequestGroup->getSupportGroup()->setUpdatedAt(new \DateTime())
+        $originRequest->getSupportGroup()->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->getUser());
 
-        $this->updateBudgetGroup($originRequestGroup);
-
+        $this->manager->persist($originRequest);
         $this->manager->flush();
 
-        $this->addFlash("success", "L'évaluation sociale a été mis à jour.");
+        $this->addFlash("success", "Les informations ont été mises à jour.");
     }
 }

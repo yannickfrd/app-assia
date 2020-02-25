@@ -10,10 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 class OriginRequest
 {
     public const RESULT_PRE_ADMISSION = [
-        1 => "Admission",
-        2 => "Refus du service",
-        3 => "Refus de la personne",
-        4 => "Refus autre",
+        1 => "En cours",
+        2 => "Admission",
+        3 => "Refus du service",
+        4 => "Refus de la personne",
+        5 => "Refus autre",
         97 => "Autre",
         98 => "Non concerné",
         99 => "Non renseigné"
@@ -49,7 +50,7 @@ class OriginRequest
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $commentPreAdmission;
+    private $comment;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="originRequest", cascade={"persist", "remove"})
@@ -61,6 +62,11 @@ class OriginRequest
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="originRequests")
      */
     private $organization;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $organizationComment;
 
     public function getId(): ?int
     {
@@ -127,14 +133,14 @@ class OriginRequest
         return $this;
     }
 
-    public function getCommentPreAdmission(): ?string
+    public function getComment(): ?string
     {
-        return $this->commentPreAdmission;
+        return $this->comment;
     }
 
-    public function setCommentPreAdmission(?string $commentPreAdmission): self
+    public function setComment(?string $comment): self
     {
-        $this->commentPreAdmission = $commentPreAdmission;
+        $this->comment = $comment;
 
         return $this;
     }
@@ -159,6 +165,18 @@ class OriginRequest
     public function setOrganization(?Organization $organization): self
     {
         $this->organization = $organization;
+
+        return $this;
+    }
+
+    public function getOrganizationComment(): ?string
+    {
+        return $this->organizationComment;
+    }
+
+    public function setOrganizationComment(?string $organizationComment): self
+    {
+        $this->organizationComment = $organizationComment;
 
         return $this;
     }

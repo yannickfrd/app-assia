@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Evaluation;
 
 use App\Form\Utils\Choices;
 use App\Entity\EvalAdmPerson;

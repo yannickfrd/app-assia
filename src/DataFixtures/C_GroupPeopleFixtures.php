@@ -29,7 +29,7 @@ class C_GroupPeopleFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $this->init(); //
+        $this->init(); // Fixtures
     }
 
     protected function init()

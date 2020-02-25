@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query;
+use App\Entity\SupportGroup;
 use App\Entity\OriginRequest;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method OriginRequest|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,23 @@ class OriginRequestRepository extends ServiceEntityRepository
         parent::__construct($registry, OriginRequest::class);
     }
 
-    // /**
-    //  * @return OriginRequest[] Returns an array of OriginRequest objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Donne l'origine de la demande du suivi social
+     *
+     * @param SupportGroup $supportGroup
+     * @return OriginRequest|null
+     */
+    public function findOriginRequest(SupportGroup $supportGroup): ?OriginRequest
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        return $this->createQueryBuilder("o")
+            ->select("o")
+            ->leftJoin("o.supportGroup", "sg")->addselect("PARTIAL sg.{id, updatedAt, updatedBy}")
 
-    /*
-    public function findOneBySomeField($value): ?OriginRequest
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where("o.supportGroup = :supportGroup")
+            ->setParameter("supportGroup", $supportGroup)
+
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
     }
-    */
 }

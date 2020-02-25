@@ -1,7 +1,8 @@
 -- Select --: -- Sélectionner --
 Decision date: Date de décision
 Organization: Service orienteur ou prescripteur
+Organization comment: Précision concernant le service
 Orientation date:  Date d'orientation
 Pre admission date: Date d'entretien de pré-admission
-Pre admission result: Résultat de la pré-admisson
+Resul pre admission: Résultat de la pré-admisson
 Write a comment about the origin request: Ecrire un commentaire relatif à l'origine de la demande ou à la pré-admission

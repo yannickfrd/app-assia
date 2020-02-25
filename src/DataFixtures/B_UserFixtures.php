@@ -35,7 +35,7 @@ class B_UserFixtures extends Fixture
 
         foreach ($serviceUsers as $serviceUser) {
             $serviceUser = $serviceUser;
-            $this->addUser($serviceUser); //
+            $this->addUser($serviceUser); // Fixtures
         }
 
         $this->createSuperAdmin();
@@ -45,7 +45,8 @@ class B_UserFixtures extends Fixture
             $user = new User();
 
             $username = substr($habitatUser["firstname"], 0, 1) . "." . $habitatUser["lastname"];
-            $username = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $username) . "_test";
+            $username = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $username);
+            $password = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $habitatUser["firstname"]) . "2502";
 
             $email = $habitatUser["firstname"] . "." . $habitatUser["lastname"];
             $email = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $email) . "@esperer-95.org";
@@ -55,7 +56,7 @@ class B_UserFixtures extends Fixture
                 ->setLastName($habitatUser["lastname"])
                 ->setStatus(array_key_exists("status", $habitatUser) ? $habitatUser["status"] : 1)
                 ->setRoles(array_key_exists("roles", $habitatUser) ? [$habitatUser["roles"]] : [])
-                ->setPassword($this->passwordEncoder->encodePassword($user, "test2020"))
+                ->setPassword($this->passwordEncoder->encodePassword($user, $password))
                 ->setEmail($email)
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())
@@ -220,14 +221,14 @@ class B_UserFixtures extends Fixture
                 ]
             ],
             [
-                "firstname" => "Valerie",
+                "firstname" => "Valérie",
                 "lastname" => "LEOTARD",
                 "services" => [
                     "ALTHO"
                 ]
             ],
             [
-                "firstname" => "Melanie",
+                "firstname" => "Mélanie",
                 "lastname" => "LEY",
                 "services" => [
                     "SAVL",
