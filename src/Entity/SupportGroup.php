@@ -21,6 +21,49 @@ class SupportGroup
         5 => "Autre"
     ];
 
+    public const END_STATUS = [
+        400 => "CADA",
+        304 => "Colocation",
+        900 => "Décès",
+        700 => "Départ volontaire de la personne",
+        500 => "Détention",
+        105 => "Dispositif hivernal",
+        602 => "Dispositif de soin ou médical (LAM, autre)",
+        502 => "DLSAP",
+        003 => "Errance résidentielle",
+        701 => "Exclusion de la structure",
+        106 => "Foyer maternel",
+        010 => "Hébergé chez des tiers",
+        100 => "Hôtel 115",
+        101 => "Hôtel (hors 115)",
+        102 => "Hébergement d’urgence",
+        103 => "Hébergement de stabilisation",
+        104 => "Hébergement d’insertion",
+        600 => "Hôpital",
+        401 => "HUDA",
+        601 => "LHSS",
+        200 => "Logement adapté - ALT",
+        201 => "Logement adapté - FJT",
+        202 => "Logement adapté - FTM",
+        203 => "Logement adapté - Maison relais",
+        204 => "Logement adapté - Résidence sociale",
+        205 => "Logement adapté - RHVS",
+        206 => "Logement adapté - Solibail/IML",
+        207 => "Logement foyer",
+        300 => "Logement privé",
+        301 => "Logement social",
+        305 => "Maison de retraite",
+        501 => "Placement extérieur",
+        303 => "Propriétaire d'un logement",
+        001 => "Retour à la rue, squat",
+        011 => "Retour dans la famille",
+        704 => "Retour dans le pays d'origine",
+        302 => "Sous-location",
+        002 => "Squat",
+        97 => "Autre",
+        99 => "Non renseignée"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -60,6 +103,16 @@ class SupportGroup
      * @Assert\Range(min = 0, max = 10, minMessage="Le coefficient ne peut être inférieur à 0",  maxMessage="Le coefficient ne peut être supérieur à 10")
      */
     private $coefficient = 1;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $endStatus;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $endStatusComment;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -142,6 +195,7 @@ class SupportGroup
      */
     private $originRequest;
 
+
     public function __construct()
     {
         $this->supportPerson = new ArrayCollection();
@@ -187,7 +241,7 @@ class SupportGroup
         return $this->status;
     }
 
-    public function getStatusType()
+    public function getStatusList()
     {
         return self::STATUS[$this->status];
     }
@@ -198,7 +252,6 @@ class SupportGroup
 
         return $this;
     }
-
 
     public function getReferent(): ?User
     {
@@ -244,6 +297,35 @@ class SupportGroup
     public function setAgreement(?bool $agreement): self
     {
         $this->agreement = $agreement;
+
+        return $this;
+    }
+
+    public function getEndStatus(): ?int
+    {
+        return $this->endStatus;
+    }
+
+    public function setEndStatus(?int $endStatus): self
+    {
+        $this->endStatus = $endStatus;
+
+        return $this;
+    }
+
+    public function getEndStatusList()
+    {
+        return self::END_STATUS[$this->endStatus];
+    }
+
+    public function getEndStatusComment(): ?string
+    {
+        return $this->endStatusComment;
+    }
+
+    public function setEndStatusComment(?string $endStatusComment): self
+    {
+        $this->endStatusComment = $endStatusComment;
 
         return $this;
     }

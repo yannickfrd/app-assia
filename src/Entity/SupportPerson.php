@@ -13,20 +13,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SupportPerson
 {
-    public const STATUS = [
-        1 => "À venir",
-        2 => "En cours",
-        3 => "Suspendu",
-        4 => "Terminé",
-        5 => "Autre"
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $role;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $head;
 
     /**
      * @ORM\Column(type="date")
@@ -45,6 +47,16 @@ class SupportPerson
      * @Assert\Range(min = 1, max = 5, minMessage="Le statut doit être renseigné.",  maxMessage="Le statut doit être renseigné.")
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $endStatus;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $endStatusComment;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -88,16 +100,6 @@ class SupportPerson
      */
     private $initEvalPerson;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $role;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $head;
-
 
     public function __construct()
     {
@@ -109,6 +111,35 @@ class SupportPerson
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getRole(): ?int
+    {
+        return $this->role;
+    }
+
+    public function setRole(?int $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getRoleList()
+    {
+        return RolePerson::ROLE[$this->role];
+    }
+
+    public function getHead(): ?bool
+    {
+        return $this->head;
+    }
+
+    public function setHead(?bool $head): self
+    {
+        $this->head = $head;
+
+        return $this;
     }
 
     public function getStartDate(): ?\DateTimeInterface
@@ -147,6 +178,37 @@ class SupportPerson
         return $this;
     }
 
+
+    public function getEndStatus(): ?int
+    {
+        return $this->endStatus;
+    }
+
+    public function setEndStatus(?int $endStatus): self
+    {
+        $this->endStatus = $endStatus;
+
+        return $this;
+    }
+
+    public function getEndStatusList()
+    {
+        return SupportGroup::END_STATUS[$this->endStatus];
+    }
+
+    public function getEndStatusComment(): ?string
+    {
+        return $this->endStatusComment;
+    }
+
+    public function setEndStatusComment(?string $endStatusComment): self
+    {
+        $this->endStatusComment = $endStatusComment;
+
+        return $this;
+    }
+
+
     public function getComment(): ?string
     {
         return $this->comment;
@@ -183,9 +245,9 @@ class SupportPerson
         return $this;
     }
 
-    public function getStatusType()
+    public function getStatusList()
     {
-        return self::STATUS[$this->status];
+        return SupportGroup::STATUS[$this->status];
     }
 
     public function getPerson(): ?Person
@@ -211,36 +273,6 @@ class SupportPerson
 
         return $this;
     }
-
-    public function getRole(): ?int
-    {
-        return $this->role;
-    }
-
-    public function setRole(?int $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    public function getRoleList()
-    {
-        return RolePerson::ROLE[$this->role];
-    }
-
-    public function getHead(): ?bool
-    {
-        return $this->head;
-    }
-
-    public function setHead(?bool $head): self
-    {
-        $this->head = $head;
-
-        return $this;
-    }
-
 
     /**
      * @return Collection|Note[]

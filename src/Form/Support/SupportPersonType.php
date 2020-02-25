@@ -3,6 +3,7 @@
 namespace App\Form\Support;
 
 use App\Entity\RolePerson;
+use App\Entity\SupportGroup;
 use App\Form\Utils\Choices;
 use App\Entity\SupportPerson;
 use Symfony\Component\Form\AbstractType;
@@ -54,18 +55,21 @@ class SupportPersonType extends AbstractType
             ])
             ->add("status", ChoiceType::class, [
                 "label_attr" => ["class" => "sr-only"],
-                "choices" => Choices::getChoices(SupportPerson::STATUS),
+                "choices" => Choices::getChoices(SupportGroup::STATUS),
                 "attr" => [
                     "class" => "w-min-150"
                 ],
                 "placeholder" => "-- Select --",
                 "required" => true
             ])
-            ->add("comment", null, [
+            ->add("endStatus", ChoiceType::class, [
                 "label_attr" => ["class" => "sr-only"],
+                "choices" => Choices::getChoices(SupportGroup::END_STATUS),
                 "attr" => [
-                    "rows" => 1,
-                ]
+                    "class" => "w-min-150"
+                ],
+                "placeholder" => "-- Select --",
+                "required" => true
             ]);
     }
 

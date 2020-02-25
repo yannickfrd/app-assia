@@ -159,7 +159,7 @@
                         <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
                             {% if support.groupPeople.nbPeople > 1 %}{{ support.groupPeople.nbPeople }} personnes{% endif %}
                         </td>
-                        <td class="align-middle">{{ support.getstatusType }}</td>
+                        <td class="align-middle">{{ support.getstatusList }}</td>
                         <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
                         <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
                         </td>

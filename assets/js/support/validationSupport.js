@@ -1,4 +1,5 @@
 import MessageFlash from "../utils/messageFlash";
+import DisplayInputs from "../utils/displayInputs";
 
 // Validation des données de la fiche personne
 export default class ValidationSupport {
@@ -42,7 +43,7 @@ export default class ValidationSupport {
             }
         }.bind(this));
 
-
+        new DisplayInputs("support_group_", "status", "select", [4]);
     }
 
     checkStartDate() {

@@ -79,7 +79,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
             ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, preAdmission, accommodation, justice}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
+            ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}");
     }

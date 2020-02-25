@@ -55,7 +55,7 @@
                         </a>
                         {% endif %}
                     </th>
-                    <td class="align-middle">{{ support.getStatusType }}</td>
+                    <td class="align-middle">{{ support.statusList }}</td>
                     <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>
                     <td class="align-middle">
                         {% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}

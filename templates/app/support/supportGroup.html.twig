@@ -109,13 +109,16 @@
 		<div class="col-md-6">{{ form_row(form.endDate) }}</div>
 	</div>
 	<div class="form-group row">
+		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
+		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatusComment) }}</div>
+	</div>
+	<div class="form-group row">
 		<div class="col-md-6">{{ form_row(form.referent) }}</div>
 		<div class="col-md-6">{{ form_row(form.referent2) }}</div>
 	</div>
-
-	{# <div class="mb-4">
-		{% include "app/evaluation/initEvaluation.html.twig" %}
-	</div> #}
+	<div class="form-group row">
+		<div class="col-md-12">{{ form_widget(form.comment) }}</div>
+	</div>
 
 	<div class="form-group row">
 		<div class="col-md-12"> 

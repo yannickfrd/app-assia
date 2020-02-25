@@ -27,14 +27,14 @@
 							<thead>
 								<tr>
 									<th scope="col" class="align-middle th-w-20"></th>
-									<th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
+									<th scope="col" class="align-middle th-w-120">Prénom et Nom</th>
                                 	<th scope="col" class="th-w-20" data-placement="bottom"
                                     title="Demandeur/euse principal·e">DP</th>									
                                 	<th scope="col" class="th-w-150 align-middle">Rôle</th>
-									<th scope="col" class="align-middle th-w-100">Date de début</th>
-									<th scope="col" class="align-middle th-w-100">Date de fin</th>
-									<th scope="col" class="align-middle th-w-100">Statut</th>
-									<th scope="col" class="align-middle th-w-150">Commentaire</th>
+									<th scope="col" class="align-middle th-date">Date de début</th>
+									<th scope="col" class="align-middle th-date">Date de fin</th>
+									<th scope="col" class="align-middle th-w-120">Statut</th>
+									<th scope="col" class="align-middle th-w-120">Situation à la fin</th>
 									<th scope="col" class="align-middle th-w-20"></th>
 								</tr>
 							</thead>
@@ -57,7 +57,7 @@
 										<td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
 										<td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
 										<td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
-										<td class="px-1">{{ form_widget(form_support_pers.comment) }}</td>
+										<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
 										<td class="px-1">
 											<button class="js-remove btn btn-danger shadow" data-url="{{ path('remove_support_pers', {'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Retirer la personne du suivi">
 												<span class="fas fa-user-times"></span>

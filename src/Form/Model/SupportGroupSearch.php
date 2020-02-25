@@ -164,7 +164,7 @@ class SupportGroupSearch
         return $this->status;
     }
 
-    public function getStatusType()
+    public function getStatusList()
     {
         return SupportGroup::STATUS[$this->status];
     }

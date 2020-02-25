@@ -57,7 +57,7 @@ class SupportPersonExport
             "Nb de personnes" => $groupPeople->getNbPeople(),
             "Rôle dans le groupe" => $supportPerson->getRoleList(),
             "DP" => $supportPerson->getHead() ? "Oui" : "Non",
-            "Statut" => $supportPerson->getStatusType(),
+            "Statut" => $supportPerson->getStatusList(),
             "Date début suivi" => $this->formatDate($supportPerson->getStartDate()),
             "Date Fin suivi" => $this->formatDate($supportPerson->getEndDate()),
             "Référent social" => $supportGroup->getReferent()->getFullname(),

@@ -139,13 +139,13 @@ class SupportController extends AbstractController
      * Modification des suivis individuels
      * 
      * @Route("/support/{id}/people", name="support_pers_edit", methods="GET|POST")
-     * @param int $id
+     * @param SupportGroup $supportGroup
      * @param Request $request
      * @return Response
      */
-    public function editSupportGroupleWithPeople(int $id, Request $request): Response
+    public function editSupportGroupleWithPeople(SupportGroup $supportGroup, Request $request): Response
     {
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
@@ -368,6 +368,14 @@ class SupportController extends AbstractController
     {
         $supportGroup->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->getUser());
+
+        if ($supportGroup->getEndStatus()) {
+            foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+                $supportPerson->setendStatus($supportGroup->getEndStatus());
+                $supportPerson->setendStatusComment($supportGroup->getEndStatusComment());
+                $this->manager->persist($supportPerson);
+            }
+        }
 
         $this->manager->flush();
 
