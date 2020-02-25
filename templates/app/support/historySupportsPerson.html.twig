@@ -61,7 +61,7 @@
                         <td>{{ support.endDate | date("d/m/Y") }}</td>
                         <td>
                             {% if support.supportGroup.referent %}
-                            <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
+                            <a href="mailto:{{ support.supportGroup.referent.email }}" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
                                 data-html="true"
                                 title="{{ contact_user }}">{{ support.supportGroup.referent.firstname }}
                                 {{  support.supportGroup.referent.lastname }}</a>
@@ -69,7 +69,7 @@
                         </td>
                         <td>
                             {% if support.supportGroup.service %}
-                            <a href="#" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
+                            <a href="mailto:{{ support.supportGroup.service.email }}" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
                                 data-html="true"
                                 title="{{ contact_service }}">{{ support.supportGroup.service.name }}</a>
                             {% endif %}

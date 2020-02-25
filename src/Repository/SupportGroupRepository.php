@@ -232,7 +232,7 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->andWhere("sg.referent = :referent")
             ->setParameter("referent", $user)
-            ->andWhere("sg.status = 2")
+            ->andWhere("sg.status <= 2")
 
             ->orderBy("sg.startDate", "DESC")
 

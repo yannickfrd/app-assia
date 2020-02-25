@@ -168,6 +168,9 @@ class EvaluationController extends AbstractController
         $chargesGroupAmt = 0;
         $debtsGroupAmt = 0;
         $monthlyRepaymentAmt = 0;
+        // Ressources et dettes initiales
+        $initResourcesGroupAmt = 0;
+        $initDebtsGroupAmt = 0;
 
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
 
@@ -178,6 +181,12 @@ class EvaluationController extends AbstractController
                 $debtsGroupAmt += $evalBudgetPerson->getDebtsAmt();
                 $monthlyRepaymentAmt += $evalBudgetPerson->getMonthlyRepaymentAmt();
             }
+
+            $initEvalPerson = $evaluationPerson->getInitEvalPerson();
+            if ($initEvalPerson) {
+                $initResourcesGroupAmt += $initEvalPerson->getResourcesAmt();
+                $initDebtsGroupAmt += $initEvalPerson->getDebtsAmt();
+            }
         };
 
         $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
@@ -186,6 +195,9 @@ class EvaluationController extends AbstractController
         $evalBudgetGroup->setDebtsGroupAmt($debtsGroupAmt);
         $evalBudgetGroup->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
         $evalBudgetGroup->setBudgetBalanceAmt($resourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt);
+        // Ressources et dettes initiales
+        $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
+        $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
     }
 
     /**

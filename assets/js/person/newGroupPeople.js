@@ -4,20 +4,19 @@ import ValidationPerson from "./validationPerson";
 export default class NewGroupPeople {
     constructor(parametersUrl) {
         this.parametersUrl = parametersUrl;
+        this.form = document.querySelector("#person>form").name; // role_person_group
 
         this.typoInputElt = document.getElementById("role_person_group_groupPeople_familyTypology");
         this.nbPeopleInputElt = document.getElementById("role_person_group_groupPeople_nbPeople");
-
-        this.form = "role_person_person_";
         this.roleInputElt = document.getElementById("role_person_role");
+
         if (this.typoInputElt) {
-            this.form = "role_person_group_person_";
-            this.roleInputElt = document.getElementById("role_person_group_role");
+            this.roleInputElt = document.getElementById(this.form + "_role");
         }
-        this.firstnameInputElt = document.getElementById(this.form + "firstname");
-        this.lastnameInputElt = document.getElementById(this.form + "lastname");
-        this.birthdateInputElt = document.getElementById(this.form + "birthdate");
-        this.genderInputElt = document.getElementById(this.form + "gender");
+        this.firstnameInputElt = document.getElementById(this.form + "_person_firstname");
+        this.lastnameInputElt = document.getElementById(this.form + "_person_lastname");
+        this.birthdateInputElt = document.getElementById(this.form + "_person_birthdate");
+        this.genderInputElt = document.getElementById(this.form + "_person_gender");
         // this.emailInputElt = document.getElementById(this.form + "email");
         // this.phone1InputElt = document.getElementById(this.form + "phone1");
 
@@ -26,23 +25,29 @@ export default class NewGroupPeople {
     }
 
     init() {
-        this.birthdateInputElt.addEventListener("focusout", this.getAge.bind(this));
-        this.genderInputElt.addEventListener("input", this.getGender.bind(this));
+        if (this.birthdateInputElt) {
+            this.birthdateInputElt.addEventListener("focusout", this.getAge.bind(this));
+        }
+        if (this.genderInputElt) {
+            this.genderInputElt.addEventListener("input", this.getGender.bind(this));
+        }
         if (this.typoInputElt) {
             this.typoInputElt.addEventListener("input", this.editTypo.bind(this));
             this.nbPeopleInputElt.addEventListener("input", this.editNbPeople.bind(this));
         }
         // this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
         // this.phone1InputElt.addEventListener("input", this.phone.bind(this));
+
+
         let validationPerson = new ValidationPerson(
-            this.form + "lastname",
-            this.form + "firstname",
-            this.form + "birthdate",
-            this.form + "gender",
-            this.form + "email",
-            "role_person_group_role",
-            "role_person_group_groupPeople_familyTypology",
-            "role_person_group_groupPeople_nbPeople"
+            this.form + "_person_lastname",
+            this.form + "_person_firstname",
+            this.form + "_person_birthdate",
+            this.form + "_person_gender",
+            this.form + "_person_email",
+            this.form + "_role",
+            this.form + "_groupPeople_familyTypology",
+            this.form + "_groupPeople_nbPeople"
         );
 
         document.getElementById("send").addEventListener("click", function (e) {
@@ -56,11 +61,11 @@ export default class NewGroupPeople {
 
         let firstname = this.parametersUrl.getOne("firstname");
         if (firstname) {
-            this.firstnameInputElt.value = firstname;
+            this.firstnameInputElt.value = decodeURI(firstname);
         }
         let lastname = this.parametersUrl.getOne("lastname");
         if (lastname) {
-            this.lastnameInputElt.value = lastname;
+            this.lastnameInputElt.value = decodeURI(lastname);
         }
         let birthdate = this.parametersUrl.getOne("birthdate");
         if (birthdate) {

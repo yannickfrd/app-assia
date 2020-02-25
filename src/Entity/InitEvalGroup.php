@@ -17,6 +17,16 @@ class InitEvalGroup
     private $id;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $resourcesGroupAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $debtsGroupAmt;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $housingStatus;
@@ -32,16 +42,6 @@ class InitEvalGroup
     private $socialHousingRequest;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $resourcesGroup;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $debtsGroup;
-
-    /**
      * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="initEvalGroup", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -51,6 +51,30 @@ class InitEvalGroup
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getResourcesGroupAmt(): ?float
+    {
+        return $this->resourcesGroupAmt;
+    }
+
+    public function setResourcesGroupAmt(?float $resourcesGroupAmt): self
+    {
+        $this->resourcesGroupAmt = $resourcesGroupAmt;
+
+        return $this;
+    }
+
+    public function getDebtsGroupAmt(): ?float
+    {
+        return $this->debtsGroupAmt;
+    }
+
+    public function setDebtsGroupAmt(?float $debtsGroupAmt): self
+    {
+        $this->debtsGroupAmt = $debtsGroupAmt;
+
+        return $this;
     }
 
     public function getHousingStatus(): ?int
@@ -90,30 +114,6 @@ class InitEvalGroup
     public function setSocialHousingRequest(?int $socialHousingRequest): self
     {
         $this->socialHousingRequest = $socialHousingRequest;
-
-        return $this;
-    }
-
-    public function getResourcesGroup(): ?int
-    {
-        return $this->resourcesGroup;
-    }
-
-    public function setResourcesGroup(?int $resourcesGroup): self
-    {
-        $this->resourcesGroup = $resourcesGroup;
-
-        return $this;
-    }
-
-    public function getDebtsGroup(): ?int
-    {
-        return $this->debtsGroup;
-    }
-
-    public function setDebtsGroup(?int $debtsGroup): self
-    {
-        $this->debtsGroup = $debtsGroup;
 
         return $this;
     }

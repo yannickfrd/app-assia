@@ -16,6 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
         new CheckChange("person"); // form name
     } else {
         new NewGroupPeople(parametersUrl);
-        new CheckChange("role_person_group"); // form name
+        // new CheckChange("role_person_group"); // form name
     }
 });

@@ -17,17 +17,17 @@ class EvalBudgetGroup
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $resourcesGroupAmt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $chargesGroupAmt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $debtsGroupAmt;
 
@@ -47,7 +47,7 @@ class EvalBudgetGroup
     private $monthlyRepaymentAmt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $budgetBalanceAmt;
 
@@ -67,36 +67,36 @@ class EvalBudgetGroup
         return $this->id;
     }
 
-    public function getResourcesGroupAmt(): ?int
+    public function getResourcesGroupAmt(): ?float
     {
         return $this->resourcesGroupAmt;
     }
 
-    public function setResourcesGroupAmt(?int $resourcesGroupAmt): self
+    public function setResourcesGroupAmt(?float $resourcesGroupAmt): self
     {
         $this->resourcesGroupAmt = $resourcesGroupAmt;
 
         return $this;
     }
 
-    public function getChargesGroupAmt(): ?int
+    public function getChargesGroupAmt(): ?float
     {
         return $this->chargesGroupAmt;
     }
 
-    public function setChargesGroupAmt(?int $chargesGroupAmt): self
+    public function setChargesGroupAmt(?float $chargesGroupAmt): self
     {
         $this->chargesGroupAmt = $chargesGroupAmt;
 
         return $this;
     }
 
-    public function getDebtsGroupAmt(): ?int
+    public function getDebtsGroupAmt(): ?float
     {
         return $this->debtsGroupAmt;
     }
 
-    public function setDebtsGroupAmt(?int $debtsGroupAmt): self
+    public function setDebtsGroupAmt(?float $debtsGroupAmt): self
     {
         $this->debtsGroupAmt = $debtsGroupAmt;
 
@@ -139,12 +139,12 @@ class EvalBudgetGroup
         return $this;
     }
 
-    public function getBudgetBalanceAmt(): ?int
+    public function getBudgetBalanceAmt(): ?float
     {
         return $this->budgetBalanceAmt;
     }
 
-    public function setBudgetBalanceAmt(?int $budgetBalanceAmt): self
+    public function setBudgetBalanceAmt(?float $budgetBalanceAmt): self
     {
         $this->budgetBalanceAmt = $budgetBalanceAmt;
 
