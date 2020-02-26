@@ -20,7 +20,9 @@ class SupportPersonExport
      */
     public function exportData($supports)
     {
+        $arrayData = [];
         $i = 0;
+
         foreach ($supports as $supportPerson) {
             if ($i == 0) {
                 $arrayData[] = array_keys($this->getDatas($supportPerson));

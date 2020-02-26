@@ -206,7 +206,7 @@ class Person
 
     public function getFullname(): ?string
     {
-        return $this->firstname . " " . $this->lastname;
+        return $this->lastname . " " . $this->firstname;
     }
 
     public function getMaidenName(): ?string

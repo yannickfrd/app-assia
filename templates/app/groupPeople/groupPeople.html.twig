@@ -49,8 +49,8 @@
                                 <th scope="col" class="th-w-20 align-middle"></th>
                                 <th scope="col" class="th-w-20" data-placement="bottom"
                                     title="Demandeur/euse principal·e">DP</th>
-                                <th scope="col" class="th-w-150 align-middle">Prénom</th>
                                 <th scope="col" class="th-w-150 align-middle">Nom</th>
+                                <th scope="col" class="th-w-150 align-middle">Prénom</th>
                                 <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
                                 <th scope="col" class="th-w-50 align-middle">Âge</th>
                                 <th scope="col" class="th-w-100 align-middle">Sexe</th>
@@ -73,8 +73,8 @@
                                         {{ form_widget(form_person.head) }}
                                     </div>
                                 </td>
-                                <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
                                 <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
+                                <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
                                 {% set age = person.age %}
                                 <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
                                 <td class="text-center px-1 align-middle">{{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>

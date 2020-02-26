@@ -316,7 +316,7 @@ class User implements UserInterface
 
     public function setLastname(string $lastname): self
     {
-        $this->lastname = $lastname;
+        $this->lastname = strtoupper($lastname);
 
         return $this;
     }
@@ -328,14 +328,14 @@ class User implements UserInterface
 
     public function setFirstname(string $firstname): self
     {
-        $this->firstname = $firstname;
+        $this->firstname = ucfirst($firstname);
 
         return $this;
     }
 
     public function getFullname(): ?string
     {
-        return $this->firstname . " " . $this->lastname;
+        return $this->lastname . " " . $this->firstname;
     }
 
     public function getInitials(): ?string

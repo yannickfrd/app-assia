@@ -153,10 +153,10 @@
                             </a>
                         </th>
                         <td class="align-middle">
-                        {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
-                        {{ supportPerson.person.fullname }}
+                        {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
+                        {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
-                        <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
+                        <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}
                             {% if support.groupPeople.nbPeople > 1 %}{{ support.groupPeople.nbPeople }} personnes{% endif %}
                         </td>
                         <td class="align-middle">{{ support.getstatusList }}</td>

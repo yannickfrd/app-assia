@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th scope="col" class="align-middle th-w-20"></th>
-                    <th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
+                    <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
                     <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
                     <th scope="col" class="align-middle th-w-100">Service (Dispositif)</th>
                     <th scope="col" class="align-middle th-w-100">Statut</th>
@@ -36,10 +36,10 @@
                         </a>
                     </th>
                     <td class="align-middle">
-                    {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
-                    {{ supportPerson.person.fullname }}
+                    {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
+                    {{ supportPerson.person.fullname }}<br />
                     {% endfor %}
-                    <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
+                    <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}
                         {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
                     </td>
                     <td class="align-middle">

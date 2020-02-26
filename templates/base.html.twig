@@ -82,10 +82,10 @@
 							</a>
 							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuAdmin">
 								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un utilisateur</a>
-								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter un dispositif</a>
 								{% if is_granted("ROLE_SUPER_ADMIN") %}
 								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
 								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
+								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter un dispositif</a>
 								{% endif %}
 								<a class="dropdown-item" href="{{ path("admin_organization_new") }}">Ajouter un organisme prescripteur</a>
 								<div class="dropdown-divider"></div>
@@ -158,7 +158,7 @@
 				<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
 				<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février 1979.</span>
 			</p>
-			<p>Version 1.0.1 - 26/02/2020</p>
+			<p>Version 1.0.2 - 27/02/2020</p>
 		</div>
 
 	</footer>

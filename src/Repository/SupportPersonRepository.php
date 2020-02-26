@@ -62,7 +62,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             // }
         }
         if ($supportGroupSearch->getFullname()) {
-            $query->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter("fullname", '%' . $supportGroupSearch->getFullname() . '%');
         }
 

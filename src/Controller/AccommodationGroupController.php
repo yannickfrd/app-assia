@@ -66,25 +66,20 @@ class AccommodationGroupController extends AbstractController
 
         // Vérifie si une prise en charge existe déjà pour le suivi
         if ($supportGroup->getAccommodationGroups()) {
-
             foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
                 if ($accommodationGroup->getEndDate() == null) {
-
-                    $this->addFlash("warning", "Attention, une prise en charge est déjà en cours.");
-
-                    return $this->redirectToRoute("support_accommodation_edit", [
-                        "id" => $accommodationGroup->getId()
-                    ]);
+                    $this->addFlash("warning", "Attention, une autre prise en charge est déjà en cours pour ce suivi.");
+                    // return $this->redirectToRoute("support_accommodation_edit", [
+                    //     "id" => $accommodationGroup->getId()
+                    // ]);
                 }
             }
         }
 
-        if ($accommodationGroup == null) {
-            $accommodationGroup = new AccommodationGroup();
-            $accommodationGroup->setSupportGroup($supportGroup)
-                ->setStartDate($supportGroup->getStartDate())
-                ->setEndDate($supportGroup->getEndDate());
-        }
+        $accommodationGroup = new AccommodationGroup();
+        $accommodationGroup->setSupportGroup($supportGroup)
+            ->setStartDate($supportGroup->getStartDate())
+            ->setEndDate($supportGroup->getEndDate());
 
         $form = $this->createForm(AccommodationGroupType::class, $accommodationGroup);
         $form->handleRequest($request);

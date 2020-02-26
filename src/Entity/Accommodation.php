@@ -167,6 +167,12 @@ class Accommodation
         return $this;
     }
 
+    public function getFullName(): ?string
+    {
+        return $this->getService()->getName() . " - " . $this->name;
+    }
+
+
     public function getPlacesNumber(): ?int
     {
         return $this->placesNumber;

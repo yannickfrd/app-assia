@@ -32,7 +32,7 @@
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(supports, "Prénom et Nom", "p.lastname") }}
+                            {{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}
                         </th>
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(supports, "Date de naissance", "p.birthdate") }}
@@ -79,13 +79,13 @@
                             {% endif %} #}
                         </th>
                         <td class="align-middle">
-                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
+                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
                             <a href="{% if support.groupPeople %}{{ path('group_people_show', {'id':support.groupPeople.id}) }} {% endif %}"
-                                class="text-{{ theme_color }} font-weight-bold">{{ supportPerson.person.fullname }}</a>                            
+                                class="text-{{ theme_color }} font-weight-bold">{{ supportPerson.person.fullname }}</a><br />
                             {% endfor %}
                         </td>
                         <td class="align-middle">
-                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
+                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
                             {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />                           
                             {% endfor %}
                         </td>

@@ -50,7 +50,7 @@
                 <thead>
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-80">Prénom et Nom</th>
+                        <th scope="col" class="align-middle th-w-80">Nom et prénom</th>
                         <th scope="col" class="align-middle th-w-100">Garde ou scolarité</th>
                         <th scope="col" class="align-middle th-w-100">Lieu de garde/scolarité</th>
                         <th scope="col" class="align-middle th-w-100">À héberger </th>
@@ -62,7 +62,7 @@
 					{% set person = evalPerson.vars.value.supportPerson.person %}
                     <tr>
                         <th scope="row"></th>
-                        <td class="px-1 align-middle">{{ person.firstname }} {{ person.lastname }}</td>
+                        <td class="px-1 align-middle">{{ person.fullname }}</td>
                         <td class="px-1 w-min-150">{{ form_widget(evalPerson.evalFamilyPerson.childcareSchool) }}</td>
                         <td class="px-1 w-min-150">
                             {{ form_widget(evalPerson.evalFamilyPerson.childcareSchoolLocation) }}</td>

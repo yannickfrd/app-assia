@@ -274,6 +274,13 @@ class SupportController extends AbstractController
     {
         $supports = $this->repoSupportPerson->findSupportsToExport($supportGroupSearch);
 
+        if (!$supports) {
+
+            $this->addFlash("warning", "Aucun résultat à exporter.");
+
+            return $this->redirectToRoute("supports");
+        }
+
         $export = new SupportPersonExport();
 
         return $export->exportData($supports);
