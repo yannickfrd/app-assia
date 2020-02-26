@@ -161,6 +161,11 @@ class SupportGroup
     private $service;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Device", inversedBy="supportGroup")
+     */
+    private $device;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportGroup")
      */
     private $notes;
@@ -441,6 +446,18 @@ class SupportGroup
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getDevice(): ?Device
+    {
+        return $this->device;
+    }
+
+    public function setDevice(?Device $device): self
+    {
+        $this->device = $device;
 
         return $this;
     }

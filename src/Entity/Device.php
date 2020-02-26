@@ -70,11 +70,17 @@ class Device
      */
     private $accommodations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="device")
+     */
+    private $supportGroup;
+
 
     public function __construct()
     {
         $this->serviceDevices = new ArrayCollection();
         $this->accommodations = new ArrayCollection();
+        $this->supportGroup = new ArrayCollection();
     }
 
 
@@ -228,6 +234,37 @@ class Device
             // set the owning side to null (unless already changed)
             if ($accommodation->getDevice() === $this) {
                 $accommodation->setDevice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SupportGroup[]
+     */
+    public function getSupportGroup(): Collection
+    {
+        return $this->supportGroup;
+    }
+
+    public function addSupportGroup(SupportGroup $supportGroup): self
+    {
+        if (!$this->supportGroup->contains($supportGroup)) {
+            $this->supportGroup[] = $supportGroup;
+            $supportGroup->setDevice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupportGroup(SupportGroup $supportGroup): self
+    {
+        if ($this->supportGroup->contains($supportGroup)) {
+            $this->supportGroup->removeElement($supportGroup);
+            // set the owning side to null (unless already changed)
+            if ($supportGroup->getDevice() === $this) {
+                $supportGroup->setDevice(null);
             }
         }
 

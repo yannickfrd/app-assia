@@ -62,7 +62,7 @@ class D_SupportGroupFixtures extends Fixture
         $this->supportGroup = new SupportGroup();
 
         if ($this->nbSupports >= 2 && $k == 1) {
-            $this->status = 4;
+            $this->status = 2; // 4
             $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), "now");
             $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, "now"));
         } else if ($this->nbSupports >= 2 && $k == 2) {
@@ -70,7 +70,7 @@ class D_SupportGroupFixtures extends Fixture
             $this->startDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->endDate, "now"));
             $this->endDate = null;
         } else {
-            $this->status = mt_rand(2, 4);
+            $this->status = 2; // $this->status = mt_rand(2, 4);
             $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), "now");
             if ($this->status == 4) {
                 $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, "now"));

@@ -43,7 +43,6 @@ class SupportGroupType extends AbstractType
             ])
             ->add("device", EntityType::class, [
                 "class" => Device::class,
-                "mapped" => false,
                 "choice_label" => "name",
                 "query_builder" => function (DeviceRepository $repo) {
                     return $repo->createQueryBuilder("d")
