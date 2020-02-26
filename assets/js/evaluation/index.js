@@ -2,7 +2,7 @@ import AjaxRequest from "../utils/ajaxRequest";
 import Evaluation from "./evaluation";
 import UpdateEvaluation from "./updateEvaluation";
 import CheckChange from "../utils/checkChange";
-import "../utils/maskDeptCode";
+import "../utils/maskZipCode";
 import "../utils/maskPhone";
 
 let ajaxRequest = new AjaxRequest();

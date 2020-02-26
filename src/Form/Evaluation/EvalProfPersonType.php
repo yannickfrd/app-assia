@@ -57,6 +57,11 @@ class EvalProfPersonType extends AbstractType
             ->add("workingHours")
             ->add("workPlace")
             ->add("employerName")
+            ->add("transportMeansType", ChoiceType::class, [
+                "choices" => Choices::getChoices(EvalProfPerson::TRANSFORT_MEANS),
+                "placeholder" => "-- Select --",
+                "required" => false
+            ])
             ->add("transportMeans")
             ->add("rqth", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),

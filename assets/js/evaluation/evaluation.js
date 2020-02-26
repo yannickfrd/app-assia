@@ -89,7 +89,10 @@ export default class evaluation {
         new DisplayInputs(prefix, "expulsionInProgress", "select", [1]);
         new DisplayInputs(prefix, "housingExperience", "select", [1]);
         new DisplayInputs(prefix, "domiciliation", "select", [1]);
-        this.editElt("", "hsgHelps", "d-table-row");
+        this.editElt("", "_evalHousingGroup_hsgHelps", "d-table-row");
+        // js-evalHousingGroup_hsgHelps d-table-row"
+        // js-_evalHousingGroup_hsgHelps
+
         this.selectTrElts("eval_housing", "evalHousingGroup", "", "hsgHelps");
     }
 

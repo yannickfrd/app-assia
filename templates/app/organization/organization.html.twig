@@ -1,0 +1,61 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{% set organization = form.vars.value %}
+
+{% block title %}{% if edit_mode %}Organisme {{ organization.name }}{% else %}Nouvel organisme{% endif %} | Esperer95.app{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1 class="h2 mb-3">{% if edit_mode %}Organisme {{ organization.name }}{% else %}Nouvel organisme{% endif %}</h1>
+    {% if edit_mode %}
+    <div class="small text-secondary">
+        <p> Créé le {{organization.createdAt | date("d/m/Y à H:i") }}
+            {% if organization.createdBy %}par {{ organization.createdBy.fullname }}{% endif %}
+            (modifié le {{ organization.updatedAt | date("d/m/Y à H:i") }}
+            {% if organization.updatedBy %}par {{ organization.updatedBy.fullname }}{% endif %})
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-4"></div>
+    {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                href="{{ path('admin_organizations') }}">Liste des organismes</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Fiche organisme</li>
+        </ol>
+    </nav>
+
+    <hr>
+
+    <section>
+        {% include "model/msgFlash.html.twig" %}
+        <div id="js-msg-flash-content"></div>
+
+        {{ form_start(form) }}
+
+        <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.name) }}</div>
+            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+        </div>
+
+        {{ form_row(form._token) }}
+        <div class="form-group row">
+            <div class="col-md-12"> 
+                <div class="mb-4 float-right">
+                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form, {"render_rest": false}) }}
+    </section>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("directory") }}{% endblock javascripts %}

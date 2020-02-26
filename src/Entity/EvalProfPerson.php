@@ -60,6 +60,13 @@ class EvalProfPerson
         99 => "Non renseigné"
     ];
 
+    public const TRANSFORT_MEANS = [
+        1 => "Voiture",
+        2 => "Transport en commun",
+        97 => "Autre",
+        99 => "Non renseigné"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -121,6 +128,11 @@ class EvalProfPerson
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $employerName;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $transportMeansType;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -239,7 +251,6 @@ class EvalProfPerson
         return self::CONTRACT_TYPE[$this->contractType];
     }
 
-
     public function getContractStartDate(): ?\DateTimeInterface
     {
         return $this->contractStartDate;
@@ -311,6 +322,24 @@ class EvalProfPerson
 
         return $this;
     }
+
+    public function getTransportMeansType(): ?int
+    {
+        return $this->transportMeansType;
+    }
+
+    public function setTransportMeansType(?int $transportMeansType): self
+    {
+        $this->transportMeansType = $transportMeansType;
+
+        return $this;
+    }
+
+    public function getTransportMeansTypeList()
+    {
+        return self::TRANSFORT_MEANS[$this->transportMeansType];
+    }
+
 
     public function getTransportMeans(): ?string
     {

@@ -32,6 +32,7 @@ class OriginRequestRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("o")
             ->select("o")
             ->leftJoin("o.supportGroup", "sg")->addselect("PARTIAL sg.{id, updatedAt, updatedBy}")
+            ->leftJoin("o.organization", "organization")->addselect("PARTIAL organization.{id, name}")
 
             ->where("o.supportGroup = :supportGroup")
             ->setParameter("supportGroup", $supportGroup)

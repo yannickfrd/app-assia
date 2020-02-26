@@ -126,6 +126,11 @@ class EvalHousingGroup
     private $daloCommission;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $daloId;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $daloRecordDate;
@@ -508,6 +513,18 @@ class EvalHousingGroup
     public function getDaloCommissionList()
     {
         return Choices::YES_NO[$this->daloCommission];
+    }
+
+    public function getDaloId(): ?string
+    {
+        return $this->daloId;
+    }
+
+    public function setDaloId(?string $daloId): self
+    {
+        $this->daloId = $daloId;
+
+        return $this;
     }
 
     public function getDaloRecordDate(): ?\DateTimeInterface

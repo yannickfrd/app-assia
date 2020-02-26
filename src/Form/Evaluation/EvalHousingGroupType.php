@@ -59,7 +59,9 @@ class EvalHousingGroupType extends AbstractType
                 "widget" => "single_text",
                 "required" => false
             ])
-            ->add("housingWishes")
+            ->add("housingWishes", null, [
+                "help" => "T1, T2, T3, T4, T5..."
+            ])
             ->add("citiesWishes")
             ->add("specificities")
             ->add("syplo", ChoiceType::class, [
@@ -77,6 +79,7 @@ class EvalHousingGroupType extends AbstractType
                 "placeholder" => "-- Select --",
                 "required" => false
             ])
+            ->add("daloId")
             ->add("daloRecordDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
@@ -124,8 +127,9 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add("hsgActionDept", null, [
                 "attr" => [
-                    "class" => "js-dept-code",
-                ]
+                    "class" => "js-zip-code"
+                ],
+                "help" => "Department or zip code"
             ])
             ->add("hsgActionRecordId")
             ->add("expulsionInProgress", ChoiceType::class, [
@@ -171,8 +175,9 @@ class EvalHousingGroupType extends AbstractType
             ->add("domiciliationCity")
             ->add("domiciliationDept", null, [
                 "attr" => [
-                    "class" => "js-dept-code",
-                ]
+                    "class" => "js-zip-code",
+                ],
+                "help" => "Department or zip code"
             ])
             ->add("housingAccessType", ChoiceType::class, [
                 "choices" => Choices::getChoices(Choices::YES_NO),
@@ -182,6 +187,14 @@ class EvalHousingGroupType extends AbstractType
             ->add("housingArrivalDate", DateType::class, [
                 "widget" => "single_text",
                 "required" => false
+            ])
+            ->add("housingAddress")
+            ->add("housingCity")
+            ->add("housingDept", null, [
+                "attr" => [
+                    "class" => "js-zip-code"
+                ],
+                "help" => "Department or zip code"
             ])
             ->add("commentEvalHousing", null, [
                 "label_attr" => ["class" => "sr-only"],

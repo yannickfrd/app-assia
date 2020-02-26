@@ -6,12 +6,13 @@ Collective agreement housing: Labellisation Accord Collectif
 Collective agreement housing date: Date de labellisation Accord Collectif
 Comment eval housing: Commentaire relatif à la situation liée au logement et l'hébergement
 Dalo commission: Passage en commission DALO
+Dalo id: Numéro DALO
 Dalo record date: Date de dépôt du DALO
 Dalo decision date: Date de décision du DALO
 Dalo requalified daho: DALO requalifié en DAHO
 Dalo tribunal action: DALO recours Tribunal administratif
 Dalo tribunal action date: Date du recours Tribunal administratif
-
+Department or zip code: Département ou code postal
 Domiciliation: Domiciliation
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
@@ -24,10 +25,10 @@ Fsl: FSL
 Heps precision: Précision sur les aides et accès au logement
 Housing : Logement ou hébergement
 Housing access type: Type	d'accès au logement
-Housing address: Adresse d'hébergement ou du logement
+Housing address: Adresse du logement
 Housing arrival date: Date d'entrée dans le logement
-Housing city: Ville d'hébergement
-Housing dept: Département - hébergement
+Housing city: Ville
+Housing dept: Département
 Housing expe comment: Commentaire expérience lié au logement
 Housing experience: Expérience de logement autonome
 Housing status: Situation résidentielle

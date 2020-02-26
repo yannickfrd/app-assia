@@ -167,7 +167,7 @@ Pour tester l'application, vous pouvez vous connecter avec les identifiants suiv
     head: Demandeur principal
     hepsPrecision: Précision sur les aides et accès au logement
     housing: hébergement ou du logement
-    housingAddress: Adresse d'hébergement ou du logement
+    housingAddress: Adresse du logement
     housingAllowance: Aide au logement
     housingCity: Ville d'hébergement
     housingDept: Département - hébergement
