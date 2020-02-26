@@ -79,6 +79,7 @@
         <div class="form-group row">
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
+        {% if is_granted("EDIT", service) %}
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
@@ -86,7 +87,7 @@
                 </div>
             </div>
         </div>
-
+        {% endif %}
     </section>
 
     <hr>
@@ -130,6 +131,8 @@
                 data-list-selector="#serviceDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
                 service</button>
         </div>
+
+        {% if is_granted("EDIT", service) %}
         <div class="row">
             <div class="col-md-12">
                 <div class="float-right mb-2">
@@ -137,7 +140,8 @@
                 </div>
             </div>
         </div>
-
+        {% endif %}
+        
     </section>
 
     {{ form_row(form._token) }}

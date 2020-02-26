@@ -1,7 +1,11 @@
+import MessageFlash from "../utils/messageFlash";
+import Loader from "../utils/loader";
+
 export default class AjaxRequest {
 
     constructor() {
         this.xhr = new XMLHttpRequest();
+        this.loader = new Loader();
         // this.timeSend = null; // Temp pour test
         // this.timeResp = null; // Temp pour test
         // this.data = null;
@@ -27,13 +31,18 @@ export default class AjaxRequest {
     // Retourne le résultat de la rêquête
     load(callback, url) {
         if (this.xhr.status >= 200 && this.xhr.status < 400) {
-            callback(this.xhr.responseText); // Appelle la fonction callback en lui passant la réponse de la requête
+            return callback(this.xhr.responseText); // Appelle la fonction callback en lui passant la réponse de la requête
             // this.timeResp = Date.now(); // Temp pour test
             // let time = (this.timeResp - this.timeSend) / 1000; // Temp pour test
             // console.log("Statut: " + this.xhr.status + ", Durée : " + time + "s");
-        } else {
-            console.error("Statut: " + this.xhr.status + " " + this.xhr.statusText + " " + url);
         }
+        console.error("Statut: " + this.xhr.status + " " + this.xhr.statusText + " " + url);
+        this.loader.off();
+
+        if (this.xhr.status === 403) {
+            return new MessageFlash("danger", "Vous n'avez pas les droits pour effectuer cette action.");
+        }
+        return new MessageFlash("danger", "Une erreur s'est produite : " + this.xhr.statusText);
     }
 
     error(url) {

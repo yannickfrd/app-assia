@@ -116,7 +116,7 @@ class SupportController extends AbstractController
     {
         $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
@@ -147,7 +147,7 @@ class SupportController extends AbstractController
     {
         // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $form = $this->createForm(SupportGroupWithPeopleType::class, $supportGroup);
         $form->handleRequest($request);

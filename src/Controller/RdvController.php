@@ -67,7 +67,7 @@ class RdvController extends AbstractController
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $calendar = new Calendar($year, $month);
 
@@ -127,7 +127,7 @@ class RdvController extends AbstractController
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $rdvSearch = new RdvSearch;
 
@@ -186,7 +186,7 @@ class RdvController extends AbstractController
      */
     public function getRdv(Rdv $rdv, RdvRepository $repo): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $rdv);
+        $this->denyAccessUnlessGranted("VIEW", $rdv);
 
         $rdv = $repo->find($rdv->getId());
 

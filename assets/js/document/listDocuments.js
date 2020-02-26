@@ -198,7 +198,10 @@ export default class ListDocuments {
                 this.responseAjax(response);
             }.bind(this),
             error: function (jqXHR, textStatus, errorMessage) {
-                new MessageFlash("danger", "Une erreur s'est produite : " + errorMessage);
+                if (errorMessage === "Forbidden") {
+                    return new MessageFlash("danger", "Vous n'avez pas les droits pour effectuer cette action.");
+                }
+                return new MessageFlash("danger", "Une erreur s'est produite : " + errorMessage);
             }.bind(this)
         });
     }

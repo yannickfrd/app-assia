@@ -39,7 +39,7 @@ class SupportGroupVoter extends Voter
                 return $this->canView();
                 break;
             case "EDIT":
-                return $this->canEdit();
+                return $this->canView();
                 break;
             case "DELETE":
                 return $this->canDelete();
@@ -80,6 +80,13 @@ class SupportGroupVoter extends Voter
     protected function canDelete()
     {
         if ($this->security->isGranted("ROLE_SUPER_ADMIN") || ($this->isAdminService())) {
+            return true;
+        }
+
+        if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() == $this->userId)
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() == $this->userId)
+            || ($this->supportGroup->getCreatedBy() && $this->supportGroup->getCreatedBy()->getId() == $this->userId)
+        ) {
             return true;
         }
         return false;

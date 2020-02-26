@@ -113,7 +113,7 @@ class AccommodationController extends AbstractController
      */
     public function deleteAccommodation(Accommodation $accommodation): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
+        $this->denyAccessUnlessGranted("DELETE", $accommodation->getService());
 
         $this->manager->remove($accommodation);
         $this->manager->flush();

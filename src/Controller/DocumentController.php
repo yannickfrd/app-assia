@@ -44,7 +44,7 @@ class DocumentController extends AbstractController
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $documentSearch = new DocumentSearch;
 
@@ -122,7 +122,7 @@ class DocumentController extends AbstractController
     {
         $supportGroup = $document->getSupportGroup();
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("DELETE", $supportGroup);
 
         $documentName = $document->getName();
 

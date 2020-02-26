@@ -30,7 +30,7 @@
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
                     <tr>
-                        <th scope="col" class="align-middle th-w-80"></th>
+                        <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(supports, "Prénom et Nom", "p.lastname") }}
                         </th>
@@ -53,7 +53,7 @@
                             {{ knp_pagination_sortable(supports, "Référent", "u.lastname") }}
                         </th>
                         <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(supports, "Service", "s.name") }}
+                            {{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}
                         </th>
                     </tr>
                 </thead>
@@ -71,12 +71,12 @@
                             <span class="btn btn-{{ theme_color }} btn-sm shadow my-1">
                                 <span class="fas fa-ban"></span></span>
                             {% endif %}
-                            {% if is_granted("EDIT", support) %}
+                            {# {% if is_granted("EDIT", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_edit', {'id':support.id}) }} {% endif %}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
                                 title="Modifier la fiche du suivi"><span class="fas fa-edit"></span>
                             </a>
-                            {% endif %}
+                            {% endif %} #}
                         </th>
                         <td class="align-middle">
                             {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.head == true) %}
@@ -91,18 +91,16 @@
                         </td>
                         <td class="align-middle">
                             {{ support.groupPeople.getFamilyTypologyType }}
-                            {% if support.supportPerson|length > 1 %} | {{ support.supportPerson|length }}
-                            pers.{% endif %}
+                            {% if support.supportPerson|length > 1 %} | {{ support.supportPerson|length }} pers.{% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusList }}</td>
                         <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>
-                        <td class="align-middle">{% if support.endDate %}
-                            {{ support.endDate | date("d/m/Y") }}{% endif %}
-                        </td>
+                        <td class="align-middle">{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %} </td>
+                        <td class="align-middle">{% if support.referent %}{{ support.referent.fullname }}{% endif %}</td>
                         <td class="align-middle">
-                            {% if support.referent %}{{ support.referent.fullname }}{% endif %}
+                            {{ support.service.name }}<br>
+                            {% if support.device %}({{ support.device.name }}){% endif %}
                         </td>
-                        <td class="align-middle">{{ support.service.name }}</td>
                     </tr>
                     {# {% endcache %} #}
                     {% endfor %}

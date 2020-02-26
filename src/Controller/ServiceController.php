@@ -90,12 +90,13 @@ class ServiceController extends AbstractController
      */
     public function editService(Service $service, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $service);
+        $this->denyAccessUnlessGranted("VIEW", $service);
 
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted("EDIT", $service);
             $this->updateService($service);
         }
 

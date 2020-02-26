@@ -70,7 +70,7 @@ class EvaluationController extends AbstractController
     public function editEvaluation(int $id, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
 

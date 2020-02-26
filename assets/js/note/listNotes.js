@@ -190,19 +190,19 @@ export default class ListNotes {
     // Réponse du serveur
     responseAjax(data) {
         let dataJSON = JSON.parse(data);
-        if (dataJSON.code === 200) {
-            if (dataJSON.action === "create" && !this.autoSave) {
-                this.createNote(dataJSON.data);
+        if (dataJSON.code === 200 && !this.autoSave) {
+            switch (data.action) {
+                case "create":
+                    this.createNote(dataJSON.data);
+                    break;
+                case "update":
+                    this.updateNote(dataJSON.data);
+                    break;
+                case "delete":
+                    document.getElementById("note-" + this.cardId).remove();
+                    this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
+                    break;
             }
-            if (dataJSON.action === "update") {
-                this.updateNote(dataJSON.data);
-            }
-            if (dataJSON.action === "delete") {
-                document.getElementById("note-" + this.cardId).remove();
-                this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
-            }
-        }
-        if (!this.autoSave) {
             new MessageFlash(dataJSON.alert, dataJSON.msg);
             this.loader.off(true);
         }
@@ -255,5 +255,4 @@ export default class ListNotes {
 
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
     }
-
 }

@@ -6,7 +6,7 @@ export default class Search {
         this.inputElts = this.formSearch.getElementsByTagName("input");
         this.checkboxElts = this.formSearch.querySelectorAll("input[type='checkbox']");
         this.selectElts = this.formSearch.getElementsByTagName("select");
-        this.btnClearElt = this.formSearch.querySelector("#js-btn-clear");
+        this.btnClearElt = this.formSearch.querySelector("button[type='reset']");
         this.init();
     }
 

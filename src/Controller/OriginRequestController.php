@@ -39,7 +39,7 @@ class OriginRequestController extends AbstractController
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
         $originRequest = $this->repo->findOriginRequest($supportGroup);
 

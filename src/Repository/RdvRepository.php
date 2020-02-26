@@ -62,22 +62,18 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null)
     {
-        $query = $this->createQueryBuilder("r")
-            ->select("r")
-            ->leftJoin("r.createdBy", "u")
-            ->addselect("u")
-            ->leftJoin("r.supportGroup", "s")
-            ->addselect("s")
-            ->andWhere("r.start >= :start")
-            ->setParameter("start", $start)
-            ->andWhere("r.start <= :end")
-            ->setParameter("end", $end)
-            ->andWhere("r.createdBy = :user")
-            ->setParameter("user",  $this->currentUserService->getUser());
+        $query = $this->createQueryBuilder("r")->select("r")
+            ->leftJoin("r.createdBy", "u")->addselect("u")
+            ->leftJoin("r.supportGroup", "s")->addselect("s")
+
+            ->where("r.start >= :start")->setParameter("start", $start)
+            ->andWhere("r.start <= :end")->setParameter("end", $end);
 
         if ($supportGroup) {
-            $query->andWhere("r.supportGroup = :supportGroup")
-                ->setParameter("supportGroup",  $supportGroup);
+            $query->andWhere("r.supportGroup = :supportGroup")->setParameter("supportGroup",  $supportGroup);
+        } else {
+            $query->andWhere("r.createdBy = :user")
+                ->setParameter("user",  $this->currentUserService->getUser());
         }
 
         return $query->orderBy("r.start", "ASC")

@@ -94,8 +94,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findAllSupportsQuery(SupportGroupSearch $supportGroupSearch): Query
     {
         $query =  $this->createQueryBuilder("sg")
-            ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->select("sg")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
+            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
@@ -104,7 +105,8 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query = $this->filter($query, $supportGroupSearch);
 
         return $query->orderBy("sg.startDate", "DESC")
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     public function getSupports(SupportGroupSearch $supportGroupSearch)
@@ -112,8 +114,9 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query =  $this->createQueryBuilder("sg")
             ->select("sg")
             ->leftJoin("sg.service", "s")->addSelect("PARTIAL s.{id,name}")
+            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
+            ->leftJoin("sg.supportPerson", "sp")->addSelect("sp")
             ->leftJoin("so.person", "p")->addselect("p")
             ->leftJoin("sg.groupPeople", "g")->addselect("g")
             ->leftJoin("sg.referent", "u")->addSelect("PARTIAL u.{id,fullname}")
@@ -130,7 +133,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         if (!$this->currentUserService->isRole("ROLE_SUPER_ADMIN")) {
             // if ($this->currentUserService->isRole("ROLE_ADMIN")) {
-            $query->andWhere("s.id IN (:services)")
+            $query->where("s.id IN (:services)")
                 ->setParameter("services",  $this->currentUserService->getServices());
             // } else {
             //     $query->andWhere("sg.referent = :user")
@@ -138,7 +141,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             // }
         }
         if ($supportGroupSearch->getFullname()) {
-            $query->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter("fullname", '%' . $supportGroupSearch->getFullname() . '%');
         }
 
@@ -228,6 +231,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("sg")
             ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
             ->leftJoin("sp.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")

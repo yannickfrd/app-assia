@@ -39,7 +39,9 @@ class SupportGroupType extends AbstractType
                 "choice_label" => "name",
                 "query_builder" => function (ServiceRepository $repo) {
                     return $repo->getServicesQueryList($this->currentUser);
-                }
+                },
+                "placeholder" => "-- Select --",
+
             ])
             ->add("device", EntityType::class, [
                 "class" => Device::class,
@@ -51,7 +53,9 @@ class SupportGroupType extends AbstractType
                         ->where("sd.service IN (:services)")
                         ->setParameter("services", $this->currentUser->getServices())
                         ->orderBy("d.name", "ASC");
-                }
+                },
+                "placeholder" => "-- Select --",
+                "required" => false
             ])
             ->add("status", ChoiceType::class, [
                 "choices" => Choices::getChoices(SupportGroup::STATUS),
@@ -67,6 +71,8 @@ class SupportGroupType extends AbstractType
                 "query_builder" => function (UserRepository $repo) {
                     return $repo->getUsersQueryList($this->currentUser, $this->data->getReferent());
                 },
+                "placeholder" => "-- Select --",
+
             ])
             ->add("referent2", EntityType::class, [
                 "class" => User::class,

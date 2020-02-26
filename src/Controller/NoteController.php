@@ -44,7 +44,7 @@ class NoteController extends AbstractController
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $noteSearch = new NoteSearch;
 
@@ -119,7 +119,7 @@ class NoteController extends AbstractController
      */
     public function deleteNote(Note $note): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $note->getSupportGroup());
+        $this->denyAccessUnlessGranted("DELETE", $note->getSupportGroup());
 
         $this->manager->remove($note);
         $this->manager->flush();

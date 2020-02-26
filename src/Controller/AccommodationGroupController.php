@@ -41,7 +41,7 @@ class AccommodationGroupController extends AbstractController
     {
         $supportGroup = $supportRepo->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
         $accommodationGroups = $this->repo->findBy(["supportGroup" => $supportGroup]);
 
@@ -164,7 +164,7 @@ class AccommodationGroupController extends AbstractController
 
         $supportGroup = $accommodationGroup->getSupportGroup();
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("DELETE", $supportGroup);
 
         $this->manager->remove($accommodationGroup);
         $this->manager->flush();
@@ -186,7 +186,7 @@ class AccommodationGroupController extends AbstractController
     {
         $accommodationPerson = $repo->findOneById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $accommodationPerson->getAccommodationGroup()->getSupportGroup());
+        $this->denyAccessUnlessGranted("DELETE", $accommodationPerson->getAccommodationGroup()->getSupportGroup());
 
         $this->manager->remove($accommodationPerson);
         $this->manager->flush();

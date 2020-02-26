@@ -19,7 +19,7 @@
                     <th scope="col" class="align-middle th-w-20"></th>
                     <th scope="col" class="align-middle th-w-150">Prénom et Nom</th>
                     <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
-                    <th scope="col" class="align-middle th-w-100">Dispositif</th>
+                    <th scope="col" class="align-middle th-w-100">Service (Dispositif)</th>
                     <th scope="col" class="align-middle th-w-100">Statut</th>
                     <th scope="col" class="align-middle th-date">Date de début</th>
                     <th scope="col" class="align-middle th-date">Date de fin</th>
@@ -42,7 +42,10 @@
                     <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br>
                         {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
                     </td>
-                    <td class="align-middle">{{ support.service.name }}</td>
+                    <td class="align-middle">
+                        {{ support.service.name }}<br>
+                        {% if support.device %}({{ support.device.name }}){% endif %}                    
+                    </td>
                     <td class="align-middle">{{ support.getstatusList }}</td>
                     <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
                     <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
