@@ -61,7 +61,7 @@ class AccommodationController extends AbstractController
      */
     public function newAccommodation(Service $service, Accommodation $accommodation = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("EDIT", $service);
 
         $accommodation = new Accommodation();
         $accommodation->setService($service);
@@ -89,7 +89,7 @@ class AccommodationController extends AbstractController
      */
     public function editAccommodation(Accommodation $accommodation, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
 
         $form = $this->createForm(AccommodationType::class, $accommodation);
         $form->handleRequest($request);
@@ -113,7 +113,7 @@ class AccommodationController extends AbstractController
      */
     public function deleteAccommodation(Accommodation $accommodation): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
 
         $this->manager->remove($accommodation);
         $this->manager->flush();
