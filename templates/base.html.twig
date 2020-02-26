@@ -81,17 +81,20 @@
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin
 							</a>
 							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuAdmin">
-								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un nouvel utilisateur</a>
+								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un utilisateur</a>
+								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter un dispositif</a>
 								{% if is_granted("ROLE_SUPER_ADMIN") %}
 								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
 								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
-								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter d'un dispositif</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("admin_users") }}">Utilisateurs</a>
-								<a class="dropdown-item" href="{{ path("admin_devices") }}">Dispositifs</a>
-								<a class="dropdown-item" href="{{ path("admin_accommodations") }}">Groupes de places</a>
 								{% endif %}
-								<a class="dropdown-item" href="{{ path("admin_organizations") }}">Organismes prescripteurs</a>
+								<a class="dropdown-item" href="{{ path("admin_organization_new") }}">Ajouter un organisme prescripteur</a>
+								<div class="dropdown-divider"></div>
+								{% if is_granted("ROLE_SUPER_ADMIN") %}
+								<a class="dropdown-item" href="{{ path("admin_users") }}">Liste des utilisateurs</a>
+								{% endif %}
+								<a class="dropdown-item" href="{{ path("admin_devices") }}">Liste des dispositifs</a>
+								<a class="dropdown-item" href="{{ path("admin_accommodations") }}">Liste des groupes de places</a>
+								<a class="dropdown-item" href="{{ path("admin_organizations") }}">Liste des organismes prescripteurs</a>
 							</div>
 						</li>
 						{% endif %}

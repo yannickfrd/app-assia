@@ -51,7 +51,7 @@ export default class ValidationPerson {
     }
 
     checkLastname() {
-        if (this.lastnameInputElt.value.length <= 2) {
+        if (this.lastnameInputElt.value.length <= 1) {
             this.validationInput.invalid("lastname", this.lastnameLabelElt, this.lastnameInputElt, "Le nom est trop court (2 caractères min.).");
         } else if (this.lastnameInputElt.value.length >= 50) {
             this.validationInput.invalid("lastname", this.lastnameLabelElt, this.lastnameInputElt, "Le nom est trop long (50 caractères max.).");
@@ -61,7 +61,7 @@ export default class ValidationPerson {
     }
 
     checkFirstname() {
-        if (this.firstnameInputElt.value.length <= 2) {
+        if (this.firstnameInputElt.value.length <= 1) {
             this.validationInput.invalid("firstname", this.firstnameLabelElt, this.firstnameInputElt, "Le prénom est trop court (2 caractères min.).");
         } else if (this.firstnameInputElt.value.length >= 50) {
             this.validationInput.invalid("firstname", this.firstnameLabelElt, this.firstnameInputElt, "Le prénom est trop long (50 caractères max.).");

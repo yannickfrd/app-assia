@@ -256,7 +256,7 @@ export default class evaluation {
     editElt(i, eltId, display) {
         let selectElt = document.getElementById("js-" + i + eltId);
         let inputElts = document.querySelectorAll(".js-" + i + eltId);
-        selectElt.addEventListener("input", this.addOption.bind(this, selectElt, i, eltId, display));
+        selectElt.addEventListener("change", this.addOption.bind(this, selectElt, i, eltId, display));
         inputElts.forEach(inputElt => {
             inputElt.addEventListener("click", function () {
                 this.displayNone(inputElt, display);

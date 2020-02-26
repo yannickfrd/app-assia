@@ -54,8 +54,6 @@ export default class ValidationSupport {
             this.invalid("startDate", this.startDateLabelElt, this.startDateInputElt, "La date est invalide.");
         } else if (interval < -7) {
             this.invalid("startDate", this.startDateLabelElt, this.startDateInputElt, "Le début du suivi ne peut pas être supérieur de 7 jours par rapport à la date du jour.");
-        } else if (interval >= 364) {
-            this.invalid("startDate", this.startDateLabelElt, this.startDateInputElt, "Le début du suivi ne peut pas être daté de plus d'un an par rapport à la date du jour.");
         } else {
             this.valid("startDate", this.startDateInputElt);
         }

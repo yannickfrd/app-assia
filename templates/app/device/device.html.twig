@@ -4,13 +4,13 @@
 
 {% set device = form.vars.value %}
 
-{% block title %}{% if edit_mode %}Dispositif {{ device.name }}{% else %}Ajout d'un nouveau dispositif{% endif %} | Esperer95.app{% endblock %}
+{% block title %}{% if edit_mode %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %} | Esperer95.app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}Dispositif {{ device.name }}{% else %}Ajout d'un nouveau dispositif{% endif %}</h1>
+    <h1 class="h2 mb-3">{% if edit_mode %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{device.createdAt | date("d/m/Y à H:i") }}

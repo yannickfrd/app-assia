@@ -33,7 +33,7 @@ class DeviceController extends AbstractController
      */
     public function listDevice(Request $request, Pagination $pagination): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
         $devices = $pagination->paginate($this->repo->findAllDevicesQuery(), $request);
 
@@ -52,7 +52,7 @@ class DeviceController extends AbstractController
      */
     public function newDevice(Device $device = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
         $device = new Device();
 
@@ -101,7 +101,7 @@ class DeviceController extends AbstractController
      */
     public function editDevice(Device $device, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
         $form = $this->createForm(DeviceType::class, $device);
         $form->handleRequest($request);
