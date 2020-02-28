@@ -121,10 +121,8 @@
 						<a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
 							data-trigger="hover" data-placement="bottom" data-html="true"
 							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y h:i") }}
-							<br>fonction : {{ user.statuslist }}<br>Services rattachés :
-							{% for serviceuser in app.session.get("servicesUser") %}<br>- {{ serviceuser }}{% endfor %}">
-							<span class="fas fa-user"></span>
-							{{ user.firstname }} {{ user.lastname|first }}.
+							<br />Fonction : {{ user.statuslist }}<br />Services rattachés :<br />- {{ app.session.get("servicesUser")|join("<br />- ") }}">
+							<span class="fas fa-user mr-2"></span>{{ user.firstname }} {{ user.lastname|first }}.
 						</a>
 						<br />
 						<a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
@@ -158,7 +156,7 @@
 				<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
 				<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février 1979.</span>
 			</p>
-			<p>Version 1.1.0 - 02/03/2020</p>
+			<p>Version 1.0.3 - 28/02/2020</p>
 		</div>
 
 	</footer>

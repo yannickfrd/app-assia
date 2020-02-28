@@ -90,6 +90,7 @@ class GroupPeopleSearchType extends AbstractType
             "data_class" => GroupPeopleSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
+            'allow_extra_fields' => true,
             "csrf_protection" => false
         ]);
     }

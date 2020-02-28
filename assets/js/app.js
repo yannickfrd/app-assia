@@ -29,7 +29,7 @@ $(function () {
 window.onload = function () {
     // Stop spinner loader 
     document.getElementById("loader").classList.add("d-none");
-    // Smooth Scroll animation
+    // Smooth Scroll animationa
     document.getElementById("scroll-top").addEventListener("click", function (e) {
         e.preventDefault();
         let target = this.getAttribute("href");

@@ -63,6 +63,7 @@ class ServiceSearchType extends AbstractType
             "data_class" => ServiceSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
+            'allow_extra_fields' => true,
             "csrf_protection" => false
         ]);
     }

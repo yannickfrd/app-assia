@@ -87,6 +87,7 @@ class PersonSearchType extends AbstractType
             "data_class" => PersonSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
+            'allow_extra_fields' => true,
             "csrf_protection" => false
         ]);
     }

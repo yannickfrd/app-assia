@@ -364,13 +364,15 @@ export default class evaluation {
             }.bind(this));
         });
 
-        amtElt.addEventListener("click", function () {
-            let sumAlts = this.getSumAmts(inputElts);
-            if (sumAlts != 0) {
-                amtElt.value = sumAlts;
-                this.updateAmtGroup(type);
-            }
-        }.bind(this));
+        if (amtElt) {
+            amtElt.addEventListener("click", function () {
+                let sumAlts = this.getSumAmts(inputElts);
+                if (sumAlts != 0) {
+                    amtElt.value = sumAlts;
+                    this.updateAmtGroup(type);
+                }
+            }.bind(this));
+        }
     }
 
     // Retourne la somme des montants

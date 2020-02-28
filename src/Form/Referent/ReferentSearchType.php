@@ -44,7 +44,9 @@ class ReferentSearchType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => ReferentSearch::class,
-            "translation_domain" => "forms"
+            "translation_domain" => "forms",
+            'allow_extra_fields' => true,
+            "csrf_protection" => false
         ]);
     }
 }

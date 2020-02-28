@@ -40,7 +40,9 @@ class RdvSearchType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => RdvSearch::class,
-            "translation_domain" => "forms"
+            "translation_domain" => "forms",
+            'allow_extra_fields' => true,
+            "csrf_protection" => false
         ]);
     }
 }

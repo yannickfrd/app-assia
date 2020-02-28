@@ -7,32 +7,31 @@
 {% block card_body %}
 
 <div class="card mb-4">
-  	<div class="card-header font-weight-bold">
-		<div class="row">
-			<div class="col-6 col-md-2 mb-2 text-cente border-right border-gray">Situation budgétaire du groupe</div>
+  	<div class="card-body pb-1">
+		<div class="d-flex row justify-content-center">
 			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Total des resources</span><br/>
-				<span id="resourcesGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.resourcesGroupAmt is defined %}
+				<span id="resourcesGroupAmt">{% if evaluationGroup.evalBudgetGroup.resourcesGroupAmt is defined %}
 					{{ evaluationGroup.evalBudgetGroup.resourcesGroupAmt }}{% else %}0{% endif %}</span> €
 			</div>
 			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Total des charges</span><br/>
-				<span id="chargesGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
+				<span id="chargesGroupAmt">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
 					{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</span> €
 			</div>
 			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Remboursemt mensuel</span><br/>
-				<span id="repaymentGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
+				<span id="repaymentGroupAmt">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
 					{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €
 			</div>
 			<div class="col-6 col-md-2 mb-2 text-center border-right border-gray">
 				<span>Reste à vivre</span><br/>
-					<span id="budgetBalanceGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
+					<span id="budgetBalanceGroupAmt">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
 						{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</span> €
 			</div>
 			<div class="col-6 col-md-2 mb-2 text-center">
 				<span>Total des dettes</span><br/>
-					<span id="debtsGroupAmt" class="font-weight-bold">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
+					<span id="debtsGroupAmt">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
 						{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</span> €
 			</div>
 		</div>

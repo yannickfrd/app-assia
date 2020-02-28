@@ -17,9 +17,9 @@
 </div>
 
 {% if form.supportPerson is defined %}
-{% set form_evaluation_people = form.supportPerson|filter(a => a.vars.value.role != 3) %}
+{% set form_evaluation_people = form.supportPerson|filter(a => a.vars.value.person.age >= 16) %}
 {% else %}
-{% set form_evaluation_people = form.evaluationPeople|filter(a => a.vars.value.supportPerson.role != 3) %}
+{% set form_evaluation_people = form.evaluationPeople|filter(a => a.vars.value.supportPerson.person.age >= 16) %}
 {% endif %}
 
 <div class="row">

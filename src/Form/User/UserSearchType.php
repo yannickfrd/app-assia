@@ -113,6 +113,7 @@ class UserSearchType extends AbstractType
             "data_class" => UserSearch::class,
             "method" => "get",
             "translation_domain" => "forms",
+            'allow_extra_fields' => true,
             "csrf_protection" => false
         ]);
     }

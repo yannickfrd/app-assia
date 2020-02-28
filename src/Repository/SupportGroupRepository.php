@@ -231,7 +231,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findAllSupportsFromUser(User $user, $maxResults = null)
     {
         return $this->createQueryBuilder("sg")
-            ->select("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
+            ->select("sg")
             ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
@@ -246,7 +246,8 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->setMaxResults($maxResults)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 }

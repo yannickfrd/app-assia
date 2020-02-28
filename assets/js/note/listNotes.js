@@ -121,7 +121,7 @@ export default class ListNotes {
     // Timer pour la sauvegarde automatique
     timerAutoSave() {
         clearInterval(this.countdownID);
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 5 * 60 * 1000);
+        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000); // 2 minutes
         if (this.count > 10) {
             this.autoSave = true;
             this.count = 0;
