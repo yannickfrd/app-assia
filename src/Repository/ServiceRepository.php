@@ -27,8 +27,7 @@ class ServiceRepository extends ServiceEntityRepository
      */
     public function findAllServicesQuery($serviceSearch): Query
     {
-        $query =  $this->createQueryBuilder("s")
-            ->select("s")
+        $query =  $this->createQueryBuilder("s")->select("s")
             ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
 
         if ($serviceSearch->getName()) {
@@ -54,9 +53,9 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /** 
-     * Donne la liste des services
+     * Donne la liste des services de l'utilisateur
      */
-    public function getServicesQueryList($currentUser)
+    public function getServicesFromUserQueryList($currentUser)
     {
         $query =  $this->createQueryBuilder("s")
             ->select("PARTIAL s.{id, name}");
@@ -71,6 +70,7 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur
      *
+     * @param User $user
      */
     public function findAllServicesFromUser(User $user)
     {
@@ -86,5 +86,33 @@ class ServiceRepository extends ServiceEntityRepository
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    /**
+     * Donne tous les services de l'utilisateur
+     * @param integer $id
+     * @return Service|null
+     */
+    public function getFullService(int $id): ?Service
+    {
+        return $this->createQueryBuilder("s")->select("s")
+            ->leftJoin("s.pole", "p")->addselect("PARTIAL p.{id, name}")
+
+            ->leftJoin("s.chief", "chief")->addselect("PARTIAL chief.{id, firstname, lastname}")
+
+            ->leftJoin("s.serviceDevices", "sd")->addselect("sd")
+            ->leftJoin("sd.device", "d")->addselect("PARTIAL d.{id, name}")
+
+            ->leftJoin("s.accommodations", "a")->addselect("a")
+
+            ->leftJoin("s.serviceUser", "su")->addselect("su")
+            ->leftJoin("su.user", "u")->addselect("PARTIAL u.{id, firstname, lastname, status, phone, email}")
+
+            ->where("s.id = :id")
+            ->setParameter("id", $id)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
     }
 }

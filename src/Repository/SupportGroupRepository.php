@@ -97,6 +97,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->select("sg")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
+            ->leftJoin("sg.accommodationGroups", "ag")->addselect("PARTIAL ag.{id, accommodation}")
+            ->leftJoin("ag.accommodation", "a")->addselect("PARTIAL a.{id, name, address}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
@@ -117,7 +119,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
             ->leftJoin("sg.supportPerson", "sp")->addSelect("sp")
-            ->leftJoin("so.person", "p")->addselect("p")
+            ->leftJoin("sp.person", "p")->addselect("p")
             ->leftJoin("sg.groupPeople", "g")->addselect("g")
             ->leftJoin("sg.referent", "u")->addSelect("PARTIAL u.{id,fullname}")
             ->andWhere("sp.head = TRUE");
@@ -144,22 +146,13 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter("fullname", '%' . $supportGroupSearch->getFullname() . '%');
         }
-
-        // if ($supportGroupSearch->getBirthdate()) {
-        //     $query->andWhere("p.birthdate = :birthdate")
-        //         ->setParameter("birthdate", $supportGroupSearch->getBirthdate());
-        // }
-        // if ($supportGroupSearch->getFamilyTypology()) {
-        //     $query->andWhere("g.familyTypology = :familyTypology")
-        //         ->setParameter("familyTypology", $supportGroupSearch->getFamilyTypology());
-        // }
+        if ($supportGroupSearch->getFamilyTypology()) {
+            $query->andWhere("g.familyTypology = :familyTypology")
+                ->setParameter("familyTypology", $supportGroupSearch->getFamilyTypology());
+        }
         // if ($supportGroupSearch->getNbPeople()) {
         //     $query->andWhere("g.nbPeople = :nbPeople")
         //         ->setParameter("nbPeople", $supportGroupSearch->getNbPeople());
-        // }
-        // if ($supportGroupSearch->getStatus()) {
-        //     $query->andWhere("sg.status = :status")
-        //         ->setParameter("status", $supportGroupSearch->getStatus());
         // }
         if ($supportGroupSearch->getStatus()) {
             $expr = $query->expr();
@@ -210,11 +203,20 @@ class SupportGroupRepository extends ServiceEntityRepository
                 ->setParameter("referent", $supportGroupSearch->getReferent());
         }
 
-        if ($supportGroupSearch->getService() && count($supportGroupSearch->getService())) {
+        if ($supportGroupSearch->getServices() && count($supportGroupSearch->getServices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getService() as $service) {
+            foreach ($supportGroupSearch->getServices() as $service) {
                 $orX->add($expr->eq("sg.service", $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($supportGroupSearch->getDevices() && count($supportGroupSearch->getDevices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($supportGroupSearch->getDevices() as $device) {
+                $orX->add($expr->eq("sg.device", $device));
             }
             $query->andWhere($orX);
         }

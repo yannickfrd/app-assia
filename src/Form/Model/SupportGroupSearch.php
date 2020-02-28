@@ -75,7 +75,12 @@ class SupportGroupSearch
     /**
      * @var ArrayCollection
      */
-    private $service;
+    private $services;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $devices;
 
     /**
      * @var bool
@@ -84,6 +89,8 @@ class SupportGroupSearch
 
     public function __construct()
     {
+        $this->services = new ArrayCollection();
+        $this->devices = new ArrayCollection();
     }
 
     /**
@@ -230,18 +237,35 @@ class SupportGroupSearch
         return $this;
     }
 
+
     /**
      *
      * @return ArrayCollection|null
      */
-    public function getService(): ?ArrayCollection
+    public function getServices(): ?ArrayCollection
     {
-        return $this->service;
+        return $this->services;
     }
 
-    public function setService(?ArrayCollection $service): self
+    public function setService(?ArrayCollection $services): self
     {
-        $this->service = $service;
+        $this->services = $services;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return ArrayCollection|null
+     */
+    public function getDevices(): ?ArrayCollection
+    {
+        return $this->devices;
+    }
+
+    public function setDevices(?ArrayCollection $devices): self
+    {
+        $this->devices = $devices;
 
         return $this;
     }

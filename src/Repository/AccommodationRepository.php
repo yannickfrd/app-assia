@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Service;
 use Doctrine\ORM\Query;
 use App\Entity\Accommodation;
+use App\Form\Model\AccommodationSearch;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -23,22 +24,96 @@ class AccommodationRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les places
+
+     * @param AccommodationSearch $accommodationSearch
      * @return Query
      */
-    public function findAllAccommodationsQuery($accommodationSearch): Query
+    public function findAllAccommodationsQuery(AccommodationSearch $accommodationSearch): Query
+    {
+        $query =  $this->getAccommodations();
+
+        if ($accommodationSearch) {
+            $query = $this->filter($query, $accommodationSearch);
+        }
+
+        return $query->orderBy("a.name", "ASC")
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+
+    /**
+     * Retourne toutes les places pour l'export
+     *
+     * @param AccommodationSearch $accommodationSearch
+     */
+    public function findAccommodationsToExport(AccommodationSearch $accommodationSearch = null)
+    {
+        $query =  $this->getAccommodations();
+
+        if ($accommodationSearch) {
+            $query = $this->filter($query, $accommodationSearch);
+        }
+
+        return $query->orderBy("a.name", "DESC")
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /** 
+     * Donne la liste des groupes de places
+     */
+    public function getAccommodationsQueryList($service)
     {
         $query =  $this->createQueryBuilder("a")
+            ->select("PARTIAL a.{id, name, service}")
+
+            ->where("a.service = :service")
+            ->setParameter("service", $service)
+
+            ->andWhere("a.closingDate IS NULL")
+            ->orWhere("a.closingDate > :date")
+            ->setParameter("date", new \Datetime());
+
+        return $query->orderBy("a.name", "ASC");
+    }
+
+    /**
+     * Donne toutes les places du service
+     *
+     * @return Service|null
+     */
+    public function findAccommodationsFromService(Service $service)
+    {
+        return $this->createQueryBuilder("a")
             ->select("a")
+            ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
+
+            ->where("a.service = :service")
+            ->setParameter("service", $service)
+
+            ->orderBy("a.name", "ASC")
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    protected function getAccommodations()
+    {
+        return $this->createQueryBuilder("a")->select("a")
             ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
             ->innerJoin("a.service", "s")->addSelect("PARTIAL s.{id,name}")
             ->innerJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}")
             ->leftJoin("a.accommodationGroups", "gpa")->addSelect("PARTIAL gpa.{id,startDate, endDate}")
             ->leftJoin("gpa.accommodationPersons", "pa")->addSelect("PARTIAL pa.{id,startDate, endDate}");
+    }
 
-        // $today = new \Datetime();
-        // $query->andWhere("gpa.endDate >= :now")
-        //     ->setParameter("now", $today);
-
+    /**
+     * Filtre la recherche
+     *
+     * @param AccommodationSearch $accommodationSearch
+     */
+    protected function filter($query, AccommodationSearch $accommodationSearch)
+    {
         if ($accommodationSearch->getName()) {
             $query->andWhere("a.name LIKE :name")
                 ->setParameter("name", '%' . $accommodationSearch->getName() . '%');
@@ -109,42 +184,6 @@ class AccommodationRepository extends ServiceEntityRepository
             }
             $query->andWhere($orX);
         }
-
-        return $query->orderBy("a.name", "ASC")
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-    }
-
-    /** 
-     * Donne la liste des groupes de places
-     */
-    public function getAccommodationsQueryList($service)
-    {
-        $query =  $this->createQueryBuilder("a")
-            ->select("PARTIAL a.{id, name, service}")
-
-            ->where("a.service = :service")
-            ->setParameter("service", $service);
-
-        return $query->orderBy("a.name", "ASC");
-    }
-
-    /**
-     * Donne toutes les places du service
-     *
-     * @return Service|null
-     */
-    public function findAccommodationsFromService(Service $service)
-    {
-        return $this->createQueryBuilder("a")
-            ->select("a")
-            ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
-
-            ->where("a.service = :service")
-            ->setParameter("service", $service)
-
-            ->orderBy("a.name", "ASC")
-
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+        return $query;
     }
 }

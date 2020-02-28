@@ -31,7 +31,7 @@ class SupportPersonExport
             $i++;
         }
 
-        $export = new Export("export_suivis", "xlsx", $arrayData, 12.5);
+        $export = new Export("export_suivis", "xlsx", $arrayData, null);
 
         return $export->exportFile();
     }
@@ -47,11 +47,21 @@ class SupportPersonExport
         $supportGroup = $supportPerson->getSupportGroup();
         $groupPeople = $supportGroup->getGroupPeople();
 
+        $nameAccommodations = [];
+        $addressAccommodations = [];
+
+        $accommodationPersons = $person->getAccommodationPersons();
+        foreach ($accommodationPersons as $accommodationPerson) {
+            $accommodations = $accommodationPerson->getAccommodationGroup()->getAccommodation();
+            $nameAccommodations[] = $accommodations->getName();
+            $addressAccommodations[] = $accommodations->getAddress();
+        }
+
         return [
-            "N° Suivi groupe" => $supportGroup->getId(),
-            "N° Suivi personne" => $supportPerson->getId(),
-            "N° Groupe" => $groupPeople->getId(),
-            "N° Personne" => $person->getId(),
+            // "N° Suivi groupe" => $supportGroup->getId(),
+            // "N° Suivi personne" => $supportPerson->getId(),
+            // "N° Groupe" => $groupPeople->getId(),
+            // "N° Personne" => $person->getId(),
             "Nom" => $person->getLastname(),
             "Prénom" => $person->getFirstname(),
             "Date de naissance" => $this->formatDate($person->getBirthdate()),
@@ -63,8 +73,11 @@ class SupportPersonExport
             "Date début suivi" => $this->formatDate($supportPerson->getStartDate()),
             "Date Fin suivi" => $this->formatDate($supportPerson->getEndDate()),
             "Référent social" => $supportGroup->getReferent()->getFullname(),
-            "Service" => $supportGroup->getService()->getName(),
             "Pôle" => $supportGroup->getService()->getPole()->getName(),
+            "Service" => $supportGroup->getService()->getName(),
+            "Dispositif" => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : "",
+            "Nom du logement/ hébergement" => join(", ", $nameAccommodations),
+            "Adresse" => join(", ", $addressAccommodations)
         ];
     }
 

@@ -131,7 +131,7 @@ class SecurityController extends AbstractController
     /**
      * Fiche de l'utilisateur connecté
      * 
-     * @Route("/user", name="user_show", methods="GET|POST")
+     * @Route("/my_profile", name="my_profile", methods="GET|POST")
      * @param UserChangePassword $userChangePassword
      * @param Request $request
      * @return Response

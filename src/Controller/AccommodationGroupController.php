@@ -98,7 +98,7 @@ class AccommodationGroupController extends AbstractController
     /**
      * Modification d'un hébergement 
      * 
-     * @Route("/accommodation/{id}", name="support_accommodation_edit", methods="GET|POST")
+     * @Route("/support/accommodation_group/{id}", name="support_accommodation_edit", methods="GET|POST")
      * @param int $id
      * @param Request $request
      * @return Response
@@ -269,7 +269,6 @@ class AccommodationGroupController extends AbstractController
 
                 $accommodationPerson->setAccommodationGroup($accommodationGroup)
                     ->setPerson($rolePerson->getPerson())
-                    ->setAccommodation($accommodationGroup->getAccommodation())
                     ->setStartDate($accommodationGroup->getStartDate())
                     ->setEndDate($accommodationGroup->getEndDate())
                     ->setCreatedAt($now)

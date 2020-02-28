@@ -75,7 +75,7 @@ class UserVoter extends Voter
         if ($this->security->isGranted("ROLE_ADMIN")) {
             foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
                 foreach ($this->user->getServiceUser() as $serviceUser) {
-                    if ($serviceUser->getService()->getId() == $serviceCurrentUser->getService()->getId()) {
+                    if ($serviceCurrentUser->getService() && $serviceCurrentUser->getService()->getId() == $serviceUser->getService()->getId()) {
                         return true;
                     }
                 }

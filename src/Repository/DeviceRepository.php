@@ -34,17 +34,31 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /** 
-     * Donne la liste des dispositifs
+     * Donne la liste des dispositifs du service
      */
-    public function getDevicesQueryList($place)
+    public function getDevicesFromServiceQueryList($accommodation)
     {
-        $query =  $this->createQueryBuilder("d")
-            ->select("PARTIAL d.{id, name}")
-            ->leftJoin("d.serviceDevices", "s")
+        $query =  $this->createQueryBuilder("d")->select("PARTIAL d.{id, name}")
+            ->leftJoin("d.serviceDevices", "sd")
 
-            ->where("s.service = :service")
-            ->setParameter("service", $place->getService());
+            ->where("sd.service = :service")
+            ->setParameter("service", $accommodation->getService());
 
+        return $query->orderBy("d.name", "ASC");
+    }
+
+    /** 
+     * Donne la liste des dispositifs de l'utilisateur
+     */
+    public function getDevicesFromUserQueryList($currentUser)
+    {
+        $query =  $this->createQueryBuilder("d")->select("PARTIAL d.{id, name}")
+            ->leftJoin("d.serviceDevices", "sd")->addSelect("sd");
+
+        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
+            $query = $query->where("sd.service IN (:services)")
+                ->setParameter("services", $currentUser->getServices());
+        }
         return $query->orderBy("d.name", "ASC");
     }
 }

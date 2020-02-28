@@ -5,6 +5,7 @@ namespace App\Form\OriginRequest;
 use App\Entity\Organization;
 use App\Form\Utils\Choices;
 use App\Entity\OriginRequest;
+use App\Repository\OrganizationRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -22,6 +23,11 @@ class OriginRequestType extends AbstractType
             ->add("organization", EntityType::class, [
                 "class" => Organization::class,
                 "choice_label" => "name",
+                "query_builder" => function (OrganizationRepository $repo) {
+                    return $repo->createQueryBuilder("o")
+                        ->select("o")
+                        ->orderBy("o.name", "ASC");
+                },
                 "placeholder" => "-- Select --"
             ])
             ->add("organizationComment")

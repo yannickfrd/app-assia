@@ -80,7 +80,7 @@ class ExportType extends AbstractType
                 "choice_label" => "name",
                 "multiple" => true,
                 "query_builder" => function (ServiceRepository $repo) {
-                    return $repo->getServicesQueryList($this->currentUser);
+                    return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
                 "placeholder" => "-- Service --",
                 "attr" => [

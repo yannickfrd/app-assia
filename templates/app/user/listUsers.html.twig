@@ -65,19 +65,17 @@
                         <td>{{ user.statusList }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{% for role in user.serviceUser %}
-                            <a href="{{ path('service_edit', {'id': role.service.id}) }}"
-                                class="text-{{ theme_color }}">
-                                {{  role.service.name }}</a><br>
+                        <td>
+                            {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
+                            <a href="{{ path('service_edit', {'id': role.service.id}) }}" class="text-{{ theme_color }}">{{  role.service.name }}</a>, 
                             {% endfor %}
                         </td>
-                        {% set poles = [] %}
-                        <td>{% for role in user.serviceUser %}
+                        <td>
+                            {% set poles = [] %}
+                            {% for role in user.serviceUser %}
                             {% if role.service.pole.id not in poles %}
                             {% set poles = poles|merge([role.service.pole.id]) %}
-                            <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}"
-                                class="text-{{ theme_color }}">
-                                {{  role.service.pole.name }}</a><br>
+                            <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" class="text-{{ theme_color }}">{{  role.service.pole.name }}</a><br>
                             {% endif %}
                             {% endfor %}
                         </td>

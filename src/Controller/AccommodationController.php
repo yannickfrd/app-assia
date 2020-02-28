@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Service;
 use App\Service\Pagination;
 use App\Entity\Accommodation;
+use App\Export\AccommodationExport;
 use App\Form\Model\AccommodationSearch;
 use App\Form\Accommodation\AccommodationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,6 +41,10 @@ class AccommodationController extends AbstractController
 
         $form = $this->createForm(AccommodationSearchType::class, $accommodationSearch);
         $form->handleRequest($request);
+
+        if ($accommodationSearch->getExport()) {
+            return $this->exportData($accommodationSearch);
+        }
 
         $accommodations = $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request);
 
@@ -82,20 +87,20 @@ class AccommodationController extends AbstractController
     /**
      * Modification d'un groupe de places
      * 
-     * @Route("/admin/accommodation/{id}", name="admin_accommodation_edit", methods="GET|POST")
+     * @Route("/accommodation/{id}", name="accommodation_edit", methods="GET|POST")
      * @param Accommodation $accommodation
      * @param Request $request
      * @return Response
      */
     public function editAccommodation(Accommodation $accommodation, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
+        $this->denyAccessUnlessGranted("VIEW", $accommodation->getService());
 
         $form = $this->createForm(AccommodationType::class, $accommodation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
             return $this->updateAccommodation($accommodation);
         }
         return $this->render("app/accommodation/accommodation.html.twig", [
@@ -161,5 +166,26 @@ class AccommodationController extends AbstractController
         $this->addFlash("success", "Les modifications ont été enregistrées.");
 
         return $this->redirectToRoute("service_edit", ["id" => $accommodation->getService()->getId()]);
+    }
+
+    /**
+     * Exporte les données
+     * 
+     * @param AccommodationSearch $accommodationSearch
+     */
+    protected function exportData(AccommodationSearch $accommodationSearch)
+    {
+        $accommodations = $this->repo->findAccommodationsToExport($accommodationSearch);
+
+        if (!$accommodations) {
+
+            $this->addFlash("warning", "Aucun résultat à exporter.");
+
+            return $this->redirectToRoute("supports");
+        }
+
+        $export = new AccommodationExport();
+
+        return $export->exportData($accommodations);
     }
 }

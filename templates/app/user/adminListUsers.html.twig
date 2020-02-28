@@ -86,10 +86,11 @@
                         <td>{{ user.statusList }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{% for role in user.serviceUser %}
+                        <td>
+                        {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
                             <a href="{{ path('service_edit', {'id': role.service.id}) }}"
                                 class="text-{{ theme_color }}">
-                                {{  role.service.name }}</a><br>
+                                {{  role.service.name }}</a>, 
                             {% endfor %}
                         </td>
                         {% set poles = [] %}

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\Query;
 use App\Entity\SupportPerson;
+use App\Form\Model\SupportGroupSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,7 +26,12 @@ class SupportPersonRepository extends ServiceEntityRepository
         $this->currentUserService = $currentUserService;
     }
 
-    public function findSupportsToExport($supportGroupSearch = null)
+    /**
+     * Retourne toutes les places pour l'export
+     *
+     * @param SupportGroupSearch $supportGroupSearch
+     */
+    public function findSupportsToExport(SupportGroupSearch $supportGroupSearch = null)
     {
         $query = $this->getSupportsQuery();
 
@@ -43,14 +49,23 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("sp")
             ->select("PARTIAL sp.{id, status, startDate, endDate, head, role}")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
+            ->leftJoin("p.accommodationPersons", "ap")->addselect("ap")
+            ->leftJoin("ap.accommodationGroup", "ag")->addselect("ag")
+            ->leftJoin("ag.accommodation", "a")->addselect("a")
             ->leftJoin("sp.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
             ->leftJoin("sg.referent", "u")->addselect("PARTIAL u.{id, firstname, lastname}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
-            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}");
+            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}");
     }
 
-    protected function filter($query, $supportGroupSearch)
+    /**
+     * Filtre la recherche
+     *
+     * @param SupportGroupSearch $supportGroupSearch
+     */
+    protected function filter($query, SupportGroupSearch $supportGroupSearch)
     {
         if (!$this->currentUserService->isRole("ROLE_SUPER_ADMIN")) {
             // if ($this->currentUserService->isRole("ROLE_ADMIN")) {
@@ -131,10 +146,10 @@ class SupportPersonRepository extends ServiceEntityRepository
                 ->setParameter("referent", $supportGroupSearch->getReferent());
         }
 
-        if (count($supportGroupSearch->getService())) {
+        if (count($supportGroupSearch->getServices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getService() as $service) {
+            foreach ($supportGroupSearch->getServices() as $service) {
                 $orX->add($expr->eq("sg.service", $service));
             }
             $query->andWhere($orX);
@@ -209,11 +224,20 @@ class SupportPersonRepository extends ServiceEntityRepository
                 ->setParameter("referent", $supportGroupSearch->getReferent());
         }
 
-        if (count($supportGroupSearch->getService())) {
+        if (count($supportGroupSearch->getServices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getService() as $service) {
+            foreach ($supportGroupSearch->getServices() as $service) {
                 $orX->add($expr->eq("sg.service", $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if (count($supportGroupSearch->getDevices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($supportGroupSearch->getDevices() as $device) {
+                $orX->add($expr->eq("sg.device", $device));
             }
             $query->andWhere($orX);
         }

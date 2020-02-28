@@ -86,10 +86,16 @@ class ServiceController extends AbstractController
      * Modification d'un service
      * 
      * @Route("/service/{id}", name="service_edit", methods="GET|POST")
-     *  @return Response
+     * @param integer $id
+     * @param UserRepository $repoUser
+     * @param AccommodationRepository $repoAccommodation
+     * @param Request $request
+     * @return Response
      */
-    public function editService(Service $service, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
+    public function editService(int $id, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
     {
+        $service = $this->repo->getFullService($id);
+
         $this->denyAccessUnlessGranted("VIEW", $service);
 
         $form = $this->createForm(ServiceType::class, $service);

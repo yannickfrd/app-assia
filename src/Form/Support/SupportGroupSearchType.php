@@ -2,15 +2,17 @@
 
 namespace App\Form\Support;
 
-use App\Entity\GroupPeople;
-use App\Entity\Service;
-use App\Entity\SupportGroup;
 use App\Entity\User;
-use App\Form\Model\SupportGroupSearch;
+use App\Entity\Device;
+use App\Entity\Service;
+use App\Entity\GroupPeople;
 use App\Form\Utils\Choices;
+use App\Entity\SupportGroup;
 use App\Repository\UserRepository;
-use App\Repository\ServiceRepository;
 use App\Security\CurrentUserService;
+use App\Repository\ServiceRepository;
+use App\Form\Model\SupportGroupSearch;
+use App\Repository\DeviceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -37,21 +39,15 @@ class SupportGroupSearchType extends AbstractType
                     "class" => "w-max-170",
                 ]
             ])
-            // ->add("birthdate", DateType::class, [
-            //     "widget" => "single_text",
-            //     "attr" => [
-            //         "class" => "w-max-165",
-            //     ],
-            //     "required" => false
-            // ])
-            // ->add("familyTypology", ChoiceType::class, [
-            //     "placeholder" => "-- Family Typology --",
-            //     "required" => false,
-            //     "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
-            //     "attr" => [
-            //         "class" => "w-max-200",
-            //     ]
-            // ])
+            ->add("familyTypology", ChoiceType::class, [
+                "label_attr" => ["class" => "sr-only"],
+                "choices" => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
+                "attr" => [
+                    "class" => "w-max-220",
+                ],
+                "placeholder" => "-- Family Typology --",
+                "required" => false
+            ])
             // ->add("nbPeople", null, [
             //     "attr" => [
             //         "class" => "w-max-100",
@@ -104,17 +100,31 @@ class SupportGroupSearchType extends AbstractType
                 ],
                 "required" => false
             ])
-            ->add("service", EntityType::class, [
+            ->add("services", EntityType::class, [
                 "class" => Service::class,
                 "choice_label" => "name",
                 "multiple" => true,
                 "query_builder" => function (ServiceRepository $repo) {
-                    return $repo->getServicesQueryList($this->currentUser);
+                    return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
                 "label_attr" => ["class" => "sr-only"],
                 "placeholder" => "-- Service --",
                 "attr" => [
                     "class" => "multi-select js-service w-min-150 w-max-180"
+                ],
+                "required" => false
+            ])
+            ->add("devices", EntityType::class, [
+                "class" => Device::class,
+                "choice_label" => "name",
+                "multiple" => true,
+                "query_builder" => function (DeviceRepository $repo) {
+                    return $repo->getDevicesFromUserQueryList($this->currentUser);
+                },
+                "label_attr" => ["class" => "sr-only"],
+                "placeholder" => "-- Device --",
+                "attr" => [
+                    "class" => "multi-select js-device w-min-150 w-max-180"
                 ],
                 "required" => false
             ])

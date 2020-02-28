@@ -411,35 +411,4 @@ class Accommodation
 
         return $this;
     }
-
-    /**
-     * @return Collection|AccommodationPerson[]
-     */
-    public function getAccommodationPersons(): Collection
-    {
-        return $this->accommodationPersons;
-    }
-
-    public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
-    {
-        if (!$this->accommodationPersons->contains($accommodationPerson)) {
-            $this->accommodationPersons[] = $accommodationPerson;
-            $accommodationPerson->setAccommodation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
-    {
-        if ($this->accommodationPersons->contains($accommodationPerson)) {
-            $this->accommodationPersons->removeElement($accommodationPerson);
-            // set the owning side to null (unless already changed)
-            if ($accommodationPerson->getAccommodation() === $this) {
-                $accommodationPerson->setAccommodation(null);
-            }
-        }
-
-        return $this;
-    }
 }

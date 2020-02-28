@@ -30,6 +30,8 @@ class GroupPeopleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder("g")
             ->select("g")
+            ->leftJoin("g.createdBy", "createdBy")->addselect("PARTIAL createdBy.{id, firstname, lastname}")
+            ->leftJoin("g.updatedBy", "updatedBy")->addselect("PARTIAL updatedBy.{id, firstname, lastname}")
             ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
             ->leftJoin("r.person", "p")->addselect("p")
             ->leftJoin("g.supports", "sg")->addselect("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")

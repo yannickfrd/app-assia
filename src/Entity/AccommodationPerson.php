@@ -36,11 +36,6 @@ class AccommodationPerson
      */
     private $commentEndReason;
 
-    // /**
-    //  * @ORM\ManyToOne(targetEntity="App\Entity\Accommodation", inversedBy="AccommodationPerson")
-    //  */
-    // private $accommodation;
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -127,18 +122,6 @@ class AccommodationPerson
     public function setCommentEndReason(?string $commentEndReason): self
     {
         $this->commentEndReason = $commentEndReason;
-
-        return $this;
-    }
-
-    public function getAccommodation(): ?Accommodation
-    {
-        return $this->accommodation;
-    }
-
-    public function setAccommodation(?Accommodation $accommodation): self
-    {
-        $this->accommodation = $accommodation;
 
         return $this;
     }

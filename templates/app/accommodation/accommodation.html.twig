@@ -28,7 +28,7 @@ Esperer95.app{% endblock %}
             <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des
                     services</a></li>
             <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                    href="{{ path('service_edit', {'id':accommodation.service.id}) }}">Fiche du service</a></li>
+                    href="{{ path('service_edit', {'id':accommodation.service.id}) }}">{{ accommodation.service.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
         </ol>
     </nav>
@@ -43,6 +43,7 @@ Esperer95.app{% endblock %}
 
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.name) }}</div>
+            <div class="col-md-6">{{ form_row(form.service) }}</div>
         </div>
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.device) }}</div>
@@ -53,9 +54,9 @@ Esperer95.app{% endblock %}
             <div class="col-md-6">{{ form_row(form.closingDate) }}</div>
         </div>
         <div class="form-group row">
+            <div class="col-md-6">{{ form_row(form.address) }}</div>
             <div class="col-md-6">{{ form_row(form.city) }}</div>
             <div class="col-md-6">{{ form_row(form.department) }}</div>
-            <div class="col-md-6">{{ form_row(form.address) }}</div>
         </div>
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.accommodationType) }}</div>
@@ -66,6 +67,8 @@ Esperer95.app{% endblock %}
             <div class="col-md-12">{{ form_widget(form.comment) }}</div>
         </div>
 
+
+        {% if is_granted("EDIT", accommodation.service) %}
         <div class="form-group row">
             <div class="col-md-12">
                 {% if edit_mode %}
@@ -82,6 +85,7 @@ Esperer95.app{% endblock %}
                 </div>
             </div>
         </div>
+        {% endif %}
 
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}

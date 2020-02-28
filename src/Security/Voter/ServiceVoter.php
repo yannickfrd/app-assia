@@ -3,7 +3,6 @@
 namespace App\Security\Voter;
 
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -56,7 +55,7 @@ class ServiceVoter extends Voter
         }
         if ($this->security->isGranted("ROLE_ADMIN")) {
             foreach ($this->currentUser->getServiceUser() as $serviceUser) {
-                if ($this->service->getId() == $serviceUser->getService()->getId()) {
+                if ($serviceUser->getService() && $serviceUser->getService()->getId() == $this->service->getId()) {
                     return true;
                 }
             }

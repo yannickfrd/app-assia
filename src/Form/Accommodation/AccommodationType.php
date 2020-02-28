@@ -3,9 +3,12 @@
 namespace App\Form\Accommodation;
 
 use App\Entity\Device;
+use App\Entity\Service;
 use App\Form\Utils\Choices;
 use App\Entity\Accommodation;
 use App\Repository\DeviceRepository;
+use App\Security\CurrentUserService;
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -15,7 +18,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AccommodationType extends AbstractType
 {
+    protected $currentUser;
     protected $place;
+    protected $data;
+
+    public function __construct(CurrentUserService $currentUser)
+    {
+        $this->currentUser = $currentUser;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,11 +37,19 @@ class AccommodationType extends AbstractType
                     "placeholder" => "Nom du groupe de places"
                 ]
             ])
+            ->add("service", EntityType::class, [
+                "class" => Service::class,
+                "choice_label" => "name",
+                "query_builder" => function (ServiceRepository $repo) {
+                    return $repo->getServicesFromUserQueryList($this->currentUser);
+                },
+                "placeholder" => "-- Select --"
+            ])
             ->add("device", EntityType::class, [
                 "class" => Device::class,
                 "choice_label" => "name",
                 "query_builder" => function (DeviceRepository $repo) {
-                    return $repo->getDevicesQueryList($this->place);
+                    return $repo->getDevicesFromServiceQueryList($this->place);
                 },
                 "placeholder" => "-- Select --"
             ])

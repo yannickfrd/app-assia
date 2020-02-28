@@ -90,8 +90,9 @@
         {% endif %}
     </section>
 
-    <hr>
 
+    {% if is_granted("EDIT", service) %}
+    <hr>
     <section>
 
         <h2 class="h4 mb-4">Dispositif(s) rattaché(s)</h2>
@@ -132,7 +133,6 @@
                 service</button>
         </div>
 
-        {% if is_granted("EDIT", service) %}
         <div class="row">
             <div class="col-md-12">
                 <div class="float-right mb-2">
@@ -140,9 +140,9 @@
                 </div>
             </div>
         </div>
-        {% endif %}
         
     </section>
+    {% endif %}
 
     {{ form_row(form._token) }}
     {{ form_end(form, {"render_rest": false}) }}
@@ -173,7 +173,7 @@
                     {% for accommodation in accommodations %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('admin_accommodation_edit', {'id':accommodation.id}) }}"
+                            <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le groupe de places">
                                 <span class="fas fa-eye"></span>
@@ -193,13 +193,14 @@
                 </tbody>
             </table>
         </div>
+        {% if is_granted("EDIT", service) %}
         <div class="row my-3">
             <div class="col-md-12">
-                <a href="{{ path('service_accommodation_new', {'id':service.id}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-plus-square pr-2"></span>Créer
-                    un nouveau groupe de places</a>
+                <a href="{{ path('service_accommodation_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
             </div>
         </div>
+        {% endif %}
     </section>
     <hr>
     {% endif %}
@@ -222,11 +223,13 @@
                     {% for user in users %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('user_show', {'id':user.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir la fiche du service">
-                                <span class="fas fa-eye"></span>
+                            {% if is_granted("EDIT", user) %}
+                            <a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                data-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
                             </a>
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>                           
+                            {% endif %}
                         </th>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
@@ -238,18 +241,20 @@
                 </tbody>
             </table>
         </div>
+            {% endif %}
+        {% if is_granted("EDIT", service) %}
         <div class="row">
             <div class="col-md-12">
                 <a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
                         class="fas fa-plus-square pr-2"></span>Créer un nouvel utilisateur</a>
             </div>
         </div>
+        {% endif %}
 
     </section>
 
 </div>
 
-{% endif %}
 
 {% endblock %}
 

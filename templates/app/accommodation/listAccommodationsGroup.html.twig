@@ -35,7 +35,6 @@ Logement/hébergement | Esperer95.app
 
 					<tbody id="container-accommodationGroups" data-support="{{ support.id }}">
 						{% for support_group_accommodation in support_group_accommodations %}
-
 							<tr id="accommodationGroup-{{ support_group_accommodation.id }}">
 								<th scope="row" class="align-middle text-center">
 									<a href="{{ path('support_accommodation_edit', {'id': support_group_accommodation.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom" title="Voir le détail de l'hébergement">

@@ -1,18 +1,18 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Groupe de places | Esperer95.app{% endblock %}
+{% block title %}Groupes de places | Esperer95.app{% endblock %}
 
 {% block body %}
 
 <section class="mt-0 mb-4">
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-4">Groupe de places </h1>
+        <h1 class="h2 mb-4">Groupes de places</h1>
     </div>
 
     {% include "app/accommodation/searchAccommodations.html.twig" %}
 
-    <div class=" container">
+    <div class="container-fluid mt-4">
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
                 <p class="align-middle">Total : {{ accommodations.getTotalItemCount | number_format(0,'', ' ')}} groupes
@@ -32,6 +32,9 @@
                             {{ knp_pagination_sortable(accommodations, "Nom du groupe de places", "a.name") }}
                         </th>
                         <th scope="col" class="align-middle th-w-100">
+                            {{ knp_pagination_sortable(accommodations, "Service", "s.name") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-100">
                             {{ knp_pagination_sortable(accommodations, "Dispositif", "d.name") }}
                         </th>
                         <th scope="col" class="align-middle th-w-80">
@@ -44,6 +47,9 @@
                             {{ knp_pagination_sortable(accommodations, "Date de fermeture", "a.closingDate") }}
                         </th>
                         </th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(accommodations, "Adresse", "a.address") }}
+                        </th>
                         <th scope="col" class="align-middle th-w-100">
                             {{ knp_pagination_sortable(accommodations, "Ville", "a.city") }}
                         </th>
@@ -51,10 +57,7 @@
                             {{ knp_pagination_sortable(accommodations, "Département", "a.department") }}
                         </th>
                         <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(accommodations, "Adresse", "a.address") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(accommodations, "Occupation", "a.address") }}
+                            {{ knp_pagination_sortable(accommodations, "Occupation actuelle (Nb de personnes)", "a.address") }}
                         </th>
                     </tr>
                 </thead>
@@ -63,35 +66,35 @@
                     {% for accommodation in accommodations %}
                     <tr>
                         <th scope="row">
-                            <a href="{{ path('admin_accommodation_edit', {'id':accommodation.id}) }}"
+                            <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir le groupe de places">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
                         <td>{{ accommodation.name }}</td>
+                        <td>{{ accommodation.service.name }}</td>
                         <td>{{ accommodation.device.name }}</td>
                         <td>{{ accommodation.placesNumber }}</td>
                         <td>{{ accommodation.openingDate | date("d/m/Y") }}</td>
-                        <td>{{ accommodation.closingDate | date("d/m/Y") }}</td>
+                        <td>{% if accommodation.closingDate %} {{ accommodation.closingDate | date("d/m/Y") }}{% endif %}</td>
+                        <td>{{ accommodation.address }}</td>
                         <td>{{ accommodation.city }}</td>
                         <td>{{ accommodation.department }}</td>
-                        <td>{{ accommodation.address }}</td>
                         <td>
                             {% for  accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
-                            Occupé ({{ accommodationGroup.accommodationPersons|length }})<br>
+                            {{ accommodationGroup.accommodationPersons|length }}<br />
                             {% endfor %}
-                        </td>
-                        <td>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="navigation">
-            {{ knp_pagination_render(accommodations) }}
-        </div>
+
+        <div class="navigation">{{ knp_pagination_render(accommodations) }}</div>
+
+    </div>
 </section>
 
 {% endblock %}

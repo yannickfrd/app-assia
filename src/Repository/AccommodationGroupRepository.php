@@ -36,7 +36,7 @@ class AccommodationGroupRepository extends ServiceEntityRepository
             ->leftJoin("pa.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
             ->leftJoin("gpa.supportGroup", "sg")->addselect("PARTIAL sg.{id, startDate, endDate}")
             ->leftJoin("sg.groupPeople", "gp")->addselect("PARTIAL gp.{id, familyTypology, nbPeople}")
-            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
+            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name, accommodation}")
             ->leftJoin("gp.rolePerson", "rp")->addselect("PARTIAL rp.{id, role, head}")
             ->leftJoin("rp.person", "p1")->addselect("PARTIAL p1.{id, firstname, lastname}")
 

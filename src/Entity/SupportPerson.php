@@ -104,7 +104,6 @@ class SupportPerson
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->accommodationPersons = new ArrayCollection();
         $this->evaluationsPerson = new ArrayCollection();
     }
 

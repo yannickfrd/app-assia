@@ -27,7 +27,7 @@ class AccommodationGroupType extends AbstractType
         $builder
             ->add("accommodation", EntityType::class, [
                 "class" => Accommodation::class,
-                "choice_label" => "fullname",
+                "choice_label" => "name",
                 "query_builder" => function (AccommodationRepository $repo) {
                     return $repo->getAccommodationsQueryList($this->service);
                 },
