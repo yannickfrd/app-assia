@@ -1,29 +1,56 @@
-# Esperer95.app
+# esperer95.app
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
 1.0.0 17/02/2020
-
 
 # Développeur
 Romain MADELAINE
 
 
 # Repository Git
-https://github.com/RomMad/esperer95-app
+https://github.com/RomMad/esperer95.app
 
 
 # Connection à la base démo
-L'application nécessite de disposer au préalable d'un compte créé par un administrateur.
-Pour tester l'application, vous pouvez vous connecter avec les identifiants suivants:
-- Login: j.doe_test
-- Mot de passe: test2020
+
+
+# Mise à jour
+## Version 1.0.3 - 28/02/2020
+- "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom et adresse du groupe de place).
+- "Les suivis" : ajout de la possibilité de filtrer par dispositif et typologie familiale.
+- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom et adresse du groupe de place).
+- "Groupes de places" : ajout de la colonne "Service" et modification "Occupation actuelle".
+- "Groupes de places : ajout de l'export Excel des groupes de places avec l'ensemble des informations.
+- Modification et correction des droits d'accès ou d'édition des services et groupe de places.
+- "Origine de la demande" : liste déroulante "Organisme orienteur ou prescripteur" triée par ordre alphabétique.
+- Prise en chage "Logement/hébergement" : liste déroulante des groupes de place" : affiche uniquement les logements ouverts.
+- Fiche "Groupe" et "Personne" : ajout de l'information de l'utilisateur ayant créé et modifié la fiche.
+## Version 1.0.2 - 27/02/2020
+- Suivi social : correction des droits d'accès au suivi : si l’utilisateur est rattaché au même service que le référent, il peut dorénavant voir dans le suivi social, ainsi que tous les RDVS, les notes et les documents créés.
+- Service : modification des droits d'accès : la fiche du service est maintenant accessible à tous les utilisateurs rattachés au service, mais sans droit d'édition pou les non-administrateurs.
+- Tableau « Les suivis » : le dispositif apparaît entre parenthèses en dessous du nom du service. Exemple : SAVL (AVDL).
+- « Mes suivis en cours » et « Les suivis » : lorsqu’il s’agit qu’un couple, les noms et prénoms des deux personnes sont affichés.
+- Un même ménage peut à présent être pris en charge sur plusieurs groupes de places (ex. : 2 chambres différentes).
+- Suivis : correction du bug dans le formulaire de recherche des suivis provoquant une erreur 500
+- Export Suivis : correction du problème d’export provoquant une erreur 500
+- Les suivis sont maintenant nommés NOM Prénom (au lieu de Prénom NOM).
+- La liste des organismes orienteurs/prescripteurs est classée par ordre alphabétique.
+## Version 1.0.1 - 26/02/2020
+- Personne : modification du contrôle de la longueur du nom
+- Suivi social : correction du bug de liaison entre le suivi social et le dispositif 
+- Suivi social : modification du contrôle de la date de début
+- Origine demande : Correction du bug de liaison entre l'origine de demande et le service prescripteur
+- Evaluation sociale : onglet "Logement - Hébergement" : ajout des champs "Numéro DALO", "Adresse du logement", "Ville du logement", "Département du logement"
+- Evaluation sociale : onglet "Emploi" : Liste déroulante pour moyen de transport (voiture, transport en commun)
+- Evaluation sociale : onglet "Logement - Hébergement" : Correction bug d'affichage des "Type d'aides liées au logement"
+- Administration : ajout des droits d’accès au profil "Administrateur" pour la création et l'édition de groupe de places
+- Administration : gestion des organismes prescripteurs/orienteurs (ajout et modification)
 
 
 # Glossaire
-
 ## Traduction des entités
-    Accommodation:     Groupe de places
+    Accommodation: Groupe de places
     AccommodationGroup: Prise en charge du groupe de personnes
     AccommodationPerson: Prise en charge d'une personne
     Activity: Services et prestations

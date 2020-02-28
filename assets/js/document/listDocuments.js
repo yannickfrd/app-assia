@@ -54,7 +54,7 @@ export default class ListDocuments {
 
         this.modalConfirmElt.addEventListener("click", function (e) {
             e.preventDefault();
-            this.deleteDocument(this.modalConfirmElt.getAttribute("data-url"));
+            this.ajaxRequest(this.modalConfirmElt.getAttribute("data-url"), "GET", null, false, false);
         }.bind(this));
     }
 

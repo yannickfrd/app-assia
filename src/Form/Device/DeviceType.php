@@ -14,7 +14,7 @@ class DeviceType extends AbstractType
         $builder
             ->add("name")
             ->add("coefficient", null, [
-                "help" => "Coefficient entre 0 et 10. Les décimales sont acceptées."
+                "help" => "Coefficient entre 0 et 10. Les décimales sont prises en compte."
             ])
             ->add("comment", null, [
                 "attr" => [

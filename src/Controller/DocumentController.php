@@ -139,7 +139,7 @@ class DocumentController extends AbstractController
             "code" => 200,
             "action" => "delete",
             "alert" => "warning",
-            "msg" => "Le document \"" . $documentName . "\" été supprimé.",
+            "msg" => "Le document \"" . $documentName . "\" a été supprimé.",
         ], 200);
     }
 
