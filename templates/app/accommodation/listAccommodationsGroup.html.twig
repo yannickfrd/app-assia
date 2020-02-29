@@ -53,7 +53,9 @@ Logement/hébergement | Esperer95.app
 								<td>{{ support_group_accommodation.accommodation.city }}</td>
 								<td>{{ support_group_accommodation.accommodation.address }}</td>
 								<td class="align-middle text-center">
-									<a href="{{ path('support_group_people_accommodation_delete', {'id':support_group_accommodation.id}) }}" class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge?')){return true;}else{return false;}">
+									<a href="{{ path('support_group_people_accommodation_delete', {'id':support_group_accommodation.id}) }}" 
+										class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" 
+										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
 										<span class="fas fa-trash-alt"></span>
 									</a>
 								</td>

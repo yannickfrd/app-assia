@@ -25,7 +25,8 @@
 		<div class="form-group row">
 			<div class="col-md-12">
 				<div class="my-2 float-right">
-					<button type="submit" name="send2" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow">{% if form.vars.value.evalSocialGroup %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+					<button type="submit" name="send2" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" 
+						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if form.vars.value.evalSocialGroup %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
 		</div>
@@ -47,7 +48,8 @@
 		<div class="form-group row">
 			<div class="col-md-12">
 				<div class="mb-4 float-right">
-					<button type="submit" name="send" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow">{% if form.vars.value.evalSocialGroup %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+					<button type="submit" name="send" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" 
+						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if form.vars.value.evalSocialGroup %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
 		</div>

@@ -79,6 +79,25 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
+     * Supprime le groupe de personnes
+     * 
+     * @Route("/group/{id}/delete", name="group_people_delete")
+     * @param GroupPeople $groupPeople
+     * @return Response
+     */
+    public function deleteSupport(GroupPeople $groupPeople): Response
+    {
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+
+        $this->manager->remove($groupPeople);
+        $this->manager->flush();
+
+        $this->addFlash("danger", "Le groupe a été supprimé.");
+
+        return $this->redirectToRoute("home");
+    }
+
+    /**
      * Ajout d'une personne dans une groupe
      * 
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")

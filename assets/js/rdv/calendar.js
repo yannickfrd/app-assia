@@ -139,6 +139,7 @@ export default class Calendar {
         this.loader.on();
         this.rdvElt = rdvElt;
         this.rdvId = Number(this.rdvElt.id.replace("rdv-", ""));
+        console.log("GET", "/rdv/" + this.rdvId + "/get");
         this.ajaxRequest.init("GET", "/rdv/" + this.rdvId + "/get", this.responseAjax.bind(this), true);
     }
 

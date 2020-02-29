@@ -228,12 +228,12 @@
                                 data-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
                             </a>
                             {% else %}
-                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>                           
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow cursor-default"><span class="fas fa-ban"></span></span>                           
                             {% endif %}
                         </th>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
-                        <td>{{ user.statusList }}</td>
+                        <td>{% if user.status %}{{ user.statusList }}{% endif %}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
                     </tr>

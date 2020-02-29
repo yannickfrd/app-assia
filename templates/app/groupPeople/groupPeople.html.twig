@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-md-12 mb-3">
                 <div class="float-right">
-                    <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow">Mettre à jour</button>
+                    <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
                 </div>
             </div>
         </div>
@@ -118,8 +118,16 @@
         </div>
         <div class="form-group row">
             <div class="col-md-12">
+                {% if is_granted("ROLE_ADMIN") %}
+                <div class="float-left d-flex">
+                    <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('group_people_delete', {'id':group_people.id}) }}"
+                        title="Supprimer le suivi social" data-placement="bottom"
+                        onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
+                        class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+                </div>
+                {% endif %}
                 <div class="float-right">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">Mettre à jour</button>
+                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
                 </div>
             </div>
         </div>

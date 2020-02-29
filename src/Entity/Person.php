@@ -146,7 +146,7 @@ class Person
     private $rolesPerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="person", orphanRemoval=true, cascade={"persist"})
      */
     private $supports;
 

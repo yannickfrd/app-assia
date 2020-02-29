@@ -265,6 +265,25 @@ class PersonController extends AbstractController
     }
 
     /**
+     * Supprime la personne
+     * 
+     * @Route("/person/{id}/delete", name="person_delete")
+     * @param Person $person
+     * @return Response
+     */
+    public function deleteSupport(Person $person): Response
+    {
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+
+        $this->manager->remove($person);
+        $this->manager->flush();
+
+        $this->addFlash("danger", "Le personne a été supprimée.");
+
+        return $this->redirectToRoute("people");
+    }
+
+    /**
      * Permet de trouver les personnes par le mode de recherche instannée AJAX
      *
      * @Route("/search/person", name="search_person", methods="GET")

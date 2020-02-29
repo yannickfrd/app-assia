@@ -166,17 +166,17 @@ class SupportGroup
     private $device;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportGroup")
+     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="supportGroup")
+     * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $rdvs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Document", mappedBy="supportGroup")
+     * @ORM\OneToMany(targetEntity="App\Entity\Document", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $documents;
 
@@ -186,7 +186,7 @@ class SupportGroup
     private $accommodationGroups;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationGroup", mappedBy="supportGroup")
+     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $evaluationsGroup;
 

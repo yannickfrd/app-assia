@@ -229,7 +229,6 @@ class InitEvalPerson
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="initEvalPerson", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true)
      */
     private $supportPerson;
 

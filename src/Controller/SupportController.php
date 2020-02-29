@@ -136,6 +136,25 @@ class SupportController extends AbstractController
     }
 
     /**
+     * Supprime le suivi social du groupe
+     * 
+     * @Route("/support/{id}/delete", name="support_delete")
+     * @param SupportGroup $supportGroup
+     * @return Response
+     */
+    public function deleteSupport(SupportGroup $supportGroup): Response
+    {
+        $this->denyAccessUnlessGranted("DELETE", $supportGroup);
+
+        $this->manager->remove($supportGroup);
+        $this->manager->flush();
+
+        $this->addFlash("danger", "Le suivi social a été supprimé.");
+
+        return $this->redirectToRoute("group_people_show", ["id" => $supportGroup->getGroupPeople()->getId()]);
+    }
+
+    /**
      * Modification des suivis individuels
      * 
      * @Route("/support/{id}/people", name="support_pers_edit", methods="GET|POST")

@@ -76,7 +76,7 @@ class GroupPeople
     private $rolePerson;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="groupPeople", orphanRemoval=true)
      * @Assert\Valid
      */
     private $supports;
