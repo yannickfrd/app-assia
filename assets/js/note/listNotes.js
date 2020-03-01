@@ -188,22 +188,22 @@ export default class ListNotes {
     }
 
     // Réponse du serveur
-    responseAjax(data) {
-        let dataJSON = JSON.parse(data);
-        if (dataJSON.code === 200 && !this.autoSave) {
+    responseAjax(response) {
+        let data = JSON.parse(response);
+        if (data.code === 200 && !this.autoSave) {
             switch (data.action) {
                 case "create":
-                    this.createNote(dataJSON.data);
+                    this.createNote(data.data);
                     break;
                 case "update":
-                    this.updateNote(dataJSON.data);
+                    this.updateNote(data.data);
                     break;
                 case "delete":
                     document.getElementById("note-" + this.cardId).remove();
                     this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
                     break;
             }
-            new MessageFlash(dataJSON.alert, dataJSON.msg);
+            new MessageFlash(data.alert, data.msg);
             this.loader.off(true);
         }
     }

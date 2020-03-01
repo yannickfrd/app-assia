@@ -98,9 +98,7 @@ class DocumentController extends AbstractController
      */
     public function editDocument(Document $document, Request $request): Response
     {
-        $supportGroup = $document->getSupportGroup();
-
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted("EDIT", $document);
 
         $form = $this->createForm(DocumentType::class, $document);
         $form->handleRequest($request);
@@ -120,13 +118,11 @@ class DocumentController extends AbstractController
      */
     public function deleteDocument(Document $document): Response
     {
-        $supportGroup = $document->getSupportGroup();
-
-        $this->denyAccessUnlessGranted("DELETE", $supportGroup);
+        $this->denyAccessUnlessGranted("DELETE", $document);
 
         $documentName = $document->getName();
 
-        $file = "uploads/documents/" . $supportGroup->getGroupPeople()->getId() . "/" . $document->getInternalFileName();
+        $file = "uploads/documents/" . $document->getSupportGroup()->getGroupPeople()->getId() . "/" . $document->getInternalFileName();
 
         if (file_exists($file)) {
             unlink($file);

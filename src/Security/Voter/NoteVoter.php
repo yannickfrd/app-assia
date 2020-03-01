@@ -2,17 +2,17 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Rdv;
+use App\Entity\Note;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class RdvVoter extends Voter
+class NoteVoter extends Voter
 {
     private $security;
     protected $currentUser;
     protected $currentUserId;
-    protected $rdv;
+    protected $note;
 
     public function __construct(Security $security)
     {
@@ -22,14 +22,14 @@ class RdvVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ["VIEW", "EDIT", "DELETE"])
-            && $subject instanceof \App\Entity\Rdv;
+            && $subject instanceof \App\Entity\Note;
     }
 
-    protected function voteOnAttribute($attribute, $rdv, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $note, TokenInterface $token)
     {
         $this->currentUser = $token->getUser();
         $this->currentUserId = $this->currentUser->getId();
-        $this->rdv = $rdv;
+        $this->note = $note;
 
         if (!$this->currentUser) {
             return false;
@@ -52,11 +52,11 @@ class RdvVoter extends Voter
 
     protected function canView()
     {
-        if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId()) {
             return true;
         }
 
-        $user = $this->rdv->getCreatedBy();
+        $user = $this->note->getCreatedBy();
         foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
             foreach ($user->getServiceUser() as $serviceUser) {
                 if ($serviceCurrentUser->getService()->getId() == $serviceUser->getService()->getId()) {
@@ -72,7 +72,7 @@ class RdvVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId()) {
             return true;
         }
 
@@ -85,7 +85,7 @@ class RdvVoter extends Voter
 
     protected function canDelete()
     {
-        if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId()) {
             return true;
         }
 
@@ -101,7 +101,7 @@ class RdvVoter extends Voter
     {
         if ($this->security->isGranted("ROLE_ADMIN")) {
             foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
-                foreach ($this->rdv->getCreatedBy()->getServiceUser() as $serviceUser) {
+                foreach ($this->note->getCreatedBy()->getServiceUser() as $serviceUser) {
                     if ($serviceUser->getService()->getId() == $serviceCurrentUser->getService()->getId()) {
                         return true;
                     }

@@ -188,7 +188,7 @@ class RdvController extends AbstractController
     {
         $this->denyAccessUnlessGranted("VIEW", $rdv);
 
-        $rdv = $repo->find($rdv->getId());
+        // $rdv = $repo->find($rdv->getId());
 
         // Obtenir le nom de la personne suivie
         if ($rdv->getSupportGroup()) {

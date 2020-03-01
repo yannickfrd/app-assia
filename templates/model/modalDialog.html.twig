@@ -20,13 +20,13 @@
             <div class="modal-footer d-flex justify-content-between">
                 {% block modal_footer %}
                 <div class="float-left">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}</button>
                 </div>
                 <div class="float-right">
-                <button type="button" id="modal-confirm"class="btn btn-{% block modal_alert %}{{ theme_color }} text-white{% endblock %}"
-                    data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
-                {% endblock %}
+                    <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}{{ theme_color }} text-white{% endblock %}"
+                    href="{% block modal_href %}{% endblock %}" data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
                 </div>
+                {% endblock %}
             </div>
 
           {% endblock %}

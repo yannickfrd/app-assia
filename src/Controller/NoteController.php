@@ -99,7 +99,7 @@ class NoteController extends AbstractController
      */
     public function editNote(Note $note, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $note->getSupportGroup());
+        $this->denyAccessUnlessGranted("EDIT", $note);
 
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
@@ -119,7 +119,7 @@ class NoteController extends AbstractController
      */
     public function deleteNote(Note $note): Response
     {
-        $this->denyAccessUnlessGranted("DELETE", $note->getSupportGroup());
+        $this->denyAccessUnlessGranted("DELETE", $note);
 
         $this->manager->remove($note);
         $this->manager->flush();
