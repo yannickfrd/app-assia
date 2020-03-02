@@ -54,7 +54,7 @@ class Document
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="documents")
      */
     private $createdBy;
 

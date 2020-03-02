@@ -89,4 +89,12 @@ class GroupPeopleRepository extends ServiceEntityRepository
         return $query->orderBy("g.id", "ASC")
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
+
+    public function countAllGroups(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder("g")->select("COUNT(g.id)");
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

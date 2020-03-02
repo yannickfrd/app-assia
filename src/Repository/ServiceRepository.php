@@ -98,7 +98,7 @@ class ServiceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("s")->select("s")
             ->leftJoin("s.pole", "p")->addselect("PARTIAL p.{id, name}")
 
-            ->leftJoin("s.chief", "chief")->addselect("PARTIAL chief.{id, firstname, lastname}")
+            ->leftJoin("s.chief", "chief")->addselect("PARTIAL chief.{id, firstname, lastname, status, phone, email}")
 
             ->leftJoin("s.serviceDevices", "sd")->addselect("sd")
             ->leftJoin("sd.device", "d")->addselect("PARTIAL d.{id, name}")

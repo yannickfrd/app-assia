@@ -224,7 +224,7 @@ class SupportPersonRepository extends ServiceEntityRepository
                 ->setParameter("referent", $supportGroupSearch->getReferent());
         }
 
-        if (count($supportGroupSearch->getServices())) {
+        if ($supportGroupSearch->getServices() && count($supportGroupSearch->getServices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($supportGroupSearch->getServices() as $service) {
@@ -233,7 +233,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if (count($supportGroupSearch->getDevices())) {
+        if ($supportGroupSearch->getDevices() && count($supportGroupSearch->getDevices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($supportGroupSearch->getDevices() as $device) {

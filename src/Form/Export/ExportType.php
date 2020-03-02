@@ -3,14 +3,16 @@
 namespace App\Form\Export;
 
 use App\Entity\User;
+use App\Entity\Device;
 use App\Entity\Service;
-use App\Entity\SupportGroup;
 use App\Form\Model\Export;
-use App\Form\Model\SupportGroupSearch;
 use App\Form\Utils\Choices;
+use App\Entity\SupportGroup;
 use App\Repository\UserRepository;
+use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
+use App\Form\Model\SupportGroupSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -75,7 +77,7 @@ class ExportType extends AbstractType
                 ],
                 "required" => false
             ])
-            ->add("service", EntityType::class, [
+            ->add("services", EntityType::class, [
                 "class" => Service::class,
                 "choice_label" => "name",
                 "multiple" => true,
@@ -84,7 +86,20 @@ class ExportType extends AbstractType
                 },
                 "placeholder" => "-- Service --",
                 "attr" => [
-                    "class" => "multi-select js-service w-min-150 w-max-180"
+                    "class" => "multi-select js-service"
+                ],
+                "required" => false
+            ])
+            ->add("devices", EntityType::class, [
+                "class" => Device::class,
+                "choice_label" => "name",
+                "multiple" => true,
+                "query_builder" => function (DeviceRepository $repo) {
+                    return $repo->getDevicesFromUserQueryList($this->currentUser);
+                },
+                "placeholder" => "-- Device --",
+                "attr" => [
+                    "class" => "multi-select js-device"
                 ],
                 "required" => false
             ])

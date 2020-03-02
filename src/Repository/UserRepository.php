@@ -186,4 +186,29 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
+
+    public function countUsers(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder("u")
+            // ->select("u")
+            // ->leftJoin("u.referentSupport", "s")->addSelect("PARTIAL s.{id, status, startDate, endDate}")
+            // ->join("u.notesCreated", "n")->addSelect("COUNT(n.id)")
+            // ->leftJoin("u.rdvs", "r")->addSelect("PARTIAL r.{id, start}")
+            // ->leftJoin("u.documents", "d")->addSelect("PARTIAL d.{id}")
+
+            ->andWhere("u.enabled = TRUE");
+
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ($key == "status") {
+                    $query = $query->andWhere("u.status = :status")
+                        ->setParameter("status", $value);
+                }
+            }
+        }
+
+        return $query->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
 }

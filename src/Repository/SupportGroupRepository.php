@@ -250,4 +250,32 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
+
+    public function countAllSupports(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder("sg")->select("COUNT(sg.id)");
+
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ($key == "user") {
+                    $query = $query->andWhere("sg.referent = :user")
+                        ->setParameter("user", $value);
+                }
+                if ($key == "status") {
+                    $query = $query->andWhere("sg.status = :status")
+                        ->setParameter("status", $value);
+                }
+                if ($key == "service") {
+                    $query = $query->andWhere("sg.service = :service")
+                        ->setParameter("service", $value);
+                }
+                if ($key == "device") {
+                    $query = $query->andWhere("sg.device = :device")
+                        ->setParameter("device", $value);
+                }
+            }
+        }
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

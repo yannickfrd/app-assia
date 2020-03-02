@@ -126,4 +126,35 @@ class RdvRepository extends ServiceEntityRepository
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
+
+    public function countAllRdvs(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder("rdv")->select("COUNT(rdv.id)");
+
+        if ($criteria) {
+
+            // $query = $query->leftJoin("rdv.supportGroup", "sg")->addselect("PARTIAL sg.{id, referent, status, service, device}");
+
+            foreach ($criteria as $key => $value) {
+                if ($key == "user") {
+                    $query = $query->andWhere("rdv.createdBy = :user")
+                        ->setParameter("user", $value);
+                }
+                if ($key == "status") {
+                    $query = $query->andWhere("sg.status = :status")
+                        ->setParameter("status", $value);
+                }
+                if ($key == "service") {
+                    $query = $query->andWhere("sg.service = :service")
+                        ->setParameter("service", $value);
+                }
+                if ($key == "device") {
+                    $query = $query->andWhere("sg.device = :device")
+                        ->setParameter("device", $value);
+                }
+            }
+        }
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

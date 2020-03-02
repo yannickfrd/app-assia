@@ -72,4 +72,36 @@ class NoteRepository extends ServiceEntityRepository
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
+
+    public function countAllNotes(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder("n")->select("COUNT(n.id)");
+
+        if ($criteria) {
+
+            // $query = $query->leftJoin("n.supportGroup", "sg")->addselect("PARTIAL sg.{id, referent, status, service, device}");
+
+            foreach ($criteria as $key => $value) {
+                if ($key == "user") {
+                    $query = $query->andWhere("n.createdBy = :user")
+                        ->setParameter("user", $value);
+                }
+                if ($key == "status") {
+                    $query = $query->andWhere("sg.status = :status")
+                        ->setParameter("status", $value);
+                }
+                if ($key == "service") {
+                    $query = $query->andWhere("sg.service = :service")
+                        ->setParameter("service", $value);
+                }
+                if ($key == "device") {
+                    $query = $query->andWhere("sg.device = :device")
+                        ->setParameter("device", $value);
+                }
+            }
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -12,7 +12,8 @@ export default class DisplayInputs {
     init() {
         if (this.inputElt) {
             this.select();
-            this.inputElt.addEventListener("click", this.select.bind(this))
+            this.inputElt.addEventListener("change", this.select.bind(this)) // au changement sur mobile
+            this.inputElt.addEventListener("click", this.select.bind(this)) // au click sur ordinateur 
         }
     }
 

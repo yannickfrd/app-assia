@@ -471,7 +471,7 @@ class EvalHousingGroup
 
     public function getSyploList()
     {
-        return Choices::YES_NO[$this->syplo];
+        return Choices::YES_NO_IN_PROGRESS[$this->syplo];
     }
 
     public function getSyploId(): ?string
@@ -630,7 +630,7 @@ class EvalHousingGroup
 
     public function getHsgActionEligibilityList()
     {
-        return Choices::YES_NO[$this->syplo];
+        return Choices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility];
     }
 
     public function getHsgActionRecord(): ?int

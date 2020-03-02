@@ -47,8 +47,8 @@ class ServiceType extends AbstractType
                 "choice_label" => "fullname",
                 "query_builder" => function (UserRepository $repo) {
                     return $repo->createQueryBuilder("u")
-                        ->where("u.status = 3")
-                        ->andWhere("u.enabled = TRUE")
+                        ->where("u.enabled = TRUE")
+                        ->andWhere("u.status = 2 OR u.status = 3  OR u.status = 4")
                         ->orderBy("u.lastname", "ASC");
                 },
                 "placeholder" => "-- Select --",

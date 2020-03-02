@@ -10,7 +10,12 @@
 {% endblock %}
 
 {% block modal_footer %}
-<button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Ajouter la personne</button>
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+<div class="float-left">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+</div>
+<div class="float-right">
+    <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Ajouter la personne</button>
+</div>
+
 {{ form_end(form_role_person, {"render_rest": false}) }}
 {% endblock %}

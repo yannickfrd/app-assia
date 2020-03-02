@@ -110,4 +110,12 @@ class PersonRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function countAllPeople(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder("p")->select("COUNT(p.id)");
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

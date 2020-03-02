@@ -148,6 +148,7 @@ export default class evaluation {
         let length = document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").length;
         for (let i = 0; i < length; i++) {
             new DisplayInputs(prefix, i + "_evalProfPerson_profStatus", "select", [3, 5, 8]);
+            new DisplayInputs(prefix, i + "_evalProfPerson_transportMeansType", "select", [1, 2, 3]);
             new DisplayInputs(prefix, i + "_evalProfPerson_rqth", "select", [1]);
         }
     }

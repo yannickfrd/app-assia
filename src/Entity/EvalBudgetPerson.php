@@ -11,6 +11,12 @@ use Symfony\Component\Validator\Constraints\Choice;
  */
 class EvalBudgetPerson
 {
+    public const YES_NO = [
+        0 => "Non",
+        1 => "Oui",
+        2 => "Non",
+        99 => "Non renseigné"
+    ];
     public const SETTLEMENT_PLAN = [
         1 => "Proposé",
         2 => "Accepté",
@@ -480,7 +486,7 @@ class EvalBudgetPerson
 
     public function getDisAdultAllowanceList()
     {
-        return Choices::YES_NO[$this->disAdultAllowance];
+        return self::YES_NO[$this->disAdultAllowance];
     }
 
     public function getDisChildAllowance(): ?int
@@ -497,7 +503,7 @@ class EvalBudgetPerson
 
     public function getDisChildAllowanceList()
     {
-        return Choices::YES_NO[$this->disChildAllowance];
+        return self::YES_NO[$this->disChildAllowance];
     }
 
     public function getUnemplBenefit(): ?int
@@ -514,7 +520,7 @@ class EvalBudgetPerson
 
     public function getUnemplBenefitList()
     {
-        return Choices::YES_NO[$this->unemplBenefit];
+        return self::YES_NO[$this->unemplBenefit];
     }
 
     public function getAsylumAllowance(): ?int
@@ -531,7 +537,7 @@ class EvalBudgetPerson
 
     public function getAsylumAllowanceList()
     {
-        return Choices::YES_NO[$this->asylumAllowance];
+        return self::YES_NO[$this->asylumAllowance];
     }
 
     public function getTempWaitingAllowance(): ?int
@@ -548,7 +554,7 @@ class EvalBudgetPerson
 
     public function getTempWaitingAllowanceList()
     {
-        return Choices::YES_NO[$this->tempWaitingAllowance];
+        return self::YES_NO[$this->tempWaitingAllowance];
     }
 
     public function getFamilyAllowance(): ?int
@@ -565,7 +571,7 @@ class EvalBudgetPerson
 
     public function getFamilyAllowanceList()
     {
-        return Choices::YES_NO[$this->familyAllowanceAmt];
+        return self::YES_NO[$this->familyAllowance];
     }
 
     public function getSolidarityAllowance(): ?int
@@ -582,7 +588,7 @@ class EvalBudgetPerson
 
     public function getSolidarityAllowanceList()
     {
-        return Choices::YES_NO[$this->solidarityAllowance];
+        return self::YES_NO[$this->solidarityAllowance];
     }
 
     public function getPaidTraining(): ?int
@@ -599,7 +605,7 @@ class EvalBudgetPerson
 
     public function getPaidTrainingList()
     {
-        return Choices::YES_NO[$this->paidTraining];
+        return self::YES_NO[$this->paidTraining];
     }
 
     public function getYouthGuarantee(): ?int
@@ -616,7 +622,7 @@ class EvalBudgetPerson
 
     public function getYouthGuaranteeList()
     {
-        return Choices::YES_NO[$this->youthGuarantee];
+        return self::YES_NO[$this->youthGuarantee];
     }
 
     public function getMaintenance(): ?int
@@ -633,7 +639,7 @@ class EvalBudgetPerson
 
     public function getMaintenanceList()
     {
-        return Choices::YES_NO[$this->maintenance];
+        return self::YES_NO[$this->maintenance];
     }
 
     public function getActivityBonus(): ?int
@@ -650,7 +656,7 @@ class EvalBudgetPerson
 
     public function getActivityBonusList()
     {
-        return Choices::YES_NO[$this->activityBonus];
+        return self::YES_NO[$this->activityBonus];
     }
 
     public function getPensionBenefit(): ?int
@@ -667,7 +673,7 @@ class EvalBudgetPerson
 
     public function getPensionBenefitList()
     {
-        return Choices::YES_NO[$this->pensionBenefit];
+        return self::YES_NO[$this->pensionBenefit];
     }
 
     public function getMinimumIncome(): ?int
@@ -684,7 +690,7 @@ class EvalBudgetPerson
 
     public function getMinimumIncomeList()
     {
-        return Choices::YES_NO[$this->minimumIncome];
+        return self::YES_NO[$this->minimumIncome];
     }
 
     public function getSalary(): ?int
@@ -701,7 +707,7 @@ class EvalBudgetPerson
 
     public function getSalaryList()
     {
-        return Choices::YES_NO[$this->salary];
+        return self::YES_NO[$this->salary];
     }
 
     public function getRessourceOther(): ?int
@@ -718,7 +724,7 @@ class EvalBudgetPerson
 
     public function getRessourceOtherList()
     {
-        return Choices::YES_NO[$this->ressourceOther];
+        return self::YES_NO[$this->ressourceOther];
     }
 
     public function getRessourceOtherPrecision(): ?string
@@ -963,7 +969,7 @@ class EvalBudgetPerson
 
     public function getChargesList()
     {
-        return Choices::YES_NO[$this->charges];
+        return self::YES_NO[$this->charges];
     }
 
     public function getChargesAmt(): ?float
@@ -1280,7 +1286,7 @@ class EvalBudgetPerson
 
     public function getDebtsList()
     {
-        return Choices::YES_NO[$this->debts];
+        return self::YES_NO[$this->debts];
     }
 
     public function getDebtRental(): ?int

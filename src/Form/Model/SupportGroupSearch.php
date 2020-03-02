@@ -247,7 +247,7 @@ class SupportGroupSearch
         return $this->services;
     }
 
-    public function setService(?ArrayCollection $services): self
+    public function setServices(?ArrayCollection $services): self
     {
         $this->services = $services;
 
