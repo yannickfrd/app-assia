@@ -49,12 +49,16 @@ class SupportPersonExport
 
         $nameAccommodations = [];
         $addressAccommodations = [];
+        $cityAccommodations = [];
+        $departmentAccommodations = [];
 
         $accommodationPersons = $person->getAccommodationPersons();
         foreach ($accommodationPersons as $accommodationPerson) {
             $accommodations = $accommodationPerson->getAccommodationGroup()->getAccommodation();
             $nameAccommodations[] = $accommodations->getName();
             $addressAccommodations[] = $accommodations->getAddress();
+            $cityAccommodations[] = $accommodations->getCity();
+            $departmentAccommodations[] = $accommodations->getDepartment();
         }
 
         return [
@@ -77,7 +81,9 @@ class SupportPersonExport
             "Service" => $supportGroup->getService()->getName(),
             "Dispositif" => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : "",
             "Nom du logement/ hébergement" => join(", ", $nameAccommodations),
-            "Adresse" => join(", ", $addressAccommodations)
+            "Adresse" => join(", ", $addressAccommodations),
+            "Ville" => join(", ", $cityAccommodations),
+            "Département" => join(", ", $departmentAccommodations)
         ];
     }
 

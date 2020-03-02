@@ -2,30 +2,38 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.0.0 17/02/2020
+1.1.0 02/03/2020
 
 # Développeur
 Romain MADELAINE
 
-
 # Repository Git
 https://github.com/RomMad/esperer95.app
 
-
 # Connection à la base démo
+https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.1.0 - 02/03/2020
+- Administration : possibilité de supprimer une personne, un groupe ou un suivi social (profil "Administrateur")
+- Correction des droits d'accès aux RDVS, notes et documents (édition et suppression)
+- Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale sur téléphone mobile
+- Tableau de bord "Super Administrateur" : Nb de suivis,  Nb de RDVs Nb de documents,  Nb de notes
+- Correctif export des suivis
+
 ## Version 1.0.3 - 28/02/2020
-- "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom et adresse du groupe de place).
+- "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom, adresse et ville du groupe de place).
 - "Les suivis" : ajout de la possibilité de filtrer par dispositif et typologie familiale.
-- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom et adresse du groupe de place).
+- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom, adresse et ville du du groupe de place).
 - "Groupes de places" : ajout de la colonne "Service" et modification "Occupation actuelle".
 - "Groupes de places : ajout de l'export Excel des groupes de places avec l'ensemble des informations.
 - Modification et correction des droits d'accès ou d'édition des services et groupe de places.
 - "Origine de la demande" : liste déroulante "Organisme orienteur ou prescripteur" triée par ordre alphabétique.
 - Prise en chage "Logement/hébergement" : liste déroulante des groupes de place" : affiche uniquement les logements ouverts.
 - Fiche "Groupe" et "Personne" : ajout de l'information de l'utilisateur ayant créé et modifié la fiche.
+
 ## Version 1.0.2 - 27/02/2020
 - Suivi social : correction des droits d'accès au suivi : si l’utilisateur est rattaché au même service que le référent, il peut dorénavant voir dans le suivi social, ainsi que tous les RDVS, les notes et les documents créés.
 - Service : modification des droits d'accès : la fiche du service est maintenant accessible à tous les utilisateurs rattachés au service, mais sans droit d'édition pou les non-administrateurs.
@@ -36,6 +44,7 @@ https://github.com/RomMad/esperer95.app
 - Export Suivis : correction du problème d’export provoquant une erreur 500
 - Les suivis sont maintenant nommés NOM Prénom (au lieu de Prénom NOM).
 - La liste des organismes orienteurs/prescripteurs est classée par ordre alphabétique.
+
 ## Version 1.0.1 - 26/02/2020
 - Personne : modification du contrôle de la longueur du nom
 - Suivi social : correction du bug de liaison entre le suivi social et le dispositif 

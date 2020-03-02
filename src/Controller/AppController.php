@@ -47,7 +47,7 @@ class AppController extends AbstractController
         if ($this->getUser()->getStatus() == 1) {
             return $this->dashboardSocialWorker($cache);
         }
-        if ($this->isGranted("ROLE_ADMIN") || $this->isGranted("ROLE_SUPER_ADMIN")) {
+        if ($this->isGranted("ROLE_SUPER_ADMIN")) {
             return $this->dashboardAdmin($cache);
         }
         return $this->dashboardSocialWorker($cache);

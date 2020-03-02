@@ -154,7 +154,7 @@ class EvalSocialPerson
 
     public function getRightSocialSecurityList()
     {
-        return Choices::YES_NO[$this->rightSocialSecurity];
+        return Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity];
     }
 
     public function getSocialSecurity(): ?int
