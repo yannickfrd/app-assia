@@ -6,7 +6,7 @@
 
 {% block body %}
 
-<section class="my-0">
+<section class="mt-0">
 
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
@@ -34,8 +34,8 @@
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}</th>
                         <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de naissance", "p.birthdate") }}</th>
                         <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(supports, "Typologie familiale", "g.familyTypology") }}</th>
-                        <th scope="col" class="align-middle th-w-100"> {{ knp_pagination_sortable(supports, "Statut", "sg.status") }}</th>
-                        <th scope="col" class="align-middle th-date"> {{ knp_pagination_sortable(supports, "Début de suivi", "sg.startDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Statut", "sg.status") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début de suivi", "sg.startDate") }}</th>
                         <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin de suivi", "sg.endDate") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}</th>
@@ -46,6 +46,13 @@
                 <tbody>
                     {% for support in supports %}
                     {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
+
+                    {% if support.supportPerson|filter(a => a.role != 3)|length  %}
+                    {% set supportPeople = support.supportPerson|filter(a => a.role != 3) %}
+                    {% else %} 
+                    {% set supportPeople = support.supportPerson %}
+                    {% endif %}
+
                     <tr>
                         <th scope="row" class="align-middle">
                             {% if is_granted("VIEW", support) %}
@@ -65,13 +72,13 @@
                             {% endif %} #}
                         </th>
                         <td class="align-middle">
-                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
+                            {% for supportPerson in supportPeople %}
                             <a href="{{ path('group_person_show', {'id':support.groupPeople.id, 'person_id':supportPerson.person.id, 'slug':supportPerson.person.slug}) }}"
                                 class="text-{{ theme_color }}" title="Voir la fiche de la personne" data-placement="bottom">{{ supportPerson.person.fullname }}</a><br />
-                            {% endfor %}
+                        {% endfor %}
                         </td>
                         <td class="align-middle">
-                            {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
+                            {% for supportPerson in supportPeople %}
                             {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />                           
                             {% endfor %}
                         </td>

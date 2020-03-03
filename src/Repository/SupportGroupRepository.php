@@ -62,6 +62,7 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->leftJoin("sg.accommodationGroups", "ag")->addselect("PARTIAL ag.{id}")
             ->leftJoin("sg.evaluationsGroup", "eg")->addselect("PARTIAL eg.{id}")
+            ->leftJoin("eg.evalHousingGroup", "ehg")->addselect("PARTIAL ehg.{id, housingStatus, housingAddress, housingCity, housingDept}")
             ->leftJoin("sg.rdvs", "rdvs")->addselect("PARTIAL rdvs.{id}")
             ->leftJoin("sg.notes", "notes")->addselect("PARTIAL notes.{id}")
             ->leftJoin("sg.documents", "docs")->addselect("PARTIAL docs.{id}")
