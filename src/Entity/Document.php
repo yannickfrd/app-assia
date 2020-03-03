@@ -10,14 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
 class Document
 {
     public const TYPE = [
-        1 => "Identité/Etat civil",
         2 => "Administratif",
-        3 => "Ressources",
+        9 => "Emploi",
+        1 => "Identité/Etat civil",
         4 => "Impôts",
-        5 => "Redevance",
         6 => "Logement",
-        7 => "Santé",
         8 => "Orientation",
+        5 => "Redevance",
+        3 => "Ressources",
+        7 => "Santé",
         97 => "Autre"
     ];
 
