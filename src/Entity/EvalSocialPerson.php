@@ -381,6 +381,11 @@ class EvalSocialPerson
         return $this->violenceVictim;
     }
 
+    public function getViolenceVictimList()
+    {
+        return Choices::YES_NO[$this->violenceVictim];
+    }
+
     public function setViolenceVictim(?int $violenceVictim): self
     {
         $this->violenceVictim = $violenceVictim;
@@ -392,6 +397,12 @@ class EvalSocialPerson
     {
         return $this->domViolenceVictim;
     }
+
+    public function getDomViolenceVictimList()
+    {
+        return Choices::YES_NO[$this->domViolenceVictim];
+    }
+
 
     public function setDomViolenceVictim(?int $domViolenceVictim): self
     {

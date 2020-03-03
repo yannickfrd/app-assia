@@ -98,21 +98,6 @@ class EvalAdmPerson
     private $workRight;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $rightWork;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $rightSocialBenf;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $housingAllowance;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalAdmPerson;

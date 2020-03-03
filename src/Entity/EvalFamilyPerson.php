@@ -153,6 +153,11 @@ class EvalFamilyPerson
         return $this->maritalStatus;
     }
 
+    public function getMaritalStatusList()
+    {
+        return self::MARITAL_STATUS[$this->maritalStatus];
+    }
+
     public function setMaritalStatus(?int $maritalStatus): self
     {
         $this->maritalStatus = $maritalStatus;
@@ -160,19 +165,14 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getMaritalStatusList()
-    {
-        return self::MARITAL_STATUS[$this->maritalStatus];
-    }
-
-    public function getChildcareSchool(): ?int
-    {
-        return $this->childcareSchool;
-    }
-
     public function getUnbornChild(): ?int
     {
         return $this->unbornChild;
+    }
+
+    public function getUnbornChildList()
+    {
+        return Choices::YES_NO[$this->unbornChild];
     }
 
     public function setUnbornChild(?int $unbornChild): self
@@ -199,6 +199,11 @@ class EvalFamilyPerson
         return $this->pregnancyType;
     }
 
+    public function getPregnancyTypeList()
+    {
+        return self::PREGNANCY_TYPE[$this->pregnancyType];
+    }
+
     public function setPregnancyType(?int $pregnancyType): self
     {
         $this->pregnancyType = $pregnancyType;
@@ -206,9 +211,14 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getPregnancyTypeList()
+    public function getChildcareSchool(): ?int
     {
-        return self::PREGNANCY_TYPE[$this->pregnancyType];
+        return $this->childcareSchool;
+    }
+
+    public function getChildcareSchoolList()
+    {
+        return self::CHILDCARE_SCHOOL[$this->childcareSchool];
     }
 
     public function setChildcareSchool(?int $childcareSchool): self
@@ -216,11 +226,6 @@ class EvalFamilyPerson
         $this->childcareSchool = $childcareSchool;
 
         return $this;
-    }
-
-    public function getChildcareSchoolList()
-    {
-        return self::CHILDCARE_SCHOOL[$this->childcareSchool];
     }
 
     public function getChildcareSchoolLocation(): ?string

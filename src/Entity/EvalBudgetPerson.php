@@ -17,6 +17,7 @@ class EvalBudgetPerson
         2 => "Non",
         99 => "Non renseigné"
     ];
+
     public const SETTLEMENT_PLAN = [
         1 => "Proposé",
         2 => "Accepté",
@@ -477,6 +478,11 @@ class EvalBudgetPerson
         return $this->disAdultAllowance;
     }
 
+    public function getDisAdultAllowanceList()
+    {
+        return self::YES_NO[$this->disAdultAllowance];
+    }
+
     public function setDisAdultAllowance(?int $disAdultAllowance): self
     {
         $this->disAdultAllowance = $disAdultAllowance;
@@ -484,14 +490,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDisAdultAllowanceList()
-    {
-        return self::YES_NO[$this->disAdultAllowance];
-    }
-
     public function getDisChildAllowance(): ?int
     {
         return $this->disChildAllowance;
+    }
+
+    public function getDisChildAllowanceList()
+    {
+        return self::YES_NO[$this->disChildAllowance];
     }
 
     public function setDisChildAllowance(?int $disChildAllowance): self
@@ -501,14 +507,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDisChildAllowanceList()
-    {
-        return self::YES_NO[$this->disChildAllowance];
-    }
-
     public function getUnemplBenefit(): ?int
     {
         return $this->unemplBenefit;
+    }
+
+    public function getUnemplBenefitList()
+    {
+        return self::YES_NO[$this->unemplBenefit];
     }
 
     public function setUnemplBenefit(?int $unemplBenefit): self
@@ -518,14 +524,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getUnemplBenefitList()
-    {
-        return self::YES_NO[$this->unemplBenefit];
-    }
-
     public function getAsylumAllowance(): ?int
     {
         return $this->asylumAllowance;
+    }
+
+    public function getAsylumAllowanceList()
+    {
+        return self::YES_NO[$this->asylumAllowance];
     }
 
     public function setAsylumAllowance(?int $asylumAllowance): self
@@ -535,14 +541,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getAsylumAllowanceList()
-    {
-        return self::YES_NO[$this->asylumAllowance];
-    }
-
     public function getTempWaitingAllowance(): ?int
     {
         return $this->tempWaitingAllowance;
+    }
+
+    public function getTempWaitingAllowanceList()
+    {
+        return self::YES_NO[$this->tempWaitingAllowance];
     }
 
     public function setTempWaitingAllowance(?int $tempWaitingAllowance): self
@@ -552,14 +558,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getTempWaitingAllowanceList()
-    {
-        return self::YES_NO[$this->tempWaitingAllowance];
-    }
-
     public function getFamilyAllowance(): ?int
     {
         return $this->familyAllowance;
+    }
+
+    public function getFamilyAllowanceList()
+    {
+        return self::YES_NO[$this->familyAllowance];
     }
 
     public function setFamilyAllowance(?int $familyAllowance): self
@@ -569,14 +575,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getFamilyAllowanceList()
-    {
-        return self::YES_NO[$this->familyAllowance];
-    }
-
     public function getSolidarityAllowance(): ?int
     {
         return $this->solidarityAllowance;
+    }
+
+    public function getSolidarityAllowanceList()
+    {
+        return self::YES_NO[$this->solidarityAllowance];
     }
 
     public function setSolidarityAllowance(?int $solidarityAllowance): self
@@ -586,14 +592,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getSolidarityAllowanceList()
-    {
-        return self::YES_NO[$this->solidarityAllowance];
-    }
-
     public function getPaidTraining(): ?int
     {
         return $this->paidTraining;
+    }
+
+    public function getPaidTrainingList()
+    {
+        return self::YES_NO[$this->paidTraining];
     }
 
     public function setPaidTraining(?int $paidTraining): self
@@ -603,14 +609,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getPaidTrainingList()
-    {
-        return self::YES_NO[$this->paidTraining];
-    }
-
     public function getYouthGuarantee(): ?int
     {
         return $this->youthGuarantee;
+    }
+
+    public function getYouthGuaranteeList()
+    {
+        return self::YES_NO[$this->youthGuarantee];
     }
 
     public function setYouthGuarantee(?int $youthGuarantee): self
@@ -620,14 +626,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getYouthGuaranteeList()
-    {
-        return self::YES_NO[$this->youthGuarantee];
-    }
-
     public function getMaintenance(): ?int
     {
         return $this->maintenance;
+    }
+
+    public function getMaintenanceList()
+    {
+        return self::YES_NO[$this->maintenance];
     }
 
     public function setMaintenance(?int $maintenance): self
@@ -637,14 +643,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getMaintenanceList()
-    {
-        return self::YES_NO[$this->maintenance];
-    }
-
     public function getActivityBonus(): ?int
     {
         return $this->activityBonus;
+    }
+
+    public function getActivityBonusList()
+    {
+        return self::YES_NO[$this->activityBonus];
     }
 
     public function setActivityBonus(?int $activityBonus): self
@@ -654,14 +660,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getActivityBonusList()
-    {
-        return self::YES_NO[$this->activityBonus];
-    }
-
     public function getPensionBenefit(): ?int
     {
         return $this->pensionBenefit;
+    }
+
+    public function getPensionBenefitList()
+    {
+        return self::YES_NO[$this->pensionBenefit];
     }
 
     public function setPensionBenefit(?int $pensionBenefit): self
@@ -671,14 +677,15 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getPensionBenefitList()
-    {
-        return self::YES_NO[$this->pensionBenefit];
-    }
 
     public function getMinimumIncome(): ?int
     {
         return $this->minimumIncome;
+    }
+
+    public function getMinimumIncomeList()
+    {
+        return self::YES_NO[$this->minimumIncome];
     }
 
     public function setMinimumIncome(?int $minimumIncome): self
@@ -688,14 +695,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getMinimumIncomeList()
-    {
-        return self::YES_NO[$this->minimumIncome];
-    }
-
     public function getSalary(): ?int
     {
         return $this->salary;
+    }
+
+    public function getSalaryList()
+    {
+        return self::YES_NO[$this->salary];
     }
 
     public function setSalary(?int $salary): self
@@ -705,14 +712,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getSalaryList()
-    {
-        return self::YES_NO[$this->salary];
-    }
-
     public function getRessourceOther(): ?int
     {
         return $this->ressourceOther;
+    }
+
+    public function getRessourceOtherList()
+    {
+        return self::YES_NO[$this->ressourceOther];
     }
 
     public function setRessourceOther(?int $ressourceOther): self
@@ -720,11 +727,6 @@ class EvalBudgetPerson
         $this->ressourceOther = $ressourceOther;
 
         return $this;
-    }
-
-    public function getRessourceOtherList()
-    {
-        return self::YES_NO[$this->ressourceOther];
     }
 
     public function getRessourceOtherPrecision(): ?string
@@ -1001,6 +1003,11 @@ class EvalBudgetPerson
         return $this->electricityGas;
     }
 
+    public function getElectricityGasList()
+    {
+        return self::YES_NO[$this->electricityGas];
+    }
+
     public function setElectricityGas(?int $electricityGas): self
     {
         $this->electricityGas = $electricityGas;
@@ -1011,6 +1018,11 @@ class EvalBudgetPerson
     public function getWater(): ?int
     {
         return $this->water;
+    }
+
+    public function getWaterList()
+    {
+        return self::YES_NO[$this->water];
     }
 
     public function setWater(?int $water): self
@@ -1025,6 +1037,11 @@ class EvalBudgetPerson
         return $this->insurance;
     }
 
+    public function getInsuranceList()
+    {
+        return self::YES_NO[$this->insurance];
+    }
+
     public function setInsurance(?int $insurance): self
     {
         $this->insurance = $insurance;
@@ -1035,6 +1052,11 @@ class EvalBudgetPerson
     public function getMutual(): ?int
     {
         return $this->mutual;
+    }
+
+    public function getMutualList()
+    {
+        return self::YES_NO[$this->mutual];
     }
 
     public function setMutual(?int $mutual): self
@@ -1049,6 +1071,11 @@ class EvalBudgetPerson
         return $this->taxes;
     }
 
+    public function getTaxesList()
+    {
+        return self::YES_NO[$this->taxes];
+    }
+
     public function setTaxes(?int $taxes): self
     {
         $this->taxes = $taxes;
@@ -1059,6 +1086,11 @@ class EvalBudgetPerson
     public function getTransport(): ?int
     {
         return $this->transport;
+    }
+
+    public function getTransportList()
+    {
+        return self::YES_NO[$this->transport];
     }
 
     public function setTransport(?int $transport): self
@@ -1073,6 +1105,11 @@ class EvalBudgetPerson
         return $this->childcare;
     }
 
+    public function getChildcareList()
+    {
+        return self::YES_NO[$this->childcare];
+    }
+
     public function setChildcare(?int $childcare): self
     {
         $this->childcare = $childcare;
@@ -1083,6 +1120,11 @@ class EvalBudgetPerson
     public function getAlimony(): ?int
     {
         return $this->alimony;
+    }
+
+    public function getAlimonyList()
+    {
+        return self::YES_NO[$this->alimony];
     }
 
     public function setAlimony(?int $alimony): self
@@ -1097,6 +1139,11 @@ class EvalBudgetPerson
         return $this->phone;
     }
 
+    public function getPhoneList()
+    {
+        return self::YES_NO[$this->phone];
+    }
+
     public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
@@ -1107,6 +1154,11 @@ class EvalBudgetPerson
     public function getChargeOther(): ?int
     {
         return $this->chargeOther;
+    }
+
+    public function getChargeOtherList()
+    {
+        return self::YES_NO[$this->chargeOther];
     }
 
     public function setChargeOther(?int $chargeOther): self
@@ -1294,6 +1346,11 @@ class EvalBudgetPerson
         return $this->debtRental;
     }
 
+    public function getDebtRentalList()
+    {
+        return self::YES_NO[$this->debtRental];
+    }
+
     public function setDebtRental(?int $debtRental): self
     {
         $this->debtRental = $debtRental;
@@ -1304,6 +1361,11 @@ class EvalBudgetPerson
     public function getDebtConsrCredit(): ?int
     {
         return $this->debtConsrCredit;
+    }
+
+    public function getDebtConsrCreditList()
+    {
+        return self::YES_NO[$this->debtConsrCredit];
     }
 
     public function setDebtConsrCredit(?int $debtConsrCredit): self
@@ -1318,6 +1380,11 @@ class EvalBudgetPerson
         return $this->debtMortgage;
     }
 
+    public function getDebtMortgageList()
+    {
+        return self::YES_NO[$this->debtMortgage];
+    }
+
     public function setDebtMortgage(int $debtMortgage): self
     {
         $this->debtMortgage = $debtMortgage;
@@ -1328,6 +1395,11 @@ class EvalBudgetPerson
     public function getDebtFines(): ?int
     {
         return $this->debtFines;
+    }
+
+    public function getDebtFinesList()
+    {
+        return self::YES_NO[$this->debtFines];
     }
 
     public function setDebtFines(?int $debtFines): self
@@ -1342,6 +1414,11 @@ class EvalBudgetPerson
         return $this->debtTaxDelays;
     }
 
+    public function getDebtTaxDelaysList()
+    {
+        return self::YES_NO[$this->debtTaxDelays];
+    }
+
     public function setDebtTaxDelays(?int $debtTaxDelays): self
     {
         $this->debtTaxDelays = $debtTaxDelays;
@@ -1354,6 +1431,11 @@ class EvalBudgetPerson
         return $this->debtBankOverdrafts;
     }
 
+    public function getDebtBankOverdraftsList()
+    {
+        return self::YES_NO[$this->debtBankOverdrafts];
+    }
+
     public function setDebtBankOverdrafts(?int $debtBankOverdrafts): self
     {
         $this->debtBankOverdrafts = $debtBankOverdrafts;
@@ -1364,6 +1446,11 @@ class EvalBudgetPerson
     public function getDebtOther(): ?int
     {
         return $this->debtOther;
+    }
+
+    public function getDebtOtherList()
+    {
+        return self::YES_NO[$this->debtOther];
     }
 
     public function setDebtOther(?int $debtOther): self

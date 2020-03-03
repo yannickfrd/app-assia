@@ -48,6 +48,13 @@ class EvalHousingGroup
         99 => "Non renseignée"
     ];
 
+    public const YES_NO = [
+        0 => "Non",
+        1 => "Oui",
+        2 => "Non",
+        99 => "Non renseigné"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -332,16 +339,16 @@ class EvalHousingGroup
         return $this->siaoRequest;
     }
 
+    public function getSiaoRequestList()
+    {
+        return Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest];
+    }
+
     public function setSiaoRequest(?int $siaoRequest): self
     {
         $this->siaoRequest = $siaoRequest;
 
         return $this;
-    }
-
-    public function getSiaoRequestList()
-    {
-        return Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest];
     }
 
     public function getSiaoRequestDate(): ?\DateTimeInterface
@@ -373,16 +380,16 @@ class EvalHousingGroup
         return $this->socialHousingRequest;
     }
 
+    public function getSocialHousingRequestList()
+    {
+        return Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest];
+    }
+
     public function setSocialHousingRequest(?int $socialHousingRequest): self
     {
         $this->socialHousingRequest = $socialHousingRequest;
 
         return $this;
-    }
-
-    public function getSocialHousingRequestList()
-    {
-        return Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest];
     }
 
     public function getSocialHousingRequestId(): ?string
@@ -462,16 +469,16 @@ class EvalHousingGroup
         return $this->syplo;
     }
 
+    public function getSyploList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->syplo];
+    }
+
     public function setSyplo(?int $syplo): self
     {
         $this->syplo = $syplo;
 
         return $this;
-    }
-
-    public function getSyploList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->syplo];
     }
 
     public function getSyploId(): ?string
@@ -503,16 +510,16 @@ class EvalHousingGroup
         return $this->daloCommission;
     }
 
+    public function getDaloCommissionList()
+    {
+        return Choices::YES_NO[$this->daloCommission];
+    }
+
     public function setDaloCommission(?int $daloCommission): self
     {
         $this->daloCommission = $daloCommission;
 
         return $this;
-    }
-
-    public function getDaloCommissionList()
-    {
-        return Choices::YES_NO[$this->daloCommission];
     }
 
     public function getDaloId(): ?string
@@ -573,6 +580,11 @@ class EvalHousingGroup
         return $this->daloTribunalAction;
     }
 
+    public function getDaloTribunalActionList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->daloTribunalAction];
+    }
+
     public function setDaloTribunalAction(?int $daloTribunalAction): self
     {
         $this->daloTribunalAction = $daloTribunalAction;
@@ -595,6 +607,11 @@ class EvalHousingGroup
     public function getCollectiveAgreementHousing(): ?int
     {
         return $this->collectiveAgreementHousing;
+    }
+
+    public function getCollectiveAgreementHousingList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->collectiveAgreementHousing];
     }
 
     public function setCollectiveAgreementHousing(?int $collectiveAgreementHousing): self
@@ -621,6 +638,11 @@ class EvalHousingGroup
         return $this->hsgActionEligibility;
     }
 
+    public function getHsgActionEligibilityList()
+    {
+        return Choices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility];
+    }
+
     public function setHsgActionEligibility(?int $hsgActionEligibility): self
     {
         $this->hsgActionEligibility = $hsgActionEligibility;
@@ -628,14 +650,14 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getHsgActionEligibilityList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility];
-    }
-
     public function getHsgActionRecord(): ?int
     {
         return $this->hsgActionRecord;
+    }
+
+    public function getHsgActionRecordList()
+    {
+        return Choices::YES_NO[$this->hsgActionRecord];
     }
 
     public function setHsgActionRecord(?int $hsgActionRecord): self
@@ -643,11 +665,6 @@ class EvalHousingGroup
         $this->hsgActionRecord = $hsgActionRecord;
 
         return $this;
-    }
-
-    public function getHsgActionRecordList()
-    {
-        return Choices::YES_NO[$this->hsgActionRecord];
     }
 
     public function getHsgActionDate(): ?\DateTimeInterface
@@ -691,6 +708,11 @@ class EvalHousingGroup
         return $this->expulsionInProgress;
     }
 
+    public function getExpulsionInProgressList()
+    {
+        return Choices::YES_NO[$this->expulsionInProgress];
+    }
+
     public function setExpulsionInProgress(?int $expulsionInProgress): self
     {
         $this->expulsionInProgress = $expulsionInProgress;
@@ -698,14 +720,14 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getExpulsionInProgressList()
-    {
-        return Choices::YES_NO[$this->expulsionInProgress];
-    }
-
     public function getPublicForce(): ?int
     {
         return $this->publicForce;
+    }
+
+    public function getPublicForceList()
+    {
+        return Choices::YES_NO[$this->publicForce];
     }
 
     public function setPublicForce(?int $publicForce): self
@@ -713,11 +735,6 @@ class EvalHousingGroup
         $this->publicForce = $publicForce;
 
         return $this;
-    }
-
-    public function getPublicForceList()
-    {
-        return Choices::YES_NO[$this->publicForce];
     }
 
     public function getPublicForceDate(): ?\DateTimeInterface
@@ -749,16 +766,16 @@ class EvalHousingGroup
         return $this->housingExperience;
     }
 
+    public function getHousingExperienceList()
+    {
+        return Choices::YES_NO[$this->housingExperience];
+    }
+
     public function setHousingExperience(?int $housingExperience): self
     {
         $this->housingExperience = $housingExperience;
 
         return $this;
-    }
-
-    public function getHousingExperienceList()
-    {
-        return Choices::YES_NO[$this->housingExperience];
     }
 
     public function getHousingExpeComment(): ?string
@@ -778,6 +795,11 @@ class EvalHousingGroup
         return $this->fsl;
     }
 
+    public function getFslList()
+    {
+        return self::YES_NO[$this->fsl];
+    }
+
     public function setFsl(?int $fsl): self
     {
         $this->fsl = $fsl;
@@ -788,6 +810,11 @@ class EvalHousingGroup
     public function getFslEligibility(): ?int
     {
         return $this->fslEligibility;
+    }
+
+    public function getFslEligibilityList()
+    {
+        return self::YES_NO[$this->fslEligibility];
     }
 
     public function setFslEligibility(?int $fslEligibility): self
@@ -802,6 +829,11 @@ class EvalHousingGroup
         return $this->cafEligibility;
     }
 
+    public function getCafEligibilityList()
+    {
+        return self::YES_NO[$this->cafEligibility];
+    }
+
     public function setCafEligibility(?int $cafEligibility): self
     {
         $this->cafEligibility = $cafEligibility;
@@ -812,6 +844,11 @@ class EvalHousingGroup
     public function getOtherHelps(): ?int
     {
         return $this->otherHelps;
+    }
+
+    public function getOtherHelpsList()
+    {
+        return self::YES_NO[$this->otherHelps];
     }
 
     public function setOtherHelps(?int $otherHelps): self
@@ -850,6 +887,11 @@ class EvalHousingGroup
         return $this->housingStatus;
     }
 
+    public function getHousingStatusList()
+    {
+        return self::HOUSING_STATUS[$this->housingStatus];
+    }
+
     public function setHousingStatus(?int $housingStatus): self
     {
         $this->housingStatus = $housingStatus;
@@ -857,15 +899,14 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getHousingStatusList()
-    {
-        return self::HOUSING_STATUS[$this->housingStatus];
-    }
-
-
     public function getHousing(): ?int
     {
         return $this->housing;
+    }
+
+    public function getHousingList()
+    {
+        return Choices::YES_NO[$this->housing];
     }
 
     public function setHousing(?int $housing): self
@@ -873,11 +914,6 @@ class EvalHousingGroup
         $this->housing = $housing;
 
         return $this;
-    }
-
-    public function getHousingList()
-    {
-        return Choices::YES_NO[$this->housing];
     }
 
     public function getHousingAddress(): ?string
@@ -944,16 +980,16 @@ class EvalHousingGroup
         return $this->endDomiciliationDate;
     }
 
+    public function getDomiciliationList()
+    {
+        return Choices::YES_NO[$this->domiciliation];
+    }
+
     public function setEndDomiciliationDate(?\DateTimeInterface $endDomiciliationDate): self
     {
         $this->endDomiciliationDate = $endDomiciliationDate;
 
         return $this;
-    }
-
-    public function getDomiciliationList()
-    {
-        return Choices::YES_NO[$this->domiciliation];
     }
 
     public function getDomiciliationAddress(): ?string

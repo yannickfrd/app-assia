@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -139,6 +140,11 @@ class EvalSocialGroup
     public function getAnimal(): ?int
     {
         return $this->animal;
+    }
+
+    public function getAnimalList()
+    {
+        return Choices::YES_NO[$this->animal];
     }
 
     public function setAnimal(?int $animal): self

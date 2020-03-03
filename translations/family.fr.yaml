@@ -3,7 +3,8 @@ Eval family person: Famille
 -- Select --: -- Sélectionner --
 Caf id: Numéro CAF
 Children behind: Enfants restés au pays
-Comment eval family group: Commentaire relatif à la situation familiale
+Comment eval family group: Commentaire relatif à la situation familiale du groupe
+Comment eval family person: Commentaire relatif à la situation sociale de la personne
 Exp date childbirth: Date prév. de l'accouchement
 Faml reunification: Regroupement familial
 Nb dependent children : Nombre d'enfants à charge

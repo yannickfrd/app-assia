@@ -59,7 +59,7 @@ class AppController extends AbstractController
 
         if (!$userSupports->isHit()) {
             $userSupports->set($this->repoSupport->findAllSupportsFromUser($this->getUser()));
-            $userSupports->expiresAfter(5 * 60);  // 5 * 60 seconds
+            $userSupports->expiresAfter(2 * 60);  // 5 * 60 seconds
             $cache->save($userSupports);
         }
 

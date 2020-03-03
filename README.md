@@ -20,18 +20,16 @@ https://demo.esperer95.app
 - Administration : possibilité de supprimer une personne, un groupe ou un suivi social (profil "Administrateur")
 - Correction des droits d'accès aux RDVS, notes et documents (édition et suppression)
 - Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale sur téléphone mobile
-- Tableau de bord "Super Administrateur" : Nb de suivis,  Nb de RDVs Nb de documents,  Nb de notes
+- Tableau de bord "Super Administrateur" : Nb de suivis,  Nb de RDVs, Nb de documents,  Nb de notes
 - Correctif export des suivis
-
-## Version 1.0.3 - 28/02/2020
 - "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom, adresse et ville du groupe de place).
 - "Les suivis" : ajout de la possibilité de filtrer par dispositif et typologie familiale.
-- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom, adresse et ville du du groupe de place).
+- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom, adresse et ville du groupe de place).
 - "Groupes de places" : ajout de la colonne "Service" et modification "Occupation actuelle".
 - "Groupes de places : ajout de l'export Excel des groupes de places avec l'ensemble des informations.
 - Modification et correction des droits d'accès ou d'édition des services et groupe de places.
 - "Origine de la demande" : liste déroulante "Organisme orienteur ou prescripteur" triée par ordre alphabétique.
-- Prise en chage "Logement/hébergement" : liste déroulante des groupes de place" : affiche uniquement les logements ouverts.
+- Prise en charge "Logement/hébergement" : liste déroulante des groupes de place" : affiche uniquement les logements ouverts.
 - Fiche "Groupe" et "Personne" : ajout de l'information de l'utilisateur ayant créé et modifié la fiche.
 
 ## Version 1.0.2 - 27/02/2020
