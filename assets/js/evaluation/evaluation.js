@@ -79,7 +79,6 @@ export default class evaluation {
         let prefix = this.prefix + "evalHousingGroup_";
         // new DisplayInputs(prefix, "housingAccessType", "select", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
         new DisplayInputs(prefix, "housingStatus", "select", [200, 201, 202, 203, 204, 205, 206, 207, 300, 301, 302, 303, 304]);
-
         new DisplayInputs(prefix, "siaoRequest", "select", [1]);
         new DisplayInputs(prefix, "socialHousingRequest", "select", [1]);
         new DisplayInputs(prefix, "syplo", "select", [1]);

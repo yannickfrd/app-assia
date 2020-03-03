@@ -123,7 +123,7 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add("ressourceOtherPrecision", null, [
                 "attr" => [
-                    "placeholder" => "Autre ressource..."
+                    "placeholder" => "Other ressource(s)..."
                 ]
             ])
             ->add("disAdultAllowanceAmt", MoneyType::class, [
@@ -261,7 +261,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add("alimony")
             ->add("phone")
             ->add("chargeOther", null, ["label_attr" => ["class" => "js-noText"]])
-            ->add("chargeOtherPrecision", null, ["attr" => ["placeholder" => "Autre charge..."]])
+            ->add("chargeOtherPrecision", null, ["attr" => ["placeholder" => "Other charge(s)..."]])
             ->add("rentAmt", MoneyType::class, [
                 "attr" => ["class" => "js-charges text-right"],
                 "required" => false
@@ -331,7 +331,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add("debtTaxDelays")
             ->add("debtBankOverdrafts")
             ->add("debtOther")
-            ->add("debtOtherPrecision")
+            ->add("debtOtherPrecision", null, ["attr" => ["placeholder" => "Other debt(s)..."]])
             ->add("debtComment")
             ->add("monthlyRepaymentAmt", MoneyType::class, [
                 "attr" => ["class" => "js-repaymentAmt text-right"],
