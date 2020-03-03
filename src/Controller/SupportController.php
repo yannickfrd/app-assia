@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\EvaluationPerson;
+use App\Entity\Person;
+use App\Entity\RolePerson;
 use App\Form\Model\Export;
 use App\Entity\GroupPeople;
-use App\Entity\RolePerson;
+use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Form\Export\ExportType;
+use App\Entity\EvaluationPerson;
 use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
@@ -18,12 +20,11 @@ use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Form\Support\SupportGroupSearchType;
+use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Support\SupportGroupWithPeopleType;
-use App\Repository\EvaluationGroupRepository;
-use App\Service\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -195,38 +196,62 @@ class SupportController extends AbstractController
      */
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo): Response
     {
-        $supportGroup->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $people = [];
-
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-            $people[] = $supportPerson->getPerson()->getId();
-        }
+        $addPeople = false;
 
         foreach ($supportGroup->getGroupPeople()->getrolePerson() as $rolePerson) {
 
-            $personId = $rolePerson->getPerson()->getId();
+            if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
 
-            if (!in_array($personId, $people)) {
-
-                $evaluationPerson = new EvaluationPerson();
+                $supportPerson = $this->createSupportPerson($rolePerson, $supportGroup);
 
                 $evaluationGroup =  $repo->findLastEvaluationFromSupport($supportGroup);
 
                 if ($evaluationGroup) {
+
+                    $evaluationPerson = new EvaluationPerson();
+
                     $evaluationPerson->setEvaluationGroup($evaluationGroup)
-                        ->setSupportPerson($this->createSupportPerson($rolePerson, $supportGroup));
+                        ->setSupportPerson($supportPerson);
 
                     $this->manager->persist($evaluationPerson);
                 }
+
+                $addPeople = true;
+
+                $this->addFlash("success", $rolePerson->getPerson()->getFullname() .  " a été ajouté(e) au suivi.");
             }
         }
-        $this->manager->flush();
+
+        if ($addPeople) {
+            $supportGroup->setUpdatedAt(new \DateTime())
+                ->setUpdatedBy($this->getUser());
+
+            $this->manager->flush();
+        } else {
+            $this->addFlash("warning", "Aucune personne n'a été ajoutée au suivi.");
+        }
 
         return $this->redirectToRoute("support_pers_edit", [
             "id" => $supportGroup->getId()
         ]);
+    }
+
+    /**
+     * Vérifie si la personne est déjà dans le suivi social
+     *
+     * @param Person $person
+     * @param SupportGroup $supportGroup
+     * @return true|false
+     */
+    protected function personIsInSupport(Person $person, SupportGroup $supportGroup)
+    {
+        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+
+            if ($person == $supportPerson->getPerson()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
