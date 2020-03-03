@@ -39,6 +39,7 @@ class PersonRepository extends ServiceEntityRepository
             ->leftJoin("sp.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
             ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname, email, phone}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
+            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
 
             ->andWhere("p.id = :id")

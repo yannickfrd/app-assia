@@ -37,6 +37,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->leftJoin("g.supports", "sg")->addselect("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
             ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname, email, phone}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
+            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
             ->leftJoin("g.referents", "referents")->addselect("referents")
 

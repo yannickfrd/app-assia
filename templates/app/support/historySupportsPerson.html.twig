@@ -69,9 +69,10 @@
                         </td>
                         <td>
                             {% if support.supportGroup.service %}
-                            <a href="mailto:{{ support.supportGroup.service.email }}" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"
-                                data-html="true"
-                                title="{{ contact_service }}">{{ support.supportGroup.service.name }}</a>
+                            <a href="mailto:{{ support.supportGroup.service.email }}" class="text-{{ theme_color }}" 
+                                data-toggle="tooltip" data-placement="right"data-html="true" 
+                                title="{{ contact_service }}">{{ support.supportGroup.service.name }}<br />
+                                {% if support.supportGroup.device %}({{ support.supportGroup.device.name }}){% endif %}</a>
                             {% endif %}
                         </td>
                         <td>{{ support.supportGroup.service.pole.name }}</td>
