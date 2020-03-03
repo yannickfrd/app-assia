@@ -189,22 +189,29 @@ export default class ListNotes {
 
     // Réponse du serveur
     responseAjax(response) {
+
         let data = JSON.parse(response);
-        if (data.code === 200 && !this.autoSave) {
+
+        if (data.code === 200) {
             switch (data.action) {
                 case "create":
                     this.createNote(data.data);
                     break;
                 case "update":
-                    this.updateNote(data.data);
+                    if (!this.autoSave) {
+                        this.updateNote(data.data);
+                    }
                     break;
                 case "delete":
                     document.getElementById("note-" + this.cardId).remove();
                     this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
                     break;
             }
-            new MessageFlash(data.alert, data.msg);
-            this.loader.off(true);
+
+            if (!this.autoSave) {
+                new MessageFlash(data.alert, data.msg);
+                this.loader.off(true);
+            }
         }
     }
 
@@ -236,6 +243,7 @@ export default class ListNotes {
         containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild);
         this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) + 1;
 
+        this.getNote(noteElt);
         noteElt.addEventListener("click", this.getNote.bind(this, noteElt));
     }
 

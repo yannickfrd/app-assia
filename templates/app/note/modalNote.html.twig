@@ -16,29 +16,20 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-2 d-none d-sm-block">
-                        {{ form_label(form.type) }}
-                    </div>
-                    <div class="col-6 col-sm-4">
-                        {{ form_widget(form.type) }}
-                    </div>
-                    <div class="col-sm-2 d-none d-sm-block">
-                        {{ form_label(form.status) }}
-                    </div>
-                    <div class="col-6 col-sm-4">
-                        {{ form_widget(form.status) }}
-                    </div>
+                    <div class="col-sm-2 d-none d-sm-block">{{ form_label(form.type) }}</div>
+                    <div class="col-6 col-sm-4">{{ form_widget(form.type) }}</div>
+                    <div class="col-sm-2 d-none d-sm-block">{{ form_label(form.status) }}</div>
+                    <div class="col-6 col-sm-4">{{ form_widget(form.status) }}</div>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <div class="float-left">
-                    <button id="modal-btn-delete"
-                        class="mr-3 btn btn-danger d-none" data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span></button>
+                <div class="d-flex float-left">
+                    <button id="modal-btn-delete" class="mr-3 btn btn-danger d-none" 
+                        data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span></button>
                     <div id="js-auto-save" class="text-secondary py-1 d-none"><span class="fas fa-sync-alt mr-2"></span>Sauv. auto.</div>
                 </div>
                 <div class="float-right">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary"
-                        data-dismiss="modal">Annuler</button>
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                     <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }}">Enregistrer</button>
                 </div>
             </div>

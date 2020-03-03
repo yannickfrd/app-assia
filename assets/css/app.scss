@@ -339,13 +339,13 @@ th.required:after {
 
 // Editeur de texte des notes
 #editor {
-    min-height: calc(100vh - 331px);
-    max-height: calc(100vh - 331px);
+    min-height: calc(100vh - 345px);
+    max-height: calc(100vh - 345px);
 }
 
 .editor-fullscreen {
-    min-height: calc(100vh - 275px) !important;
-    max-height: calc(100vh - 275px) !important;
+    min-height: calc(100vh - 290px) !important;
+    max-height: calc(100vh - 290px) !important;
 }
 
 /* Gestion de dépassement des notes */
