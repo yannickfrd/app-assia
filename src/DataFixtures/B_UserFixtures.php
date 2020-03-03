@@ -56,7 +56,7 @@ class B_UserFixtures extends Fixture
                 ->setLastName($habitatUser["lastname"])
                 ->setStatus(array_key_exists("status", $habitatUser) ? $habitatUser["status"] : 1)
                 ->setRoles(array_key_exists("roles", $habitatUser) ? [$habitatUser["roles"]] : [])
-                ->setPassword($this->passwordEncoder->encodePassword($user, $password))
+                ->setPassword($this->passwordEncoder->encodePassword($user, "Test123*"))
                 ->setEmail($email)
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime())

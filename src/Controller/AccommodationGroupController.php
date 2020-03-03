@@ -225,7 +225,8 @@ class AccommodationGroupController extends AbstractController
 
         foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPerson) {
 
-            $accommodationPerson->setAccommodation($accommodationGroup->getAccommodation())
+            $accommodationPerson
+                // ->setAccommodation($accommodationGroup->getAccommodation())
                 ->setUpdatedAt($now)
                 ->setUpdatedBy($this->getUser());
 
