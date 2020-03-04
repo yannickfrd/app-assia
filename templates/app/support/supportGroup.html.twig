@@ -51,7 +51,7 @@
 			</li>
 		</ol>
 	</nav>
-	{% for person in people|sort ((a, b) => a.person.birthdate <=> b.person.birthdate) %}
+	{% for person in people %}
 		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
 			class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
 	{% endfor %}

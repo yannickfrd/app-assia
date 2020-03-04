@@ -44,6 +44,8 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->andWhere("g.id = :id")
             ->setParameter("id", $id)
 
+            ->orderBy("p.birthdate", "ASC")
+
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }

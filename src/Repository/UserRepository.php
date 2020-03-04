@@ -110,7 +110,9 @@ class UserRepository extends ServiceEntityRepository
             }
             $query->andWhere($orX);
         }
+
         $query = $query->orderBy("u.lastname", "ASC");
+
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 

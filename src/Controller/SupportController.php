@@ -159,13 +159,13 @@ class SupportController extends AbstractController
      * Modification des suivis individuels
      * 
      * @Route("/support/{id}/people", name="support_pers_edit", methods="GET|POST")
-     * @param SupportGroup $supportGroup
+     * @param integer $$id
      * @param Request $request
      * @return Response
      */
-    public function editSupportGroupleWithPeople(SupportGroup $supportGroup, Request $request): Response
+    public function editSupportGroupleWithPeople(int $id, Request $request): Response
     {
-        // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
@@ -274,7 +274,7 @@ class SupportController extends AbstractController
 
             return $this->json([
                 "code" => 200,
-                "msg" => "La personne a été retirée du suivi social.",
+                "msg" => $supportPerson->getPerson()->getFullname() . " a été retiré(e) du suivi social.",
                 "data" => null
             ], 200);
         }

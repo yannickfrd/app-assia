@@ -13,6 +13,8 @@ class ObjectToArray
     protected $translator;
     protected $nameObject;
     protected $translation;
+    protected $initEvalGroup = null;
+    protected $initEvalPerson = null;
     protected $evalSocialGroup = null;
     protected $evalSocialPerson = null;
     protected $evalAdmPerson = null;

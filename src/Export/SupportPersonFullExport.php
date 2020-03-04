@@ -16,12 +16,17 @@ use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationPerson;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
 
 class SupportPersonFullExport
 {
     protected $arrayData;
     protected $objectToArray;
     protected $datas;
+
+    protected $initEvalGroup;
+    protected $initEvalPerson;
 
     protected $evaluationPerson;
     protected $evalAdmPerson;
@@ -39,6 +44,9 @@ class SupportPersonFullExport
     {
         $this->arrayData = [];
         $this->objectToArray = $objectToArray;
+
+        $this->initEvalGroup = new InitEvalGroup();
+        $this->initEvalPerson = new InitEvalPerson();
 
         $this->evaluationPerson = new EvaluationPerson();
         $this->evalAdmPerson = new EvalAdmPerson();
@@ -84,6 +92,8 @@ class SupportPersonFullExport
         $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();
         $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
 
+        $this->mergeObject($supportPerson->getSupportGroup()->getInitEvalGroup() ?? $this->initEvalGroup, "initEvalGroup", "initEval");
+        $this->mergeObject($supportPerson->getInitEvalPerson() ?? $this->initEvalPerson, "initEvalPerson", "initEval");
         $this->mergeObject($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, "evalSocialGroup", "social");
         $this->mergeObject($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, "evalSocialPerson", "social");
         $this->mergeObject($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, "evalAdmPerson", "adm");

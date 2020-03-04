@@ -70,6 +70,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere("sg.id = :id")
             ->setParameter("id", $id)
 
+            ->orderBy("p.birthdate", "ASC")
+
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
@@ -84,7 +86,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, preAdmission, accommodation, justice}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("sp")
             ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
-            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}");
+            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
+
+            ->orderBy("p.birthdate", "ASC");
     }
 
     /**
@@ -237,13 +241,14 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")
             ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
-            ->leftJoin("sp.person", "person")->addselect("PARTIAL person.{id, firstname, lastname}")
+            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
 
             ->andWhere("sg.referent = :referent")
             ->setParameter("referent", $user)
             ->andWhere("sg.status <= 2")
+            ->andWhere("sp.role != 3")
 
-            ->orderBy("sg.startDate", "DESC")
+            ->orderBy("p.lastname", "ASC")
 
             ->setMaxResults($maxResults)
 

@@ -26,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for support in supports|sort ((a, b) => a.startDate <=> b.startDate) %}
+                {% for support in supports %}
                 {# {% cache "referentSupport" ~ user.id ~ support.id support.updatedAt.timestamp %} #}
                  <tr id="support-{{ support.id }}">
                     <th scope="row" class="align-middle">
@@ -36,9 +36,9 @@
                         </a>
                     </th>
                     <td class="align-middle">
-                    {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
-                    {{ supportPerson.person.fullname }}<br />
-                    {% endfor %}
+                        {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
+                        {{ supportPerson.person.fullname }}<br />
+                        {% endfor %}
                     <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br />
                         {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
                     </td>

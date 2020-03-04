@@ -55,7 +55,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->andWhere("eg.supportGroup = :supportGroup")
             ->setParameter("supportGroup", $id)
 
-            ->orderBy("eg.id", "DESC")
+            ->orderBy("p.birthdate", "ASC")
             // ->setMaxResults(1)
 
             ->getQuery()

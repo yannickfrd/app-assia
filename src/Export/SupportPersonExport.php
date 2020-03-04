@@ -62,10 +62,10 @@ class SupportPersonExport
         }
 
         return [
-            // "N° Suivi groupe" => $supportGroup->getId(),
-            // "N° Suivi personne" => $supportPerson->getId(),
-            // "N° Groupe" => $groupPeople->getId(),
+            "N° Groupe" => $groupPeople->getId(),
+            "N° Suivi groupe" => $supportGroup->getId(),
             // "N° Personne" => $person->getId(),
+            // "N° Suivi personne" => $supportPerson->getId(),
             "Nom" => $person->getLastname(),
             "Prénom" => $person->getFirstname(),
             "Date de naissance" => $this->formatDate($person->getBirthdate()),
