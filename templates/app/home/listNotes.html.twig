@@ -30,7 +30,7 @@
                      </th>
                      <td class="align-middle">{{ note.title }}</td>
                      <td class="align-middle">
-                    {% for supportPerson in note.supportGroup.supportPerson|filter(supportPerson => supportPerson.head == true) %}
+                    {% for supportPerson in note.supportGroup.supportPerson|filter(a => a.head == true) %}
                     {{ supportPerson.person.fullname }}
                     {% endfor %}                     
                     </td>

@@ -2,12 +2,12 @@
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.charges) }}</div>
-        <div class="col-md-12  js-{{ loop.index0 }}_{{ entity }}_charges d-block">
+        <div class="col-md-12 js-{{ key }}_{{ entity }}_charges d-block">
             <div class="row">
                 <div class="col-form-label col-sm-4">Type de charges</div>
                 <div class="col-sm-8">
-                    <select id="js-{{ loop.index0 }}_{{ entity }}_charges_type"
-                        name="js-{{ loop.index0 }}_{{ entity }}_charges_type" class="form-control"
+                    <select id="js-{{ key }}_{{ entity }}_charges_type"
+                        name="js-{{ key }}_{{ entity }}_charges_type" class="form-control"
                         data-id="chargesType" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
                         <option class="default" value="">-- Ajouter --</option>
                         <option value="rent">Loyer</option>
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="table-responsive js-{{ loop.index0 }}_{{ entity }}_charges d-block">
+            <div class="table-responsive js-{{ key }}_{{ entity }}_charges d-block">
                 <table class="table table-sm table-hover text-dark">
                     <thead>
                         <tr>
@@ -37,8 +37,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-rent"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-rent"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.rent) }}</div>
                             </th>
@@ -47,8 +47,8 @@
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-electricityGas"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-electricityGas"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.electricityGas) }}</div>
                             </th>
@@ -58,8 +58,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-water"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-water"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.water) }}</div>
                             </th>
@@ -69,8 +69,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-insurance"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-insurance"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.insurance) }}</div>
                             </th>
@@ -79,8 +79,8 @@
                             <td><button class="btn btn-danger js-remove">
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-mutual"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-mutual"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.mutual) }}</div>
                             </th>
@@ -89,8 +89,8 @@
                             <td><button class="btn btn-danger js-remove">
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-taxes"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-taxes"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.taxes) }}</div>
                             </th>
@@ -100,8 +100,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-transport"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-transport"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.transport) }}</div>
                             </th>
@@ -111,8 +111,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-childcare"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-childcare"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.childcare) }}</div>
                             </th>
@@ -122,8 +122,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-alimony"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-alimony"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.alimony) }}</div>
                             </th>
@@ -133,8 +133,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-phone"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-phone"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.phone) }}</div>
                             </th>
@@ -144,8 +144,8 @@
                                     <span class="fas fa-trash-alt"></class></button>
                             </td>
                         </tr>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_charges_type-chargeOther"
-                            class="js-{{ loop.index0 }}_{{ entity }}_resources_type d-table-row">
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-chargeOther"
+                            class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
                             <th scope="row"><div
                                     class="sr-only">{{ form_widget(evalBudgetPerson.chargeOther) }}</div>
                             </th>
@@ -159,7 +159,7 @@
                         </tr>
                     </tbody>
                     <tfoot>
-                        <tr id="js-{{ loop.index0 }}_{{ entity }}_chargesAmt" class="font-weight-bold">
+                        <tr id="js-{{ key }}_{{ entity }}_chargesAmt" class="font-weight-bold">
                             <th scope="row"></th>
                             <td class="align-middle">Total des charges</td>
                             <td class="align-middle">

@@ -71,8 +71,8 @@
                         {% if support.service %}
                         <a href="mailto:{{ support.service.email }}" class="text-{{ theme_color }}"
                             data-toggle="tooltip" data-placement="right" data-html="true"
-                            title="{{ contact_service }}">{{ support.service.name }}</a><br />
-                            {% if support.device %}({{ support.device.name }}){% endif %}
+                            title="{{ contact_service }}">{{ support.service.name }}</a>
+                            {% if support.device %} ({{ support.device.name }}){% endif %}
                         {% endif %}
                     </td>
                     <td class="align-middle">

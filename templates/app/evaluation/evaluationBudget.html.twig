@@ -61,22 +61,20 @@
 <div class="row">
 	<div class="col-md-12 accordion" id="accordion-eval_budget">
 		<div class="mb-4">
-			{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
+			{% for key, evalPerson in form_evaluationPeople_filteredByAge %}
 				{% set person = evalPerson.vars.value.supportPerson.person %}
-				
-			<button type="button" id="heading-eval_budget-{{ loop.index0 }}"
-				class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
-				data-toggle="collapse" data-target="#collapse-eval_budget-{{ loop.index0 }}" aria-expanded="false"
-				aria-controls="collapse-eval_budget-{{ loop.index0 }}">{{ person.fullname}}</button>
+			<button type="button" id="heading-eval_budget-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
+				data-toggle="collapse" data-target="#collapse-eval_budget-{{ key }}" aria-expanded="false"
+				aria-controls="collapse-eval_budget-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
 			{% endfor %}
 		</div>
 
-		{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
+		{% for key, evalPerson in form_evaluationPeople_filteredByAge %}
 		{% set evalBudgetPerson = evalPerson.evalBudgetPerson %}
 		{% set entity = "evalBudgetPerson" %}
 
-		<div id="collapse-eval_budget-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-			aria-labelledby="heading-eval_budget-{{ loop.index0 }}" data-parent="#accordion-eval_budget" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+		<div id="collapse-eval_budget-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+			aria-labelledby="heading-eval_budget-{{ key }}" data-parent="#accordion-eval_budget" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="row">
 
 				{% include "app/evaluation/evalResources.html.twig" %}
@@ -85,24 +83,24 @@
 
 			</div>
 			<div class="form-group row">
-				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
+				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
 			</div>
 			<div class="form-group row">
-				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
-				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
+				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
+				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_resources d-block">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
 			</div>
 
 			<hr>
 
 			<div class="form-group row">
 				<div class="col-md-6">{{ form_row(evalBudgetPerson.debts) }}</div>
-				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
-				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_debts d-block">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
+				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_debts d-block">
 					<div class="row">
 						<div class="col-form-label col-sm-4">Type de dettes</div>
 						<div class="col-sm-8">
-							<select id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type"
-								name="js-{{ loop.index0 }}_evalBudgetPerson_debts_type" class="form-control">
+							<select id="js-{{ key }}_evalBudgetPerson_debts_type"
+								name="js-{{ key }}_evalBudgetPerson_debts_type" class="form-control">
 								<option class="default" value="">-- Ajouter --</option>
 								<option value="debtRental">Dettes locatives</option>
 								<option value="debtConsrCredit">Dette de crédits à la consommation</option>
@@ -114,7 +112,7 @@
 							</select>
 						</div>
 						<div class="col-md-12 mt-3">
-							<div class="table-responsive js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+							<div class="table-responsive js-{{ key }}_evalBudgetPerson_debts d-block">
 								<table class="table table-sm table-hover text-dark">
 									<thead>
 										<tr>
@@ -124,44 +122,44 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtRental"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtRental"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtRental) }}</div></th>
 											<td class="align-middle">Dettes locatives</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtConsrCredit"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtConsrCredit"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtConsrCredit) }}</div></th>
 											<td class="align-middle">Dette de crédits à la consommation</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtMortgage"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtMortgage"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtMortgage) }}</div></th>
 											<td class="align-middle">Dettes de crédits immobiliers</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtFines"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtFines"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtFines) }}</div></th>
 											<td class="align-middle">Amendes</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtTaxDelays"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtTaxDelays"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtTaxDelays) }}</div></th>
 											<td class="align-middle">Retards d'impôts</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtBankOverdrafts"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtBankOverdrafts"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtBankOverdrafts) }}</div></th>
 											<td class="align-middle">Découverts bancaires</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ loop.index0 }}_evalBudgetPerson_debts_type-debtOther"
-											class="js-{{ loop.index0 }}_evalBudgetPerson_debts_type d-table-row">
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtOther"
+											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
 											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtOther) }}</div></th>
 											<td class="align-middle">{{ form_widget(evalBudgetPerson.debtOtherPrecision) }}</td>											
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
@@ -172,17 +170,17 @@
         				</div>		
 					</div>
 				</div>
-				<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_debts d-block">
 					<div class="row">
 						<div class="col-md-12">{{ form_row(evalBudgetPerson.monthlyRepaymentAmt) }}</div>
 						<div class="col-md-12">{{ form_row(evalBudgetPerson.debtComment) }}</div>
 					</div>
 				</div>
 			</div>
-			<div class="js-{{ loop.index0 }}_evalBudgetPerson_debts d-block">
+			<div class="js-{{ key }}_evalBudgetPerson_debts d-block">
 				<div class="form-group row">
 					<div class="col-md-6">{{ form_row(evalBudgetPerson.overIndebtRecord) }}</div>
-					<div class="col-md-6 js-{{ loop.index0 }}_evalBudgetPerson_overIndebtRecord d-block">{{ form_row(evalBudgetPerson.overIndebtRecordDate) }}</div>
+					<div class="col-md-6 js-{{ key }}_evalBudgetPerson_overIndebtRecord d-block">{{ form_row(evalBudgetPerson.overIndebtRecordDate) }}</div>
 				</div>
 				<div class="form-group row">
 					<div class="col-md-6">{{ form_row(evalBudgetPerson.settlementPlan) }}</div>

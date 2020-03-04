@@ -59,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for form_person in form.rolePerson.children|sort ((a, b) => a.person.vars.value.birthdate <=> b.person.vars.value.birthdate) %}
+                            {% for form_person in form.rolePerson.children %}
                             {% set person = form_person.vars.value.person %}
                             <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                 <th scope="row" class="align-middle">

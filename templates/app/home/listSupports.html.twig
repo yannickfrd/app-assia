@@ -36,7 +36,7 @@
                         </a>
                     </th>
                     <td class="align-middle">
-                        {% for supportPerson in support.supportPerson|filter(supportPerson => supportPerson.role != 3) %}
+                        {% for supportPerson in support.supportPerson|filter(a => a.role != 3) %}
                         {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
                     <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br />

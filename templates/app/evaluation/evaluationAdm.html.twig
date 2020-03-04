@@ -9,41 +9,40 @@
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-eval_adm">
 			<div class="mb-4">
-				{% for evalPerson in form.evaluationPeople %}
+				{% for key, evalPerson in form.evaluationPeople %}
 					{% set person = evalPerson.vars.value.supportPerson.person %}
-					<button type="button" id="heading-eval_adm-{{ loop.index0 }}"
-						class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
-						data-toggle="collapse" data-target="#collapse-eval_adm-{{ loop.index0 }}" aria-expanded="false"
-						aria-controls="collapse-eval_adm-{{ loop.index0 }}">{{ person.fullname}}</button>
+					<button type="button" id="heading-eval_adm-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
+						data-toggle="collapse" data-target="#collapse-eval_adm-{{ key }}" aria-expanded="false"
+						aria-controls="collapse-eval_adm-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
 				{% endfor %}
 			</div>
-				{% for evalPerson in form.evaluationPeople %}
-				<div id="collapse-eval_adm-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
-					aria-labelledby="heading-eval_adm-{{ loop.index0 }}" data-parent="#accordion-eval_adm" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+				{% for key, evalPerson in form.evaluationPeople %}
+				<div id="collapse-eval_adm-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
+					aria-labelledby="heading-eval_adm-{{ key }}" data-parent="#accordion-eval_adm" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
 					<div class="form-group row">
 						<div class="col-md-6">{{ form_row(evalPerson.evalAdmPerson.nationality) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_nationality d-block">
 							{{ form_row(evalPerson.evalAdmPerson.country) }}</div>
 					</div>
 					<div class="form-group row">
 						<div class="col-md-6">{{ form_row(evalPerson.evalAdmPerson.paper) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_paper d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_paper d-block">
 							{{ form_row(evalPerson.evalAdmPerson.paperType) }}</div>
 					</div>
 					<div class="form-group row">
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_paperType d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_paperType d-block">
 							{{ form_row(evalPerson.evalAdmPerson.renewalPermitDate) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_paperType d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_paperType d-block">
 							{{ form_row(evalPerson.evalAdmPerson.endValidPermitDate) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_paperType d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_paperType d-block">
 							{{ form_row(evalPerson.evalAdmPerson.nbRenewals) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_paperType d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_paperType d-block">
 							{{ form_row(evalPerson.evalAdmPerson.workRight) }}</div>
 					</div>
 					<div class="form-group row">
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_nationality d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_nationality d-block">
 							{{ form_row(evalPerson.evalAdmPerson.asylumBackground) }}</div>
-						<div class="col-md-6 js-{{ loop.index0 }}_evalAdmPerson_asylumBackground d-block">
+						<div class="col-md-6 js-{{ key }}_evalAdmPerson_asylumBackground d-block">
 							{{ form_row(evalPerson.evalAdmPerson.asylumStatus) }}</div>
 					</div>
 					<div class="form-group row mt-5">

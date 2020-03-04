@@ -9,18 +9,18 @@
 <div class="row">
     <div class="col-md-12 accordion" id="accordion-eval_prof">
         <div class="mb-4">
-        	{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
+        	{% for key, evalPerson in form_evaluationPeople_filteredByAge %}
 			{% set person = evalPerson.vars.value.supportPerson.person %}
-            <button type="button" id="heading-eval_prof-{{ loop.index0 }}"
-                class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
-                data-toggle="collapse" data-target="#collapse-eval_prof-{{ loop.index0 }}" aria-expanded="false"
-                aria-controls="collapse-eval_prof-{{ loop.index0 }}">{{ person.fullname}}</button>
+            <button type="button" id="heading-eval_prof-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
+                data-toggle="collapse" data-target="#collapse-eval_prof-{{ key }}" aria-expanded="false"
+                aria-controls="collapse-eval_prof-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
+                {# {{ dump(key) }} #}
             {% endfor %}
         </div>
 
-        	{% for evalPerson in form.evaluationPeople|filter(evaluationPeople => evaluationPeople.vars.value.supportPerson.person.age >= 16) %}
-        <div id="collapse-eval_prof-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-eval_prof-{{ loop.index0 }}" data-parent="#accordion-eval_prof" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+        	{% for key, evalPerson in form_evaluationPeople_filteredByAge %}
+        <div id="collapse-eval_prof-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+            aria-labelledby="heading-eval_prof-{{ key }}" data-parent="#accordion-eval_prof" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.schoolLevel) }}</div>
                 <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>
@@ -30,38 +30,38 @@
                 <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.jobCenterId) }}</div>
             </div>
             <div class="form-group row">
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.contractType) }}
                 </div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.jobType) }}
                 </div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.contractStartDate) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.contractEndDate) }}
                 </div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.nbWorkingHours) }}
                 </div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.workingHours) }}
                 </div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.workPlace) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_profStatus d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_profStatus d-block">
                     {{ form_row(evalPerson.evalProfPerson.employerName) }}
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.transportMeansType) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_transportMeansType d-block">{{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_transportMeansType d-block">{{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
             </div>
             <div class="form-group row">
                 <div class="col-md-6" data-placement="bottom"
                     title="Reconnaissance de la qualité de travailleur handicapé">
                     {{ form_row(evalPerson.evalProfPerson.rqth) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_evalProfPerson_rqth d-block">
+                <div class="col-md-6 js-{{ key }}_evalProfPerson_rqth d-block">
                     {{ form_row(evalPerson.evalProfPerson.endRqthDate) }}</div>
             </div>
             <div class="form-group row">

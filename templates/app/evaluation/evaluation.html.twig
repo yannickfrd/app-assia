@@ -31,6 +31,9 @@
 			</div>
 		</div>
 
+		{% set form_evaluationPeople_filteredByAge = form.evaluationPeople|filter(a => a.vars.value.supportPerson.person.age >= 16) %}
+		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(a => a.vars.value.supportPerson.role != 3) %}
+
 		<div class="mb-4" data-editMode="{% if form.vars.value.evalSocialGroup%}true{% else %}false{% endif %}">
 			{# {% include "app/support/evalSummary.html.twig" %} #}
 			{% include "app/evaluation/initEvaluation.html.twig" %}

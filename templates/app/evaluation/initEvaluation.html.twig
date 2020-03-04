@@ -19,13 +19,13 @@
 {% if form.supportPerson is defined %}
 {% set form_evaluation_people = form.supportPerson|filter(a => a.vars.value.person.age >= 16) %}
 {% else %}
-{% set form_evaluation_people = form.evaluationPeople|filter(a => a.vars.value.supportPerson.person.age >= 16) %}
+{% set form_evaluation_people = form_evaluationPeople_filteredByAge %}
 {% endif %}
 
 <div class="row">
 	<div class="col-md-12 accordion" id="accordion-init_eval">
 		<div class="mb-4">
-			{% for evalPerson in form_evaluation_people %}
+			{% for key, evalPerson in form_evaluation_people %}
 
 			{% if form.supportPerson is defined %}
 			{% set person = evalPerson.vars.value.person %}
@@ -33,25 +33,24 @@
 			{% set person = evalPerson.vars.value.supportPerson.person %}
 			{% endif %}
 
-			<button type="button" id="heading-init_eval-{{ loop.index0 }}"
-				class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
-				data-toggle="collapse" data-target="#collapse-init_eval-{{ loop.index0 }}" aria-expanded="false"
-				aria-controls="collapse-init_eval-{{ loop.index0 }}">{{ person.fullname }}</button>
+			<button type="button" id="heading-init_eval-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
+				data-toggle="collapse" data-target="#collapse-init_eval-{{ key }}" aria-expanded="false"
+				aria-controls="collapse-init_eval-{{ key }}" data-key="{{ key }}">{{ person.fullname }}</button>
 			{% endfor %}
 		</div>
 
-		{% for evalPerson in form_evaluation_people %}
+		{% for key, evalPerson in form_evaluation_people %}
 		{% set evalBudgetPerson = evalPerson.initEvalPerson %}
 		{% set entity = "initEvalPerson" %}
 
-		<div id="collapse-init_eval-{{ loop.index0 }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-			aria-labelledby="heading-init_eval-{{ loop.index0 }}" data-parent="#accordion-init_eval" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+		<div id="collapse-init_eval-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+			aria-labelledby="heading-init_eval-{{ key }}" data-parent="#accordion-init_eval" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="form-group row">
-				<div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_paper d-block">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
+				<div class="col-md-6 js-{{ key }}_initEvalPerson_paper d-block">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
 			</div>			
 		    <div class="form-group row mb-0">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.rightSocialSecurity) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_rightSocialSecurity d-block">{{ form_row(evalPerson.initEvalPerson.socialSecurity) }}</div>
+                <div class="col-md-6 js-{{ key }}_initEvalPerson_rightSocialSecurity d-block">{{ form_row(evalPerson.initEvalPerson.socialSecurity) }}</div>
             </div>		
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.familyBreakdown) }}</div>
@@ -59,14 +58,14 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.profStatus) }}</div>
-                <div class="col-md-6 js-{{ loop.index0 }}_initEvalPerson_profStatus d-block">{{ form_row(evalPerson.initEvalPerson.contractType) }}</div>
+                <div class="col-md-6 js-{{ key }}_initEvalPerson_profStatus d-block">{{ form_row(evalPerson.initEvalPerson.contractType) }}</div>
 			</div>
 			<div class="form-group row">
 				{% include "app/evaluation/evalResources.html.twig" %}
 				<div class="col-md-6">
 					<div class="form-group row">
 						<div class="col-md-12">{{ form_row(evalBudgetPerson.debts) }}</div>
-						<div class="col-md-12 js-{{ loop.index0 }}_initEvalPerson_debts d-block">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
+						<div class="col-md-12 js-{{ key }}_initEvalPerson_debts d-block">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
 					</div>
 				</div>
 			</div>

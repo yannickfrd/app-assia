@@ -98,8 +98,8 @@ export default class evaluation {
 
     // Evaluation situation initiale individuelle
     initEvalPerson(prefix) {
-        let length = document.getElementById("accordion-init_eval").querySelectorAll("button.js-person").length;
-        for (let i = 0; i < length; i++) {
+        document.getElementById("accordion-init_eval").querySelectorAll("button.js-person").forEach(personElt => {
+            let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_initEvalPerson_rightSocialSecurity", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_initEvalPerson_profStatus", "select", [3, 5, 8]);
             new DisplayInputs(prefix, i + "_initEvalPerson_resources", "select", [1, 3]);
@@ -107,57 +107,58 @@ export default class evaluation {
             this.editElt(i, "_initEvalPerson_resources_type", "d-table-row");
             this.selectTrElts("init_eval", "initEvalPerson", i, "resources_type");
             this.editAmt(prefix, "init_eval", "initEvalPerson", i, "resources");
-        }
+        });
     }
 
     // Evaluation sociale individuelle
     evalSocialPerson(prefix) {
-        let length = document.getElementById("accordion-eval_social").querySelectorAll("button.js-person").length;
-        for (let i = 0; i < length; i++) {
+        document.getElementById("accordion-eval_social").querySelectorAll("button.js-person").forEach(personElt => {
+            let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_evalSocialPerson_rightSocialSecurity", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_evalSocialPerson_healthProblem", "select", [1]);
             new DisplayInputs(prefix, i + "_evalSocialPerson_careSupport", "select", [1]);
             new DisplayInputs(prefix, i + "_evalSocialPerson_violenceVictim", "select", [1]);
             this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row");
             this.selectTrElts("eval_social", "evalSocialPerson", i, "healthProblemType");
-        }
+        });
     }
 
     // Evaluation administrative individuelle
     evalAdmPerson(prefix) {
-        let length = document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").length;
-        for (let i = 0; i < length; i++) {
+        document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
+            let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_evalAdmPerson_nationality", "select", [2, 3, 4]);
             new DisplayInputs(prefix, i + "_evalAdmPerson_paper", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_evalAdmPerson_paperType", "select", [20, 21, 22, 30, 31, 97]);
             new DisplayInputs(prefix, i + "_evalAdmPerson_asylumBackground", "select", [1]);
-        }
+        });
     }
 
     // Evaluation familiale individuelle
     evalFamily(prefix) {
-        let length = document.getElementById("accordion-eval_family").querySelectorAll("button.js-person").length;
-        for (let i = 0; i < length; i++) {
+        document.getElementById("accordion-eval_family").querySelectorAll("button.js-person").forEach(personElt => {
+            let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_evalFamilyPerson_unbornChild", "select", [1]);
             new DisplayInputs(prefix, i + "_evalFamilyPerson_protectiveMeasure", "select", [1, 3]);
-        }
+
+        });
     }
 
     // Evaluation professionnelle individuelle
     evalProfPerson(prefix) {
-        let length = document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").length;
-        for (let i = 0; i < length; i++) {
+        document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").forEach(personElt => {
+            let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_evalProfPerson_profStatus", "select", [3, 5, 8]);
             new DisplayInputs(prefix, i + "_evalProfPerson_transportMeansType", "select", [1, 2, 3]);
             new DisplayInputs(prefix, i + "_evalProfPerson_rqth", "select", [1]);
-        }
+        });
     }
 
     // Evaluation budgétaire individuelle
     evalBudgetPerson(prefix) {
-        let length = document.getElementById("accordion-eval_budget").querySelectorAll("button.js-person").length;
         let entity = "evalBudgetPerson";
-        for (let i = 0; i < length; i++) {
+        document.getElementById("accordion-eval_budget").querySelectorAll("button.js-person").forEach(personElt => {
+            let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_evalBudgetPerson_resources", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_evalBudgetPerson_charges", "select", [1]);
             new DisplayInputs(prefix, i + "_evalBudgetPerson_debts", "select", [1]);
@@ -170,7 +171,7 @@ export default class evaluation {
             this.selectTrElts("eval_budget", entity, i, "debts_type");
             this.editAmt(prefix, "eval_budget", entity, i, "resources");
             this.editAmt(prefix, "eval_budget", entity, i, "charges");
-        }
+        });
     }
 
 
