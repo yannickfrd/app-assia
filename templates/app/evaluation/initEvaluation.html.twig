@@ -6,7 +6,7 @@
 
 {% block card_body %}
 
-<div class="js-evalGroup" data-supportId="g-{{form.vars.value.supportGroup.id}}">
+<div class="js-evalGroup" data-support-id="g-{{form.vars.value.supportGroup.id}}">
 	<div class="form-group row">
 		<div class="col-md-6">{{ form_row(form.initEvalGroup.housingStatus) }}</div>
 	</div>
@@ -44,7 +44,7 @@
 		{% set entity = "initEvalPerson" %}
 
 		<div id="collapse-init_eval-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-			aria-labelledby="heading-init_eval-{{ key }}" data-parent="#accordion-init_eval" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+			aria-labelledby="heading-init_eval-{{ key }}" data-parent="#accordion-init_eval" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="form-group row">
 				<div class="col-md-6 js-{{ key }}_initEvalPerson_paper d-block">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
 			</div>			

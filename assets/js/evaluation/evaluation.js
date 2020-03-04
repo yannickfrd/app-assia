@@ -46,11 +46,11 @@ export default class evaluation {
             });
         });
 
-        document.querySelectorAll(".js-evalGroup[data-supportId]").forEach(elt => {
+        document.querySelectorAll(".js-evalGroup[data-support-id]").forEach(elt => {
             this.initSelects(elt);
             this.initInputs(elt);
         })
-        document.querySelectorAll(".collapse[data-supportId]").forEach(elt => {
+        document.querySelectorAll(".collapse[data-support-id]").forEach(elt => {
             this.initSelects(elt);
             this.initInputs(elt);
         })
@@ -90,9 +90,6 @@ export default class evaluation {
         new DisplayInputs(prefix, "housingExperience", "select", [1]);
         new DisplayInputs(prefix, "domiciliation", "select", [1]);
         this.editElt("", "_evalHousingGroup_hsgHelps", "d-table-row");
-        // js-evalHousingGroup_hsgHelps d-table-row"
-        // js-_evalHousingGroup_hsgHelps
-
         this.selectTrElts("eval_housing", "evalHousingGroup", "", "hsgHelps");
     }
 
@@ -174,11 +171,10 @@ export default class evaluation {
         });
     }
 
-
     // Initialise les Inputs pour les éléments de la situations initiale
     initInputs(elt) {
         elt.querySelectorAll("input.js-initEval").forEach(inputElt => {
-            inputElt.setAttribute("data-supportId", elt.getAttribute("data-supportId"));
+            inputElt.setAttribute("data-support-id", elt.getAttribute("data-support-id"));
             if (!inputElt.value) {
                 inputElt.classList.add("border-warning");
             }
@@ -189,7 +185,7 @@ export default class evaluation {
     // Initialise les Selects pour les éléments de la situations initiale
     initSelects(elt) {
         elt.querySelectorAll("select.js-initEval").forEach(selectElt => {
-            selectElt.setAttribute("data-supportId", elt.getAttribute("data-supportId"));
+            selectElt.setAttribute("data-support-id", elt.getAttribute("data-support-id"));
             if (!this.getOption(selectElt)) {
                 selectElt.classList.add("border-warning");
             }
@@ -201,9 +197,9 @@ export default class evaluation {
     changeInput(elt) {
         if (elt.value) {
             let dataId = elt.getAttribute("data-id");
-            let supportPersonId = elt.getAttribute("data-supportId");
-            document.querySelectorAll("input[data-id='" + dataId + "'][data-supportId='" + supportPersonId + "']").forEach(inputElt => {
-                if (inputElt.value === "") {
+            let supportPersonId = elt.getAttribute("data-support-id");
+            document.querySelectorAll("input[data-id='" + dataId + "'][data-support-id='" + supportPersonId + "']").forEach(inputElt => {
+                if (!inputElt.value && this.editMode === "false") {
                     inputElt.value = elt.value;
                     inputElt.classList.remove("border-warning");
                 }
@@ -218,7 +214,7 @@ export default class evaluation {
     changeSelect(elt) {
         let optionSelected = this.getOption(elt);
         if (optionSelected) {
-            document.querySelectorAll("select[data-id='" + elt.getAttribute("data-id") + "'][data-supportId='" + elt.getAttribute("data-supportId") + "']").forEach(selectElt => {
+            document.querySelectorAll("select[data-id='" + elt.getAttribute("data-id") + "'][data-support-id='" + elt.getAttribute("data-support-id") + "']").forEach(selectElt => {
                 if (!selectElt.querySelector("option[selected]")) {
                     this.setOption(selectElt, optionSelected);
                     selectElt.classList.remove("border-warning");
@@ -294,19 +290,26 @@ export default class evaluation {
         optionElts.forEach(option => {
             if (option.selected) {
                 this.trElt = document.getElementById("js-" + i + eltId + "-" + option.value);
+                let dataId = this.trElt.getAttribute("data-id");
+                let supportPersonId = this.trElt.getAttribute("data-support-id");
+                let trElts = document.querySelectorAll("tr[data-id='" + dataId + "'][data-support-id='" + supportPersonId + "']");
                 if (selectElt.getAttribute("data-id") === "resourcesType" && this.editMode === "false") {
-                    let dataId = this.trElt.getAttribute("data-id");
-                    let supportPersonId = this.trElt.getAttribute("data-supportId");
-                    let trElts = document.querySelectorAll("tr[data-id='" + dataId + "'][data-supportId='" + supportPersonId + "']");
                     trElts.forEach(trElt => {
-                        trElt.querySelector("input").value = 1;
+                        trElt.querySelector("input[type='number']").value = 1;
                         trElt.classList.replace("d-none", display);
                     })
                 } else {
-                    this.trElt.querySelector("input").value = 1;
+                    this.trElt.querySelector("input[type='number']").value = 1;
                     this.trElt.classList.replace("d-none", display);
                 }
             }
+            // Met tous les autres inputs du tableau à 0 si vide
+            document.querySelectorAll(".js-" + i + eltId).forEach(trElt => {
+                let inputElt = trElt.querySelector("input[type='number']");
+                if (!inputElt.value) {
+                    inputElt.value = 0;
+                }
+            });
         });
         // Remplace le select sur l'option par défaut
         window.setTimeout(function () {
@@ -339,7 +342,6 @@ export default class evaluation {
             }
         });
         trElt.classList.replace("d-table-row", "d-none");
-
         if (entity === "evalBudgetPerson") {
             this.updateSumAmt(collapseId, entity, i, "resources");
             this.updateSumAmt(collapseId, entity, i, "charges");

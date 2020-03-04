@@ -74,7 +74,7 @@
 		{% set entity = "evalBudgetPerson" %}
 
 		<div id="collapse-eval_budget-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-			aria-labelledby="heading-eval_budget-{{ key }}" data-parent="#accordion-eval_budget" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+			aria-labelledby="heading-eval_budget-{{ key }}" data-parent="#accordion-eval_budget" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="row">
 
 				{% include "app/evaluation/evalResources.html.twig" %}

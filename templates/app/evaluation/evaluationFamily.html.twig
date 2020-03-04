@@ -19,7 +19,7 @@
 
         {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
         <div id="collapse-eval_family-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" data-supportId="p-{{ evalPerson.vars.value.supportPerson.id }}">
+            aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
                 {% if evalPerson.vars.value.supportPerson.person.gender == 1 %}

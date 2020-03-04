@@ -181,8 +181,19 @@ class InitEvalPersonType extends AbstractType
                     "data-id" => "salary"
                 ],
             ])
-            ->add("ressourceOther", null, ["label_attr" => ["class" => "js-noText"]])
-            ->add("ressourceOtherPrecision", null, ["attr" => ["placeholder" => "Autre ressource..."]])
+            ->add("ressourceOther", null, [
+                "label_attr" => [
+                    "class" => "js-initEval js-noText",
+                    "data-id" => "ressourceOther"
+                ]
+            ])
+            ->add("ressourceOtherPrecision", null, [
+                "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "ressourceOtherPrecision",
+                    "placeholder" => "Other ressource(s)..."
+                ]
+            ])
             ->add("disAdultAllowanceAmt", MoneyType::class, [
                 "attr" => [
                     "class" => "js-resources js-initEval text-right",

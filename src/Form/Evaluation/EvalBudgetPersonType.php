@@ -118,11 +118,14 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add("ressourceOther", null, [
                 "label_attr" => [
-                    "class" => "js-noText"
+                    "class" => "js-initEval js-noText",
+                    "data-id" => "ressourceOther"
                 ]
             ])
             ->add("ressourceOtherPrecision", null, [
                 "attr" => [
+                    "class" => "js-initEval",
+                    "data-id" => "ressourceOtherPrecision",
                     "placeholder" => "Other ressource(s)..."
                 ]
             ])
