@@ -140,6 +140,7 @@ class EvaluationController extends AbstractController
     {
         $now = new \DateTime();
 
+        $evaluationGroup->setUpdatedAt($now);
         $evaluationGroup->getSupportGroup()->setUpdatedAt($now)
             ->setUpdatedBy($this->getUser());
 

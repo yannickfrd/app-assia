@@ -116,7 +116,7 @@
 						{% set user = app.user %}
 						<a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
 							data-trigger="hover" data-placement="bottom" data-html="true"
-							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/y h:i") }}
+							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin | date(" d/m/Y H:i") }}
 							<br />Fonction : {{ user.statuslist }}<br />Services rattachés :<br />- {{ app.session.get("servicesUser")|join("<br />- ") }}">
 							<span class="fas fa-user mr-2"></span>{{ user.firstname }} {{ user.lastname|first }}.
 						</a>
