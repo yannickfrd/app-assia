@@ -16,6 +16,21 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.1.1 - 04/03/2020
+- Ajout du nom du dispositif après celui du service dans l'historique des suivis sociaux de la personne et du groupe
+- Ajout de l'item "Emploi" dans la liste déroulante du type de Document
+- Ajout du champ "Précision autres dettes" dans le formulaire de l'évaluation sociale
+- Ajout de l'adresse du logement sur la page d'accueil du suivi
+- Page d'accueil : tri des suivis en cours par ordre alphabétique
+- Modification du tri des personnes d'un groupe ou d'un suivi par âge
+- Correction du problème de modification de la prise en charge (erreur 500)
+- Correction du problème d'ajout des personnes à un suivi existant
+- Correction du bug de duplication des notes en raison de la sauvegarde automatique
+- Correction du problème de modification des ressources entre la situation initiale et la situation actuelle
+- Correction du problème d'affichage des noms et prénoms dans le tableau des suivis
+- Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale pour certains ménages
+- Ajout de la situation initiale du suivi dans l'export Excel global
+
 ## Version 1.1.0 - 02/03/2020
 - Administration : possibilité de supprimer une personne, un groupe ou un suivi social (profil "Administrateur")
 - Correction des droits d'accès aux RDVS, notes et documents (édition et suppression)

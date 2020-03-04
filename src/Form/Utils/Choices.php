@@ -32,6 +32,11 @@ class Choices
         99 => "Non renseigné"
     ];
 
+    public const YES_NO_BOOLEAN = [
+        0 => "Non",
+        1 => "Oui"
+    ];
+
     public static function getchoices($const)
     {
         foreach ($const as $key => $value) {

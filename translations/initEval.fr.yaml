@@ -19,19 +19,37 @@ Resources amt: Montant total des ressources
 Debts:  Dettes
 Debts amt: Montant des dettes
 
-Min income: RSA
-Salary: Salaire
-Unempl benefit: ARE
-Family allowance: Allocations familiales
-Dis adult allowance: AAH
-Dis child allowance: AEEH
-Asylum seeker allowance: ADA
-Temp waiting allowance: ATA
-Paid training: Formation rémunérée
-Youth guarantee: Garantie jeunes
-Maintenance: Pension alimentaire
+
+Activity bonus amt: Montant prime d'activité
 Activity bonus: Prime d'activité
-Pension benefit: Retraite
-Ressource other: Autres revenus
+Asylum allowance amt: Montant ADA
+Asylum allowance: ADA
+Dis adult allowance amt: Montant AAH
+Dis adult allowance: AAH
+Dis child allowance amt: Montant AEEH
+Dis child allowance: AEEH
+Family allowance amt: Montant allocations familiales
+Family allowance: Allocations familiales
+Maintenance amt: Montant pension alimentaire
+Maintenance: Pension alimentaire
+Minimum income amt: Montant RSA
+Minimum income: RSA
+Other ressource(s)... amt: Montant autre(s) ressource(s)
 Other ressource(s)...: Autre(s) ressource(s)
+Paid training amt: Montant formation rémunérée
+Paid training: Formation rémunérée
+Pension benefit amt: Montant retraite
+Pension benefit: Retraite
+Ressource other amt: Montant autres revenus
+Ressource other: Autres revenus
+Ressource other precision: Précision autre(s) ressource(s)
+Salary amt: Montant salaire
+Salary: Salaire
+Solidarity allowance amt: Montant ASS
 Solidarity allowance: ASS
+Temp waiting allowance amt: Montant ATA
+Temp waiting allowance: ATA
+Unempl benefit amt: Montant ARE
+Unempl benefit: ARE
+Youth guarantee amt: Montant Garantie jeunes
+Youth guarantee: Garantie jeunes

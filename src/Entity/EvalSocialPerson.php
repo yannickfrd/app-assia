@@ -247,7 +247,7 @@ class EvalSocialPerson
 
     public function getPhysicalHealthProblemList()
     {
-        return Choices::YES_NO[$this->physicalHealthProblem];
+        return Choices::YES_NO_BOOLEAN[$this->physicalHealthProblem];
     }
 
     public function getMentalHealthProblem(): ?int
@@ -264,7 +264,7 @@ class EvalSocialPerson
 
     public function getMentalHealthProblemList()
     {
-        return Choices::YES_NO[$this->mentalHealthProblem];
+        return Choices::YES_NO_BOOLEAN[$this->mentalHealthProblem];
     }
 
     public function getAddictionProblem(): ?int
@@ -281,7 +281,7 @@ class EvalSocialPerson
 
     public function getAddictionProblemList()
     {
-        return Choices::YES_NO[$this->addictionProblem];
+        return Choices::YES_NO_BOOLEAN[$this->addictionProblem];
     }
 
     public function getCareSupport(): ?int

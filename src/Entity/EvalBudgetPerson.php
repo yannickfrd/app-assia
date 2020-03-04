@@ -11,13 +11,6 @@ use Symfony\Component\Validator\Constraints\Choice;
  */
 class EvalBudgetPerson
 {
-    public const YES_NO = [
-        0 => "Non",
-        1 => "Oui",
-        2 => "Non",
-        99 => "Non renseigné"
-    ];
-
     public const SETTLEMENT_PLAN = [
         1 => "Proposé",
         2 => "Accepté",
@@ -480,7 +473,7 @@ class EvalBudgetPerson
 
     public function getDisAdultAllowanceList()
     {
-        return self::YES_NO[$this->disAdultAllowance];
+        return Choices::YES_NO_BOOLEAN[$this->disAdultAllowance];
     }
 
     public function setDisAdultAllowance(?int $disAdultAllowance): self
@@ -497,7 +490,7 @@ class EvalBudgetPerson
 
     public function getDisChildAllowanceList()
     {
-        return self::YES_NO[$this->disChildAllowance];
+        return Choices::YES_NO_BOOLEAN[$this->disChildAllowance];
     }
 
     public function setDisChildAllowance(?int $disChildAllowance): self
@@ -514,7 +507,7 @@ class EvalBudgetPerson
 
     public function getUnemplBenefitList()
     {
-        return self::YES_NO[$this->unemplBenefit];
+        return Choices::YES_NO_BOOLEAN[$this->unemplBenefit];
     }
 
     public function setUnemplBenefit(?int $unemplBenefit): self
@@ -531,7 +524,7 @@ class EvalBudgetPerson
 
     public function getAsylumAllowanceList()
     {
-        return self::YES_NO[$this->asylumAllowance];
+        return Choices::YES_NO_BOOLEAN[$this->asylumAllowance];
     }
 
     public function setAsylumAllowance(?int $asylumAllowance): self
@@ -548,7 +541,7 @@ class EvalBudgetPerson
 
     public function getTempWaitingAllowanceList()
     {
-        return self::YES_NO[$this->tempWaitingAllowance];
+        return Choices::YES_NO_BOOLEAN[$this->tempWaitingAllowance];
     }
 
     public function setTempWaitingAllowance(?int $tempWaitingAllowance): self
@@ -565,7 +558,7 @@ class EvalBudgetPerson
 
     public function getFamilyAllowanceList()
     {
-        return self::YES_NO[$this->familyAllowance];
+        return Choices::YES_NO_BOOLEAN[$this->familyAllowance];
     }
 
     public function setFamilyAllowance(?int $familyAllowance): self
@@ -582,7 +575,7 @@ class EvalBudgetPerson
 
     public function getSolidarityAllowanceList()
     {
-        return self::YES_NO[$this->solidarityAllowance];
+        return Choices::YES_NO_BOOLEAN[$this->solidarityAllowance];
     }
 
     public function setSolidarityAllowance(?int $solidarityAllowance): self
@@ -599,7 +592,7 @@ class EvalBudgetPerson
 
     public function getPaidTrainingList()
     {
-        return self::YES_NO[$this->paidTraining];
+        return Choices::YES_NO_BOOLEAN[$this->paidTraining];
     }
 
     public function setPaidTraining(?int $paidTraining): self
@@ -616,7 +609,7 @@ class EvalBudgetPerson
 
     public function getYouthGuaranteeList()
     {
-        return self::YES_NO[$this->youthGuarantee];
+        return Choices::YES_NO_BOOLEAN[$this->youthGuarantee];
     }
 
     public function setYouthGuarantee(?int $youthGuarantee): self
@@ -633,7 +626,7 @@ class EvalBudgetPerson
 
     public function getMaintenanceList()
     {
-        return self::YES_NO[$this->maintenance];
+        return Choices::YES_NO_BOOLEAN[$this->maintenance];
     }
 
     public function setMaintenance(?int $maintenance): self
@@ -650,7 +643,7 @@ class EvalBudgetPerson
 
     public function getActivityBonusList()
     {
-        return self::YES_NO[$this->activityBonus];
+        return Choices::YES_NO_BOOLEAN[$this->activityBonus];
     }
 
     public function setActivityBonus(?int $activityBonus): self
@@ -667,7 +660,7 @@ class EvalBudgetPerson
 
     public function getPensionBenefitList()
     {
-        return self::YES_NO[$this->pensionBenefit];
+        return Choices::YES_NO_BOOLEAN[$this->pensionBenefit];
     }
 
     public function setPensionBenefit(?int $pensionBenefit): self
@@ -685,7 +678,7 @@ class EvalBudgetPerson
 
     public function getMinimumIncomeList()
     {
-        return self::YES_NO[$this->minimumIncome];
+        return Choices::YES_NO_BOOLEAN[$this->minimumIncome];
     }
 
     public function setMinimumIncome(?int $minimumIncome): self
@@ -702,7 +695,7 @@ class EvalBudgetPerson
 
     public function getSalaryList()
     {
-        return self::YES_NO[$this->salary];
+        return Choices::YES_NO_BOOLEAN[$this->salary];
     }
 
     public function setSalary(?int $salary): self
@@ -719,7 +712,7 @@ class EvalBudgetPerson
 
     public function getRessourceOtherList()
     {
-        return self::YES_NO[$this->ressourceOther];
+        return Choices::YES_NO_BOOLEAN[$this->ressourceOther];
     }
 
     public function setRessourceOther(?int $ressourceOther): self
@@ -971,7 +964,7 @@ class EvalBudgetPerson
 
     public function getChargesList()
     {
-        return self::YES_NO[$this->charges];
+        return Choices::YES_NO[$this->charges];
     }
 
     public function getChargesAmt(): ?float
@@ -1005,7 +998,7 @@ class EvalBudgetPerson
 
     public function getElectricityGasList()
     {
-        return self::YES_NO[$this->electricityGas];
+        return Choices::YES_NO_BOOLEAN[$this->electricityGas];
     }
 
     public function setElectricityGas(?int $electricityGas): self
@@ -1022,7 +1015,7 @@ class EvalBudgetPerson
 
     public function getWaterList()
     {
-        return self::YES_NO[$this->water];
+        return Choices::YES_NO_BOOLEAN[$this->water];
     }
 
     public function setWater(?int $water): self
@@ -1039,7 +1032,7 @@ class EvalBudgetPerson
 
     public function getInsuranceList()
     {
-        return self::YES_NO[$this->insurance];
+        return Choices::YES_NO_BOOLEAN[$this->insurance];
     }
 
     public function setInsurance(?int $insurance): self
@@ -1056,7 +1049,7 @@ class EvalBudgetPerson
 
     public function getMutualList()
     {
-        return self::YES_NO[$this->mutual];
+        return Choices::YES_NO_BOOLEAN[$this->mutual];
     }
 
     public function setMutual(?int $mutual): self
@@ -1073,7 +1066,7 @@ class EvalBudgetPerson
 
     public function getTaxesList()
     {
-        return self::YES_NO[$this->taxes];
+        return Choices::YES_NO_BOOLEAN[$this->taxes];
     }
 
     public function setTaxes(?int $taxes): self
@@ -1090,7 +1083,7 @@ class EvalBudgetPerson
 
     public function getTransportList()
     {
-        return self::YES_NO[$this->transport];
+        return Choices::YES_NO_BOOLEAN[$this->transport];
     }
 
     public function setTransport(?int $transport): self
@@ -1107,7 +1100,7 @@ class EvalBudgetPerson
 
     public function getChildcareList()
     {
-        return self::YES_NO[$this->childcare];
+        return Choices::YES_NO_BOOLEAN[$this->childcare];
     }
 
     public function setChildcare(?int $childcare): self
@@ -1124,7 +1117,7 @@ class EvalBudgetPerson
 
     public function getAlimonyList()
     {
-        return self::YES_NO[$this->alimony];
+        return Choices::YES_NO_BOOLEAN[$this->alimony];
     }
 
     public function setAlimony(?int $alimony): self
@@ -1141,7 +1134,7 @@ class EvalBudgetPerson
 
     public function getPhoneList()
     {
-        return self::YES_NO[$this->phone];
+        return Choices::YES_NO_BOOLEAN[$this->phone];
     }
 
     public function setPhone(?int $phone): self
@@ -1158,7 +1151,7 @@ class EvalBudgetPerson
 
     public function getChargeOtherList()
     {
-        return self::YES_NO[$this->chargeOther];
+        return Choices::YES_NO_BOOLEAN[$this->chargeOther];
     }
 
     public function setChargeOther(?int $chargeOther): self
@@ -1338,7 +1331,7 @@ class EvalBudgetPerson
 
     public function getDebtsList()
     {
-        return self::YES_NO[$this->debts];
+        return Choices::YES_NO[$this->debts];
     }
 
     public function getDebtRental(): ?int
@@ -1348,7 +1341,7 @@ class EvalBudgetPerson
 
     public function getDebtRentalList()
     {
-        return self::YES_NO[$this->debtRental];
+        return Choices::YES_NO_BOOLEAN[$this->debtRental];
     }
 
     public function setDebtRental(?int $debtRental): self
@@ -1365,7 +1358,7 @@ class EvalBudgetPerson
 
     public function getDebtConsrCreditList()
     {
-        return self::YES_NO[$this->debtConsrCredit];
+        return Choices::YES_NO_BOOLEAN[$this->debtConsrCredit];
     }
 
     public function setDebtConsrCredit(?int $debtConsrCredit): self
@@ -1382,7 +1375,7 @@ class EvalBudgetPerson
 
     public function getDebtMortgageList()
     {
-        return self::YES_NO[$this->debtMortgage];
+        return Choices::YES_NO_BOOLEAN[$this->debtMortgage];
     }
 
     public function setDebtMortgage(int $debtMortgage): self
@@ -1399,7 +1392,7 @@ class EvalBudgetPerson
 
     public function getDebtFinesList()
     {
-        return self::YES_NO[$this->debtFines];
+        return Choices::YES_NO_BOOLEAN[$this->debtFines];
     }
 
     public function setDebtFines(?int $debtFines): self
@@ -1416,7 +1409,7 @@ class EvalBudgetPerson
 
     public function getDebtTaxDelaysList()
     {
-        return self::YES_NO[$this->debtTaxDelays];
+        return Choices::YES_NO_BOOLEAN[$this->debtTaxDelays];
     }
 
     public function setDebtTaxDelays(?int $debtTaxDelays): self
@@ -1433,7 +1426,7 @@ class EvalBudgetPerson
 
     public function getDebtBankOverdraftsList()
     {
-        return self::YES_NO[$this->debtBankOverdrafts];
+        return Choices::YES_NO_BOOLEAN[$this->debtBankOverdrafts];
     }
 
     public function setDebtBankOverdrafts(?int $debtBankOverdrafts): self
@@ -1450,7 +1443,7 @@ class EvalBudgetPerson
 
     public function getDebtOtherList()
     {
-        return self::YES_NO[$this->debtOther];
+        return Choices::YES_NO_BOOLEAN[$this->debtOther];
     }
 
     public function setDebtOther(?int $debtOther): self
