@@ -70,6 +70,11 @@ class SupportPersonType extends AbstractType
                 ],
                 "placeholder" => "-- Select --",
                 "required" => true
+            ])
+            ->add("endStatusComment", null, [
+                "attr" => [
+                    "class" => "w-min-150"
+                ],
             ]);
     }
 

@@ -411,7 +411,7 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Met à jour le suivi social
+     * Met à jour le suivi social du groupe
      * 
      * @param SupportGroup $supportGroup
      */
@@ -420,17 +420,28 @@ class SupportController extends AbstractController
         $supportGroup->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->getUser());
 
-        if ($supportGroup->getEndStatus()) {
-            foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-                $supportPerson->setendStatus($supportGroup->getEndStatus());
-                $supportPerson->setendStatusComment($supportGroup->getEndStatusComment());
-                $this->manager->persist($supportPerson);
-            }
-        }
+        $this->updateSupportPeople($supportGroup);
 
         $this->manager->flush();
 
         return $this->addFlash("success", "Le suivi social a été modifié.");
+    }
+
+    /**
+     * Met à jour le suivi social de la personne
+     *
+     * @param SupportGroup $supportGroup
+     */
+    protected function updateSupportPeople(SupportGroup $supportGroup)
+    {
+        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+            if (!$supportPerson->getEndDate()) {
+                $supportPerson->setStatus($supportGroup->getStatus());
+                $supportPerson->setEndDate($supportGroup->getEndDate());
+                $supportPerson->setEndStatus($supportGroup->getEndStatus());
+                $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
+            }
+        }
     }
 
     /**

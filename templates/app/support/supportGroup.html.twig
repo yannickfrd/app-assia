@@ -42,12 +42,11 @@
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
 				<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
-					<span class="fas fa-users mr-2"></span>Fiche groupe
-					<span class="small">{{ group_people.familyTypologyType }}</span>
+					<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small">{{ group_people.familyTypologyType }}</span>
 				</a>
 			</li>
 			<li class="breadcrumb-item active" aria-current="page">
-				{% if edit_mode %}Suivi social{% else %}Nouveau suivi social{% endif %}
+				{% if edit_mode %}Suivi social (Accueil){% else %}Nouveau suivi social{% endif %}
 			</li>
 		</ol>
 	</nav>
@@ -67,31 +66,31 @@
 	{% if edit_mode %}
 		<div class="d-flex row justify-content-center my-4">
 			{% if support.service.preAdmission %}
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_originRequest', {'id':support.id}) }}" data-placement="bottom" title="Origine de la demande et pré-admission">Origine demande</a>
 			</div>			
 			{% endif %}
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Personnes attachées au suivi social">Personnes</a>
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Personnes rattachées au suivi social">Personnes</a>
 			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
 			</div>
 			{% if support.service.accommodation %}
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a class="btn btn-{{ theme_color }} btn-block shadow" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Mdalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
 			</div>
 			{#<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
 			<a class="btn btn-{{ theme_color }} btn-block shadow" href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a>
 			</div> #}
 			{% endif %}
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span></a>
 			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a href="{{ path('notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
 			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a href="{{ path('documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span></a>
 			</div>
 		</div>
