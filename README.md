@@ -29,6 +29,7 @@ https://demo.esperer95.app
 - Correction du problème de modification des ressources entre la situation initiale et la situation actuelle
 - Correction du problème d'affichage des noms et prénoms dans le tableau des suivis
 - Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale pour certains ménages
+- Correction du problème de mise à jour du statut et date des suivis des personnes après la mise à jour du statut du suivi du groupe
 - Ajout de la situation initiale du suivi dans l'export Excel global
 
 ## Version 1.1.0 - 02/03/2020

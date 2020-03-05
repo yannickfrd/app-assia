@@ -48,7 +48,7 @@
 								<tr class="js-tr-support_pers">
 									<th scope="row">
 									</th>
-									<td class="px-2 align-middle">{{ person.fullname }}</td>
+									<td class="px-2 align-middle w-min-150">{{ person.fullname }}</td>
 									<td class="px-1 align-middle">
 										<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
 											{{ form_widget(form_support_pers.head) }}
@@ -87,13 +87,13 @@
 		{{ form_end(form, {"render_rest": false}) }}
 
 	</section>
-	
+
 </div>
 
-	{% include "app/support/removeSupportPerson.html.twig" %}
+{% include "app/support/removeSupportPerson.html.twig" %}
 
 {% endblock %}
 
 {% block javascripts %}
-	{{ encore_entry_script_tags("supportPers") }}
+{{ encore_entry_script_tags("supportPers") }}
 {% endblock javascripts %}

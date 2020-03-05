@@ -22,6 +22,8 @@ class SupportGroup
     ];
 
     public const END_STATUS = [
+        001 => "A la rue - abri de fortune",
+        303 => "Accès à la propriété",
         400 => "CADA",
         304 => "Colocation",
         900 => "Décès",
@@ -30,10 +32,10 @@ class SupportGroup
         105 => "Dispositif hivernal",
         602 => "Dispositif de soin ou médical (LAM, autre)",
         502 => "DLSAP",
-        003 => "Errance résidentielle",
         701 => "Exclusion de la structure",
         106 => "Foyer maternel",
         010 => "Hébergé chez des tiers",
+        011 => "Hébergé chez famille",
         100 => "Hôtel 115",
         101 => "Hôtel (hors 115)",
         102 => "Hébergement d’urgence",
@@ -54,9 +56,6 @@ class SupportGroup
         301 => "Logement social",
         305 => "Maison de retraite",
         501 => "Placement extérieur",
-        303 => "Propriétaire d'un logement",
-        001 => "Retour à la rue, squat",
-        011 => "Retour dans la famille",
         704 => "Retour dans le pays d'origine",
         302 => "Sous-location",
         002 => "Squat",

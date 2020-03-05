@@ -48,13 +48,6 @@ class EvalHousingGroup
         99 => "Non renseignée"
     ];
 
-    public const YES_NO = [
-        0 => "Non",
-        1 => "Oui",
-        2 => "Non",
-        99 => "Non renseigné"
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -797,7 +790,7 @@ class EvalHousingGroup
 
     public function getFslList()
     {
-        return self::YES_NO[$this->fsl];
+        return Choices::YES_NO_BOOLEAN[$this->fsl];
     }
 
     public function setFsl(?int $fsl): self
@@ -814,7 +807,7 @@ class EvalHousingGroup
 
     public function getFslEligibilityList()
     {
-        return self::YES_NO[$this->fslEligibility];
+        return Choices::YES_NO_BOOLEAN[$this->fslEligibility];
     }
 
     public function setFslEligibility(?int $fslEligibility): self
@@ -831,7 +824,7 @@ class EvalHousingGroup
 
     public function getCafEligibilityList()
     {
-        return self::YES_NO[$this->cafEligibility];
+        return Choices::YES_NO_BOOLEAN[$this->cafEligibility];
     }
 
     public function setCafEligibility(?int $cafEligibility): self
@@ -848,7 +841,7 @@ class EvalHousingGroup
 
     public function getOtherHelpsList()
     {
-        return self::YES_NO[$this->otherHelps];
+        return Choices::YES_NO_BOOLEAN[$this->otherHelps];
     }
 
     public function setOtherHelps(?int $otherHelps): self

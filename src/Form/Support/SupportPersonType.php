@@ -66,14 +66,14 @@ class SupportPersonType extends AbstractType
                 "label_attr" => ["class" => "sr-only"],
                 "choices" => Choices::getChoices(SupportGroup::END_STATUS),
                 "attr" => [
-                    "class" => "w-min-150"
+                    "class" => "w-min-180"
                 ],
                 "placeholder" => "-- Select --",
                 "required" => true
             ])
             ->add("endStatusComment", null, [
                 "attr" => [
-                    "class" => "w-min-150"
+                    "class" => "w-min-180"
                 ],
             ]);
     }
