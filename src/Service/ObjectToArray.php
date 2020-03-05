@@ -50,7 +50,9 @@ class ObjectToArray
         foreach ((array) $object as $key => $value) {
             $key = explode("\x00", $key);
             $key = array_pop($key);
-            $keys[] = $this->unCamelCase($key) . " (" . $transNameObject . ")";
+            if ($key != "id" && !stristr($key, "evaluation")) {
+                $keys[] = $this->unCamelCase($key) . " [" . $transNameObject . "]";
+            }
         }
         $this->{$this->nameObject} = $keys;
         return $keys;
@@ -72,7 +74,11 @@ class ObjectToArray
         $values = [];
 
         foreach ($array as $key => $value) {
-            $values[] = $this->getValue($object, $key, $value);
+            $key = explode("\x00", $key);
+            $key = array_pop($key);
+            if ($key != "id" && !stristr($key, "evaluation")) {
+                $values[] = $this->getValue($object, $key, $value);
+            }
         }
         return $values;
     }
@@ -80,8 +86,6 @@ class ObjectToArray
     protected function getValue($object, $key, $value)
     {
         if (is_int($value)) {
-            $key = explode("\x00", $key);
-            $key = array_pop($key);
             $method = "get" . ucfirst($key) . "List";
             if (method_exists($object, $method)) {
                 return  $object->$method($value);
