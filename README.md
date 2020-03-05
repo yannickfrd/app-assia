@@ -16,13 +16,14 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.1.1 - 04/03/2020
+## Version 1.1.1 - 05/03/2020
 - Ajout du nom du dispositif après celui du service dans l'historique des suivis sociaux de la personne et du groupe
 - Ajout de l'item "Emploi" dans la liste déroulante du type de Document
 - Ajout du champ "Précision autres dettes" dans le formulaire de l'évaluation sociale
 - Ajout de l'adresse du logement sur la page d'accueil du suivi
 - Page d'accueil : tri des suivis en cours par ordre alphabétique
 - Modification du tri des personnes d'un groupe ou d'un suivi par âge
+- Modification du contrôle de saisie dans le suivi social  (statut et dates de début et de fin)
 - Correction du problème de modification de la prise en charge (erreur 500)
 - Correction du problème d'ajout des personnes à un suivi existant
 - Correction du bug de duplication des notes en raison de la sauvegarde automatique
@@ -224,7 +225,7 @@ https://demo.esperer95.app
     housingExpeComment: Commentaire expérience lié au logement
     housingExperience: Expérience de logement autonome
     housingStatus: Evaluation résidentielle
-    housingWishes: Type de logement souhaité
+    housingWishes: Type de logement(s) souhaité(s)
     hsgActionDate: Date de dépôt Action Logement
     hsgActionDept: Département
     hsgActionEligibility: Eligibilité Action Logement

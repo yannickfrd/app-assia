@@ -129,12 +129,14 @@ export default class ListDocuments {
         // Vérifie si l'extension du fichier est valide
         if ((validExtensions.indexOf(extensionFile) === -1)) {
             error = true;
-            new MessageFlash("danger", "Le format du fichier n'est pas valide.");
+            new MessageFlash("danger", "Le format du fichier n'est pas valide (" + extensionFile + "). Formats acceptés : doc, docx, jpg, pdf, png, rar, xls, xlsx, zip.");
         }
+
+        let sizeFile = Math.round((this.documentFileInput.files[0].size / 1024 / 1024) * 10) / 10;
         // Vérifie si le fichier est supérieur à 5 Mo
-        if ((this.documentFileInput.files[0].size / 1024 / 1024) > 5) {
+        if (sizeFile > 5) {
             error = true;
-            new MessageFlash("danger", "Le fichier est trop volumineux.");
+            new MessageFlash("danger", "Le fichier est trop volumineux (" + sizeFile + " Mo). Maximum : 5 Mo.");
         }
         // Si le fichier est valide, affiche le nom
         if (error === false) {

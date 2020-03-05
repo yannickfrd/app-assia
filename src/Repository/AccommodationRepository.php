@@ -102,9 +102,10 @@ class AccommodationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("a")->select("a")
             ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
             ->innerJoin("a.service", "s")->addSelect("PARTIAL s.{id,name}")
-            ->innerJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}")
-            ->leftJoin("a.accommodationGroups", "gpa")->addSelect("PARTIAL gpa.{id,startDate, endDate}")
-            ->leftJoin("gpa.accommodationPersons", "pa")->addSelect("PARTIAL pa.{id,startDate, endDate}");
+            ->innerJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
+            ->leftJoin("a.accommodationGroups", "ag")->addSelect("PARTIAL ag.{id,startDate, endDate}")
+            ->leftJoin("ag.accommodationPersons", "ap")->addSelect("PARTIAL ap.{id,startDate, endDate}");
+        // ->leftJoin("ap.person", "p")->addSelect("PARTIAL p.{id,firstname, lastname}");
     }
 
     /**

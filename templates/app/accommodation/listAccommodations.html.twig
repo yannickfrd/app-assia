@@ -56,9 +56,10 @@
                         <th scope="col" class="align-middle th-w-60">
                             {{ knp_pagination_sortable(accommodations, "Département", "a.department") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(accommodations, "Occupation actuelle (Nb de personnes)", "a.address") }}
-                        </th>
+                        <th scope="col" class="align-middle th-w-150">Occupation actuelle (Nb de personnes)</th>
+                        {# <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(accommodations, "Nom des occupants", "a.accommodationPersons") }}
+                        </th> #}
                     </tr>
                 </thead>
 
@@ -86,6 +87,13 @@
                             {{ accommodationGroup.accommodationPersons|length }}<br />
                             {% endfor %}
                         </td>
+                        {# <td>
+                            {% for  accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
+                            {% for  accommodationPerson in accommodationGroup.accommodationPersons %}
+                            {{ accommodationPerson.person.fullname }}<br />
+                            {% endfor %}
+                            {% endfor %}
+                        </td> #}
                     </tr>
                     {% endfor %}
                 </tbody>
