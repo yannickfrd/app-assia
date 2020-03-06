@@ -180,7 +180,7 @@ class DocumentController extends AbstractController
             "data" => [
                 "documentId" => $document->getId(),
                 "groupPeopleId" => $groupPeople->getId(),
-                "typeList" => $document->getTypeList(),
+                "type" => $document->getTypeToString(),
                 "path" => $path . "/" . $fileName,
                 "size" => $size,
                 "createdAt" => date_format($now, "d/m/Y H:i")
@@ -206,7 +206,7 @@ class DocumentController extends AbstractController
             "alert" => "success",
             "msg" => "Les informations du document \"" . $document->getName() . "\" ont été mises à jour.",
             "data" => [
-                "typeList" => $document->getTypeList(),
+                "type" => $document->getTypeToString(),
             ]
         ], 200);
     }

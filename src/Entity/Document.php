@@ -108,7 +108,7 @@ class Document
         return $this;
     }
 
-    public function getTypeList()
+    public function getTypeToString(): ?string
     {
         return self::TYPE[$this->type];
     }

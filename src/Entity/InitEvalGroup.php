@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\InitEvalGroupRepository")
@@ -18,11 +20,13 @@ class InitEvalGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $resourcesGroupAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $debtsGroupAmt;
 
@@ -32,14 +36,29 @@ class InitEvalGroup
     private $housingStatus;
 
     /**
+     * @Groups("export")
+     */
+    private $housingStatusToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $siaoRequest;
 
     /**
+     * @Groups("export")
+     */
+    private $siaoRequestToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $socialHousingRequest;
+
+    /**
+     * @Groups("export")
+     */
+    private $socialHousingRequestToString;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="initEvalGroup", cascade={"persist", "remove"})
@@ -82,9 +101,9 @@ class InitEvalGroup
         return $this->housingStatus;
     }
 
-    public function getHousingStatusList()
+    public function getHousingStatusToString(): ?string
     {
-        return EvalHousingGroup::HOUSING_STATUS[$this->housingStatus];
+        return $this->housingStatus ? EvalHousingGroup::HOUSING_STATUS[$this->housingStatus] : null;
     }
 
     public function setHousingStatus(?int $housingStatus): self
@@ -99,6 +118,11 @@ class InitEvalGroup
         return $this->siaoRequest;
     }
 
+    public function getSiaoRequestToString(): ?string
+    {
+        return $this->siaoRequest ? Choices::YES_NO_IN_PROGRESS[$this->siaoRequest] : null;
+    }
+
     public function setSiaoRequest(?int $siaoRequest): self
     {
         $this->siaoRequest = $siaoRequest;
@@ -109,6 +133,11 @@ class InitEvalGroup
     public function getSocialHousingRequest(): ?int
     {
         return $this->socialHousingRequest;
+    }
+
+    public function getSocialHousingRequestToString(): ?string
+    {
+        return $this->socialHousingRequest ? Choices::YES_NO_IN_PROGRESS[$this->socialHousingRequest] : null;
     }
 
     public function setSocialHousingRequest(?int $socialHousingRequest): self

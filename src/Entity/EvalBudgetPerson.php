@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Choice;
 
 /**
@@ -32,6 +33,11 @@ class EvalBudgetPerson
     private $resources;
 
     /**
+     * @Groups("export")
+     */
+    private $resourcesToString;
+
+    /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $resourcesAmt;
@@ -42,9 +48,19 @@ class EvalBudgetPerson
     private $disAdultAllowance;
 
     /**
+     * @Groups("export")
+     */
+    private $disAdultAllowanceToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $disChildAllowance;
+
+    /**
+     * @Groups("export")
+     */
+    private $disChildAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -52,9 +68,19 @@ class EvalBudgetPerson
     private $unemplBenefit;
 
     /**
+     * @Groups("export")
+     */
+    private $unemplBenefitToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $asylumAllowance;
+
+    /**
+     * @Groups("export")
+     */
+    private $asylumAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -62,9 +88,19 @@ class EvalBudgetPerson
     private $tempWaitingAllowance;
 
     /**
+     * @Groups("export")
+     */
+    private $tempWaitingAllowanceToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyAllowance;
+
+    /**
+     * @Groups("export")
+     */
+    private $familyAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -72,9 +108,19 @@ class EvalBudgetPerson
     private $solidarityAllowance;
 
     /**
+     * @Groups("export")
+     */
+    private $solidarityAllowanceToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $paidTraining;
+
+    /**
+     * @Groups("export")
+     */
+    private $paidTrainingToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -82,9 +128,19 @@ class EvalBudgetPerson
     private $youthGuarantee;
 
     /**
+     * @Groups("export")
+     */
+    private $youthGuaranteeToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $maintenance;
+
+    /**
+     * @Groups("export")
+     */
+    private $maintenanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -92,9 +148,19 @@ class EvalBudgetPerson
     private $activityBonus;
 
     /**
+     * @Groups("export")
+     */
+    private $activityBonusToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $pensionBenefit;
+
+    /**
+     * @Groups("export")
+     */
+    private $pensionBenefitToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -102,9 +168,19 @@ class EvalBudgetPerson
     private $minimumIncome;
 
     /**
+     * @Groups("export")
+     */
+    private $minimumIncomeToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $salary;
+
+    /**
+     * @Groups("export")
+     */
+    private $salaryToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -112,82 +188,103 @@ class EvalBudgetPerson
     private $ressourceOther;
 
     /**
+     * @Groups("export")
+     */
+    private $ressourceOtherToString;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups("export")
      */
     private $ressourceOtherPrecision;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $disAdultAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $disChildAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $unemplBenefitAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $asylumAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $tempWaitingAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $familyAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $solidarityAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $paidTrainingAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $youthGuaranteeAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $maintenanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $activityBonusAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $pensionBenefitAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $minimumIncomeAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $salaryAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $ressourceOtherAmt;
 
@@ -342,6 +439,11 @@ class EvalBudgetPerson
     private $debts;
 
     /**
+     * @Groups("export")
+     */
+    private $debtsToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtRental;
@@ -383,6 +485,7 @@ class EvalBudgetPerson
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $debtsAmt;
 
@@ -393,6 +496,7 @@ class EvalBudgetPerson
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $monthlyRepaymentAmt;
 
@@ -402,7 +506,13 @@ class EvalBudgetPerson
     private $overIndebtRecord;
 
     /**
+     * @Groups("export")
+     */
+    private $overIndebtRecordToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $overIndebtRecordDate;
 
@@ -412,9 +522,19 @@ class EvalBudgetPerson
     private $settlementPlan;
 
     /**
+     * @Groups("export")
+     */
+    private $settlementPlanToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $moratorium;
+
+    /**
+     * @Groups("export")
+     */
+    private $moratoriumToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -442,16 +562,16 @@ class EvalBudgetPerson
         return $this->resources;
     }
 
+    public function getResourcesToString(): ?string
+    {
+        return $this->resources ? Choices::YES_NO_IN_PROGRESS[$this->resources] : null;
+    }
+
     public function setResources(?int $resources): self
     {
         $this->resources = $resources;
 
         return $this;
-    }
-
-    public function getResourcesList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->resources];
     }
 
     public function getResourcesAmt(): ?float
@@ -471,9 +591,9 @@ class EvalBudgetPerson
         return $this->disAdultAllowance;
     }
 
-    public function getDisAdultAllowanceList()
+    public function getDisAdultAllowanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->disAdultAllowance];
+        return $this->disAdultAllowance ? Choices::YES_NO_BOOLEAN[$this->disAdultAllowance] : null;
     }
 
     public function setDisAdultAllowance(?int $disAdultAllowance): self
@@ -488,9 +608,9 @@ class EvalBudgetPerson
         return $this->disChildAllowance;
     }
 
-    public function getDisChildAllowanceList()
+    public function getDisChildAllowanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->disChildAllowance];
+        return $this->disChildAllowance ? Choices::YES_NO_BOOLEAN[$this->disChildAllowance] : null;
     }
 
     public function setDisChildAllowance(?int $disChildAllowance): self
@@ -505,9 +625,9 @@ class EvalBudgetPerson
         return $this->unemplBenefit;
     }
 
-    public function getUnemplBenefitList()
+    public function getUnemplBenefitToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->unemplBenefit];
+        return $this->unemplBenefit ? Choices::YES_NO_BOOLEAN[$this->unemplBenefit] : null;
     }
 
     public function setUnemplBenefit(?int $unemplBenefit): self
@@ -522,9 +642,9 @@ class EvalBudgetPerson
         return $this->asylumAllowance;
     }
 
-    public function getAsylumAllowanceList()
+    public function getAsylumAllowanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->asylumAllowance];
+        return $this->asylumAllowance ? Choices::YES_NO_BOOLEAN[$this->asylumAllowance] : null;
     }
 
     public function setAsylumAllowance(?int $asylumAllowance): self
@@ -539,9 +659,9 @@ class EvalBudgetPerson
         return $this->tempWaitingAllowance;
     }
 
-    public function getTempWaitingAllowanceList()
+    public function getTempWaitingAllowanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->tempWaitingAllowance];
+        return $this->tempWaitingAllowance ? Choices::YES_NO_BOOLEAN[$this->tempWaitingAllowance] : null;
     }
 
     public function setTempWaitingAllowance(?int $tempWaitingAllowance): self
@@ -556,9 +676,9 @@ class EvalBudgetPerson
         return $this->familyAllowance;
     }
 
-    public function getFamilyAllowanceList()
+    public function getFamilyAllowanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->familyAllowance];
+        return $this->getFamilyAllowance() ? Choices::YES_NO_BOOLEAN[$this->familyAllowance] : null;
     }
 
     public function setFamilyAllowance(?int $familyAllowance): self
@@ -573,9 +693,9 @@ class EvalBudgetPerson
         return $this->solidarityAllowance;
     }
 
-    public function getSolidarityAllowanceList()
+    public function getSolidarityAllowanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->solidarityAllowance];
+        return $this->solidarityAllowance ? Choices::YES_NO_BOOLEAN[$this->solidarityAllowance] : null;
     }
 
     public function setSolidarityAllowance(?int $solidarityAllowance): self
@@ -590,9 +710,9 @@ class EvalBudgetPerson
         return $this->paidTraining;
     }
 
-    public function getPaidTrainingList()
+    public function getPaidTrainingToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->paidTraining];
+        return $this->paidTraining ? Choices::YES_NO_BOOLEAN[$this->paidTraining] : null;
     }
 
     public function setPaidTraining(?int $paidTraining): self
@@ -607,9 +727,9 @@ class EvalBudgetPerson
         return $this->youthGuarantee;
     }
 
-    public function getYouthGuaranteeList()
+    public function getYouthGuaranteeToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->youthGuarantee];
+        return $this->youthGuarantee ? Choices::YES_NO_BOOLEAN[$this->youthGuarantee] : null;
     }
 
     public function setYouthGuarantee(?int $youthGuarantee): self
@@ -624,9 +744,9 @@ class EvalBudgetPerson
         return $this->maintenance;
     }
 
-    public function getMaintenanceList()
+    public function getMaintenanceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->maintenance];
+        return $this->maintenance ? Choices::YES_NO_BOOLEAN[$this->maintenance] : null;
     }
 
     public function setMaintenance(?int $maintenance): self
@@ -641,9 +761,9 @@ class EvalBudgetPerson
         return $this->activityBonus;
     }
 
-    public function getActivityBonusList()
+    public function getActivityBonusToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->activityBonus];
+        return $this->activityBonus ? Choices::YES_NO_BOOLEAN[$this->activityBonus] : null;
     }
 
     public function setActivityBonus(?int $activityBonus): self
@@ -658,9 +778,9 @@ class EvalBudgetPerson
         return $this->pensionBenefit;
     }
 
-    public function getPensionBenefitList()
+    public function getPensionBenefitToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->pensionBenefit];
+        return $this->pensionBenefit ? Choices::YES_NO_BOOLEAN[$this->pensionBenefit] : null;
     }
 
     public function setPensionBenefit(?int $pensionBenefit): self
@@ -676,9 +796,9 @@ class EvalBudgetPerson
         return $this->minimumIncome;
     }
 
-    public function getMinimumIncomeList()
+    public function getMinimumIncomeToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->minimumIncome];
+        return $this->minimumIncome ? Choices::YES_NO_BOOLEAN[$this->minimumIncome] : null;
     }
 
     public function setMinimumIncome(?int $minimumIncome): self
@@ -693,9 +813,9 @@ class EvalBudgetPerson
         return $this->salary;
     }
 
-    public function getSalaryList()
+    public function getSalaryToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->salary];
+        return $this->salary ? Choices::YES_NO_BOOLEAN[$this->salary] : null;
     }
 
     public function setSalary(?int $salary): self
@@ -710,9 +830,9 @@ class EvalBudgetPerson
         return $this->ressourceOther;
     }
 
-    public function getRessourceOtherList()
+    public function getRessourceOtherToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->ressourceOther];
+        return $this->ressourceOther ? Choices::YES_NO_BOOLEAN[$this->ressourceOther] : null;
     }
 
     public function setRessourceOther(?int $ressourceOther): self
@@ -955,16 +1075,16 @@ class EvalBudgetPerson
         return $this->charges;
     }
 
+    public function getChargesToString(): ?string
+    {
+        return $this->charges ? Choices::YES_NO[$this->charges] : null;
+    }
+
     public function setCharges(?int $charges): self
     {
         $this->charges = $charges;
 
         return $this;
-    }
-
-    public function getChargesList()
-    {
-        return Choices::YES_NO[$this->charges];
     }
 
     public function getChargesAmt(): ?float
@@ -996,9 +1116,9 @@ class EvalBudgetPerson
         return $this->electricityGas;
     }
 
-    public function getElectricityGasList()
+    public function getElectricityGasToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->electricityGas];
+        return $this->electricityGas ? Choices::YES_NO_BOOLEAN[$this->electricityGas]  : null;
     }
 
     public function setElectricityGas(?int $electricityGas): self
@@ -1013,9 +1133,9 @@ class EvalBudgetPerson
         return $this->water;
     }
 
-    public function getWaterList()
+    public function getWaterToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->water];
+        return $this->water ? Choices::YES_NO_BOOLEAN[$this->water] : null;
     }
 
     public function setWater(?int $water): self
@@ -1030,9 +1150,9 @@ class EvalBudgetPerson
         return $this->insurance;
     }
 
-    public function getInsuranceList()
+    public function getInsuranceToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->insurance];
+        return $this->insurance ? Choices::YES_NO_BOOLEAN[$this->insurance] : null;
     }
 
     public function setInsurance(?int $insurance): self
@@ -1047,9 +1167,9 @@ class EvalBudgetPerson
         return $this->mutual;
     }
 
-    public function getMutualList()
+    public function getMutualToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->mutual];
+        return $this->mutual ? Choices::YES_NO_BOOLEAN[$this->mutual] : null;
     }
 
     public function setMutual(?int $mutual): self
@@ -1064,9 +1184,9 @@ class EvalBudgetPerson
         return $this->taxes;
     }
 
-    public function getTaxesList()
+    public function getTaxesToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->taxes];
+        return $this->taxes ? Choices::YES_NO_BOOLEAN[$this->taxes] : null;
     }
 
     public function setTaxes(?int $taxes): self
@@ -1081,9 +1201,9 @@ class EvalBudgetPerson
         return $this->transport;
     }
 
-    public function getTransportList()
+    public function getTransportToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->transport];
+        return $this->transport ? Choices::YES_NO_BOOLEAN[$this->transport] : null;
     }
 
     public function setTransport(?int $transport): self
@@ -1098,9 +1218,9 @@ class EvalBudgetPerson
         return $this->childcare;
     }
 
-    public function getChildcareList()
+    public function getChildcareToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->childcare];
+        return $this->childcare ? Choices::YES_NO_BOOLEAN[$this->childcare] : null;
     }
 
     public function setChildcare(?int $childcare): self
@@ -1115,9 +1235,9 @@ class EvalBudgetPerson
         return $this->alimony;
     }
 
-    public function getAlimonyList()
+    public function getAlimonyToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->alimony];
+        return $this->alimony ? Choices::YES_NO_BOOLEAN[$this->alimony] : null;
     }
 
     public function setAlimony(?int $alimony): self
@@ -1132,9 +1252,9 @@ class EvalBudgetPerson
         return $this->phone;
     }
 
-    public function getPhoneList()
+    public function getPhoneToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->phone];
+        return $this->phone ? Choices::YES_NO_BOOLEAN[$this->phone] : null;
     }
 
     public function setPhone(?int $phone): self
@@ -1149,9 +1269,9 @@ class EvalBudgetPerson
         return $this->chargeOther;
     }
 
-    public function getChargeOtherList()
+    public function getChargeOtherToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->chargeOther];
+        return $this->chargeOther ? Choices::YES_NO_BOOLEAN[$this->chargeOther] : null;
     }
 
     public function setChargeOther(?int $chargeOther): self
@@ -1329,9 +1449,9 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDebtsList()
+    public function getDebtsToString(): ?string
     {
-        return Choices::YES_NO[$this->debts];
+        return $this->debts ? Choices::YES_NO[$this->debts] : null;
     }
 
     public function getDebtRental(): ?int
@@ -1339,9 +1459,9 @@ class EvalBudgetPerson
         return $this->debtRental;
     }
 
-    public function getDebtRentalList()
+    public function getDebtRentalToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtRental];
+        return $this->debtRental ? Choices::YES_NO_BOOLEAN[$this->debtRental] : null;
     }
 
     public function setDebtRental(?int $debtRental): self
@@ -1356,9 +1476,9 @@ class EvalBudgetPerson
         return $this->debtConsrCredit;
     }
 
-    public function getDebtConsrCreditList()
+    public function getDebtConsrCreditToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtConsrCredit];
+        return $this->debtConsrCredit ? Choices::YES_NO_BOOLEAN[$this->debtConsrCredit] : null;
     }
 
     public function setDebtConsrCredit(?int $debtConsrCredit): self
@@ -1373,9 +1493,9 @@ class EvalBudgetPerson
         return $this->debtMortgage;
     }
 
-    public function getDebtMortgageList()
+    public function getDebtMortgageToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtMortgage];
+        return $this->debtMortgage ? Choices::YES_NO_BOOLEAN[$this->debtMortgage] : null;
     }
 
     public function setDebtMortgage(int $debtMortgage): self
@@ -1390,9 +1510,9 @@ class EvalBudgetPerson
         return $this->debtFines;
     }
 
-    public function getDebtFinesList()
+    public function getDebtFinesToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtFines];
+        return $this->debtFines ? Choices::YES_NO_BOOLEAN[$this->debtFines] : null;
     }
 
     public function setDebtFines(?int $debtFines): self
@@ -1407,9 +1527,9 @@ class EvalBudgetPerson
         return $this->debtTaxDelays;
     }
 
-    public function getDebtTaxDelaysList()
+    public function getDebtTaxDelaysToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtTaxDelays];
+        return $this->debtTaxDelays ? Choices::YES_NO_BOOLEAN[$this->debtTaxDelays] : null;
     }
 
     public function setDebtTaxDelays(?int $debtTaxDelays): self
@@ -1424,9 +1544,9 @@ class EvalBudgetPerson
         return $this->debtBankOverdrafts;
     }
 
-    public function getDebtBankOverdraftsList()
+    public function getDebtBankOverdraftsToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtBankOverdrafts];
+        return $this->getDebtBankOverdrafts() ? Choices::YES_NO_BOOLEAN[$this->debtBankOverdrafts] : null;
     }
 
     public function setDebtBankOverdrafts(?int $debtBankOverdrafts): self
@@ -1441,9 +1561,9 @@ class EvalBudgetPerson
         return $this->debtOther;
     }
 
-    public function getDebtOtherList()
+    public function getDebtOtherToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->debtOther];
+        return $this->debtOther ? Choices::YES_NO_BOOLEAN[$this->debtOther] : null;
     }
 
     public function setDebtOther(?int $debtOther): self
@@ -1506,16 +1626,16 @@ class EvalBudgetPerson
         return $this->overIndebtRecord;
     }
 
+    public function getOverIndebtRecordToString(): ?string
+    {
+        return $this->overIndebtRecord ? Choices::YES_NO_IN_PROGRESS[$this->overIndebtRecord] : null;
+    }
+
     public function setOverIndebtRecord(?int $overIndebtRecord): self
     {
         $this->overIndebtRecord = $overIndebtRecord;
 
         return $this;
-    }
-
-    public function getOverIndebtRecordList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->overIndebtRecord];
     }
 
     public function getOverIndebtRecordDate(): ?\DateTimeInterface
@@ -1535,6 +1655,11 @@ class EvalBudgetPerson
         return $this->settlementPlan;
     }
 
+    public function getSettlementPlanToString(): ?string
+    {
+        return $this->settlementPlan ? self::SETTLEMENT_PLAN[$this->settlementPlan] : null;
+    }
+
     public function setSettlementPlan(?int $settlementPlan): self
     {
         $this->settlementPlan = $settlementPlan;
@@ -1542,14 +1667,14 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getSettlementPlanList()
-    {
-        return self::SETTLEMENT_PLAN[$this->settlementPlan];
-    }
-
     public function getMoratorium(): ?int
     {
         return $this->moratorium;
+    }
+
+    public function getMoratoriumToString(): ?string
+    {
+        return $this->moratorium ? Choices::YES_NO_IN_PROGRESS[$this->moratorium] : null;
     }
 
     public function setMoratorium(?int $moratorium): self
@@ -1557,11 +1682,6 @@ class EvalBudgetPerson
         $this->moratorium = $moratorium;
 
         return $this;
-    }
-
-    public function getMoratoriumList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->moratorium];
     }
 
     public function getEndRightsDate(): ?\DateTimeInterface

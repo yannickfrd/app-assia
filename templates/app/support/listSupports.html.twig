@@ -83,10 +83,10 @@
                             {% endfor %}
                         </td>
                         <td class="align-middle">
-                            {{ support.groupPeople.getFamilyTypologyType }}
+                            {{ support.groupPeople.familyTypologyToString }}
                             {% if support.supportPerson|length > 1 %} | {{ support.supportPerson|length }} pers.{% endif %}
                         </td>
-                        <td class="align-middle">{{ support.statusList }}</td>
+                        <td class="align-middle">{{ support.statusToString }}</td>
                         <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>
                         <td class="align-middle">{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %} </td>
                         <td class="align-middle">{% if support.referent %}{{ support.referent.fullname }}{% endif %}</td>

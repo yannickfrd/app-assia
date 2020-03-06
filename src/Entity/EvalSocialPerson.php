@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalSocialPersonRepository")
@@ -43,9 +44,19 @@ class EvalSocialPerson
     private $rightSocialSecurity;
 
     /**
+     * @Groups("export")
+     */
+    private $rightSocialSecurityToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $socialSecurity;
+
+    /**
+     * @Groups("export")
+     */
+    private $socialSecurityToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -63,9 +74,19 @@ class EvalSocialPerson
     private $childWelfareBackground;
 
     /**
+     * @Groups("export")
+     */
+    private $childWelfareBackgroundToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyBreakdown;
+
+    /**
+     * @Groups("export")
+     */
+    private $familyBreakdownToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -73,9 +94,19 @@ class EvalSocialPerson
     private $friendshipBreakdown;
 
     /**
+     * @Groups("export")
+     */
+    private $friendshipBreakdownToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $healthProblem;
+
+    /**
+     * @Groups("export")
+     */
+    private $healthProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -83,9 +114,19 @@ class EvalSocialPerson
     private $physicalHealthProblem;
 
     /**
+     * @Groups("export")
+     */
+    private $physicalHealthProblemToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $mentalHealthProblem;
+
+    /**
+     * @Groups("export")
+     */
+    private $mentalHealthProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -93,9 +134,19 @@ class EvalSocialPerson
     private $addictionProblem;
 
     /**
+     * @Groups("export")
+     */
+    private $addictionProblemToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $wheelchair;
+
+    /**
+     * @Groups("export")
+     */
+    private $wheelchairToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -103,15 +154,29 @@ class EvalSocialPerson
     private $reducedMobility;
 
     /**
+     * @Groups("export")
+     */
+    private $reducedMobilityToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $careSupport;
+
+    /**
+     * @Groups("export")
+     */
+    private $careSupportToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $careSupportType;
 
+    /**
+     * @Groups("export")
+     */
+    private $careSupportTypeToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -119,9 +184,19 @@ class EvalSocialPerson
     private $violenceVictim;
 
     /**
+     * @Groups("export")
+     */
+    private $violenceVictimToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $domViolenceVictim;
+
+    /**
+     * @Groups("export")
+     */
+    private $domViolenceVictimToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -145,6 +220,11 @@ class EvalSocialPerson
         return $this->rightSocialSecurity;
     }
 
+    public function getRightSocialSecurityToString(): ?string
+    {
+        return $this->rightSocialSecurity ? Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
+    }
+
     public function setRightSocialSecurity(?int $rightSocialSecurity): self
     {
         $this->rightSocialSecurity = $rightSocialSecurity;
@@ -152,14 +232,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getRightSocialSecurityList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity];
-    }
-
     public function getSocialSecurity(): ?int
     {
         return $this->socialSecurity;
+    }
+
+    public function getSocialSecurityToString(): ?string
+    {
+        return $this->socialSecurity ? self::SOCIAL_SECURITY[$this->socialSecurity] : null;
     }
 
     public function setSocialSecurity(?int $socialSecurity): self
@@ -167,11 +247,6 @@ class EvalSocialPerson
         $this->socialSecurity = $socialSecurity;
 
         return $this;
-    }
-
-    public function getSocialSecurityList()
-    {
-        return self::SOCIAL_SECURITY[$this->socialSecurity];
     }
 
     public function getSocialSecurityOffice(): ?string
@@ -210,15 +285,20 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getChildWelfareBackgroundList()
+    public function getChildWelfareBackgroundToString(): ?string
     {
-        return Choices::YES_NO[$this->childWelfareBackground];
+        return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
     }
 
 
     public function getHealthProblem(): ?int
     {
         return $this->healthProblem;
+    }
+
+    public function getHealthProblemToString(): ?string
+    {
+        return $this->healthProblem ? Choices::YES_NO[$this->healthProblem] : null;
     }
 
     public function setHealthProblem(?int $healthProblem): self
@@ -228,14 +308,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getHealthProblemList()
-    {
-        return Choices::YES_NO[$this->healthProblem];
-    }
-
     public function getPhysicalHealthProblem(): ?int
     {
         return $this->physicalHealthProblem;
+    }
+
+    public function getPhysicalHealthProblemToString(): ?string
+    {
+        return $this->physicalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->physicalHealthProblem] : null;
     }
 
     public function setPhysicalHealthProblem(?int $physicalHealthProblem): self
@@ -245,14 +325,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getPhysicalHealthProblemList()
-    {
-        return Choices::YES_NO_BOOLEAN[$this->physicalHealthProblem];
-    }
-
     public function getMentalHealthProblem(): ?int
     {
         return $this->mentalHealthProblem;
+    }
+
+    public function getMentalHealthProblemToString(): ?string
+    {
+        return $this->mentalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->mentalHealthProblem] : null;
     }
 
     public function setMentalHealthProblem(?int $mentalHealthProblem): self
@@ -262,14 +342,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getMentalHealthProblemList()
-    {
-        return Choices::YES_NO_BOOLEAN[$this->mentalHealthProblem];
-    }
-
     public function getAddictionProblem(): ?int
     {
         return $this->addictionProblem;
+    }
+
+    public function getAddictionProblemToString(): ?string
+    {
+        return $this->addictionProblem ? Choices::YES_NO_BOOLEAN[$this->addictionProblem] : null;
     }
 
     public function setAddictionProblem(?int $addictionProblem): self
@@ -279,14 +359,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getAddictionProblemList()
-    {
-        return Choices::YES_NO_BOOLEAN[$this->addictionProblem];
-    }
-
     public function getCareSupport(): ?int
     {
         return $this->careSupport;
+    }
+
+    public function getCareSupportToString(): ?string
+    {
+        return $this->careSupport ? Choices::YES_NO_IN_PROGRESS[$this->careSupport] : null;
     }
 
     public function setCareSupport(?int $careSupport): self
@@ -296,14 +376,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getCareSupportList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->careSupport];
-    }
-
     public function getCareSupportType(): ?int
     {
         return $this->careSupportType;
+    }
+
+    public function getCareSupportTypeToString(): ?string
+    {
+        return $this->careSupport ? self::CARE_SUPPORT[$this->careSupport] : null;
     }
 
     public function setCareSupportType(?int $careSupportType): self
@@ -313,14 +393,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getCareSupportTypeList()
-    {
-        return self::CARE_SUPPORT[$this->careSupport];
-    }
-
     public function getFamilyBreakdown(): ?int
     {
         return $this->familyBreakdown;
+    }
+
+    public function getFamilyBreakdownToString(): ?string
+    {
+        return $this->familyBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->familyBreakdown] : null;
     }
 
     public function setFamilyBreakdown(?int $familyBreakdown): self
@@ -330,14 +410,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getFamilyBreakdownList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->familyBreakdown];
-    }
-
     public function getFriendshipBreakdown(): ?int
     {
         return $this->friendshipBreakdown;
+    }
+
+    public function getFriendshipBreakdownToString(): ?string
+    {
+        return $this->friendshipBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->friendshipBreakdown] : null;
     }
 
     public function setFriendshipBreakdown(?int $friendshipBreakdown): self
@@ -347,14 +427,14 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getFriendshipBreakdownList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->friendshipBreakdown];
-    }
-
     public function getWheelchair(): ?int
     {
         return $this->wheelchair;
+    }
+
+    public function getWheelchairToString(): ?string
+    {
+        return $this->wheelchair ? Choices::YES_NO_BOOLEAN[$this->wheelchair] : null;
     }
 
     public function setWheelchair(?int $wheelchair): self
@@ -369,6 +449,11 @@ class EvalSocialPerson
         return $this->reducedMobility;
     }
 
+    public function getReducedMobilityToString(): ?string
+    {
+        return $this->reducedMobility ? Choices::YES_NO_BOOLEAN[$this->reducedMobility] : null;
+    }
+
     public function setReducedMobility(?int $reducedMobility): self
     {
         $this->reducedMobility = $reducedMobility;
@@ -381,9 +466,9 @@ class EvalSocialPerson
         return $this->violenceVictim;
     }
 
-    public function getViolenceVictimList()
+    public function getViolenceVictimToString(): ?string
     {
-        return Choices::YES_NO[$this->violenceVictim];
+        return $this->violenceVictim ? Choices::YES_NO[$this->violenceVictim] : null;
     }
 
     public function setViolenceVictim(?int $violenceVictim): self
@@ -398,9 +483,9 @@ class EvalSocialPerson
         return $this->domViolenceVictim;
     }
 
-    public function getDomViolenceVictimList()
+    public function getDomViolenceVictimToString(): ?string
     {
-        return Choices::YES_NO[$this->domViolenceVictim];
+        return $this->domViolenceVictim ? Choices::YES_NO[$this->domViolenceVictim] : null;
     }
 
 

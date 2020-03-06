@@ -250,7 +250,7 @@ export default class ListDocuments {
     updateDocument(data) {
         this.nameDocumentElt.textContent = this.documentNameInput.value;
         let documentTypeInput = this.documentElt.querySelector(".js-document-type");
-        documentTypeInput.textContent = data.typeList;
+        documentTypeInput.textContent = data.typeToString;
         documentTypeInput.setAttribute("data-value", this.getOption(this.documentTypeInput));
         this.documentElt.querySelector(".js-document-content").textContent = this.documentContentInput.value;
     }
@@ -262,7 +262,7 @@ export default class ListDocuments {
                     <a href="/uploads/documents/${data.path}" target="_blank" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
                 </th>
                     <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
-                    <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.typeList}</td>
+                    <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.type}</td>
                     <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
                     <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
                     <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>

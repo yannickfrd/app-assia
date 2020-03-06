@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,8 +41,14 @@ class GroupPeople
     private $familyTypology;
 
     /**
+     * Groups("export")
+     */
+    private $familyTypologyToString;
+
+    /**
      * @ORM\Column(type="smallint")
      * @Assert\Range(min = 1, max = 99, minMessage="Le nombre de personnes doit être renseigné.",  maxMessage="Le nombre de personnes doit être renseigné.")
+     * Groups("export")
      */
     private $nbPeople;
 
@@ -122,7 +129,7 @@ class GroupPeople
         return $this->familyTypology;
     }
 
-    public function getFamilyTypologyType(): string
+    public function getFamilyTypologyToString(): string
     {
         return self::FAMILY_TYPOLOGY[$this->familyTypology];
     }
@@ -209,7 +216,7 @@ class GroupPeople
     /**
      * @return Collection|Supports[]
      */
-    public function getSupports(): Collection
+    public function getSupports(): ?Collection
     {
         return $this->supports;
     }
@@ -240,7 +247,7 @@ class GroupPeople
     /**
      * @return Collection|RolePerson[]
      */
-    public function getrolePerson(): Collection
+    public function getrolePerson(): ?Collection
     {
         return $this->rolePerson;
     }
@@ -271,7 +278,7 @@ class GroupPeople
     /**
      * @return Collection|Referent[]
      */
-    public function getReferents(): Collection
+    public function getReferents(): ?Collection
     {
         return $this->referents;
     }
@@ -302,7 +309,7 @@ class GroupPeople
     /**
      * @return Collection|Document[]
      */
-    public function getDocuments(): Collection
+    public function getDocuments(): ?Collection
     {
         return $this->documents;
     }
@@ -333,7 +340,7 @@ class GroupPeople
     /**
      * @return Collection|AccommodationGroup[]
      */
-    public function getAccommodationGroups(): Collection
+    public function getAccommodationGroups(): ?Collection
     {
         return $this->accommodationGroups;
     }

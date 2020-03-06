@@ -127,7 +127,7 @@ class AccommodationGroup
         return $this->endReason;
     }
 
-    public function getEndReasonList()
+    public function getEndReasonToString(): ?string
     {
         return self::END_REASON[$this->endReason];
     }
@@ -226,7 +226,7 @@ class AccommodationGroup
     /**
      * @return Collection|AccommodationPerson[]
      */
-    public function getAccommodationPersons(): Collection
+    public function getAccommodationPersons(): ?Collection
     {
         return $this->accommodationPersons;
     }

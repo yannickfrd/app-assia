@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OrganizationRepository")
+ * @UniqueEntity(
+ *     fields={"name"},
+ *     message="Cet organisme existe déjà !")
  */
 class Organization
 {
@@ -161,7 +165,7 @@ class Organization
     /**
      * @return Collection|OriginRequest[]
      */
-    public function getOriginRequests(): Collection
+    public function getOriginRequests(): ?Collection
     {
         return $this->originRequests;
     }
@@ -192,7 +196,7 @@ class Organization
     /**
      * @return Collection|Service[]
      */
-    public function getService(): Collection
+    public function getService(): ?Collection
     {
         return $this->service;
     }

@@ -39,14 +39,14 @@
                         {% for supportPerson in support.supportPerson|filter(a => a.role != 3) %}
                         {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
-                    <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}<br />
+                    <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<br />
                         {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
                     </td>
                     <td class="align-middle">
                         {{ support.service.name }}<br />
                         {% if support.device %}({{ support.device.name }}){% endif %}                    
                     </td>
-                    <td class="align-middle">{{ support.getstatusList }}</td>
+                    <td class="align-middle">{{ support.statusToString }}</td>
                     <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
                     <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
                     </td>

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalFamilyPersonRepository")
@@ -88,12 +89,23 @@ class EvalFamilyPerson
     private $maritalStatus;
 
     /**
+     * @Groups("export")
+     */
+    private $maritalStatusToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $unbornChild;
 
     /**
+     * @Groups("export")
+     */
+    private $unbornChildToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $expDateChildbirth;
 
@@ -128,9 +140,19 @@ class EvalFamilyPerson
     private $protectiveMeasure;
 
     /**
+     * @Groups("export")
+     */
+    private $protectiveMeasureToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $protectiveMeasureType;
+
+    /**
+     * @Groups("export")
+     */
+    private $protectiveMeasureTypeToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -153,9 +175,9 @@ class EvalFamilyPerson
         return $this->maritalStatus;
     }
 
-    public function getMaritalStatusList()
+    public function getMaritalStatusToString(): ?string
     {
-        return self::MARITAL_STATUS[$this->maritalStatus];
+        return $this->maritalStatus ? self::MARITAL_STATUS[$this->maritalStatus] : null;
     }
 
     public function setMaritalStatus(?int $maritalStatus): self
@@ -170,9 +192,9 @@ class EvalFamilyPerson
         return $this->unbornChild;
     }
 
-    public function getUnbornChildList()
+    public function getUnbornChildToString(): ?string
     {
-        return Choices::YES_NO[$this->unbornChild];
+        return $this->unbornChild ? Choices::YES_NO[$this->unbornChild] : null;
     }
 
     public function setUnbornChild(?int $unbornChild): self
@@ -199,9 +221,9 @@ class EvalFamilyPerson
         return $this->pregnancyType;
     }
 
-    public function getPregnancyTypeList()
+    public function getPregnancyTypeToString(): ?string
     {
-        return self::PREGNANCY_TYPE[$this->pregnancyType];
+        return $this->pregnancyType ? self::PREGNANCY_TYPE[$this->pregnancyType] : null;
     }
 
     public function setPregnancyType(?int $pregnancyType): self
@@ -216,9 +238,9 @@ class EvalFamilyPerson
         return $this->childcareSchool;
     }
 
-    public function getChildcareSchoolList()
+    public function getChildcareSchoolToString(): ?string
     {
-        return self::CHILDCARE_SCHOOL[$this->childcareSchool];
+        return $this->childcareSchool ? self::CHILDCARE_SCHOOL[$this->childcareSchool] : null;
     }
 
     public function setChildcareSchool(?int $childcareSchool): self
@@ -245,6 +267,11 @@ class EvalFamilyPerson
         return $this->childToHost;
     }
 
+    public function getChildToHostToString(): ?string
+    {
+        return $this->childcareSchool ? self::CHILD_TO_HOST[$this->childcareSchool] : null;
+    }
+
     public function setChildToHost(?int $childToHost): self
     {
         $this->childToHost = $childToHost;
@@ -252,14 +279,14 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getChildToHostList()
-    {
-        return self::CHILD_TO_HOST[$this->childcareSchool];
-    }
-
     public function getChildDependance(): ?int
     {
         return $this->childDependance;
+    }
+
+    public function getChildDependanceToString(): ?string
+    {
+        return $this->childDependance ? self::CHILD_DEPENDANCE[$this->childDependance] : null;
     }
 
     public function setChildDependance(?int $childDependance): self
@@ -269,14 +296,14 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getChildDependanceList()
-    {
-        return self::CHILD_DEPENDANCE[$this->childDependance];
-    }
-
     public function getProtectiveMeasure(): ?int
     {
         return $this->protectiveMeasure;
+    }
+
+    public function getProtectiveMeasureToString(): ?string
+    {
+        return $this->protectiveMeasure ? Choices::YES_NO_IN_PROGRESS[$this->protectiveMeasure] : null;
     }
 
     public function setProtectiveMeasure(?int $protectiveMeasure): self
@@ -286,14 +313,14 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getProtectiveMeasureList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->protectiveMeasure];
-    }
-
     public function getProtectiveMeasureType(): ?int
     {
         return $this->protectiveMeasureType;
+    }
+
+    public function getProtectiveMeasureTypeToString(): ?string
+    {
+        return $this->protectiveMeasureType ? self::PROTECTIVE_MEASURE_TYPE[$this->protectiveMeasureType] : null;
     }
 
     public function setProtectiveMeasureType(?int $protectiveMeasureType): self
@@ -302,12 +329,6 @@ class EvalFamilyPerson
 
         return $this;
     }
-
-    public function getProtectiveMeasureTypeList()
-    {
-        return self::PROTECTIVE_MEASURE_TYPE[$this->protectiveMeasureType];
-    }
-
 
     public function getCommentEvalFamilyPerson(): ?string
     {

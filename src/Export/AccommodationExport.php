@@ -65,9 +65,9 @@ class AccommodationExport
             "Adresse" => $accommodation->getAddress(),
             "Ville" => $accommodation->getCity(),
             "Code postal" => $accommodation->getDepartment(),
-            "Type" => $accommodation->getAccommodationType() ? $accommodation->getAccommodationTypeList() : null,
-            "Configuration (Diffus ou regroupé)" => $accommodation->getConfiguration() ? $accommodation->getConfigurationList() : null,
-            "Individuel ou collectif" => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveList() : null,
+            "Type" => $accommodation->getAccommodationType() ? $accommodation->getAccommodationTypeToString() : null,
+            "Configuration (Diffus ou regroupé)" => $accommodation->getConfiguration() ? $accommodation->getConfigurationToString() : null,
+            "Individuel ou collectif" => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveToString() : null,
             "Commentaire" => $accommodation->getComment(),
             "Occupation actuelle (Nb de personnes)" => $numberPeople,
         ];

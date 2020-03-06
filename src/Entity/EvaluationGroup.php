@@ -233,7 +233,7 @@ class EvaluationGroup
     /**
      * @return Collection|EvaluationPerson[]
      */
-    public function getEvaluationPeople(): Collection
+    public function getEvaluationPeople(): ?Collection
     {
         return $this->evaluationPeople;
     }

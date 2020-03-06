@@ -8,6 +8,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -43,6 +44,7 @@ class Person
      * max=50,
      * minMessage="Le nom est trop court (2 caractères min).", 
      * maxMessage="Le nom est trop long (50 caractères max).")
+     * Groups("export")
      */
     private $lastname;
 
@@ -51,10 +53,11 @@ class Person
      * @Assert\NotNull(message="Le prénom ne doit pas être vide.")
      * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      * @Assert\Length(
-     * min=2, 
+     * min=2,
      * max=50,
-     * minMessage="Le prénom est trop court (2 caractères min).", 
-     * maxMessage="Le prénom est trop long (50 caractères max).")     
+     * minMessage="Le prénom est trop court (2 caractères min).",
+     * maxMessage="Le prénom est trop long (50 caractères max).")
+     * Groups("export")
      */
     private $firstname;
 
@@ -72,6 +75,7 @@ class Person
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\NotNull(message="La date de naissance ne doit pas être vide.")
+     * Groups("export")
      */
     private $birthdate;
 
@@ -81,7 +85,7 @@ class Person
      * max = 90,
      * minMessage = "La date de naissance est incorrect.",
      * maxMessage = "La date de naissance est incorrect.")
-     * @var int
+     * Groups("export")
      */
     private $age;
 
@@ -91,6 +95,11 @@ class Person
      * @Assert\Range(min = 1, max = 3, minMessage="Le sexe doit être renseigné.",  maxMessage="Le sexe doit être renseigné.")
      */
     private $gender;
+
+    /**
+     * Groups("export")
+     */
+    private $genderToString;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
@@ -163,7 +172,7 @@ class Person
         $this->accommodationPersons = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toToString()
     {
         return $this->lastname . " " . $this->firstname;
     }
@@ -277,7 +286,7 @@ class Person
         return $this;
     }
 
-    public function getGenderList()
+    public function getGenderToString(): ?string
     {
         return self::GENDER[$this->gender];
     }
@@ -393,7 +402,7 @@ class Person
     /**
      * @return Collection|RolePerson[]
      */
-    public function getRolesPerson(): Collection
+    public function getRolesPerson(): ?Collection
     {
         return $this->rolesPerson;
     }
@@ -423,7 +432,7 @@ class Person
     /**
      * @return Collection|SupportPerson[]
      */
-    public function getSupports(): Collection
+    public function getSupports(): ?Collection
     {
         return $this->supports;
     }
@@ -454,7 +463,7 @@ class Person
     /**
      * @return Collection|AccommodationPerson[]
      */
-    public function getAccommodationPersons(): Collection
+    public function getAccommodationPersons(): ?Collection
     {
         return $this->accommodationPersons;
     }

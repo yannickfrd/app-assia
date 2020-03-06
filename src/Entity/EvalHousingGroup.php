@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalHousingGroupRepository")
@@ -61,12 +62,19 @@ class EvalHousingGroup
     private $siaoRequest;
 
     /**
+     * @Groups("export")
+     */
+    private $siaoRequestToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $siaoRequestDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $siaoUpdatedRequestDate;
 
@@ -76,17 +84,24 @@ class EvalHousingGroup
     private $socialHousingRequest;
 
     /**
+     * @Groups("export")
+     */
+    private $socialHousingRequestToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $socialHousingRequestId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $socialHousingRequestDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $socialHousingUpdatedRequestDate;
 
@@ -111,12 +126,18 @@ class EvalHousingGroup
     private $syplo;
 
     /**
+     * @Groups("export")
+     */
+    private $syploToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $syploId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $syploDate;
 
@@ -126,12 +147,18 @@ class EvalHousingGroup
     private $daloCommission;
 
     /**
+     * @Groups("export")
+     */
+    private $daloCommissionToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $daloId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $daloRecordDate;
 
@@ -141,7 +168,13 @@ class EvalHousingGroup
     private $daloTribunalAction;
 
     /**
+     * @Groups("export")
+     */
+    private $daloTribunalActionToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $daloTribunalActionDate;
 
@@ -151,7 +184,13 @@ class EvalHousingGroup
     private $daloRequalifiedDaho;
 
     /**
+     * @Groups("export")
+     */
+    private $daloRequalifiedDahoToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $daloDecisionDate;
 
@@ -161,7 +200,13 @@ class EvalHousingGroup
     private $collectiveAgreementHousing;
 
     /**
+     * @Groups("export")
+     */
+    private $collectiveAgreementHousingToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $collectiveAgreementHousingDate;
 
@@ -171,12 +216,23 @@ class EvalHousingGroup
     private $hsgActionEligibility;
 
     /**
+     * @Groups("export")
+     */
+    private $hsgActionEligibilityToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $hsgActionRecord;
 
     /**
+     * @Groups("export")
+     */
+    private $hsgActionRecordToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $hsgActionDate;
 
@@ -194,6 +250,11 @@ class EvalHousingGroup
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $expulsionInProgress;
+
+    /**
+     * @Groups("export")
+     */
+    private $expulsionInProgressToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -216,6 +277,11 @@ class EvalHousingGroup
     private $housingExperience;
 
     /**
+     * @Groups("export")
+     */
+    private $housingExperienceToString;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $housingExpeComment;
@@ -226,9 +292,19 @@ class EvalHousingGroup
     private $fsl;
 
     /**
+     * @Groups("export")
+     */
+    private $fslToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $fslEligibility;
+
+    /**
+     * @Groups("export")
+     */
+    private $fslEligibilityToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -236,12 +312,23 @@ class EvalHousingGroup
     private $cafEligibility;
 
     /**
+     * @Groups("export")
+     */
+    private $cafEligibilityToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $otherHelps;
 
     /**
+     * @Groups("export")
+     */
+    private $otherHelpsToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $hepsPrecision;
 
@@ -256,9 +343,19 @@ class EvalHousingGroup
     private $housingStatus;
 
     /**
+     * @Groups("export")
+     */
+    private $housingStatusToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $housing;
+
+    /**
+     * @Groups("export")
+     */
+    private $housingToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -281,12 +378,18 @@ class EvalHousingGroup
     private $domiciliation;
 
     /**
+     * @Groups("export")
+     */
+    private $domiciliationToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $startDomiciliationDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $endDomiciliationDate;
 
@@ -302,16 +405,19 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups("export")
      */
     private $domiciliationDept;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
      */
     private $housingAccessType;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $housingArrivalDate;
 
@@ -332,9 +438,9 @@ class EvalHousingGroup
         return $this->siaoRequest;
     }
 
-    public function getSiaoRequestList()
+    public function getSiaoRequestToString(): ?string
     {
-        return Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest];
+        return $this->siaoRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest] : null;
     }
 
     public function setSiaoRequest(?int $siaoRequest): self
@@ -373,9 +479,9 @@ class EvalHousingGroup
         return $this->socialHousingRequest;
     }
 
-    public function getSocialHousingRequestList()
+    public function getSocialHousingRequestToString(): ?string
     {
-        return Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest];
+        return $this->socialHousingRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest] : null;
     }
 
     public function setSocialHousingRequest(?int $socialHousingRequest): self
@@ -462,9 +568,9 @@ class EvalHousingGroup
         return $this->syplo;
     }
 
-    public function getSyploList()
+    public function getSyploToString(): ?string
     {
-        return Choices::YES_NO_IN_PROGRESS[$this->syplo];
+        return $this->syplo ? Choices::YES_NO_IN_PROGRESS[$this->syplo] : null;
     }
 
     public function setSyplo(?int $syplo): self
@@ -503,9 +609,9 @@ class EvalHousingGroup
         return $this->daloCommission;
     }
 
-    public function getDaloCommissionList()
+    public function getDaloCommissionToString(): ?string
     {
-        return Choices::YES_NO[$this->daloCommission];
+        return $this->daloCommission ? Choices::YES_NO[$this->daloCommission] : null;
     }
 
     public function setDaloCommission(?int $daloCommission): self
@@ -544,16 +650,16 @@ class EvalHousingGroup
         return $this->daloRequalifiedDaho;
     }
 
+    public function getDaloRequalifiedDahoToString(): ?string
+    {
+        return $this->daloRequalifiedDaho ? Choices::YES_NO[$this->daloRequalifiedDaho] : null;
+    }
+
     public function setDaloRequalifiedDaho(?int $daloRequalifiedDaho): self
     {
         $this->daloRequalifiedDaho = $daloRequalifiedDaho;
 
         return $this;
-    }
-
-    public function getDaloRequalifiedDahoList()
-    {
-        return Choices::YES_NO[$this->daloRequalifiedDaho];
     }
 
     public function getDaloDecisionDate(): ?\DateTimeInterface
@@ -573,9 +679,9 @@ class EvalHousingGroup
         return $this->daloTribunalAction;
     }
 
-    public function getDaloTribunalActionList()
+    public function getDaloTribunalActionToString(): ?string
     {
-        return Choices::YES_NO_IN_PROGRESS[$this->daloTribunalAction];
+        return $this->daloTribunalAction ? Choices::YES_NO_IN_PROGRESS[$this->daloTribunalAction] : null;
     }
 
     public function setDaloTribunalAction(?int $daloTribunalAction): self
@@ -602,9 +708,9 @@ class EvalHousingGroup
         return $this->collectiveAgreementHousing;
     }
 
-    public function getCollectiveAgreementHousingList()
+    public function getCollectiveAgreementHousingToString(): ?string
     {
-        return Choices::YES_NO_IN_PROGRESS[$this->collectiveAgreementHousing];
+        return $this->collectiveAgreementHousing ? Choices::YES_NO_IN_PROGRESS[$this->collectiveAgreementHousing] : null;
     }
 
     public function setCollectiveAgreementHousing(?int $collectiveAgreementHousing): self
@@ -631,9 +737,9 @@ class EvalHousingGroup
         return $this->hsgActionEligibility;
     }
 
-    public function getHsgActionEligibilityList()
+    public function getHsgActionEligibilityToString(): ?string
     {
-        return Choices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility];
+        return $this->hsgActionEligibility ? Choices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility] : null;
     }
 
     public function setHsgActionEligibility(?int $hsgActionEligibility): self
@@ -648,9 +754,9 @@ class EvalHousingGroup
         return $this->hsgActionRecord;
     }
 
-    public function getHsgActionRecordList()
+    public function getHsgActionRecordToString(): ?string
     {
-        return Choices::YES_NO[$this->hsgActionRecord];
+        return $this->hsgActionRecord ? Choices::YES_NO[$this->hsgActionRecord] : null;
     }
 
     public function setHsgActionRecord(?int $hsgActionRecord): self
@@ -701,9 +807,9 @@ class EvalHousingGroup
         return $this->expulsionInProgress;
     }
 
-    public function getExpulsionInProgressList()
+    public function getExpulsionInProgressToString(): ?string
     {
-        return Choices::YES_NO[$this->expulsionInProgress];
+        return $this->expulsionInProgress ? Choices::YES_NO[$this->expulsionInProgress] : null;
     }
 
     public function setExpulsionInProgress(?int $expulsionInProgress): self
@@ -718,9 +824,9 @@ class EvalHousingGroup
         return $this->publicForce;
     }
 
-    public function getPublicForceList()
+    public function getPublicForceToString(): ?string
     {
-        return Choices::YES_NO[$this->publicForce];
+        return $this->publicForce ? Choices::YES_NO[$this->publicForce] : null;
     }
 
     public function setPublicForce(?int $publicForce): self
@@ -759,9 +865,9 @@ class EvalHousingGroup
         return $this->housingExperience;
     }
 
-    public function getHousingExperienceList()
+    public function getHousingExperienceToString(): ?string
     {
-        return Choices::YES_NO[$this->housingExperience];
+        return $this->housingExperience ? Choices::YES_NO[$this->housingExperience] : null;
     }
 
     public function setHousingExperience(?int $housingExperience): self
@@ -788,9 +894,9 @@ class EvalHousingGroup
         return $this->fsl;
     }
 
-    public function getFslList()
+    public function getFslToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->fsl];
+        return $this->fsl ? Choices::YES_NO_BOOLEAN[$this->fsl] : null;
     }
 
     public function setFsl(?int $fsl): self
@@ -805,9 +911,9 @@ class EvalHousingGroup
         return $this->fslEligibility;
     }
 
-    public function getFslEligibilityList()
+    public function getFslEligibilityToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->fslEligibility];
+        return $this->fslEligibility ? Choices::YES_NO_BOOLEAN[$this->fslEligibility] : null;
     }
 
     public function setFslEligibility(?int $fslEligibility): self
@@ -822,9 +928,9 @@ class EvalHousingGroup
         return $this->cafEligibility;
     }
 
-    public function getCafEligibilityList()
+    public function getCafEligibilityToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->cafEligibility];
+        return $this->cafEligibility ? Choices::YES_NO_BOOLEAN[$this->cafEligibility] : null;
     }
 
     public function setCafEligibility(?int $cafEligibility): self
@@ -839,9 +945,9 @@ class EvalHousingGroup
         return $this->otherHelps;
     }
 
-    public function getOtherHelpsList()
+    public function getOtherHelpsToString(): ?string
     {
-        return Choices::YES_NO_BOOLEAN[$this->otherHelps];
+        return $this->otherHelps ? Choices::YES_NO_BOOLEAN[$this->otherHelps] : null;
     }
 
     public function setOtherHelps(?int $otherHelps): self
@@ -880,9 +986,9 @@ class EvalHousingGroup
         return $this->housingStatus;
     }
 
-    public function getHousingStatusList()
+    public function getHousingStatusToString(): ?string
     {
-        return self::HOUSING_STATUS[$this->housingStatus];
+        return $this->housingStatus ? self::HOUSING_STATUS[$this->housingStatus] : null;
     }
 
     public function setHousingStatus(?int $housingStatus): self
@@ -897,9 +1003,9 @@ class EvalHousingGroup
         return $this->housing;
     }
 
-    public function getHousingList()
+    public function getHousingToString(): ?string
     {
-        return Choices::YES_NO[$this->housing];
+        return $this->housing ? Choices::YES_NO[$this->housing] : null;
     }
 
     public function setHousing(?int $housing): self
@@ -973,9 +1079,9 @@ class EvalHousingGroup
         return $this->endDomiciliationDate;
     }
 
-    public function getDomiciliationList()
+    public function getDomiciliationToString(): ?string
     {
-        return Choices::YES_NO[$this->domiciliation];
+        return $this->domiciliation ? Choices::YES_NO[$this->domiciliation] : null;
     }
 
     public function setEndDomiciliationDate(?\DateTimeInterface $endDomiciliationDate): self

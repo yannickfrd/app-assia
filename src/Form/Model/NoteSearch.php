@@ -46,7 +46,7 @@ class NoteSearch
         return $this;
     }
 
-    public function getTypeList()
+    public function getTypeString()
     {
         return Note::TYPE[$this->type];
     }
@@ -63,7 +63,7 @@ class NoteSearch
         return $this;
     }
 
-    public function getStatusList()
+    public function getStatusString()
     {
         return Note::STATUS[$this->status];
     }

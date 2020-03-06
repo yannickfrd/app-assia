@@ -233,7 +233,7 @@
                         </th>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
-                        <td>{% if user.status %}{{ user.statusList }}{% endif %}</td>
+                        <td>{% if user.status %}{{ user.statusToString }}{% endif %}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
                     </tr>

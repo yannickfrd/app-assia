@@ -94,7 +94,7 @@ class EvalJusticePerson
         return $this;
     }
 
-    public function getJusticeStatusList()
+    public function getJusticeStatusToString(): ?string
     {
         return self::JUSTICE_STATUS[$this->justiceStatus];
     }
@@ -111,7 +111,7 @@ class EvalJusticePerson
         return $this;
     }
 
-    public function getJusticeActList()
+    public function getJusticeActToString(): ?string
     {
         return self::JUSTICE_ACT[$this->justiceAct];
     }

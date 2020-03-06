@@ -36,9 +36,9 @@ class PersonExport
         $roles = [];
         foreach ($person->getRolesPerson() as $roleUser) {
             $groupPeople = $roleUser->getGroupPeople();
-            $typologies[] = $groupPeople->getFamilyTypologyType();
+            $typologies[] = $groupPeople->getFamilyTypologyToString();
             $nbPeople[] = $groupPeople->getNbPeople();
-            $roles[] = $roleUser->getRoleList();
+            $roles[] = $roleUser->getRoleToString();
         }
 
         return [
@@ -46,7 +46,7 @@ class PersonExport
             "Nom" => $person->getLastname(),
             "Prénom" => $person->getFirstname(),
             "Date de naissance" => Date::PHPToExcel($person->getBirthdate()->format("d/m/Y")),
-            "Sexe" => $person->getGenderList(),
+            "Sexe" => $person->getGenderToString(),
             "Typologie familiale" => join($typologies, ", "),
             "Nb de personnes" => join($nbPeople, ", "),
             "Rôle dans le groupe" => join($roles, ", "),

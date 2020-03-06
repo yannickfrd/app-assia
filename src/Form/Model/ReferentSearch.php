@@ -40,7 +40,7 @@ class ReferentSearch
         return $this;
     }
 
-    public function getTypeList()
+    public function getTypeString()
     {
         return Referent::TYPE[$this->type];
     }

@@ -159,8 +159,8 @@ class NoteController extends AbstractController
             "msg" => "La note sociale a été enregistrée.",
             "data" => [
                 "noteId" => $note->getId(),
-                "type" => $note->getTypeList(),
-                "status" => $note->getStatusList(),
+                "type" => $note->getTypeToString(),
+                "status" => $note->getStatusToString(),
                 "editInfo" => "| Créé le " . date_format($now, "d/m/Y à H:i") .  " par " . $note->getCreatedBy()->getFullname()
             ]
         ], 200);
@@ -186,8 +186,8 @@ class NoteController extends AbstractController
             "msg" => "La note sociale a été modifiée.",
             "data" => [
                 "noteId" => $note->getId(),
-                "type" => $note->getTypeList(),
-                "status" => $note->getStatusList(),
+                "type" => $note->getTypeToString(),
+                "status" => $note->getStatusToString(),
                 "editInfo" => "(modifié le " . date_format($note->getUpdatedAt(), "d/m/Y à H:i") . " par " . $note->getUpdatedBy()->getFullname() . ")"
             ]
         ], 200);

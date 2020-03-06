@@ -47,7 +47,7 @@
 			<div class="calendar-table calendar-{{ calendar.weeks }}weeks">
 				<div class="calendar-header text-secondary">
 					<div class="calendar-week-number"></div>
-					{% for day in calendar.daysList %}
+					{% for day in calendar.daysList%}
 						{% if loop.index0 < 5 %}
 							<div class="calendar-header-col week-5days">{{ day }}</div>
 						{% endif %}

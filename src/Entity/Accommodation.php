@@ -227,16 +227,16 @@ class Accommodation
         return $this->accommodationType;
     }
 
+    public function getAccommodationTypeToString(): ?string
+    {
+        return self::ACCOMMODATION_TYPE[$this->accommodationType];
+    }
+
     public function setAccommodationType(?int $accommodationType): self
     {
         $this->accommodationType = $accommodationType;
 
         return $this;
-    }
-
-    public function getAccommodationTypeList()
-    {
-        return self::ACCOMMODATION_TYPE[$this->accommodationType];
     }
 
     public function getConfiguration(): ?int
@@ -251,7 +251,7 @@ class Accommodation
         return $this;
     }
 
-    public function getConfigurationList()
+    public function getConfigurationToString(): ?string
     {
         return self::CONFIGURATION[$this->configuration];
     }
@@ -261,16 +261,16 @@ class Accommodation
         return $this->individualCollective;
     }
 
+    public function getIndividualCollectiveToString(): ?string
+    {
+        return self::INDIVIDUAL_COLLECTIVE[$this->individualCollective];
+    }
+
     public function setIndividualCollective(?int $individualCollective): self
     {
         $this->individualCollective = $individualCollective;
 
         return $this;
-    }
-
-    public function getIndividualCollectiveList()
-    {
-        return self::INDIVIDUAL_COLLECTIVE[$this->individualCollective];
     }
 
     public function getComment(): ?string
@@ -384,7 +384,7 @@ class Accommodation
     /**
      * @return Collection|AccommodationGroup[]
      */
-    public function getAccommodationGroups(): Collection
+    public function getAccommodationGroups(): ?Collection
     {
         return $this->accommodationGroups;
     }

@@ -131,7 +131,7 @@ class Export
         return $this->status;
     }
 
-    public function getStatusList()
+    public function getStatusString()
     {
         return SupportGroup::STATUS[$this->status];
     }
@@ -155,7 +155,7 @@ class Export
         return $this;
     }
 
-    public function getSupportDatesList()
+    public function getSupportDatesString()
     {
         return self::SUPPORT_DATES[$this->supportDates];
     }

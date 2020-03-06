@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalBudgetGroupRepository")
@@ -18,16 +19,19 @@ class EvalBudgetGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $resourcesGroupAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $chargesGroupAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $debtsGroupAmt;
 
@@ -43,11 +47,13 @@ class EvalBudgetGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $monthlyRepaymentAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $budgetBalanceAmt;
 

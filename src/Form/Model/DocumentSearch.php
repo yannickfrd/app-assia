@@ -40,7 +40,7 @@ class DocumentSearch
         return $this;
     }
 
-    public function getTypeList()
+    public function getTypeString()
     {
         return Document::TYPE[$this->type];
     }

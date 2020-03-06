@@ -34,7 +34,7 @@
                     {{ supportPerson.person.fullname }}
                     {% endfor %}                     
                     </td>
-                     <td class="align-middle">{{ note.statusList }}</td>
+                     <td class="align-middle">{{ note.statusToString }}</td>
                      <td class="align-middle">{{ note.createdAt| date("d/m/Y") }}</td>
                      <td class="align-middle">{{ note.updatedAt| date("d/m/Y") }}</td>
                  </tr>

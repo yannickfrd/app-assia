@@ -79,10 +79,10 @@ Notes sociales | Esperer95.app
 				<div class="card-header">
 					<h3 class="card-title h5 text-{{ theme_color }}">{{ note.title }}</h3>
 					<span class="js-note-type" data-value={{ note.type }}>
-						{{ note.typeList }}
+						{{ note.typeToString }}
 					</span>
 					<span class="js-note-status" data-value={{ note.status }}>
-						({{ note.statusList }})</span>
+						({{ note.statusToString }})</span>
 					<span class="small text-secondary js-note-created">| Créé le {{note.createdAt | date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
 					</span>
 					<span class="small text-secondary js-note-updated">

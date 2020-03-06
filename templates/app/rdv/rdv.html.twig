@@ -28,7 +28,7 @@
                     <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
                             href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span
                                 class="fas fa-users mr-2"></span>Fiche groupe <span
-                                class="small">{{ support.groupPeople.getFamilyTypologyType }}</span></a></li>
+                                class="small">{{ support.groupPeople.familyTypologyToString }}</span></a></li>
                     <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
                             href="{{ path('support_edit', {'id':support.id }) }}">Suivi social</a></li>
                     <li class="breadcrumb-item active" aria-current="page">

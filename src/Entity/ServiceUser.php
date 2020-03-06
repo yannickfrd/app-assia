@@ -66,7 +66,7 @@ class ServiceUser
         return $this;
     }
 
-    public function getRoleList()
+    public function getRoleString(): ?string
     {
         return self::ROLE[$this->role];
     }

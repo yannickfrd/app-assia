@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\DeviceRepository")
  * @UniqueEntity(
  *  fields={"name"},
- *  message="Ce nom de dispositif existe déjà."
+ *  message="Ce dispositif existe déjà."
  * )
  */
 class Device
@@ -84,7 +84,7 @@ class Device
     }
 
 
-    public function __toString()
+    public function __toToString()
     {
         return strval($this->id);
     }
@@ -181,7 +181,7 @@ class Device
     /**
      * @return Collection|ServiceDevice[]
      */
-    public function getServiceDevices(): Collection
+    public function getServiceDevices(): ?Collection
     {
         return $this->serviceDevices;
     }
@@ -212,7 +212,7 @@ class Device
     /**
      * @return Collection|Accommodation[]
      */
-    public function getAccommodations(): Collection
+    public function getAccommodations(): ?Collection
     {
         return $this->accommodations;
     }
@@ -243,7 +243,7 @@ class Device
     /**
      * @return Collection|SupportGroup[]
      */
-    public function getSupportGroup(): Collection
+    public function getSupportGroup(): ?Collection
     {
         return $this->supportGroup;
     }

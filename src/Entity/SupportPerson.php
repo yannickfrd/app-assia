@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Entity\RolePerson;
+use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -26,18 +28,30 @@ class SupportPerson
     private $role;
 
     /**
+     * @Groups("export")
+     */
+    private $roleToString;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $head;
 
     /**
+     * Groups("export")
+     */
+    private $headToString;
+
+    /**
      * @ORM\Column(type="date")
      * @Assert\NotNull(message="La date de début ne doit pas être vide.")
+     * @Groups("export")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $endDate;
 
@@ -49,12 +63,23 @@ class SupportPerson
     private $status;
 
     /**
+     * @Groups("export")
+     */
+    private $statusToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $endStatus;
 
     /**
+     * @Groups("export")
+     */
+    private $endStatusToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $endStatusComment;
 
@@ -117,6 +142,11 @@ class SupportPerson
         return $this->role;
     }
 
+    public function getRoleToString(): ?string
+    {
+        return RolePerson::ROLE[$this->role];
+    }
+
     public function setRole(?int $role): self
     {
         $this->role = $role;
@@ -124,14 +154,14 @@ class SupportPerson
         return $this;
     }
 
-    public function getRoleList()
-    {
-        return RolePerson::ROLE[$this->role];
-    }
-
     public function getHead(): ?bool
     {
         return $this->head;
+    }
+
+    public function getHeadToString(): ?string
+    {
+        return Choices::YES_NO_BOOLEAN[$this->head];
     }
 
     public function setHead(?bool $head): self
@@ -190,9 +220,9 @@ class SupportPerson
         return $this;
     }
 
-    public function getEndStatusList()
+    public function getEndStatusToString(): ?string
     {
-        return SupportGroup::END_STATUS[$this->endStatus];
+        return $this->endStatus ? SupportGroup::END_STATUS[$this->endStatus] : null;
     }
 
     public function getEndStatusComment(): ?string
@@ -244,9 +274,9 @@ class SupportPerson
         return $this;
     }
 
-    public function getStatusList()
+    public function getStatusToString(): ?string
     {
-        return SupportGroup::STATUS[$this->status];
+        return $this->status ? SupportGroup::STATUS[$this->status] : null;
     }
 
     public function getPerson(): ?Person
@@ -276,7 +306,7 @@ class SupportPerson
     /**
      * @return Collection|Note[]
      */
-    public function getNotes(): Collection
+    public function getNotes(): ?Collection
     {
         return $this->notes;
     }
@@ -307,7 +337,7 @@ class SupportPerson
     /**
      * @return Collection|EvaluationPerson[]
      */
-    public function getEvaluationsPerson(): Collection
+    public function getEvaluationsPerson(): ?Collection
     {
         return $this->evaluationsPerson;
     }

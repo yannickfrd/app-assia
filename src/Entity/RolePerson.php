@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Entity\Person;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Form\Utils\Choices;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
@@ -42,11 +44,21 @@ class RolePerson
     private $head;
 
     /**
+     * Groups("export")
+     */
+    private $headToString;
+
+    /**
      * @ORM\Column(type="smallint")
      * @Assert\NotNull(message="Le rôle ne doit pas être vide.")
      * @Assert\Range(min = 1, max = 7, minMessage="Ne doit pas être vide.",  maxMessage="Le rôle ne doit pas être vide.")
      */
     private $role;
+
+    /**
+     * Groups("export")
+     */
+    private $roleToString;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson", cascade={"persist"})
@@ -88,6 +100,11 @@ class RolePerson
         return $this->head;
     }
 
+    public function getHeadToString(): ?string
+    {
+        return Choices::YES_NO_BOOLEAN[$this->head];
+    }
+
     public function setHead(?bool $head): self
     {
         $this->head = $head;
@@ -100,16 +117,16 @@ class RolePerson
         return $this->role;
     }
 
+    public function getRoleToString(): ?string
+    {
+        return self::ROLE[$this->role];
+    }
+
     public function setRole(?int $role): self
     {
         $this->role = $role;
 
         return $this;
-    }
-
-    public function getRoleList()
-    {
-        return self::ROLE[$this->role];
     }
 
     public function getPerson(): ?Person

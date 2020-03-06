@@ -134,7 +134,7 @@ class Rdv
         return $this;
     }
 
-    public function getStatusList()
+    public function getStatusToString(): ?string
     {
         return self::STATUS[$this->status];
     }

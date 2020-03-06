@@ -9,11 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
+ * @UniqueEntity(
+ *     fields={"name"},
+ *     message="Ce service existe déjà !")
  */
 class Service
 {
@@ -34,6 +39,7 @@ class Service
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull(message="Le nom du service ne doit pas être vide.")
+     * Groups("export")
      */
     private $name;
 
@@ -179,7 +185,7 @@ class Service
         $this->organizations = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toToString()
     {
         return strval($this->id);
     }
@@ -252,7 +258,7 @@ class Service
     /**
      * @return Collection|ServiceUser[]
      */
-    public function getserviceUser(): Collection
+    public function getserviceUser(): ?Collection
     {
         return $this->serviceUser;
     }
@@ -295,7 +301,7 @@ class Service
     /**
      * @return Collection|SupportGroup[]
      */
-    public function getSupportGroup(): Collection
+    public function getSupportGroup(): ?Collection
     {
         return $this->supportGroup;
     }
@@ -395,9 +401,9 @@ class Service
         return $this;
     }
 
-    public function getSupportAccessList()
+    public function getSupportAccessToString(): ?string
     {
-        return self::SUPPORT_ACCESS[$this->supportAccess];
+        return $this->supportAccess ? self::SUPPORT_ACCESS[$this->supportAccess] : null;
     }
 
     public function getPreAdmission(): ?bool
@@ -511,7 +517,7 @@ class Service
     /**
      * @return Collection|ServiceDevice[]
      */
-    public function getServiceDevices(): Collection
+    public function getServiceDevices(): ?Collection
     {
         return $this->serviceDevices;
     }
@@ -542,7 +548,7 @@ class Service
     /**
      * @return Collection|Accommodation[]
      */
-    public function getAccommodations(): Collection
+    public function getAccommodations(): ?Collection
     {
         return $this->accommodations;
     }
@@ -573,7 +579,7 @@ class Service
     /**
      * @return Collection|Organization[]
      */
-    public function getOrganizations(): Collection
+    public function getOrganizations(): ?Collection
     {
         return $this->organizations;
     }

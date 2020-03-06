@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalAdmPersonRepository")
@@ -53,6 +54,11 @@ class EvalAdmPerson
     private $nationality;
 
     /**
+     * @Groups("export")
+     */
+    private $nationalityToString;
+
+    /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $country;
@@ -63,9 +69,19 @@ class EvalAdmPerson
     private $paper;
 
     /**
+     * @Groups("export")
+     */
+    private $paperToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $paperType;
+
+    /**
+     * @Groups("export")
+     */
+    private $paperTypeToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -73,9 +89,19 @@ class EvalAdmPerson
     private $asylumBackground;
 
     /**
+     * @Groups("export")
+     */
+    private $asylumBackgroundToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $asylumStatus;
+
+    /**
+     * @Groups("export")
+     */
+    private $asylumStatusToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -98,6 +124,11 @@ class EvalAdmPerson
     private $workRight;
 
     /**
+     * @Groups("export")
+     */
+    private $workRightToString;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalAdmPerson;
@@ -118,18 +149,17 @@ class EvalAdmPerson
         return $this->nationality;
     }
 
+    public function getNationalityToString(): ?string
+    {
+        return $this->nationality ? self::NATIONALITY[$this->nationality] : null;
+    }
+
     public function setNationality(?int $nationality): self
     {
         $this->nationality = $nationality;
 
         return $this;
     }
-
-    public function getNationalityList()
-    {
-        return self::NATIONALITY[$this->nationality];
-    }
-
 
     public function getCountry(): ?string
     {
@@ -148,6 +178,11 @@ class EvalAdmPerson
         return $this->paper;
     }
 
+    public function getPaperToString(): ?string
+    {
+        return $this->paper ? Choices::YES_NO_IN_PROGRESS[$this->paper] : null;
+    }
+
     public function setPaper(?int $paper): self
     {
         $this->paper = $paper;
@@ -155,14 +190,14 @@ class EvalAdmPerson
         return $this;
     }
 
-    public function getPaperList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->paper];
-    }
-
     public function getPaperType(): ?int
     {
         return $this->paperType;
+    }
+
+    public function getPaperTypeToString(): ?string
+    {
+        return $this->paperType ? self::PAPER_TYPE[$this->paperType] : null;
     }
 
     public function setPaperType(?int $paperType): self
@@ -172,15 +207,14 @@ class EvalAdmPerson
         return $this;
     }
 
-    public function getPaperTypeList()
-    {
-        return self::PAPER_TYPE[$this->paperType];
-    }
-
-
     public function getAsylumBackground(): ?int
     {
         return $this->asylumBackground;
+    }
+
+    public function getAsylumBackgroundToString(): ?string
+    {
+        return $this->asylumBackground ? Choices::YES_NO[$this->asylumBackground] : null;
     }
 
     public function setAsylumBackground(?int $asylumBackground): self
@@ -190,14 +224,14 @@ class EvalAdmPerson
         return $this;
     }
 
-    public function getAsylumBackgroundList()
-    {
-        return Choices::YES_NO[$this->asylumBackground];
-    }
-
     public function getAsylumStatus(): ?int
     {
         return $this->asylumStatus;
+    }
+
+    public function getAsylumStatusToString(): ?string
+    {
+        return $this->asylumStatus ? self::RIGHT_TO_RESIDE[$this->asylumStatus] : null;
     }
 
     public function setAsylumStatus(?int $asylumStatus): self
@@ -205,11 +239,6 @@ class EvalAdmPerson
         $this->asylumStatus = $asylumStatus;
 
         return $this;
-    }
-
-    public function getAsylumStatusList()
-    {
-        return self::RIGHT_TO_RESIDE[$this->asylumStatus];
     }
 
     public function getEndValidPermitDate(): ?\DateTimeInterface
@@ -253,16 +282,16 @@ class EvalAdmPerson
         return $this->workRight;
     }
 
+    public function getWorkRightToString(): ?string
+    {
+        return $this->workRight ? Choices::YES_NO_IN_PROGRESS[$this->workRight] : null;
+    }
+
     public function setWorkRight(?int $workRight): self
     {
         $this->workRight = $workRight;
 
         return $this;
-    }
-
-    public function getWorkRightList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->workRight];
     }
 
     public function getCommentEvalAdmPerson(): ?string

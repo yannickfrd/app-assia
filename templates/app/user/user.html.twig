@@ -32,7 +32,7 @@
                 <div class="col-4 col-md-2 mb-3">Login :</div>
                 <div class="col-8 col-md-4">{{ app.user.username }}</div>
                 <div class="col-4 col-md-2 mb-3">Fonction :</div>
-                <div class="col-8 col-md-4">{{ app.user.statusList }}</div>
+                <div class="col-8 col-md-4">{{ app.user.statusToString }}</div>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-md-6">{{ form_row(form.email) }}</div>
@@ -156,10 +156,10 @@
                         {% for supportPerson in support.supportPerson|filter(a => a.role != 3) %}
                         {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
-                        <td class="align-middle">{{ support.groupPeople.getFamilyTypologyType }}
+                        <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
                             {% if support.groupPeople.nbPeople > 1 %}{{ support.groupPeople.nbPeople }} personnes{% endif %}
                         </td>
-                        <td class="align-middle">{{ support.getstatusList }}</td>
+                        <td class="align-middle">{{ support.statusToString }}</td>
                         <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
                         <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
                         </td>

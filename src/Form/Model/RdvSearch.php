@@ -58,7 +58,7 @@ class RdvSearch
         return $this;
     }
 
-    public function getStatusList()
+    public function getStatusString()
     {
         return Rdv::STATUS[$this->status];
     }

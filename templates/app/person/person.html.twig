@@ -35,7 +35,7 @@ Esperer95.app
             <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
                     href="{{ path('group_people_show', {'id': group_people.id}) }}"><span
                         class="fas fa-users mr-2"></span>Fiche groupe</a> <span
-                    class="small text-secondary">{{ group_people.getFamilyTypologyType }}
+                    class="small text-secondary">{{ group_people.familyTypologyToString }}
                     {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }} personnes){% endif %}
                 </span></li>
             <li class="breadcrumb-item active" aria-current="page">Fiche individuelle</li>
@@ -157,10 +157,10 @@ Esperer95.app
                             class="d-none d-sm-table-cell">
                             {{ role.groupPeople.id }}</td>
                         <td class="d-table-row d-sm-table-cell">
-                            {{ role.groupPeople.getFamilyTypologyType }}
+                            {{ role.groupPeople.familyTypologyToString }}
                         </td>
                         <td class="d-table-row d-sm-table-cell">{{ role.groupPeople.nbPeople }}</td>
-                        <td>{{ role.getRoleList }} {% if role.head %} (DP){% endif %}</td>
+                        <td>{{ role.roleToString }} {% if role.head %} (DP){% endif %}</td>
                         <td class="d-none d-sm-table-cell">
                             {{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
                         <td class="d-none d-sm-table-cell">

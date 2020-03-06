@@ -245,9 +245,9 @@ class SupportGroup
         return $this->status;
     }
 
-    public function getStatusList()
+    public function getStatusToString(): ?string
     {
-        return self::STATUS[$this->status];
+        return $this->status ? self::STATUS[$this->status] : null;
     }
 
     public function setStatus(?int $status): self
@@ -317,9 +317,9 @@ class SupportGroup
         return $this;
     }
 
-    public function getEndStatusList()
+    public function getEndStatusToString(): ?string
     {
-        return self::END_STATUS[$this->endStatus];
+        return $this->endStatus ? self::END_STATUS[$this->endStatus] : null;
     }
 
     public function getEndStatusComment(): ?string
@@ -464,7 +464,7 @@ class SupportGroup
     /**
      * @return Collection|Note[]
      */
-    public function getNotes(): Collection
+    public function getNotes(): ?Collection
     {
         return $this->notes;
     }
@@ -495,7 +495,7 @@ class SupportGroup
     /**
      * @return Collection|Rdv[]
      */
-    public function getRdvs(): Collection
+    public function getRdvs(): ?Collection
     {
         return $this->rdvs;
     }
@@ -526,7 +526,7 @@ class SupportGroup
     /**
      * @return Collection|Document[]
      */
-    public function getDocuments(): Collection
+    public function getDocuments(): ?Collection
     {
         return $this->documents;
     }
@@ -557,7 +557,7 @@ class SupportGroup
     /**
      * @return Collection|AccommodationGroup[]
      */
-    public function getAccommodationGroups(): Collection
+    public function getAccommodationGroups(): ?Collection
     {
         return $this->accommodationGroups;
     }
@@ -588,7 +588,7 @@ class SupportGroup
     /**
      * @return Collection|EvaluationGroup[]
      */
-    public function getEvaluationsGroup(): Collection
+    public function getEvaluationsGroup(): ?Collection
     {
         return $this->evaluationsGroup;
     }

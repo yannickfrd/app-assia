@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -86,6 +87,11 @@ class User implements UserInterface
      */
     private $firstname;
     //* @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
+
+    /**
+     * @Groups("export")
+     */
+    private $fullname;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -363,9 +369,9 @@ class User implements UserInterface
         return $this->status;
     }
 
-    public function getStatusList()
+    public function getStatusToString(): ?string
     {
-        return self::STATUS[$this->status];
+        return $this->status ? self::STATUS[$this->status] : null;
     }
 
     public function setStatus(?int $status): self
@@ -485,7 +491,7 @@ class User implements UserInterface
     /**
      * @return Collection|Person[]
      */
-    public function getPeople(): Collection
+    public function getPeople(): ?Collection
     {
         return $this->people;
     }
@@ -516,7 +522,7 @@ class User implements UserInterface
     /**
      * @return Collection|GroupPeople[]
      */
-    public function getGroupPeople(): Collection
+    public function getGroupPeople(): ?Collection
     {
         return $this->groupPeople;
     }
@@ -547,7 +553,7 @@ class User implements UserInterface
     /**
      * @return Collection|SupportGroup[]
      */
-    public function getsupportsGroupCreated(): Collection
+    public function getsupportsGroupCreated(): ?Collection
     {
         return $this->supportsGroupCreated;
     }
@@ -578,7 +584,7 @@ class User implements UserInterface
     /**
      * @return Collection|ServiceUser[]
      */
-    public function getServiceUser(): Collection
+    public function getServiceUser(): ?Collection
     {
         return $this->serviceUser;
     }
@@ -612,7 +618,7 @@ class User implements UserInterface
     /**
      * @return Collection|UserConnection[]
      */
-    public function getUserConnections(): Collection
+    public function getUserConnections(): ?Collection
     {
         return $this->userConnections;
     }
@@ -679,7 +685,7 @@ class User implements UserInterface
     /**
      * @return Collection|ReferentSupport[]
      */
-    public function getReferentSupport(): Collection
+    public function getReferentSupport(): ?Collection
     {
         return $this->referentSupport;
     }
@@ -710,7 +716,7 @@ class User implements UserInterface
     /**
      * @return Collection|SupportGroup[]
      */
-    public function getReferent2Support(): Collection
+    public function getReferent2Support(): ?Collection
     {
         return $this->referent2Support;
     }
@@ -741,7 +747,7 @@ class User implements UserInterface
     /**
      * @return Collection|Note[]
      */
-    public function getNotesCreated(): Collection
+    public function getNotesCreated(): ?Collection
     {
         return $this->notesCreated;
     }
@@ -772,7 +778,7 @@ class User implements UserInterface
     /**
      * @return Collection|Rdv[]
      */
-    public function getRdvs(): Collection
+    public function getRdvs(): ?Collection
     {
         return $this->rdvs;
     }
@@ -803,7 +809,7 @@ class User implements UserInterface
     /**
      * @return Collection|Document[]
      */
-    public function getDocuments(): Collection
+    public function getDocuments(): ?Collection
     {
         return $this->documents;
     }

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalFamilyGroupRepository")
@@ -28,6 +29,7 @@ class EvalFamilyGroup
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
      */
     private $nbDependentChildren;
 
@@ -37,12 +39,23 @@ class EvalFamilyGroup
     private $childrenBehind;
 
     /**
+     * @Groups("export")
+     */
+    private $childrenBehindToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $famlReunification;
 
     /**
+     * @Groups("export")
+     */
+    private $famlReunificationToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
      */
     private $nbPeopleReunification;
 
@@ -92,9 +105,9 @@ class EvalFamilyGroup
         return $this;
     }
 
-    public function getChildrenBehindList()
+    public function getChildrenBehindToString(): ?string
     {
-        return Choices::YES_NO[$this->childrenBehind];
+        return $this->childrenBehind ? Choices::YES_NO[$this->childrenBehind] : null;
     }
 
     public function getFamlReunification(): ?int
@@ -109,9 +122,9 @@ class EvalFamilyGroup
         return $this;
     }
 
-    public function getFamlReunificationList()
+    public function getFamlReunificationToString(): ?string
     {
-        return self::FAML_REUNIFICATION[$this->famlReunification];
+        return $this->famlReunification ? self::FAML_REUNIFICATION[$this->famlReunification] : null;
     }
 
     public function getNbPeopleReunification(): ?int

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Form\Utils\Choices;
 use App\Entity\EvaluationPerson;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalProfPersonRepository")
@@ -80,9 +81,19 @@ class EvalProfPerson
     private $schoolLevel;
 
     /**
+     * @Groups("export")
+     */
+    private $schoolLevelToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $profExperience;
+
+    /**
+     * @Groups("export")
+     */
+    private $profExperienceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -90,7 +101,13 @@ class EvalProfPerson
     private $profStatus;
 
     /**
+     * @Groups("export")
+     */
+    private $profStatusToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $jobType;
 
@@ -98,6 +115,11 @@ class EvalProfPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $contractType;
+
+    /**
+     * @Groups("export")
+     */
+    private $contractTypeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -111,6 +133,7 @@ class EvalProfPerson
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups("export")
      */
     private $nbWorkingHours;
 
@@ -135,6 +158,11 @@ class EvalProfPerson
     private $transportMeansType;
 
     /**
+     * @Groups("export")
+     */
+    private $transportMeansTypeToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $transportMeans;
@@ -143,6 +171,11 @@ class EvalProfPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $rqth;
+
+    /**
+     * @Groups("export")
+     */
+    private $rqthToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -176,6 +209,11 @@ class EvalProfPerson
         return $this->schoolLevel;
     }
 
+    public function getSchoolLevelToString(): ?string
+    {
+        return $this->schoolLevel ? self::SCHOOL_LEVEL[$this->schoolLevel] : null;
+    }
+
     public function setSchoolLevel(?int $schoolLevel): self
     {
         $this->schoolLevel = $schoolLevel;
@@ -183,14 +221,14 @@ class EvalProfPerson
         return $this;
     }
 
-    public function getSchoolLevelList()
-    {
-        return self::SCHOOL_LEVEL[$this->schoolLevel];
-    }
-
     public function getProfExperience(): ?int
     {
         return $this->profExperience;
+    }
+
+    public function getProfExperienceToString(): ?string
+    {
+        return $this->profExperience ? self::PROF_EXPERIENCE[$this->profExperience] : null;
     }
 
     public function setProfExperience(?int $profExperience): self
@@ -200,14 +238,14 @@ class EvalProfPerson
         return $this;
     }
 
-    public function getProfExperienceList()
-    {
-        return self::PROF_EXPERIENCE[$this->profExperience];
-    }
-
     public function getProfStatus(): ?int
     {
         return $this->profStatus;
+    }
+
+    public function getProfStatusToString(): ?string
+    {
+        return $this->profStatus ? self::PROF_STATUS[$this->profStatus] : null;
     }
 
     public function setProfStatus(?int $profStatus): self
@@ -215,11 +253,6 @@ class EvalProfPerson
         $this->profStatus = $profStatus;
 
         return $this;
-    }
-
-    public function getProfStatusList()
-    {
-        return self::PROF_STATUS[$this->profStatus];
     }
 
     public function getJobType(): ?string
@@ -239,16 +272,16 @@ class EvalProfPerson
         return $this->contractType;
     }
 
+    public function getContractTypeToString(): ?string
+    {
+        return $this->contractType ? self::CONTRACT_TYPE[$this->contractType] : null;
+    }
+
     public function setContractType(?int $contractType): self
     {
         $this->contractType = $contractType;
 
         return $this;
-    }
-
-    public function getContractTypeList()
-    {
-        return self::CONTRACT_TYPE[$this->contractType];
     }
 
     public function getContractStartDate(): ?\DateTimeInterface
@@ -328,18 +361,17 @@ class EvalProfPerson
         return $this->transportMeansType;
     }
 
+    public function getTransportMeansTypeToString(): ?string
+    {
+        return $this->transportMeansType ? self::TRANSFORT_MEANS[$this->transportMeansType] : null;
+    }
+
     public function setTransportMeansType(?int $transportMeansType): self
     {
         $this->transportMeansType = $transportMeansType;
 
         return $this;
     }
-
-    public function getTransportMeansTypeList()
-    {
-        return self::TRANSFORT_MEANS[$this->transportMeansType];
-    }
-
 
     public function getTransportMeans(): ?string
     {
@@ -358,18 +390,17 @@ class EvalProfPerson
         return $this->rqth;
     }
 
+    public function getRqthToString(): ?string
+    {
+        return $this->rqth ? Choices::YES_NO_IN_PROGRESS[$this->rqth] : null;
+    }
+
     public function setRqth(?int $rqth): self
     {
         $this->rqth = $rqth;
 
         return $this;
     }
-
-    public function getRqthList()
-    {
-        return Choices::YES_NO_IN_PROGRESS[$this->rqth];
-    }
-
 
     public function getCommentEvalProf(): ?string
     {

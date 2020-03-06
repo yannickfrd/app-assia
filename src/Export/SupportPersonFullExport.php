@@ -4,9 +4,10 @@ namespace App\Export;
 
 use App\Service\Export;
 use App\Entity\EvalAdmPerson;
+use App\Entity\InitEvalGroup;
 use App\Entity\SupportPerson;
 use App\Entity\EvalProfPerson;
-use App\Service\ObjectToArray;
+use App\Entity\InitEvalPerson;
 use App\Entity\EvalBudgetGroup;
 use App\Entity\EvalFamilyGroup;
 use App\Entity\EvalSocialGroup;
@@ -16,13 +17,16 @@ use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
+
+use App\Export\SupportPersonExport;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SupportPersonFullExport
 {
-    protected $arrayData;
-    protected $objectToArray;
+    protected $normalizer;
+    protected $translator;
     protected $datas;
 
     protected $initEvalGroup;
@@ -40,13 +44,19 @@ class SupportPersonFullExport
     protected $evalBudgetGroup;
     protected $evalHousingGroup;
 
-    public function __construct(ObjectToArray $objectToArray)
+    public function __construct(NormalizerInterface $normalizer, TranslatorInterface $translator)
     {
-        $this->arrayData = [];
-        $this->objectToArray = $objectToArray;
+        $this->normalizer = $normalizer;
+        $this->translator = $translator;
 
         $this->initEvalGroup = new InitEvalGroup();
         $this->initEvalPerson = new InitEvalPerson();
+
+        $this->evaluationGroup = new EvaluationGroup();
+        $this->evalBudgetGroup = new EvalBudgetGroup();
+        $this->evalFamilyGroup = new EvalFamilyGroup();
+        $this->evalHousingGroup = new EvalHousingGroup();
+        $this->evalSocialGroup = new EvalSocialGroup();
 
         $this->evaluationPerson = new EvaluationPerson();
         $this->evalAdmPerson = new EvalAdmPerson();
@@ -54,12 +64,6 @@ class SupportPersonFullExport
         $this->evalFamilyPerson = new EvalFamilyPerson();
         $this->evalProfPerson = new EvalProfPerson();
         $this->evalSocialPerson = new EvalSocialPerson();
-
-        $this->evaluationGroup = new EvaluationGroup();
-        $this->evalBudgetGroup = new EvalBudgetGroup();
-        $this->evalFamilyGroup = new EvalFamilyGroup();
-        $this->evalHousingGroup = new EvalHousingGroup();
-        $this->evalSocialGroup = new EvalSocialGroup();
     }
 
     /**
@@ -67,7 +71,8 @@ class SupportPersonFullExport
      */
     public function exportData($supports)
     {
-        $arrayData[] = array_keys($this->getDatas($supports[0]));
+        $arrayData = [];
+        $arrayData[] =  $this->getKeys(array_keys($this->getDatas($supports[0])));
 
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->getDatas($supportPerson);
@@ -89,27 +94,61 @@ class SupportPersonFullExport
         $this->datas = $supportPersonExport->getDatas($supportPerson);
 
         $evaluations = $supportPerson->getEvaluationsPerson();
-        $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();
-        $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
+        $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? $this->evaluationPerson;
+        $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
-        $this->mergeObject($supportPerson->getSupportGroup()->getInitEvalGroup() ?? $this->initEvalGroup, "initEvalGroup", "initEval");
-        $this->mergeObject($supportPerson->getInitEvalPerson() ?? $this->initEvalPerson, "initEvalPerson", "initEval");
-        $this->mergeObject($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, "evalSocialGroup", "social");
-        $this->mergeObject($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, "evalSocialPerson", "social");
-        $this->mergeObject($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, "evalAdmPerson", "adm");
-        $this->mergeObject($this->evaluationGroup->getEvalFamilyGroup() ?? $this->evalFamilyGroup, "evalFamilyGroup", "family");
-        $this->mergeObject($this->evaluationPerson->getEvalFamilyPerson() ?? $this->evalFamilyPerson, "evalFamilyPerson", "family");
-        $this->mergeObject($this->evaluationPerson->getEvalProfPerson() ?? $this->evalProfPerson, "evalProfPerson", "prof");
-        $this->mergeObject($this->evaluationGroup->getEvalBudgetGroup() ?? $this->evalBudgetGroup, "evalBudgetGroup", "budget");
-        $this->mergeObject($this->evaluationPerson->getEvalBudgetPerson() ?? $this->evalBudgetPerson, "evalBudgetPerson", "budget");
-        $this->mergeObject($this->evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, "evalHousingGroup", "housing");
+        $this->normalize($supportPerson->getSupportGroup()->getInitEvalGroup() ?? $this->initEvalGroup, "initEval");
+        $this->normalize($supportPerson->getInitEvalPerson() ?? $this->initEvalPerson, "initEval");
+        $this->normalize($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, "social");
+        $this->normalize($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, "social");
+        $this->normalize($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, "adm");
+        $this->normalize($this->evaluationGroup->getEvalFamilyGroup() ?? $this->evalFamilyGroup, "family");
+        $this->normalize($this->evaluationPerson->getEvalFamilyPerson() ?? $this->evalFamilyPerson, "family");
+        $this->normalize($this->evaluationPerson->getEvalProfPerson() ?? $this->evalProfPerson, "prof");
+        $this->normalize($this->evaluationGroup->getEvalBudgetGroup() ?? $this->evalBudgetGroup, "budget");
+        $this->normalize($this->evaluationPerson->getEvalBudgetPerson() ?? $this->evalBudgetPerson, "budget");
+        $this->normalize($this->evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, "housing");
 
         return $this->datas;
     }
 
-    protected function mergeObject($entity, $entityName, $translation)
+    // Normalise l'entité
+    protected function normalize($entity, $translation = null)
     {
-        $array = $this->objectToArray->getArray($entity,  $entityName, $translation);
+        $array = $this->normalizer->normalize($entity, null, ["groups" => "export"]);
+
+        foreach ($array as $key => $value) {
+            if ($value && stristr($key, "Date")) {
+                $array[$key] =  Date::stringToExcel(substr($value, 0, 10));
+            }
+            $newKey = $key . "#" . $translation;
+            $array[$newKey] = $array[$key];
+            unset($array[$key]);
+        }
         $this->datas = array_merge($this->datas, $array);
+    }
+
+    // Inverse l'écriture en camelCase
+    protected function unCamelCase($content, $separator = " ", $translation)
+    {
+        $content = preg_replace("#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#", $separator . "$1", $content);
+        return $this->translator->trans(ucfirst(strtolower($content)), [], $translation);
+    }
+
+    protected function getKeys($array)
+    {
+        $arrayKeys = [];
+        foreach ($array as $value) {
+            if (stristr($value, "#")) {
+                $array = explode("#", $value, 2);
+                $translation = $array[1];
+                $value = $this->unCamelCase(str_replace("ToString", "", $array[0]), " ", $translation);
+                $translation = $this->unCamelCase($translation, " ", $translation);
+                $arrayKeys[] = $value . " [" . $translation . "]";
+            } else {
+                $arrayKeys[] = $value;
+            }
+        }
+        return $arrayKeys;
     }
 }

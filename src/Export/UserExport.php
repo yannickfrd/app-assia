@@ -44,7 +44,7 @@ class UserExport
             "N° Utilisateur" => $user->getId(),
             "Nom" => $user->getLastname(),
             "Prénom" => $user->getFirstname(),
-            "Fonction" => $user->getStatusList(),
+            "Fonction" => $user->getStatusToString(),
             "Email" => $user->getEmail(),
             "Téléphone" => $user->getPhone(),
             "Service" => join($services, ", "),

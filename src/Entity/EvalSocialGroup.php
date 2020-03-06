@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Form\Utils\Choices;
+use App\Entity\EvaluationGroup;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalSocialGroupRepository")
@@ -68,14 +70,29 @@ class EvalSocialGroup
     private $reasonRequest;
 
     /**
+     * @Groups("export")
+     */
+    private $reasonRequestToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $wanderingTime;
 
     /**
+     * @Groups("export")
+     */
+    private $wanderingTimeToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $animal;
+
+    /**
+     * @Groups("export")
+     */
+    private $animalToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -110,9 +127,9 @@ class EvalSocialGroup
         return $this;
     }
 
-    public function getReasonRequestList()
+    public function getReasonRequestToString(): ?string
     {
-        return self::REASON_REQUEST[$this->reasonRequest];
+        return $this->reasonRequest ? self::REASON_REQUEST[$this->reasonRequest] : null;
     }
 
     public function getWanderingTime(): ?int
@@ -127,9 +144,9 @@ class EvalSocialGroup
         return $this;
     }
 
-    public function getWanderingTimeList()
+    public function getWanderingTimeToString(): ?string
     {
-        return self::WANDERING_TIME[$this->wanderingTime];
+        return $this->wanderingTime ? self::WANDERING_TIME[$this->wanderingTime] : null;
     }
 
     public function getEvaluationGroup(): ?EvaluationGroup
@@ -142,9 +159,9 @@ class EvalSocialGroup
         return $this->animal;
     }
 
-    public function getAnimalList()
+    public function getAnimalToString(): ?string
     {
-        return Choices::YES_NO[$this->animal];
+        return $this->animal ? Choices::YES_NO[$this->animal] : null;
     }
 
     public function setAnimal(?int $animal): self

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.1.0 02/03/2020
+1.1.1 09/03/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,12 +16,12 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.1.1 - 05/03/2020
+## Version 1.1.1 - 09/03/2020
 - Ajout du nom du dispositif après celui du service dans l'historique des suivis sociaux de la personne et du groupe
 - Ajout de l'item "Emploi" dans la liste déroulante du type de Document
 - Ajout du champ "Précision autres dettes" dans le formulaire de l'évaluation sociale
 - Ajout de l'adresse du logement sur la page d'accueil du suivi
-- Page d'accueil : tri des suivis en cours par ordre alphabétique
+- Page d'accueil (Mon espace) : tri des suivis en cours par ordre alphabétique
 - Modification du tri des personnes d'un groupe ou d'un suivi par âge
 - Modification du contrôle de saisie dans le suivi social  (statut et dates de début et de fin)
 - Correction du problème de modification de la prise en charge (erreur 500)
@@ -32,6 +32,8 @@ https://demo.esperer95.app
 - Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale pour certains ménages
 - Correction du problème de mise à jour du statut et date des suivis des personnes après la mise à jour du statut du suivi du groupe
 - Ajout de la situation initiale du suivi dans l'export Excel global
+- Normalisation des objects lors de l'export des suivis sociaux
+- Mise en place de l'annotation Groups "export" dans chaque entité + ajout des variables ToString
 
 ## Version 1.1.0 - 02/03/2020
 - Administration : possibilité de supprimer une personne, un groupe ou un suivi social (profil "Administrateur")

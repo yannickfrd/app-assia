@@ -128,7 +128,7 @@ class AccommodationSearch
         return $this;
     }
 
-    public function getSupportDatesList()
+    public function getSupportDatesString()
     {
         return self::ACCOMMODATION_DATES[$this->supportDates];
     }

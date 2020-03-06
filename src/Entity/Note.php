@@ -131,7 +131,7 @@ class Note
         return $this;
     }
 
-    public function getTypeList()
+    public function getTypeToString(): ?string
     {
         return self::TYPE[$this->type];
     }
@@ -148,7 +148,7 @@ class Note
         return $this;
     }
 
-    public function getStatusList()
+    public function getStatusToString(): ?string
     {
         return self::STATUS[$this->status];
     }

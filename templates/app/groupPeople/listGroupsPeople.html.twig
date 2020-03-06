@@ -90,8 +90,8 @@
                             {% elseif rolePerson.person.gender == 2 %}
                             <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></class>
                             {% endif %} </td>
-                        <td>{{ rolePerson.roleList }}{% if rolePerson.head %} (DP){% endif %}</td>
-                        <td>{{ groupPeople.familyTypologyType }}</td>
+                        <td>{{ rolePerson.roleToString }}{% if rolePerson.head %} (DP){% endif %}</td>
+                        <td>{{ groupPeople.familyTypologyToString }}</td>
                         <td>{{ groupPeople.nbPeople }}</td>
                     </tr>
                     {% endfor %}
