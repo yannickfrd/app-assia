@@ -83,8 +83,7 @@ class Device
         $this->supportGroup = new ArrayCollection();
     }
 
-
-    public function __toToString()
+    public function __toString()
     {
         return strval($this->id);
     }

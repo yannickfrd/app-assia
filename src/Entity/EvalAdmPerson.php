@@ -54,11 +54,6 @@ class EvalAdmPerson
     private $nationality;
 
     /**
-     * @Groups("export")
-     */
-    private $nationalityToString;
-
-    /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $country;
@@ -69,19 +64,9 @@ class EvalAdmPerson
     private $paper;
 
     /**
-     * @Groups("export")
-     */
-    private $paperToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $paperType;
-
-    /**
-     * @Groups("export")
-     */
-    private $paperTypeToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -89,19 +74,9 @@ class EvalAdmPerson
     private $asylumBackground;
 
     /**
-     * @Groups("export")
-     */
-    private $asylumBackgroundToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $asylumStatus;
-
-    /**
-     * @Groups("export")
-     */
-    private $asylumStatusToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -124,11 +99,6 @@ class EvalAdmPerson
     private $workRight;
 
     /**
-     * @Groups("export")
-     */
-    private $workRightToString;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalAdmPerson;
@@ -149,6 +119,9 @@ class EvalAdmPerson
         return $this->nationality;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getNationalityToString(): ?string
     {
         return $this->nationality ? self::NATIONALITY[$this->nationality] : null;
@@ -178,6 +151,9 @@ class EvalAdmPerson
         return $this->paper;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPaperToString(): ?string
     {
         return $this->paper ? Choices::YES_NO_IN_PROGRESS[$this->paper] : null;
@@ -195,6 +171,9 @@ class EvalAdmPerson
         return $this->paperType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPaperTypeToString(): ?string
     {
         return $this->paperType ? self::PAPER_TYPE[$this->paperType] : null;
@@ -212,6 +191,9 @@ class EvalAdmPerson
         return $this->asylumBackground;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAsylumBackgroundToString(): ?string
     {
         return $this->asylumBackground ? Choices::YES_NO[$this->asylumBackground] : null;
@@ -229,6 +211,9 @@ class EvalAdmPerson
         return $this->asylumStatus;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAsylumStatusToString(): ?string
     {
         return $this->asylumStatus ? self::RIGHT_TO_RESIDE[$this->asylumStatus] : null;
@@ -282,6 +267,9 @@ class EvalAdmPerson
         return $this->workRight;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getWorkRightToString(): ?string
     {
         return $this->workRight ? Choices::YES_NO_IN_PROGRESS[$this->workRight] : null;

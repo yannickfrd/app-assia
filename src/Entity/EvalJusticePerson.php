@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalJusticePersonRepository")
@@ -30,7 +31,7 @@ class EvalJusticePerson
 
     public const JUSTICE_ACT = [
         1 => "Composition pénale (CP)",
-        2 => "Contrôle judiciaire socio-éductatif (CJS)", // Sursis probatoire
+        2 => "Contrôle judiciaire socio-éducatif (CJS)", // Sursis probatoire
         3 => "Enquête de personnalité auteur (EP)",
         4 => "Enquête de personnalité victime",
         5 => "Enquête sociale rapide",
@@ -94,9 +95,12 @@ class EvalJusticePerson
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getJusticeStatusToString(): ?string
     {
-        return self::JUSTICE_STATUS[$this->justiceStatus];
+        return $this->justiceStatus ? self::JUSTICE_STATUS[$this->justiceStatus] : null;
     }
 
     public function getJusticeAct(): ?int
@@ -111,9 +115,12 @@ class EvalJusticePerson
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getJusticeActToString(): ?string
     {
-        return self::JUSTICE_ACT[$this->justiceAct];
+        return $this->justiceAct ? self::JUSTICE_ACT[$this->justiceAct] : null;
     }
 
     public function getCommentEvalJustice(): ?string

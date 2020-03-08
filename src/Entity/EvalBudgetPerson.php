@@ -33,11 +33,6 @@ class EvalBudgetPerson
     private $resources;
 
     /**
-     * @Groups("export")
-     */
-    private $resourcesToString;
-
-    /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $resourcesAmt;
@@ -48,19 +43,9 @@ class EvalBudgetPerson
     private $disAdultAllowance;
 
     /**
-     * @Groups("export")
-     */
-    private $disAdultAllowanceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $disChildAllowance;
-
-    /**
-     * @Groups("export")
-     */
-    private $disChildAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -68,19 +53,9 @@ class EvalBudgetPerson
     private $unemplBenefit;
 
     /**
-     * @Groups("export")
-     */
-    private $unemplBenefitToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $asylumAllowance;
-
-    /**
-     * @Groups("export")
-     */
-    private $asylumAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -88,19 +63,9 @@ class EvalBudgetPerson
     private $tempWaitingAllowance;
 
     /**
-     * @Groups("export")
-     */
-    private $tempWaitingAllowanceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyAllowance;
-
-    /**
-     * @Groups("export")
-     */
-    private $familyAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -108,19 +73,9 @@ class EvalBudgetPerson
     private $solidarityAllowance;
 
     /**
-     * @Groups("export")
-     */
-    private $solidarityAllowanceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $paidTraining;
-
-    /**
-     * @Groups("export")
-     */
-    private $paidTrainingToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -128,19 +83,9 @@ class EvalBudgetPerson
     private $youthGuarantee;
 
     /**
-     * @Groups("export")
-     */
-    private $youthGuaranteeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $maintenance;
-
-    /**
-     * @Groups("export")
-     */
-    private $maintenanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -148,19 +93,9 @@ class EvalBudgetPerson
     private $activityBonus;
 
     /**
-     * @Groups("export")
-     */
-    private $activityBonusToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $pensionBenefit;
-
-    /**
-     * @Groups("export")
-     */
-    private $pensionBenefitToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -168,29 +103,14 @@ class EvalBudgetPerson
     private $minimumIncome;
 
     /**
-     * @Groups("export")
-     */
-    private $minimumIncomeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $salary;
 
     /**
-     * @Groups("export")
-     */
-    private $salaryToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $ressourceOther;
-
-    /**
-     * @Groups("export")
-     */
-    private $ressourceOtherToString;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -439,11 +359,6 @@ class EvalBudgetPerson
     private $debts;
 
     /**
-     * @Groups("export")
-     */
-    private $debtsToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtRental;
@@ -506,11 +421,6 @@ class EvalBudgetPerson
     private $overIndebtRecord;
 
     /**
-     * @Groups("export")
-     */
-    private $overIndebtRecordToString;
-
-    /**
      * @ORM\Column(type="date", nullable=true)
      * @Groups("export")
      */
@@ -522,19 +432,9 @@ class EvalBudgetPerson
     private $settlementPlan;
 
     /**
-     * @Groups("export")
-     */
-    private $settlementPlanToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $moratorium;
-
-    /**
-     * @Groups("export")
-     */
-    private $moratoriumToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -562,6 +462,9 @@ class EvalBudgetPerson
         return $this->resources;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getResourcesToString(): ?string
     {
         return $this->resources ? Choices::YES_NO_IN_PROGRESS[$this->resources] : null;
@@ -591,6 +494,9 @@ class EvalBudgetPerson
         return $this->disAdultAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDisAdultAllowanceToString(): ?string
     {
         return $this->disAdultAllowance ? Choices::YES_NO_BOOLEAN[$this->disAdultAllowance] : null;
@@ -608,6 +514,9 @@ class EvalBudgetPerson
         return $this->disChildAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDisChildAllowanceToString(): ?string
     {
         return $this->disChildAllowance ? Choices::YES_NO_BOOLEAN[$this->disChildAllowance] : null;
@@ -625,6 +534,9 @@ class EvalBudgetPerson
         return $this->unemplBenefit;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getUnemplBenefitToString(): ?string
     {
         return $this->unemplBenefit ? Choices::YES_NO_BOOLEAN[$this->unemplBenefit] : null;
@@ -642,6 +554,9 @@ class EvalBudgetPerson
         return $this->asylumAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAsylumAllowanceToString(): ?string
     {
         return $this->asylumAllowance ? Choices::YES_NO_BOOLEAN[$this->asylumAllowance] : null;
@@ -659,6 +574,9 @@ class EvalBudgetPerson
         return $this->tempWaitingAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getTempWaitingAllowanceToString(): ?string
     {
         return $this->tempWaitingAllowance ? Choices::YES_NO_BOOLEAN[$this->tempWaitingAllowance] : null;
@@ -676,6 +594,9 @@ class EvalBudgetPerson
         return $this->familyAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFamilyAllowanceToString(): ?string
     {
         return $this->getFamilyAllowance() ? Choices::YES_NO_BOOLEAN[$this->familyAllowance] : null;
@@ -693,6 +614,9 @@ class EvalBudgetPerson
         return $this->solidarityAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSolidarityAllowanceToString(): ?string
     {
         return $this->solidarityAllowance ? Choices::YES_NO_BOOLEAN[$this->solidarityAllowance] : null;
@@ -710,6 +634,9 @@ class EvalBudgetPerson
         return $this->paidTraining;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPaidTrainingToString(): ?string
     {
         return $this->paidTraining ? Choices::YES_NO_BOOLEAN[$this->paidTraining] : null;
@@ -727,6 +654,9 @@ class EvalBudgetPerson
         return $this->youthGuarantee;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getYouthGuaranteeToString(): ?string
     {
         return $this->youthGuarantee ? Choices::YES_NO_BOOLEAN[$this->youthGuarantee] : null;
@@ -744,6 +674,9 @@ class EvalBudgetPerson
         return $this->maintenance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMaintenanceToString(): ?string
     {
         return $this->maintenance ? Choices::YES_NO_BOOLEAN[$this->maintenance] : null;
@@ -761,6 +694,9 @@ class EvalBudgetPerson
         return $this->activityBonus;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getActivityBonusToString(): ?string
     {
         return $this->activityBonus ? Choices::YES_NO_BOOLEAN[$this->activityBonus] : null;
@@ -778,6 +714,9 @@ class EvalBudgetPerson
         return $this->pensionBenefit;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPensionBenefitToString(): ?string
     {
         return $this->pensionBenefit ? Choices::YES_NO_BOOLEAN[$this->pensionBenefit] : null;
@@ -796,6 +735,9 @@ class EvalBudgetPerson
         return $this->minimumIncome;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMinimumIncomeToString(): ?string
     {
         return $this->minimumIncome ? Choices::YES_NO_BOOLEAN[$this->minimumIncome] : null;
@@ -813,6 +755,9 @@ class EvalBudgetPerson
         return $this->salary;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSalaryToString(): ?string
     {
         return $this->salary ? Choices::YES_NO_BOOLEAN[$this->salary] : null;
@@ -830,6 +775,9 @@ class EvalBudgetPerson
         return $this->ressourceOther;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRessourceOtherToString(): ?string
     {
         return $this->ressourceOther ? Choices::YES_NO_BOOLEAN[$this->ressourceOther] : null;
@@ -1075,6 +1023,9 @@ class EvalBudgetPerson
         return $this->charges;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getChargesToString(): ?string
     {
         return $this->charges ? Choices::YES_NO[$this->charges] : null;
@@ -1449,6 +1400,9 @@ class EvalBudgetPerson
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDebtsToString(): ?string
     {
         return $this->debts ? Choices::YES_NO[$this->debts] : null;
@@ -1459,6 +1413,9 @@ class EvalBudgetPerson
         return $this->debtRental;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDebtRentalToString(): ?string
     {
         return $this->debtRental ? Choices::YES_NO_BOOLEAN[$this->debtRental] : null;
@@ -1626,6 +1583,9 @@ class EvalBudgetPerson
         return $this->overIndebtRecord;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getOverIndebtRecordToString(): ?string
     {
         return $this->overIndebtRecord ? Choices::YES_NO_IN_PROGRESS[$this->overIndebtRecord] : null;
@@ -1655,6 +1615,9 @@ class EvalBudgetPerson
         return $this->settlementPlan;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSettlementPlanToString(): ?string
     {
         return $this->settlementPlan ? self::SETTLEMENT_PLAN[$this->settlementPlan] : null;
@@ -1672,6 +1635,9 @@ class EvalBudgetPerson
         return $this->moratorium;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMoratoriumToString(): ?string
     {
         return $this->moratorium ? Choices::YES_NO_IN_PROGRESS[$this->moratorium] : null;

@@ -24,19 +24,9 @@ class InitEvalPerson
     private $paperType;
 
     /**
-     * @Groups("export")
-     */
-    private $paperTypeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $rightSocialSecurity;
-
-    /**
-     * @Groups("export")
-     */
-    private $rightSocialSecurityToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -44,19 +34,9 @@ class InitEvalPerson
     private $socialSecurity;
 
     /**
-     * @Groups("export")
-     */
-    private $socialSecurityToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyBreakdown;
-
-    /**
-     * @Groups("export")
-     */
-    private $familyBreakdownToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -64,19 +44,9 @@ class InitEvalPerson
     private $friendshipBreakdown;
 
     /**
-     * @Groups("export")
-     */
-    private $friendshipBreakdownToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $resources;
-
-    /**
-     * @Groups("export")
-     */
-    private $resourcesToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -90,19 +60,9 @@ class InitEvalPerson
     private $disAdultAllowance;
 
     /**
-     * @Groups("export")
-     */
-    private $disAdultAllowanceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $disChildAllowance;
-
-    /**
-     * @Groups("export")
-     */
-    private $disChildAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -110,19 +70,9 @@ class InitEvalPerson
     private $unemplBenefit;
 
     /**
-     * @Groups("export")
-     */
-    private $unemplBenefitToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $asylumAllowance;
-
-    /**
-     * @Groups("export")
-     */
-    private $asylumAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -130,19 +80,9 @@ class InitEvalPerson
     private $tempWaitingAllowance;
 
     /**
-     * @Groups("export")
-     */
-    private $tempWaitingAllowanceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyAllowance;
-
-    /**
-     * @Groups("export")
-     */
-    private $familyAllowanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -150,19 +90,9 @@ class InitEvalPerson
     private $solidarityAllowance;
 
     /**
-     * @Groups("export")
-     */
-    private $solidarityAllowanceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $paidTraining;
-
-    /**
-     * @Groups("export")
-     */
-    private $paidTrainingToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -170,19 +100,9 @@ class InitEvalPerson
     private $youthGuarantee;
 
     /**
-     * @Groups("export")
-     */
-    private $youthGuaranteeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $maintenance;
-
-    /**
-     * @Groups("export")
-     */
-    private $maintenanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -190,19 +110,9 @@ class InitEvalPerson
     private $activityBonus;
 
     /**
-     * @Groups("export")
-     */
-    private $activityBonusToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $pensionBenefit;
-
-    /**
-     * @Groups("export")
-     */
-    private $pensionBenefitToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -210,29 +120,14 @@ class InitEvalPerson
     private $minimumIncome;
 
     /**
-     * @Groups("export")
-     */
-    private $minimumIncomeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $salary;
 
     /**
-     * @Groups("export")
-     */
-    private $salaryToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $ressourceOther;
-
-    /**
-     * @Groups("export")
-     */
-    private $ressourceOtherToString;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -336,11 +231,6 @@ class InitEvalPerson
     private $debts;
 
     /**
-     * @Groups("export")
-     */
-    private $debtsToString;
-
-    /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
@@ -352,19 +242,9 @@ class InitEvalPerson
     private $profStatus;
 
     /**
-     * @Groups("export")
-     */
-    private $profStatusToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $contractType;
-
-    /**
-     * @Groups("export")
-     */
-    private $contractTypeToString;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SupportPerson", inversedBy="initEvalPerson", cascade={"persist", "remove"})
@@ -381,6 +261,9 @@ class InitEvalPerson
         return $this->paperType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPaperTypeToString(): ?string
     {
         return $this->paperType ? EvalAdmPerson::PAPER_TYPE[$this->paperType] : null;
@@ -398,6 +281,9 @@ class InitEvalPerson
         return $this->rightSocialSecurity;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRightSocialSecurityToString(): ?string
     {
         return $this->rightSocialSecurity ? Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
@@ -415,6 +301,9 @@ class InitEvalPerson
         return $this->socialSecurity;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSocialSecurityToString(): ?string
     {
         return $this->socialSecurity ? EvalSocialPerson::SOCIAL_SECURITY[$this->socialSecurity] : null;
@@ -432,6 +321,9 @@ class InitEvalPerson
         return $this->familyBreakdown;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFamilyBreakdownToString(): ?string
     {
         return $this->familyBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->familyBreakdown] : null;
@@ -449,6 +341,9 @@ class InitEvalPerson
         return $this->friendshipBreakdown;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFriendshipBreakdownToString(): ?string
     {
         return $this->friendshipBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->friendshipBreakdown] : null;
@@ -461,11 +356,54 @@ class InitEvalPerson
         return $this;
     }
 
+    public function getProfStatus(): ?int
+    {
+        return $this->profStatus;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getProfStatusToString(): ?string
+    {
+        return $this->profStatus ? EvalProfPerson::PROF_STATUS[$this->profStatus] : null;
+    }
+
+    public function setProfStatus(?int $profStatus): self
+    {
+        $this->profStatus = $profStatus;
+
+        return $this;
+    }
+
+    public function getContractType(): ?int
+    {
+        return $this->contractType;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getContractTypeToString(): ?string
+    {
+        return $this->contractType ? EvalProfPerson::CONTRACT_TYPE[$this->contractType] : null;
+    }
+
+    public function setContractType(?int $contractType): self
+    {
+        $this->contractType = $contractType;
+
+        return $this;
+    }
+
     public function getResources(): ?int
     {
         return $this->resources;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getResourcesToString(): ?string
     {
         return $this->resources ? Choices::YES_NO_IN_PROGRESS[$this->resources] : null;
@@ -495,6 +433,9 @@ class InitEvalPerson
         return $this->disAdultAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDisAdultAllowanceToString(): ?string
     {
         return $this->disAdultAllowance ? Choices::YES_NO_BOOLEAN[$this->disAdultAllowance] : null;
@@ -512,6 +453,9 @@ class InitEvalPerson
         return $this->disChildAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDisChildAllowanceToString(): ?string
     {
         return $this->disChildAllowance ? Choices::YES_NO_BOOLEAN[$this->disChildAllowance] : null;
@@ -529,6 +473,9 @@ class InitEvalPerson
         return $this->unemplBenefit;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getUnemplBenefitToString(): ?string
     {
         return $this->unemplBenefit ? Choices::YES_NO_BOOLEAN[$this->unemplBenefit] : null;
@@ -546,6 +493,9 @@ class InitEvalPerson
         return $this->asylumAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAsylumAllowanceToString(): ?string
     {
         return $this->asylumAllowance ? Choices::YES_NO_BOOLEAN[$this->asylumAllowance] : null;
@@ -563,6 +513,9 @@ class InitEvalPerson
         return $this->tempWaitingAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getTempWaitingAllowanceToString(): ?string
     {
         return $this->tempWaitingAllowance ? Choices::YES_NO_BOOLEAN[$this->tempWaitingAllowance] : null;
@@ -580,6 +533,9 @@ class InitEvalPerson
         return $this->familyAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFamilyAllowanceToString(): ?string
     {
         return $this->getFamilyAllowance() ? Choices::YES_NO_BOOLEAN[$this->familyAllowance] : null;
@@ -597,6 +553,9 @@ class InitEvalPerson
         return $this->solidarityAllowance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSolidarityAllowanceToString(): ?string
     {
         return $this->solidarityAllowance ? Choices::YES_NO_BOOLEAN[$this->solidarityAllowance] : null;
@@ -614,6 +573,9 @@ class InitEvalPerson
         return $this->paidTraining;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPaidTrainingToString(): ?string
     {
         return $this->paidTraining ? Choices::YES_NO_BOOLEAN[$this->paidTraining] : null;
@@ -631,6 +593,9 @@ class InitEvalPerson
         return $this->youthGuarantee;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getYouthGuaranteeToString(): ?string
     {
         return $this->youthGuarantee ? Choices::YES_NO_BOOLEAN[$this->youthGuarantee] : null;
@@ -648,6 +613,9 @@ class InitEvalPerson
         return $this->maintenance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMaintenanceToString(): ?string
     {
         return $this->maintenance ? Choices::YES_NO_BOOLEAN[$this->maintenance] : null;
@@ -665,6 +633,9 @@ class InitEvalPerson
         return $this->activityBonus;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getActivityBonusToString(): ?string
     {
         return $this->activityBonus ? Choices::YES_NO_BOOLEAN[$this->activityBonus] : null;
@@ -682,6 +653,9 @@ class InitEvalPerson
         return $this->pensionBenefit;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPensionBenefitToString(): ?string
     {
         return $this->pensionBenefit ? Choices::YES_NO_BOOLEAN[$this->pensionBenefit] : null;
@@ -700,6 +674,9 @@ class InitEvalPerson
         return $this->minimumIncome;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMinimumIncomeToString(): ?string
     {
         return $this->minimumIncome ? Choices::YES_NO_BOOLEAN[$this->minimumIncome] : null;
@@ -717,6 +694,9 @@ class InitEvalPerson
         return $this->salary;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSalaryToString(): ?string
     {
         return $this->salary ? Choices::YES_NO_BOOLEAN[$this->salary] : null;
@@ -734,6 +714,9 @@ class InitEvalPerson
         return $this->ressourceOther;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRessourceOtherToString(): ?string
     {
         return $this->ressourceOther ? Choices::YES_NO_BOOLEAN[$this->ressourceOther] : null;
@@ -943,6 +926,9 @@ class InitEvalPerson
         return $this->debts;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDebtsToString(): ?string
     {
         return $this->debts ? Choices::YES_NO[$this->debts] : null;
@@ -967,39 +953,6 @@ class InitEvalPerson
         return $this;
     }
 
-    public function getProfStatus(): ?int
-    {
-        return $this->profStatus;
-    }
-
-    public function getProfStatusToString(): ?string
-    {
-        return $this->profStatus ? EvalProfPerson::PROF_STATUS[$this->profStatus] : null;
-    }
-
-    public function setProfStatus(?int $profStatus): self
-    {
-        $this->profStatus = $profStatus;
-
-        return $this;
-    }
-
-    public function getContractType(): ?int
-    {
-        return $this->contractType;
-    }
-
-    public function getContractTypeToString(): ?string
-    {
-        return $this->contractType ? EvalProfPerson::CONTRACT_TYPE[$this->contractType] : null;
-    }
-
-    public function setContractType(?int $contractType): self
-    {
-        $this->contractType = $contractType;
-
-        return $this;
-    }
 
     public function getSupportPerson(): ?SupportPerson
     {

@@ -157,6 +157,15 @@ class ExportType extends AbstractType
                     "class" => "custom-control-input checkbox"
                 ]
             ])
+            ->add("evalJustice", CheckBoxType::class, [
+                "required" => false,
+                "label_attr" => [
+                    "class" => "custom-control-label",
+                ],
+                "attr" => [
+                    "class" => "custom-control-input checkbox"
+                ]
+            ])
             ->add("calcul", null, [
                 "mapped" => false
             ])

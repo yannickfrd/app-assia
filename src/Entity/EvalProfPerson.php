@@ -81,29 +81,14 @@ class EvalProfPerson
     private $schoolLevel;
 
     /**
-     * @Groups("export")
-     */
-    private $schoolLevelToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $profExperience;
 
     /**
-     * @Groups("export")
-     */
-    private $profExperienceToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $profStatus;
-
-    /**
-     * @Groups("export")
-     */
-    private $profStatusToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -115,11 +100,6 @@ class EvalProfPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $contractType;
-
-    /**
-     * @Groups("export")
-     */
-    private $contractTypeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -158,11 +138,6 @@ class EvalProfPerson
     private $transportMeansType;
 
     /**
-     * @Groups("export")
-     */
-    private $transportMeansTypeToString;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $transportMeans;
@@ -171,11 +146,6 @@ class EvalProfPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $rqth;
-
-    /**
-     * @Groups("export")
-     */
-    private $rqthToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -209,6 +179,9 @@ class EvalProfPerson
         return $this->schoolLevel;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSchoolLevelToString(): ?string
     {
         return $this->schoolLevel ? self::SCHOOL_LEVEL[$this->schoolLevel] : null;
@@ -226,6 +199,9 @@ class EvalProfPerson
         return $this->profExperience;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getProfExperienceToString(): ?string
     {
         return $this->profExperience ? self::PROF_EXPERIENCE[$this->profExperience] : null;
@@ -243,6 +219,9 @@ class EvalProfPerson
         return $this->profStatus;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getProfStatusToString(): ?string
     {
         return $this->profStatus ? self::PROF_STATUS[$this->profStatus] : null;
@@ -272,6 +251,9 @@ class EvalProfPerson
         return $this->contractType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getContractTypeToString(): ?string
     {
         return $this->contractType ? self::CONTRACT_TYPE[$this->contractType] : null;
@@ -361,6 +343,9 @@ class EvalProfPerson
         return $this->transportMeansType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getTransportMeansTypeToString(): ?string
     {
         return $this->transportMeansType ? self::TRANSFORT_MEANS[$this->transportMeansType] : null;
@@ -390,6 +375,9 @@ class EvalProfPerson
         return $this->rqth;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRqthToString(): ?string
     {
         return $this->rqth ? Choices::YES_NO_IN_PROGRESS[$this->rqth] : null;

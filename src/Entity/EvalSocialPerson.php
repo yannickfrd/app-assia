@@ -44,19 +44,9 @@ class EvalSocialPerson
     private $rightSocialSecurity;
 
     /**
-     * @Groups("export")
-     */
-    private $rightSocialSecurityToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $socialSecurity;
-
-    /**
-     * @Groups("export")
-     */
-    private $socialSecurityToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -74,19 +64,9 @@ class EvalSocialPerson
     private $childWelfareBackground;
 
     /**
-     * @Groups("export")
-     */
-    private $childWelfareBackgroundToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyBreakdown;
-
-    /**
-     * @Groups("export")
-     */
-    private $familyBreakdownToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -94,19 +74,9 @@ class EvalSocialPerson
     private $friendshipBreakdown;
 
     /**
-     * @Groups("export")
-     */
-    private $friendshipBreakdownToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $healthProblem;
-
-    /**
-     * @Groups("export")
-     */
-    private $healthProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -114,19 +84,9 @@ class EvalSocialPerson
     private $physicalHealthProblem;
 
     /**
-     * @Groups("export")
-     */
-    private $physicalHealthProblemToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $mentalHealthProblem;
-
-    /**
-     * @Groups("export")
-     */
-    private $mentalHealthProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -134,19 +94,9 @@ class EvalSocialPerson
     private $addictionProblem;
 
     /**
-     * @Groups("export")
-     */
-    private $addictionProblemToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $wheelchair;
-
-    /**
-     * @Groups("export")
-     */
-    private $wheelchairToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -154,19 +104,9 @@ class EvalSocialPerson
     private $reducedMobility;
 
     /**
-     * @Groups("export")
-     */
-    private $reducedMobilityToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $careSupport;
-
-    /**
-     * @Groups("export")
-     */
-    private $careSupportToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -174,29 +114,14 @@ class EvalSocialPerson
     private $careSupportType;
 
     /**
-     * @Groups("export")
-     */
-    private $careSupportTypeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $violenceVictim;
 
     /**
-     * @Groups("export")
-     */
-    private $violenceVictimToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $domViolenceVictim;
-
-    /**
-     * @Groups("export")
-     */
-    private $domViolenceVictimToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -220,6 +145,9 @@ class EvalSocialPerson
         return $this->rightSocialSecurity;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRightSocialSecurityToString(): ?string
     {
         return $this->rightSocialSecurity ? Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
@@ -237,6 +165,9 @@ class EvalSocialPerson
         return $this->socialSecurity;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSocialSecurityToString(): ?string
     {
         return $this->socialSecurity ? self::SOCIAL_SECURITY[$this->socialSecurity] : null;
@@ -285,6 +216,9 @@ class EvalSocialPerson
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getChildWelfareBackgroundToString(): ?string
     {
         return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
@@ -296,6 +230,9 @@ class EvalSocialPerson
         return $this->healthProblem;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getHealthProblemToString(): ?string
     {
         return $this->healthProblem ? Choices::YES_NO[$this->healthProblem] : null;
@@ -313,6 +250,9 @@ class EvalSocialPerson
         return $this->physicalHealthProblem;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPhysicalHealthProblemToString(): ?string
     {
         return $this->physicalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->physicalHealthProblem] : null;
@@ -330,6 +270,9 @@ class EvalSocialPerson
         return $this->mentalHealthProblem;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMentalHealthProblemToString(): ?string
     {
         return $this->mentalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->mentalHealthProblem] : null;
@@ -347,6 +290,9 @@ class EvalSocialPerson
         return $this->addictionProblem;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAddictionProblemToString(): ?string
     {
         return $this->addictionProblem ? Choices::YES_NO_BOOLEAN[$this->addictionProblem] : null;
@@ -364,6 +310,9 @@ class EvalSocialPerson
         return $this->careSupport;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getCareSupportToString(): ?string
     {
         return $this->careSupport ? Choices::YES_NO_IN_PROGRESS[$this->careSupport] : null;
@@ -381,6 +330,9 @@ class EvalSocialPerson
         return $this->careSupportType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getCareSupportTypeToString(): ?string
     {
         return $this->careSupport ? self::CARE_SUPPORT[$this->careSupport] : null;
@@ -398,6 +350,9 @@ class EvalSocialPerson
         return $this->familyBreakdown;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFamilyBreakdownToString(): ?string
     {
         return $this->familyBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->familyBreakdown] : null;
@@ -415,6 +370,9 @@ class EvalSocialPerson
         return $this->friendshipBreakdown;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFriendshipBreakdownToString(): ?string
     {
         return $this->friendshipBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->friendshipBreakdown] : null;
@@ -432,6 +390,9 @@ class EvalSocialPerson
         return $this->wheelchair;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getWheelchairToString(): ?string
     {
         return $this->wheelchair ? Choices::YES_NO_BOOLEAN[$this->wheelchair] : null;
@@ -449,6 +410,9 @@ class EvalSocialPerson
         return $this->reducedMobility;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getReducedMobilityToString(): ?string
     {
         return $this->reducedMobility ? Choices::YES_NO_BOOLEAN[$this->reducedMobility] : null;
@@ -466,6 +430,9 @@ class EvalSocialPerson
         return $this->violenceVictim;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getViolenceVictimToString(): ?string
     {
         return $this->violenceVictim ? Choices::YES_NO[$this->violenceVictim] : null;
@@ -483,6 +450,9 @@ class EvalSocialPerson
         return $this->domViolenceVictim;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDomViolenceVictimToString(): ?string
     {
         return $this->domViolenceVictim ? Choices::YES_NO[$this->domViolenceVictim] : null;

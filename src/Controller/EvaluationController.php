@@ -96,7 +96,8 @@ class EvaluationController extends AbstractController
 
         $evaluationGroup->setSupportGroup($supportGroup)
             ->setDate($now)
-            ->setCreatedAt($now);
+            ->setCreatedAt($now)
+            ->setUpdatedAt($now);
 
         $supportGroup->setInitEvalGroup(new InitEvalGroup());
         $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());

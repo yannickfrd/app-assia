@@ -185,7 +185,7 @@ class Service
         $this->organizations = new ArrayCollection();
     }
 
-    public function __toToString()
+    public function __toString()
     {
         return strval($this->id);
     }

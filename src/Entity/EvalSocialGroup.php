@@ -70,29 +70,14 @@ class EvalSocialGroup
     private $reasonRequest;
 
     /**
-     * @Groups("export")
-     */
-    private $reasonRequestToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $wanderingTime;
 
     /**
-     * @Groups("export")
-     */
-    private $wanderingTimeToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $animal;
-
-    /**
-     * @Groups("export")
-     */
-    private $animalToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -127,6 +112,9 @@ class EvalSocialGroup
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getReasonRequestToString(): ?string
     {
         return $this->reasonRequest ? self::REASON_REQUEST[$this->reasonRequest] : null;
@@ -144,6 +132,9 @@ class EvalSocialGroup
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getWanderingTimeToString(): ?string
     {
         return $this->wanderingTime ? self::WANDERING_TIME[$this->wanderingTime] : null;
@@ -159,6 +150,9 @@ class EvalSocialGroup
         return $this->animal;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAnimalToString(): ?string
     {
         return $this->animal ? Choices::YES_NO[$this->animal] : null;

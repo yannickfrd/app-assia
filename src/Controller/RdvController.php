@@ -184,18 +184,16 @@ class RdvController extends AbstractController
      * @param RdvRepository $repo
      * @return Response
      */
-    public function getRdv(Rdv $rdv, RdvRepository $repo): Response
+    public function getRdv(Rdv $rdv): Response
     {
         $this->denyAccessUnlessGranted("VIEW", $rdv);
-
-        // $rdv = $repo->find($rdv->getId());
 
         // Obtenir le nom de la personne suivie
         if ($rdv->getSupportGroup()) {
             $supportFullname = "";
-            foreach ($rdv->getSupportGroup()->getGroupPeople()->getRolePerson() as $rolePerson) {
-                if ($rolePerson->getHead() == true) {
-                    $supportFullname = $rolePerson->getPerson()->getFullname();
+            foreach ($rdv->getSupportGroup()->getSupportPerson() as $supportPerson) {
+                if ($supportPerson->getHead() == true) {
+                    $supportFullname = $supportPerson->getPerson()->getFullname();
                 }
             };
         }

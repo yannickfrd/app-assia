@@ -163,6 +163,8 @@ class SupportPersonRepository extends ServiceEntityRepository
         $query = $this->getSupportsQuery();
 
         $query = $query->leftJoin("sp.evaluationsPerson", "ep")->addselect("ep")
+            ->leftJoin("ep.initEvalPerson", "initEvalPerson")->addselect("initEvalPerson")
+            ->leftJoin("ep.evalJusticePerson", "evalJusticePerson")->addselect("evalJusticePerson")
             ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
             ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
             ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
@@ -170,6 +172,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin("ep.evalSocialPerson", "evalSocialPerson")->addselect("evalSocialPerson")
 
             ->leftJoin("ep.evaluationGroup", "eg")->addselect("eg")
+            ->leftJoin("eg.initEvalGroup", "initEvalGroup")->addselect("initEvalGroup")
             ->leftJoin("eg.evalBudgetGroup", "evalBudgetGroup")->addselect("evalBudgetGroup")
             ->leftJoin("eg.evalFamilyGroup", "evalFamilyGroup")->addselect("evalFamilyGroup")
             ->leftJoin("eg.evalHousingGroup", "evalHousingGroup")->addselect("evalHousingGroup")

@@ -172,7 +172,7 @@ class Person
         $this->accommodationPersons = new ArrayCollection();
     }
 
-    public function __toToString()
+    public function __toString()
     {
         return $this->lastname . " " . $this->firstname;
     }

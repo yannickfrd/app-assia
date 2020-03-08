@@ -127,6 +127,9 @@ class AccommodationGroup
         return $this->endReason;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getEndReasonToString(): ?string
     {
         return self::END_REASON[$this->endReason];

@@ -36,29 +36,14 @@ class InitEvalGroup
     private $housingStatus;
 
     /**
-     * @Groups("export")
-     */
-    private $housingStatusToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $siaoRequest;
 
     /**
-     * @Groups("export")
-     */
-    private $siaoRequestToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $socialHousingRequest;
-
-    /**
-     * @Groups("export")
-     */
-    private $socialHousingRequestToString;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\SupportGroup", inversedBy="initEvalGroup", cascade={"persist", "remove"})
@@ -101,6 +86,9 @@ class InitEvalGroup
         return $this->housingStatus;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getHousingStatusToString(): ?string
     {
         return $this->housingStatus ? EvalHousingGroup::HOUSING_STATUS[$this->housingStatus] : null;
@@ -118,9 +106,12 @@ class InitEvalGroup
         return $this->siaoRequest;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSiaoRequestToString(): ?string
     {
-        return $this->siaoRequest ? Choices::YES_NO_IN_PROGRESS[$this->siaoRequest] : null;
+        return $this->siaoRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest] : null;
     }
 
     public function setSiaoRequest(?int $siaoRequest): self
@@ -135,9 +126,12 @@ class InitEvalGroup
         return $this->socialHousingRequest;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSocialHousingRequestToString(): ?string
     {
-        return $this->socialHousingRequest ? Choices::YES_NO_IN_PROGRESS[$this->socialHousingRequest] : null;
+        return $this->socialHousingRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest] : null;
     }
 
     public function setSocialHousingRequest(?int $socialHousingRequest): self

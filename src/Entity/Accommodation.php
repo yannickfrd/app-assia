@@ -227,6 +227,9 @@ class Accommodation
         return $this->accommodationType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAccommodationTypeToString(): ?string
     {
         return self::ACCOMMODATION_TYPE[$this->accommodationType];
@@ -251,6 +254,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getConfigurationToString(): ?string
     {
         return self::CONFIGURATION[$this->configuration];
@@ -261,6 +267,9 @@ class Accommodation
         return $this->individualCollective;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getIndividualCollectiveToString(): ?string
     {
         return self::INDIVIDUAL_COLLECTIVE[$this->individualCollective];

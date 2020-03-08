@@ -89,19 +89,9 @@ class EvalFamilyPerson
     private $maritalStatus;
 
     /**
-     * @Groups("export")
-     */
-    private $maritalStatusToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $unbornChild;
-
-    /**
-     * @Groups("export")
-     */
-    private $unbornChildToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -140,19 +130,9 @@ class EvalFamilyPerson
     private $protectiveMeasure;
 
     /**
-     * @Groups("export")
-     */
-    private $protectiveMeasureToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $protectiveMeasureType;
-
-    /**
-     * @Groups("export")
-     */
-    private $protectiveMeasureTypeToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -175,6 +155,9 @@ class EvalFamilyPerson
         return $this->maritalStatus;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getMaritalStatusToString(): ?string
     {
         return $this->maritalStatus ? self::MARITAL_STATUS[$this->maritalStatus] : null;
@@ -192,6 +175,9 @@ class EvalFamilyPerson
         return $this->unbornChild;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getUnbornChildToString(): ?string
     {
         return $this->unbornChild ? Choices::YES_NO[$this->unbornChild] : null;
@@ -238,6 +224,9 @@ class EvalFamilyPerson
         return $this->childcareSchool;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getChildcareSchoolToString(): ?string
     {
         return $this->childcareSchool ? self::CHILDCARE_SCHOOL[$this->childcareSchool] : null;
@@ -267,6 +256,9 @@ class EvalFamilyPerson
         return $this->childToHost;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getChildToHostToString(): ?string
     {
         return $this->childcareSchool ? self::CHILD_TO_HOST[$this->childcareSchool] : null;
@@ -284,6 +276,9 @@ class EvalFamilyPerson
         return $this->childDependance;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getChildDependanceToString(): ?string
     {
         return $this->childDependance ? self::CHILD_DEPENDANCE[$this->childDependance] : null;
@@ -301,6 +296,9 @@ class EvalFamilyPerson
         return $this->protectiveMeasure;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getProtectiveMeasureToString(): ?string
     {
         return $this->protectiveMeasure ? Choices::YES_NO_IN_PROGRESS[$this->protectiveMeasure] : null;
@@ -318,6 +316,9 @@ class EvalFamilyPerson
         return $this->protectiveMeasureType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getProtectiveMeasureTypeToString(): ?string
     {
         return $this->protectiveMeasureType ? self::PROTECTIVE_MEASURE_TYPE[$this->protectiveMeasureType] : null;

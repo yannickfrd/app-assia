@@ -15,6 +15,7 @@ use App\Entity\EvaluationGroup;
 use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
+use App\Entity\EvalJusticePerson;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationPerson;
 
@@ -33,6 +34,8 @@ class SupportPersonFullExport
     protected $initEvalPerson;
 
     protected $evaluationPerson;
+    protected $evalJusticePerson;
+    protected $evalSocialPerson;
     protected $evalAdmPerson;
     protected $evalBudgetPerson;
     protected $evalFamilyPerson;
@@ -59,6 +62,7 @@ class SupportPersonFullExport
         $this->evalSocialGroup = new EvalSocialGroup();
 
         $this->evaluationPerson = new EvaluationPerson();
+        $this->evalJusticePerson = new EvalJusticePerson();
         $this->evalAdmPerson = new EvalAdmPerson();
         $this->evalBudgetPerson = new EvalBudgetPerson();
         $this->evalFamilyPerson = new EvalFamilyPerson();
@@ -94,11 +98,12 @@ class SupportPersonFullExport
         $this->datas = $supportPersonExport->getDatas($supportPerson);
 
         $evaluations = $supportPerson->getEvaluationsPerson();
-        $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? $this->evaluationPerson;
-        $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
+        $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();
+        $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
 
-        $this->normalize($supportPerson->getSupportGroup()->getInitEvalGroup() ?? $this->initEvalGroup, "initEval");
-        $this->normalize($supportPerson->getInitEvalPerson() ?? $this->initEvalPerson, "initEval");
+        $this->normalize($this->evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, "justice");
+        $this->normalize($this->evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, "initEval");
+        $this->normalize($this->evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, "initEval");
         $this->normalize($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, "social");
         $this->normalize($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, "social");
         $this->normalize($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, "adm");

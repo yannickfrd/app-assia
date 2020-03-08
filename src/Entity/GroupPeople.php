@@ -41,11 +41,6 @@ class GroupPeople
     private $familyTypology;
 
     /**
-     * Groups("export")
-     */
-    private $familyTypologyToString;
-
-    /**
      * @ORM\Column(type="smallint")
      * @Assert\Range(min = 1, max = 99, minMessage="Le nombre de personnes doit être renseigné.",  maxMessage="Le nombre de personnes doit être renseigné.")
      * Groups("export")
@@ -129,6 +124,9 @@ class GroupPeople
         return $this->familyTypology;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFamilyTypologyToString(): string
     {
         return self::FAMILY_TYPOLOGY[$this->familyTypology];

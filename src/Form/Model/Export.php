@@ -90,7 +90,10 @@ class Export
      */
     private $evalSocial;
 
-
+    /**
+     * @var bool|null
+     */
+    private $evalJustice;
 
     public function __construct()
     {
@@ -298,6 +301,18 @@ class Export
     public function setEvalSocial(bool $evalSocial): self
     {
         $this->evalSocial = $evalSocial;
+
+        return $this;
+    }
+
+    public function getEvalJustice(): ?bool
+    {
+        return $this->evalJustice;
+    }
+
+    public function setEvalJustice(bool $evalJustice): self
+    {
+        $this->evalJustice = $evalJustice;
 
         return $this;
     }

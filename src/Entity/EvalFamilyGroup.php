@@ -39,19 +39,9 @@ class EvalFamilyGroup
     private $childrenBehind;
 
     /**
-     * @Groups("export")
-     */
-    private $childrenBehindToString;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $famlReunification;
-
-    /**
-     * @Groups("export")
-     */
-    private $famlReunificationToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -105,6 +95,9 @@ class EvalFamilyGroup
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getChildrenBehindToString(): ?string
     {
         return $this->childrenBehind ? Choices::YES_NO[$this->childrenBehind] : null;
@@ -122,6 +115,9 @@ class EvalFamilyGroup
         return $this;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getFamlReunificationToString(): ?string
     {
         return $this->famlReunification ? self::FAML_REUNIFICATION[$this->famlReunification] : null;
