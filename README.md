@@ -16,6 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.1.2 - XX/03/2020
+- Ajout de contrôles de saisie dans l'évaluation sociales (date et montant)
+
+
 ## Version 1.1.1 - 09/03/2020
 - Ajout du nom du dispositif après celui du service dans l'historique des suivis sociaux de la personne et du groupe
 - Ajout de l'item "Emploi" dans la liste déroulante du type de Document

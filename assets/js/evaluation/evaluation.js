@@ -1,4 +1,5 @@
 import DisplayInputs from "../utils/displayInputs";
+import ValidationInput from "../utils/validationInput";
 
 // Evaluation sociale
 export default class evaluation {
@@ -14,6 +15,8 @@ export default class evaluation {
         this.repaymentGroupAmtElt = document.getElementById("repaymentGroupAmt");
         this.budgetBalanceGroupAmtElt = document.getElementById("budgetBalanceGroupAmt");
 
+        this.moneyElts = document.querySelectorAll(".js-money");
+
         this.evalBudgetResourcesAmtElts = this.evalBudgetElt.querySelectorAll(".js-resourcesAmt");
         this.evalBudgetChargesAmtElts = this.evalBudgetElt.querySelectorAll(".js-chargesAmt");
         this.evalBudgetDebtsAmtElts = this.evalBudgetElt.querySelectorAll(".js-debtsAmt");
@@ -22,6 +25,10 @@ export default class evaluation {
 
         this.resourcesAmtElts = document.querySelectorAll("input[data-id='resourcesAmt']");
 
+        this.now = new Date();
+        this.dateElts = document.querySelectorAll("input[type='date']");
+
+        this.validationInput = new ValidationInput();
         this.init();
     }
 
@@ -54,7 +61,15 @@ export default class evaluation {
             this.initSelects(elt);
             this.initInputs(elt);
         })
+
+        this.moneyElts.forEach(moneyElt => {
+            moneyElt.addEventListener("change", this.checkMoney.bind(this, moneyElt));
+        });
+        this.dateElts.forEach(dateElt => {
+            dateElt.addEventListener("focusout", this.checkDate.bind(this, dateElt));
+        });
     }
+
 
     // Evaluation sociale du groupe
     evalSocialGroup() {
@@ -387,7 +402,13 @@ export default class evaluation {
                 array.push(parseInt(inputElt.value));
             }
         });
-        return array.reduce((a, b) => a + b, 0);
+
+        let sumAmts = array.reduce((a, b) => a + b, 0);
+
+        if (!isNaN(sumAmts)) {
+            return sumAmts;
+        }
+        return "Erreur";
     }
 
     // Met à jour la somme des montants de la personne
@@ -454,5 +475,21 @@ export default class evaluation {
                 break;
         }
         return amtElts;
+    }
+
+    checkMoney(moneyElt) {
+        moneyElt.value = moneyElt.value.replace(" ", "");
+        if (Number(moneyElt.value)) {
+            return this.validationInput.valid(moneyElt);
+        }
+        return this.validationInput.invalid(moneyElt, "Montant invalide.");
+    }
+
+    checkDate(dateElt) {
+        let interval = Math.round((this.now - new Date(dateElt.value)) / (24 * 3600 * 1000));
+        if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
+            return this.validationInput.invalid(dateElt, "Date invalide.");
+        }
+        return this.validationInput.valid(dateElt);
     }
 }

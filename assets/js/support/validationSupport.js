@@ -1,5 +1,6 @@
 import MessageFlash from "../utils/messageFlash";
 import DisplayInputs from "../utils/displayInputs";
+import ValidationInput from "../utils/validationInput";
 
 // Validation des données de la fiche personne
 export default class ValidationSupport {
@@ -18,7 +19,7 @@ export default class ValidationSupport {
         this.statusLabelElt = document.querySelector("label[for=" + this.status + "]");
 
         this.now = new Date();
-
+        this.validationInput = new ValidationInput();
         this.init();
     }
 
@@ -47,22 +48,22 @@ export default class ValidationSupport {
     }
 
     checkStartDate() {
-        let interval = Math.round((this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000));
+        let intervalWithNow = Math.round((this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000));
         let status = parseInt(this.getOption(this.statusSelectElt));
 
-        if ((this.startDateInputElt.value && !Number.isInteger(interval)) || interval > (365 * 9)) {
-            return this.invalid("startDate", this.startDateLabelElt, this.startDateInputElt, "La date est invalide.");
+        if ((this.startDateInputElt.value && !Number.isInteger(intervalWithNow)) || intervalWithNow > (365 * 9)) {
+            return this.validationInput.invalid(this.startDateInputElt, "La date est invalide.");
         }
-        if (interval < -30) {
-            return this.invalid("startDate", this.startDateLabelElt, this.startDateInputElt, "Le début du suivi ne peut pas être supérieur de 30 jours par rapport à la date du jour.");
+        if (intervalWithNow < -30) {
+            return this.validationInput.invalid(this.startDateInputElt, "Le début du suivi ne peut pas être supérieur de 30 jours par rapport à la date du jour.");
         }
-        if (!interval && [2, 3, 4].indexOf(status) != -1) {
-            return this.invalid("startDate", this.startDateLabelElt, this.startDateInputElt, "Le date de début ne peut pas être vide");
+        if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) {
+            return this.validationInput.invalid(this.startDateInputElt, "Le date de début ne peut pas être vide");
         }
-        if (interval || (!interval && status === 1)) {
-            return this.valid("startDate", this.startDateInputElt);
+        if (intervalWithNow || (!intervalWithNow && status === 1)) {
+            return this.validationInput.valid(this.startDateInputElt);
         }
-        return this.valid("startDate", this.startDateInputElt);
+        return this.validationInput.valid(this.startDateInputElt);
     }
     checkEndDate() {
         let startDate = new Date(this.startDateInputElt.value);
@@ -70,29 +71,33 @@ export default class ValidationSupport {
         let intervalWithStart = Math.round((endDate - startDate) / (24 * 3600 * 1000));
         let intervalWithNow = Math.round((this.now - endDate) / (24 * 3600 * 1000));
 
+        if ((this.endDateInputElt.value && !Number.isInteger(intervalWithNow)) || intervalWithNow > (365 * 9)) {
+            return this.validationInput.invalid(this.endDateInputElt, "La date est invalide.");
+        }
+
         if (intervalWithStart < 0) {
-            return this.invalid("startDate", this.endDateLabelElt, this.endDateInputElt, "La fin du suivi ne peut pas être antérieure au début du suivi.");
+            return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut pas être antérieure au début du suivi.");
         }
         if (intervalWithNow < 0) {
-            return this.invalid("startDate", this.endDateLabelElt, this.endDateInputElt, "La fin du suivi ne peut être postérieur à la date du jour.");
+            return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut être postérieur à la date du jour.");
         }
         if (!this.endDateInputElt.value && this.getOption(this.statusSelectElt) == 4) {
-            return this.invalid("startDate", this.endDateLabelElt, this.endDateInputElt, "La date de fin ne peut pas être vide si le suivi est terminé.");
+            return this.validationInput.invalid(this.endDateInputElt, "La date de fin ne peut pas être vide si le suivi est terminé.");
         }
         if (this.endDateInputElt.value) {
             this.setOption(this.statusSelectElt, 4);
             this.statusSelectElt.click();
         }
-        return this.valid("startDate", this.endDateInputElt);
+        return this.validationInput.valid(this.endDateInputElt);
     }
 
     checkStatus() {
         let statusValue = this.getOption(this.statusSelectElt);
 
         if (statusValue >= 1 && statusValue <= 5) {
-            return this.valid("status", this.statusSelectElt);
+            return this.validationInput.valid(this.statusSelectElt);
         }
-        return this.invalid("status", this.statusLabelElt, this.statusSelectElt, "Le statut doit être renseigné.");
+        return this.validationInput.invalid(this.statusSelectElt, "Le statut doit être renseigné.");
     }
 
     getOption(selectElt) {
@@ -125,40 +130,6 @@ export default class ValidationSupport {
             day = "0" + day;
         }
         return this.now.getFullYear() + "-" + month + "-" + day;
-    }
-
-    // Met le champ en valide 
-    valid(field, inputElt) {
-        if (inputElt.classList.contains("is-invalid")) {
-            inputElt.classList.replace("is-invalid", "is-valid");
-            return this.removeInvalid(inputElt, document.querySelector(".js-invalid-" + field));
-        }
-        return inputElt.classList.add("is-valid");
-    }
-
-    // Met le champ en invalide et met un message d'erreur
-    invalid(field, label, inputElt, msg) {
-        if (document.querySelector("label>span.js-invalid-" + field)) {
-            document.querySelector("span.js-invalid-" + field).remove();
-        }
-        if (!inputElt.classList.contains("is-invalid")) {
-            inputElt.classList.add("is-invalid");
-        }
-        let invalidFeedbackElt = document.createElement("span");
-        invalidFeedbackElt.className = "invalid-feedback d-block js-invalid js-invalid-" + field;
-        invalidFeedbackElt.innerHTML = `
-                <span class="form-error-icon badge badge-danger text-uppercase">Erreur</span> 
-                <span class="form-error-message">${msg}</span>
-                `
-        label.appendChild(invalidFeedbackElt);
-    }
-
-    // Retire le message d'erreur de validité
-    removeInvalid(inputElt, msgElt) {
-        inputElt.classList.remove("is-invalid");
-        if (msgElt) {
-            msgElt.remove();
-        }
     }
 
     // Renvoie le nombre de champs invalides

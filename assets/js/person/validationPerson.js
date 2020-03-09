@@ -31,7 +31,6 @@ export default class ValidationPerson {
         this.nbPeopleLabelElt = document.querySelector("label[for=" + nbPeople + "]");
 
         this.validationInput = new ValidationInput();
-
         this.init();
     }
 
@@ -52,21 +51,21 @@ export default class ValidationPerson {
 
     checkLastname() {
         if (this.lastnameInputElt.value.length <= 1) {
-            this.validationInput.invalid("lastname", this.lastnameLabelElt, this.lastnameInputElt, "Le nom est trop court (2 caractères min.).");
+            this.validationInput.invalid(this.lastnameInputElt, "Le nom est trop court (2 caractères min.).");
         } else if (this.lastnameInputElt.value.length >= 50) {
-            this.validationInput.invalid("lastname", this.lastnameLabelElt, this.lastnameInputElt, "Le nom est trop long (50 caractères max.).");
+            this.validationInput.invalid(this.lastnameInputElt, "Le nom est trop long (50 caractères max.).");
         } else {
-            this.validationInput.valid("lastname", this.lastnameLabelElt, this.lastnameInputElt);
+            this.validationInput.valid(this.lastnameInputElt);
         }
     }
 
     checkFirstname() {
         if (this.firstnameInputElt.value.length <= 1) {
-            this.validationInput.invalid("firstname", this.firstnameLabelElt, this.firstnameInputElt, "Le prénom est trop court (2 caractères min.).");
+            this.validationInput.invalid(this.firstnameInputElt, "Le prénom est trop court (2 caractères min.).");
         } else if (this.firstnameInputElt.value.length >= 50) {
-            this.validationInput.invalid("firstname", this.firstnameLabelElt, this.firstnameInputElt, "Le prénom est trop long (50 caractères max.).");
+            this.validationInput.invalid(this.firstnameInputElt, "Le prénom est trop long (50 caractères max.).");
         } else {
-            this.validationInput.valid("firstname", this.firstnameLabelElt, this.firstnameInputElt);
+            this.validationInput.valid(this.firstnameInputElt);
         }
     }
 
@@ -75,9 +74,9 @@ export default class ValidationPerson {
         let now = new Date();
         let age = Math.round((now - birthdate) / (24 * 3600 * 1000 * 365.25));
         if (birthdate < now && age < 99) {
-            this.validationInput.valid("birthdate", this.birthdateLabelElt, this.birthdateInputElt);
+            this.validationInput.valid(this.birthdateInputElt);
         } else {
-            this.validationInput.invalid("birthdate", this.birthdateLabelElt, this.birthdateInputElt, "La date de naissance est incorrecte.");
+            this.validationInput.invalid(this.birthdateInputElt, "La date de naissance est incorrecte.");
         }
     }
 
@@ -88,9 +87,9 @@ export default class ValidationPerson {
             }
         });
         if (this.genderValue >= 1 && this.genderValue <= 3) {
-            this.validationInput.valid("gender", this.genderLabelElt, this.genderInputElt);
+            this.validationInput.valid(this.genderInputElt);
         } else {
-            this.validationInput.invalid("gender", this.genderLabelElt, this.genderInputElt, "Le sexe doit être renseigné.");
+            this.validationInput.invalid(this.genderInputElt, "Le sexe doit être renseigné.");
         }
     }
 
@@ -98,9 +97,9 @@ export default class ValidationPerson {
         let regex = this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}");
         if (regex || this.emailInputElt.value === "") {
             this.valid("email", this.emailInputElt);
-            this.validationInput.valid("email", this.emailLabelElt, this.emailInputElt);
+            this.validationInput.valid(this.emailInputElt);
         } else {
-            this.validationInput.invalid("email", this.emailLabelElt, this.emailInputElt, "L'adresse email est incorrecte.");
+            this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
         }
     }
 
@@ -111,9 +110,9 @@ export default class ValidationPerson {
             }
         });
         if (this.roleValue >= 1 && this.roleValue <= 9) {
-            this.validationInput.valid("role", this.roleLabelElt, this.roleInputElt);
+            this.validationInput.valid(this.roleInputElt);
         } else {
-            this.validationInput.invalid("role", this.roleLabelElt, this.roleInputElt, "Le rôle  doit être renseigné.");
+            this.validationInput.invalid(this.roleInputElt, "Le rôle  doit être renseigné.");
         }
     }
 
@@ -124,17 +123,17 @@ export default class ValidationPerson {
             }
         });
         if (this.typoValue >= 1 && this.typoValue <= 9) {
-            this.validationInput.valid("typo", this.typoLabelElt, this.typoInputElt);
+            this.validationInput.valid(this.typoInputElt);
         } else {
-            this.validationInput.invalid("typo", this.typoLabelElt, this.typoInputElt, "La typologie  doit être renseignée.");
+            this.validationInput.invalid(this.typoInputElt, "La typologie  doit être renseignée.");
         }
     }
 
     checkNbPeople() {
         if (this.nbPeopleInputElt.value >= 1 && this.nbPeopleInputElt.value <= 19) {
-            this.valid("nbPeople", this.nbPeopleInputElt);
+            this.validationInput.valid(this.nbPeopleInputElt);
         } else {
-            this.invalid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
+            this.validationInput.invalid(this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
         }
     }
 
@@ -166,9 +165,9 @@ export default class ValidationPerson {
                 <span class="form-error-message">${msg}</span>
                 `
             label.appendChild(invalidFeedbackElt);
-            this.validationInput.valid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt);
+            this.validationInput.valid(this.nbPeopleInputElt);
         } else {
-            this.validationInput.invalid("nbPeople", this.nbPeopleLabelElt, this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
+            this.validationInput.invalid(this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
         }
     }
 
