@@ -101,16 +101,16 @@ class Document
         return $this->type;
     }
 
+    public function getTypeToString(): ?string
+    {
+        return self::TYPE[$this->type];
+    }
+
     public function setType(?int $type): self
     {
         $this->type = $type;
 
         return $this;
-    }
-
-    public function getTypeToString(): ?string
-    {
-        return self::TYPE[$this->type];
     }
 
     public function getContent(): ?string

@@ -250,7 +250,7 @@ export default class ListDocuments {
     updateDocument(data) {
         this.nameDocumentElt.textContent = this.documentNameInput.value;
         let documentTypeInput = this.documentElt.querySelector(".js-document-type");
-        documentTypeInput.textContent = data.typeToString;
+        documentTypeInput.textContent = data.type;
         documentTypeInput.setAttribute("data-value", this.getOption(this.documentTypeInput));
         this.documentElt.querySelector(".js-document-content").textContent = this.documentContentInput.value;
     }
