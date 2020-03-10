@@ -321,7 +321,7 @@ class InitEvalPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => InitEvalPerson::class,
-            "translation_domain" => "initEval"
+            "translation_domain" => "evaluation"
         ]);
     }
 }

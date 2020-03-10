@@ -43,7 +43,7 @@ class EvalSocialGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalSocialGroup::class,
-            "translation_domain" => "social"
+            "translation_domain" => "evaluation"
         ]);
     }
 }

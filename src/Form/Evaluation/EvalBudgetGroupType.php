@@ -35,7 +35,7 @@ class EvalBudgetGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalBudgetGroup::class,
-            "translation_domain" => "budget"
+            "translation_domain" => "evaluation"
         ]);
     }
 }

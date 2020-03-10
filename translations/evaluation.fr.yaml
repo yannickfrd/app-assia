@@ -1,0 +1,255 @@
+Init eval: Initial
+-- Select --: -- Sélectionner --
+
+# Administratif
+Adm: Administratif
+Asylum background: Parcours asile
+Asylum status: Statut lié à l'asile
+Comment eval adm: Commentaire relatif à la situation administrative
+Country: Pays
+End valid permit date: Date de fin de validité du titre
+Nationality: Nationalité 
+Nb renewals: Nombre de renouvellements
+Paper type: Type de papier
+Paper: Papier d'identité
+Renewal permit date: Date de renouvellement du titre
+Resid permit request: Demande de titre de séjour
+Work right: Autorisation de travail
+Write a comment about the administrative situation: Ecrire un commentaire relatif à la situation administrative
+
+# Budget
+Activity bonus amt: Montant Prime d'activité
+Activity bonus: Prime d'activité
+Alimony amt: Montant Pension alimentaire
+Alimony: Pension alimentaire
+Asylum allowance amt: Montant ADA
+Asylum allowance: ADA
+Budget balance amt: Reste à vivre
+Budget: Budget
+Charge comment: Commentaire sur les charges
+Charge other amt: Montant autre charge
+Charge other precision: Précision Autre charge
+Charge other: Autre charge
+Charges amt: Montant total des charges
+Charges group amt: Charges totales du groupe
+Charges: Charges
+Childcare amt: Montant garde enfant(s)
+Childcare: Garde d'enfant(s)
+Comment eval budget: Commentaire relatif à la situation budgétaire
+Debt amt: Montant total des dettes
+Debt bank old amt: Montant découverts bancaires
+Debt bank overdrafts: Découverts bancaires
+Debt comment: Commentaire sur les dettes
+Debt consr credit amt: Montant dette de crédits à la consommation
+Debt consr credit: Dette de crédits à la consommation
+Debt fines amt: Montant amendes
+Debt fines: Amendes
+Debt mortgage amt: Montant dettes de crédits immobiliers
+Debt mortgage: Dettes de crédits immobiliers
+Debt other amt: Montant des autres dettes
+Debt other precision: Précision autres dettes
+Debt other: Autres dettes
+Debt rental amt: Montant des dettes locatives
+Debt rental: Dettes locatives
+Debt tax delays amt: Montant retards d'impôts
+Debt tax delays: Retards d'impôts
+Debt unpaid maint amt: Montant pension alimentaire non réglée
+Debt unpaid maint: Pension alimentaire non réglée
+Debts amt: Montant des dettes
+Debts group amt: Dettes totales du groupe
+Debts: Dettes
+Dis adult allowance amt: Montant AAH
+Dis adult allowance: AAH
+Dis child allowance amt: Montant AAEH
+Dis child allowance: AEEH
+Electricity gas amt: Montant électricité / Gaz
+Electricity gas: Electricité / Gaz
+End rights date: Date de fin de droits
+Family allowance amt: Montant allocations familiales
+Family allowance: Allocations familiales
+Income n1 amt: Revenu fiscal n-1
+Income n2 amt: Revenu fiscal n-2
+Incomen1amt: Revenu fiscal n-1
+Incomen2amt: Revenu fiscal n-2
+Insurance amt: Montant assurance(s)
+Insurance: Assurance(s)
+Maintenance amt: Montant pension alimentaire
+Maintenance: Pension alimentaire
+Minimum income amt: Montant RSA
+Minimum income: RSA
+Monthly repayment amt: Montant du remboursement mensuel
+Moratorium: Moratoire
+Mutual amt: Montant mutuelle(s)
+Mutual: Mutuelle(s)
+Other charge(s)...: Autre(s) charge(s)...
+Other debt(s)...: Autre(s) dette(s)...
+Other ressource(s)...: Autre(s) ressource(s)
+Over indebt record date: Date de dépôt du dossier
+Over indebt record: Dossier de surendettement
+Paid training amt: Montant formation rémunérée
+Paid training: Formation rémunérée
+Pension benefit amt: Montant retraire
+Pension benefit: Retraite
+Phone amt: Montant téléphone
+Phone: Téléphone
+Rent amt: Montant loyer
+Rent: Loyer
+Resources amt: Montant total des ressources
+Resources comment: Commentaire sur les ressources
+Resources group amt: Ressources totales du groupe
+Resources: Ressources
+Ressource other amt: Montant autre ressource
+Ressource other precision: Précision autres revenus
+Ressource other: Autre ressource
+Salary amt: Montant salaire
+Salary: Salaire
+Settlement plan: Plan d'apurement
+Solidarity allowance amt: Montant ASS
+Solidarity allowance: ASS
+Taxes amt: Montant impôts
+Taxes: Impôts
+Temp waiting allowance amt: Montant allocation temporaire d'attente
+Temp waiting allowance: ATA
+Transport amt: Montant transport
+Transport: Transport
+Unempl benefit amt: Montant ARE
+Unempl benefit: ARE
+Water amt: Montant Eau
+Water: Eau
+Write a comment about the budget situation : Ecrire un commentaire relatif à la situation budgétaire
+Youth guarantee amt: Montant Garantie jeunes
+Youth guarantee: Garantie jeunes
+
+# Family
+Caf id: Numéro CAF
+Child dependance: A charge / Situation enfant
+Child to host : A héberger 
+Childcare school location: Lieu de garde/scolarité
+Childcare school: Garde ou scolarité
+Children behind: Enfants restés au pays
+Comment eval family group: Commentaire relatif à la situation familiale du groupe
+Comment eval family person: Commentaire relatif à la situation sociale de la personne
+Exp date childbirth: Date prév. de l'accouchement
+Family: Famille
+Faml reunification: Regroupement familial
+Marital status: Situation matrimoniale
+Nb dependent children : Nombre d'enfants à charge
+Nb people reunification: Nombre de pers. concernées par le regroupement
+Pregnancy type: Type de grossesse
+Protective measure type: Type de mesure de protection
+Protective measure: Mesure de protection
+Unborn child: Enfant à naître
+Write a comment about the family situation of the group: Ecrire un commentaire relatif à la situation familiale du groupe
+Write a comment about the family situation of the person: Ecrire un commentaire relatif à la situation familiale de la personne
+
+# Prof
+Comment eval prof:  Commentaire relatif la situation professionnelle
+Contract end date: Date de fin du contrat
+Contract start date: Date de début du contrat
+Contract type: Type de contrat
+Employer name: Nom de l'employeur
+End rqth date : Date de fin de validité RQTH
+Job center id: Numéro Pôle Emploi
+Job type: Type d'emploi
+Nb working hours: Nombre d'heures de travail
+Prof experience: Expérience professionnelle
+Prof status: Statut professionnel
+Prof: Emploi
+Rqth: RQTH
+School level: Niveau scolaire
+Transport means type: Moyen(s) de transport 
+Transport means: Précision moyen(s) de transport 
+Work place: Lieu de travail (commune)
+Working hours: Horaires de travail
+Write a comment about the professional situation: Ecrire un commentaire relatif à la situation professionnelle
+
+# Housing
+Caf eligibility: Eligibilité CAF
+Cities wishes: Communes ou départements souhaités
+Collective agreement housing date: Date de labellisation Accord Collectif
+Collective agreement housing: Labellisation Accord Collectif
+Comment eval housing: Commentaire relatif à la situation liée au logement et l'hébergement
+Dalo commission: Passage en commission DALO
+Dalo decision date: Date de décision du DALO
+Dalo id: Numéro DALO
+Dalo record date: Date de dépôt du DALO
+Dalo requalified daho: DALO requalifié en DAHO
+Dalo tribunal action date: Date du recours Tribunal administratif
+Dalo tribunal action: DALO recours Tribunal administratif
+Department or zip code: Département ou code postal
+Domiciliation address: Adresse de domiciliation
+Domiciliation city: Ville de domiciliation
+Domiciliation dept: Département de domiciliation
+Domiciliation: Domiciliation
+End domiciliation date: Date de fin domiciliation
+Expulsion comment: Commentaire sur l'expulsion location
+Expulsion in progress: Procédure d'expulsion en cours
+Fsl eligibility: Eligibilité aide à l'installation FSL
+Fsl: FSL
+Heps precision: Précision sur les aides et accès au logement
+Housing access type: Type d'accès au logement
+Housing address: Adresse du logement ou hébergement
+Housing arrival date: Date d'entrée dans le logement
+Housing city: Ville
+Housing dept: Département
+Housing expe comment: Commentaire expérience lié au logement
+Housing experience: Expérience de logement autonome
+Housing status: Situation résidentielle
+Housing wishes: Type de logement(s) souhaité(s)
+Housing: Logement
+Housings status: Situation résidentielle
+Hsg action date: Date de dépôt Action Logement
+Hsg action dept: Département
+Hsg action eligibility: Eligibilité Action Logement
+Hsg action record id: Numéro d'enregistrement
+Hsg action record: Demande déposée Action Logement
+Other helps: Autre(s) aide(s)
+Public force date: Date du concours de la Force Publique
+Public force: Concours de la Force Publique
+Siao request date: Date de demande initiale SIAO
+Siao request: Demande SIAO active
+Siao updated request date: Date de dernière actualisation SIAO
+Social housing request date: Date de demande de logement social
+Social housing request id: Numéro unique régional (NUR)
+Social housing request: Demande de logement social
+Social housing updated request date: Date de renouvellement 
+Specificities: Spécificités à prendre en considération 
+Start domiciliation date: Date de début domiciliation
+Syplo date: Date du SYPLO
+Syplo id: Numéro SYPLO
+Syplo: SYPLO
+Write a comment about the housing situation: Ecrire un commentaire relatif à la situation liée au logement et à l'hébergement
+
+# Justice
+Comment eval justice: Commentaire sur la situation judiciaire
+Justice act: Mesure judiciaire
+Justice status: Situation judiciaire
+Write a comment about the justice situation of the person: Ecrire un commentaire relatif à la situation judiciaire de la personne
+
+# Social person
+Addiction problem: Problématique d'addiction
+Animal type: Type d'animal
+Animal: Présence d'un animal
+Care support: Service de soins ou d'acc. à domicile
+Care support type: Type de service soins ou d'acc. à domicile
+Child welfare background: Parcours institutionnel enfance
+Comment eval social: Commentaire relatif à la situation sociale
+Dom violence victim: Femme victime de violence conjugale
+End rights social security date: Date de fin de droits à la Sécurité sociale
+Family breakdown: Rupture des liens familiaux
+Friendship breakdown: Rupture des liens amicaux
+Health problem: Problématique de santé
+Mental health problem: Problématique de santé mentale
+Physical health problem: Problématique de santé physique
+Reason request: Motif de la demande
+Reduced mobility: Personne à mobilité réduite
+Right social benefit: Droit aux prestations sociales et familiales
+Right social security: Droits ouverts Sécurité sociale
+Social security: Sécurité sociale
+Social security office: Caisse de Sécurité sociale
+Social: Social
+Violence victim: Personne victime de violence
+Wandering time: Durée d'errance
+Wheelchair: Personne en fauteuil roulant
+Write a comment about the social situation of the group: Ecrire un commentaire relatif à la situation sociale du groupe
+Write a comment about the social situation of the person: Ecrire un commentaire relatif à la situation sociale de la personne

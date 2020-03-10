@@ -105,7 +105,7 @@ class EvalSocialPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalSocialPerson::class,
-            "translation_domain" => "social",
+            "translation_domain" => "evaluation",
         ]);
     }
 }

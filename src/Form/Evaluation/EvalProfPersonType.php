@@ -85,7 +85,7 @@ class EvalProfPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalProfPerson::class,
-            "translation_domain" => "prof",
+            "translation_domain" => "evaluation",
         ]);
     }
 }

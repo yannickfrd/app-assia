@@ -18,7 +18,7 @@ https://demo.esperer95.app
 
 ## Version 1.1.2 - XX/03/2020
 - Ajout de contrôles de saisie dans l'évaluation sociales (date et montant)
-
+- Traduction des erreurs de validation dans l'évaluation sociale
 
 ## Version 1.1.1 - 09/03/2020
 - Ajout du nom du dispositif après celui du service dans l'historique des suivis sociaux de la personne et du groupe

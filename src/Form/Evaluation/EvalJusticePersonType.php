@@ -38,7 +38,7 @@ class EvalJusticePersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalJusticePerson::class,
-            "translation_domain" => "justice",
+            "translation_domain" => "evaluation",
         ]);
     }
 }

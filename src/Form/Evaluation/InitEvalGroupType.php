@@ -48,7 +48,7 @@ class InitEvalGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => InitEvalGroup::class,
-            "translation_domain" => "initEval"
+            "translation_domain" => "evaluation"
         ]);
     }
 }

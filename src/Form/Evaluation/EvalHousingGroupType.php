@@ -209,7 +209,7 @@ class EvalHousingGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalHousingGroup::class,
-            "translation_domain" => "housing"
+            "translation_domain" => "evaluation"
         ]);
     }
 }

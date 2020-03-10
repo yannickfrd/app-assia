@@ -479,7 +479,7 @@ export default class evaluation {
 
     checkMoney(moneyElt) {
         moneyElt.value = moneyElt.value.replace(" ", "");
-        if (Number(moneyElt.value)) {
+        if (Number(moneyElt.value) >= 0) {
             return this.validationInput.valid(moneyElt);
         }
         return this.validationInput.invalid(moneyElt, "Montant invalide.");

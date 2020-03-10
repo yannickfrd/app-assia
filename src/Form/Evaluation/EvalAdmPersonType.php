@@ -73,7 +73,7 @@ class EvalAdmPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalAdmPerson::class,
-            "translation_domain" => "adm",
+            "translation_domain" => "evaluation",
         ]);
     }
 }

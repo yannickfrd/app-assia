@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\Normalisation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -67,7 +68,7 @@ class EvaluationController extends AbstractController
      * @return Response
      */
 
-    public function editEvaluation(int $id, Request $request): Response
+    public function editEvaluation(int $id, Request $request, Normalisation $normalisation): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
@@ -81,7 +82,7 @@ class EvaluationController extends AbstractController
             return $this->updateEvaluationGroup($evaluationGroup);
         }
 
-        return $this->errorMessage($form);
+        return $this->errorMessage($form, $normalisation);
     }
 
     /**
@@ -205,13 +206,14 @@ class EvaluationController extends AbstractController
     /**
      * Retourne un message d'erreur au format JSON
      * 
+     * @param Normalisation $normalisation
      * @return Response
      */
-    protected function errorMessage($form): Response
+    protected function errorMessage($form, Normalisation $normalisation): Response
     {
         $msg = [];
         foreach ($form->getErrors(true) as $error) {
-            $msg[] = $error->getOrigin()->getName() . " : " . $error->getMessage();
+            $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName())  . " : " . $error->getMessage();
         }
 
         return $this->json([

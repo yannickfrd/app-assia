@@ -377,7 +377,7 @@ class EvalBudgetPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalBudgetPerson::class,
-            "translation_domain" => "budget"
+            "translation_domain" => "evaluation"
         ]);
     }
 }

@@ -73,7 +73,7 @@ class EvalFamilyPersonType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalFamilyPerson::class,
-            "translation_domain" => "family",
+            "translation_domain" => "evaluation",
         ]);
     }
 }

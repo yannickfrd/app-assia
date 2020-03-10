@@ -41,7 +41,7 @@ class EvalFamilyGroupType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => EvalFamilyGroup::class,
-            "translation_domain" => "family"
+            "translation_domain" => "evaluation"
         ]);
     }
 }
