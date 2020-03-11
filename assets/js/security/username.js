@@ -26,15 +26,15 @@ export default class Username {
 
     init() {
         if (this.lastnameInputElt) {
-            this.firstnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
-            this.lastnameInputElt.addEventListener("focusout", this.updateUsername.bind(this));
+            this.firstnameInputElt.addEventListener("change", this.updateUsername.bind(this));
+            this.lastnameInputElt.addEventListener("change", this.updateUsername.bind(this));
             this.usernameInputElt.addEventListener("keyup", this.timer.bind(this));
         }
-        this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
+        this.emailInputElt.addEventListener("change", this.checkEmail.bind(this));
         if (this.passwordInputElt) {
             this.passwordInputElt.addEventListener("keyup", this.checkPassword.bind(this));
-            this.passwordInputElt.addEventListener("focusout", this.checkoutPassword.bind(this));
-            this.confirmPasswordInputElt.addEventListener("focusout", this.checkConfirmPassword.bind(this));
+            this.passwordInputElt.addEventListener("change", this.checkoutPassword.bind(this));
+            this.confirmPasswordInputElt.addEventListener("change", this.checkConfirmPassword.bind(this));
         }
     }
 
@@ -47,46 +47,39 @@ export default class Username {
 
     checkUsername() {
         if (this.usernameInputElt.value.length > 6) {
-            this.sendAjaxRequest();
-        } else {
-            this.validationInput.invalid(this.usernameInputElt, "Le login est invalide.");
+            return this.sendAjaxRequest();
         }
+        return this.validationInput.invalid(this.usernameInputElt, "Le login est invalide.");
     }
 
     updateUsername() {
         if (this.firstnameInputElt.value.length > 2 && this.lastnameInputElt.value.length > 2) {
-            let autoUsername = this.firstnameInputElt.value.toLowerCase().charAt(0) + "." + this.lastnameInputElt.value.toLowerCase();
-            this.usernameInputElt.value = autoUsername;
+            this.usernameInputElt.value = this.firstnameInputElt.value.toLowerCase().charAt(0) + "." + this.lastnameInputElt.value.toLowerCase();;
             this.sendAjaxRequest();
         }
     }
 
     sendAjaxRequest() {
-        let url = "/user/username_exists?value=" + this.usernameInputElt.value;
-        this.ajaxRequest.init("GET", url, this.response.bind(this), true);
+        this.ajaxRequest.init("GET", "/user/username_exists?value=" + this.usernameInputElt.value, this.response.bind(this), true);
     }
 
     response(data) {
-        let dataJSON = JSON.parse(data);
-        if (dataJSON.response === true) {
-            this.validationInput.invalid(this.usernameInputElt, "Ce login est déjà pris !");
-        } else {
-            this.validationInput.valid(this.usernameInputElt);
+        if (JSON.parse(data).response === true) {
+            return this.validationInput.invalid(this.usernameInputElt, "Ce login est déjà pris !");
         }
+        return this.validationInput.valid(this.usernameInputElt);
     }
 
     checkEmail() {
-        let regex = this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}");
-        if (regex || this.emailInputElt.value === "") {
-            this.validationInput.valid(this.emailInputElt);
-        } else {
-            this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
+        if (this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}") || this.emailInputElt.value === "") {
+            return this.validationInput.valid(this.emailInputElt);
         }
+        return this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
     }
 
     checkPassword() {
         if (this.passwordInputElt.value.match(this.regexPassword)) {
-            this.validationInput.valid(this.passwordInputElt);
+            return this.validationInput.valid(this.passwordInputElt);
         }
     }
 
@@ -94,13 +87,15 @@ export default class Username {
         if (!this.passwordInputElt.value.match(this.regexPassword)) {
             this.validationInput.invalid(this.passwordInputElt, "Le mot de passe est invalide.");
         }
+        this.checkConfirmPassword();
     }
 
     checkConfirmPassword() {
         if (this.confirmPasswordInputElt.value === this.passwordInputElt.value) {
-            this.validationInput.valid(this.confirmPasswordInputElt);
-        } else {
-            this.validationInput.invalid(this.confirmPasswordInputElt, "Le mot de passe et la confirmation sont différents.");
+            return this.validationInput.valid(this.confirmPasswordInputElt);
+        }
+        if (this.confirmPasswordInputElt.value) {
+            return this.validationInput.invalid(this.confirmPasswordInputElt, "La confirmation est différente du mot de passe.");
         }
     }
 }

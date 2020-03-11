@@ -52,11 +52,14 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createUser($user);
+            if (count($user->getServiceUser()) > 0) {
+                return $this->createUser($user);
+            }
+            $this->addFlash("danger", "Veuillez rattacher l'utilisateur à au moins un service.");
         }
 
         return $this->render("app/security/registration.html.twig", [
-            "form" => $form->createView(),
+            "form" => $form->createView()
         ]);
     }
 

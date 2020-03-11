@@ -1,37 +1,49 @@
-$(document).ready(function () {
-    $('.add-another-collection-widget').click(function (e) {
-        e.preventDefault();
-        var list = $(jQuery(this).attr('data-list-selector'));
-        // Try to find the counter of the list or use the length of the list
-        var counter = list.data('widget-counter') || list.children().length;
+// Classe d'ajout d'éléments dans une collection
+export default class AddCollectionWidget {
+
+    constructor() {
+        this.btnElt = document.querySelector(".add-another-collection-widget");
+        this.list = document.querySelector(this.btnElt.getAttribute("data-list-selector"));
+        this.counter = this.list.getAttribute("data-widget-counter") || this.list.children().length; // Try to find the counter of the list or use the length of the list
+        this.init();
+    }
+
+    init() {
+        this.btnElt.addEventListener("click", e => {
+            e.preventDefault();
+            this.addElt();
+        });
+    }
+
+    // Ajoute un élément prototypé dans la liste
+    addElt() {
         // grab the prototype template
-        var newWidget = list.attr('data-prototype');
-        // replace the "__name__" used in the id and name of the prototype
-        // with a number that's unique to your emails
-        newWidget = newWidget.replace(/__name__/g, counter);
+        let newWidget = this.list.getAttribute("data-prototype");
+        // replace the "__name__" used in the id and name of the prototype with a number that's unique to your emails
+        newWidget = newWidget.replace(/__name__/g, this.counter);
         // Increase the counter
-        counter++;
+        this.counter++;
         // And store it, the length cannot be used if deleting widgets is allowed
-        list.data('widget-counter', counter);
+        this.list.setAttribute("data-widget-counter", this.counter);
         // create a new list element and add it to the list
-        var newElem = $(list.attr('data-widget-tags')).html(newWidget);
+        let newElt = $(this.list.getAttribute("data-widget-tags")).html(newWidget);
+        // Add the delete link
+        this.addDeleteLink(newElt);
+        // Add the element
+        newElt.appendTo(this.list);
+    }
 
-        addDeleteLink(newElem);
-
-        newElem.appendTo(list);
-    });
-});
-
-// La fonction qui ajoute un lien de suppression d'une catégorie
-function addDeleteLink($prototype) {
-    // Création du lien
-    var $deleteLink = $('<div class="form-group col-sm-1 my-2"><button class="btn btn-danger"><span class="fas fa-trash-alt"></class></button>');
-    // Ajout du lien
-    $prototype.append($deleteLink);
-    // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie
-    $deleteLink.click(function (e) {
-        $prototype.remove();
-        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-        return false;
-    });
+    // Ajoute un lien de suppression d'une catégorie
+    addDeleteLink(newElt) {
+        // Création du lien
+        let deleteLink = $('<div class="form-group col-sm-1 my-2"><button class="btn btn-danger"><span class="fas fa-trash-alt"></class></button>');
+        // Ajout du lien
+        newElt.append(deleteLink);
+        // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie
+        deleteLink.click(e => {
+            e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+            newElt.remove();
+            return false;
+        });
+    }
 }

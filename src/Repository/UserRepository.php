@@ -74,6 +74,7 @@ class UserRepository extends ServiceEntityRepository
     {
         $query =  $this->createQueryBuilder("u")
             ->select("u")
+            ->leftJoin("u.createdBy", "creatorUser")->addselect("creatorUser")
             ->leftJoin("u.serviceUser", "su")->addselect("su")
             ->leftJoin("su.service", "s")->addSelect("PARTIAL s.{id,name}")
             ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
