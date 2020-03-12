@@ -355,7 +355,7 @@ class EvalSocialPerson
      */
     public function getFamilyBreakdownToString(): ?string
     {
-        return $this->familyBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->familyBreakdown] : null;
+        return $this->familyBreakdown ? Choices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
     }
 
     public function setFamilyBreakdown(?int $familyBreakdown): self
@@ -375,7 +375,7 @@ class EvalSocialPerson
      */
     public function getFriendshipBreakdownToString(): ?string
     {
-        return $this->friendshipBreakdown ? Choices::YES_NO_IN_PROGRESS[$this->friendshipBreakdown] : null;
+        return $this->friendshipBreakdown ? Choices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
     }
 
     public function setFriendshipBreakdown(?int $friendshipBreakdown): self

@@ -22,12 +22,13 @@ class User implements UserInterface
 {
     public const STATUS = [
         1 => "Travailleur social",
-        2 => "Coordinatrice/teur",
-        3 => "Chef·fe de service",
-        4 => "Directrice/teur",
         5 => "Administratif",
         6 => "Chargé·e de mission",
+        3 => "Chef·fe de service",
+        2 => "Coordinatrice/teur",
+        4 => "Directrice/teur",
         7 => "Stagiaire",
+        8 => "Responsable informatique",
         97 => "Autre"
     ];
 

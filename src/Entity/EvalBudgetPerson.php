@@ -34,6 +34,7 @@ class EvalBudgetPerson
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $resourcesAmt;
 
@@ -230,6 +231,7 @@ class EvalBudgetPerson
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
      */
     private $chargesAmt;
 
