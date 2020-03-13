@@ -4,30 +4,30 @@
 		<h1 class="h2">{{ title }}</h1>
 		<div>
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_edit', {'id':support.id}) }}" data-placement="bottom" title="Page d'accueil du suivi">
-				<span class="fas fa-home"></class><span class="sr-only">Page d'accueil du suivi</span>
+				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
 			</a>
 			</a>
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_originRequest', {'id':support.id}) }}" data-placement="bottom" title="Origine de la demande">
-				<span class="fas fa-step-backward"></class><span class="sr-only">Origine de la demande</span>
+				<span class="fas fa-step-backward"></span><span class="sr-only">Origine de la demande</span>
 			</a>
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Personnes rattachées au suivi social">
-				<span class="fas fa-users"></class><span class="sr-only">Personnes accompagnées</span>
+				<span class="fas fa-users"></span><span class="sr-only">Personnes accompagnées</span>
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Evaluation sociale">
-				<span class="fas fa-clipboard"></class><span class="sr-only">Évaluation</span>
+				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
 			</a>
 			{% if support.service.accommodation %}
 				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Modalités d'hébergement">
-					<span class="fas fa-bed"></class><span class="sr-only">Hébergement</span>
+					<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 				</a>
 			{% endif %}
 			<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Rendez-vous">
-				<span class="far fa-calendar-alt"></class><span class="sr-only">Agenda</span>
+				<span class="far fa-calendar-alt"></span><span class="sr-only">Agenda</span>
 			</a>
 			<a href="{{ path('notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Notes sociales">
-				<span class="fas fa-edit"></class><span class="sr-only">Notes</span>
+				<span class="fas fa-edit"></span><span class="sr-only">Notes</span>
 			</a>
 			<a href="{{ path('documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Documents administratifs">
-				<span class="fas fa-file-upload"></class><span class="sr-only">Documents</span>
+				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
 		</div>
 	</div>

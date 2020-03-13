@@ -149,11 +149,6 @@ class PersonSearch
         return $this;
     }
 
-    public function getGenderString()
-    {
-        return Person::GENDER[$this->gender];
-    }
-
     /**
      * @return string|null
      */

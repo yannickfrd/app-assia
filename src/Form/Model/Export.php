@@ -158,11 +158,6 @@ class Export
         return $this;
     }
 
-    public function getSupportDatesString()
-    {
-        return self::SUPPORT_DATES[$this->supportDates];
-    }
-
     public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;

@@ -128,11 +128,6 @@ class AccommodationSearch
         return $this;
     }
 
-    public function getSupportDatesString()
-    {
-        return self::ACCOMMODATION_DATES[$this->supportDates];
-    }
-
     public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;

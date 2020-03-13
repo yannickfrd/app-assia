@@ -46,11 +46,6 @@ class NoteSearch
         return $this;
     }
 
-    public function getTypeString()
-    {
-        return Note::TYPE[$this->type];
-    }
-
     public function getStatus(): ?int
     {
         return $this->status;
@@ -61,10 +56,5 @@ class NoteSearch
         $this->status = $status;
 
         return $this;
-    }
-
-    public function getStatusString()
-    {
-        return Note::STATUS[$this->status];
     }
 }

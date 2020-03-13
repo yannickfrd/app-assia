@@ -2,64 +2,148 @@
 
 namespace App\Form\Model;
 
-use App\Entity\Rdv;
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class RdvSearch
 {
     /**
      * @var string|null
      */
-    private $content;
+    private $title;
 
     /**
-     * @var int|null
+     * @var string|null
      */
-    private $type;
+    private $fullname;
 
     /**
-     * @var int|null
+     * @var date|null
      */
-    private $status;
+    private $startDate;
 
-    public function getContent(): ?string
+    /**
+     * @var date|null
+     */
+    private $endDate;
+
+    /**
+     * @var string|null
+     */
+    private $referent;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $services;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $devices;
+
+
+    public function __construct()
     {
-        return $this->content;
+        $this->services = new ArrayCollection();
+        $this->devices = new ArrayCollection();
     }
 
-    public function setContent(string $content): self
+    /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
     {
-        $this->content = $content;
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+    /**
+     * @return string|null
+     */
+    public function getFullname(): ?string
+    {
+        return $this->fullname;
+    }
+
+    public function setFullname(string $fullname): self
+    {
+        $this->fullname = $fullname;
 
         return $this;
     }
 
-    public function getType(): ?int
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->type;
+        return $this->startDate;
     }
 
-    public function setType(?int $type): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
-        $this->type = $type;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->status;
+        return $this->endDate;
     }
 
-    public function setStatus(?int $status): self
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        $this->status = $status;
+        if ($endDate) {
+            $this->endDate = $endDate;
+        }
+        return $this;
+    }
+
+    public function getReferent(): ?string
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(?string $referent): self
+    {
+        $this->referent = $referent;
 
         return $this;
     }
 
-    public function getStatusString()
+    /**
+     *
+     * @return ArrayCollection|null
+     */
+    public function getServices(): ?ArrayCollection
     {
-        return Rdv::STATUS[$this->status];
+        return $this->services;
+    }
+
+    public function setServices(?ArrayCollection $services): self
+    {
+        $this->services = $services;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return ArrayCollection|null
+     */
+    public function getDevices(): ?ArrayCollection
+    {
+        return $this->devices;
+    }
+
+    public function setDevices(?ArrayCollection $devices): self
+    {
+        $this->devices = $devices;
+
+        return $this;
     }
 }

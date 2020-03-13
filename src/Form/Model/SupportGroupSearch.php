@@ -171,11 +171,6 @@ class SupportGroupSearch
         return $this->status;
     }
 
-    public function getStatusString()
-    {
-        return SupportGroup::STATUS[$this->status];
-    }
-
     public function setStatus(?array $status): self
     {
         $this->status = $status;
@@ -193,11 +188,6 @@ class SupportGroupSearch
         $this->supportDates = $supportDates;
 
         return $this;
-    }
-
-    public function getSupportDatesString()
-    {
-        return self::SUPPORT_DATES[$this->supportDates];
     }
 
     public function getStartDate(): ?\DateTimeInterface

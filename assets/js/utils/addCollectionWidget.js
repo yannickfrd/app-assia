@@ -36,7 +36,7 @@ export default class AddCollectionWidget {
     // Ajoute un lien de suppression d'une catégorie
     addDeleteLink(newElt) {
         // Création du lien
-        let deleteLink = $('<div class="form-group col-sm-1 my-2"><button class="btn btn-danger"><span class="fas fa-trash-alt"></class></button>');
+        let deleteLink = $('<div class="form-group col-sm-1 my-2"><button class="btn btn-danger"><span class="fas fa-trash-alt"></span></button>');
         // Ajout du lien
         newElt.append(deleteLink);
         // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie

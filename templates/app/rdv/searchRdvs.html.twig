@@ -1,0 +1,17 @@
+{% extends "model/search.html.twig" %}
+
+{% block search_form %}
+
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.title) }}</div>
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.fullname) }}</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_row(form.startDate) }}
+</div>
+<div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_row(form.endDate) }}
+</div>
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.referent) }}</div>
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.services) }}</div>
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.devices) }}</div>
+
+{% endblock %}

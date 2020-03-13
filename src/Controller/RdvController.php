@@ -3,15 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Rdv;
-use App\Entity\SupportGroup;
-use App\Form\Model\RdvSearch;
 use App\Form\Rdv\RdvType;
-use App\Form\Rdv\RdvSearchType;
-use App\Repository\RdvRepository;
-use App\Repository\SupportGroupRepository;
 use App\Service\Calendar;
 use App\Service\Pagination;
+use App\Entity\SupportGroup;
+use App\Form\Model\RdvSearch;
+use App\Form\Rdv\RdvSearchType;
+use App\Repository\RdvRepository;
+use App\Form\Model\SupportRdvSearch;
+use App\Form\Rdv\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +28,67 @@ class RdvController extends AbstractController
     {
         $this->manager = $manager;
         $this->repo = $repo;
+    }
+
+    /**
+     * Liste des rendez-vous
+     * 
+     * @Route("/rdvs", name="rdvs")
+     * @param Request $request
+     * @param RdvSearch $rdvSearch
+     * @param Pagination $pagination
+     * @return Response
+     */
+    public function viewListRdvs(Request $request, RdvSearch $rdvSearch = null, Pagination $pagination): Response
+    {
+        $rdvSearch = new RdvSearch();
+
+        $form = $this->createForm(RdvSearchType::class, $rdvSearch);
+        $form->handleRequest($request);
+
+        // if ($rdvSearch->getExport()) {
+        //     return $this->exportData($rdvSearch);
+        // }
+
+        $rdvs = $pagination->paginate($this->repo->findAllRdvsQuery($rdvSearch), $request);
+
+        return $this->render("app/rdv/listRdvs.html.twig", [
+            "rdvSearch" => $rdvSearch,
+            "form" => $form->createView(),
+            "rdvs" => $rdvs ?? null
+        ]);
+    }
+
+    /**
+     * Liste des rendez-vous
+     * 
+     * @Route("support/{id}/rdvs", name="support_rdvs")
+     * @param int $id
+     * @param SupportGroupRepository $repoSupport
+     * @param RdvSearch $rdvSearch
+     * @param Request $request
+     * @param Pagination $pagination
+     * @return Response
+     */
+    public function viewSupportListRdvs($id, SupportGroupRepository $repoSupport, SupportRdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
+    {
+        $supportGroup = $repoSupport->findSupportById($id);
+
+        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+
+        $rdvSearch = new SupportRdvSearch();
+
+        $formSearch = $this->createForm(SupportRdvSearchType::class, $rdvSearch);
+        $formSearch->handleRequest($request);
+
+        $rdvs = $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $rdvSearch), $request);
+
+        return $this->render("app/rdv/supportRdvs.html.twig", [
+            "support" => $supportGroup,
+            "form_search" => $formSearch->createView(),
+            // "form" => $form->createView(),
+            "rdvs" => $rdvs
+        ]);
     }
 
     /**
@@ -109,41 +172,6 @@ class RdvController extends AbstractController
         return $this->render("app/rdv/day.html.twig", [
             "rdvs" => $rdvs,
             "form" => $form->createView()
-        ]);
-    }
-
-    /**
-     * Liste des rendez-vous
-     * 
-     * @Route("support/{id}/rdvs", name="rdvs")
-     * @param int $id
-     * @param SupportGroupRepository $repoSupport
-     * @param RdvSearch $rdvSearch
-     * @param Request $request
-     * @param Pagination $pagination
-     * @return Response
-     */
-    public function listRdv($id, SupportGroupRepository $repoSupport,  RdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
-    {
-        $supportGroup = $repoSupport->findSupportById($id);
-
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
-
-        $rdvSearch = new RdvSearch;
-
-        $formSearch = $this->createForm(RdvSearchType::class, $rdvSearch);
-        $formSearch->handleRequest($request);
-
-        $rdvs =  $pagination->paginate($this->repo->findAllRdvsQuery($supportGroup->getId(), $rdvSearch), $request);
-
-        $form = $this->createForm(RdvType::class, new Rdv());
-        $form->handleRequest($request);
-
-        return $this->render("app/rdv/listRdvs.html.twig", [
-            "support" => $supportGroup,
-            "form_search" => $formSearch->createView(),
-            "form" => $form->createView(),
-            "rdvs" => $rdvs ?? null,
         ]);
     }
 

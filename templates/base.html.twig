@@ -56,13 +56,18 @@
 								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
 							</div>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path("calendar") }}">Agenda</a>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuCalendar"
+								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Agenda
+							</a>
+							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
+								<a class="dropdown-item" href="{{ path("calendar") }}">Mon agenda</a>
+								<a class="dropdown-item" href="{{ path("rdvs", {'startDate': 'now'|date('Y-m-d') }) }}">Voir tous les rendez-vous</a>
+							</div>
 						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
-								role="button" data-toggle="dropdown" aria-haspopup="true"
-								aria-expanded="false">Répertoire
+								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Répertoire
 							</a>
 							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
 								<a class="dropdown-item" href="{{ path("users") }}">Utilisateurs</a>

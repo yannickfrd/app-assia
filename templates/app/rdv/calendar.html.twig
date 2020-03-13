@@ -15,7 +15,7 @@
 			{% endif %}
 			<div class="d-flex flex-row align-items-center justify-content-between mx-2">
 				<div class="d-flex align-items-center mb-3">
-					<h2 class="h2 mr-3">Agenda</h2>
+					<h2 class="h2 mr-3"><a class="fas fa-table mr-2 text-{{ theme_color }}" href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}" title="Passer en vue tableau"></a>Agenda</h2>
 					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" title="Ajouter un rendez-vous">
 						<span class="far fa-calendar-plus"></span>
 					</button>
@@ -23,21 +23,21 @@
 				<h3 class="h4 text-secondary">{{ calendar.getMonthToString }}</h3>
 				<div class="float-right">
 					{% if support is defined %}
-						<a href="{{ path('support_calendar', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
-						<a href="{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
-							<span class="fas fa-angle-left"></class>
-						</a>
-						<a href="{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
-							<span class="fas fa-angle-right"></class>
-						</a>
+					<a href="{{ path('support_calendar', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
+					<a href="{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
+						<span class="fas fa-angle-left"></span>
+					</a>
+					<a href="{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
+						<span class="fas fa-angle-right"></span>
+					</a>
 					{% else %}
-						<a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
-						<a href="{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
-							<span class="fas fa-angle-left"></class>
-						</a>
-						<a href="{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
-							<span class="fas fa-angle-right"></class>
-						</a>
+					<a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
+					<a href="{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
+						<span class="fas fa-angle-left"></span>
+					</a>
+					<a href="{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
+						<span class="fas fa-angle-right"></span>
+					</a>
 					{% endif %}
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 					<div class="calendar-week-number"></div>
 					{% for day in calendar.daysList%}
 						{% if loop.index0 < 5 %}
-							<div class="calendar-header-col week-5days">{{ day }}</div>
+						<div class="calendar-header-col week-5days">{{ day }}</div>
 						{% endif %}
 					{% endfor %}
 				</div>

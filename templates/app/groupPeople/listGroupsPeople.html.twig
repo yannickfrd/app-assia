@@ -86,9 +86,9 @@
                             ({{ rolePerson.person.age }}{% if rolePerson.person.age > 1 %}
                             ans{% elseif rolePerson.person.age > 0 %} an{% endif %}){% endif %}
                         <td>{% if rolePerson.person.gender == 1 %}
-                            <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></class>
+                            <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
                             {% elseif rolePerson.person.gender == 2 %}
-                            <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></class>
+                            <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
                             {% endif %} </td>
                         <td>{{ rolePerson.roleToString }}{% if rolePerson.head %} (DP){% endif %}</td>
                         <td>{{ groupPeople.familyTypologyToString }}</td>
