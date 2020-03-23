@@ -68,6 +68,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     *@Assert\NotBlank()    
      * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le mot de passe est invalide.")
      */
     private $password;
