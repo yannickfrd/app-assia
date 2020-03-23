@@ -16,6 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.2.0 - 27/03/2020
+- Page de recherche de tous les rendez-vous du/des services (Onglet "Agenda" > "Voir tous les rendez-vous"), ainsi que qu'une page avec la liste de tous les rendez-vous d'un suivi.
+- Correction de la mise à jour des dates de suivis individuelles en fonction du suivi du groupe
+
 ## Version 1.1.2 - 12/03/2020
 - Ajout de contrôles de saisie dans l'évaluation sociales (date et montant)
 - Traduction des erreurs de validation dans l'évaluation sociale

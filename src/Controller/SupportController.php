@@ -434,8 +434,12 @@ class SupportController extends AbstractController
      */
     protected function updateSupportPeople(SupportGroup $supportGroup)
     {
+        $nbPeople = count($supportGroup->getSupportPerson());
         foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-            if (!$supportPerson->getEndDate()) {
+            if ($nbPeople == 1) {
+                $supportPerson->setStartDate($supportGroup->getStartDate());
+            }
+            if ($nbPeople == 1 || !$supportPerson->getEndDate()) {
                 $supportPerson->setStatus($supportGroup->getStatus());
                 $supportPerson->setEndDate($supportGroup->getEndDate());
                 $supportPerson->setEndStatus($supportGroup->getEndStatus());
