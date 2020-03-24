@@ -5,7 +5,7 @@ namespace App\Repository;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Entity\EvaluationGroup;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
