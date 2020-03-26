@@ -77,7 +77,7 @@ class AppController extends AbstractController
         if (!$indicators->isHit()) {
 
             $datas = [];
-            $datas["Nombre de personnes"] = (int) $this->repoPerson->countAllPeople();
+            $datas["Nombre de personnes"] = (int) $this->repoPerson->findAllPeople();
             $datas["Nombre de groupes"] = (int) $this->repoGroupPeople->countAllGroups();
             $datas["Nombre de suivis"] = (int) $this->repoSupport->countAllSupports();
             $datas["Nombre de suivis en cours"] = (int) $this->repoSupport->countAllSupports(["status" => 2]);
@@ -98,7 +98,7 @@ class AppController extends AbstractController
             $users = [];
 
             /** @param User $user */
-            foreach ($this->repoUser->countUsers(["status" => 1]) as $user) {
+            foreach ($this->repoUser->findUsers(["status" => 1]) as $user) {
                 $users[] = [
                     "id" => $user->getId(),
                     "name" => $user->getFullname(),

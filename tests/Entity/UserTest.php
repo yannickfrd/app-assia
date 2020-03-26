@@ -3,34 +3,42 @@
 namespace App\Tests\Entity;
 
 use App\Entity\User;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserTest extends KernelTestCase
+class UserTest extends WebTestCase
 {
-    // protected $passwordEncoder;
+    use FixturesTrait;
+    use AsserthasErrorsTrait;
 
-    // public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-    // {
-    //     $this->passwordEncoder = $passwordEncoder;
-    // }
 
+    /**
+     * @var User
+     */
+    protected $user;
+
+    protected function setUp()
+    {
+        $this->user = $this->getUser();
+    }
 
     public function getUser(): User
     {
         $faker = \Faker\Factory::create("fr_FR");
 
-        $user = new User;
-
+        $firstname = $faker->firstname();
+        $lastname = $faker->lastName();
+        $username = $firstname . "." . $lastname;
         $now = new \DateTime();
 
-        return $user
-            ->setUsername($faker->firstname())
-            ->setFirstName($faker->firstname())
-            ->setLastName($faker->lastName())
+        return (new User)
+            ->setUsername($username)
+            ->setFirstName($firstname)
+            ->setLastName($lastname)
             ->setStatus(1)
             ->setRoles(["ROLE_USER"])
-            ->setPassword("test123")
+            ->setPassword("Test123*")
             ->setEmail($faker->email())
             ->setEnabled(true)
             ->setLoginCount(mt_rand(0, 99))
@@ -39,57 +47,63 @@ class UserTest extends KernelTestCase
             ->setUpdatedAt($now);
     }
 
-    public function assertHasErrors(User $user, int $number = 0)
+    public function testValidUser()
     {
-        self::bootKernel();
-        $errors = self::$container->get("validator")->validate($user);
-        $messages = [];
-        /** @var ConstraintViolation $error */
-        foreach ($errors as $error) {
-            $messages[] = $error->getPropertyPath() . " => " . $error->getMessage();
-        }
-        $this->assertCount($number, $errors, implode(", ", $messages));
+        $this->assertHasErrors($this->user, 0);
     }
 
-    public function testValidPassword()
+    public function testBlankFirstname()
     {
-        $user = $this->getUser()
-            ->setPassword("Test123!");
-
-        $this->assertHasErrors($user, 0);
+        $this->assertHasErrors($this->user->setFirstname(""), 2);
     }
 
-    public function testBlanckUsername()
+    public function testInvalidFirstname()
     {
-        $user = $this->getUser()
-            ->setUsername("")
-            ->setPassword("");
-
-        $this->assertHasErrors($user, 1);
+        $this->assertHasErrors($this->user->setFirstname("x"), 1);
     }
 
-    public function testUsername()
+    public function testBlankLastname()
     {
-        $user = $this->getUser()
-            ->setUsername("")
-            ->setPassword("");
-
-        $this->assertHasErrors($user, 1);
+        $this->assertHasErrors($this->user->setLastname(""), 2);
     }
 
-    public function testBlanckPassword()
+    public function testInvalidLastname()
     {
-        $user = $this->getUser()
-            ->setPassword("");
+        $this->assertHasErrors($this->user->setLastname("x"), 1);
+    }
 
-        $this->assertHasErrors($user, 1);
+    public function testBlankUsername()
+    {
+        $this->assertHasErrors($this->user->setUsername(""), 1);
+    }
+
+    public function testBlankPassword()
+    {
+        $this->assertHasErrors($this->user->setPassword(""), 1);
     }
 
     public function testInvalidPassword()
     {
-        $user = $this->getUser()
-            ->setPassword("test123");
+        $this->assertHasErrors($this->user->setPassword("test123"), 1);
+    }
 
+    public function testBlankEmail()
+    {
+        $this->assertHasErrors($this->user->setEmail(""), 1);
+    }
+
+    public function testInvalidEmail()
+    {
+        $this->assertHasErrors($this->user->setEmail("xxxx@xxx"), 1);
+    }
+
+    public function testUsernameExists()
+    {
+        $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/UserTestFixtures.yaml"
+        ]);
+
+        $user = $this->user->setUsername("r.madelaine");
         $this->assertHasErrors($user, 1);
     }
 }

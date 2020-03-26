@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Person;
 
 use Doctrine\ORM\Query;
+use App\Form\Model\PersonSearch;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -51,10 +52,12 @@ class PersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les personnes
-     * 
+     *
+     * @param PersonSearch $personSearch
+     * @param string $search
      * @return Query
      */
-    public function findAllPeopleQuery($personSearch, $search = null): Query
+    public function findAllPeopleQuery(PersonSearch $personSearch, string $search = null): Query
     {
         $query =  $this->createQueryBuilder("p")
             ->select("p");
@@ -89,9 +92,11 @@ class PersonRepository extends ServiceEntityRepository
 
     /**
      * Trouve toutes les personnes à exporter
-     *
+     * 
+     * @param PersonSearch $personSearch
+     * @return mixed *
      */
-    public function findPeopleToExport($personSearch)
+    public function findPeopleToExport(PersonSearch $personSearch)
     {
         $query = $this->findAllPeopleQuery($personSearch);
         return $query->getResult();
@@ -99,8 +104,11 @@ class PersonRepository extends ServiceEntityRepository
 
     /**
      *  Trouve toutes les personnes
+     *
+     * @param string $search
+     * @return mixed
      */
-    public function findPeopleByResearch($search)
+    public function findPeopleByResearch(string $search)
     {
         return $this->createQueryBuilder("p")
             ->select("p")
@@ -112,7 +120,7 @@ class PersonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countAllPeople(array $criteria = null)
+    public function findAllPeople(array $criteria = null)
     {
         $query = $this->createQueryBuilder("p")->select("COUNT(p.id)");
 

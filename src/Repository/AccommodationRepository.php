@@ -45,6 +45,7 @@ class AccommodationRepository extends ServiceEntityRepository
      * Retourne toutes les places pour l'export
      *
      * @param AccommodationSearch $accommodationSearch
+     * @return mixed
      */
     public function findAccommodationsToExport(AccommodationSearch $accommodationSearch = null)
     {
@@ -59,12 +60,15 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /** 
+    /**
      * Donne la liste des groupes de places
+     *
+     * @param Service $service
+     * @return void
      */
-    public function getAccommodationsQueryList($service)
+    public function getAccommodationsQueryList(Service $service)
     {
-        $query =  $this->createQueryBuilder("a")
+        $query = $this->createQueryBuilder("a")
             ->select("PARTIAL a.{id, name, service}")
 
             ->where("a.service = :service")
@@ -80,7 +84,8 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Donne toutes les places du service
      *
-     * @return Service|null
+     * @param Service $service
+     * @return mixed
      */
     public function findAccommodationsFromService(Service $service)
     {
@@ -100,9 +105,9 @@ class AccommodationRepository extends ServiceEntityRepository
     protected function getAccommodations()
     {
         return $this->createQueryBuilder("a")->select("a")
-            ->innerJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
-            ->innerJoin("a.service", "s")->addSelect("PARTIAL s.{id,name}")
-            ->innerJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
+            ->leftJoin("a.device", "d")->addSelect("PARTIAL d.{id,name}")
+            ->leftJoin("a.service", "s")->addSelect("PARTIAL s.{id,name}")
+            ->leftJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
             ->leftJoin("a.accommodationGroups", "ag")->addSelect("PARTIAL ag.{id,startDate, endDate}")
             ->leftJoin("ag.accommodationPersons", "ap")->addSelect("PARTIAL ap.{id,startDate, endDate}");
         // ->leftJoin("ap.person", "p")->addSelect("PARTIAL p.{id,firstname, lastname}");
@@ -132,33 +137,33 @@ class AccommodationRepository extends ServiceEntityRepository
 
         if ($supportDates == 1) {
             if ($accommodationSearch->getStartDate()) {
-                $query->andWhere("a.startDate >= :startDate")
+                $query->andWhere("a.openingDate >= :startDate")
                     ->setParameter("startDate", $accommodationSearch->getStartDate());
             }
             if ($accommodationSearch->getEndDate()) {
-                $query->andWhere("a.startDate <= :endDate")
+                $query->andWhere("a.openingDate <= :endDate")
                     ->setParameter("endDate", $accommodationSearch->getEndDate());
             }
         }
         if ($supportDates == 2) {
             if ($accommodationSearch->getStartDate()) {
                 if ($accommodationSearch->getStartDate()) {
-                    $query->andWhere("a.endDate >= :startDate")
+                    $query->andWhere("a.closingDate >= :startDate")
                         ->setParameter("startDate", $accommodationSearch->getStartDate());
                 }
                 if ($accommodationSearch->getEndDate()) {
-                    $query->andWhere("a.endDate <= :endDate")
+                    $query->andWhere("a.closingDate <= :endDate")
                         ->setParameter("endDate", $accommodationSearch->getEndDate());
                 }
             }
         }
         if ($supportDates == 3 || !$supportDates) {
             if ($accommodationSearch->getStartDate()) {
-                $query->andWhere("a.endDate >= :startDate OR a.endDate IS NULL")
+                $query->andWhere("a.closingDate >= :startDate OR a.closingDate IS NULL")
                     ->setParameter("startDate", $accommodationSearch->getStartDate());
             }
             if ($accommodationSearch->getEndDate()) {
-                $query->andWhere("a.startDate <= :endDate")
+                $query->andWhere("a.openingDate <= :endDate")
                     ->setParameter("endDate", $accommodationSearch->getEndDate());
             }
         }

@@ -113,7 +113,7 @@ class A_ServiceFixtures extends Fixture
         foreach ($services as $service) {
             $this->addService($service);
             // Crée des faux utilisateurs
-            for ($i = 1; $i <= mt_rand(3, 5); $i++) {
+            for ($i = 1; $i <= 5; $i++) {
                 $this->addServiceUser();
             }
         }

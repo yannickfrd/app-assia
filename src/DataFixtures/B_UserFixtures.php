@@ -40,47 +40,47 @@ class B_UserFixtures extends Fixture
 
         $this->createSuperAdmin();
 
-        foreach ($this->getHabitatUsers() as $habitatUser) {
+        // foreach ($this->getHabitatUsers() as $habitatUser) {
 
-            $user = new User();
+        //     $user = new User();
 
-            $username = substr($habitatUser["firstname"], 0, 1) . "." . $habitatUser["lastname"];
-            $username = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $username);
-            $password = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $habitatUser["firstname"]) . "2502";
+        //     $username = substr($habitatUser["firstname"], 0, 1) . "." . $habitatUser["lastname"];
+        //     $username = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $username);
+        //     $password = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $habitatUser["firstname"]) . "2502";
 
-            $email = $habitatUser["firstname"] . "." . $habitatUser["lastname"];
-            $email = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $email) . "@esperer-95.org";
+        //     $email = $habitatUser["firstname"] . "." . $habitatUser["lastname"];
+        //     $email = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $email) . "@esperer-95.org";
 
-            $user->setUsername($username)
-                ->setFirstName($habitatUser["firstname"])
-                ->setLastName($habitatUser["lastname"])
-                ->setStatus(array_key_exists("status", $habitatUser) ? $habitatUser["status"] : 1)
-                ->setRoles(array_key_exists("roles", $habitatUser) ? [$habitatUser["roles"]] : [])
-                ->setPassword($this->passwordEncoder->encodePassword($user, "Test123*"))
-                ->setEmail($email)
-                ->setCreatedAt(new \DateTime())
-                ->setUpdatedAt(new \DateTime())
-                ->setEnabled(true)
-                ->setLoginCount(0)
-                ->setLastLogin(new \DateTime());
+        //     $user->setUsername($username)
+        //         ->setFirstName($habitatUser["firstname"])
+        //         ->setLastName($habitatUser["lastname"])
+        //         ->setStatus(array_key_exists("status", $habitatUser) ? $habitatUser["status"] : 1)
+        //         ->setRoles(array_key_exists("roles", $habitatUser) ? [$habitatUser["roles"]] : [])
+        //         ->setPassword($this->passwordEncoder->encodePassword($user, "Test123*"))
+        //         ->setEmail($email)
+        //         ->setCreatedAt(new \DateTime())
+        //         ->setUpdatedAt(new \DateTime())
+        //         ->setEnabled(true)
+        //         ->setLoginCount(0)
+        //         ->setLastLogin(new \DateTime());
 
-            $services = $habitatUser["services"];
+        //     $services = $habitatUser["services"];
 
-            foreach ($services as $service) {
+        //     foreach ($services as $service) {
 
-                $service = $this->repoService->findOneBy(["name" => $service]);
+        //         $service = $this->repoService->findOneBy(["name" => $service]);
 
-                $serviceUser = new ServiceUser();
+        //         $serviceUser = new ServiceUser();
 
-                $serviceUser->setRole(1)
-                    ->setService($service);
+        //         $serviceUser->setRole(1)
+        //             ->setService($service);
 
-                $manager->persist($serviceUser);
+        //         $manager->persist($serviceUser);
 
-                $user->addServiceUser($serviceUser);
-            }
-            $manager->persist($user);
-        }
+        //         $user->addServiceUser($serviceUser);
+        //     }
+        //     $manager->persist($user);
+        // }
         $manager->flush();
     }
 
@@ -138,131 +138,5 @@ class B_UserFixtures extends Fixture
         $this->users[] = $user;
 
         $this->manager->persist($user);
-    }
-
-
-    public function getHabitatUsers()
-    {
-        return [
-            [
-                "firstname" => "John",
-                "lastname" => "DOE",
-                "services" => [
-                    "ALTHO"
-                ]
-            ],
-            [
-                "firstname" => "Gaëlle",
-                "lastname" => "ARTIFONI",
-                "status" => 4,
-                "roles" => "ROLE_ADMIN",
-                "services" => [
-                    "ALTHO",
-                    "ASSLT - ASLLT",
-                    "10 000 logements",
-                    "SAVL",
-                    "AVDL"
-                ]
-            ],
-            [
-                "firstname" => "Laetitia",
-                "lastname" => "CHANIAL",
-                "status" => 3,
-                "roles" => "ROLE_ADMIN",
-                "services" => [
-                    "ALTHO",
-                    "ASSLT - ASLLT",
-                    "10 000 logements",
-                    "SAVL",
-                    "AVDL"
-                ]
-            ],
-            [
-                "firstname" => "Priscillia",
-                "lastname" => "CORNU",
-                "status" => 1,
-                "services" => [
-                    "ALTHO"
-                ]
-            ],
-            [
-                "firstname" => "Krystel",
-                "lastname" => "FONDRILLE",
-                "services" => [
-                    "ASSLT - ASLLT",
-                ]
-            ],
-            [
-                "firstname" => "Aurore",
-                "lastname" => "FROMONT",
-                "status" => 2,
-                "roles" => "ROLE_ADMIN",
-                "services" => [
-                    "ALTHO",
-                    "ASSLT - ASLLT",
-                    "10 000 logements",
-                    "SAVL",
-                    "AVDL"
-                ]
-            ],
-            [
-                "firstname" => "Nicolas",
-                "lastname" => "GIROD",
-                "services" => [
-                    "10 000 logements",
-                ]
-            ],
-            [
-                "firstname" => "Lucie",
-                "lastname" => "LALOU",
-                "services" => [
-                    "ASSLT - ASLLT",
-                    "SAVL"
-                ]
-            ],
-            [
-                "firstname" => "Valérie",
-                "lastname" => "LEOTARD",
-                "services" => [
-                    "ALTHO"
-                ]
-            ],
-            [
-                "firstname" => "Mélanie",
-                "lastname" => "LEY",
-                "services" => [
-                    "SAVL",
-                ]
-            ],
-            [
-                "firstname" => "Eva",
-                "lastname" => "MASSON",
-                "services" => [
-                    "AVDL",
-                ]
-            ],
-            [
-                "firstname" => "Alison",
-                "lastname" => "ROUGIER",
-                "status" => 5,
-                "services" => [
-                    "AVDL",
-                ]
-            ],
-            [
-                "firstname" => "Maryse",
-                "lastname" => "STEPHAN",
-                "services" => [
-                    "ALTHO",
-                ]
-            ],
-            [
-                "firstname" => "Kristell",
-                "lastname" => "VIMOND",
-                "services" => [
-                    "AVDL",
-                ]
-            ],
-        ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Service\Phone;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,6 +38,7 @@ class User implements UserInterface
         "ROLE_ADMIN" => "Administrateur",
         "ROLE_SUPER_ADMIN" => "Administrateur général"
     ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -46,6 +48,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -80,15 +83,21 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
+     * @Assert\Length(min=2, max=50,
+     * minMessage="Le nom est trop court (2 caractères min).", 
+     * maxMessage="Le nom est trop long (50 caractères max).")
      */
     private $lastname;
-    //* @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
+     * @Assert\Length(min=2, max=50,
+     * minMessage="Le prénom est trop court (2 caractères min).", 
+     * maxMessage="Le prénom est trop long (50 caractères max).")
      */
     private $firstname;
-    //* @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
 
     /**
      * @Groups("export")
@@ -277,24 +286,24 @@ class User implements UserInterface
 
     public function getPhone(): ?string
     {
-        return $this->phone;
+        return Phone::getPhoneFormat($this->phone);
     }
 
     public function setPhone(?string $phone): self
     {
-        $this->phone = $phone;
+        $this->phone = Phone::formatPhone($phone);
 
         return $this;
     }
 
     public function getPhone2(): ?string
     {
-        return $this->phone2;
+        return Phone::getPhoneFormat($this->phone2);
     }
 
     public function setPhone2(?string $phone2): self
     {
-        $this->phone2 = $phone2;
+        $this->phone2 = Phone::formatPhone($phone2);
 
         return $this;
     }

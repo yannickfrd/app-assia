@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\Service;
 use Doctrine\ORM\Query;
+use App\Form\Model\UserSearch;
+use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -46,7 +48,7 @@ class UserRepository extends ServiceEntityRepository
      * @param int $id
      * @return User|null
      */
-    public function findUserById($id): ?User
+    public function findUserById(int $id): ?User
     {
         return $this->createQueryBuilder("u")
             ->select("u")
@@ -67,10 +69,12 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les utilisateurs
+     * Retourne tous les utilisateurs
+     *
+     * @param UserSearch $userSearch
      * @return Query
      */
-    public function findAllUsersQuery($userSearch): Query
+    public function findAllUsersQuery(UserSearch $userSearch): Query
     {
         $query =  $this->createQueryBuilder("u")
             ->select("u")
@@ -117,16 +121,26 @@ class UserRepository extends ServiceEntityRepository
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
-    public function findUsersToExport($userSearch)
+    /**
+     * Trouve les utilisateurs pour l'export des données
+     *
+     * @param UserSearch $userSearch
+     * @param mixed
+     */
+    public function findUsersToExport(UserSearch $userSearch)
     {
         $query = $this->findAllUsersQuery($userSearch);
         return $query->getResult();
     }
 
-    /** 
+    /**
      * Donne la liste des utilisateurs
+     *
+     * @param CurrentUserService $currentUser
+     * @param User $user
+     * @return void
      */
-    public function getUsersQueryList($currentUser, $user = null)
+    public function getUsersQueryList(CurrentUserService $currentUser, User $user = null)
     {
         $query =  $this->createQueryBuilder("u")
             ->select("PARTIAL u.{id, firstname, lastname, enabled}");
@@ -152,10 +166,13 @@ class UserRepository extends ServiceEntityRepository
         return $query->orderBy("u.lastname", "ASC");
     }
 
-    /** 
+    /**
      * Donne la liste des utilisateurs pour les listes déroulantes
+     *
+     * @param CurrentUserService $currentUser
+     * @return void
      */
-    public function getAllUsersFromServicesQueryList($currentUser)
+    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser)
     {
         $query =  $this->createQueryBuilder("u")
             ->select("PARTIAL u.{id, firstname, lastname, enabled}")
@@ -172,7 +189,8 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne tous les utilisateurs du service
      *
-     * @return Service|null
+     * @param Service $service
+     * @return mixed
      */
     public function findUsersFromService(Service $service)
     {
@@ -190,7 +208,7 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countUsers(array $criteria = null)
+    public function findUsers(array $criteria = null)
     {
         $query = $this->createQueryBuilder("u")
             // ->select("u")

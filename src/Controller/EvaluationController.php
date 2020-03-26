@@ -213,13 +213,13 @@ class EvaluationController extends AbstractController
     {
         $msg = [];
         foreach ($form->getErrors(true) as $error) {
-            $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName())  . " : " . $error->getMessage();
+            $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName())  . " => " . $error->getMessage();
         }
 
         return $this->json([
             "code" => 403,
             "alert" => "danger",
-            "msg" => "Une erreur s'est produite : " . join($msg, " ")
+            "msg" => "Une erreur s'est produite : " . join(" ", $msg)
         ], 200);
     }
 }

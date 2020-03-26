@@ -3,9 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Person;
-
 use App\Form\Utils\Choices;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;

@@ -153,7 +153,6 @@ class UserSearch
 
     public function setPhone(?string $phone): self
     {
-
         $this->phone = Phone::formatPhone($phone);
 
         return $this;
