@@ -18,6 +18,13 @@ class PersonTest extends WebTestCase
 
     protected function setUp()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PersonFixtures.yaml"
+        ]);
+
         $this->person = $this->getPerson();
     }
 
@@ -68,11 +75,6 @@ class PersonTest extends WebTestCase
 
     public function testPersonExists()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserTestFixtures.yaml",
-            dirname(__DIR__) . "/DataFixtures/PersonTestFixtures.yaml"
-        ]);
-
         $person = $this->person
             ->setFirstname("John")
             ->setLastname("Doe")

@@ -1,9 +1,12 @@
+# parameters:
+#     key: value
+
 App\Entity\User:
   user1:
     firstname: Romain
     lastname: Madelaine
     username: r.madelaine
-    password: Test123*
+    plainPassword: Test123*
     email: romain.madelaine@esperer-95.org
     status: 6
     roles: ["ROLE_SUPER_ADMIN"]
@@ -15,10 +18,10 @@ App\Entity\User:
     enabled: true
 
   user{2..10}:
-    firstname: <firstName()>
-    lastname: <lastName()>
+    firstname: <fr_FR:firstName()>
+    lastname: <fr_FR:lastName()>
     username: <mb_strtolower($firstname.$lastname)>
-    password: Test123*
+    plainPassword: Test123*
     email: $username@esperer-95.org
     status: 1
     phone: 01 00 00 00 00
@@ -29,30 +32,3 @@ App\Entity\User:
     enabled: true
     createdBy: "@user1"
     updatedBy: "@user1"
-
-
-App\Entity\Pole:
-  pole{1..5}:
-    name: <words(3, true)>
-    color: brown
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-
-App\Entity\Service:
-  service{1..10}:
-    name: <words(3, true)>
-    accommodation: true
-    pole: "@pole<numberBetween(1, 5)>"
-    enabled: true
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-App\Entity\ServiceUser:
-  serviceUser{1..10}:
-    service: "@service<numberBetween(1, 10)>"
-    user: "@user<numberBetween(1, 10)>"
-
-  serviceUser10:
-    service: "@service*"
-    user: "@user1"

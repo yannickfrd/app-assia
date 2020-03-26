@@ -241,7 +241,7 @@
                 </tbody>
             </table>
         </div>
-            {% endif %}
+
         {% if is_granted("EDIT", service) %}
         <div class="row">
             <div class="col-md-12">
@@ -249,6 +249,9 @@
                         class="fas fa-plus-square pr-2"></span>Créer un nouvel utilisateur</a>
             </div>
         </div>
+        {% endif %}
+
+
         {% endif %}
 
     </section>

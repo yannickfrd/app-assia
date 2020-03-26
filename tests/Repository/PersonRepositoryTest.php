@@ -36,8 +36,10 @@ class PersonRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserTestFixtures.yaml",
-            dirname(__DIR__) . "/DataFixtures/PersonTestFixtures.yaml"
+            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PersonFixtures.yaml"
         ]);
 
         $kernel = self::bootKernel();
@@ -110,5 +112,12 @@ class PersonRepositoryTest extends WebTestCase
     public function testFindAllPeople()
     {
         $this->assertGreaterThanOrEqual(50, $this->repo->findAllPeople());
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }

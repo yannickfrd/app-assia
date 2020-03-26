@@ -77,6 +77,11 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @var string
+     */
+    private $plainPassword;
+
+    /**
      * @Assert\EqualTo(propertyPath="password", message="Le mot de passe différent de la confirmation.")
      */
     private $confirmPassword;
@@ -316,6 +321,18 @@ class User implements UserInterface
     public function setPassword(?string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

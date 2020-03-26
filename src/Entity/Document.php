@@ -50,6 +50,11 @@ class Document
     private $internalFileName;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $size;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -74,10 +79,6 @@ class Document
      */
     private $supportGroup;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $size;
 
     public function getId(): ?int
     {
@@ -133,6 +134,18 @@ class Document
     public function setInternalFileName(string $internalFileName): self
     {
         $this->internalFileName = $internalFileName;
+
+        return $this;
+    }
+
+    public function getSize(): ?float
+    {
+        return $this->size;
+    }
+
+    public function setSize(?float $size): self
+    {
+        $this->size = $size;
 
         return $this;
     }
@@ -193,18 +206,6 @@ class Document
     public function setSupportGroup(?SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
-
-        return $this;
-    }
-
-    public function getSize(): ?float
-    {
-        return $this->size;
-    }
-
-    public function setSize(?float $size): self
-    {
-        $this->size = $size;
 
         return $this;
     }

@@ -1,0 +1,16 @@
+App\Entity\Organization:
+  organization{1..10}:
+    name: <sentence(3, true)>
+    type: <numberBetween(1, 12)>
+    socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
+    email1: <fr_FR:email()>
+    phone1: <fr_FR:phone()>
+    address : <fr_FR:address()>
+    city: <fr_FR:city()>
+    department: <numberBetween(1, 95)>
+    comment: <sentence(6, true)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@user*"
+    updatedBy: "@user*"
+    groupPeople: "@groupPeople*"

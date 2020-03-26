@@ -12,7 +12,6 @@ class UserTest extends WebTestCase
     use FixturesTrait;
     use AsserthasErrorsTrait;
 
-
     /**
      * @var User
      */
@@ -20,6 +19,12 @@ class UserTest extends WebTestCase
 
     protected function setUp()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml"
+        ]);
+
         $this->user = $this->getUser();
     }
 
@@ -99,10 +104,6 @@ class UserTest extends WebTestCase
 
     public function testUsernameExists()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserTestFixtures.yaml"
-        ]);
-
         $user = $this->user->setUsername("r.madelaine");
         $this->assertHasErrors($user, 1);
     }

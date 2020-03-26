@@ -47,8 +47,11 @@ class AccommodationRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserTestFixtures.yaml",
-            dirname(__DIR__) . "/DataFixtures/AccommodationTestFixtures.yaml"
+            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/AccommodationFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/DeviceFixtures.yaml"
         ]);
 
         $kernel = self::bootKernel();
@@ -117,5 +120,14 @@ class AccommodationRepositoryTest extends WebTestCase
     public function testFindAccommodationsFromService()
     {
         $this->assertGreaterThanOrEqual(1, $this->repo->findAccommodationsFromService($this->service));
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        // doing this is recommended to avoid memory leaks
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }

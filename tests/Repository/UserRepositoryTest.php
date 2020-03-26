@@ -42,7 +42,9 @@ class UserRepositoryTest extends WebTestCase
         // $this->loadFixtures([A_ServiceFixtures::class, B_UserFixtures::class]);
 
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserTestFixtures.yaml"
+            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
+            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml"
         ]);
 
         $kernel = self::bootKernel();

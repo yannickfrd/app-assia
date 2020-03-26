@@ -86,7 +86,7 @@ class ServiceController extends AbstractController
      * Modification d'un service
      * 
      * @Route("/service/{id}", name="service_edit", methods="GET|POST")
-     * @param integer $id
+     * @param integer $id from Service
      * @param UserRepository $repoUser
      * @param AccommodationRepository $repoAccommodation
      * @param Request $request

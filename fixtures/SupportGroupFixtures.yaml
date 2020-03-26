@@ -1,0 +1,27 @@
+App\Entity\SupportGroup:
+  supportGroup{1..50}:
+    startDate: <dateTimeBetween("-2 years", "now")>
+    endDate: <dateTimeBetween($startDate, "now")>
+    status: <numberBetween(1, 4)>
+    agreement: true
+    referent: "@user*"
+    service: "@service*"
+    device: "@device*"
+    groupPeople: "@groupPeople*"
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: $referent
+    updatedBy: $referent
+
+
+App\Entity\SupportPerson:
+  supportPerson{1..150}:
+    startDate: <dateTimeBetween("-2 years", "now")>
+    endDate: <dateTimeBetween($startDate, "now")>
+    status: <numberBetween(1, 4)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    supportGroup: "@supportGroup*"
+    person: "@person*"
+    head: "@rolePerson*->head"
+    role: "@rolePerson*->role"

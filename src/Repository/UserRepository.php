@@ -29,7 +29,7 @@ class UserRepository extends ServiceEntityRepository
      * @param string $username
      * @return User|null
      */
-    public function findUserByUsernameOrEmail($username)
+    public function findUserByUsernameOrEmail(string $username)
     {
         return $this->createQueryBuilder("u")
             ->select("u")
@@ -208,6 +208,11 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     *
+     * @param array $criteria
+     * @return mixed
+     */
     public function findUsers(array $criteria = null)
     {
         $query = $this->createQueryBuilder("u")

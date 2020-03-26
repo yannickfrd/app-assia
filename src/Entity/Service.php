@@ -3,16 +3,12 @@
 namespace App\Entity;
 
 use App\Service\Phone;
-
-use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
-
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
@@ -39,6 +35,7 @@ class Service
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull(message="Le nom du service ne doit pas être vide.")
+     * @Assert\NotBlank()
      * Groups("export")
      */
     private $name;
@@ -50,6 +47,7 @@ class Service
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Pole", inversedBy="services", cascade={"persist"})
+     * @Assert\NotNull(message="Le pôle est obligatoire.")
      */
     private $pole;
 

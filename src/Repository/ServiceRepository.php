@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\Service;
 use Doctrine\ORM\Query;
+use App\Form\Model\ServiceSearch;
+use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -22,10 +24,12 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne tous services
+     * Retourne tous les services
+     * 
+     * @param ServiceSearch $serviceSearch
      * @return Query
      */
-    public function findAllServicesQuery($serviceSearch): Query
+    public function findAllServicesQuery(ServiceSearch $serviceSearch): Query
     {
         $query =  $this->createQueryBuilder("s")->select("s")
             ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
@@ -42,23 +46,29 @@ class ServiceRepository extends ServiceEntityRepository
             $query = $query->andWhere("p.id = :pole_id")
                 ->setParameter("pole_id", $serviceSearch->getPole());
         }
-        return $query->orderBy("s.name", "ASC")
-            ->getQuery();
+        return $query->orderBy("s.name", "ASC")->getQuery();
     }
 
-    public function findServicesToExport($serviceSearch)
-    {
-        $query = $this->findAllServicesQuery($serviceSearch);
-        return $query->getResult();
-    }
-
-    /** 
-     * Donne la liste des services de l'utilisateur
+    /**
+     * Donne tous les services à exporter
+     *
+     * @param ServiceSearch $serviceSearch
+     * @return mixed
      */
-    public function getServicesFromUserQueryList($currentUser)
+    public function findServicesToExport(ServiceSearch $serviceSearch)
     {
-        $query =  $this->createQueryBuilder("s")
-            ->select("PARTIAL s.{id, name}");
+        return $this->findAllServicesQuery($serviceSearch)->getResult();
+    }
+
+    /**
+     * Donne la liste des services de l'utilisateur
+     *
+     * @param CurrentUserService $currentUser
+     * @return void
+     */
+    public function getServicesFromUserQueryList(CurrentUserService $currentUser)
+    {
+        $query =  $this->createQueryBuilder("s")->select("PARTIAL s.{id, name}");
 
         if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
             $query = $query->andWhere("s.id IN (:services)")
@@ -71,6 +81,7 @@ class ServiceRepository extends ServiceEntityRepository
      * Donne tous les services de l'utilisateur
      *
      * @param User $user
+     * @return mixed
      */
     public function findAllServicesFromUser(User $user)
     {
@@ -89,8 +100,8 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne tous les services de l'utilisateur
-     * @param integer $id
+     * Donne un service
+     * @param integer $id from Service
      * @return Service|null
      */
     public function getFullService(int $id): ?Service

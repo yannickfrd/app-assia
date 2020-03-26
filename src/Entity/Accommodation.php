@@ -6,9 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AccommodationGroup;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationRepository")
+ * @UniqueEntity(
+ *     fields={"name", "service"},
+ *     errorPath="name",
+ *     message="Ce groupe de places existe déjà !")
  */
 class Accommodation
 {
@@ -50,16 +58,20 @@ class Accommodation
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $placesNumber;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull()
      */
     private $openingDate;
 
@@ -299,7 +311,7 @@ class Accommodation
         return $this->openingDate;
     }
 
-    public function setOpeningDate(\DateTimeInterface $openingDate): self
+    public function setOpeningDate(?\DateTimeInterface $openingDate): self
     {
         $this->openingDate = $openingDate;
 
