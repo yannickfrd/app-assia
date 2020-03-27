@@ -1,0 +1,64 @@
+App\Entity\Note:
+  note1:
+    title: Note 666
+    content: Contenu de la note
+    type: 1
+    status: 1
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@user"
+    updatedBy: "@user"
+    supportGroup: "@supportGroup"
+
+  note{2..5}:
+    title: <sentence(10, true)>
+    content: <paragraphs(6, true)>
+    type: <numberBetween(1, 2)>
+    status: <numberBetween(1, 4)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@user"
+    updatedBy: "@user"
+    supportGroup: "@supportGroup"
+
+App\Entity\User:
+  user:
+    firstname: Romain
+    lastname: Madelaine
+    username: r.madelaine
+    email: romain.madelaine@esperer-95.org
+    status: 1
+
+App\Entity\Person:
+  person: 
+    firstname: John
+    lastname: Doe
+    gender: 2
+    birthdate: <date_create("1980-01-01")>
+
+App\Entity\GroupPeople:
+  groupPeople:
+    familyTypology: 2
+    nbPeople: 1
+
+App\Entity\SupportGroup:
+  supportGroup:
+    startDate: <date_create("2019-04-03")>
+    status: 2
+    referent: "@user"
+    groupPeople: "@groupPeople"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\SupportPerson:
+  supportPerson:
+    startDate: "@supportGroup->startDate"
+    endDate: "@supportGroup->endDate"
+    status: "@supportGroup->status"
+    createdAt: "@supportGroup->createdAt"
+    updatedAt: "@supportGroup->updatedAt"
+    supportGroup: "@supportGroup"
+    person: "@person"
+    head: 1
+    role: 5

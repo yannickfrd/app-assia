@@ -1,0 +1,53 @@
+App\Entity\Document:
+  document1: 
+    name: Document 666
+    type: 1
+    content: Description du document
+    internalFileName: <slug()>
+    size: <numberBetween(200000, 4000000)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@user"
+    groupPeople: "@groupPeople"
+    supportGroup: "@supportGroup"
+
+  document{2..5}:
+    name: <sentence(5, true)>
+    type: <numberBetween(1, 9)>
+    content: <sentence(6, true)>
+    internalFileName: <slug()>
+    size: <numberBetween(200000, 4000000)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@user"
+    groupPeople: "@groupPeople"
+    supportGroup: "@supportGroup"
+
+App\Entity\User:
+  user:
+    firstname: Romain
+    lastname: Madelaine
+    username: r.madelaine
+    email: romain.madelaine@esperer-95.org
+    status: 1
+
+App\Entity\Person:
+  person: 
+    firstname: John
+    lastname: Doe
+    gender: 2
+    birthdate: <date_create("1980-01-01")>
+
+App\Entity\GroupPeople:
+  groupPeople:
+    familyTypology: 2
+    nbPeople: 1
+
+App\Entity\SupportGroup:
+  supportGroup:
+    startDate: <date_create("2019-04-03")>
+    status: 2
+    referent: "@user"
+    groupPeople: "@groupPeople"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>

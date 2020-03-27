@@ -12,17 +12,16 @@ class UserTest extends WebTestCase
     use FixturesTrait;
     use AsserthasErrorsTrait;
 
-    /**
-     * @var User
-     */
+    /** @var \Doctrine\ORM\EntityManager */
+    private $entityManager;
+
+    /** @var User */
     protected $user;
 
     protected function setUp()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml"
+            dirname(__DIR__) . "/Datafixtures/UserFixturesTest.yaml",
         ]);
 
         $this->user = $this->getUser();
@@ -47,9 +46,7 @@ class UserTest extends WebTestCase
             ->setEmail($faker->email())
             ->setEnabled(true)
             ->setLoginCount(mt_rand(0, 99))
-            ->setLastLogin($now)
-            ->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setLastLogin($now);
     }
 
     public function testValidUser()

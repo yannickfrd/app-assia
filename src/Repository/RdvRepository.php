@@ -30,13 +30,13 @@ class RdvRepository extends ServiceEntityRepository
 
     /**
      * Return all rdvs of group support
-     * 
+     *
+     * @param RdvSearch $rdvSearch
      * @return Query
      */
     public function findAllRdvsQuery(RdvSearch $rdvSearch): Query
     {
-        $query =  $this->createQueryBuilder("r")
-            ->select("r")
+        $query =  $this->createQueryBuilder("r")->select("r")
             ->leftJoin("r.createdBy", "u")->addselect("PARTIAL u.{id, firstname, lastname}")
             ->leftJoin("r.supportGroup", "sg")->addSelect("sg")
             ->leftJoin("sg.supportPerson", "sp")->addSelect("sp")
@@ -90,10 +90,12 @@ class RdvRepository extends ServiceEntityRepository
 
     /**
      * Return all rdvs of group support
-     * 
+     *
+     * @param integer $supportGroupId
+     * @param RdvSearch $rdvSearch
      * @return Query
      */
-    public function findAllRdvsQueryFromSupport($supportGroupId, $rdvSearch): Query
+    public function findAllRdvsQueryFromSupport(int $supportGroupId, RdvSearch $rdvSearch): Query
     {
         $query =  $this->createQueryBuilder("r")
             ->select("r")
@@ -125,6 +127,10 @@ class RdvRepository extends ServiceEntityRepository
      * Trouve tous les RDV entre 2 dates
      * 
      * @return Rdv[]
+     * @param \Datetime $start
+     * @param \Datetime $end
+     * @param SupportGroup $supportGroup
+     * @return mixed
      */
     public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null)
     {
@@ -150,10 +156,13 @@ class RdvRepository extends ServiceEntityRepository
 
     /**
      * Donne tous les RDV entre 2 dates par jour
-     * 
-     * @return Array
+     *
+     * @param \Datetime $start
+     * @param \Datetime $end
+     * @param SupportGroup $supportGroup
+     * @return array
      */
-    public function FindRdvsBetweenByDay(\Datetime $start, \Datetime $end, $supportGroup): array
+    public function FindRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup): array
     {
         $rdvs = $this->findRdvsBetween($start, $end, $supportGroup);
         $days = [];
@@ -169,10 +178,13 @@ class RdvRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne tous les rdvs créées par l'utilisateur
+     * Donne tous les rdvs créés par l'utilisateur
      *
+     * @param User $user
+     * @param integer $maxResults
+     * @return mixed
      */
-    public function findAllRdvsFromUser(User $user, $maxResults)
+    public function findAllRdvsFromUser(User $user, int $maxResults = 1000)
     {
         return $this->createQueryBuilder("rdv")
             ->addselect("PARTIAL rdv.{id, title, start, end, location}")

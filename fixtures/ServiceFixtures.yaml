@@ -30,9 +30,9 @@ App\Entity\Service:
     updatedBy: "@user*"
 
 App\Entity\ServiceUser:
-  servUser1:
+  servuserAdmin:
     service: "@service1"
-    user: "@user1"
+    user: "@userAdmin"
 
   servUser{2..10}:
     service: "@service*"

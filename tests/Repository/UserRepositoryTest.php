@@ -42,9 +42,7 @@ class UserRepositoryTest extends WebTestCase
         // $this->loadFixtures([A_ServiceFixtures::class, B_UserFixtures::class]);
 
         $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml"
+            dirname(__DIR__) . "/Datafixtures/UserFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -58,8 +56,6 @@ class UserRepositoryTest extends WebTestCase
 
         /** @var PoleRepository */
         $repoPole = $this->entityManager->getRepository(Pole::class);
-
-        // $this->repo = self::$container->get(UserRepository::class);
 
         $this->user = $this->repo->findOneBy(["username" => "r.madelaine"]);
 
@@ -79,7 +75,7 @@ class UserRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(10, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
     }
 
     public function testFindUserByUsername()
@@ -100,7 +96,7 @@ class UserRepositoryTest extends WebTestCase
     public function testFindAllUsersQueryWithoutFilters()
     {
         $query = $this->repo->findAllUsersQuery(new UserSearch);
-        $this->assertGreaterThanOrEqual(10, count($query->getResult()));
+        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllUsersQueryWithFilters()
@@ -143,7 +139,7 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUsersWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(10, count($this->repo->findUsers()));
+        $this->assertGreaterThanOrEqual(5, count($this->repo->findUsers()));
     }
 
     public function testFindUsersWithCriteria()

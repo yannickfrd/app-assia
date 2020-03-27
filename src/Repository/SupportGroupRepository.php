@@ -79,8 +79,7 @@ class SupportGroupRepository extends ServiceEntityRepository
 
     protected function getsupportQuery()
     {
-        return $this->createQueryBuilder("sg")
-            ->select("sg")
+        return $this->createQueryBuilder("sg")->select("sg")
             ->leftJoin("sg.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
             ->leftJoin("sg.updatedBy", "user2")->addselect("PARTIAL user2.{id, firstname, lastname}")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, preAdmission, accommodation, justice}")
@@ -94,12 +93,12 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne tous les suivis sociaux
      * 
+     * @param SupportGroupSearch $supportGroupSearch
      * @return Query
      */
     public function findAllSupportsQuery(SupportGroupSearch $supportGroupSearch): Query
     {
-        $query =  $this->createQueryBuilder("sg")
-            ->select("sg")
+        $query =  $this->createQueryBuilder("sg")->select("sg")
             ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name}")
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("sg.accommodationGroups", "ag")->addselect("PARTIAL ag.{id, accommodation}")
@@ -116,10 +115,15 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
+    /**
+     * Donne les suivis
+     *
+     * @param SupportGroupSearch $supportGroupSearch
+     * @return mixed
+     */
     public function getSupports(SupportGroupSearch $supportGroupSearch)
     {
-        $query =  $this->createQueryBuilder("sg")
-            ->select("sg")
+        $query =  $this->createQueryBuilder("sg")->select("sg")
             ->leftJoin("sg.service", "s")->addSelect("PARTIAL s.{id,name}")
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("s.pole", "pole")->addSelect("PARTIAL pole.{id,name}")
@@ -136,16 +140,18 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Filtres
+     *
+     * @param [type] $query
+     * @param SupportGroupSearch $supportGroupSearch
+     * @return mixed
+     */
     protected function filter($query, SupportGroupSearch $supportGroupSearch)
     {
         if (!$this->currentUserService->isRole("ROLE_SUPER_ADMIN")) {
-            // if ($this->currentUserService->isRole("ROLE_ADMIN")) {
             $query->where("s.id IN (:services)")
                 ->setParameter("services",  $this->currentUserService->getServices());
-            // } else {
-            //     $query->andWhere("sg.referent = :user")
-            //         ->setParameter("user",  $this->currentUserService->getUser());
-            // }
         }
         if ($supportGroupSearch->getFullname()) {
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
@@ -155,10 +161,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere("g.familyTypology = :familyTypology")
                 ->setParameter("familyTypology", $supportGroupSearch->getFamilyTypology());
         }
-        // if ($supportGroupSearch->getNbPeople()) {
-        //     $query->andWhere("g.nbPeople = :nbPeople")
-        //         ->setParameter("nbPeople", $supportGroupSearch->getNbPeople());
-        // }
         if ($supportGroupSearch->getStatus()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -235,8 +237,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findAllSupportsFromUser(User $user, $maxResults = null)
     {
-        return $this->createQueryBuilder("sg")
-            ->select("sg")
+        return $this->createQueryBuilder("sg")->select("sg")
             ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name}")
             ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
             ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople}")

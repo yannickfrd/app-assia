@@ -1,6 +1,3 @@
-# parameters:
-#     key: value
-
 App\Entity\User:
   userAdmin:
     firstname: Romain
@@ -17,7 +14,7 @@ App\Entity\User:
     lastlogin: <dateTimeBetween($updatedAt, "now")>
     enabled: true
 
-  user{2..10}:
+  user{2..5}:
     firstname: <fr_FR:firstName()>
     lastname: <fr_FR:lastName()>
     username: <mb_strtolower($firstname.$lastname)>
@@ -32,3 +29,24 @@ App\Entity\User:
     enabled: true
     createdBy: "@userAdmin"
     updatedBy: "@userAdmin"
+
+
+App\Entity\Service:
+  service:
+    name: AVDL
+    pole: "@pole"
+    enabled: true
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+App\Entity\ServiceUser:
+  servuserAdmin:
+    service: "@service"
+    user: "@userAdmin"
+
+
+App\Entity\Pole:
+  pole:
+    name: Habitat
+    createdAt: <date_create()>
+    updatedAt: <date_create()>

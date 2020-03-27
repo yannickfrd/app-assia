@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DocumentRepository")
@@ -31,11 +32,14 @@ class Document
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull();
+     * @Assert\NotBlank();
      */
     private $name;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\NotNull();
      */
     private $type;
 

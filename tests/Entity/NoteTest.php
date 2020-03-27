@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Tests\Entity;
+
+use App\Entity\Note;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class NoteTest extends WebTestCase
+{
+    use FixturesTrait;
+    use AsserthasErrorsTrait;
+
+    /** @var Note */
+    protected $note;
+
+
+    protected function setUp()
+    {
+        $this->loadFixtureFiles([
+            dirname(__DIR__) . "/Datafixtures/NoteFixturesTest.yaml",
+        ]);
+
+        $this->note = $this->getNote();
+    }
+
+    protected function getNote()
+    {
+        $faker = \Faker\Factory::create("fr_FR");
+
+        return (new Note())
+            ->setTitle("Note 666")
+            ->setContent($faker->paragraphs(6, true))
+            ->setType(1)
+            ->setStatus(1);
+    }
+
+    public function testValidNote()
+    {
+        $this->assertHasErrors($this->note, 0);
+    }
+
+    public function testBlankContent()
+    {
+        $this->assertHasErrors($this->note->setContent(""), 1);
+    }
+}

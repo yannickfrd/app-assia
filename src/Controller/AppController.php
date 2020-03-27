@@ -83,7 +83,7 @@ class AppController extends AbstractController
             $datas["Nombre de suivis en cours"] = (int) $this->repoSupport->countAllSupports(["status" => 2]);
             $datas["Nombre de notes"] =  (int) $this->repoNote->countAllNotes();
             $datas["Nombre de RDVs"] = (int) $this->repoRdv->countAllRdvs();
-            $datas["Nombre de documents"] = $this->repoDocument->countAllDocuments() . " (" . round($this->repoDocument->SumSizeAllDocuments() / 1024 / 1024) . " Mo.)";
+            $datas["Nombre de documents"] = $this->repoDocument->countAllDocuments() . " (" . round($this->repoDocument->sumSizeAllDocuments() / 1024 / 1024) . " Mo.)";
 
             $indicators->set($datas);
             $indicators->expiresAfter(5 * 60);  // 5 * 60 seconds

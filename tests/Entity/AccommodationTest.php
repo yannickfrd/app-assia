@@ -13,6 +13,9 @@ class AccommodationTest extends WebTestCase
     use FixturesTrait;
     use AsserthasErrorsTrait;
 
+    /** @var \Doctrine\ORM\EntityManager */
+
+    private $entityManager;
     /** @var Accommodation */
     protected $accommodation;
 
@@ -26,7 +29,7 @@ class AccommodationTest extends WebTestCase
 
         $kernel = self::bootKernel();
 
-        $entityManager = $kernel->getContainer()
+        $this->entityManager = $kernel->getContainer()
             ->get("doctrine")
             ->getManager();
 
@@ -39,7 +42,7 @@ class AccommodationTest extends WebTestCase
         ]);
 
         /** @var ServiceRepository */
-        $repoService = $entityManager->getRepository(Service::class);
+        $repoService = $this->entityManager->getRepository(Service::class);
 
         $this->service = $repoService->findOneBy(["name" => "AVDL"]);
     }
@@ -97,5 +100,12 @@ class AccommodationTest extends WebTestCase
             ->setService($this->service);
 
         $this->assertHasErrors($accommodation, 1);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }

@@ -11,18 +11,14 @@ class PersonTest extends WebTestCase
     use FixturesTrait;
     use AsserthasErrorsTrait;
 
-    /**
-     * @var Person
-     */
+
+    /** @var Person */
     protected $person;
 
     protected function setUp()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PersonFixtures.yaml"
+            dirname(__DIR__) . "/Datafixtures/PersonFixturesTest.yaml",
         ]);
 
         $this->person = $this->getPerson();
@@ -38,9 +34,7 @@ class PersonTest extends WebTestCase
             ->setLastName($faker->lastName())
             ->setGender(mt_rand(1, 3))
             ->setBirthdate($faker->dateTimeBetween($startDate = "-55 years", $endDate = "-18 years", $timezone = null))
-            ->setEmail($faker->email())
-            ->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setEmail($faker->email());
     }
 
     public function testValidPerson()

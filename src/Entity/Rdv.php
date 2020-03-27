@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RdvRepository")
@@ -24,16 +25,19 @@ class Rdv
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotNull()
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotNull()
      */
     private $end;
 
@@ -100,7 +104,7 @@ class Rdv
         return $this->start;
     }
 
-    public function setStart(\DateTimeInterface $start): self
+    public function setStart(?\DateTimeInterface $start): self
     {
         $this->start = $start;
 
@@ -112,7 +116,7 @@ class Rdv
         return $this->end;
     }
 
-    public function setEnd(\DateTimeInterface $end): self
+    public function setEnd(?\DateTimeInterface $end): self
     {
         $this->end = $end;
 

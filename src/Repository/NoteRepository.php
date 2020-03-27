@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Note;
 use App\Entity\User;
+use App\Form\Model\NoteSearch;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -23,17 +24,19 @@ class NoteRepository extends ServiceEntityRepository
 
     /**
      * Return all notes of group support
-     * 
+     *
+     * @param integer $supportGroupId
+     * @param NoteSearch $noteSearch
      * @return Query
      */
-    public function findAllNotesQuery($supportGroupId, $noteSearch): Query
+    public function findAllNotesQuery(int $supportGroupId, NoteSearch $noteSearch): Query
     {
         $query =  $this->createQueryBuilder("n")
             ->andWhere("n.supportGroup = :supportGroup")
             ->setParameter("supportGroup", $supportGroupId);
 
         if ($noteSearch->getContent()) {
-            $query->andWhere("n.content LIKE :content")
+            $query->andWhere("n.title LIKE :content OR n.content LIKE :content")
                 ->setParameter("content", '%' . $noteSearch->getContent() . '%');
         }
         if ($noteSearch->getStatus()) {
@@ -49,10 +52,13 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne toutes les notes créées par l'utilisateur
+     *  Donne toutes les notes créées par l'utilisateur
      *
+     * @param User $user
+     * @param integer $maxResults
+     * @return mixed
      */
-    public function findAllNotesFromUser(User $user, $maxResults)
+    public function findAllNotesFromUser(User $user, int $maxResults = 1000)
     {
         return $this->createQueryBuilder("n")
             ->addselect("PARTIAL n.{id, title, status, createdAt, updatedAt}")
@@ -73,6 +79,12 @@ class NoteRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Compte le nombre de notes
+     *
+     * @param array $criteria
+     * @return mixed
+     */
     public function countAllNotes(array $criteria = null)
     {
         $query = $this->createQueryBuilder("n")->select("COUNT(n.id)");

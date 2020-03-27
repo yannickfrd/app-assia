@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Document;
 use Doctrine\ORM\Query;
+use App\Entity\Document;
+use App\Entity\SupportGroup;
+use App\Form\Model\DocumentSearch;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -22,17 +24,19 @@ class DocumentRepository extends ServiceEntityRepository
 
     /**
      * Return all documents of group support
-     * 
+     *
+     * @param int $supportGroupId
+     * @param DocumentSearch $documentSearch
      * @return Query
      */
-    public function findAllDocumentsQuery($supportGroupId, $documentSearch): Query
+    public function findAllDocumentsQuery($supportGroupId, DocumentSearch $documentSearch): Query
     {
         $query =  $this->createQueryBuilder("d")
             ->andWhere("d.supportGroup = :supportGroup")
             ->setParameter("supportGroup", $supportGroupId);
 
         if ($documentSearch->getName()) {
-            $query->andWhere("d.name LIKE :name")
+            $query->andWhere("d.name LIKE :name OR d.content LIKE :name")
                 ->setParameter("name", '%' . $documentSearch->getName() . '%');
         }
         if ($documentSearch->getType()) {
@@ -74,7 +78,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function SumSizeAllDocuments(array $criteria = null)
+    public function sumSizeAllDocuments(array $criteria = null)
     {
         $query = $this->createQueryBuilder("d")->select("SUM(d.size)");
 

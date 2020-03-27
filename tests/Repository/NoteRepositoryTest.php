@@ -3,13 +3,13 @@
 namespace App\Tests\Repository;
 
 use App\Entity\User;
-use App\Entity\Document;
+use App\Entity\Note;
 use App\Entity\SupportGroup;
-use App\Form\Model\DocumentSearch;
+use App\Form\Model\NoteSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DocumentRepositoryTest extends WebTestCase
+class NoteRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
@@ -17,7 +17,7 @@ class DocumentRepositoryTest extends WebTestCase
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
-    /** @var DocumentRepository */
+    /** @var NoteRepository */
     protected $repo;
 
     /** @var SupportGroup */
@@ -26,14 +26,14 @@ class DocumentRepositoryTest extends WebTestCase
     /** @var User */
     protected $user;
 
-    /** @var DocumentSearch */
-    protected $documentSearch;
+    /** @var NoteSearch */
+    protected $noteSearch;
 
 
     protected function setUp()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/DocumentFixturesTest.yaml",
+            dirname(__DIR__) . "/Datafixtures/NoteFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -42,8 +42,8 @@ class DocumentRepositoryTest extends WebTestCase
             ->get("doctrine")
             ->getManager();
 
-        /** @var DocumentRepository */
-        $this->repo = $this->entityManager->getRepository(Document::class);
+        /** @var NoteRepository */
+        $this->repo = $this->entityManager->getRepository(Note::class);
 
         /** @var SupportGroupRepository */
         $repoSupportGroup = $this->entityManager->getRepository(SupportGroup::class);
@@ -57,9 +57,10 @@ class DocumentRepositoryTest extends WebTestCase
         ]);
         $this->user = $repoUser->findOneBy(["username" => "r.madelaine"]);
 
-        $this->documentSearch = (new DocumentSearch())
-            ->setName("Document 666")
-            ->setType(1);
+        $this->noteSearch = (new NoteSearch())
+            ->setContent("Contenu de la note")
+            ->setType(1)
+            ->setStatus(1);
     }
 
     public function testCount()
@@ -67,37 +68,38 @@ class DocumentRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(2, $this->repo->count([]));
     }
 
-    public function testFindAllDocumentsQueryWithoutFilters()
+    public function testFindAllNotesQueryWithoutFilters()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), new DocumentSearch());
+        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), new NoteSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllDocumentsQueryWithFilters()
+    public function testFindAllNotesQueryWithFilters()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->documentSearch);
+        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), $this->noteSearch);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllDocumentsQueryWithFilterByContent()
+    public function testFindAllNotesQueryWithFilterByTitle()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->documentSearch->setName("Description"));
+        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), $this->noteSearch->setContent("Note 666"));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testCountAllDocumentsWithoutCriteria()
+    public function testFindAllNotesFromUser()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllDocuments());
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllNotesFromUser($this->user, 10)));
     }
 
-    public function testCountAllDocumentsWithCriteria()
+
+    public function testCountAllNotesWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllDocuments(["user" => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes());
     }
 
-    public function testSumSizeAllDocuments()
+    public function testCountAllNotesWithCriteria()
     {
-        $this->assertGreaterThan(200000 * 5, $this->repo->sumSizeAllDocuments());
+        $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes(["user" => $this->user]));
     }
 
     protected function tearDown()

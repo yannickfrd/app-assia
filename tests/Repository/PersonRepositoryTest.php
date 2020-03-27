@@ -73,7 +73,7 @@ class PersonRepositoryTest extends WebTestCase
     public function testCount()
     {
         // $people = self::$container->get(PersonRepository::class)->count([]);
-        $this->assertGreaterThanOrEqual(50, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
     }
 
     public function testfindPersonById()
@@ -84,7 +84,7 @@ class PersonRepositoryTest extends WebTestCase
     public function testFindAllPeopleQueryWithoutFilters()
     {
         $query = $this->repo->findAllPeopleQuery(new PersonSearch());
-        $this->assertGreaterThanOrEqual(50, count($query->getResult()));
+        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllPeopleQueryWithFilters()
@@ -101,7 +101,7 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testFindPeopleToExport()
     {
-        $this->assertGreaterThanOrEqual(50, count($this->repo->findPeopleToExport(new PersonSearch())));
+        $this->assertGreaterThanOrEqual(5, count($this->repo->findPeopleToExport(new PersonSearch())));
     }
 
     public function testFindPeopleByResearch()
@@ -111,7 +111,7 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testFindAllPeople()
     {
-        $this->assertGreaterThanOrEqual(50, $this->repo->findAllPeople());
+        $this->assertGreaterThanOrEqual(5, $this->repo->findAllPeople());
     }
 
     protected function tearDown()

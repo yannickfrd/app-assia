@@ -65,7 +65,7 @@ class ServiceRepositoryTest extends WebTestCase
         /** @var PoleRepository */
         $repoPole = $this->entityManager->getRepository(Pole::class);
 
-        /** @var PoleRepository */
+        /** @var UserRepository */
         $repoUser = $this->entityManager->getRepository(User::class);
 
         $this->service = $this->repo->findOneBy(["name" => "AVDL"]);
@@ -119,5 +119,12 @@ class ServiceRepositoryTest extends WebTestCase
     public function testGetFullService()
     {
         $this->assertNotNull($this->repo->getFullService($this->service->getId()));
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }

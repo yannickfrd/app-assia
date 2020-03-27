@@ -3,7 +3,6 @@
 namespace App\Form\Model;
 
 use App\Entity\Note;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class NoteSearch
 {

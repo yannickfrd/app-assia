@@ -13,9 +13,7 @@ class AccommodationRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
     /**
@@ -125,8 +123,6 @@ class AccommodationRepositoryTest extends WebTestCase
     protected function tearDown()
     {
         parent::tearDown();
-
-        // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
     }

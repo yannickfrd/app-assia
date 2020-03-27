@@ -3,7 +3,6 @@
 namespace App\Form\Model;
 
 use App\Entity\User;
-use App\Entity\SupportGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,20 +20,10 @@ class SupportGroupSearch
     private $fullname;
 
     /**
-     * @var string|null
-     */
-    private $firstname;
-
-    /**
      * @var date|null
      * @Assert\Date(message="Date de naissance invalide.")
      */
     private $birthdate;
-
-    /**
-     * @var int|null
-     */
-    private $role;
 
     /**
      * @var int|null
@@ -104,21 +93,6 @@ class SupportGroupSearch
     public function setFullname(string $fullname): self
     {
         $this->fullname = $fullname;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
 
         return $this;
     }

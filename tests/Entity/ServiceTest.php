@@ -13,6 +13,9 @@ class ServiceTest extends WebTestCase
     use FixturesTrait;
     use AsserthasErrorsTrait;
 
+    /** @var \Doctrine\ORM\EntityManager */
+    private $entityManager;
+
     /** @var Service */
     protected $service;
 
@@ -24,7 +27,7 @@ class ServiceTest extends WebTestCase
     {
         $kernel = self::bootKernel();
 
-        $entityManager = $kernel->getContainer()
+        $this->entityManager = $kernel->getContainer()
             ->get("doctrine")
             ->getManager();
 
@@ -35,7 +38,7 @@ class ServiceTest extends WebTestCase
         ]);
 
         /** @var PoleRepository */
-        $repoPole = $entityManager->getRepository(Pole::class);
+        $repoPole = $this->entityManager->getRepository(Pole::class);
 
         $this->pole = $repoPole->findOneBy(["name" => "Habitat"]);
 
@@ -52,9 +55,7 @@ class ServiceTest extends WebTestCase
             ->setCity($faker->city)
             ->setZipCode($faker->numberBetween(1, 95))
             ->setAddress($faker->address)
-            ->setPole($this->pole)
-            ->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setPole($this->pole);
     }
 
     public function testValidService()
@@ -82,5 +83,12 @@ class ServiceTest extends WebTestCase
         $service = $this->service
             ->setName("AVDL");
         $this->assertHasErrors($service, 1);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }

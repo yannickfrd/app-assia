@@ -1,5 +1,17 @@
 App\Entity\Document:
-  document{1..200}:
+  document1: 
+    name: Document 666
+    type: 1
+    content: Description du document
+    internalFileName: <slug()>
+    size: <numberBetween(200000, 4000000)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@userAdmin"
+    groupPeople: "@groupPeople1"
+    supportGroup: "@supportGroup1"
+
+  document{2..200}:
     name: <sentence(5, true)>
     type: <numberBetween(1, 9)>
     content: <sentence(6, true)>

@@ -2,7 +2,6 @@
 
 namespace App\Form\Model;
 
-use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class RdvSearch
@@ -63,6 +62,7 @@ class RdvSearch
 
         return $this;
     }
+
     /**
      * @return string|null
      */
