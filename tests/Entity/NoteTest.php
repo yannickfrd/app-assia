@@ -4,12 +4,13 @@ namespace App\Tests\Entity;
 
 use App\Entity\Note;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class NoteTest extends WebTestCase
 {
     use FixturesTrait;
-    use AsserthasErrorsTrait;
+    use AssertHasErrorsTrait;
 
     /** @var Note */
     protected $note;

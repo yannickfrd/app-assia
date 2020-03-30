@@ -5,12 +5,13 @@ namespace App\Tests\Entity;
 use App\Entity\Service;
 use App\Entity\Accommodation;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccommodationTest extends WebTestCase
 {
     use FixturesTrait;
-    use AsserthasErrorsTrait;
+    use AssertHasErrorsTrait;
 
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;

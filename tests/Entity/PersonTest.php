@@ -4,12 +4,13 @@ namespace App\Tests\Entity;
 
 use App\Entity\Person;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PersonTest extends WebTestCase
 {
     use FixturesTrait;
-    use AsserthasErrorsTrait;
+    use AssertHasErrorsTrait;
 
 
     /** @var Person */

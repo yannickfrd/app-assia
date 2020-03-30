@@ -4,13 +4,14 @@ namespace App\Tests\Entity;
 
 use App\Entity\User;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserTest extends WebTestCase
 {
     use FixturesTrait;
-    use AsserthasErrorsTrait;
+    use AssertHasErrorsTrait;
 
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;

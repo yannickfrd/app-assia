@@ -4,7 +4,7 @@ namespace App\Tests\Entity;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-trait AsserthasErrorsTrait
+trait AssertHasErrorsTrait
 {
     /**
      *
