@@ -11,46 +11,31 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceRepositoryTest extends WebTestCase
 {
-
     use FixturesTrait;
 
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
-    /**
-     * @var ServiceRepository
-     */
+    /** @var ServiceRepository  */
     protected $repo;
 
-    /**
-     * @var Service
-     */
+    /** @var Service */
     protected $service;
 
-    /**
-     * @var Pole
-     */
+    /** @var Pole */
     protected $pole;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $user;
 
-    /**
-     * @var ServiceSearch
-     */
+    /** @var ServiceSearch */
     protected $serviceSearch;
 
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml"
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/ServiceFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -62,22 +47,10 @@ class ServiceRepositoryTest extends WebTestCase
         /** @var ServiceRepository */
         $this->repo = $this->entityManager->getRepository(Service::class);
 
-        /** @var PoleRepository */
-        $repoPole = $this->entityManager->getRepository(Pole::class);
-
-        /** @var UserRepository */
-        $repoUser = $this->entityManager->getRepository(User::class);
-
-        $this->service = $this->repo->findOneBy(["name" => "AVDL"]);
-        $this->pole = $repoPole->findOneBy(["name" => "Habitat"]);
-        $this->user = $repoUser->findOneBy(["username" => "r.madelaine"]);
-
-        $this->serviceSearch = $this->getServiceSearch();
-    }
-
-    protected function getServiceSearch()
-    {
-        return (new ServiceSearch())
+        $this->service = $dataFixtures["service1"];
+        $this->pole = $dataFixtures["pole"];
+        $this->user = $dataFixtures["user"];
+        $this->serviceSearch = (new ServiceSearch())
             ->setName("AVDL")
             ->setEmail("avdl@esperer-95.org")
             ->setCity("Pontoise")
@@ -87,13 +60,13 @@ class ServiceRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(10, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
     }
 
     public function testFindAllServicesQueryWithoutFilters()
     {
         $query = $this->repo->findAllServicesQuery(new ServiceSearch());
-        $this->assertGreaterThanOrEqual(10, count($query->getResult()));
+        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllServicesQueryWithFilters()
@@ -126,5 +99,10 @@ class ServiceRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->service = null;
+        $this->pole = null;
+        $this->user = null;
+        $this->serviceSearch = null;
     }
 }

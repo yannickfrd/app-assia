@@ -13,7 +13,6 @@ class RdvRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
@@ -32,8 +31,8 @@ class RdvRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/RdvFixturesTest.yaml",
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/RdvFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -45,19 +44,8 @@ class RdvRepositoryTest extends WebTestCase
         /** @var RdvRepository */
         $this->repo = $this->entityManager->getRepository(Rdv::class);
 
-        /** @var SupportGroupRepository */
-        $repoSupportGroup = $this->entityManager->getRepository(SupportGroup::class);
-
-        /** @var UserRepository */
-        $repoUser = $this->entityManager->getRepository(User::class);
-
-        $this->supportGroup = $repoSupportGroup->findOneBy([
-            "startDate" => new \DateTime("2019-04-03"),
-            "endDate" => null
-        ]);
-        $this->user = $repoUser->findOneBy(["username" => "r.madelaine"]);
-
-
+        $this->supportGroup = $dataFixtures["supportGroup"];
+        $this->user = $dataFixtures["user"];
         $this->rdvSearch = (new RdvSearch())
             ->setTitle("Rdv 666")
             ->setStartDate(new \DateTime("2020-01-01"))
@@ -123,5 +111,9 @@ class RdvRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->supportGroup = null;
+        $this->user = null;
+        $this->rdvSearch = null;
     }
 }

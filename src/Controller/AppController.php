@@ -12,6 +12,7 @@ use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppController extends AbstractController
@@ -38,6 +39,7 @@ class AppController extends AbstractController
     /**
      * @Route("/home", name="home")
      * @Route("/")
+     * @IsGranted("ROLE_USER")
      * @return Response
      */
     public function home(): Response

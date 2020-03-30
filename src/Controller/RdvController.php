@@ -104,7 +104,7 @@ class RdvController extends AbstractController
     {
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $this->repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
+        $rdvs = $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
 
         $form = $this->createForm(RdvType::class, new Rdv());
 
@@ -134,7 +134,7 @@ class RdvController extends AbstractController
 
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $this->repo->FindRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup);
+        $rdvs = $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup);
 
         $rdv = new Rdv();
 

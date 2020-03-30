@@ -1,0 +1,61 @@
+App\Entity\Service:
+  service1:
+    name: AVDL
+    pole: "@pole"
+    email: avdl@esperer-95.org
+    phone: 01 00 00 00 00
+    address: Pontoise
+    city: Pontoise
+    zipCode: 95 000
+    accommodation: true
+    enabled: true
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@user"
+    updatedBy: "@user"
+
+  service{2..5}:
+    name: <sentence(3, true)>
+    city: <fr_FR:city()>
+    phone: <fr_FR:phoneNumber()>
+    email: <fr_FR:email()>
+    zipCode: <numberBetween(1, 95)>
+    address : <fr_FR:address()>
+    accommodation: true
+    enabled: true
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    pole: "@pole"
+    createdBy: "@user"
+    updatedBy: "@user"
+
+
+App\Entity\ServiceUser:
+  servUserAdmin:
+    service: "@service1"
+    user: "@user"
+
+  servUser{2..5}:
+    service: "@service*"
+    user: "@user"
+
+    
+App\Entity\User:
+  user:
+    firstname: Romain
+    lastname: Madelaine
+    username: r.madelaine
+    email: romain.madelaine@esperer-95.org
+    status: 1
+
+
+App\Entity\Pole:
+  pole:
+    name: Habitat
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\Device:
+  device:
+    name: AVDL

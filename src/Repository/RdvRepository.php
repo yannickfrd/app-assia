@@ -162,7 +162,7 @@ class RdvRepository extends ServiceEntityRepository
      * @param SupportGroup $supportGroup
      * @return array
      */
-    public function FindRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup): array
+    public function findRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null): array
     {
         $rdvs = $this->findRdvsBetween($start, $end, $supportGroup);
         $days = [];

@@ -13,7 +13,6 @@ class NoteRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
@@ -32,8 +31,8 @@ class NoteRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/NoteFixturesTest.yaml",
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/NoteFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -45,18 +44,8 @@ class NoteRepositoryTest extends WebTestCase
         /** @var NoteRepository */
         $this->repo = $this->entityManager->getRepository(Note::class);
 
-        /** @var SupportGroupRepository */
-        $repoSupportGroup = $this->entityManager->getRepository(SupportGroup::class);
-
-        /** @var UserRepository */
-        $repoUser = $this->entityManager->getRepository(User::class);
-
-        $this->supportGroup = $repoSupportGroup->findOneBy([
-            "startDate" => new \DateTime("2019-04-03"),
-            "endDate" => null
-        ]);
-        $this->user = $repoUser->findOneBy(["username" => "r.madelaine"]);
-
+        $this->supportGroup = $dataFixtures["supportGroup"];
+        $this->user = $dataFixtures["user"];
         $this->noteSearch = (new NoteSearch())
             ->setContent("Contenu de la note")
             ->setType(1)
@@ -107,5 +96,9 @@ class NoteRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->supportGroup = null;
+        $this->user = null;
+        $this->noteSearch = null;
     }
 }

@@ -17,18 +17,9 @@ class NoteTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/NoteFixturesTest.yaml",
-        ]);
-
-        $this->note = $this->getNote();
-    }
-
-    protected function getNote()
-    {
         $faker = \Faker\Factory::create("fr_FR");
 
-        return (new Note())
+        $this->note = (new Note())
             ->setTitle("Note 666")
             ->setContent($faker->paragraphs(6, true))
             ->setType(1)
@@ -43,5 +34,10 @@ class NoteTest extends WebTestCase
     public function testBlankContent()
     {
         $this->assertHasErrors($this->note->setContent(""), 1);
+    }
+
+    protected function tearDown()
+    {
+        $this->note = null;
     }
 }

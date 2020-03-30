@@ -17,18 +17,9 @@ class DocumentTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/DocumentFixturesTest.yaml",
-        ]);
-
-        $this->document = $this->getDocument();
-    }
-
-    protected function getDocument()
-    {
         $faker = \Faker\Factory::create("fr_FR");
 
-        return (new Document())
+        $this->document = (new Document())
             ->setName("Document 666")
             ->setType(1)
             ->setInternalFileName($faker->slug());
@@ -47,5 +38,10 @@ class DocumentTest extends WebTestCase
     public function testNullType()
     {
         $this->assertHasErrors($this->document->setType(null), 1);
+    }
+
+    protected function tearDown()
+    {
+        $this->document = null;
     }
 }

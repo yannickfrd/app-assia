@@ -4,7 +4,6 @@ namespace App\Tests\Entity;
 
 use App\Entity\Service;
 use App\Entity\Pole;
-use App\Repository\ServiceRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -31,26 +30,15 @@ class ServiceTest extends WebTestCase
             ->get("doctrine")
             ->getManager();
 
-        $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml"
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/ServiceFixturesTest.yaml",
         ]);
 
-        /** @var PoleRepository */
-        $repoPole = $this->entityManager->getRepository(Pole::class);
+        $this->pole = $dataFixtures["pole"];
 
-        $this->pole = $repoPole->findOneBy(["name" => "Habitat"]);
-
-        $this->service = $this->getService();
-    }
-
-    protected function getService()
-    {
         $faker = \Faker\Factory::create("fr_FR");
-        $now = new \DateTime();
 
-        return (new Service())
+        $this->service = (new Service())
             ->setName("Service " . $faker->numberBetween(1, 100))
             ->setCity($faker->city)
             ->setZipCode($faker->numberBetween(1, 95))
@@ -90,5 +78,7 @@ class ServiceTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->pole;
+        $this->service;
     }
 }

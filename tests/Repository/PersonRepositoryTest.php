@@ -12,34 +12,23 @@ class PersonRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
-    /**
-     * @var PersonRepository
-     */
+    /** @var PersonRepository */
     protected $repo;
 
-    /**
-     * @var Person
-     */
+    /** @var Person */
     protected $person;
 
-    /**
-     * @var PersonSearch
-     */
+    /** @var PersonSearch */
     protected $personSearch;
 
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PersonFixtures.yaml"
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/PersonFixturesTest.yaml"
         ]);
 
         $kernel = self::bootKernel();
@@ -51,11 +40,7 @@ class PersonRepositoryTest extends WebTestCase
         /** @var PersonRepository */
         $this->repo = $this->entityManager->getRepository(Person::class);
 
-        $this->person = $this->repo->findOneBy([
-            "firstname" => "John",
-            "lastname" => "DOE"
-        ]);
-
+        $this->person = $dataFixtures["user"];
         $this->personSearch = $this->getPersonSearch();
     }
 
@@ -119,5 +104,8 @@ class PersonRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->person = null;
+        $this->personSearch = null;
     }
 }

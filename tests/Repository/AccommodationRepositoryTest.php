@@ -16,40 +16,26 @@ class AccommodationRepositoryTest extends WebTestCase
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
-    /**
-     * @var AccommodationRepository
-     */
+    /** @var AccommodationRepository */
     protected $repo;
 
-    /**
-     * @var Accommodation
-     */
+    /** @var Accommodation  */
     protected $accommodation;
 
-    /**
-     * @var Service
-     */
+    /** @var Service */
     protected $service;
 
-    /**
-     * @var Pole
-     */
+    /** @var Pole */
     protected $pole;
 
-    /**
-     * @var AccommodationSearch
-     */
+    /** @var AccommodationSearch */
     protected $accommodationSearch;
 
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/AccommodationFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/DeviceFixtures.yaml"
+        $datafixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/AccommodationFixturesTest.yaml"
         ]);
 
         $kernel = self::bootKernel();
@@ -61,41 +47,25 @@ class AccommodationRepositoryTest extends WebTestCase
         /** @var AccommodationRepository */
         $this->repo = $this->entityManager->getRepository(Accommodation::class);
 
-        /** @var ServiceRepository */
-        $repoService = $this->entityManager->getRepository(Service::class);
-
-        /** @var PoleRepository */
-        $repoPole = $this->entityManager->getRepository(Pole::class);
-
-        $this->accommodation = $this->repo->findOneBy(["name" => "r.madelaine"]);
-
-        $this->service = $repoService->findOneBy(["name" => "AVDL"]);
-
-        $this->pole = $repoPole->findOneBy(["name" => "AVDL"]);
-
-        $this->accommodationSearch = $this->getAccommodationSearch();
-    }
-
-    protected function getAccommodationSearch()
-    {
-        return (new AccommodationSearch())
+        $this->service = $datafixtures["service"];
+        $this->accommodationSearch = (new AccommodationSearch())
             ->setName("Logement")
             ->setPlacesNumber(6)
             ->setStartDate(new \DateTime("2010-01-01"))
             ->setEndDate(new \DateTime("2020-01-01"))
             ->setCity("Houille")
-            ->setPole($this->pole);
+            ->setPole($this->entityManager->getRepository(Pole::class)->findOneBy(["name" => "AVDL"]));
     }
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(100, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
     }
 
     public function testFindAllAccommodationsQueryWithoutFilters()
     {
         $query = $this->repo->findAllAccommodationsQuery(new AccommodationSearch());
-        $this->assertGreaterThanOrEqual(100, count($query->getResult()));
+        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllAccommodationsQueryWithFilters()
@@ -125,5 +95,8 @@ class AccommodationRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->service = null;
+        $this->accommodationSearch = null;
     }
 }

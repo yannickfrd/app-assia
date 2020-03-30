@@ -4,7 +4,6 @@ namespace App\Tests\Entity;
 
 use App\Entity\Service;
 use App\Entity\Accommodation;
-use App\Repository\ServiceRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -14,8 +13,8 @@ class AccommodationTest extends WebTestCase
     use AsserthasErrorsTrait;
 
     /** @var \Doctrine\ORM\EntityManager */
-
     private $entityManager;
+
     /** @var Accommodation */
     protected $accommodation;
 
@@ -33,18 +32,11 @@ class AccommodationTest extends WebTestCase
             ->get("doctrine")
             ->getManager();
 
-        $this->loadFixtureFiles([
-            dirname(__DIR__, 2) . "/fixtures/UserFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/ServiceFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/PoleFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/AccommodationFixtures.yaml",
-            dirname(__DIR__, 2) . "/fixtures/DeviceFixtures.yaml"
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/AccommodationFixturesTest.yaml",
         ]);
 
-        /** @var ServiceRepository */
-        $repoService = $this->entityManager->getRepository(Service::class);
-
-        $this->service = $repoService->findOneBy(["name" => "AVDL"]);
+        $this->service = $dataFixtures["service"];
     }
 
     protected function getAccommodation()
@@ -107,5 +99,6 @@ class AccommodationTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->service = null;
     }
 }

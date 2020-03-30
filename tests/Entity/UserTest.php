@@ -20,15 +20,6 @@ class UserTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/UserFixturesTest.yaml",
-        ]);
-
-        $this->user = $this->getUser();
-    }
-
-    public function getUser(): User
-    {
         $faker = \Faker\Factory::create("fr_FR");
 
         $firstname = $faker->firstname();
@@ -36,7 +27,7 @@ class UserTest extends WebTestCase
         $username = $firstname . "." . $lastname;
         $now = new \DateTime();
 
-        return (new User)
+        $this->user = (new User)
             ->setUsername($username)
             ->setFirstName($firstname)
             ->setLastName($lastname)
@@ -101,7 +92,16 @@ class UserTest extends WebTestCase
 
     public function testUsernameExists()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/UserFixturesTest.yaml",
+        ]);
+
         $user = $this->user->setUsername("r.madelaine");
         $this->assertHasErrors($user, 1);
+    }
+
+    protected function tearDown()
+    {
+        $this->user = null;
     }
 }

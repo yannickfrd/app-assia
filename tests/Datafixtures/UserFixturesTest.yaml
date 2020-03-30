@@ -10,7 +10,7 @@ App\Entity\User:
     phone: "01 00 00 00 00"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    loginCount: 0
+    loginCount: 1
     lastlogin: <dateTimeBetween($updatedAt, "now")>
     enabled: true
 
@@ -40,7 +40,7 @@ App\Entity\Service:
     updatedAt: <date_create()>
 
 App\Entity\ServiceUser:
-  servuserAdmin:
+  servUserAdmin:
     service: "@service"
     user: "@userAdmin"
 

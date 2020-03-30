@@ -17,20 +17,11 @@ class RdvTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/RdvFixturesTest.yaml",
-        ]);
-
-        $this->rdv = $this->getRdv();
-    }
-
-    protected function getRdv()
-    {
         $faker = \Faker\Factory::create("fr_FR");
         $start = $faker->dateTimeBetween("-1 months", "+ 1 months");
         $end =  $faker->dateTimeBetween($start, "+ 1 months");
 
-        return (new Rdv())
+        $this->rdv = (new Rdv())
             ->setTitle("Rdv 666")
             ->setContent($faker->paragraphs(6, true))
             ->setStart($start)
@@ -56,5 +47,10 @@ class RdvTest extends WebTestCase
     public function testNullEnd()
     {
         $this->assertHasErrors($this->rdv->setEnd(null), 1);
+    }
+
+    protected function tearDown()
+    {
+        $this->rdv = null;
     }
 }

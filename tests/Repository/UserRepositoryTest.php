@@ -4,45 +4,36 @@ namespace App\Tests\Repository;
 
 use App\Entity\Pole;
 use App\Entity\User;
+use App\Entity\Service;
 use App\Form\Model\UserSearch;
 use App\Repository\UserRepository;
-use App\DataFixtures\B_UserFixtures;
-use App\DataFixtures\A_ServiceFixtures;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     protected $repo;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $user;
 
-    /**
-     * @var UserSearch
-     */
-    protected $userSearch;
+    /** @var Service */
+    protected $service;
 
+    /** @var UserSearch */
+    protected $userSearch;
 
     protected function setUp()
     {
         // $this->loadFixtures([A_ServiceFixtures::class, B_UserFixtures::class]);
-
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/UserFixturesTest.yaml",
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/UserFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -54,12 +45,9 @@ class UserRepositoryTest extends WebTestCase
         /** @var UserRepository */
         $this->repo = $this->entityManager->getRepository(User::class);
 
-        /** @var PoleRepository */
-        $repoPole = $this->entityManager->getRepository(Pole::class);
-
-        $this->user = $this->repo->findOneBy(["username" => "r.madelaine"]);
-
-        $this->userSearch = $this->getUserSearch($repoPole->findOneBy(["name" => "Habitat"]));
+        $this->user = $dataFixtures["userAdmin"];
+        $this->service = $dataFixtures["service"];
+        $this->userSearch = $this->getUserSearch($dataFixtures["pole"]);
     }
 
     protected function getUserSearch(Pole $pole)
@@ -127,13 +115,7 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUsersFromService()
     {
-        $service = null;
-        foreach ($this->user->getServiceUser() as $serviceUser) {
-            $service = $serviceUser->getService();
-        }
-
-
-        $users = $this->repo->findUsersFromService($service);
+        $users = $this->repo->findUsersFromService($this->service);
         $this->assertGreaterThanOrEqual(1, count($users));
     }
 
@@ -150,9 +132,12 @@ class UserRepositoryTest extends WebTestCase
     protected function tearDown()
     {
         parent::tearDown();
-
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->user = null;
+        $this->service = null;
+        $this->userSearch = null;
     }
 }

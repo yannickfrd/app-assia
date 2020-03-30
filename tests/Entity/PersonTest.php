@@ -17,19 +17,9 @@ class PersonTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/PersonFixturesTest.yaml",
-        ]);
-
-        $this->person = $this->getPerson();
-    }
-
-    protected function getPerson(): Person
-    {
         $faker = \Faker\Factory::create("fr_FR");
-        $now = new \DateTime();
 
-        return (new Person)
+        $this->person = (new Person)
             ->setFirstName($faker->firstname())
             ->setLastName($faker->lastName())
             ->setGender(mt_rand(1, 3))
@@ -69,10 +59,19 @@ class PersonTest extends WebTestCase
 
     public function testPersonExists()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/PersonFixturesTest.yaml",
+        ]);
+
         $person = $this->person
             ->setFirstname("John")
             ->setLastname("Doe")
             ->setBirthdate(new \DateTime("1980-01-01"));
         $this->assertHasErrors($person, 1);
+    }
+
+    protected function tearDown()
+    {
+        $this->person = null;
     }
 }

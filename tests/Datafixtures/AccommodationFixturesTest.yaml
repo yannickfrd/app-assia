@@ -12,11 +12,11 @@ App\Entity\Accommodation:
     individualCollective:  <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    service: "@service1"
-    createdBy: "@user*"
-    updatedBy: "@user*"
+    service: "@service"
+    createdBy: "@user"
+    updatedBy: "@user"
 
-  accommodation{2..100}:
+  accommodation{2..5}:
     name: <word()> <numberBetween(1, 1000)>
     placesNumber: <numberBetween(1, 10)>
     openingDate: <datetimeBetween("-10 years", "now")>
@@ -28,7 +28,58 @@ App\Entity\Accommodation:
     individualCollective:  <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    service: "@service<numberBetween(1, 10)>"
-    device: "@device*"
-    createdBy: "@user*"
-    updatedBy: "@user*"
+    service: "@service"
+    device: "@device"
+    createdBy: "@user"
+    updatedBy: "@user"
+
+    
+App\Entity\User:
+  user:
+    firstname: Romain
+    lastname: Madelaine
+    username: r.madelaine
+    email: romain.madelaine@esperer-95.org
+    status: 1
+
+
+App\Entity\Person:
+  person: 
+    firstname: John
+    lastname: Doe
+    gender: 2
+    birthdate: <date_create("1980-01-01")>
+
+
+App\Entity\GroupPeople:
+  groupPeople:
+    familyTypology: 2
+    nbPeople: 1
+
+
+App\Entity\RolePerson:
+  rolePerson:
+    head: 1
+    role: 5
+    person: "@person"
+    groupPeople: "@groupPeople"
+
+
+App\Entity\Service:
+  service:
+    name: AVDL
+    pole: "@pole"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\Pole:
+  pole:
+    name: Habitat
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\Device:
+  device:
+    name: AVDL

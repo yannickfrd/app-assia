@@ -2,7 +2,6 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Pole;
 use App\Entity\User;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
@@ -12,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SupportGroupRepositoryTest extends WebTestCase
 {
-
     use FixturesTrait;
 
     /**
@@ -20,36 +18,26 @@ class SupportGroupRepositoryTest extends WebTestCase
      */
     private $entityManager;
 
-    /**
-     * @var SupportGroupRepository
-     */
+    /** @var SupportGroupRepository */
     protected $repo;
 
-    /**
-     * @var SupportGroup
-     */
+    /** @var SupportGroup */
     protected $supportGroup;
 
-    /**
-     * @var Service
-     */
+    /** @var Service */
     protected $service;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $user;
 
-    /**
-     * @var SupportGroupSearch
-     */
+    /** @var SupportGroupSearch */
     protected $supportGroupSearch;
 
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/SupportGroupFixturesTest.yaml",
+        $dataFixtures  = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/SupportGroupFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -61,19 +49,9 @@ class SupportGroupRepositoryTest extends WebTestCase
         /** @var SupportGroupRepository */
         $this->repo = $this->entityManager->getRepository(SupportGroup::class);
 
-        /** @var ServiceRepository */
-        $repoService = $this->entityManager->getRepository(Service::class);
-
-        /** @var UserRepository */
-        $repoUser = $this->entityManager->getRepository(User::class);
-
-        $this->supportGroup = $this->repo->findOneBy([
-            "startDate" => new \DateTime("2019-04-03"),
-            "endDate" => null
-        ]);
-        $this->service = $repoService->findOneBy(["name" => "AVDL"]);
-        $this->user = $repoUser->findOneBy(["username" => "r.madelaine"]);
-
+        $this->supportGroup = $dataFixtures["supportGroup1"];
+        $this->service =  $dataFixtures["service"];
+        $this->user = $dataFixtures["user"];
         $this->supportGroupSearch = $this->getSupportGroupSearch();
     }
 
@@ -141,5 +119,10 @@ class SupportGroupRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->supportGroup = null;
+        $this->service = null;
+        $this->user = null;
+        $this->supportGroupSearch = null;
     }
 }

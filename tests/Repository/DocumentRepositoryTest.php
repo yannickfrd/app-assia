@@ -13,7 +13,6 @@ class DocumentRepositoryTest extends WebTestCase
 {
     use FixturesTrait;
 
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
@@ -32,8 +31,8 @@ class DocumentRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/Datafixtures/DocumentFixturesTest.yaml",
+        $dataFixtures  = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixtures/DocumentFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -45,18 +44,8 @@ class DocumentRepositoryTest extends WebTestCase
         /** @var DocumentRepository */
         $this->repo = $this->entityManager->getRepository(Document::class);
 
-        /** @var SupportGroupRepository */
-        $repoSupportGroup = $this->entityManager->getRepository(SupportGroup::class);
-
-        /** @var UserRepository */
-        $repoUser = $this->entityManager->getRepository(User::class);
-
-        $this->supportGroup = $repoSupportGroup->findOneBy([
-            "startDate" => new \DateTime("2019-04-03"),
-            "endDate" => null
-        ]);
-        $this->user = $repoUser->findOneBy(["username" => "r.madelaine"]);
-
+        $this->supportGroup = $dataFixtures["supportGroup"];
+        $this->user = $dataFixtures["user"];
         $this->documentSearch = (new DocumentSearch())
             ->setName("Document 666")
             ->setType(1);
@@ -105,5 +94,9 @@ class DocumentRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->repo = null;
+        $this->supportGroup = null;
+        $this->user = null;
+        $this->documentSearch = null;
     }
 }
