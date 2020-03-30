@@ -9,3 +9,4 @@ script:
   # - npm run build
   # - vendor/bin/phpunit
   # - php bin/phpunit
+  - php ./vendor/bin/phpunit
