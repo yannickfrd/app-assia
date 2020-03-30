@@ -6,10 +6,6 @@ php:
 
 script:
   - composer install
-  #- vendor/bin/phpunit # vendor/bin/phpunit/home/travis/.travis/functions: line 109: vendor/bin/phpunit: No such file or directory
-  # - php ./vendor/bin/phpunit # Could not open input file: ./vendor/bin/phpunit
   - php bin/phpunit
-  # - vendor/bin/simple-phpunit
-
-
+  #- vendor/bin/phpunit # vendor/bin/phpunit/home/travis/.travis/functions: line 109: vendor/bin/phpunit: No such file or directory
   # - npm run build
