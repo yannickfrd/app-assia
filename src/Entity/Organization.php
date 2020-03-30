@@ -62,15 +62,15 @@ class Organization
      */
     private $originRequests;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Service", inversedBy="organizations")
-     */
-    private $service;
+    // /**
+    //  * @ORM\ManyToMany(targetEntity="App\Entity\Service", inversedBy="organizations")
+    //  */
+    // private $service;
 
     public function __construct()
     {
         $this->originRequests = new ArrayCollection();
-        $this->service = new ArrayCollection();
+        // $this->service = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,29 +193,29 @@ class Organization
         return $this;
     }
 
-    /**
-     * @return Collection|Service[]
-     */
-    public function getService(): ?Collection
-    {
-        return $this->service;
-    }
+    // /**
+    //  * @return Collection|Service[]
+    //  */
+    // public function getService(): ?Collection
+    // {
+    //     return $this->service;
+    // }
 
-    public function addService(Service $service): self
-    {
-        if (!$this->service->contains($service)) {
-            $this->service[] = $service;
-        }
+    // public function addService(Service $service): self
+    // {
+    //     if (!$this->service->contains($service)) {
+    //         $this->service[] = $service;
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeService(Service $service): self
-    {
-        if ($this->service->contains($service)) {
-            $this->service->removeElement($service);
-        }
+    // public function removeService(Service $service): self
+    // {
+    //     if ($this->service->contains($service)) {
+    //         $this->service->removeElement($service);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

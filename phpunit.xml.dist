@@ -36,9 +36,5 @@
     <extensions>
         <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
     </extensions>
-
-    <!-- <php>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[total]=999999"/>
-    </php> -->
     
 </phpunit>

@@ -163,10 +163,10 @@ class Service
      */
     private $accommodations;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Organization", mappedBy="service")
-     */
-    private $organizations;
+    // /**
+    //  * @ORM\ManyToMany(targetEntity="App\Entity\Organization", mappedBy="service")
+    //  */
+    // private $organizations;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -180,7 +180,7 @@ class Service
         $this->supportGroup = new ArrayCollection();
         $this->serviceDevices = new ArrayCollection();
         $this->accommodations = new ArrayCollection();
-        $this->organizations = new ArrayCollection();
+        // $this->organizations = new ArrayCollection();
     }
 
     public function __toString()
@@ -574,33 +574,33 @@ class Service
         return $this;
     }
 
-    /**
-     * @return Collection|Organization[]
-     */
-    public function getOrganizations(): ?Collection
-    {
-        return $this->organizations;
-    }
+    // /**
+    //  * @return Collection|Organization[]
+    //  */
+    // public function getOrganizations(): ?Collection
+    // {
+    //     return $this->organizations;
+    // }
 
-    public function addOrganization(Organization $organization): self
-    {
-        if (!$this->organizations->contains($organization)) {
-            $this->organizations[] = $organization;
-            $organization->addService($this);
-        }
+    // public function addOrganization(Organization $organization): self
+    // {
+    //     if (!$this->organizations->contains($organization)) {
+    //         $this->organizations[] = $organization;
+    //         $organization->addService($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeOrganization(Organization $organization): self
-    {
-        if ($this->organizations->contains($organization)) {
-            $this->organizations->removeElement($organization);
-            $organization->removeService($this);
-        }
+    // public function removeOrganization(Organization $organization): self
+    // {
+    //     if ($this->organizations->contains($organization)) {
+    //         $this->organizations->removeElement($organization);
+    //         $organization->removeService($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getChief(): ?User
     {
