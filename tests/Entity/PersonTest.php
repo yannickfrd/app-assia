@@ -61,7 +61,7 @@ class PersonTest extends WebTestCase
     public function testPersonExists()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/PersonFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml",
         ]);
 
         $person = $this->person

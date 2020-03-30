@@ -32,7 +32,7 @@ class ServiceTest extends WebTestCase
             ->getManager();
 
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/ServiceFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/ServiceFixturesTest.yaml",
         ]);
 
         $this->pole = $dataFixtures["pole"];

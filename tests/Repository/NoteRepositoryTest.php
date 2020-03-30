@@ -32,7 +32,7 @@ class NoteRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/NoteFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/NoteFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();

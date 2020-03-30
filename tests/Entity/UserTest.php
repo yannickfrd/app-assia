@@ -94,7 +94,7 @@ class UserTest extends WebTestCase
     public function testUsernameExists()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
         $user = $this->user->setUsername("r.madelaine");

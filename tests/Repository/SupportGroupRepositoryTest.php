@@ -37,7 +37,7 @@ class SupportGroupRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures  = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/SupportGroupFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/SupportGroupFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();

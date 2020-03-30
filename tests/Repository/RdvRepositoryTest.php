@@ -32,7 +32,7 @@ class RdvRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/RdvFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/RdvFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();

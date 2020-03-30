@@ -34,7 +34,7 @@ class AccommodationTest extends WebTestCase
             ->getManager();
 
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/AccommodationFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml",
         ]);
 
         $this->service = $dataFixtures["service"];

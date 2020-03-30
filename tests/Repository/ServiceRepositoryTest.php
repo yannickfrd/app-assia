@@ -35,7 +35,7 @@ class ServiceRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/ServiceFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/ServiceFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();

@@ -20,7 +20,7 @@ class AppControllerTest extends WebTestCase
         $this->client = static::createClient();
 
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
         /** @var User */

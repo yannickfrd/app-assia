@@ -35,7 +35,7 @@ class AccommodationRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $datafixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/AccommodationFixturesTest.yaml"
+            dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml"
         ]);
 
         $kernel = self::bootKernel();

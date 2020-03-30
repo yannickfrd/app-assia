@@ -32,7 +32,7 @@ class DocumentRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures  = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/DocumentFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/DocumentFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();

@@ -28,7 +28,7 @@ class PersonRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/PersonFixturesTest.yaml"
+            dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml"
         ]);
 
         $kernel = self::bootKernel();

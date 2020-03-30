@@ -16,7 +16,7 @@ class SecurityController extends WebTestCase
     protected function setUp()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixtures/UserFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
         $this->client = static::createClient();
