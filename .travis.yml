@@ -6,8 +6,8 @@ php:
 
 script:
   - composer install
+  - vendor/bin/phpunit
   # - npm run build
-  # - vendor/bin/phpunit
   # - php bin/phpunit
   # - php ./vendor/bin/phpunit # Could not open input file: ./vendor/bin/phpunit
-  - vendor/bin/simple-phpunit
+  # - vendor/bin/simple-phpunit
