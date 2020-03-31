@@ -1,5 +1,5 @@
 import AjaxRequest from "../utils/ajaxRequest";
-import ListNotes from "./listnotes";
+import ListNotes from "./listNotes";
 import CheckChangeModal from "../utils/checkChangeModal";
 
 let ajaxRequest = new AjaxRequest();
