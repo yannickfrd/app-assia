@@ -25,6 +25,10 @@ class AccommodationTest extends WebTestCase
 
     protected function setUp()
     {
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml",
+        ]);
+
         $this->accommodation = $this->getAccommodation();
 
         $kernel = self::bootKernel();
@@ -33,9 +37,6 @@ class AccommodationTest extends WebTestCase
             ->get("doctrine")
             ->getManager();
 
-        $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml",
-        ]);
 
         $this->service = $dataFixtures["service"];
     }

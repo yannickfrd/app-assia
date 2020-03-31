@@ -18,6 +18,10 @@ class PersonTest extends WebTestCase
 
     protected function setUp()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml",
+        ]);
+
         $faker = \Faker\Factory::create("fr_FR");
 
         $this->person = (new Person)
@@ -60,10 +64,6 @@ class PersonTest extends WebTestCase
 
     public function testPersonExists()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml",
-        ]);
-
         $person = $this->person
             ->setFirstname("John")
             ->setLastname("Doe")

@@ -21,6 +21,10 @@ class UserTest extends WebTestCase
 
     protected function setUp()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
+        ]);
+
         $faker = \Faker\Factory::create("fr_FR");
 
         $firstname = $faker->firstname();
@@ -93,10 +97,6 @@ class UserTest extends WebTestCase
 
     public function testUsernameExists()
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
-        ]);
-
         $user = $this->user->setUsername("r.madelaine");
         $this->assertHasErrors($user, 1);
     }

@@ -1,10 +1,10 @@
 {
     "devDependencies": {
         "@ckeditor/ckeditor5-alignment": "^16.0.0",
-        "@symfony/webpack-encore": "^0.28.0",
+        "@symfony/webpack-encore": "^0.28.3",
         "core-js": "^3.6.4",
         "node-sass": "^4.13.1",
-        "regenerator-runtime": "^0.13.2",
+        "regenerator-runtime": "^0.13.5",
         "sass-loader": "7.0.1",
         "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack-notifier": "^1.6.0"
@@ -30,8 +30,8 @@
         "jquery": "^3.4.1",
         "jquery-mask-plugin": "^1.14.16",
         "maildev": "^1.1.0",
-        "nodemailer": "^6.3.1",
-        "open": "^7.0.2",
+        "nodemailer": "^6.4.6",
+        "open": "^7.0.3",
         "popover": "^2.4.1",
         "popper.js": "^1.16.1",
         "select2": "^4.0.13",

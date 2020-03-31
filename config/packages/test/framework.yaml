@@ -1,8 +1,10 @@
+# config/packages/test/framework.yaml
 framework:
     test: true
     session:
         storage_id: session.storage.mock_file
 
-liip_test_fixtures:
-    cache_db:
-        sqlite: liip_test_fixtures.services_database_backup.sqlite
+# L'activivation de ce code provoque une erreur des tests sur un serveur externe
+# liip_test_fixtures:
+#     cache_db:
+#         sqlite: liip_test_fixtures.services_database_backup.sqlite
