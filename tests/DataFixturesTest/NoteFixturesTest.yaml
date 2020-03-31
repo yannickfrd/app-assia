@@ -28,6 +28,7 @@ App\Entity\User:
     username: r.madelaine
     email: romain.madelaine@esperer-95.org
     status: 1
+    plainPassword: Test123*
 
 App\Entity\Person:
   person: 
