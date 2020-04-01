@@ -8,8 +8,8 @@ App\Entity\Rdv:
     location: Houilles
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@user"
-    updatedBy: "@user"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
     supportGroup: "@supportGroup"
 
 
@@ -21,16 +21,17 @@ App\Entity\Rdv:
     end: $start
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@user"
-    updatedBy: "@user"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
 App\Entity\User:
-  user:
+  userSuperAdmin:
     firstname: Romain
     lastname: Madelaine
     username: r.madelaine
     email: romain.madelaine@esperer-95.org
     status: 1
+    roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
 App\Entity\Person:
@@ -49,7 +50,7 @@ App\Entity\SupportGroup:
   supportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
-    referent: "@user"
+    referent: "@userSuperAdmin"
     groupPeople: "@groupPeople"
     createdAt: <date_create()>
     updatedAt: <date_create()>

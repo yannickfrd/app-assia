@@ -1,0 +1,42 @@
+App\Entity\SupportGroup:
+  supportGroupWithEval:
+    startDate: <date_create("2020-03-04")>
+    endDate: null
+    status: 2
+    agreement: true
+    referent: "@userSuperAdmin"
+    service: "@service"
+    device: "@device"
+    groupPeople: "@groupPeople1"
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: $referent
+    updatedBy: $referent
+
+
+App\Entity\SupportPerson:
+  supportPersonWithEval:
+    startDate: "@supportGroup1->startDate"
+    endDate: "@supportGroup1->endDate"
+    status: "@supportGroup1->status"
+    createdAt: "@supportGroup1->createdAt"
+    updatedAt: "@supportGroup1->updatedAt"
+    supportGroup: "@supportGroup1"
+    person: "@person"
+    head: "@rolePerson->head"
+    role: "@rolePerson->role"
+
+
+App\Entity\EvaluationGroup:
+  evaluationGroup1:
+    date: <date_create("2019-04-03")>
+    title: "Evaluation initiale"
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    supportGroup: "@supportGroupWithEval"
+
+
+App\Entity\EvaluationPerson:
+  evaluationPerson1:
+    evaluationGroup: "@evaluationGroup1"
+    supportPerson: "@supportPersonWithEval"

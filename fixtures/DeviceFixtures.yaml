@@ -4,8 +4,8 @@ App\Entity\Device:
     coefficient: 1
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userAdmin"
-    updatedBy: "@userAdmin"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
   device{2..10}:
     name: <sentence(3, true)>

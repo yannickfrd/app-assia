@@ -20,14 +20,14 @@ class SupportGroupTest extends WebTestCase
         $kernel = self::bootKernel();
 
         $dataFixutres = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/SupportGroupFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/SupportFixturesTest.yaml",
         ]);
 
         $this->supportGroup = (new SupportGroup())
             ->setStartDate(new \DateTime("2020-01-01"))
             ->setStatus(2)
             ->setAgreement(true)
-            ->setReferent($dataFixutres["user"])
+            ->setReferent($dataFixutres["userSuperAdmin"])
             ->setService($dataFixutres["service"])
             ->setDevice($dataFixutres["device"]);
     }

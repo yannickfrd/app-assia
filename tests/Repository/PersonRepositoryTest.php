@@ -40,7 +40,7 @@ class PersonRepositoryTest extends WebTestCase
         /** @var PersonRepository */
         $this->repo = $this->entityManager->getRepository(Person::class);
 
-        $this->person = $dataFixtures["user"];
+        $this->person = $dataFixtures["userSuperAdmin"];
         $this->personSearch = $this->getPersonSearch();
     }
 

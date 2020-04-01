@@ -39,7 +39,7 @@ class PersonController extends AbstractController
      * Liste des personnes
      * 
      * @Route("/people", name="people")
-     * @Route("/new_support/search/person", name="new_support_search_person")
+     * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
      * @param Request $request
      * @param PersonSearch $personSearch
      * @param Pagination $pagination
@@ -68,7 +68,7 @@ class PersonController extends AbstractController
     /**
      * Rechercher une personne pour l'ajouter dans un groupe
      * 
-     * @Route("/group/{id}/search_person", name="group_search_person")
+     * @Route("/group/{id}/search_person", name="group_search_person", methods="GET|POST")
      * @param GroupPeople $groupPeople
      * @param PersonSearch $personSearch
      * @param Request $request
@@ -78,12 +78,11 @@ class PersonController extends AbstractController
     public function searchPersonToAdd(GroupPeople $groupPeople, PersonSearch $personSearch = null, Request $request, Pagination $pagination): Response
     {
         $personSearch = new PersonSearch();
-        $rolePerson = new RolePerson;
 
         $form = $this->createForm(PersonSearchType::class, $personSearch);
         $form->handleRequest($request);
 
-        $formRolePerson = $this->createForm(RolePersonType::class, $rolePerson);
+        $formRolePerson = $this->createForm(RolePersonType::class, new RolePerson());
         $formRolePerson->handleRequest($request);
 
         if ($request->query->all()) {
@@ -163,19 +162,18 @@ class PersonController extends AbstractController
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      * @param GroupPeople $groupPeople
-     * @param Person $person
+     * @param int $person_id
      * @param Request $request
      * @return Response
      */
-    public function editPersonInGroup(GroupPeople $groupPeople, $person_id, Request $request): Response
+    public function editPersonInGroup(GroupPeople $groupPeople, int $person_id, Request $request): Response
     {
         $person = $this->repo->findPersonById($person_id);
 
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        $rolePerson = new RolePerson();
-        $formNewGroup = $this->createForm(PersonNewGroupType::class, $rolePerson, [
+        $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
             "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
         ]);
 
@@ -196,7 +194,7 @@ class PersonController extends AbstractController
     /**
      * Met à jour les informations d'une personne via Ajax
      * 
-     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="GET|POST")
+     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
      * @param Person $person
      * @param Request $request
      * @param ValidatorInterface $validator
@@ -208,7 +206,6 @@ class PersonController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->updatePerson($person);
         }
         return $this->errorMessage($validator, $form);
@@ -217,8 +214,8 @@ class PersonController extends AbstractController
     /**
      * Voir la fiche individuelle
      * 
-     * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
-     * @Route("/person/{id}", name="person_show", methods="GET|POST")
+     * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
+     * @Route("/person/{id}", name="person_show", methods="GET")
      * @param Person $person
      * @param RolePerson $rolePerson
      * @param Request $request
@@ -245,14 +242,14 @@ class PersonController extends AbstractController
     /**
      * Ajoute un nouveau groupe à la personne
      * 
-     * @Route("/person/{id}/new_group", name="person_new_group", methods="GET|POST")
+     * @Route("/person/{id}/new_group", name="person_new_group", methods="POST")
      * @param Person $person
      * @param RolePerson $rolePerson
      * @param Request $request
      */
-    public function newGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
+    public function addNewGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
     {
-        $rolePerson = new RolePerson;
+        $rolePerson = new RolePerson();
 
         $form = $this->createForm(PersonNewGroupType::class, $rolePerson);
         $form->handleRequest($request);
@@ -267,13 +264,13 @@ class PersonController extends AbstractController
     /**
      * Supprime la personne
      * 
-     * @Route("/person/{id}/delete", name="person_delete")
+     * @Route("/person/{id}/delete", name="person_delete", methods="GET")
      * @param Person $person
      * @return Response
      */
-    public function deleteSupport(Person $person): Response
+    public function deletePerson(Person $person): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        // $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
         $this->manager->remove($person);
         $this->manager->flush();
@@ -293,11 +290,7 @@ class PersonController extends AbstractController
      */
     public function searchPerson(Request $request): Response
     {
-        if ($request->query->get("search")) {
-            $search = $request->query->get("search");
-        } else {
-            $search = null;
-        }
+        $search = $request->query->get("search") ?? null;
 
         $people = $this->repo->findPeopleByResearch($search);
         $nbResults = count($people);
@@ -328,8 +321,7 @@ class PersonController extends AbstractController
     protected function exportData(PersonSearch $personSearch)
     {
         $people = $this->repo->findPeopleToExport($personSearch);
-        $export = new PersonExport();
-        return $export->exportData($people);
+        return (new PersonExport())->exportData($people);
     }
 
     /**

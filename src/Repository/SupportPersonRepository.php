@@ -245,7 +245,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        return $query->setMaxResults(500)
+        return $query->setMaxResults(1000)
             ->orderBy("sp.startDate", "DESC")
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();

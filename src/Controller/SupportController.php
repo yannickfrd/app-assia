@@ -61,12 +61,10 @@ class SupportController extends AbstractController
             return $this->exportData($supportGroupSearch);
         }
 
-        $supports = $pagination->paginate($this->repoSupportGroup->findAllSupportsQuery($supportGroupSearch), $request);
-
         return $this->render("app/support/listSupports.html.twig", [
             "supportGroupSearch" => $supportGroupSearch,
             "form" => $form->createView(),
-            "supports" => $supports
+            "supports" => $pagination->paginate($this->repoSupportGroup->findAllSupportsQuery($supportGroupSearch), $request)
         ]);
     }
 
@@ -84,9 +82,9 @@ class SupportController extends AbstractController
     {
         $groupPeople = $repo->findGroupPeopleById($id);
 
-        $supportGroup = new SupportGroup();
-        $supportGroup->setStartDate(new \DateTime());
-        $supportGroup->setReferent($this->getUser());
+        $supportGroup = (new SupportGroup())
+            ->setStartDate(new \DateTime())
+            ->setReferent($this->getUser());
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup);
         $form->handleRequest($request);
@@ -106,7 +104,7 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Modification d'un suvi social
+     * Modification d'un suivi social
      * 
      * @Route("/support/{id}", name="support_edit", methods="GET|POST")
      * @param int $id
@@ -139,7 +137,7 @@ class SupportController extends AbstractController
     /**
      * Supprime le suivi social du groupe
      * 
-     * @Route("/support/{id}/delete", name="support_delete")
+     * @Route("/support/{id}/delete", name="support_delete", methods="GET")
      * @param SupportGroup $supportGroup
      * @return Response
      */
@@ -150,7 +148,7 @@ class SupportController extends AbstractController
         $this->manager->remove($supportGroup);
         $this->manager->flush();
 
-        $this->addFlash("danger", "Le suivi social a été supprimé.");
+        $this->addFlash("warning", "Le suivi social a été supprimé.");
 
         return $this->redirectToRoute("group_people_show", ["id" => $supportGroup->getGroupPeople()->getId()]);
     }
@@ -191,7 +189,7 @@ class SupportController extends AbstractController
     /**
      * Ajout de personnes au suivi
      * 
-     * @Route("/support/{id}/add_people", name="support_add_people", methods="GET|POST")
+     * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      * @param SupportGroup $supportGroup
      */
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo): Response

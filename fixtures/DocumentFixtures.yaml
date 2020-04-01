@@ -7,7 +7,7 @@ App\Entity\Document:
     size: <numberBetween(200000, 4000000)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userAdmin"
+    createdBy: "@userSuperAdmin"
     groupPeople: "@groupPeople1"
     supportGroup: "@supportGroup1"
 

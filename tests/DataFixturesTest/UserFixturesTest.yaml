@@ -1,5 +1,5 @@
 App\Entity\User:
-  userAdmin:
+  userSuperAdmin:
     firstname: Romain
     lastname: Madelaine
     username: r.madelaine
@@ -14,6 +14,37 @@ App\Entity\User:
     lastlogin: <dateTimeBetween($updatedAt, "now")>
     enabled: true
 
+  userRoleAdmin:
+    firstname: Laetitia
+    lastname: CHANIAL
+    username: l.chanial
+    plainPassword: Test123*
+    email: l.chanial@esperer-95.org
+    status: 6
+    roles: ["ROLE_ADMIN"]
+    phone: "01 00 00 00 00"
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    loginCount: 1
+    lastlogin: <dateTimeBetween($updatedAt, "now")>
+    enabled: true
+
+  userRoleUser:
+    firstname: Lucie
+    lastname: LALOU
+    username: <mb_strtolower($firstname.$lastname)>
+    plainPassword: Test123*
+    email: $username@esperer-95.org
+    status: 1
+    phone: 01 00 00 00 00
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    loginCount: <numberBetween(0, 99)>
+    lastlogin: <dateTimeBetween($updatedAt, "now")>
+    enabled: true
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
+
   user{2..5}:
     firstname: <fr_FR:firstName()>
     lastname: <fr_FR:lastName()>
@@ -27,8 +58,8 @@ App\Entity\User:
     loginCount: <numberBetween(0, 99)>
     lastlogin: <dateTimeBetween($updatedAt, "now")>
     enabled: true
-    createdBy: "@userAdmin"
-    updatedBy: "@userAdmin"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
 
 App\Entity\Service:
@@ -40,9 +71,9 @@ App\Entity\Service:
     updatedAt: <date_create()>
 
 App\Entity\ServiceUser:
-  servUserAdmin:
+  servuserSuperAdmin:
     service: "@service"
-    user: "@userAdmin"
+    user: "@userSuperAdmin"
 
 
 App\Entity\Pole:

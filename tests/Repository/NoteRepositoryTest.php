@@ -45,7 +45,7 @@ class NoteRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Note::class);
 
         $this->supportGroup = $dataFixtures["supportGroup"];
-        $this->user = $dataFixtures["user"];
+        $this->user = $dataFixtures["userSuperAdmin"];
         $this->noteSearch = (new NoteSearch())
             ->setContent("Contenu de la note")
             ->setType(1)

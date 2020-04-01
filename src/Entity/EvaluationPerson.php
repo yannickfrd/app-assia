@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\EvalSocialPerson;
 use Doctrine\ORM\Mapping as ORM;
-use App\Form\Evaluation\EvalSocialPersonType;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvaluationPersonRepository")

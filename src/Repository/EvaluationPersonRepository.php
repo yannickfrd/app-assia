@@ -47,7 +47,7 @@ class EvaluationPersonRepository extends ServiceEntityRepository
             ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
             ->leftJoin("ep.evalProfPerson", "evalProfPerson")->addselect("evalProfPerson");
 
-        return $query->setMaxResults(502)
+        return $query->setMaxResults(1000)
             ->orderBy("sp.startDate", "DESC")
             ->getQuery()
             // ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)

@@ -4,7 +4,7 @@ App\Entity\SupportGroup:
     endDate: null
     status: 2
     agreement: true
-    referent: "@user"
+    referent: "@userSuperAdmin"
     service: "@service"
     device: "@device"
     groupPeople: "@groupPeople"
@@ -18,7 +18,7 @@ App\Entity\SupportGroup:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
     status: <numberBetween(1, 4)>
-    referent: "@user"
+    referent: "@userSuperAdmin"
     service: "@service"
     device: "@device"
     groupPeople: "@groupPeople"
@@ -42,12 +42,13 @@ App\Entity\SupportPerson:
 
     
 App\Entity\User:
-  user:
+  userSuperAdmin:
     firstname: Romain
     lastname: Madelaine
     username: r.madelaine
     email: romain.madelaine@esperer-95.org
     status: 1
+    roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
 

@@ -37,7 +37,7 @@ class SupportGroupRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures  = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/SupportGroupFixturesTest.yaml",
+            dirname(__DIR__) . "/DataFixturesTest/SupportFixturesTest.yaml",
         ]);
 
         $kernel = self::bootKernel();
@@ -51,7 +51,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
         $this->supportGroup = $dataFixtures["supportGroup1"];
         $this->service =  $dataFixtures["service"];
-        $this->user = $dataFixtures["user"];
+        $this->user = $dataFixtures["userSuperAdmin"];
         $this->supportGroupSearch = $this->getSupportGroupSearch();
     }
 

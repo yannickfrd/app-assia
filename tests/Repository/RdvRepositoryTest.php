@@ -45,7 +45,7 @@ class RdvRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Rdv::class);
 
         $this->supportGroup = $dataFixtures["supportGroup"];
-        $this->user = $dataFixtures["user"];
+        $this->user = $dataFixtures["userSuperAdmin"];
         $this->rdvSearch = (new RdvSearch())
             ->setTitle("Rdv 666")
             ->setStartDate(new \DateTime("2020-01-01"))

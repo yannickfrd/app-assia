@@ -97,7 +97,7 @@ class B_UserFixtures extends Fixture
             ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
             ->setEmail("romain.madelaine@esperer-95.org")
             ->setEnabled(true)
-            ->setLoginCount(0)
+            ->setLoginCount(1)
             ->setLastLogin(new \DateTime())
             ->setCreatedAt(new \DateTime())
             ->setUpdatedAt(new \DateTime());

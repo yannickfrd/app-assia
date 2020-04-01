@@ -2,57 +2,42 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Component\BrowserKit\Cookie;
+use App\Tests\Controller\ControllerTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class AppControllerTest extends WebTestCase
 {
     use FixturesTrait;
-
-    /** @var KernelBrowser */
-    protected $client;
+    use ControllerTestTrait;
 
     protected function setUp()
     {
-        $this->client = static::createClient();
-
         $dataFixtures = $this->loadFixtureFiles([
             dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
-        /** @var User */
-        $userAdmin = $dataFixtures["userAdmin"];
-
-        $session  = $this->client->getContainer()->get("session");
-        $token = new UsernamePasswordToken($userAdmin, null, "main", $userAdmin->getRoles());
-        $session->set("security_main", serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        $this->createLoggedUser($dataFixtures);
     }
 
-    protected function generateURl($route)
+    public function testHomepageIsUp()
     {
-        return $this->client->getContainer()->get("router")->generate($route);
+        $this->client->request("GET", "/");
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAccessHomePage()
     {
-        $this->client = static::createClient();
-
         $csrfToken = $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate");
 
-        $this->client->request("POST", $this->generateURl("security_login"), [
+        $this->client->request("POST", $this->generateUri("security_login"), [
             "_username" => "r.madelaine",
             "_password" => "Test123*",
             "_csrf_token" => $csrfToken
         ]);
 
-        $this->client->followRedirect();
+        $this->client->followRedirects(true);
         $this->client->followRedirect();
 
         $this->assertSelectorExists(".alert.alert-success");

@@ -7,7 +7,7 @@ App\Entity\Document:
     size: <numberBetween(200000, 4000000)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@user"
+    createdBy: "@userSuperAdmin"
     groupPeople: "@groupPeople"
     supportGroup: "@supportGroup"
 
@@ -19,17 +19,18 @@ App\Entity\Document:
     size: <numberBetween(200000, 4000000)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@user"
+    createdBy: "@userSuperAdmin"
     groupPeople: "@groupPeople"
     supportGroup: "@supportGroup"
 
 App\Entity\User:
-  user:
+  userSuperAdmin:
     firstname: Romain
     lastname: Madelaine
     username: r.madelaine
     email: romain.madelaine@esperer-95.org
     status: 1
+    roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
     
@@ -49,7 +50,7 @@ App\Entity\SupportGroup:
   supportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
-    referent: "@user"
+    referent: "@userSuperAdmin"
     groupPeople: "@groupPeople"
     createdAt: <date_create()>
     updatedAt: <date_create()>

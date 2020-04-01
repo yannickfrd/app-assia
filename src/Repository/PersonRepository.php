@@ -108,7 +108,7 @@ class PersonRepository extends ServiceEntityRepository
      * @param string $search
      * @return mixed
      */
-    public function findPeopleByResearch(string $search)
+    public function findPeopleByResearch(string $search = null)
     {
         return $this->createQueryBuilder("p")
             ->select("p")

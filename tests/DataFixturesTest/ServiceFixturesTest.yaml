@@ -11,8 +11,8 @@ App\Entity\Service:
     enabled: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
-    createdBy: "@user"
-    updatedBy: "@user"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
   service{2..5}:
     name: <sentence(3, true)>
@@ -26,27 +26,28 @@ App\Entity\Service:
     createdAt: <date_create()>
     updatedAt: <date_create()>
     pole: "@pole"
-    createdBy: "@user"
-    updatedBy: "@user"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
 
 App\Entity\ServiceUser:
-  servUserAdmin:
+  servuserSuperAdmin:
     service: "@service1"
-    user: "@user"
+    user: "@userSuperAdmin"
 
   servUser{2..5}:
     service: "@service*"
-    user: "@user"
+    user: "@userSuperAdmin"
 
     
 App\Entity\User:
-  user:
+  userSuperAdmin:
     firstname: Romain
     lastname: Madelaine
     username: r.madelaine
     email: romain.madelaine@esperer-95.org
     status: 1
+    roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
 

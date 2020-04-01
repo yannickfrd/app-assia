@@ -21,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class EvaluationController extends AbstractController
 {
     private $manager;
+    private $repoSupportGroup;
     private $repo;
 
     public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo)

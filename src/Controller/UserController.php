@@ -24,7 +24,7 @@ class UserController extends AbstractController
     /**
      * Liste des utilisateurs
      * 
-     * @Route("directory/users", name="users")
+     * @Route("directory/users", name="users", methods="GET|POST")
      * @param Request $request
      * @param UserSearch $userSearch
      * @param Pagination $pagination
@@ -53,7 +53,7 @@ class UserController extends AbstractController
     /**
      * Administration des utilisateurs
      * 
-     * @Route("admin/users", name="admin_users")
+     * @Route("admin/users", name="admin_users", methods="GET|POST")
      * @param Request $request
      * @param UserSearch $userSearch
      * @param Pagination $pagination

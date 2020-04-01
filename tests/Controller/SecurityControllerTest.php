@@ -2,13 +2,17 @@
 
 namespace App\Tests\Controller;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Controller\ControllerTestTrait;
 use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityController extends WebTestCase
 {
     use FixturesTrait;
+    use ControllerTestTrait;
+
 
     /** @var KernelBrowser */
     protected $client;
@@ -22,43 +26,38 @@ class SecurityController extends WebTestCase
         $this->client = static::createClient();
     }
 
-    protected function generateURl($route)
-    {
-        return $this->client->getContainer()->get("router")->generate($route);
-    }
-
     public function testLoginPage()
     {
-        $this->client->request("GET", $this->generateURl("security_login"));
+        $this->client->request("GET", $this->generateUri("security_login"));
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        static::assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     public function testH1LoginPage()
     {
-        $this->client->request("GET", $this->generateURl("security_login"));
+        $this->client->request("GET", $this->generateUri("security_login"));
 
-        $this->assertSelectorTextContains("h1", "Merci de vous connecter");
-        $this->assertSelectorNotExists(".alert-dismissible");
+        static::assertSelectorTextContains("h1", "Merci de vous connecter");
+        static::assertSelectorNotExists(".alert-dismissible");
     }
 
     // public function testAuthHomePage()
     // {
-    //     $this->client->request("GET", $this->generateURl("home"));
+    //     $this->client->request("GET", $this->generateUri("home"));
 
-    //     $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+    //     static::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     // }
 
     // public function testRedirectToLogin()
     // {
-    //     $this->client->request("GET", $this->generateURl("home"));
+    //     $this->client->request("GET", $this->generateUri("home"));
 
-    //     $this->assertResponseRedirects($this->generateURl("security_login"));
+    //     static::assertResponseRedirects($this->generateUri("security_login"));
     // }
 
     public function testFailLogin()
     {
-        $crawler = $this->client->request("GET", $this->generateURl("security_login"));
+        $crawler = $this->client->request("GET", $this->generateUri("security_login"));
 
         $form = $crawler->selectButton("Se connecter")->form([
             "_username" => "badUsername",
@@ -67,28 +66,26 @@ class SecurityController extends WebTestCase
 
         $this->client->submit($form);
 
-        // $this->assertResponseRedirects($this->generateURl("security_login"));
+        // $this->assertResponseRedirects($this->generateUri("security_login"));
         $this->client->followRedirect();
 
-        // $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorExists(".alert.alert-danger");
+        // static::assertResponseStatusCodeSame(Response::HTTP_OK);
+        static::assertSelectorExists(".alert.alert-danger");
     }
 
     public function testSuccessLogin()
     {
-        $this->client = static::createClient();
-
         $csrfToken = $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate");
 
-        $this->client->request("POST", $this->generateURl("security_login"), [
+        $this->client->request("POST", $this->generateUri("security_login"), [
             "_username" => "r.madelaine",
             "_password" => "Test123*",
             "_csrf_token" => $csrfToken
         ]);
 
-        $this->client->followRedirect();
+        $this->client->followRedirects(true);
         $this->client->followRedirect();
 
-        $this->assertSelectorExists(".alert.alert-success");
+        static::assertSelectorExists(".alert.alert-success");
     }
 }
