@@ -37,12 +37,12 @@ Encore
     .addEntry('place', './assets/js/accommodation/accommodation.js')
     .addEntry('registration', './assets/js/security/registration.js')
     .addEntry('rdv', './assets/js/rdv/rdv.js')
-    // .addEntry('search', './assets/js/search.js')
-    // .addEntry('service', './assets/js/service/service.js')
-    // .addEntry('support', './assets/js/support/support.js')
-    // .addEntry('supportPers', './assets/js/support/supportPerson.js')
-    // .addEntry('user', './assets/js/user/user.js')
-    // .addEntry('securityUser', './assets/js/security/securityUser.js')
+    .addEntry('search', './assets/js/search.js')
+    .addEntry('service', './assets/js/service/service.js')
+    .addEntry('support', './assets/js/support/support.js')
+    .addEntry('supportPers', './assets/js/support/supportPerson.js')
+    .addEntry('user', './assets/js/user/user.js')
+    .addEntry('security', './assets/js/security/security.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
