@@ -34,7 +34,7 @@ class GroupPeopleController extends AbstractController
     /**
      * Liste des groupes de personnes
      * 
-     * @Route("/groups_people", name="groups_people")
+     * @Route("/groups_people", name="groups_people", methods="GET|POST")
      * @param GroupPeopleSearch $groupPeopleSearch
      * @param Request $request
      * @param Pagination $pagination
@@ -44,21 +44,19 @@ class GroupPeopleController extends AbstractController
     {
         $groupPeopleSearch = new GroupPeopleSearch();
 
-        $form = $this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch);
-        $form->handleRequest($request);
-
-        $groupsPeople = $pagination->paginate($this->repo->findAllGroupPeopleQuery($groupPeopleSearch), $request);
+        $form = ($this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch))
+            ->handleRequest($request);
 
         return $this->render("app/groupPeople/listGroupsPeople.html.twig", [
-            "groupsPeople" => $groupsPeople,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "groupsPeople" => $pagination->paginate($this->repo->findAllGroupPeopleQuery($groupPeopleSearch), $request)
         ]);
     }
 
     /**
      * Modification d'un groupe
      * 
-     * @Route("/group/{id}", name="group_people_show")
+     * @Route("/group/{id}", name="group_people_show", methods="GET|POST")
      * @param Request $request
      * @return Response
      */
@@ -81,11 +79,11 @@ class GroupPeopleController extends AbstractController
     /**
      * Supprime le groupe de personnes
      * 
-     * @Route("/group/{id}/delete", name="group_people_delete")
+     * @Route("/group/{id}/delete", name="group_people_delete", methods="GET")
      * @param GroupPeople $groupPeople
      * @return Response
      */
-    public function deleteSupport(GroupPeople $groupPeople): Response
+    public function deleteGroupPeople(GroupPeople $groupPeople): Response
     {
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
@@ -98,22 +96,25 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * Ajout d'une personne dans une groupe
+     * Ajout d'une personne dans un groupe
      * 
-     * @Route("/group/{id}/add/person/{person_id}", name="group_add_person")
+     * @Route("/group/{id}/add/person/{person_id}", name="group_add_person", methods="POST")
      * @ParamConverter("person", options={"id" = "person_id"})
+     * @param integer $id
      * @param Person $person
-     * @param RolePersonRepository $repo
+     * @param RolePerson $rolePerson
+     * @param RolePersonRepository $repoRolePerson
+     * @param Request $request
      * @return Response
      */
-    public function tryAddPersonInGroup($id, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
+    public function tryAddPersonInGroup(int $id, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
     {
         $groupPeople = $this->repo->findGroupPeopleById($id);
 
-        $rolePerson = new RolePerson;
+        $rolePerson = new RolePerson();
 
-        $form = $this->createForm(RolePersonType::class, $rolePerson);
-        $form->handleRequest($request);
+        $form = ($this->createForm(RolePersonType::class, $rolePerson))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->addPersonInGroup($groupPeople, $rolePerson, $person, $repoRolePerson);

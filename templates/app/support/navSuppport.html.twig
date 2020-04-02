@@ -23,10 +23,10 @@
 			<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Rendez-vous">
 				<span class="far fa-calendar-alt"></span><span class="sr-only">Agenda</span>
 			</a>
-			<a href="{{ path('notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Notes sociales">
+			<a href="{{ path('support_notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Notes sociales">
 				<span class="fas fa-edit"></span><span class="sr-only">Notes</span>
 			</a>
-			<a href="{{ path('documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Documents administratifs">
+			<a href="{{ path('support_documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Documents administratifs">
 				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
 		</div>

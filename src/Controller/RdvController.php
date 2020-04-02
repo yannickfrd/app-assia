@@ -33,7 +33,7 @@ class RdvController extends AbstractController
     /**
      * Liste des rendez-vous
      * 
-     * @Route("/rdvs", name="rdvs")
+     * @Route("/rdvs", name="rdvs", methods="GET|POST")
      * @param Request $request
      * @param RdvSearch $rdvSearch
      * @param Pagination $pagination
@@ -43,34 +43,28 @@ class RdvController extends AbstractController
     {
         $rdvSearch = new RdvSearch();
 
-        $form = $this->createForm(RdvSearchType::class, $rdvSearch);
-        $form->handleRequest($request);
-
-        // if ($rdvSearch->getExport()) {
-        //     return $this->exportData($rdvSearch);
-        // }
-
-        $rdvs = $pagination->paginate($this->repo->findAllRdvsQuery($rdvSearch), $request);
+        $form = ($this->createForm(RdvSearchType::class, $rdvSearch))
+            ->handleRequest($request);
 
         return $this->render("app/rdv/listRdvs.html.twig", [
             "rdvSearch" => $rdvSearch,
             "form" => $form->createView(),
-            "rdvs" => $rdvs ?? null
+            "rdvs" => $pagination->paginate($this->repo->findAllRdvsQuery($rdvSearch), $request) ?? null
         ]);
     }
 
     /**
      * Liste des rendez-vous
      * 
-     * @Route("support/{id}/rdvs", name="support_rdvs")
-     * @param int $id
+     * @Route("support/{id}/rdvs", name="support_rdvs", methods="GET")
+     * @param integer $id // SupportGroup
      * @param SupportGroupRepository $repoSupport
      * @param RdvSearch $rdvSearch
      * @param Request $request
      * @param Pagination $pagination
      * @return Response
      */
-    public function viewSupportListRdvs($id, SupportGroupRepository $repoSupport, SupportRdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportGroupRepository $repoSupport, SupportRdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
@@ -81,13 +75,10 @@ class RdvController extends AbstractController
         $formSearch = $this->createForm(SupportRdvSearchType::class, $rdvSearch);
         $formSearch->handleRequest($request);
 
-        $rdvs = $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $rdvSearch), $request);
-
         return $this->render("app/rdv/supportRdvs.html.twig", [
             "support" => $supportGroup,
             "form_search" => $formSearch->createView(),
-            // "form" => $form->createView(),
-            "rdvs" => $rdvs
+            "rdvs" => $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $rdvSearch), $request)
         ]);
     }
 
@@ -95,7 +86,7 @@ class RdvController extends AbstractController
      * Affiche l'agenda de l'utilisateur (vue mensuelle)
      * 
      * @Route("/calendar/{year}/{month}", name="calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
-     * @Route("/calendar", name="calendar")
+     * @Route("/calendar", name="calendar", methods="GET")
      * @param int $year
      * @param int $month
      * @return Response
@@ -104,14 +95,12 @@ class RdvController extends AbstractController
     {
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null);
-
         $form = $this->createForm(RdvType::class, new Rdv());
 
         return $this->render("app/rdv/calendar.html.twig", [
             "calendar" => $calendar,
-            "rdvs" => $rdvs,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "rdvs" => $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null)
         ]);
     }
 
@@ -119,14 +108,14 @@ class RdvController extends AbstractController
      * Affiche l'agenda d'un suivi (vue mensuelle) 
      * 
      * @Route("/support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
-     * @Route("/support/{id}/calendar", name="support_calendar")
-     * @param int $id
+     * @Route("/support/{id}/calendar", name="support_calendar", methods="GET")
+     * @param integer $id // SupportGroup
      * @param SupportGroupRepository $supportRepo
      * @param int $year
      * @param int $month
      * @return Response
      */
-    public function showSupportCalendar($id, SupportGroupRepository $repoSupport, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, SupportGroupRepository $repoSupport, $year = null, $month = null): Response
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
@@ -134,17 +123,13 @@ class RdvController extends AbstractController
 
         $calendar = new Calendar($year, $month);
 
-        $rdvs = $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup);
-
-        $rdv = new Rdv();
-
-        $form = $this->createForm(RdvType::class, $rdv);
+        $form = $this->createForm(RdvType::class, new Rdv());
 
         return $this->render("app/rdv/calendar.html.twig", [
             "support" => $supportGroup,
             "calendar" => $calendar,
-            "rdvs" => $rdvs,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "rdvs" => $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup)
         ]);
     }
 
@@ -152,7 +137,6 @@ class RdvController extends AbstractController
      * Affiche un jour du mois (vue journalière)
      * 
      * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*", "day" : "[0-9]*"}, methods="GET")
-     * @Route("/calendar/day", name="calendar_day")
      * @param int $year
      * @param int $month
      * @param int $day
@@ -164,29 +148,27 @@ class RdvController extends AbstractController
         $startDay = new \Datetime($year . "-" . $month . "-" . $day);
         $endDay = new \Datetime($year . "-" . $month . "-" . ($day + 1));
 
-        $rdvs = $this->repo->findRdvsBetween($startDay, $endDay, null);
-
-        $form = $this->createForm(RdvType::class, new Rdv());
-        $form->handleRequest($request);
+        $form = ($this->createForm(RdvType::class, new Rdv()))
+            ->handleRequest($request);
 
         return $this->render("app/rdv/day.html.twig", [
-            "rdvs" => $rdvs,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "rdvs" => $this->repo->findRdvsBetween($startDay, $endDay, null)
         ]);
     }
 
     /**
      * Nouveau rendez-vous
      * 
-     * @Route("support/{id}/rdv/new", name="support_rdv_new")
-     * @Route("rdv/new", name="rdv_new")
-     * @param int $id
+     * @Route("support/{id}/rdv/new", name="support_rdv_new", methods="POST")
+     * @Route("rdv/new", name="rdv_new", methods="POST")
+     * @param integer $id // SupportGroup
      * @param SupportGroupRepository $repoSupport
      * @param Rdv $rdv
      * @param Request $request
      * @return Response
      */
-    public function newRdv($id = null, SupportGroupRepository $repoSupport, Rdv $rdv = null, Request $request): Response
+    public function newRdv(int $id = null, SupportGroupRepository $repoSupport, Rdv $rdv = null, Request $request): Response
     {
         if ($id) {
             $supportGroup = $repoSupport->findSupportById($id);
@@ -195,8 +177,8 @@ class RdvController extends AbstractController
 
         $rdv = new Rdv();
 
-        $form = $this->createForm(RdvType::class, $rdv);
-        $form->handleRequest($request);
+        $form = ($this->createForm(RdvType::class, $rdv))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createRdv($rdv, $supportGroup ?? null);
@@ -207,7 +189,7 @@ class RdvController extends AbstractController
     /**
      * Voir le RDV
      * 
-     * @Route("rdv/{id}/get", name="rdv_get")
+     * @Route("rdv/{id}/get", name="rdv_get", methods="GET")
      * @param Rdv $rdv
      * @param RdvRepository $repo
      * @return Response
@@ -245,7 +227,7 @@ class RdvController extends AbstractController
     /**
      * Modifie le RDV
      * 
-     * @Route("rdv/{id}/edit", name="rdv_edit")
+     * @Route("rdv/{id}/edit", name="rdv_edit", methods="POST")
      * @param Rdv $rdv
      * @param Request $request
      * @return Response
@@ -254,8 +236,8 @@ class RdvController extends AbstractController
     {
         $this->denyAccessUnlessGranted("EDIT", $rdv);
 
-        $form = $this->createForm(RdvType::class, $rdv);
-        $form->handleRequest($request);
+        $form = ($this->createForm(RdvType::class, $rdv))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -267,7 +249,7 @@ class RdvController extends AbstractController
     /**
      * Supprime le RDV
      * 
-     * @Route("rdv/{id}/delete", name="rdv_delete")
+     * @Route("rdv/{id}/delete", name="rdv_delete", methods="GET")
      * @param Rdv $rdv
      * @return Response
      */

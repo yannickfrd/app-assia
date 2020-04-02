@@ -37,7 +37,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/home", name="home")
+     * @Route("/home", name="home", methods="GET")
      * @Route("/")
      * @IsGranted("ROLE_USER")
      * @return Response

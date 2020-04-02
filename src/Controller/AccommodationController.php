@@ -30,7 +30,7 @@ class AccommodationController extends AbstractController
     /**
      * Affiche la liste des groupes de places
      * 
-     * @Route("/admin/accommodations", name="admin_accommodations")
+     * @Route("/admin/accommodations", name="admin_accommodations", methods="GET|POST")
      * @param AccommodationSearch $accommodationSearch
      * @param Request $request
      * @return Response
@@ -39,19 +39,17 @@ class AccommodationController extends AbstractController
     {
         $accommodationSearch = new AccommodationSearch();
 
-        $form = $this->createForm(AccommodationSearchType::class, $accommodationSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(AccommodationSearchType::class, $accommodationSearch))
+            ->handleRequest($request);
 
         if ($accommodationSearch->getExport()) {
             return $this->exportData($accommodationSearch);
         }
 
-        $accommodations = $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request);
-
         return $this->render("app/accommodation/listAccommodations.html.twig", [
-            "accommodations" => $accommodations ?? null,
             "accommodationSearch" => $accommodationSearch,
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "accommodations" => $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request) ?? null
         ]);
     }
 
@@ -66,13 +64,12 @@ class AccommodationController extends AbstractController
      */
     public function newAccommodation(Service $service, Accommodation $accommodation = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $service);
+        $this->denyAccessUnlessGranted("EDIT", $accommodation);
 
-        $accommodation = new Accommodation();
-        $accommodation->setService($service);
+        $accommodation = (new Accommodation())->setService($service);
 
-        $form = $this->createForm(AccommodationType::class, $accommodation);
-        $form->handleRequest($request);
+        $form = ($this->createForm(AccommodationType::class, $accommodation))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -94,10 +91,10 @@ class AccommodationController extends AbstractController
      */
     public function editAccommodation(Accommodation $accommodation, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("VIEW", $accommodation->getService());
+        $this->denyAccessUnlessGranted("VIEW", $accommodation);
 
-        $form = $this->createForm(AccommodationType::class, $accommodation);
-        $form->handleRequest($request);
+        $form = ($this->createForm(AccommodationType::class, $accommodation))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
@@ -112,13 +109,13 @@ class AccommodationController extends AbstractController
     /**
      * Supprime le groupe de places
      * 
-     * @Route("admin/accommodation/{id}/delete", name="admin_accommodation_delete")
+     * @Route("admin/accommodation/{id}/delete", name="admin_accommodation_delete", methods="GET")
      * @param Accommodation $accommodation
      * @return Response
      */
     public function deleteAccommodation(Accommodation $accommodation): Response
     {
-        $this->denyAccessUnlessGranted("DELETE", $accommodation->getService());
+        $this->denyAccessUnlessGranted("DELETE", $accommodation);
 
         $this->manager->remove($accommodation);
         $this->manager->flush();

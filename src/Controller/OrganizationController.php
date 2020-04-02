@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Organization;
-use App\Form\Organization\OrganizationType;
-use App\Repository\OrganizationRepository;
 use App\Service\Pagination;
+use App\Entity\Organization;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\OrganizationRepository;
+use App\Form\Organization\OrganizationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OrganizationController extends AbstractController
@@ -26,19 +27,16 @@ class OrganizationController extends AbstractController
     /**
      * Affiche la liste des dispositifs
      * 
-     * @Route("/admin/organizations", name="admin_organizations")
+     * @Route("/admin/organizations", name="admin_organizations", methods="GET|POST")
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param Pagination $pagination
      * @return Response
      */
     public function listOrganization(Request $request, Pagination $pagination): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
-        $organizations = $pagination->paginate($this->repo->findAllOrganizationsQuery(), $request);
-
         return $this->render("app/organization/listOrganizations.html.twig", [
-            "organizations" => $organizations ?? null
+            "organizations" => $pagination->paginate($this->repo->findAllOrganizationsQuery(), $request) ?? null
         ]);
     }
 
@@ -46,18 +44,17 @@ class OrganizationController extends AbstractController
      * Nouveau dispositif
      * 
      * @Route("/admin/organization/new", name="admin_organization_new", methods="GET|POST")
+     * @IsGranted("ROLE_ADMIN")
      * @param Organization $organization
      * @param Request $request
      * @return Response
      */
     public function newOrganization(Organization $organization = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
         $organization = new Organization();
 
-        $form = $this->createForm(OrganizationType::class, $organization);
-        $form->handleRequest($request);
+        $form = ($this->createForm(OrganizationType::class, $organization))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createOrganization($organization);
@@ -66,6 +63,32 @@ class OrganizationController extends AbstractController
         return $this->render("app/organization/organization.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
+        ]);
+    }
+
+    /**
+     * Modification d'un dispositif
+     * 
+     * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")
+     * @IsGranted("ROLE_ADMIN")
+     *  @param Organization $organization
+     * @param Request $request
+     * @return Response
+     */
+    public function editOrganization(Organization $organization, Request $request): Response
+    {
+        $form = ($this->createForm(OrganizationType::class, $organization))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->updateOrganization($organization);
+        }
+
+        $this->addFlash("success", "Le dispositif a été mis à jour.");
+
+        return $this->render("app/organization/organization.html.twig", [
+            "form" => $form->createView(),
+            "edit_mode" => true
         ]);
     }
 
@@ -89,33 +112,6 @@ class OrganizationController extends AbstractController
         $this->addFlash("success", "Le dispositif a été créé.");
 
         return $this->redirectToRoute("admin_organizations");
-    }
-
-    /**
-     * Modification d'un dispositif
-     * 
-     * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")
-     * @param Organization $organization
-     * @param Request $request
-     * @return Response
-     */
-    public function editOrganization(Organization $organization, Request $request): Response
-    {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
-        $form = $this->createForm(OrganizationType::class, $organization);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateOrganization($organization);
-        }
-
-        $this->addFlash("success", "Le dispositif a été mis à jour.");
-
-        return $this->render("app/organization/organization.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
-        ]);
     }
 
     /**

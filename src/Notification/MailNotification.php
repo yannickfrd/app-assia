@@ -8,14 +8,12 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
-use Symfony\Component\DependencyInjection\Container;
-
 class MailNotification
 {
     protected $mail;
     protected $renderer;
 
-    public function __construct(Environment $renderer, $host, $username, $password, $port)
+    public function __construct(Environment $renderer, $host = null, $username = null, $password = null, $port = null)
     {
         $this->mail = new PHPMailer(true);
 

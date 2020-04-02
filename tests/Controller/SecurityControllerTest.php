@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
 use App\Tests\Controller\ControllerTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -13,33 +14,100 @@ class SecurityController extends WebTestCase
     use FixturesTrait;
     use ControllerTestTrait;
 
-
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var array */
+    protected $dataFixtures;
+
+    /** @var User */
+    protected $user;
+
     protected function setUp()
     {
-        $this->loadFixtureFiles([
+        $this->dataFixtures = $this->loadFixtureFiles([
             dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
-        $this->client = static::createClient();
+        $this->user = $this->dataFixtures["userSuperAdmin"];
     }
 
     public function testLoginPage()
     {
+        $this->client = static::createClient();
         $this->client->request("GET", $this->generateUri("security_login"));
 
         static::assertResponseStatusCodeSame(Response::HTTP_OK);
-    }
-
-    public function testH1LoginPage()
-    {
-        $this->client->request("GET", $this->generateUri("security_login"));
-
         static::assertSelectorTextContains("h1", "Merci de vous connecter");
         static::assertSelectorNotExists(".alert-dismissible");
     }
+
+    public function testRegistrationIsUp()
+    {
+        $this->createLoggedUser($this->dataFixtures);
+        $this->client->request("GET", $this->generateUri("security_registration"));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", "Création d'un compte utilisateur");
+    }
+
+    public function testAfterLoginIsUp()
+    {
+        $this->createLoggedUser($this->dataFixtures);
+        $this->client->request("GET", $this->generateUri("security_after_login"));
+
+        $this->client->followRedirect();
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", "Tableau de bord");
+    }
+
+    public function testInitPasswordIsUp()
+    {
+        $this->createLoggedUser($this->dataFixtures);
+        $this->client->request("GET", $this->generateUri("security_init_password"));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", "Personnalisation du mot de passe");
+    }
+
+    public function testShowCurrentUserIsUp()
+    {
+        $this->createLoggedUser($this->dataFixtures);
+        $this->client->request("GET", $this->generateUri("my_profile"));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", $this->user->getFullname());
+    }
+
+    public function testEditUserIsUp()
+    {
+        $this->createLoggedUser($this->dataFixtures);
+        $this->client->request("GET", $this->generateUri("security_user", [
+            "id" => $this->user->getId()
+        ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", "Compte utilisateur : " . $this->user->getFullname());
+    }
+
+    // public function testForgotPasswordIsUp()
+    // {
+    //     $this->client->request("GET", $this->generateUri("security_forgot_password"));
+
+    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    //     $this->assertSelectorTextContains("h1", "Mot de passe oublié");
+    // }
+
+    public function testReinitPasswordIsUp()
+    {
+        $this->createLoggedUser($this->dataFixtures);
+        $this->client->request("GET", $this->generateUri("security_reinit_password"));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", "Réinitialisation du mot de passe");
+    }
+
 
     // public function testAuthHomePage()
     // {
@@ -55,8 +123,10 @@ class SecurityController extends WebTestCase
     //     static::assertResponseRedirects($this->generateUri("security_login"));
     // }
 
+
     public function testFailLogin()
     {
+        $this->client = static::createClient();
         $crawler = $this->client->request("GET", $this->generateUri("security_login"));
 
         $form = $crawler->selectButton("Se connecter")->form([
@@ -75,6 +145,7 @@ class SecurityController extends WebTestCase
 
     public function testSuccessLogin()
     {
+        $this->client = static::createClient();
         $csrfToken = $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate");
 
         $this->client->request("POST", $this->generateUri("security_login"), [

@@ -33,7 +33,7 @@ class DocumentController extends AbstractController
     /**
      * Liste des documents du suivi
      * 
-     * @Route("support/{id}/documents", name="documents")
+     * @Route("support/{id}/documents", name="support_documents", methods="GET")
      * @param DocumentSearch $documentSearch
      * @param Document $document
      * @param Request $request
@@ -46,12 +46,10 @@ class DocumentController extends AbstractController
 
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
-        $documentSearch = new DocumentSearch;
+        $documentSearch = new DocumentSearch();
 
         $formSearch = $this->createForm(DocumentSearchType::class, $documentSearch);
         $formSearch->handleRequest($request);
-
-        $documents = $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $documentSearch), $request);
 
         $form = $this->createForm(DocumentType::class, new Document());
 
@@ -59,7 +57,7 @@ class DocumentController extends AbstractController
             "support" => $supportGroup,
             "form_search" => $formSearch->createView(),
             "form" => $form->createView(),
-            "documents" => $documents
+            "documents" => $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $documentSearch), $request)
         ]);
     }
 
@@ -79,8 +77,8 @@ class DocumentController extends AbstractController
 
         $document = new Document();
 
-        $form = $this->createForm(DocumentType::class, $document);
-        $form->handleRequest($request);
+        $form = ($this->createForm(DocumentType::class, $document))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createDocument($supportGroup, $form, $fileUploader, $document);
@@ -100,8 +98,8 @@ class DocumentController extends AbstractController
     {
         $this->denyAccessUnlessGranted("EDIT", $document);
 
-        $form = $this->createForm(DocumentType::class, $document);
-        $form->handleRequest($request);
+        $form = ($this->createForm(DocumentType::class, $document))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateDocument($document);

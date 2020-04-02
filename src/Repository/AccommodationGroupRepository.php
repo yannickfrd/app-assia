@@ -23,10 +23,10 @@ class AccommodationGroupRepository extends ServiceEntityRepository
     /**
      * Donne la prise en charge avec le groupe et les personnes rattachées
      *
-     * @param int $id
+     * @param integer $id // AccomodationGroup
      * @return AccommodationGroup|null
      */
-    public function findOneById($id): ?AccommodationGroup
+    public function findOneById(int $id): ?AccommodationGroup
     {
         return $this->createQueryBuilder("gpa")
             ->select("gpa")

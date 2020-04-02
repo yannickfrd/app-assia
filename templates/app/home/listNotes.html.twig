@@ -23,7 +23,7 @@
                  {% for note in notes %}
                  <tr id="note-{{ note.id }}">
                      <th scope="row" class="align-middle">
-                         <a href="{{ path('notes', {'id':note.supportGroup.id}) }}"
+                         <a href="{{ path('support_notes', {'id':note.supportGroup.id}) }}"
                              class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                              title="Voir le suivi social"><span class="fas fa-eye"></span>
                          </a>

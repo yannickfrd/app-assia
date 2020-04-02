@@ -32,26 +32,24 @@ class NoteController extends AbstractController
     /**
      * Liste des notes
      * 
-     * @Route("support/{id}/notes", name="notes")
-     * @param SupportGroup $supportGroup
+     * @Route("support/{id}/notes", name="support_notes", methods="GET")
+     * @param integer $id // SupportGroup
      * @param NoteSearch $noteSearch
      * @param Note $note
      * @param Request $request
      * @param Pagination $pagination
      * @return Response
      */
-    public function listNotes($id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
+    public function listNotes(int $id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
         $this->denyAccessUnlessGranted("VIEW", $supportGroup);
 
-        $noteSearch = new NoteSearch;
+        $noteSearch = new NoteSearch();
 
         $formSearch = $this->createForm(NoteSearchType::class, $noteSearch);
         $formSearch->handleRequest($request);
-
-        $notes =  $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request);
 
         $form = $this->createForm(NoteType::class, new Note());
 
@@ -59,7 +57,7 @@ class NoteController extends AbstractController
             "support" => $supportGroup,
             "form_search" => $formSearch->createView(),
             "form" => $form->createView(),
-            "notes" => $notes ?? null,
+            "notes" => $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request) ?? null
         ]);
     }
 
@@ -67,12 +65,12 @@ class NoteController extends AbstractController
      * Nouvelle note
      * 
      * @Route("support/{id}/note/new", name="note_new", methods="POST") *
-     * @param int $id
+     * @param int $id // SupportGroup
      * @param Note $note
      * @param Request $request
      * @return Response
      */
-    public function newNote($id, Note $note = null, Request $request): Response
+    public function newNote(int $id, Note $note = null, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
@@ -80,8 +78,8 @@ class NoteController extends AbstractController
 
         $note = new Note();
 
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
+        $form = ($this->createForm(NoteType::class, $note))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createNote($supportGroup, $note);
@@ -92,7 +90,7 @@ class NoteController extends AbstractController
     /**
      * Modification d'une note
      * 
-     * @Route("note/{id}/edit", name="note_edit")
+     * @Route("note/{id}/edit", name="note_edit", methods="POST")
      * @param Note $note
      * @param Request $request
      * @return Response
@@ -101,8 +99,8 @@ class NoteController extends AbstractController
     {
         $this->denyAccessUnlessGranted("EDIT", $note);
 
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
+        $form = ($this->createForm(NoteType::class, $note))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateNote($note, "update");
@@ -113,7 +111,7 @@ class NoteController extends AbstractController
     /**
      * Supprime la note
      * 
-     * @Route("note/{id}/delete", name="note_delete")
+     * @Route("note/{id}/delete", name="note_delete", methods="GET")
      * @param Note $note
      * @return Response
      */
@@ -203,7 +201,7 @@ class NoteController extends AbstractController
         return $this->json([
             "code" => 200,
             "alert" => "danger",
-            "msg" => "Une erreur s'est produite. Le document n'a pas pu être enregistré.",
+            "msg" => "Une erreur s'est produite. La note n'a pas pu être enregistrée.",
         ], 200);
     }
 }

@@ -50,8 +50,8 @@ class EvaluationController extends AbstractController
             return $this->createEvaluationGroup($supportGroup);
         }
 
-        $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
+            ->handleRequest($request);
 
         return $this->render("app/evaluation/evaluation.html.twig", [
             "support" => $supportGroup,
@@ -76,8 +76,8 @@ class EvaluationController extends AbstractController
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
 
-        $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateEvaluationGroup($evaluationGroup);

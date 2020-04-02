@@ -31,29 +31,27 @@ class ServiceController extends AbstractController
     /**
      * Liste des services
      * 
-     * @Route("/services", name="services")
+     * @Route("/services", name="services", methods="GET")
      * @param Request $request
      * @param ServiceSearch $serviceSearch
      * @param Pagination $pagination
      * @return Response
      */
-    public function listService(Request $request, ServiceSearch $serviceSearch = null, Pagination $pagination): Response
+    public function listServices(Request $request, ServiceSearch $serviceSearch = null, Pagination $pagination): Response
     {
         $serviceSearch = new ServiceSearch();
 
-        $form = $this->createForm(ServiceSearchType::class, $serviceSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ServiceSearchType::class, $serviceSearch))
+            ->handleRequest($request);
 
         if ($serviceSearch->getExport()) {
             return $this->exportData($serviceSearch);
         }
 
-        $services = $pagination->paginate($this->repo->findAllServicesQuery($serviceSearch), $request);
-
         return $this->render("app/service/listServices.html.twig", [
             "serviceSearch" => $serviceSearch,
             "form" => $form->createView(),
-            "services" => $services ?? null
+            "services" => $pagination->paginate($this->repo->findAllServicesQuery($serviceSearch), $request) ?? null
         ]);
     }
 
@@ -69,8 +67,8 @@ class ServiceController extends AbstractController
 
         $service = new Service();
 
-        $form = $this->createForm(ServiceType::class, $service);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ServiceType::class, $service))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createService($service);
@@ -98,8 +96,8 @@ class ServiceController extends AbstractController
 
         $this->denyAccessUnlessGranted("VIEW", $service);
 
-        $form = $this->createForm(ServiceType::class, $service);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ServiceType::class, $service))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted("EDIT", $service);

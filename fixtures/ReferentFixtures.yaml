@@ -1,13 +1,29 @@
-App\Entity\Organization:
-  organization{1..10}:
+App\Entity\referent:
+  referent1:
+    name: Référent 666
+    type: <numberBetween(1, 12)>
+    socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
+    email1: <fr_FR:email()>
+    phone1: 01 00 00 00 00
+    address : <fr_FR:address()>
+    city: <fr_FR:city()>
+    departement: <numberBetween(1, 95)>
+    comment: <sentence(6, true)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin*"
+    groupPeople: "@groupPeople1"
+
+  referent{2}:
     name: <sentence(3, true)>
     type: <numberBetween(1, 12)>
     socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
     email1: <fr_FR:email()>
-    phone1: <fr_FR:phone()>
+    phone1: 01 00 00 00 00
     address : <fr_FR:address()>
     city: <fr_FR:city()>
-    department: <numberBetween(1, 95)>
+    departement: <numberBetween(1, 95)>
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>

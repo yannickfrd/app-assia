@@ -38,7 +38,7 @@ class PersonController extends AbstractController
     /**
      * Liste des personnes
      * 
-     * @Route("/people", name="people")
+     * @Route("/people", name="people", methods="GET|POST")
      * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
      * @param Request $request
      * @param PersonSearch $personSearch
@@ -49,19 +49,17 @@ class PersonController extends AbstractController
     {
         $personSearch = new PersonSearch();
 
-        $form = $this->createForm(PersonSearchType::class, $personSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonSearchType::class, $personSearch))
+            ->handleRequest($request);
 
         if ($personSearch->getExport()) {
             return $this->exportData($personSearch);
         }
 
-        $people = $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get("search-person")), $request);
-
         return $this->render("app/person/listPeople.html.twig", [
             "personSearch" => $personSearch,
             "form" => $form->createView(),
-            "people" => $people ?? null
+            "people" => $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get("search-person")), $request) ?? null
         ]);
     }
 
@@ -79,8 +77,8 @@ class PersonController extends AbstractController
     {
         $personSearch = new PersonSearch();
 
-        $form = $this->createForm(PersonSearchType::class, $personSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonSearchType::class, $personSearch))
+            ->handleRequest($request);
 
         $formRolePerson = $this->createForm(RolePersonType::class, new RolePerson());
         $formRolePerson->handleRequest($request);
@@ -109,8 +107,8 @@ class PersonController extends AbstractController
     {
         $rolePerson = new RolePerson();
 
-        $form = $this->createForm(RolePersonGroupType::class, $rolePerson);
-        $form->handleRequest($request);
+        $form = ($this->createForm(RolePersonGroupType::class, $rolePerson))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createPerson($rolePerson);
@@ -134,8 +132,8 @@ class PersonController extends AbstractController
     {
         $rolePerson = new RolePerson();
 
-        $form = $this->createForm(PersonRolePersonType::class, $rolePerson);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonRolePersonType::class, $rolePerson))
+            ->handleRequest($request);
 
         $person = $rolePerson->getPerson();
 
@@ -170,8 +168,8 @@ class PersonController extends AbstractController
     {
         $person = $this->repo->findPersonById($person_id);
 
-        $form = $this->createForm(PersonType::class, $person);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonType::class, $person))
+            ->handleRequest($request);
 
         $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
             "action" => $this->generateUrl("person_new_group", ["id" => $person->getId()]),
@@ -202,8 +200,8 @@ class PersonController extends AbstractController
      */
     public function editPerson(Person $person, Request $request, ValidatorInterface $validator): Response
     {
-        $form = $this->createForm(PersonType::class, $person);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonType::class, $person))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updatePerson($person);
@@ -223,8 +221,8 @@ class PersonController extends AbstractController
      */
     public function personShow(Person $person, RolePerson $rolePerson = null, Request $request): Response
     {
-        $form = $this->createForm(PersonType::class, $person);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonType::class, $person))
+            ->handleRequest($request);
 
         // Formulaire pour ajouter un nouveau groupe à la personne
         $rolePerson = new RolePerson();
@@ -251,8 +249,8 @@ class PersonController extends AbstractController
     {
         $rolePerson = new RolePerson();
 
-        $form = $this->createForm(PersonNewGroupType::class, $rolePerson);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PersonNewGroupType::class, $rolePerson))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createNewGroupToPerson($person, $rolePerson);

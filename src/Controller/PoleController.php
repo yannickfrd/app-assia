@@ -26,17 +26,15 @@ class PoleController extends AbstractController
     /**
      * Liste des pôles
      * 
-     * @Route("/poles", name="poles")
+     * @Route("/poles", name="poles", methods="GET")
      * @param Request $request
      * @param Pagination $pagination
      * @return Response
      */
     public function listPole(Request $request, Pagination $pagination): Response
     {
-        $poles =  $pagination->paginate($this->repo->findAllPolesQuery(), $request);
-
         return $this->render("app/pole/listPoles.html.twig", [
-            "poles" => $poles ?? null
+            "poles" => $pagination->paginate($this->repo->findAllPolesQuery(), $request) ?? null
         ]);
     }
 
@@ -52,8 +50,8 @@ class PoleController extends AbstractController
 
         $pole = new Pole();
 
-        $form = $this->createForm(PoleType::class, $pole);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PoleType::class, $pole))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createPole($pole);
@@ -75,8 +73,8 @@ class PoleController extends AbstractController
     {
         $this->denyAccessUnlessGranted("EDIT", $pole);
 
-        $form = $this->createForm(PoleType::class, $pole);
-        $form->handleRequest($request);
+        $form = ($this->createForm(PoleType::class, $pole))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->updatePole($pole);
@@ -95,7 +93,6 @@ class PoleController extends AbstractController
      */
     protected function createPole(Pole $pole)
     {
-
         $now = new \DateTime();
 
         $pole->setCreatedAt($now)

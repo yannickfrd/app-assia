@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use App\Form\Model\RdvSearch;
+use App\Form\Model\SupportRdvSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -92,10 +93,10 @@ class RdvRepository extends ServiceEntityRepository
      * Return all rdvs of group support
      *
      * @param integer $supportGroupId
-     * @param RdvSearch $rdvSearch
+     * @param SupportRdvSearch $supportRdvSearch
      * @return Query
      */
-    public function findAllRdvsQueryFromSupport(int $supportGroupId, RdvSearch $rdvSearch): Query
+    public function findAllRdvsQueryFromSupport(int $supportGroupId, SupportRdvSearch $rdvSearch): Query
     {
         $query =  $this->createQueryBuilder("r")
             ->select("r")

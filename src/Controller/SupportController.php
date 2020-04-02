@@ -44,7 +44,7 @@ class SupportController extends AbstractController
     /**
      * Liste des suivis sociaux
      * 
-     * @Route("/supports", name="supports")
+     * @Route("/supports", name="supports", methods="GET|POST")
      * @param Request $request
      * @param SupportGroupSearch $supportGroupSearch
      * @param Pagination $pagination
@@ -54,8 +54,8 @@ class SupportController extends AbstractController
     {
         $supportGroupSearch = new SupportGroupSearch();
 
-        $form = $this->createForm(SupportGroupSearchType::class, $supportGroupSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(SupportGroupSearchType::class, $supportGroupSearch))
+            ->handleRequest($request);
 
         if ($supportGroupSearch->getExport()) {
             return $this->exportData($supportGroupSearch);
@@ -86,8 +86,8 @@ class SupportController extends AbstractController
             ->setStartDate(new \DateTime())
             ->setReferent($this->getUser());
 
-        $form = $this->createForm(SupportGroupType::class, $supportGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
@@ -117,8 +117,8 @@ class SupportController extends AbstractController
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
-        $form = $this->createForm(SupportGroupType::class, $supportGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->updateSupportGroup($supportGroup);
@@ -167,8 +167,8 @@ class SupportController extends AbstractController
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
-        $form = $this->createForm(SupportGroupWithPeopleType::class, $supportGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(SupportGroupWithPeopleType::class, $supportGroup))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -282,7 +282,7 @@ class SupportController extends AbstractController
     /**
      * Export des données
      * 
-     * @Route("export", name="export")
+     * @Route("export", name="export", methods="GET")
      * @param Request $request
      * @param Export $export
      * @param SupportPersonFullExport $exportSupport
@@ -294,8 +294,8 @@ class SupportController extends AbstractController
 
         $export = new Export();
 
-        $form = $this->createForm(ExportType::class, $export);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ExportType::class, $export))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $supports = $this->repoSupportPerson->findSupportsFullToExport($export);

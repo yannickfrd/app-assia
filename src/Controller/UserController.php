@@ -34,19 +34,17 @@ class UserController extends AbstractController
     {
         $userSearch = new UserSearch();
 
-        $form = $this->createForm(UserSearchType::class, $userSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(UserSearchType::class, $userSearch))
+            ->handleRequest($request);
 
         if ($userSearch->getExport()) {
             return $this->exportData($userSearch);
         }
 
-        $users = $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request);
-
         return $this->render("app/user/listUsers.html.twig", [
             "userSearch" => $userSearch,
             "form" => $form->createView(),
-            "users" => $users ?? null
+            "users" => $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request) ?? null
         ]);
     }
 
@@ -65,19 +63,17 @@ class UserController extends AbstractController
 
         $userSearch = new UserSearch();
 
-        $form = $this->createForm(UserSearchType::class, $userSearch);
-        $form->handleRequest($request);
+        $form = ($this->createForm(UserSearchType::class, $userSearch))
+            ->handleRequest($request);
 
         if ($userSearch->getExport()) {
             return $this->exportData($userSearch);
         }
 
-        $users = $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request);
-
         return $this->render("app/user/adminListUsers.html.twig", [
             "userSearch" => $userSearch,
             "form" => $form->createView(),
-            "users" => $users
+            "users" => $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request)
         ]);
     }
 

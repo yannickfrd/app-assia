@@ -88,10 +88,10 @@
 				<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span></a>
 			</div>
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a href="{{ path('notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
+				<a href="{{ path('support_notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
 			</div>
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a href="{{ path('documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span></a>
+				<a href="{{ path('support_documents', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-block shadow" data-placement="bottom" title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span></a>
 			</div>
 		</div>
 	{% endif %}

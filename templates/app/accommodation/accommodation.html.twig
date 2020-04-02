@@ -4,15 +4,14 @@
 
 {% set accommodation = form.vars.value %}
 
-{% block title %}{% if edit_mode %}{{ accommodation.name }}{% else %}Création d'un groupe de places{% endif %} |
+{% block title %}{% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %} |
 Esperer95.app{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{{ accommodation.service.name }} : {% if edit_mode %}{{ accommodation.name }}{% else %}création
-        d'un groupe de places{% endif %}</h1>
+    <h1 class="h2 mb-3">{{ accommodation.service.name }} : {% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{accommodation.createdAt | date("d/m/Y à H:i") }}

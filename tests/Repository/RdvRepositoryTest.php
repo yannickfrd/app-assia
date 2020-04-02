@@ -2,10 +2,11 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\User;
 use App\Entity\Rdv;
+use App\Entity\User;
 use App\Entity\SupportGroup;
 use App\Form\Model\RdvSearch;
+use App\Form\Model\SupportRdvSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -28,6 +29,9 @@ class RdvRepositoryTest extends WebTestCase
     /** @var RdvSearch */
     protected $rdvSearch;
 
+    /** @var SupportRdvSearch */
+    protected $supportRdvSearch;
+
 
     protected function setUp()
     {
@@ -46,11 +50,17 @@ class RdvRepositoryTest extends WebTestCase
 
         $this->supportGroup = $dataFixtures["supportGroup"];
         $this->user = $dataFixtures["userSuperAdmin"];
+
         $this->rdvSearch = (new RdvSearch())
             ->setTitle("Rdv 666")
             ->setStartDate(new \DateTime("2020-01-01"))
             ->setEndDate(new \DateTime())
             ->setReferent("Romain");
+
+        $this->supportRdvSearch = (new SupportRdvSearch())
+            ->setTitle("Rdv 666")
+            ->setStartDate(new \DateTime("2020-01-01"))
+            ->setEndDate(new \DateTime());
     }
 
     public function testCount()
@@ -73,13 +83,13 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryFromSupportWithoutFilters()
     {
-        $query = $this->repo->findAllRdvsQueryFromSupport($this->supportGroup->getId(), new RdvSearch());
+        $query = $this->repo->findAllRdvsQueryFromSupport($this->supportGroup->getId(), new SupportRdvSearch());
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindAllRdvsQueryFromSupportWithFilters()
     {
-        $query = $this->repo->findAllRdvsQueryFromSupport($this->supportGroup->getId(), $this->rdvSearch);
+        $query = $this->repo->findAllRdvsQueryFromSupport($this->supportGroup->getId(), $this->supportRdvSearch);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 

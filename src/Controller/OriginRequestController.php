@@ -30,12 +30,12 @@ class OriginRequestController extends AbstractController
      * Modification de la pré-admission
      * 
      * @Route("/support/{id}/originRequest", name="support_originRequest", methods="GET|POST")
-     * @param int $id
+     * @param integer $id //SupportGroup
      * @param Request $request
      * @return Response
      */
 
-    public function editOriginRequest($id, Request $request): Response
+    public function editOriginRequest(int $id, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
@@ -48,8 +48,8 @@ class OriginRequestController extends AbstractController
             $originRequest->setSupportGroup($supportGroup);
         }
 
-        $form = $this->createForm(OriginRequestType::class, $originRequest);
-        $form->handleRequest($request);
+        $form = ($this->createForm(OriginRequestType::class, $originRequest))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->updateOriginRequest($originRequest);

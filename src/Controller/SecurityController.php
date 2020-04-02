@@ -39,7 +39,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/admin/registration", name="security_registration") 
+     * @Route("/admin/registration", name="security_registration", methods="GET|POST") 
      *
      * @param Request $request
      * @return Response
@@ -48,8 +48,8 @@ class SecurityController extends AbstractController
     {
         $user = new User();
 
-        $form = $this->createForm(RegistrationType::class, $user);
-        $form->handleRequest($request);
+        $form = ($this->createForm(RegistrationType::class, $user))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (count($user->getServiceUser()) > 0) {
@@ -57,14 +57,13 @@ class SecurityController extends AbstractController
             }
             $this->addFlash("danger", "Veuillez rattacher l'utilisateur à au moins un service.");
         }
-
         return $this->render("app/security/registration.html.twig", [
             "form" => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/login", name="security_login")
+     * @Route("/login", name="security_login", methods="GET|POST") 
      *
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
@@ -94,7 +93,7 @@ class SecurityController extends AbstractController
     /**
      * Création du mot de passe par l'utilisateur à sa première connexion
      * 
-     * @Route("/login/after_login", name="security_after_login")
+     * @Route("/login/after_login", name="security_after_login", methods="GET") 
      * @return Response
      */
     public function afterLogin(): Response
@@ -110,7 +109,7 @@ class SecurityController extends AbstractController
     /**
      * Création du mot de passe par l'utilisateur à sa première connexion
      * 
-     * @Route("/login/init_password", name="security_init_password")
+     * @Route("/login/init_password", name="security_init_password", methods="GET|POST") 
      * @param Request $request
      * @param UserResetPassword $user
      * @return Response
@@ -119,8 +118,8 @@ class SecurityController extends AbstractController
     {
         $userInitPassword = new UserInitPassword();
 
-        $form = $this->createForm(InitPasswordType::class, $userInitPassword);
-        $form->handleRequest($request);
+        $form = ($this->createForm(InitPasswordType::class, $userInitPassword))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updatePassword($userInitPassword->getPassword());
@@ -145,8 +144,8 @@ class SecurityController extends AbstractController
             ->setPhone($this->getUser()->getPhone())
             ->setPhone2($this->getUser()->getPhone2());
 
-        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo);
-        $form->handleRequest($request);
+        $form = ($this->createForm(UserChangeInfoType::class, $userChangeInfo))
+            ->handleRequest($request);
 
         $userChangePassword = new UserChangePassword();
 
@@ -173,12 +172,12 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/{id}", name="security_user") 
+     * @Route("/admin/user/{id}", name="security_user", methods="GET|POST") 
      */
     public function editUser(User $user, Request $request)
     {
-        $form = $this->createForm(SecurityUserType::class, $user);
-        $form->handleRequest($request);
+        $form = ($this->createForm(SecurityUserType::class, $user))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -197,7 +196,7 @@ class SecurityController extends AbstractController
     /**
      * Page dans le cas d'un mot de passe oublié
      * 
-     * @Route("/login/forgot_password", name="security_forgot_password")
+     * @Route("/login/forgot_password", name="security_forgot_password", methods="GET|POST") 
      * @param Request $request
      * @param UserResetPassword $userResetPassword
      * @param MailNotification $notification
@@ -207,8 +206,8 @@ class SecurityController extends AbstractController
     {
         $userResetPassword = new UserResetPassword();
 
-        $form = $this->createForm(ForgotPasswordType::class, $userResetPassword);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ForgotPasswordType::class, $userResetPassword))
+            ->handleRequest($request);
 
         if ($form->isSubmitted()) {
             // Vérifie si l'utilisateur existe
@@ -226,7 +225,7 @@ class SecurityController extends AbstractController
     /**
      * Réinitialise le mot de passe de l'utilisateur
      * 
-     * @Route("/login/reinit_password", name="security_reinit_password")
+     * @Route("/login/reinit_password", name="security_reinit_password", methods="GET|POST") 
      * @param Request $request
      * @param UserResetPassword $user
      * @return Response
@@ -235,8 +234,8 @@ class SecurityController extends AbstractController
     {
         $userResetPassword = new UserResetPassword();
 
-        $form = $this->createForm(ReinitPasswordType::class, $userResetPassword);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ReinitPasswordType::class, $userResetPassword))
+            ->handleRequest($request);
 
         // Vérifie si l'utilisateur existe avec le même token
         $user = $this->userWithTokenExists($userResetPassword, $request->get("token"));

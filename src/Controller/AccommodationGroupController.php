@@ -32,7 +32,7 @@ class AccommodationGroupController extends AbstractController
     /**
      * Liste des hébergements du suivi social
      * 
-     * @Route("support/{id}/accommodations", name="support_accommodations")
+     * @Route("support/{id}/accommodations", name="support_accommodations", methods="GET")
      * @param int $id
      * @param SupportGroupRepository $supportRepo
      * @return Response
@@ -69,23 +69,19 @@ class AccommodationGroupController extends AbstractController
             foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
                 if ($accommodationGroup->getEndDate() == null) {
                     $this->addFlash("warning", "Attention, une autre prise en charge est déjà en cours pour ce suivi.");
-                    // return $this->redirectToRoute("support_accommodation_edit", [
-                    //     "id" => $accommodationGroup->getId()
-                    // ]);
                 }
             }
         }
 
-        $accommodationGroup = new AccommodationGroup();
-        $accommodationGroup->setSupportGroup($supportGroup)
+        $accommodationGroup = (new AccommodationGroup())
+            ->setSupportGroup($supportGroup)
             ->setStartDate($supportGroup->getStartDate())
             ->setEndDate($supportGroup->getEndDate());
 
-        $form = $this->createForm(AccommodationGroupType::class, $accommodationGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(AccommodationGroupType::class, $accommodationGroup))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->createAccommodationGroup($accommodationGroup);
         }
         return $this->render("app/accommodation/accommodationGroup.html.twig", [
@@ -99,22 +95,21 @@ class AccommodationGroupController extends AbstractController
      * Modification d'un hébergement 
      * 
      * @Route("/support/accommodation_group/{id}", name="support_accommodation_edit", methods="GET|POST")
-     * @param int $id
+     * @param int $id // AccommodationGroup
      * @param Request $request
      * @return Response
      */
-    public function editAccommodationGroup($id, Request $request, SupportGroupRepository $repoSupport): Response
+    public function editAccommodationGroup(int $id, Request $request, SupportGroupRepository $repoSupport): Response
     {
         $accommodationGroup = $this->repo->findOneById($id);
         $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup());
 
         $this->denyAccessUnlessGranted("EDIT", $supportGroup);
 
-        $form = $this->createForm(AccommodationGroupType::class, $accommodationGroup);
-        $form->handleRequest($request);
+        $form = ($this->createForm(AccommodationGroupType::class, $accommodationGroup))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->updateAccommodationGroup($accommodationGroup);
         }
         return $this->render("app/accommodation/accommodationGroup.html.twig", [
@@ -127,11 +122,11 @@ class AccommodationGroupController extends AbstractController
     /**
      * Ajout de personnes à la prise en charge
      * 
-     * @Route("/support/group_people_accommodation/{id}/add_people", name="support_group_people_accommodation_add_people", methods="GET|POST")
-     * @param int $id
+     * @Route("/support/group_people_accommodation/{id}/add_people", name="support_group_people_accommodation_add_people", methods="GET")
+     * @param integer $id // AccommodationGroup
      * @return Response
      */
-    public function addPeopleInAccommodation($id): Response
+    public function addPeopleInAccommodation(int $id): Response
     {
         $accommodationGroup = $this->repo->findOneById($id);
 
@@ -149,11 +144,11 @@ class AccommodationGroupController extends AbstractController
     /**
      * Supprime la prise en charge du groupe
      * 
-     * @Route("support/group-people-accommodation/{id}/delete", name="support_group_people_accommodation_delete")
-     * @param int $id
+     * @Route("support/group-people-accommodation/{id}/delete", name="support_group_people_accommodation_delete", methods="GET")
+     * @param integer $id // AccommodationGroup
      * @return Response
      */
-    public function deleteAccommodationGroup($id): Response
+    public function deleteAccommodationGroup(int $id): Response
     {
         $accommodationGroup = $this->repo->findOneById($id);
 
@@ -164,7 +159,7 @@ class AccommodationGroupController extends AbstractController
         $this->manager->remove($accommodationGroup);
         $this->manager->flush();
 
-        $this->addFlash("danger", "La prise en charge a été supprimé.");
+        $this->addFlash("warning", "La prise en charge a été supprimé.");
 
         return $this->redirectToRoute("support_accommodations", ["id" => $supportGroup->getId()]);
     }
@@ -172,12 +167,12 @@ class AccommodationGroupController extends AbstractController
     /**
      * Supprime la prise en charge d'une personne
      * 
-     * @Route("support/person-accommodation/{id}/delete", name="support_person_accommodation_delete")
-     * @param int $id
+     * @Route("support/person-accommodation/{id}/delete", name="support_person_accommodation_delete", methods="GET")
+     * @param int $id // AccomodationPerson
      * @param AccommodationPersonRepository $repo
      * @return Response
      */
-    public function deleteAccommodationPerson($id, AccommodationPersonRepository $repo): Response
+    public function deleteAccommodationPerson(int $id, AccommodationPersonRepository $repo): Response
     {
         $accommodationPerson = $repo->findOneById($id);
 
@@ -186,14 +181,20 @@ class AccommodationGroupController extends AbstractController
         $this->manager->remove($accommodationPerson);
         $this->manager->flush();
 
-        $this->addFlash("danger", $accommodationPerson->getPerson()->getFullname() . " a été retiré de la prise en charge.");
+        $this->addFlash("warning", $accommodationPerson->getPerson()->getFullname() . " a été retiré de la prise en charge.");
 
         return $this->redirectToRoute("support_accommodation_edit", [
             "id" => $accommodationPerson->getAccommodationGroup()->getId()
         ]);
     }
 
-    protected function createAccommodationGroup(AccommodationGroup $accommodationGroup)
+    /**
+     * Crée la prise en charge du groupe
+     *
+     * @param AccommodationGroup $accommodationGroup
+     * @return Response
+     */
+    protected function createAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
         $now = new \DateTime();
 
@@ -216,7 +217,13 @@ class AccommodationGroupController extends AbstractController
         ]);
     }
 
-    protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup)
+    /**
+     * Met à jour la prise en charge du groupe
+     *
+     * @param AccommodationGroup $accommodationGroup
+     * @return Response
+     */
+    protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
         $now = new \DateTime();
 

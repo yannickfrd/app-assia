@@ -4,12 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Referent;
 use App\Entity\GroupPeople;
-use App\Form\Model\ReferentSearch;
-use App\Form\Referent\ReferentSearchType;
 use App\Form\Referent\ReferentType;
 use App\Repository\ReferentRepository;
 use App\Repository\GroupPeopleRepository;
-use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,53 +27,22 @@ class ReferentController extends AbstractController
     }
 
     /**
-     * Liste des services référents du groupe de personnes
-     * 
-     * @Route("group/{id}/referents", name="referents")
-     * @param ReferentSearch $referentSearch
-     * @param Referent $referent
-     * @param Request $request
-     * @param Pagination $pagination
-     * @return Response
-     */
-    public function listReferents($id, ReferentSearch $referentSearch = null, Request $request, Pagination $pagination): Response
-    {
-        $groupPeople = $this->repoGroupPeople->findGroupPeopleById($id);
-
-        $referentSearch = new ReferentSearch;
-
-        $formSearch = $this->createForm(ReferentSearchType::class, $referentSearch);
-        $formSearch->handleRequest($request);
-
-        $referents = $pagination->paginate($this->repo->findAllReferentsQuery($groupPeople->getId(), $referentSearch), $request);
-
-        $form = $this->createForm(ReferentType::class, new Referent());
-
-        return $this->render("app/referent/listReferents.html.twig", [
-            "group_people" => $groupPeople,
-            "form_search" => $formSearch->createView(),
-            "form" => $form->createView(),
-            "referents" => $referents
-        ]);
-    }
-
-    /**
      * Nouveau service référent
      * 
      * @Route("group/{id}/referent/new", name="referent_new", methods="GET|POST")
-     * @param int $id
+     * @param integer $id //GroupPeople
      * @param Referent $referent
      * @param Request $request
      * @return Response
      */
-    public function newReferent($id, Referent $referent = null, Request $request): Response
+    public function newReferent(int $id, Referent $referent = null, Request $request): Response
     {
         $groupPeople = $this->repoGroupPeople->findGroupPeopleById($id);
 
         $referent = new Referent();
 
-        $form = $this->createForm(ReferentType::class, $referent);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ReferentType::class, $referent))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createReferent($groupPeople, $referent);
@@ -98,8 +64,8 @@ class ReferentController extends AbstractController
      */
     public function editReferent(Referent $referent, Request $request): Response
     {
-        $form = $this->createForm(ReferentType::class, $referent);
-        $form->handleRequest($request);
+        $form = ($this->createForm(ReferentType::class, $referent))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateReferent($referent);

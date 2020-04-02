@@ -26,7 +26,7 @@ class DeviceController extends AbstractController
     /**
      * Affiche la liste des dispositifs
      * 
-     * @Route("/admin/devices", name="admin_devices")
+     * @Route("/admin/devices", name="admin_devices", methods="GET")
      * @param Request $request
      * @param Pagination $pagination
      * @return Response
@@ -35,10 +35,8 @@ class DeviceController extends AbstractController
     {
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
-        $devices = $pagination->paginate($this->repo->findAllDevicesQuery(), $request);
-
         return $this->render("app/device/listDevices.html.twig", [
-            "devices" => $devices ?? null
+            "devices" => $pagination->paginate($this->repo->findAllDevicesQuery(), $request) ?? null
         ]);
     }
 
@@ -56,8 +54,8 @@ class DeviceController extends AbstractController
 
         $device = new Device();
 
-        $form = $this->createForm(DeviceType::class, $device);
-        $form->handleRequest($request);
+        $form = ($this->createForm(DeviceType::class, $device))
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createDevice($device);
@@ -66,6 +64,33 @@ class DeviceController extends AbstractController
         return $this->render("app/device/device.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
+        ]);
+    }
+
+    /**
+     * Modification d'un dispositif
+     * 
+     * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
+     * @param Device $device
+     * @param Request $request
+     * @return Response
+     */
+    public function editDevice(Device $device, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+
+        $form = ($this->createForm(DeviceType::class, $device))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->updateDevice($device);
+        }
+
+        $this->addFlash("success", "Le dispositif a été mis à jour.");
+
+        return $this->render("app/device/device.html.twig", [
+            "form" => $form->createView(),
+            "edit_mode" => true
         ]);
     }
 
@@ -89,33 +114,6 @@ class DeviceController extends AbstractController
         $this->addFlash("success", "Le dispositif a été créé.");
 
         return $this->redirectToRoute("admin_devices");
-    }
-
-    /**
-     * Modification d'un dispositif
-     * 
-     * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
-     * @param Device $device
-     * @param Request $request
-     * @return Response
-     */
-    public function editDevice(Device $device, Request $request): Response
-    {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
-        $form = $this->createForm(DeviceType::class, $device);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateDevice($device);
-        }
-
-        $this->addFlash("success", "Le dispositif a été mis à jour.");
-
-        return $this->render("app/device/device.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
-        ]);
     }
 
     /**
