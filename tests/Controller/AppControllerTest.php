@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -10,36 +10,47 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class AppControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
+
+    /** @var KernelBrowser */
+    protected $client;
+
+    /** @var array */
+    protected $dataFixtures;
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $this->dataFixtures = $this->loadFixtureFiles([
             dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
-        $this->createLoggedUser($dataFixtures);
+        $this->client = static::createClient();
+        $this->client->followRedirects(true);
     }
 
     public function testHomepageIsUp()
     {
         $this->client->request("GET", "/");
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains("h1", "Merci de vous connecter");
     }
 
     public function testAccessHomePage()
     {
-        $csrfToken = $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate");
-
         $this->client->request("POST", $this->generateUri("security_login"), [
             "_username" => "r.madelaine",
             "_password" => "Test123*",
-            "_csrf_token" => $csrfToken
+            "_csrf_token" => $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate")
         ]);
 
-        $this->client->followRedirects(true);
-        $this->client->followRedirect();
-
         $this->assertSelectorExists(".alert.alert-success");
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

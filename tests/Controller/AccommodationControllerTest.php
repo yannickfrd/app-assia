@@ -5,7 +5,7 @@ namespace App\Tests\Controller;
 use App\Entity\Service;
 use App\Entity\Accommodation;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class AccommodationControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -34,7 +34,7 @@ class AccommodationControllerTest extends WebTestCase
             dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml"
         ]);
 
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
 
         $this->service = $this->dataFixtures["service"];
         $this->accommodation = $this->dataFixtures["accommodation1"];
@@ -78,5 +78,12 @@ class AccommodationControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", $this->accommodation->getService()->getName());
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

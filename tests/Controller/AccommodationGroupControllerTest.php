@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\AccommodationGroup;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class AccommodationGroupControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -33,7 +33,7 @@ class AccommodationGroupControllerTest extends WebTestCase
             dirname(__DIR__) . "/DataFixturesTest/AccommodationGroupFixturesTest.yaml",
         ]);
 
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
 
         $this->supportGroup = $this->dataFixtures["supportGroup1"];
         $this->accommodationGroup = $this->dataFixtures["accomGroup1"];
@@ -72,7 +72,7 @@ class AccommodationGroupControllerTest extends WebTestCase
 
     public function testAddPeopleInAccommodation()
     {
-        $this->client->request("POST", $this->generateUri("support_group_people_accommodation_add_people", [
+        $this->client->request("GET", $this->generateUri("support_group_people_accommodation_add_people", [
             "id" => $this->accommodationGroup->getId()
         ]));
 
@@ -105,5 +105,12 @@ class AccommodationGroupControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Logement/hébergement");
         $this->assertSelectorExists(".alert.alert-warning");
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

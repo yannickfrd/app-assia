@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\GroupPeople;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class GroupPeopleControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -31,7 +31,7 @@ class GroupPeopleControllerTest extends WebTestCase
             dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml"
         ]);
 
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
 
         $this->groupPeople = $this->dataFixtures["groupPeople1"];
     }
@@ -91,5 +91,12 @@ class GroupPeopleControllerTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertSame(403, $data["code"]);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

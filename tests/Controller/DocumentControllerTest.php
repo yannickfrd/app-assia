@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Document;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class DocumentControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -33,7 +33,7 @@ class DocumentControllerTest extends WebTestCase
             dirname(__DIR__) . "/DataFixturesTest/DocumentFixturesTest.yaml",
         ]);
 
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
 
         $this->supportGroup = $this->dataFixtures["supportGroup"];
         $this->document = $this->dataFixtures["document1"];
@@ -81,5 +81,12 @@ class DocumentControllerTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertSame("delete", $data["action"]);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

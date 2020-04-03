@@ -189,7 +189,7 @@ class SecurityController extends AbstractController
             $this->addFlash("success", "Le compte utilisateur a été mis à jour.");
         }
         return $this->render("app/security/securityUser.html.twig", [
-            "form" => $form->createView(),
+            "form" => $form->createView()
         ]);
     }
 

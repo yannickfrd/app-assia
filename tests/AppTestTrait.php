@@ -1,25 +1,23 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests;
 
+use App\Entity\User;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-trait ControllerTestTrait
+trait AppTestTrait
 {
     /** @var KernelBrowser */
     protected $client;
 
-    protected function createLoggedUser($dataFixtures)
+    protected function createLogin(User $user)
     {
         $this->client = static::createClient();
 
-        /** @var User */
-        $userSuperAdmin = $dataFixtures["userSuperAdmin"];
-
         $session  = $this->client->getContainer()->get("session");
-        $token = new UsernamePasswordToken($userSuperAdmin, null, "main", $userSuperAdmin->getRoles());
+        $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
         $session->set("security_main", serialize($token));
         $session->save();
 

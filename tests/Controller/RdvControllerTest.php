@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Rdv;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class RdvControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -33,7 +33,7 @@ class RdvControllerTest extends WebTestCase
             dirname(__DIR__) . "/DataFixturesTest/RdvFixturesTest.yaml",
         ]);
 
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
 
         $this->supportGroup = $this->dataFixtures["supportGroup"];
         $this->rdv = $this->dataFixtures["rdv1"];
@@ -137,5 +137,12 @@ class RdvControllerTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertSame("delete", $data["action"]);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

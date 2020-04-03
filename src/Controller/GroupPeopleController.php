@@ -224,7 +224,7 @@ class GroupPeopleController extends AbstractController
         if ($rolePerson->getHead()) {
             return $this->json([
                 "code" => null,
-                "msg" => "Le/la demandeur/euse principal·e ne peut pas être retiré du groupe.",
+                "msg" => "Le/la demandeur/euse principal·e ne peut pas être retiré·e du groupe.",
                 "data" => null
             ], 200);
         }

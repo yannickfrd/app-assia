@@ -16,7 +16,7 @@ App\Entity\Person:
     lastname: <lastName()>
     birthdate: <dateTimeBetween("-55 years", "now")>
     email: <mb_strtolower($firstname)>.<mb_strtolower($lastname)>\@gmail.com
-    phone1: 00 00 00 00 00
+    phone1: 06 00 00 00 00
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userSuperAdmin"

@@ -73,26 +73,22 @@ class PersonController extends AbstractController
      * @param Pagination $pagination
      * @return Response
      */
-    public function searchPersonToAdd(GroupPeople $groupPeople, PersonSearch $personSearch = null, Request $request, Pagination $pagination): Response
+    public function addPersonInGroup(GroupPeople $groupPeople, PersonSearch $personSearch = null, Request $request, Pagination $pagination): Response
     {
         $personSearch = new PersonSearch();
 
         $form = ($this->createForm(PersonSearchType::class, $personSearch))
             ->handleRequest($request);
 
-        $formRolePerson = $this->createForm(RolePersonType::class, new RolePerson());
-        $formRolePerson->handleRequest($request);
-
-        if ($request->query->all()) {
-            $people = $pagination->paginate($this->repo->findAllPeopleQuery($personSearch), $request);
-        }
+        $formRolePerson = ($this->createForm(RolePersonType::class, new RolePerson()))
+            ->handleRequest($request);
 
         return $this->render("app/person/listPeople.html.twig", [
             "form" => $form->createView(),
             "form_role_person" => $formRolePerson->createView() ?? null,
             "group_people" => $groupPeople,
             "personSearch" => $personSearch,
-            "people" => $people ?? null
+            "people" => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($personSearch), $request) : null
         ]);
     }
 
@@ -113,6 +109,10 @@ class PersonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createPerson($rolePerson);
         }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash("danger", "Attention, une erreur s'est produite.");
+        }
+
         return $this->render("app/person/person.html.twig", [
             "form" => $form->createView(),
             "edit_mode" => false
@@ -146,6 +146,9 @@ class PersonController extends AbstractController
             }
             $this->createPersonInGroup($person, $rolePerson, $groupPeople);
             return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+        }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash("danger", "Attention, une erreur s'est produite.");
         }
         return $this->render("app/person/person.html.twig", [
             "group_people" => $groupPeople,
@@ -190,26 +193,6 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Met à jour les informations d'une personne via Ajax
-     * 
-     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
-     * @param Person $person
-     * @param Request $request
-     * @param ValidatorInterface $validator
-     * @return Response
-     */
-    public function editPerson(Person $person, Request $request, ValidatorInterface $validator): Response
-    {
-        $form = ($this->createForm(PersonType::class, $person))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updatePerson($person);
-        }
-        return $this->errorMessage($validator, $form);
-    }
-
-    /**
      * Voir la fiche individuelle
      * 
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
@@ -235,6 +218,27 @@ class PersonController extends AbstractController
             "form_new_group" => $formNewGroup->createView(),
             "edit_mode" => true
         ]);
+    }
+
+
+    /**
+     * Met à jour les informations d'une personne via Ajax
+     * 
+     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
+     * @param Person $person
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @return Response
+     */
+    public function editPerson(Person $person, Request $request, ValidatorInterface $validator): Response
+    {
+        $form = ($this->createForm(PersonType::class, $person))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->updatePerson($person);
+        }
+        return $this->errorMessage($validator, $form);
     }
 
     /**
@@ -268,12 +272,12 @@ class PersonController extends AbstractController
      */
     public function deletePerson(Person $person): Response
     {
-        // $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
         $this->manager->remove($person);
         $this->manager->flush();
 
-        $this->addFlash("danger", "Le personne a été supprimée.");
+        $this->addFlash("warning", "La personne a été supprimée.");
 
         return $this->redirectToRoute("people");
     }
@@ -367,6 +371,7 @@ class PersonController extends AbstractController
      * Vérifie si la personne existe déjà
      * 
      * @param Person $person
+     * @return Person|null
      */
     protected function personExists(Person $person)
     {

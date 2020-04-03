@@ -3,7 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class SecurityController extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -44,7 +44,7 @@ class SecurityController extends WebTestCase
 
     public function testRegistrationIsUp()
     {
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
         $this->client->request("GET", $this->generateUri("security_registration"));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -53,7 +53,7 @@ class SecurityController extends WebTestCase
 
     public function testAfterLoginIsUp()
     {
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
         $this->client->request("GET", $this->generateUri("security_after_login"));
 
         $this->client->followRedirect();
@@ -64,7 +64,7 @@ class SecurityController extends WebTestCase
 
     public function testInitPasswordIsUp()
     {
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
         $this->client->request("GET", $this->generateUri("security_init_password"));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -73,7 +73,7 @@ class SecurityController extends WebTestCase
 
     public function testShowCurrentUserIsUp()
     {
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
         $this->client->request("GET", $this->generateUri("my_profile"));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -82,7 +82,8 @@ class SecurityController extends WebTestCase
 
     public function testEditUserIsUp()
     {
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
+
         $this->client->request("GET", $this->generateUri("security_user", [
             "id" => $this->user->getId()
         ]));
@@ -101,7 +102,7 @@ class SecurityController extends WebTestCase
 
     public function testReinitPasswordIsUp()
     {
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
         $this->client->request("GET", $this->generateUri("security_reinit_password"));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -158,5 +159,12 @@ class SecurityController extends WebTestCase
         $this->client->followRedirect();
 
         static::assertSelectorExists(".alert.alert-success");
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }

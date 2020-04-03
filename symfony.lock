@@ -201,6 +201,9 @@
     "php": {
         "version": "7.3"
     },
+    "php-webdriver/webdriver": {
+        "version": "1.8.2"
+    },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
     },
@@ -432,6 +435,9 @@
     },
     "symfony/orm-pack": {
         "version": "v1.0.6"
+    },
+    "symfony/panther": {
+        "version": "v0.7.1"
     },
     "symfony/phpunit-bridge": {
         "version": "4.3",

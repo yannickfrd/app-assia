@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\User;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Tests\Controller\ControllerTestTrait;
+use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class UserControllerTest extends WebTestCase
 {
     use FixturesTrait;
-    use ControllerTestTrait;
+    use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
@@ -30,7 +30,7 @@ class UserControllerTest extends WebTestCase
             dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
         ]);
 
-        $this->createLoggedUser($this->dataFixtures);
+        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
 
         $this->user = $this->dataFixtures["userRoleUser"];
     }
@@ -72,5 +72,12 @@ class UserControllerTest extends WebTestCase
         $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertNotTrue($result["response"]);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
     }
 }
