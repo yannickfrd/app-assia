@@ -101,8 +101,8 @@ class UserTest extends WebTestCase
         $this->assertHasErrors($user, 1);
     }
 
-    // protected function tearDown()
-    // {
-    //     $this->user = null;
-    // }
+    protected function tearDown(): void
+    {
+        $this->user = null;
+    }
 }

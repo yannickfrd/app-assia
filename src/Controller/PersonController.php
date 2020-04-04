@@ -59,7 +59,7 @@ class PersonController extends AbstractController
         return $this->render("app/person/listPeople.html.twig", [
             "personSearch" => $personSearch,
             "form" => $form->createView(),
-            "people" => $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get("search-person")), $request) ?? null
+            "people" => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get("search-person")), $request) : null
         ]);
     }
 

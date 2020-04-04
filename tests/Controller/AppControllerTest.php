@@ -47,10 +47,10 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorExists(".alert.alert-success");
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->client = null;
-    //     $this->dataFixtures = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
+    }
 }

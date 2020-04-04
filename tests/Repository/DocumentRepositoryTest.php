@@ -89,14 +89,14 @@ class DocumentRepositoryTest extends WebTestCase
         $this->assertGreaterThan(200000 * 5, $this->repo->sumSizeAllDocuments());
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->entityManager->close();
-    //     $this->entityManager = null;
-    //     $this->repo = null;
-    //     $this->supportGroup = null;
-    //     $this->user = null;
-    //     $this->documentSearch = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
+        $this->repo = null;
+        $this->supportGroup = null;
+        $this->user = null;
+        $this->documentSearch = null;
+    }
 }

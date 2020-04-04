@@ -94,15 +94,15 @@ class ServiceRepositoryTest extends WebTestCase
         $this->assertNotNull($this->repo->getFullService($this->service->getId()));
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->entityManager->close();
-    //     $this->entityManager = null;
-    //     $this->repo = null;
-    //     $this->service = null;
-    //     $this->pole = null;
-    //     $this->user = null;
-    //     $this->serviceSearch = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
+        $this->repo = null;
+        $this->service = null;
+        $this->pole = null;
+        $this->user = null;
+        $this->serviceSearch = null;
+    }
 }

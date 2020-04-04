@@ -96,11 +96,11 @@ class AccommodationTest extends WebTestCase
         $this->assertHasErrors($accommodation, 1);
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->entityManager->close();
-    //     $this->entityManager = null;
-    //     $this->service = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
+        $this->service = null;
+    }
 }

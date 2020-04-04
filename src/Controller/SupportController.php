@@ -282,7 +282,7 @@ class SupportController extends AbstractController
     /**
      * Export des données
      * 
-     * @Route("export", name="export", methods="GET")
+     * @Route("export", name="export", methods="GET|POST")
      * @param Request $request
      * @param Export $export
      * @param SupportPersonFullExport $exportSupport

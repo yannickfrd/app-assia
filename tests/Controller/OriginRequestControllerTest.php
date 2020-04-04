@@ -45,10 +45,10 @@ class OriginRequestControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", "Origine de la demande");
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->client = null;
-    //     $this->dataFixtures = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
+    }
 }

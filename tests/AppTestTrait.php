@@ -12,9 +12,19 @@ trait AppTestTrait
     /** @var KernelBrowser */
     protected $client;
 
-    protected function createLogin(User $user)
+    /**
+     * Crée une connexion
+     *
+     * @param User $user
+     * @param boolean $followRedirects
+     * @return void
+     */
+    protected function createLogin(User $user, $followRedirects = true)
     {
+        /** @var KernelBrowser */
         $this->client = static::createClient();
+
+        $followRedirects ? $this->client->followRedirects() : null;
 
         $session  = $this->client->getContainer()->get("session");
         $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
@@ -31,6 +41,23 @@ trait AppTestTrait
         ]);
     }
 
+    protected function createPantherLogin($followRedirects = true)
+    {
+        $this->client = static::createPantherClient();
+
+        $followRedirects ? $this->client->followRedirects() : null;
+
+        $crawler =  $this->client->request("GET", "/");
+
+        $form = $crawler->selectButton("send")->form([
+            "_username" => "r.madelaine",
+            "_password" => "Test123*",
+        ]);
+
+        $this->client->submit($form);
+    }
+
+
     /**
      * Generate an URI
      *
@@ -41,5 +68,17 @@ trait AppTestTrait
     protected function generateUri(string $route, array $parameters = [])
     {
         return $this->client->getContainer()->get("router")->generate($route, $parameters);
+    }
+
+    /**
+     * Generate an URI
+     *
+     * @param string $route
+     * @param array $parameters
+     * @return string $uri
+     */
+    protected function generatePantherUri(string $route, array $parameters = [])
+    {
+        return self::$container->get("router")->generate($route, $parameters);
     }
 }

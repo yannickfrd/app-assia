@@ -114,15 +114,15 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(5, $this->repo->countAllSupports());
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->entityManager->close();
-    //     $this->entityManager = null;
-    //     $this->repo = null;
-    //     $this->supportGroup = null;
-    //     $this->service = null;
-    //     $this->user = null;
-    //     $this->supportGroupSearch = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null;
+        $this->repo = null;
+        $this->supportGroup = null;
+        $this->service = null;
+        $this->user = null;
+        $this->supportGroupSearch = null;
+    }
 }

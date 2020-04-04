@@ -1,4 +1,8 @@
 language: php
+
+addons:
+  chrome: stable
+  
 php:
   # - "7.2"
   - "7.3"
@@ -10,6 +14,7 @@ script:
   - npm run build
   - php bin/console doctrine:database:create --env=test   
   - php bin/console doctrine:schema:update --env=test --force   
+  - php bin/console hautelook:fixtures:load --no-interaction
   - php bin/phpunit tests/Entity
   - php bin/phpunit tests/Repository
   - php bin/phpunit tests/Controller

@@ -93,10 +93,10 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->assertSame(403, $data["code"]);
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->client = null;
-    //     $this->dataFixtures = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
+    }
 }

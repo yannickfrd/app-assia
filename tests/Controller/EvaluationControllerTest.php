@@ -60,10 +60,10 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", "Évaluation sociale");
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->client = null;
-    //     $this->dataFixtures = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
+    }
 }

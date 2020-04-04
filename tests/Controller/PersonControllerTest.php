@@ -31,17 +31,15 @@ class PersonControllerTest extends PantherTestCase
             dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml"
         ]);
 
-        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
-
-        $this->client->followRedirects();
-
+        $this->user = $this->dataFixtures["userSuperAdmin"];
         $this->person = $this->dataFixtures["person1"];
     }
 
     public function testListPeoplePageIsUp()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request("GET", $this->generateUri("people"));
+        $this->createLogin($this->user);
+
+        $this->client->request("GET", $this->generateUri("people"));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Rechercher une personne");
@@ -49,6 +47,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testListPeoplePageWithResearch()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("people"));
 
@@ -68,6 +68,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testExportListPeople()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("people"));
 
@@ -80,6 +82,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testAddPersonInGroupIsUp()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("group_search_person", [
             "id" => $this->dataFixtures["groupPeople1"]->getId()
         ]));
@@ -107,6 +111,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testNewPersonIsUp()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("person_new"));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -115,6 +121,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testFailToCreateNewPerson()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("person_new"));
 
@@ -132,6 +140,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testCreatePersonThanExists()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("person_new"));
 
@@ -154,6 +164,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testSuccessToCreateNewPerson()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("person_new"));
 
@@ -177,6 +189,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testNewPersonInGroupIsUp()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("group_create_person", [
             "id" => $this->dataFixtures["groupPeople1"]->getId()
         ]));
@@ -188,6 +202,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testFailToCreateNewPersonInGroup()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("group_create_person", [
             "id" => $this->dataFixtures["groupPeople1"]->getId()
@@ -208,6 +224,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testSuccessToCreateNewPersonInGroup()
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("group_create_person", [
             "id" => $this->dataFixtures["groupPeople1"]->getId()
@@ -230,6 +248,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testEditPersonInGroupIsUp()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("group_person_show", [
             "id" => $this->dataFixtures["groupPeople1"]->getId(),
             "person_id" => $this->person->getId(),
@@ -242,6 +262,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testEditPersonInGroup() // Test via AJAX
     {
+        $this->createLogin($this->user);
+
         /** @var Crawler */
         $crawler = $this->client->request("GET", $this->generateUri("group_person_show", [
             "id" => $this->dataFixtures["groupPeople1"]->getId(),
@@ -259,6 +281,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testPersonShowIsUp()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("person_show", [
             "id" => $this->person->getId(),
             "slug" => $this->person->getSlug()
@@ -268,21 +292,28 @@ class PersonControllerTest extends PantherTestCase
         $this->assertSelectorTextContains("h1", $this->person->getFullname());
     }
 
-    // public function testEditPerson() // à tester avec Panther
-    // {
-    //     /** @var Crawler */
-    //     $crawler = $this->client->request("GET", $this->generateUri("person_show", [
-    //         "id" => $this->person->getId(),
-    //     ]));
+    public function testEditPersonWithAjax()
+    {
+        $this->createPantherLogin($this->user);
 
-    //     $form = $crawler->selectButton("updatePerson")->form([]);
+        /** @var Crawler */
+        $crawler = $this->client->request("GET", $this->generatePantherUri("person_show", [
+            "id" => $this->person->getId(),
+        ]));
 
-    //     $data = json_decode($this->client->getResponse()->getContent(), true);
-    //     $this->assertSame("success", $data["alert"]);
-    // }
+        $form = $crawler->selectButton("updatePerson")->form([]);
+
+        $this->client->submit($form);
+
+        $this->client->waitFor("#js-msg-flash");
+
+        $this->assertSelectorExists("#js-msg-flash.alert.alert-success");
+    }
 
     public function testFailAddNewGroupToPerson()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("POST", $this->generateUri("person_new_group", [
             "id" => $this->person->getId(),
         ]));
@@ -316,6 +347,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testSearchPersonWithOneResult()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("search_person", [
             "search" => "John Doe",
         ]));
@@ -327,6 +360,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testDeletePerson()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("person_delete", [
             "id" => $this->person->getId(),
         ]));
@@ -337,6 +372,8 @@ class PersonControllerTest extends PantherTestCase
 
     public function testSearchPersonWithResults()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("search_person", [
             "search" => "",
         ]));
@@ -347,6 +384,8 @@ class PersonControllerTest extends PantherTestCase
     }
     public function testSearchPersonWithoutResult()
     {
+        $this->createLogin($this->user);
+
         $this->client->request("GET", $this->generateUri("search_person", [
             "search" => "xxx",
         ]));
@@ -356,10 +395,10 @@ class PersonControllerTest extends PantherTestCase
         $this->assertSame(0, $data["nb_results"]);
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->client = null;
-    //     $this->dataFixtures = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
+    }
 }

@@ -37,8 +37,8 @@ class NoteTest extends WebTestCase
         $this->assertHasErrors($this->note->setContent(""), 1);
     }
 
-    // protected function tearDown()
-    // {
-    //     $this->note = null;
-    // }
+    protected function tearDown(): void
+    {
+        $this->note = null;
+    }
 }

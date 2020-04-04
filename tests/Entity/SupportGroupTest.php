@@ -42,8 +42,8 @@ class SupportGroupTest extends WebTestCase
         $this->assertHasErrors($this->supportGroup->setStatus(null), 1);
     }
 
-    // protected function tearDown()
-    // {
-    //     $this->supportGroup = null;
-    // }
+    protected function tearDown(): void
+    {
+        $this->supportGroup = null;
+    }
 }

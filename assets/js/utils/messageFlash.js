@@ -24,6 +24,7 @@ export default class MessageFlash {
                 <span id="timeline" class="bg-${this.alert}"></span>
             </div>`
         this.timerID = setInterval(this.timer.bind(this), 1000);
+        this.msgFlashContentElt.classList.remove("d-none");
         this.msgFlashContentElt.insertBefore(this.msg, this.msgFlashContentElt.firstChild);
     }
 

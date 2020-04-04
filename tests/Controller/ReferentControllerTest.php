@@ -67,10 +67,10 @@ class ReferentControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", "Group");
     }
 
-    // protected function tearDown()
-    // {
-    //     parent::tearDown();
-    //     $this->client = null;
-    //     $this->dataFixtures = null;
-    // }
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->client = null;
+        $this->dataFixtures = null;
+    }
 }
