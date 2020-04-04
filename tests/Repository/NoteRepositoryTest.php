@@ -91,14 +91,14 @@ class NoteRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes(["user" => $this->user]));
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null;
-        $this->repo = null;
-        $this->supportGroup = null;
-        $this->user = null;
-        $this->noteSearch = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->entityManager->close();
+    //     $this->entityManager = null;
+    //     $this->repo = null;
+    //     $this->supportGroup = null;
+    //     $this->user = null;
+    //     $this->noteSearch = null;
+    // }
 }

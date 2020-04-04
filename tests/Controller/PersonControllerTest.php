@@ -356,10 +356,10 @@ class PersonControllerTest extends PantherTestCase
         $this->assertSame(0, $data["nb_results"]);
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }

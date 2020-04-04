@@ -90,13 +90,13 @@ class AccommodationRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, $this->repo->findAccommodationsFromService($this->service));
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null;
-        $this->repo = null;
-        $this->service = null;
-        $this->accommodationSearch = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->entityManager->close();
+    //     $this->entityManager = null;
+    //     $this->repo = null;
+    //     $this->service = null;
+    //     $this->accommodationSearch = null;
+    // }
 }

@@ -83,10 +83,10 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame("delete", $data["action"]);
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }

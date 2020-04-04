@@ -116,14 +116,14 @@ class RdvRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(5, $this->repo->countAllRdvs(["user" => $this->user]));
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null;
-        $this->repo = null;
-        $this->supportGroup = null;
-        $this->user = null;
-        $this->rdvSearch = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->entityManager->close();
+    //     $this->entityManager = null;
+    //     $this->repo = null;
+    //     $this->supportGroup = null;
+    //     $this->user = null;
+    //     $this->rdvSearch = null;
+    // }
 }

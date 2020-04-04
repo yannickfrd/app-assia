@@ -129,15 +129,15 @@ class UserRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, count($this->repo->findUsers(["status" => 1])));
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        // doing this is recommended to avoid memory leaks
-        $this->entityManager->close();
-        $this->entityManager = null;
-        $this->repo = null;
-        $this->user = null;
-        $this->service = null;
-        $this->userSearch = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     // doing this is recommended to avoid memory leaks
+    //     $this->entityManager->close();
+    //     $this->entityManager = null;
+    //     $this->repo = null;
+    //     $this->user = null;
+    //     $this->service = null;
+    //     $this->userSearch = null;
+    // }
 }

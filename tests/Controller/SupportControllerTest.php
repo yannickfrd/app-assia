@@ -124,10 +124,10 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", "Export des données");
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }

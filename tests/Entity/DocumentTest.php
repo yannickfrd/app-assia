@@ -41,8 +41,8 @@ class DocumentTest extends WebTestCase
         $this->assertHasErrors($this->document->setType(null), 1);
     }
 
-    protected function tearDown()
-    {
-        $this->document = null;
-    }
+    // protected function tearDown()
+    // {
+    //     $this->document = null;
+    // }
 }

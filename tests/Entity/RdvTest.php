@@ -50,8 +50,8 @@ class RdvTest extends WebTestCase
         $this->assertHasErrors($this->rdv->setEnd(null), 1);
     }
 
-    protected function tearDown()
-    {
-        $this->rdv = null;
-    }
+    // protected function tearDown()
+    // {
+    //     $this->rdv = null;
+    // }
 }

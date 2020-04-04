@@ -74,10 +74,10 @@ class UserControllerTest extends WebTestCase
         $this->assertNotTrue($result["response"]);
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }

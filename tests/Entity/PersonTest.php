@@ -71,8 +71,8 @@ class PersonTest extends WebTestCase
         $this->assertHasErrors($person, 1);
     }
 
-    protected function tearDown()
-    {
-        $this->person = null;
-    }
+    // protected function tearDown()
+    // {
+    //     $this->person = null;
+    // }
 }

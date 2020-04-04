@@ -74,12 +74,12 @@ class ServiceTest extends WebTestCase
         $this->assertHasErrors($service, 1);
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null;
-        $this->pole;
-        $this->service;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->entityManager->close();
+    //     $this->entityManager = null;
+    //     $this->pole;
+    //     $this->service;
+    // }
 }

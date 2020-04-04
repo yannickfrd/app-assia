@@ -61,10 +61,10 @@ class PoleControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", $this->pole->getName());
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }

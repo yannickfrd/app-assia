@@ -99,13 +99,13 @@ class PersonRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(5, $this->repo->findAllPeople());
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null;
-        $this->repo = null;
-        $this->person = null;
-        $this->personSearch = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->entityManager->close();
+    //     $this->entityManager = null;
+    //     $this->repo = null;
+    //     $this->person = null;
+    //     $this->personSearch = null;
+    // }
 }

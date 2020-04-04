@@ -62,10 +62,10 @@ class OrganizationControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", $this->organization->getName());
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }

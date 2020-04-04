@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use PhpOffice\PhpSpreadsheet\Shared\Date;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class Normalisation

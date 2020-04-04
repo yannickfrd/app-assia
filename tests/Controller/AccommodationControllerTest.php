@@ -80,10 +80,10 @@ class AccommodationControllerTest extends WebTestCase
         $this->assertSelectorTextContains("h1", $this->accommodation->getService()->getName());
     }
 
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
-        $this->dataFixtures = null;
-    }
+    // protected function tearDown()
+    // {
+    //     parent::tearDown();
+    //     $this->client = null;
+    //     $this->dataFixtures = null;
+    // }
 }
