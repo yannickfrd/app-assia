@@ -73,9 +73,7 @@ class AccommodationControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("admin_accommodation_delete", [
             "id" => $this->accommodation->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", $this->accommodation->getService()->getName());
     }

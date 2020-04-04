@@ -60,9 +60,7 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("group_people_delete", [
             "id" => $this->groupPeople->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Tableau de bord");
     }
@@ -73,9 +71,7 @@ class GroupPeopleControllerTest extends WebTestCase
             "id" => $this->groupPeople->getId(),
             "person_id" => $this->dataFixtures["person1"]->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains(".alert.alert-danger", "Une erreur s'est produite.");
     }

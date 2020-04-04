@@ -75,9 +75,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("support_group_people_accommodation_add_people", [
             "id" => $this->accommodationGroup->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Logement/hébergement");
         $this->assertSelectorTextContains(".alert.alert-success", "Les personnes ont été ajoutées à la prise en charge.");
@@ -88,9 +86,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("support_group_people_accommodation_delete", [
             "id" => $this->accommodationGroup->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains(".alert.alert-warning", "La prise en charge a été supprimé.");
     }
@@ -99,9 +95,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("support_person_accommodation_delete", [
             "id" => $this->dataFixtures["accomPerson1"]->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Logement/hébergement");
         $this->assertSelectorExists(".alert.alert-warning");

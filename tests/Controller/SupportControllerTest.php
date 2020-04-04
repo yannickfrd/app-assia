@@ -69,9 +69,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("support_delete", [
             "id" => ($this->dataFixtures["supportGroup1"])->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Groupe");
         $this->assertSelectorExists(".alert.alert-warning");
@@ -92,9 +90,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("support_add_people", [
             "id" => ($this->dataFixtures["supportGroup1"])->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h2", "Personnes rattachées au suivi social");
         $this->assertSelectorExists(".alert.alert-warning");

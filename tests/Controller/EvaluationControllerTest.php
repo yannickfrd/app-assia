@@ -43,9 +43,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("support_evaluation_show", [
             "id" => ($this->dataFixtures["supportGroup1"])->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Évaluation sociale");
     }

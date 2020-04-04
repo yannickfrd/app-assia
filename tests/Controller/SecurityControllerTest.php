@@ -55,9 +55,7 @@ class SecurityController extends WebTestCase
     {
         $this->createLogin($this->dataFixtures["userSuperAdmin"]);
         $this->client->request("GET", $this->generateUri("security_after_login"));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Tableau de bord");
     }
@@ -128,25 +126,24 @@ class SecurityController extends WebTestCase
     public function testFailLogin()
     {
         $this->client = static::createClient();
+        $this->client->followRedirects();
         $crawler = $this->client->request("GET", $this->generateUri("security_login"));
 
-        $form = $crawler->selectButton("Se connecter")->form([
+        $form = $crawler->selectButton("send")->form([
             "_username" => "badUsername",
             "_password" => "wrongPassword"
         ]);
 
         $this->client->submit($form);
 
-        // $this->assertResponseRedirects($this->generateUri("security_login"));
-        $this->client->followRedirect();
-
-        // static::assertResponseStatusCodeSame(Response::HTTP_OK);
         static::assertSelectorExists(".alert.alert-danger");
     }
 
     public function testSuccessLogin()
     {
         $this->client = static::createClient();
+        $this->client->followRedirects();
+
         $csrfToken = $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate");
 
         $this->client->request("POST", $this->generateUri("security_login"), [
@@ -154,9 +151,6 @@ class SecurityController extends WebTestCase
             "_password" => "Test123*",
             "_csrf_token" => $csrfToken
         ]);
-
-        $this->client->followRedirects(true);
-        $this->client->followRedirect();
 
         static::assertSelectorExists(".alert.alert-success");
     }

@@ -60,9 +60,7 @@ class ReferentControllerTest extends WebTestCase
         $this->client->request("GET", $this->generateUri("referent_delete", [
             "id" => $this->referent->getId()
         ]));
-
-        $this->client->followRedirect();
-
+        // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains("h1", "Group");
     }

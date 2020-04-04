@@ -71,7 +71,7 @@ class Export
     {
         $this->getFormat($this->format);
 
-        $path = "/public/uploads/exports/" . $this->now->format("Y/m/d/");
+        $path = "public/uploads/exports/" . $this->now->format("Y/m/d/");
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
