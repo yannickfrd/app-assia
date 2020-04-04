@@ -77,7 +77,7 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testFindAllNotesFromUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllNotesFromUser($this->user, 10)));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllNotesFromUser($this->user)));
     }
 
 
