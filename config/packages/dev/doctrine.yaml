@@ -1,5 +1,5 @@
-# config/packages/dev/doctrine.yaml
-doctrine:
-    dbal:
-        driver: pdo_sqlite
-        url: '%env(resolve:DATABASE_URL)%'
+# # config/packages/dev/doctrine.yaml
+# doctrine:
+#     dbal:
+#         driver: pdo_sqlite
+#         url: '%env(resolve:DATABASE_URL)%'

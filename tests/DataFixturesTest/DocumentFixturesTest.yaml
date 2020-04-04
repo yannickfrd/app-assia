@@ -52,5 +52,23 @@ App\Entity\SupportGroup:
     status: 2
     referent: "@userSuperAdmin"
     groupPeople: "@groupPeople"
+    service: "@service"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
+
+
+App\Entity\Service:
+  service:
+    name: AVDL
+    pole: "@pole"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\Pole:
+  pole:
+    name: Habitat
     createdAt: <date_create()>
     updatedAt: <date_create()>

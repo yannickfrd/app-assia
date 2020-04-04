@@ -13,6 +13,7 @@ App\Entity\Accommodation:
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service"
+    device: "@device"
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
 
