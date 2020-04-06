@@ -10,7 +10,7 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
-        <env name="APP_DEBUG" value="1"/>
+        <env name="APP_DEBUG" value="0"/>
         <env name="APP_SECRET" value="5a79a1c866efef9ca1800f971d689f3e"/>
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />

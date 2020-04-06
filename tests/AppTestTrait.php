@@ -9,8 +9,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 trait AppTestTrait
 {
-    /** @var KernelBrowser */
-    protected $client;
+    // /** @var KernelBrowser */
+    // protected $client;
 
     /**
      * Crée une connexion

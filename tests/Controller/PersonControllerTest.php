@@ -15,8 +15,8 @@ class PersonControllerTest extends PantherTestCase
     use FixturesTrait;
     use AppTestTrait;
 
-    /** @var KernelBrowser */
-    protected $client;
+    // /** @var KernelBrowser */
+    // protected $client;
 
     /** @var array */
     protected $dataFixtures;
@@ -51,31 +51,24 @@ class PersonControllerTest extends PantherTestCase
         $this->client->submit($form);
 
         $this->client->waitFor("#js-msg-flash");
-
         $this->assertSelectorExists("#js-msg-flash.alert.alert-success");
 
 
         // testPantherEditPersonWithAjax
-        $crawler = $this->client->request("GET", $this->generatePantherUri("person_show", [
-            "id" => $this->person->getId()
-        ]));
-
         $form = $crawler->selectButton("updatePerson")->form([]);
 
         $this->client->submit($form);
 
         $this->client->waitFor("#js-msg-flash");
-
         $this->assertSelectorExists("#js-msg-flash.alert.alert-success");
-
-        $crawler->selectButton("btn-close-msg")->click();
 
 
         // testPantherSuccessToAddNewGroupToPerson
+        $crawler->selectButton("btn-close-msg")->click();
+        $this->client->waitFor("#btn-new-group");
         $crawler->selectButton("btn-new-group")->click();
 
-        $this->client->waitFor("#js-btn-confirm");
-
+        sleep(1); // $this->client->waitFor("#js-btn-confirm");
         $form = $crawler->selectButton("js-btn-confirm")->form([
             "person_new_group[groupPeople][familyTypology]" => 1,
             "person_new_group[groupPeople][nbPeople]" => 1,
