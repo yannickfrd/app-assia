@@ -35,8 +35,6 @@ class RdvController extends AbstractController
      * Liste des rendez-vous.
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
-     *
-     * @param RdvSearch $rdvSearch
      */
     public function viewListRdvs(Request $request, RdvSearch $rdvSearch = null, Pagination $pagination): Response
     {
@@ -57,8 +55,7 @@ class RdvController extends AbstractController
      *
      * @Route("support/{id}/rdvs", name="support_rdvs", methods="GET")
      *
-     * @param int       $id        // SupportGroup
-     * @param RdvSearch $rdvSearch
+     * @param int $id // SupportGroup
      */
     public function viewSupportListRdvs(int $id, SupportGroupRepository $repoSupport, SupportRdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
     {
@@ -83,11 +80,8 @@ class RdvController extends AbstractController
      *
      * @Route("/calendar/{year}/{month}", name="calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
      * @Route("/calendar", name="calendar", methods="GET")
-     *
-     * @param int $year
-     * @param int $month
      */
-    public function showCalendar($year = null, $month = null): Response
+    public function showCalendar(int $year = null, int $month = null): Response
     {
         $calendar = new Calendar($year, $month);
 
@@ -106,10 +100,7 @@ class RdvController extends AbstractController
      * @Route("/support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
      * @Route("/support/{id}/calendar", name="support_calendar", methods="GET")
      *
-     * @param int                    $id          // SupportGroup
-     * @param SupportGroupRepository $supportRepo
-     * @param int                    $year
-     * @param int                    $month
+     * @param int $id // SupportGroup
      */
     public function showSupportCalendar(int $id, SupportGroupRepository $repoSupport, $year = null, $month = null): Response
     {
@@ -184,8 +175,6 @@ class RdvController extends AbstractController
      * Voir le RDV.
      *
      * @Route("rdv/{id}/get", name="rdv_get", methods="GET")
-     *
-     * @param RdvRepository $repo
      */
     public function getRdv(Rdv $rdv): Response
     {

@@ -24,9 +24,9 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     /**
      * Donne toute l'évaluation sociale du groupe.
      *
-     * @param SupportGroup $supportGroup
+     * @param int $id // SupportGroup
      */
-    public function findEvaluationById($id): ?EvaluationGroup
+    public function findEvaluationById(int $id): ?EvaluationGroup
     {
         return $this->createQueryBuilder('eg')
             ->select('eg')

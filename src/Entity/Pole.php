@@ -115,7 +115,6 @@ class Pole
     public function __construct()
     {
         $this->services = new ArrayCollection();
-        $this->devices = new ArrayCollection();
     }
 
     public function getId(): ?int

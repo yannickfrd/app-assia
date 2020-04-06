@@ -17,7 +17,7 @@ class GroupPeopleSearch
     private $firstname;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      * @Assert\Date(message="Date de naissance invalide.")
      */
     private $birthdate;

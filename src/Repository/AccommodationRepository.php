@@ -7,6 +7,7 @@ use App\Entity\Service;
 use App\Form\Model\AccommodationSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,7 +26,7 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places.
      */
-    public function findAllAccommodationsQuery(AccommodationSearch $accommodationSearch): Query
+    public function findAllAccommodationsQuery(AccommodationSearch $accommodationSearch = null): Query
     {
         $query = $this->getAccommodations();
 
@@ -59,10 +60,8 @@ class AccommodationRepository extends ServiceEntityRepository
 
     /**
      * Donne la liste des groupes de places.
-     *
-     * @return void
      */
-    public function getAccommodationsQueryList(Service $service)
+    public function getAccommodationsQueryList(Service $service): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
             ->select('PARTIAL a.{id, name, service}')

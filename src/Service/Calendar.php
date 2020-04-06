@@ -135,7 +135,7 @@ class Calendar
      */
     public function getLastDay(): \DateTime
     {
-        return (clone $this->getFirstMonday())->modify('+'.($this->getWeeks() * 7) - 1 .' days');
+        return (clone $this->getFirstMonday())->modify('+'.(($this->getWeeks() * 7) - 1).' days');
     }
 
     /** Détermine le nombre de semaines dans le mois

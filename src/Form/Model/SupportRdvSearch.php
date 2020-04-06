@@ -10,12 +10,12 @@ class SupportRdvSearch
     private $title;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $startDate;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $endDate;
 

@@ -20,7 +20,7 @@ class SupportGroupSearch
     private $fullname;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      * @Assert\Date(message="Date de naissance invalide.")
      */
     private $birthdate;
@@ -47,12 +47,12 @@ class SupportGroupSearch
     private $supportDates;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $startDate;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $endDate;
 
@@ -95,7 +95,7 @@ class SupportGroupSearch
     }
 
     /**
-     * @return date|null
+     * @return \DateTimeInterface|null
      */
     public function getBirthdate(): ?\DateTimeInterface
     {

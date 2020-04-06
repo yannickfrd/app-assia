@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Entity\User;
 use App\Entity\UserConnection;
 use App\Repository\UserConnectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,7 @@ class LoginListener
 {
     private $manager;
     private $session;
+    private $repo;
 
     public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
     {
@@ -23,6 +25,7 @@ class LoginListener
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
+        /** @var User */
         $user = $event->getAuthenticationToken()->getUser();
 
         $lastConnection = $this->repo->findOneBy(
@@ -64,6 +67,7 @@ class LoginListener
 
     public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)
     {
+        /** @var User */
         $user = $event->getAuthenticationToken()->getUser();
 
         $count = $user->getFailureLogincount() + 1;

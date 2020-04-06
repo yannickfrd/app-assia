@@ -8,6 +8,7 @@ use App\Form\Model\SupportGroupSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -29,10 +30,8 @@ class SupportGroupRepository extends ServiceEntityRepository
 
     /**
      * Donne le suivi social avec le groupe et les personnes rattachées.
-     *
-     * @param int $id
      */
-    public function findSupportById($id): ?SupportGroup
+    public function findSupportById(int $id): ?SupportGroup
     {
         $query = $this->getsupportQuery();
 
@@ -135,11 +134,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Filtres.
      *
-     * @param [type] $query
-     *
      * @return mixed
      */
-    protected function filter($query, SupportGroupSearch $supportGroupSearch)
+    protected function filter(QueryBuilder $query, SupportGroupSearch $supportGroupSearch)
     {
         if (!$this->currentUserService->isRole('ROLE_SUPER_ADMIN')) {
             $query->where('s.id IN (:services)')

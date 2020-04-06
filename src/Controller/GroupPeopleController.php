@@ -153,7 +153,9 @@ class GroupPeopleController extends AbstractController
     {
         // Si la personne est asssociée, ne fait rien, créé la liaison
         if ($this->personExists($groupPeople, $person, $repoRolePerson)) {
-            return $this->addFlash('warning', $person->getFullname().' est déjà associé'.Grammar::gender($person->getGender()).' au groupe.');
+            $this->addFlash('warning', $person->getFullname().' est déjà associé'.Grammar::gender($person->getGender()).' au groupe.');
+
+            return;
         }
 
         $rolePerson
@@ -170,7 +172,9 @@ class GroupPeopleController extends AbstractController
 
         $this->manager->flush();
 
-        return $this->addFlash('success', $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+        $this->addFlash('success', $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+
+        return;
     }
 
     /**

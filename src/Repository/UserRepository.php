@@ -8,6 +8,7 @@ use App\Form\Model\UserSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -116,7 +117,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Trouve les utilisateurs pour l'export des données.
      *
-     * @param mixed
+     * @return mixed
      */
     public function findUsersToExport(UserSearch $userSearch)
     {
@@ -127,12 +128,8 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * Donne la liste des utilisateurs.
-     *
-     * @param User $user
-     *
-     * @return void
      */
-    public function getUsersQueryList(CurrentUserService $currentUser, User $user = null)
+    public function getUsersQueryList(CurrentUserService $currentUser, User $user = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, enabled}');
@@ -160,10 +157,8 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
-     *
-     * @return void
      */
-    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser)
+    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, enabled}')

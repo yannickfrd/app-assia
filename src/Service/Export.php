@@ -23,6 +23,13 @@ class Export
 
     private $spreadsheet;
     private $sheet;
+
+    private $nbColumns;
+    private $nbRows;
+    private $highestColumn;
+    private $headers;
+    private $allCells;
+
     private $writer;
     private $contentType;
     private $now;

@@ -8,6 +8,7 @@ use App\Form\Model\ServiceSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -59,10 +60,8 @@ class ServiceRepository extends ServiceEntityRepository
 
     /**
      * Donne la liste des services de l'utilisateur.
-     *
-     * @return void
      */
-    public function getServicesFromUserQueryList(CurrentUserService $currentUser)
+    public function getServicesFromUserQueryList(CurrentUserService $currentUser): QueryBuilder
     {
         $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}');
 

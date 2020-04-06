@@ -147,7 +147,7 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/people", name="support_pers_edit", methods="GET|POST")
      *
-     * @param int $$id
+     * @param int $id // SupportGroup
      */
     public function editSupportGroupleWithPeople(int $id, Request $request): Response
     {
@@ -316,10 +316,8 @@ class SupportController extends AbstractController
 
     /**
      * Crée un suivi.
-     *
-     * @return SupportGroup|null
      */
-    protected function createSupportGroup(GroupPeople $groupPeople, SupportGroup $supportGroup)
+    protected function createSupportGroup(GroupPeople $groupPeople, SupportGroup $supportGroup): Response
     {
         $now = new \DateTime();
 
@@ -386,7 +384,9 @@ class SupportController extends AbstractController
 
         $this->manager->flush();
 
-        return $this->addFlash('success', 'Le suivi social a été modifié.');
+        $this->addFlash('success', 'Le suivi social a été modifié.');
+
+        return;
     }
 
     /**

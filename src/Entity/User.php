@@ -704,7 +704,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|ReferentSupport[]
+     * @return Collection|Referent[]
      */
     public function getReferentSupport(): ?Collection
     {

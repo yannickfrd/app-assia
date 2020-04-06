@@ -31,7 +31,7 @@ class ServiceSearch
     private $city;
 
     /**
-     * @var int|null
+     * @var Pole|null
      */
     private $pole;
 
@@ -92,9 +92,6 @@ class ServiceSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getPole(): ?Pole
     {
         return $this->pole;

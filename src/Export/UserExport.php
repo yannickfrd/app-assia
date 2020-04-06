@@ -48,8 +48,8 @@ class UserExport
             'Fonction' => $user->getStatusToString(),
             'Email' => $user->getEmail(),
             'Téléphone' => $user->getPhone(),
-            'Service' => join($services, ', '),
-            'Pôle' => join($poles, ', '),
+            'Service' => join(', ', $services),
+            'Pôle' => join(', ', $poles),
             'Date de création' => Date::PHPToExcel($user->getCreatedAt()->format('d/m/Y')),
         ];
     }

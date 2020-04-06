@@ -30,6 +30,7 @@ class SecurityController extends AbstractController
 {
     private $manager;
     private $encoder;
+    private $repo;
 
     public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, UserRepository $repo)
     {
@@ -105,8 +106,6 @@ class SecurityController extends AbstractController
      * Création du mot de passe par l'utilisateur à sa première connexion.
      *
      * @Route("/login/init_password", name="security_init_password", methods="GET|POST")
-     *
-     * @param UserResetPassword $user
      */
     public function initPassword(Request $request, UserInitPassword $userInitPassword = null): Response
     {
@@ -302,7 +301,9 @@ class SecurityController extends AbstractController
             $this->manager->flush();
         }
 
-        return $this->addFlash('danger', 'Identifiant ou mot de passe incorrect.');
+        $this->addFlash('danger', 'Identifiant ou mot de passe incorrect.');
+
+        return;
     }
 
     /**

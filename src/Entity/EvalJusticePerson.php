@@ -44,7 +44,7 @@ class EvalJusticePerson
         12 => 'Stage de sensibilisation',
         13 => 'Suivi socio-judiciaire (SSJ)',
         14 => "Sursis de mise à l'épreuve (SME)",
-        14 => "Travail d'intérêt général (TIG)",
+        15 => "Travail d'intérêt général (TIG)",
         97 => 'Autre',
         98 => 'Non concerné',
         99 => 'Non renseigné',

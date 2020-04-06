@@ -73,18 +73,6 @@ class OriginRequest
         return $this->id;
     }
 
-    public function getServiceType(): ?int
-    {
-        return $this->serviceType;
-    }
-
-    public function setServiceType(?int $serviceType): self
-    {
-        $this->serviceType = $serviceType;
-
-        return $this;
-    }
-
     public function getOrientationDate(): ?\DateTimeInterface
     {
         return $this->orientationDate;

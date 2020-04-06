@@ -29,12 +29,12 @@ class AccommodationSearch
     private $supportDates;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $startDate;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $endDate;
 
@@ -54,7 +54,7 @@ class AccommodationSearch
     private $device;
 
     /**
-     * @var int|null
+     * @var Pole|null
      */
     private $pole;
 
@@ -166,9 +166,6 @@ class AccommodationSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getPole(): ?Pole
     {
         return $this->pole;

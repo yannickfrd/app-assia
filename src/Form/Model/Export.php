@@ -2,7 +2,6 @@
 
 namespace App\Form\Model;
 
-use App\Entity\SupportGroup;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,12 +36,12 @@ class Export
     private $supportDates;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $startDate;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $endDate;
 
@@ -128,11 +127,6 @@ class Export
     public function getStatus(): ?array
     {
         return $this->status;
-    }
-
-    public function getStatusString()
-    {
-        return SupportGroup::STATUS[$this->status];
     }
 
     public function setStatus(?array $status): self

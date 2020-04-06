@@ -20,7 +20,7 @@ class PersonSearch
     private $usename;
 
     /**
-     * @var date|null
+     * @var \DateTimeInterface|null
      */
     private $birthdate;
 
@@ -87,7 +87,7 @@ class PersonSearch
     }
 
     /**
-     * @return date|null
+     * @return \DateTimeInterface|null
      */
     public function getBirthdate(): ?\DateTimeInterface
     {
@@ -117,7 +117,7 @@ class PersonSearch
         $now = new \DateTime();
         $interval = $now->diff($this->birthdate);
         $days = $interval->days;
-        $this->age = floor($days / 365.25);
+        $age = floor($days / 365.25);
 
         return $this;
     }

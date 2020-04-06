@@ -178,12 +178,12 @@ class EvaluationGroup
         return $this;
     }
 
-    public function getevalFamilyGroup(): ?evalFamilyGroup
+    public function getevalFamilyGroup(): ?EvalFamilyGroup
     {
         return $this->evalFamilyGroup;
     }
 
-    public function setevalFamilyGroup(evalFamilyGroup $evalFamilyGroup): self
+    public function setevalFamilyGroup(EvalFamilyGroup $evalFamilyGroup): self
     {
         $this->evalFamilyGroup = $evalFamilyGroup;
 

@@ -211,7 +211,7 @@ class GroupPeople
     }
 
     /**
-     * @return Collection|Supports[]
+     * @return Collection|SupportGroup[]
      */
     public function getSupports(): ?Collection
     {

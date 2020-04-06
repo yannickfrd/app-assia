@@ -99,7 +99,7 @@ class AccommodationGroupController extends AbstractController
     public function editAccommodationGroup(int $id, Request $request, SupportGroupRepository $repoSupport): Response
     {
         $accommodationGroup = $this->repo->findOneById($id);
-        $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup());
+        $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -239,7 +239,7 @@ class AccommodationGroupController extends AbstractController
     /**
      * Crée les prises en charge individuelles.
      *
-     * @return array
+     * @return void
      */
     protected function createpPeopleAccommodation(AccommodationGroup $accommodationGroup)
     {

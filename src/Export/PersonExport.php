@@ -47,9 +47,9 @@ class PersonExport
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => Date::PHPToExcel($person->getBirthdate()->format('d/m/Y')),
             'Sexe' => $person->getGenderToString(),
-            'Typologie familiale' => join($typologies, ', '),
-            'Nb de personnes' => join($nbPeople, ', '),
-            'Rôle dans le groupe' => join($roles, ', '),
+            'Typologie familiale' => join(', ', $typologies),
+            'Nb de personnes' => join(', ', $nbPeople),
+            'Rôle dans le groupe' => join(', ', $roles),
             'Date de création' => Date::PHPToExcel($person->getCreatedAt()->format('d/m/Y')),
             'Date de mise à jour' => Date::PHPToExcel($person->getUpdatedAt()->format('d/m/Y')),
         ];

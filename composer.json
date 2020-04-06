@@ -55,6 +55,7 @@
         "fzaninotto/faker": "^1.9",
         "hautelook/alice-bundle": "^2.7",
         "liip/test-fixtures-bundle": "1.7.*",
+        "phpstan/phpstan-symfony": "^0.12.4",
         "symfony/browser-kit": "5.0.*",
         "symfony/css-selector": "5.0.*",
         "symfony/debug-pack": "*",

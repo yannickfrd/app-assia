@@ -92,8 +92,6 @@ class PersonController extends AbstractController
      * Nouvelle personne.
      *
      * @Route("/person/new", name="person_new", methods="GET|POST")
-     *
-     * @param RolePerson $rolePersonequest
      */
     public function newPerson(RolePerson $rolePerson = null, Request $request): Response
     {
@@ -270,8 +268,6 @@ class PersonController extends AbstractController
      * Permet de trouver les personnes par le mode de recherche instannée AJAX.
      *
      * @Route("/search/person", name="search_person", methods="GET")
-     *
-     * @param Person $person
      */
     public function searchPerson(Request $request): Response
     {
@@ -280,6 +276,7 @@ class PersonController extends AbstractController
         $people = $this->repo->findPeopleByResearch($search);
         $nbResults = count($people);
 
+        $results = [];
         if ($nbResults) {
             foreach ($people as $person) {
                 $results[] = [
@@ -320,7 +317,9 @@ class PersonController extends AbstractController
 
         // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
         if ($this->personExists($person)) {
-            return $this->addFlash('warning', 'Attention : '.$person->getFullname().' existe déjà !');
+            $this->addFlash('warning', 'Attention : '.$person->getFullname().' existe déjà !');
+
+            return;
         }
 
         $now = new \DateTime();
@@ -454,6 +453,7 @@ class PersonController extends AbstractController
     protected function errorMessage(ValidatorInterface $validator = null, $form): Response
     {
         $errors = $validator->validate($form);
+        $msg = [];
         foreach ($errors as $error) {
             $msg[] = $error->getMessage();
         }
@@ -461,7 +461,7 @@ class PersonController extends AbstractController
         return $this->json([
             'code' => 403,
             'alert' => 'danger',
-            'msg' => "Une erreur s'est produite : ".join($msg, ' '),
+            'msg' => "Une erreur s'est produite : ".join(' ', $msg),
         ], 200);
     }
 }

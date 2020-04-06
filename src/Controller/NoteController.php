@@ -37,7 +37,6 @@ class NoteController extends AbstractController
      *
      * @param int        $id         // SupportGroup
      * @param NoteSearch $noteSearch
-     * @param Note       $note
      */
     public function listNotes(int $id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
     {

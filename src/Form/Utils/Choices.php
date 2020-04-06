@@ -37,8 +37,9 @@ class Choices
         1 => 'Oui',
     ];
 
-    public static function getchoices($const)
+    public static function getchoices($const): array
     {
+        $output = [];
         foreach ($const as $key => $value) {
             $output[$value] = $key;
         }

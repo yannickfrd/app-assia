@@ -37,9 +37,9 @@ class DocumentController extends AbstractController
      * @Route("support/{id}/documents", name="support_documents", methods="GET")
      *
      * @param DocumentSearch $documentSearch
-     * @param Document       $document
+     * @param int            $id             // Document
      */
-    public function listDocuments($id, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $id, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 

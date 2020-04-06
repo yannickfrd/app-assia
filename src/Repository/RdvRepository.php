@@ -88,8 +88,6 @@ class RdvRepository extends ServiceEntityRepository
 
     /**
      * Return all rdvs of group support.
-     *
-     * @param SupportRdvSearch $supportRdvSearch
      */
     public function findAllRdvsQueryFromSupport(int $supportGroupId, SupportRdvSearch $rdvSearch): Query
     {
