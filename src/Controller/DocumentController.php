@@ -3,18 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Document;
-use App\Entity\SupportGroup;
-use App\Form\Model\DocumentSearch;
-use App\Form\Document\DocumentSearchType;
-use App\Form\Document\DocumentType;
-use App\Service\FileUploader;
-use App\Repository\DocumentRepository;
-use App\Repository\SupportGroupRepository;
 use App\Service\Pagination;
+use App\Entity\SupportGroup;
+use App\Service\FileUploader;
+use App\Form\Model\DocumentSearch;
+use App\Form\Document\DocumentType;
+use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Document\DocumentSearchType;
+use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DocumentController extends AbstractController
@@ -111,13 +112,12 @@ class DocumentController extends AbstractController
      * Supprime un document
      * 
      * @Route("document/{id}/delete", name="document_delete", methods="GET")
+     * @IsGranted("DELETE", subject="document")
      * @param Document $document
      * @return Response
      */
     public function deleteDocument(Document $document): Response
     {
-        $this->denyAccessUnlessGranted("DELETE", $document);
-
         $documentName = $document->getName();
 
         $file = "uploads/documents/" . $document->getSupportGroup()->getGroupPeople()->getId() . "/" . $document->getInternalFileName();

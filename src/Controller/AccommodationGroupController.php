@@ -145,13 +145,11 @@ class AccommodationGroupController extends AbstractController
      * Supprime la prise en charge du groupe
      * 
      * @Route("support/group-people-accommodation/{id}/delete", name="support_group_people_accommodation_delete", methods="GET")
-     * @param integer $id // AccommodationGroup
+     * @param AccommodationGroup $accommodationGroup
      * @return Response
      */
-    public function deleteAccommodationGroup(int $id): Response
+    public function deleteAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
-        $accommodationGroup = $this->repo->findOneById($id);
-
         $supportGroup = $accommodationGroup->getSupportGroup();
 
         $this->denyAccessUnlessGranted("DELETE", $supportGroup);
@@ -168,14 +166,12 @@ class AccommodationGroupController extends AbstractController
      * Supprime la prise en charge d'une personne
      * 
      * @Route("support/person-accommodation/{id}/delete", name="support_person_accommodation_delete", methods="GET")
-     * @param int $id // AccomodationPerson
+     * @param AccommodationPerson $accommodationPerson
      * @param AccommodationPersonRepository $repo
      * @return Response
      */
-    public function deleteAccommodationPerson(int $id, AccommodationPersonRepository $repo): Response
+    public function deleteAccommodationPerson(AccommodationPerson $accommodationPerson, AccommodationPersonRepository $repo): Response
     {
-        $accommodationPerson = $repo->findOneById($id);
-
         $this->denyAccessUnlessGranted("DELETE", $accommodationPerson->getAccommodationGroup()->getSupportGroup());
 
         $this->manager->remove($accommodationPerson);

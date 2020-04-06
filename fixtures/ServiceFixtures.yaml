@@ -3,7 +3,7 @@ App\Entity\Service:
     name: AVDL
     pole: "@pole1"
     email: avdl@esperer-95.org
-    phone: 01 00 00 00 00
+    phone: "01 00 00 00 00"
     address: Pontoise
     city: Pontoise
     zipCode: 95 000

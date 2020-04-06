@@ -6,6 +6,7 @@ use App\Entity\Person;
 use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
+use App\Service\Pagination;
 use App\Export\PersonExport;
 use App\Form\Person\PersonType;
 use App\Form\Model\PersonSearch;
@@ -16,11 +17,11 @@ use App\Form\RolePerson\RolePersonType;
 use App\Form\Person\RolePersonGroupType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Person\PersonRolePersonType;
-use App\Service\Pagination;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -267,13 +268,12 @@ class PersonController extends AbstractController
      * Supprime la personne
      * 
      * @Route("/person/{id}/delete", name="person_delete", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      * @param Person $person
      * @return Response
      */
     public function deletePerson(Person $person): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
         $this->manager->remove($person);
         $this->manager->flush();
 

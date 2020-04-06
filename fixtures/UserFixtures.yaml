@@ -24,7 +24,7 @@ App\Entity\User:
     plainPassword: Test123*
     email: $username@esperer-95.org
     status: 1
-    phone: 01 00 00 00 00
+    phone: "01 00 00 00 00"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     loginCount: <numberBetween(0, 99)>

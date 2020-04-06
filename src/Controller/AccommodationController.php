@@ -7,13 +7,14 @@ use App\Service\Pagination;
 use App\Entity\Accommodation;
 use App\Export\AccommodationExport;
 use App\Form\Model\AccommodationSearch;
-use App\Form\Accommodation\AccommodationType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AccommodationRepository;
+use App\Form\Accommodation\AccommodationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Accommodation\AccommodationSearchType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AccommodationController extends AbstractController
@@ -57,6 +58,7 @@ class AccommodationController extends AbstractController
      * Nouveau groupe de places
      * 
      * @Route("/admin/service/{id}/accommodation/new", name="service_accommodation_new", methods="GET|POST")
+     * @IsGranted("EDIT", subject="accommodation")
      * @param Service $service
      * @param Accommodation $accommodation
      * @param Request $request
@@ -64,8 +66,6 @@ class AccommodationController extends AbstractController
      */
     public function newAccommodation(Service $service, Accommodation $accommodation = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $accommodation);
-
         $accommodation = (new Accommodation())->setService($service);
 
         $form = ($this->createForm(AccommodationType::class, $accommodation))
@@ -85,14 +85,13 @@ class AccommodationController extends AbstractController
      * Modification d'un groupe de places
      * 
      * @Route("/accommodation/{id}", name="accommodation_edit", methods="GET|POST")
+     * @IsGranted("VIEW", subject="accommodation")
      * @param Accommodation $accommodation
      * @param Request $request
      * @return Response
      */
     public function editAccommodation(Accommodation $accommodation, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("VIEW", $accommodation);
-
         $form = ($this->createForm(AccommodationType::class, $accommodation))
             ->handleRequest($request);
 
@@ -110,13 +109,12 @@ class AccommodationController extends AbstractController
      * Supprime le groupe de places
      * 
      * @Route("admin/accommodation/{id}/delete", name="admin_accommodation_delete", methods="GET")
+     * @IsGranted("DELETE", subject="accommodation")
      * @param Accommodation $accommodation
      * @return Response
      */
     public function deleteAccommodation(Accommodation $accommodation): Response
     {
-        $this->denyAccessUnlessGranted("DELETE", $accommodation);
-
         $this->manager->remove($accommodation);
         $this->manager->flush();
 

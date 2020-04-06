@@ -2,16 +2,27 @@
 
 {% block modal_title %}Nouveau groupe{% endblock %}
 
-{% block modal_body %}
-{{ form_start(form_new_group) }}
-{{ form_row(form_new_group.groupPeople.familyTypology) }}
-{{ form_row(form_new_group.groupPeople.nbPeople) }}
-{{ form_row(form_new_group.role) }}
-{% endblock %}
 
-{% block modal_footer %}
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-<button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau groupe</button>
+{% block modal_body_and_footer %}
+
+{{ form_start(form_new_group) }}
+
+<div class="modal-body">
+    {{ form_row(form_new_group.groupPeople.familyTypology) }}
+    {{ form_row(form_new_group.groupPeople.nbPeople) }}
+    {{ form_row(form_new_group.role) }}
+</div>
+
+<div class="modal-footer d-flex justify-content-between">
+    {% block modal_footer %}
+    <div class="float-left">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    </div>
+    <div class="float-right">
+        <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau groupe</button>
+    </div>
+    {% endblock %}
+</div>
 
 {{ form_row(form_new_group._token) }}
 {{ form_end(form_new_group, {"render_rest": false}) }}

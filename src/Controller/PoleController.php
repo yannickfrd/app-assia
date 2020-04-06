@@ -4,12 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Pole;
 use App\Form\Pole\PoleType;
-use App\Repository\PoleRepository;
 use App\Service\Pagination;
+use App\Repository\PoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PoleController extends AbstractController
@@ -42,12 +43,11 @@ class PoleController extends AbstractController
      * Nouveau pôle
      * 
      * @Route("/pole/new", name="pole_new", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      *  @return Response
      */
     public function newPole(Pole $pole = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
-
         $pole = new Pole();
 
         $form = ($this->createForm(PoleType::class, $pole))

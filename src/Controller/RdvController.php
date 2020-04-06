@@ -17,6 +17,7 @@ use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
@@ -250,13 +251,12 @@ class RdvController extends AbstractController
      * Supprime le RDV
      * 
      * @Route("rdv/{id}/delete", name="rdv_delete", methods="GET")
+     * @IsGranted("DELETE", subject="rdv")
      * @param Rdv $rdv
      * @return Response
      */
     public function deleteRdv(Rdv $rdv): Response
     {
-        $this->denyAccessUnlessGranted("DELETE", $rdv);
-
         $this->manager->remove($rdv);
         $this->manager->flush();
 

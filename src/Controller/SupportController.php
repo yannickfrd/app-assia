@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Support\SupportGroupWithPeopleType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -138,13 +139,12 @@ class SupportController extends AbstractController
      * Supprime le suivi social du groupe
      * 
      * @Route("/support/{id}/delete", name="support_delete", methods="GET")
+     * @IsGranted("DELETE", subject="supportGroup")
      * @param SupportGroup $supportGroup
      * @return Response
      */
     public function deleteSupport(SupportGroup $supportGroup): Response
     {
-        $this->denyAccessUnlessGranted("DELETE", $supportGroup);
-
         $this->manager->remove($supportGroup);
         $this->manager->flush();
 
@@ -283,6 +283,7 @@ class SupportController extends AbstractController
      * Export des données
      * 
      * @Route("export", name="export", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      * @param Request $request
      * @param Export $export
      * @param SupportPersonFullExport $exportSupport
@@ -290,8 +291,6 @@ class SupportController extends AbstractController
      */
     public function export(Request $request, Export $export = null, SupportPersonFullExport $exportSupport): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
-
         $export = new Export();
 
         $form = ($this->createForm(ExportType::class, $export))

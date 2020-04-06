@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Export\UserExport;
+use App\Service\Pagination;
 use App\Form\Model\UserSearch;
 use App\Form\User\UserSearchType;
 use App\Repository\UserRepository;
-use App\Service\Pagination;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
@@ -52,6 +53,7 @@ class UserController extends AbstractController
      * Administration des utilisateurs
      * 
      * @Route("admin/users", name="admin_users", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      * @param Request $request
      * @param UserSearch $userSearch
      * @param Pagination $pagination
@@ -59,8 +61,6 @@ class UserController extends AbstractController
      */
     public function adminListUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
-
         $userSearch = new UserSearch();
 
         $form = ($this->createForm(UserSearchType::class, $userSearch))

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
-           {% block modal_content %}
+            {% block modal_content %}
 
             <div class="modal-header">
                 <h5 class="modal-title" id="modalConfirmation">
@@ -12,6 +12,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
+            {% block modal_body_and_footer %}
 
             <div class="modal-body">
                 {% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
@@ -29,8 +31,8 @@
                 {% endblock %}
             </div>
 
-          {% endblock %}
-
+            {% endblock %}  
+            {% endblock %}
         </div>
     </div>
 </div>

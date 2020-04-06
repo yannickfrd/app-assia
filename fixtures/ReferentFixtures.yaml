@@ -4,7 +4,7 @@ App\Entity\referent:
     type: <numberBetween(1, 12)>
     socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
     email1: <fr_FR:email()>
-    phone1: 01 00 00 00 00
+    phone1: "01 00 00 00 00"
     address : <fr_FR:address()>
     city: <fr_FR:city()>
     departement: <numberBetween(1, 95)>
@@ -20,7 +20,7 @@ App\Entity\referent:
     type: <numberBetween(1, 12)>
     socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
     email1: <fr_FR:email()>
-    phone1: 01 00 00 00 00
+    phone1: "01 00 00 00 00"
     address : <fr_FR:address()>
     city: <fr_FR:city()>
     departement: <numberBetween(1, 95)>

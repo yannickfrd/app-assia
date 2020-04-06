@@ -35,6 +35,58 @@ class PersonControllerTest extends PantherTestCase
         $this->person = $this->dataFixtures["person1"];
     }
 
+    public function testPantherEditPersonInGroupWithAjax()
+    {
+        $this->createPantherLogin($this->user);
+
+        /** @var Crawler */
+        $crawler = $this->client->request("GET", $this->generatePantherUri("group_person_show", [
+            "id" => $this->dataFixtures["groupPeople1"]->getId(),
+            "person_id" => $this->person->getId(),
+            "slug" => $this->person->getSlug()
+        ]));
+
+        $form = $crawler->selectButton("updatePerson")->form([]);
+
+        $this->client->submit($form);
+
+        $this->client->waitFor("#js-msg-flash");
+
+        $this->assertSelectorExists("#js-msg-flash.alert.alert-success");
+
+
+        // testPantherEditPersonWithAjax
+        $crawler = $this->client->request("GET", $this->generatePantherUri("person_show", [
+            "id" => $this->person->getId()
+        ]));
+
+        $form = $crawler->selectButton("updatePerson")->form([]);
+
+        $this->client->submit($form);
+
+        $this->client->waitFor("#js-msg-flash");
+
+        $this->assertSelectorExists("#js-msg-flash.alert.alert-success");
+
+        $crawler->selectButton("btn-close-msg")->click();
+
+
+        // testPantherSuccessToAddNewGroupToPerson
+        $crawler->selectButton("btn-new-group")->click();
+
+        $this->client->waitFor("#js-btn-confirm");
+
+        $form = $crawler->selectButton("js-btn-confirm")->form([
+            "person_new_group[groupPeople][familyTypology]" => 1,
+            "person_new_group[groupPeople][nbPeople]" => 1,
+            "person_new_group[role]" => 1
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSelectorTextContains(".alert.alert-success", "Le nouveau groupe a été créé.");
+    }
+
     public function testListPeoplePageIsUp()
     {
         $this->createLogin($this->user);
@@ -260,25 +312,6 @@ class PersonControllerTest extends PantherTestCase
         $this->assertSelectorTextContains("h1", $this->person->getFullname());
     }
 
-    public function testEditPersonInGroup() // Test via AJAX
-    {
-        $this->createLogin($this->user);
-
-        /** @var Crawler */
-        $crawler = $this->client->request("GET", $this->generateUri("group_person_show", [
-            "id" => $this->dataFixtures["groupPeople1"]->getId(),
-            "person_id" => $this->person->getId(),
-            "slug" => $this->person->getSlug()
-        ]));
-
-        $form = $crawler->selectButton("updatePerson")->form([]);
-
-        $this->client->submit($form);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        // $this->assertSelectorExists(".alert.alert-success");
-    }
-
     public function testPersonShowIsUp()
     {
         $this->createLogin($this->user);
@@ -292,30 +325,12 @@ class PersonControllerTest extends PantherTestCase
         $this->assertSelectorTextContains("h1", $this->person->getFullname());
     }
 
-    public function testEditPersonWithAjax()
-    {
-        $this->createPantherLogin($this->user);
-
-        /** @var Crawler */
-        $crawler = $this->client->request("GET", $this->generatePantherUri("person_show", [
-            "id" => $this->person->getId(),
-        ]));
-
-        $form = $crawler->selectButton("updatePerson")->form([]);
-
-        $this->client->submit($form);
-
-        $this->client->waitFor("#js-msg-flash");
-
-        $this->assertSelectorExists("#js-msg-flash.alert.alert-success");
-    }
-
     public function testFailAddNewGroupToPerson()
     {
         $this->createLogin($this->user);
 
         $this->client->request("POST", $this->generateUri("person_new_group", [
-            "id" => $this->person->getId(),
+            "id" => $this->person->getId()
         ]));
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -323,34 +338,12 @@ class PersonControllerTest extends PantherTestCase
         $this->assertSelectorExists(".alert.alert-danger");
     }
 
-
-    // public function testSuccessToAddNewGroupToPerson() // à tester avec Panther
-    // {
-    //     /** @var Crawler */
-    //     $crawler =         $this->client->request("GET", $this->generateUri("person_show", [
-    //         "id" => $this->person->getId(),
-    //     ]));
-
-    //     $form = $crawler->selectButton("js-btn-confirm")->form([
-    //         "person_new_group[groupPeople][familyTypology]" => 1,
-    //         "person_new_group[groupPeople][nbPeople]" => 1,
-    //         "person_new_group[role]" => 1
-    //     ]);
-
-    //     $this->client->submit($form);
-
-    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    //     $this->assertSelectorTextContains("h1", "Groupe");
-    //     $this->assertSelectorExists(".alert.alert-success");
-    // }
-
-
     public function testSearchPersonWithOneResult()
     {
         $this->createLogin($this->user);
 
         $this->client->request("GET", $this->generateUri("search_person", [
-            "search" => "John Doe",
+            "search" => "John Doe"
         ]));
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
@@ -363,7 +356,7 @@ class PersonControllerTest extends PantherTestCase
         $this->createLogin($this->user);
 
         $this->client->request("GET", $this->generateUri("person_delete", [
-            "id" => $this->person->getId(),
+            "id" => $this->person->getId()
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -375,7 +368,7 @@ class PersonControllerTest extends PantherTestCase
         $this->createLogin($this->user);
 
         $this->client->request("GET", $this->generateUri("search_person", [
-            "search" => "",
+            "search" => ""
         ]));
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
@@ -387,7 +380,7 @@ class PersonControllerTest extends PantherTestCase
         $this->createLogin($this->user);
 
         $this->client->request("GET", $this->generateUri("search_person", [
-            "search" => "xxx",
+            "search" => "xxx"
         ]));
 
         $data = json_decode($this->client->getResponse()->getContent(), true);

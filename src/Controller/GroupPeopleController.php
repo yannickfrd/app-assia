@@ -6,6 +6,7 @@ use App\Entity\Person;
 use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
+use App\Service\Pagination;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\RolePersonRepository;
@@ -15,8 +16,8 @@ use App\Repository\GroupPeopleRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\GroupPeople\GroupPeopleSearchType;
-use App\Service\Pagination;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -80,13 +81,12 @@ class GroupPeopleController extends AbstractController
      * Supprime le groupe de personnes
      * 
      * @Route("/group/{id}/delete", name="group_people_delete", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      * @param GroupPeople $groupPeople
      * @return Response
      */
     public function deleteGroupPeople(GroupPeople $groupPeople): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
         $this->manager->remove($groupPeople);
         $this->manager->flush();
 

@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Device;
+use App\Service\Pagination;
 use App\Form\Device\DeviceType;
 use App\Repository\DeviceRepository;
-use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DeviceController extends AbstractController
@@ -27,14 +28,13 @@ class DeviceController extends AbstractController
      * Affiche la liste des dispositifs
      * 
      * @Route("/admin/devices", name="admin_devices", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param Pagination $pagination
      * @return Response
      */
     public function listDevice(Request $request, Pagination $pagination): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
         return $this->render("app/device/listDevices.html.twig", [
             "devices" => $pagination->paginate($this->repo->findAllDevicesQuery(), $request) ?? null
         ]);
@@ -44,14 +44,13 @@ class DeviceController extends AbstractController
      * Nouveau dispositif
      * 
      * @Route("/admin/device/new", name="admin_device_new", methods="GET|POST")
+     * @IsGranted("ROLE_ADMIN")
      * @param Device $device
      * @param Request $request
      * @return Response
      */
     public function newDevice(Device $device = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
         $device = new Device();
 
         $form = ($this->createForm(DeviceType::class, $device))
@@ -71,14 +70,13 @@ class DeviceController extends AbstractController
      * Modification d'un dispositif
      * 
      * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
+     * @IsGranted("ROLE_ADMIN")
      * @param Device $device
      * @param Request $request
      * @return Response
      */
     public function editDevice(Device $device, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-
         $form = ($this->createForm(DeviceType::class, $device))
             ->handleRequest($request);
 

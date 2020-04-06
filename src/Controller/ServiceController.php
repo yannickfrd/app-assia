@@ -3,18 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Service;
+use App\Service\Pagination;
+use App\Export\ServiceExport;
 use App\Form\Model\ServiceSearch;
 use App\Form\Service\ServiceType;
-use App\Form\Service\ServiceSearchType;
-use App\Export\ServiceExport;
-use App\Repository\AccommodationRepository;
-use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
-use App\Service\Pagination;
+use App\Repository\ServiceRepository;
+use App\Form\Service\ServiceSearchType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AccommodationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ServiceController extends AbstractController
@@ -59,12 +60,11 @@ class ServiceController extends AbstractController
      * Nouveau service
      * 
      * @Route("/service/new", name="service_new", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      *  @return Response
      */
     public function newService(Service $service = null, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("ROLE_SUPER_ADMIN");
-
         $service = new Service();
 
         $form = ($this->createForm(ServiceType::class, $service))
