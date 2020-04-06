@@ -2,13 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\OriginRequest;
-use Symfony\Component\DomCrawler\Crawler;
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class OriginRequestControllerTest extends WebTestCase
 {
@@ -27,22 +25,22 @@ class OriginRequestControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/SupportFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $this->supportGroup = $this->dataFixtures["supportGroup1"];
+        $this->supportGroup = $this->dataFixtures['supportGroup1'];
     }
 
     public function testEditOriginRequestIsUp()
     {
-        $this->client->request("POST", $this->generateUri("support_originRequest", [
-            "id" => $this->supportGroup->getId()
+        $this->client->request('POST', $this->generateUri('support_originRequest', [
+            'id' => $this->supportGroup->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Origine de la demande");
+        $this->assertSelectorTextContains('h1', 'Origine de la demande');
     }
 
     protected function tearDown(): void

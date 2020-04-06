@@ -2,10 +2,9 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Service;
 use App\Entity\Pole;
+use App\Entity\Service;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceTest extends WebTestCase
@@ -22,25 +21,24 @@ class ServiceTest extends WebTestCase
     /** @var Pole */
     protected $pole;
 
-
     protected function setUp()
     {
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/ServiceFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 
-        $this->pole = $dataFixtures["pole"];
+        $this->pole = $dataFixtures['pole'];
 
-        $faker = \Faker\Factory::create("fr_FR");
+        $faker = \Faker\Factory::create('fr_FR');
 
         $this->service = (new Service())
-            ->setName("Service " . $faker->numberBetween(1, 100))
+            ->setName('Service '.$faker->numberBetween(1, 100))
             ->setCity($faker->city)
             ->setZipCode($faker->numberBetween(1, 95))
             ->setAddress($faker->address)
@@ -54,7 +52,7 @@ class ServiceTest extends WebTestCase
 
     public function testBlankName()
     {
-        $this->assertHasErrors($this->service->setName(""), 1);
+        $this->assertHasErrors($this->service->setName(''), 1);
     }
 
     public function testNullPole()
@@ -64,13 +62,13 @@ class ServiceTest extends WebTestCase
 
     public function testInvalidEmail()
     {
-        $this->assertHasErrors($this->service->setEmail("xxx@xxx"), 1);
+        $this->assertHasErrors($this->service->setEmail('xxx@xxx'), 1);
     }
 
     public function testServiceExists()
     {
         $service = $this->service
-            ->setName("AVDL");
+            ->setName('AVDL');
         $this->assertHasErrors($service, 1);
     }
 

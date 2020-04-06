@@ -3,11 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Person;
-
-use Doctrine\ORM\Query;
 use App\Form\Model\PersonSearch;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Person|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,98 +22,97 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne le groupe de personnes
+     * Donne le groupe de personnes.
      *
      * @param int $id
-     * @return Person|null
      */
     public function findPersonById($id): ?Person
     {
-        return $this->createQueryBuilder("p")
-            ->select("p")
-            ->leftJoin("p.createdBy", "createdBy")->addselect("PARTIAL createdBy.{id, firstname, lastname}")
-            ->leftJoin("p.updatedBy", "updatedBy")->addselect("PARTIAL updatedBy.{id, firstname, lastname}")
-            ->leftJoin("p.rolesPerson", "r")->addselect("PARTIAL r.{id, role, head}")
-            ->leftJoin("r.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}")
-            ->leftJoin("p.supports", "sp")->addselect("PARTIAL sp.{id, status, startDate, endDate, updatedAt}")
-            ->leftJoin("sp.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
-            ->leftJoin("sg.referent", "ref")->addselect("PARTIAL ref.{id, firstname, lastname, email, phone}")
-            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
-            ->leftJoin("sg.device", "d")->addselect("PARTIAL d.{id, name}")
-            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->leftJoin('p.createdBy', 'createdBy')->addselect('PARTIAL createdBy.{id, firstname, lastname}')
+            ->leftJoin('p.updatedBy', 'updatedBy')->addselect('PARTIAL updatedBy.{id, firstname, lastname}')
+            ->leftJoin('p.rolesPerson', 'r')->addselect('PARTIAL r.{id, role, head}')
+            ->leftJoin('r.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
+            ->leftJoin('p.supports', 'sp')->addselect('PARTIAL sp.{id, status, startDate, endDate, updatedAt}')
+            ->leftJoin('sp.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
+            ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname, email, phone}')
+            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone}')
+            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
 
-            ->andWhere("p.id = :id")
-            ->setParameter("id", $id)
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
     /**
-     * Retourne toutes les personnes
+     * Retourne toutes les personnes.
      *
-     * @param PersonSearch $personSearch
      * @param string $search
-     * @return Query
      */
     public function findAllPeopleQuery(PersonSearch $personSearch, string $search = null): Query
     {
-        $query =  $this->createQueryBuilder("p")
-            ->select("p");
+        $query = $this->createQueryBuilder('p')
+            ->select('p');
         if ($search) {
             $query->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search")
-                ->setParameter("search", '%' . $search . '%');
+                ->setParameter('search', '%'.$search.'%');
         }
         if ($personSearch->getFirstname()) {
-            $query->andWhere("p.firstname LIKE :firstname")
-                ->setParameter("firstname", $personSearch->getFirstname() . '%');
+            $query->andWhere('p.firstname LIKE :firstname')
+                ->setParameter('firstname', $personSearch->getFirstname().'%');
         }
         if ($personSearch->getLastname()) {
-            $query->andWhere("p.lastname LIKE :lastname")
-                ->setParameter("lastname", $personSearch->getLastname() . '%');
+            $query->andWhere('p.lastname LIKE :lastname')
+                ->setParameter('lastname', $personSearch->getLastname().'%');
         }
 
         if ($personSearch->getBirthdate()) {
-            $query->andWhere("p.birthdate = :birthdate")
-                ->setParameter("birthdate", $personSearch->getBirthdate());
+            $query->andWhere('p.birthdate = :birthdate')
+                ->setParameter('birthdate', $personSearch->getBirthdate());
         }
         if ($personSearch->getGender()) {
-            $query->andWhere("p.gender = :gender")
-                ->setParameter("gender", $personSearch->getGender());
+            $query->andWhere('p.gender = :gender')
+                ->setParameter('gender', $personSearch->getGender());
         }
         if ($personSearch->getPhone()) {
-            $query->andWhere("p.phone1 = :phone OR p.phone2 = :phone")
-                ->setParameter("phone", $personSearch->getPhone());
+            $query->andWhere('p.phone1 = :phone OR p.phone2 = :phone')
+                ->setParameter('phone', $personSearch->getPhone());
         }
-        return $query->orderBy("p.lastname", "ASC")
+
+        return $query->orderBy('p.lastname', 'ASC')
             ->getQuery();
     }
 
     /**
-     * Trouve toutes les personnes à exporter
-     * 
-     * @param PersonSearch $personSearch
+     * Trouve toutes les personnes à exporter.
+     *
      * @return mixed *
      */
     public function findPeopleToExport(PersonSearch $personSearch)
     {
         $query = $this->findAllPeopleQuery($personSearch);
+
         return $query->getResult();
     }
 
     /**
-     *  Trouve toutes les personnes
+     *  Trouve toutes les personnes.
      *
      * @param string $search
+     *
      * @return mixed
      */
     public function findPeopleByResearch(string $search = null)
     {
-        return $this->createQueryBuilder("p")
-            ->select("p")
+        return $this->createQueryBuilder('p')
+            ->select('p')
             ->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search OR CONCAT(p.firstname,' ' ,p.lastname) LIKE :search")
-            ->setParameter("search", '%' . $search . '%')
-            ->orderBy("p.lastname, p.firstname", "ASC")
+            ->setParameter('search', '%'.$search.'%')
+            ->orderBy('p.lastname, p.firstname', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
@@ -122,7 +120,7 @@ class PersonRepository extends ServiceEntityRepository
 
     public function findAllPeople(array $criteria = null)
     {
-        $query = $this->createQueryBuilder("p")->select("COUNT(p.id)");
+        $query = $this->createQueryBuilder('p')->select('COUNT(p.id)');
 
         return $query->getQuery()
             ->getSingleScalarResult();

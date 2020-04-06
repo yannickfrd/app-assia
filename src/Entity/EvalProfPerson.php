@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Form\Utils\Choices;
-use App\Entity\EvaluationPerson;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -12,60 +11,59 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class EvalProfPerson
 {
-
     public const SCHOOL_LEVEL = [
-        1 => "Savoir de base non acquis, illettrisme",
-        2 => "Avant 3ème",
-        3 => "Fin de scolarité obligatoire",
-        4 => "BEP / CAP",
-        5 => "Bac pro",
-        6 => "Bac général",
-        7 => "Bac +2",
-        8 => "Bac +3 (licence)",
-        9 => "Bac +5 (master) et plus",
-        97 => "Autre",
-        99 => "Non renseigné"
+        1 => 'Savoir de base non acquis, illettrisme',
+        2 => 'Avant 3ème',
+        3 => 'Fin de scolarité obligatoire',
+        4 => 'BEP / CAP',
+        5 => 'Bac pro',
+        6 => 'Bac général',
+        7 => 'Bac +2',
+        8 => 'Bac +3 (licence)',
+        9 => 'Bac +5 (master) et plus',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const PROF_EXPERIENCE = [
-        1 => "Jamais travaillé",
-        2 => "Très peu travaillé",
-        3 => "Alternance emploi et chômage",
-        4 => "A toujours travaillé",
-        99 => "Non renseigné"
+        1 => 'Jamais travaillé',
+        2 => 'Très peu travaillé',
+        3 => 'Alternance emploi et chômage',
+        4 => 'A toujours travaillé',
+        99 => 'Non renseigné',
     ];
 
     public const PROF_STATUS = [
-        1 => "Auto-entrepreneur/euse",
+        1 => 'Auto-entrepreneur/euse',
         2 => "Demandeur/euse d'emploi",
-        3 => "En formation",
-        4 => "En invalidité",
-        5 => "Étudiant·e",
-        6 => "Indépendant·e",
-        7 => "Retraité·e",
-        8 => "Salarié·e",
-        97 => "Autre",
-        99 => "Non renseigné"
+        3 => 'En formation',
+        4 => 'En invalidité',
+        5 => 'Étudiant·e',
+        6 => 'Indépendant·e',
+        7 => 'Retraité·e',
+        8 => 'Salarié·e',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const CONTRACT_TYPE = [
-        1 => "CDD",
-        2 => "CDI",
-        3 => "Contrat aidé",
+        1 => 'CDD',
+        2 => 'CDI',
+        3 => 'Contrat aidé',
         4 => "Contrat d'apprentissage",
-        5 => "Contrat de professionnalisation",
-        6 => "Fonction publique",
-        7 => "Intérim (CTT)",
-        8 => "Stage",
-        97 => "Autre",
-        99 => "Non renseigné"
+        5 => 'Contrat de professionnalisation',
+        6 => 'Fonction publique',
+        7 => 'Intérim (CTT)',
+        8 => 'Stage',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const TRANSFORT_MEANS = [
-        1 => "Voiture",
-        2 => "Transport en commun",
-        97 => "Autre",
-        99 => "Non renseigné"
+        1 => 'Voiture',
+        2 => 'Transport en commun',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -167,7 +165,6 @@ class EvalProfPerson
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationPerson;
-
 
     public function getId(): ?int
     {

@@ -3,12 +3,11 @@
 namespace App\EventListener;
 
 use App\Entity\UserConnection;
-
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserConnectionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class LoginListener
 {
@@ -27,8 +26,8 @@ class LoginListener
         $user = $event->getAuthenticationToken()->getUser();
 
         $lastConnection = $this->repo->findOneBy(
-            ["user" => $user],
-            ["connectionAt" => "DESC"]
+            ['user' => $user],
+            ['connectionAt' => 'DESC']
         );
 
         if ($lastConnection) {
@@ -53,14 +52,14 @@ class LoginListener
         $i = 0;
 
         foreach ($user->getServiceUser() as $serviceUser) {
-            if ($i == 0 && !in_array("ROLE_SUPER_ADMIN", $user->getRoles())) {
-                $this->session->set("themeColor", $serviceUser->getService()->getPole()->getColor());
+            if (0 == $i && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $this->session->set('themeColor', $serviceUser->getService()->getPole()->getColor());
             }
             $servicesUser[] = $serviceUser->getService()->getName();
-            $i++;
+            ++$i;
         }
 
-        $this->session->set("servicesUser", $servicesUser);
+        $this->session->set('servicesUser', $servicesUser);
     }
 
     public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)

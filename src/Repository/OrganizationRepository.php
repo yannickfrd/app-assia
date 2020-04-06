@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Organization;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Organization|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,15 +21,14 @@ class OrganizationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne tous les dispositifs
-     * @return Query
+     * Retourne tous les dispositifs.
      */
     public function findAllOrganizationsQuery(): Query
     {
-        $query =  $this->createQueryBuilder("o")
-            ->select("o");
+        $query = $this->createQueryBuilder('o')
+            ->select('o');
 
-        return $query->orderBy("o.name", "ASC")
+        return $query->orderBy('o.name', 'ASC')
             ->getQuery();
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Device;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Device|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,44 +21,44 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne tous les dispositifs
-     * @return Query
+     * Retourne tous les dispositifs.
      */
     public function findAllDevicesQuery(): Query
     {
-        $query =  $this->createQueryBuilder("d")
-            ->select("d");
+        $query = $this->createQueryBuilder('d')
+            ->select('d');
 
-        return $query->orderBy("d.name", "ASC")
+        return $query->orderBy('d.name', 'ASC')
             ->getQuery();
     }
 
-    /** 
-     * Donne la liste des dispositifs du service
+    /**
+     * Donne la liste des dispositifs du service.
      */
     public function getDevicesFromServiceQueryList($accommodation)
     {
-        $query =  $this->createQueryBuilder("d")->select("PARTIAL d.{id, name}")
-            ->leftJoin("d.serviceDevices", "sd")
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
+            ->leftJoin('d.serviceDevices', 'sd')
 
-            ->where("sd.service = :service")
-            ->setParameter("service", $accommodation->getService());
+            ->where('sd.service = :service')
+            ->setParameter('service', $accommodation->getService());
 
-        return $query->orderBy("d.name", "ASC");
+        return $query->orderBy('d.name', 'ASC');
     }
 
-    /** 
-     * Donne la liste des dispositifs de l'utilisateur
+    /**
+     * Donne la liste des dispositifs de l'utilisateur.
      */
     public function getDevicesFromUserQueryList($currentUser)
     {
-        $query =  $this->createQueryBuilder("d")->select("PARTIAL d.{id, name}")
-            ->leftJoin("d.serviceDevices", "sd")->addSelect("sd");
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
+            ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
 
-        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
-            $query = $query->where("sd.service IN (:services)")
-                ->setParameter("services", $currentUser->getServices());
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->where('sd.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
         }
-        return $query->orderBy("d.name", "ASC");
+
+        return $query->orderBy('d.name', 'ASC');
     }
 }

@@ -43,14 +43,10 @@ class GroupPeopleSearch
      */
     private $nbPeople;
 
-
     public function __construct()
     {
     }
 
-    /**
-     * @return string|null
-     */
     public function getLastname(): ?string
     {
         return $this->lastname;
@@ -63,9 +59,6 @@ class GroupPeopleSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -78,9 +71,6 @@ class GroupPeopleSearch
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getBirthdate(): ?\DateTimeInterface
     {
         return $this->birthdate;
@@ -104,7 +94,6 @@ class GroupPeopleSearch
 
         return $this;
     }
-
 
     public function getHead(): ?bool
     {

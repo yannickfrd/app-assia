@@ -12,11 +12,11 @@ class OrganizationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("name")
-            ->add("comment", null, [
-                "attr" => [
-                    "rows" => 5,
-                    "placeholder" => "Description..."
+            ->add('name')
+            ->add('comment', null, [
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'Description...',
                 ],
             ]);
     }
@@ -24,8 +24,8 @@ class OrganizationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => Organization::class,
-            "translation_domain" => "forms"
+            'data_class' => Organization::class,
+            'translation_domain' => 'forms',
         ]);
     }
 }

@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UserResetPassword
 {
-
     /**
      * @Assert\NotNull(message="Le login ne doit pas être vide.")
      */

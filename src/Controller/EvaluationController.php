@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\SupportGroup;
-use App\Entity\InitEvalGroup;
-use App\Entity\SupportPerson;
-use App\Entity\InitEvalPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
+use App\Entity\SupportGroup;
+use App\Entity\SupportPerson;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\SupportGroupRepository;
 use App\Service\Normalisation;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
 {
@@ -32,17 +32,14 @@ class EvaluationController extends AbstractController
     }
 
     /**
-     * Voir une évaluation sociale
-     * 
+     * Voir une évaluation sociale.
+     *
      * @Route("/support/{id}/evaluation", name="support_evaluation_show", methods="GET|POST")
-     * @param int $id
-     * @param Request $request
-     * @return Response
      */
     public function showEvaluation(int $id, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
 
@@ -53,26 +50,22 @@ class EvaluationController extends AbstractController
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
 
-        return $this->render("app/evaluation/evaluation.html.twig", [
-            "support" => $supportGroup,
-            "form" => $form->createView(),
-            "edit_mode" => true
+        return $this->render('app/evaluation/evaluation.html.twig', [
+            'support' => $supportGroup,
+            'form' => $form->createView(),
+            'edit_mode' => true,
         ]);
     }
 
     /**
-     * Modification d'une évaluation sociale
-     * 
+     * Modification d'une évaluation sociale.
+     *
      * @Route("/support/{id}/evaluation_edit", name="support_evaluation_edit", methods="GET|POST")
-     * @param int $id
-     * @param Request $request
-     * @return Response
      */
-
     public function editEvaluation(int $id, Request $request, Normalisation $normalisation): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
 
@@ -87,9 +80,7 @@ class EvaluationController extends AbstractController
     }
 
     /**
-     * Crée l'évaluation sociale du groupe
-     *
-     * @param SupportGroup $supportGroup
+     * Crée l'évaluation sociale du groupe.
      */
     protected function createEvaluationGroup(SupportGroup $supportGroup)
     {
@@ -108,18 +99,15 @@ class EvaluationController extends AbstractController
 
         foreach ($supportGroup->getSupportPerson() as $supportPerson) {
             $this->createEvaluationPerson($supportPerson, $evaluationGroup);
-        };
+        }
 
         $this->manager->flush();
 
-        return $this->redirectToRoute("support_evaluation_show", ["id" => $supportGroup->getId()]);
+        return $this->redirectToRoute('support_evaluation_show', ['id' => $supportGroup->getId()]);
     }
 
     /**
-     * Crée l'évaluation sociale d'une personne du groupe
-     *
-     * @param SupportPerson $supportPerson
-     * @param EvaluationGroup $evaluationGroup
+     * Crée l'évaluation sociale d'une personne du groupe.
      */
     protected function createEvaluationPerson(SupportPerson $supportPerson, EvaluationGroup $evaluationGroup)
     {
@@ -135,9 +123,7 @@ class EvaluationController extends AbstractController
     }
 
     /**
-     * Met à jour l'évaluation sociale du groupe
-     * 
-     * @param EvaluationGroup $evaluationGroup
+     * Met à jour l'évaluation sociale du groupe.
      */
     protected function updateEvaluationGroup(EvaluationGroup $evaluationGroup)
     {
@@ -153,18 +139,16 @@ class EvaluationController extends AbstractController
         $this->manager->flush();
 
         return $this->json([
-            "code" => 200,
-            "alert" => "success",
-            "msg" =>  "Les modifications ont été enregistrées.",
-            "date" => date_format($now, "d/m/Y à H:i"),
-            "user" => $this->getUser()->getFullName()
+            'code' => 200,
+            'alert' => 'success',
+            'msg' => 'Les modifications ont été enregistrées.',
+            'date' => date_format($now, 'd/m/Y à H:i'),
+            'user' => $this->getUser()->getFullName(),
         ], 200);
     }
 
     /**
-     * Met à jour le budget du groupe
-     * 
-     * @param EvaluationGroup $evaluationGroup
+     * Met à jour le budget du groupe.
      */
     protected function updateBudgetGroup(EvaluationGroup $evaluationGroup)
     {
@@ -177,7 +161,6 @@ class EvaluationController extends AbstractController
         $initDebtsGroupAmt = 0;
 
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
-
             $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
             if ($evalBudgetPerson) {
                 $resourcesGroupAmt += $evalBudgetPerson->getResourcesAmt();
@@ -191,7 +174,7 @@ class EvaluationController extends AbstractController
                 $initResourcesGroupAmt += $initEvalPerson->getResourcesAmt();
                 $initDebtsGroupAmt += $initEvalPerson->getDebtsAmt();
             }
-        };
+        }
 
         $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
         $evalBudgetGroup->setResourcesGroupAmt($resourcesGroupAmt);
@@ -205,22 +188,19 @@ class EvaluationController extends AbstractController
     }
 
     /**
-     * Retourne un message d'erreur au format JSON
-     * 
-     * @param Normalisation $normalisation
-     * @return Response
+     * Retourne un message d'erreur au format JSON.
      */
     protected function errorMessage($form, Normalisation $normalisation): Response
     {
         $msg = [];
         foreach ($form->getErrors(true) as $error) {
-            $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName())  . " => " . $error->getMessage();
+            $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName()).' => '.$error->getMessage();
         }
 
         return $this->json([
-            "code" => 403,
-            "alert" => "danger",
-            "msg" => "Une erreur s'est produite : " . join(" ", $msg)
+            'code' => 403,
+            'alert' => 'danger',
+            'msg' => "Une erreur s'est produite : ".join(' ', $msg),
         ], 200);
     }
 }

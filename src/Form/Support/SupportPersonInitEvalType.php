@@ -13,14 +13,14 @@ class SupportPersonInitEvalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("initEvalPerson", InitEvalPersonType::class);
+            ->add('initEvalPerson', InitEvalPersonType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => SupportPerson::class,
-            "translation_domain" => "forms",
+            'data_class' => SupportPerson::class,
+            'translation_domain' => 'forms',
         ]);
     }
 }

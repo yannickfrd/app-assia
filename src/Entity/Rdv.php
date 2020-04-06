@@ -11,8 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Rdv
 {
     public const STATUS = [
-        0 => "Public",
-        1 => "Privé"
+        0 => 'Public',
+        1 => 'Privé',
     ];
 
     public const STATUS_DEFAULT = 0;
@@ -43,7 +43,6 @@ class Rdv
 
     /**
      * @ORM\Column(type="smallint", nullable=true, options={"default":Rdv::STATUS_DEFAULT})
- 
      */
     private $status = self::STATUS_DEFAULT;
 
@@ -130,11 +129,12 @@ class Rdv
 
     public function setStatus(?int $status): self
     {
-        if ($status == null) {
+        if (null == $status) {
             $this->status = 0;
         } else {
             $this->status = $status;
         }
+
         return $this;
     }
 
@@ -166,7 +166,6 @@ class Rdv
 
         return $this;
     }
-
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

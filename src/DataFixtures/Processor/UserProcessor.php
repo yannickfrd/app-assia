@@ -21,7 +21,7 @@ class UserProcessor implements ProcessorInterface
     /**
      * Processes an object before it is persisted to DB.
      *
-     * @param string $id Fixture ID
+     * @param string $id     Fixture ID
      * @param object $object
      */
     public function preProcess(string $id, $object): void
@@ -30,14 +30,14 @@ class UserProcessor implements ProcessorInterface
             return;
         }
 
-        /** @var User $object */
+        /* @var User $object */
         $object->setPassword($this->passwordEncoder->encodePassword($object, $object->getPlainPassword()));
     }
 
     /**
      * Processes an object after it is persisted to DB.
      *
-     * @param string $id Fixture ID
+     * @param string $id     Fixture ID
      * @param object $object
      */
     public function postProcess(string $id, $object): void

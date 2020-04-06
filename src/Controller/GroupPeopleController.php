@@ -2,24 +2,24 @@
 
 namespace App\Controller;
 
-use App\Entity\Person;
-use App\Service\Grammar;
-use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
-use App\Service\Pagination;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Form\GroupPeople\GroupPeopleSearchType;
+use App\Form\GroupPeople\GroupPeopleType;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
-use App\Repository\RolePersonRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\GroupPeople\GroupPeopleType;
 use App\Repository\GroupPeopleRepository;
+use App\Repository\RolePersonRepository;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\GroupPeople\GroupPeopleSearchType;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GroupPeopleController extends AbstractController
 {
@@ -33,13 +33,11 @@ class GroupPeopleController extends AbstractController
     }
 
     /**
-     * Liste des groupes de personnes
-     * 
+     * Liste des groupes de personnes.
+     *
      * @Route("/groups_people", name="groups_people", methods="GET|POST")
+     *
      * @param GroupPeopleSearch $groupPeopleSearch
-     * @param Request $request
-     * @param Pagination $pagination
-     * @return Response
      */
     public function listGroupsPeople(GroupPeopleSearch $groupPeopleSearch = null, Request $request, Pagination $pagination): Response
     {
@@ -48,18 +46,16 @@ class GroupPeopleController extends AbstractController
         $form = ($this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch))
             ->handleRequest($request);
 
-        return $this->render("app/groupPeople/listGroupsPeople.html.twig", [
-            "form" => $form->createView(),
-            "groupsPeople" => $pagination->paginate($this->repo->findAllGroupPeopleQuery($groupPeopleSearch), $request)
+        return $this->render('app/groupPeople/listGroupsPeople.html.twig', [
+            'form' => $form->createView(),
+            'groupsPeople' => $pagination->paginate($this->repo->findAllGroupPeopleQuery($groupPeopleSearch), $request),
         ]);
     }
 
     /**
-     * Modification d'un groupe
-     * 
+     * Modification d'un groupe.
+     *
      * @Route("/group/{id}", name="group_people_show", methods="GET|POST")
-     * @param Request $request
-     * @return Response
      */
     public function editGroupPeople($id, Request $request): Response
     {
@@ -72,40 +68,34 @@ class GroupPeopleController extends AbstractController
             $this->updateGroupPeople($groupPeople);
         }
 
-        return $this->render("app/groupPeople/groupPeople.html.twig", [
-            "form" => $formGroupPeople->createView(),
+        return $this->render('app/groupPeople/groupPeople.html.twig', [
+            'form' => $formGroupPeople->createView(),
         ]);
     }
 
     /**
-     * Supprime le groupe de personnes
-     * 
+     * Supprime le groupe de personnes.
+     *
      * @Route("/group/{id}/delete", name="group_people_delete", methods="GET")
      * @IsGranted("ROLE_ADMIN")
-     * @param GroupPeople $groupPeople
-     * @return Response
      */
     public function deleteGroupPeople(GroupPeople $groupPeople): Response
     {
         $this->manager->remove($groupPeople);
         $this->manager->flush();
 
-        $this->addFlash("danger", "Le groupe a été supprimé.");
+        $this->addFlash('danger', 'Le groupe a été supprimé.');
 
-        return $this->redirectToRoute("home");
+        return $this->redirectToRoute('home');
     }
 
     /**
-     * Ajout d'une personne dans un groupe
-     * 
+     * Ajout d'une personne dans un groupe.
+     *
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person", methods="POST")
      * @ParamConverter("person", options={"id" = "person_id"})
-     * @param integer $id
-     * @param Person $person
+     *
      * @param RolePerson $rolePerson
-     * @param RolePersonRepository $repoRolePerson
-     * @param Request $request
-     * @return Response
      */
     public function tryAddPersonInGroup(int $id, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
     {
@@ -119,36 +109,32 @@ class GroupPeopleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->addPersonInGroup($groupPeople, $rolePerson, $person, $repoRolePerson);
         } else {
-            $this->addFlash("danger", "Une erreur s'est produite.");
+            $this->addFlash('danger', "Une erreur s'est produite.");
         }
 
-        return $this->redirectToRoute("group_people_show", ["id" => $groupPeople->getId()]);
+        return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
     }
 
     /**
-     * Retire la personne du groupe
-     * 
+     * Retire la personne du groupe.
+     *
      * @Route("/role_person/{id}/remove/{_token}", name="role_person_remove", methods="GET")
-     * @param RolePerson $rolePerson
-     * @param Request $request
-     * @return Response
      */
     public function tryRemovePersonInGroup(RolePerson $rolePerson, Request $request): Response
     {
-        if (!$this->isGranted("ROLE_ADMIN")) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->accessDenied();
         }
         // Vérifie si le token est valide avant de retirer la personne du groupe
-        if ($this->isCsrfTokenValid("remove" . $rolePerson->getId(), $request->get("_token"))) {
+        if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $request->get('_token'))) {
             return $this->removePersonInGroup($rolePerson);
         }
+
         return $this->errorMessage();
     }
 
     /**
-     * Met à jour un groupe de personnes
-     * 
-     * @param GroupPeople $groupPeople
+     * Met à jour un groupe de personnes.
      */
     protected function updateGroupPeople(GroupPeople $groupPeople)
     {
@@ -157,22 +143,17 @@ class GroupPeopleController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash("success", "Les modifications ont été enregistrées.");
+        $this->addFlash('success', 'Les modifications ont été enregistrées.');
     }
 
     /**
-     * Ajoute une personne dans le groupe
-     * 
-     * @param GroupPeople $groupPeople
-     * @param RolePerson $rolePerson
-     * @param person $person
-     * @param RolePersonRepository $repoRolePerson
+     * Ajoute une personne dans le groupe.
      */
     protected function addPersonInGroup(GroupPeople $groupPeople, RolePerson $rolePerson, person $person, RolePersonRepository $repoRolePerson)
     {
         // Si la personne est asssociée, ne fait rien, créé la liaison
         if ($this->personExists($groupPeople, $person, $repoRolePerson)) {
-            return $this->addFlash("warning", $person->getFullname() . " est déjà associé" . Grammar::gender($person->getGender()) . " au groupe.");
+            return $this->addFlash('warning', $person->getFullname().' est déjà associé'.Grammar::gender($person->getGender()).' au groupe.');
         }
 
         $rolePerson
@@ -189,30 +170,24 @@ class GroupPeopleController extends AbstractController
 
         $this->manager->flush();
 
-        return $this->addFlash("success", $person->getFullname() . " a été ajouté" . Grammar::gender($person->getGender()) . " au groupe.");
+        return $this->addFlash('success', $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au groupe.');
     }
 
     /**
-     *  Vérifie si la personne est déjà rattachée à ce groupe
-     * 
-     * @param GroupPeople $groupPeople
-     * @param Person $person
-     * @param RolePersonRepository $repoRolePerson
+     *  Vérifie si la personne est déjà rattachée à ce groupe.
+     *
      * @return RolePerson|null
      */
     protected function personExists(GroupPeople $groupPeople, Person $person, RolePersonRepository $repoRolePerson)
     {
         return $repoRolePerson->findOneBy([
-            "person" => $person->getId(),
-            "groupPeople" => $groupPeople->getId()
+            'person' => $person->getId(),
+            'groupPeople' => $groupPeople->getId(),
         ]);
     }
 
     /**
-     * Retire une personne d'un groupe
-     * 
-     * @param RolePerson $rolePerson
-     * @return Response
+     * Retire une personne d'un groupe.
      */
     protected function removePersonInGroup(RolePerson $rolePerson): Response
     {
@@ -223,9 +198,9 @@ class GroupPeopleController extends AbstractController
         // Vérifie que le groupe est composé de plus d'1 personne
         if ($rolePerson->getHead()) {
             return $this->json([
-                "code" => null,
-                "msg" => "Le/la demandeur/euse principal·e ne peut pas être retiré·e du groupe.",
-                "data" => null
+                'code' => null,
+                'msg' => 'Le/la demandeur/euse principal·e ne peut pas être retiré·e du groupe.',
+                'data' => null,
             ], 200);
         }
 
@@ -235,37 +210,33 @@ class GroupPeopleController extends AbstractController
         $this->manager->flush();
 
         return $this->json([
-            "code" => 200,
-            "msg" => $person->getFullname() . " a été retiré" .  Grammar::gender($person->getGender()) . " du groupe.",
-            "data" => $nbPeople - 1
+            'code' => 200,
+            'msg' => $person->getFullname().' a été retiré'.Grammar::gender($person->getGender()).' du groupe.',
+            'data' => $nbPeople - 1,
         ], 200);
     }
 
     /**
-     * Retourne un message d'accès refusé
-     * 
-     * @return Response
+     * Retourne un message d'accès refusé.
      */
     protected function accessDenied(): Response
     {
         return $this->json([
-            "code" => 403,
-            "alert" => "danger",
-            "msg" => "Vous n'avez pas les droits pour cette action. Demandez à un administrateur de votre service.",
+            'code' => 403,
+            'alert' => 'danger',
+            'msg' => "Vous n'avez pas les droits pour cette action. Demandez à un administrateur de votre service.",
         ], 200);
     }
 
     /**
-     * Retourne un message d'erreur au format JSON
-     * 
-     * @return Response
+     * Retourne un message d'erreur au format JSON.
      */
     protected function errorMessage(): Response
     {
         return $this->json([
-            "code" => 403,
-            "alert" => "danger",
-            "msg" => "Une erreur s'est produite.",
+            'code' => 403,
+            'alert' => 'danger',
+            'msg' => "Une erreur s'est produite.",
         ], 200);
     }
 }

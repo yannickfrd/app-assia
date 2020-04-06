@@ -3,16 +3,14 @@
 namespace App\Form\Model;
 
 use App\Entity\Pole;
-use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class AccommodationSearch
 {
     public const ACCOMMODATION_DATES = [
-        1 => "Ouverture",
-        2 => "Fermeture",
-        3 => "Période d'activité"
+        1 => 'Ouverture',
+        2 => 'Fermeture',
+        3 => "Période d'activité",
     ];
 
     /**
@@ -70,9 +68,6 @@ class AccommodationSearch
         $this->service = new ArrayCollection();
     }
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
@@ -85,9 +80,6 @@ class AccommodationSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getplacesNumber(): ?int
     {
         return $this->placesNumber;
@@ -100,9 +92,6 @@ class AccommodationSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCity(): ?string
     {
         return $this->city;
@@ -110,7 +99,6 @@ class AccommodationSearch
 
     public function setCity(?string $city): self
     {
-
         $this->city = $city;
 
         return $this;
@@ -150,12 +138,10 @@ class AccommodationSearch
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
         return $this;
     }
 
-    /**
-     * @return ArrayCollection|null
-     */
     public function getService(): ?ArrayCollection
     {
         return $this->service;
@@ -168,9 +154,6 @@ class AccommodationSearch
         return $this;
     }
 
-    /**
-     * @return ArrayCollection|null
-     */
     public function getDevice(): ?ArrayCollection
     {
         return $this->device;
@@ -198,9 +181,6 @@ class AccommodationSearch
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getExport(): ?bool
     {
         return $this->export;

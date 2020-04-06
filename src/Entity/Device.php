@@ -61,7 +61,7 @@ class Device
     private $updatedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ServiceDevice", mappedBy="device", orphanRemoval=true, cascade={"persist"})     
+     * @ORM\OneToMany(targetEntity="App\Entity\ServiceDevice", mappedBy="device", orphanRemoval=true, cascade={"persist"})
      */
     private $serviceDevices;
 
@@ -74,7 +74,6 @@ class Device
      * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="device")
      */
     private $supportGroup;
-
 
     public function __construct()
     {

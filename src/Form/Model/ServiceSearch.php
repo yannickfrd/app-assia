@@ -44,9 +44,6 @@ class ServiceSearch
     {
     }
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
@@ -59,9 +56,6 @@ class ServiceSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;
@@ -74,9 +68,6 @@ class ServiceSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhone(): ?string
     {
         return $this->phone;
@@ -84,15 +75,11 @@ class ServiceSearch
 
     public function setPhone(?string $phone): self
     {
-
         $this->phone = Phone::formatPhone($phone);
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCity(): ?string
     {
         return $this->city;
@@ -100,7 +87,6 @@ class ServiceSearch
 
     public function setCity(?string $city): self
     {
-
         $this->city = $city;
 
         return $this;
@@ -121,9 +107,6 @@ class ServiceSearch
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getExport(): ?bool
     {
         return $this->export;

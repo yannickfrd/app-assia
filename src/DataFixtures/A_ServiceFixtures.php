@@ -2,18 +2,16 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Pole;
-use App\Entity\User;
 use App\Entity\Accommodation;
 use App\Entity\Device;
+use App\Entity\Pole;
 use App\Entity\Service;
-use App\Entity\ServiceUser;
 use App\Entity\ServiceDevice;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\ServiceUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class A_ServiceFixtures extends Fixture
@@ -21,47 +19,47 @@ class A_ServiceFixtures extends Fixture
     private $manager;
 
     public const SERVICES_HABITAT = [
-        1 => "ALTHO",
-        2 => "ASSLT - ASLLT",
-        3 => "10 000 logements",
-        4 => "SAVL",
-        5 => "AVDL"
+        1 => 'ALTHO',
+        2 => 'ASSLT - ASLLT',
+        3 => '10 000 logements',
+        4 => 'SAVL',
+        5 => 'AVDL',
     ];
 
     public const SERVICES_HEB = [
-        1 => "CHU les Carrières",
-        2 => "CHRS Etape",
-        3 => "DHUA",
+        1 => 'CHU les Carrières',
+        2 => 'CHRS Etape',
+        3 => 'DHUA',
         4 => "Accueil de jour L'Ensemble",
         5 => "Accueil de nuit L'Ensemble",
         6 => "CHRS L'Ensemble",
         7 => "Maison Relais L'Ensemble",
         8 => "Taxi social L'Ensemble",
-        9 => "Maison Milada",
-        10 => "Maison Lucien",
-        11 => "MHU Oasis"
+        9 => 'Maison Milada',
+        10 => 'Maison Lucien',
+        11 => 'MHU Oasis',
     ];
 
     public const SERVICES_SOCIO = [
-        1 => "CHRS Hermitage",
-        2 => "Consultations psychologiques",
-        3 => "DAVC",
-        4 => "DLSAP",
-        5 => "PE 78",
-        6 => "PE 95",
-        7 => "Pré-sentenciel"
+        1 => 'CHRS Hermitage',
+        2 => 'Consultations psychologiques',
+        3 => 'DAVC',
+        4 => 'DLSAP',
+        5 => 'PE 78',
+        6 => 'PE 95',
+        7 => 'Pré-sentenciel',
     ];
 
     public const DEVICES = [
-        1 => "ALT",
-        2 => "ALTHO",
-        3 => "ASLLL",
-        4 => "AVDL",
+        1 => 'ALT',
+        2 => 'ALTHO',
+        3 => 'ASLLL',
+        4 => 'AVDL',
         5 => "Hébergement d'insertion",
         6 => "Hébergement d'urgence",
-        7 => "Maison relais",
-        8 => "ASSLT - ASLLT",
-        9 => "10 000 logements",
+        7 => 'Maison relais',
+        8 => 'ASSLT - ASLLT',
+        9 => '10 000 logements',
     ];
 
     private $pole;
@@ -76,7 +74,7 @@ class A_ServiceFixtures extends Fixture
     {
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
-        $this->faker = \Faker\Factory::create("fr_FR");
+        $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     /**
@@ -113,7 +111,7 @@ class A_ServiceFixtures extends Fixture
         foreach ($services as $service) {
             $this->addService($service);
             // Crée des faux utilisateurs
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 1; $i <= 5; ++$i) {
                 $this->addServiceUser();
             }
         }
@@ -124,14 +122,14 @@ class A_ServiceFixtures extends Fixture
     {
         $this->pole = new Pole();
 
-        $color = "blue";
+        $color = 'blue';
 
         switch ($key) {
             case 3:
-                $color = "brown";
+                $color = 'brown';
                 break;
             case 4:
-                $color = "orange2";
+                $color = 'orange2';
                 break;
         }
 
@@ -168,7 +166,6 @@ class A_ServiceFixtures extends Fixture
 
         foreach ($this->devices as $device) {
             if ($device->getName() == $this->service->getName()) {
-
                 $serviceDevice->setDevice($device);
 
                 $this->manager->persist($serviceDevice);
@@ -180,15 +177,15 @@ class A_ServiceFixtures extends Fixture
 
     protected function addAccommodations($device)
     {
-        for ($i = 0; $i < mt_rand(5, 10); $i++) {
+        for ($i = 0; $i < mt_rand(5, 10); ++$i) {
             $place = new Accommodation();
 
             $place->setService($this->service)
                 ->setDevice($device)
-                ->setName("Logement " . mt_rand(1, 100))
+                ->setName('Logement '.mt_rand(1, 100))
                 ->setPlacesNumber(mt_rand(2, 5))
-                ->setOpeningDate($this->faker->dateTimeBetween("-5years", "-12months"))
-                ->setCity("Cergy-Pontoise");
+                ->setOpeningDate($this->faker->dateTimeBetween('-5years', '-12months'))
+                ->setCity('Cergy-Pontoise');
 
             $this->manager->persist($place);
         }

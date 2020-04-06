@@ -2,9 +2,9 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class ServiceVoter extends Voter
 {
@@ -20,7 +20,7 @@ class ServiceVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ["VIEW", "EDIT", "DESACTIVATE"])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DESACTIVATE'])
             && $subject instanceof \App\Entity\Service;
     }
 
@@ -35,39 +35,42 @@ class ServiceVoter extends Voter
         }
 
         switch ($attribute) {
-            case "VIEW":
+            case 'VIEW':
                 return true;
                 break;
-            case "EDIT":
+            case 'EDIT':
                 return $this->canEdit();
                 break;
-            case "DEACTIVATE":
+            case 'DEACTIVATE':
                 return $this->canDeactivate();
                 break;
         }
+
         return false;
     }
 
     protected function canEdit()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN")) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
-        if ($this->security->isGranted("ROLE_ADMIN")) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             foreach ($this->currentUser->getServiceUser() as $serviceUser) {
                 if ($serviceUser->getService() && $serviceUser->getService()->getId() == $this->service->getId()) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
     protected function canDeactivate()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN")) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
+
         return false;
     }
 }

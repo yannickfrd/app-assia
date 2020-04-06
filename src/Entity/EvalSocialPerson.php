@@ -12,23 +12,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalSocialPerson
 {
     public const SOCIAL_SECURITY = [
-        6 => "ACS",
-        5 => "AME",
-        4 => "CSC (ex-CMU-C)",
-        3 => "PUMA (ex-CMU)",
-        1 => "Régime général",
-        2 => "Régime général et mutuelle",
-        97 => "Autre régime",
-        99 => "Non renseignée"
+        6 => 'ACS',
+        5 => 'AME',
+        4 => 'CSC (ex-CMU-C)',
+        3 => 'PUMA (ex-CMU)',
+        1 => 'Régime général',
+        2 => 'Régime général et mutuelle',
+        97 => 'Autre régime',
+        99 => 'Non renseignée',
     ];
 
     public const CARE_SUPPORT = [
-        1 => "Infirmier à domicile",
-        2 => "PCH",
-        3 => "SAMSAH",
-        4 => "SAVS",
-        97 => "Autre",
-        99 => "Non renseignée"
+        1 => 'Infirmier à domicile',
+        2 => 'PCH',
+        3 => 'SAMSAH',
+        4 => 'SAVS',
+        97 => 'Autre',
+        99 => 'Non renseignée',
     ];
 
     /**
@@ -139,7 +139,6 @@ class EvalSocialPerson
         return $this->id;
     }
 
-
     public function getRightSocialSecurity(): ?int
     {
         return $this->rightSocialSecurity;
@@ -223,7 +222,6 @@ class EvalSocialPerson
     {
         return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
     }
-
 
     public function getHealthProblem(): ?int
     {
@@ -457,7 +455,6 @@ class EvalSocialPerson
     {
         return $this->domViolenceVictim ? Choices::YES_NO[$this->domViolenceVictim] : null;
     }
-
 
     public function setDomViolenceVictim(?int $domViolenceVictim): self
     {

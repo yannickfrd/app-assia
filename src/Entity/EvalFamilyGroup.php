@@ -12,12 +12,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalFamilyGroup
 {
     public const FAML_REUNIFICATION = [
-        1 => "Oui",
-        2 => "Non",
-        3 => "Envisagé",
-        4 => "En cours",
-        5 => "Accepté",
-        99 => "Non renseigné"
+        1 => 'Oui',
+        2 => 'Non',
+        3 => 'Envisagé',
+        4 => 'En cours',
+        5 => 'Accepté',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -64,7 +64,6 @@ class EvalFamilyGroup
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationGroup;
-
 
     public function getId(): ?int
     {

@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\EvaluationPerson;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method EvaluationPerson|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,15 +21,16 @@ class EvaluationPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne toute l'évaluation sociale du groupe
+     * Donne toute l'évaluation sociale du groupe.
      *
      * @param SupportGroup $supportGroup
+     *
      * @return EvaluationPerson|null
      */
     public function findEvaluationsFullToExport($supportGroupSearch = null)
     {
-        $query = $this->createQueryBuilder("ep")
-            ->select("ep")
+        $query = $this->createQueryBuilder('ep')
+            ->select('ep')
             // ->join("ep.supportPerson", "sp")->addselect("PARTIAL sp.{id, person}")
             // ->join("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate}")
 
@@ -42,13 +43,13 @@ class EvaluationPersonRepository extends ServiceEntityRepository
             // ->leftJoin("eg.evalFamilyGroup", "evalFamilyGroup")->addselect("evalFamilyGroup")
             // ->leftJoin("eg.evalHousingGroup", "evalHousingGroup")->addselect("evalHousingGroup")
 
-            ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
-            ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
-            ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
-            ->leftJoin("ep.evalProfPerson", "evalProfPerson")->addselect("evalProfPerson");
+            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addselect('evalAdmPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addselect('evalBudgetPerson')
+            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addselect('evalFamilyPerson')
+            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addselect('evalProfPerson');
 
         return $query->setMaxResults(1000)
-            ->orderBy("sp.startDate", "DESC")
+            ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
             // ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();

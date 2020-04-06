@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Service\Phone;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
@@ -19,10 +19,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Service
 {
     public const SUPPORT_ACCESS = [
-        1 => "Uniquement le référent du suivi",
-        2 => "Tou·te·s les salarié·e·s du service",
-        3 => "Tou·te·s les salarié·e·s du pôle",
-        4 => "Tou·te·s les salarié·e·s de l'association"
+        1 => 'Uniquement le référent du suivi',
+        2 => 'Tou·te·s les salarié·e·s du service',
+        3 => 'Tou·te·s les salarié·e·s du pôle',
+        4 => "Tou·te·s les salarié·e·s de l'association",
     ];
 
     /**
@@ -172,7 +172,6 @@ class Service
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $chief;
-
 
     public function __construct()
     {

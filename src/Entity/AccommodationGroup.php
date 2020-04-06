@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -13,10 +13,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class AccommodationGroup
 {
     public const END_REASON = [
-        1 => "Fin du suivi",
-        2 => "Changement de logement/hébergement",
-        97 => "Autre",
-        99 => "Non renseigné"
+        1 => 'Fin du suivi',
+        2 => 'Changement de logement/hébergement',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -92,7 +92,6 @@ class AccommodationGroup
     {
         $this->accommodationPersons = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {

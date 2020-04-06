@@ -3,12 +3,12 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
-use Symfony\Component\DomCrawler\Crawler;
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends WebTestCase
 {
@@ -27,51 +27,51 @@ class UserControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $this->user = $this->dataFixtures["userRoleUser"];
+        $this->user = $this->dataFixtures['userRoleUser'];
     }
 
     public function testListUsersPageIsUp()
     {
         /** @var Crawler */
-        $crawler = $this->client->request("GET", $this->generateUri("users"));
+        $crawler = $this->client->request('GET', $this->generateUri('users'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Utilisateurs");
+        $this->assertSelectorTextContains('h1', 'Utilisateurs');
     }
 
     public function testAdminListUsersIsUp()
     {
-        $this->client->request("GET", $this->generateUri("admin_users"));
+        $this->client->request('GET', $this->generateUri('admin_users'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Administration des utilisateurs");
+        $this->assertSelectorTextContains('h1', 'Administration des utilisateurs');
     }
 
     public function testUsernameExistsIsTrue()
     {
-        $this->client->request("GET", $this->generateUri("username_exists", [
-            "value" => "r.madelaine"
+        $this->client->request('GET', $this->generateUri('username_exists', [
+            'value' => 'r.madelaine',
         ]));
 
         $result = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertTrue($result["response"]);
+        $this->assertTrue($result['response']);
     }
 
     public function testUsernameExistsIsFalse()
     {
-        $this->client->request("GET", $this->generateUri("username_exists", [
-            "value" => "xxx"
+        $this->client->request('GET', $this->generateUri('username_exists', [
+            'value' => 'xxx',
         ]));
 
         $result = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertNotTrue($result["response"]);
+        $this->assertNotTrue($result['response']);
     }
 
     protected function tearDown(): void

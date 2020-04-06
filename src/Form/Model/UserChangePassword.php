@@ -2,10 +2,8 @@
 
 namespace App\Form\Model;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserChangePassword
 {

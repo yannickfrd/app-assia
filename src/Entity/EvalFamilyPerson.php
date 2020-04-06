@@ -12,68 +12,68 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalFamilyPerson
 {
     public const MARITAL_STATUS = [
-        1 => "Célibataire",
-        2 => "Concubinage",
-        3 => "Divorcé·e",
-        4 => "Marié·e",
-        5 => "Pacsé·e",
-        6 => "Séparé·e",
-        7 => "Veuf/ve",
-        8 => "Vie maritale",
-        97 => "Autre",
-        99 => "Non renseigné"
+        1 => 'Célibataire',
+        2 => 'Concubinage',
+        3 => 'Divorcé·e',
+        4 => 'Marié·e',
+        5 => 'Pacsé·e',
+        6 => 'Séparé·e',
+        7 => 'Veuf/ve',
+        8 => 'Vie maritale',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const PREGNANCY_TYPE = [
-        1 => "Simple",
-        2 => "Jumeaux",
-        3 => "Multiple",
-        99 => "Non renseigné"
+        1 => 'Simple',
+        2 => 'Jumeaux',
+        3 => 'Multiple',
+        99 => 'Non renseigné',
     ];
 
     public const PROTECTIVE_MEASURE_TYPE = [
-        2 => "Curatelle simple",
-        3 => "Curatelle renforcée",
-        6 => "Habilitation familiale",
-        5 => "Habilitation judiciaire pour représentation du conjoint",
-        8 => "Mandat de protection future",
+        2 => 'Curatelle simple',
+        3 => 'Curatelle renforcée',
+        6 => 'Habilitation familiale',
+        5 => 'Habilitation judiciaire pour représentation du conjoint',
+        8 => 'Mandat de protection future',
         7 => "Mesure d'accompagnement (MASP ou MAJ)",
-        4 => "Sauvegarde de justice",
-        1 => "Tutelle",
-        97 => "Autre",
-        98 => "Non concerné",
-        99 => "Non renseigné"
+        4 => 'Sauvegarde de justice',
+        1 => 'Tutelle',
+        97 => 'Autre',
+        98 => 'Non concerné',
+        99 => 'Non renseigné',
     ];
 
     public const CHILDCARE_SCHOOL = [
-        1 => "Crèche",
-        2 => "Scolarité",
-        97 => "Autre",
-        99 => "Non renseigné"
+        1 => 'Crèche',
+        2 => 'Scolarité',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const CHILD_TO_HOST = [
-        1 => "En permanence",
-        2 => "En garde alternée",
-        3 => "Journée uniquement",
-        4 => "Uniquemt le WE et congés",
-        5 => "Par un tiers",
-        97 => "Autre",
-        99 => "Non renseigné"
+        1 => 'En permanence',
+        2 => 'En garde alternée',
+        3 => 'Journée uniquement',
+        4 => 'Uniquemt le WE et congés',
+        5 => 'Par un tiers',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const CHILD_DEPENDANCE = [
-        1 => "À charge (sans jugement)",
-        2 => "À charge (avec jugement)",
-        3 => "Non à charge",
-        4 => "ASE / placé",
-        5 => "Tiers",
-        6 => "Garde alternée",
+        1 => 'À charge (sans jugement)',
+        2 => 'À charge (avec jugement)',
+        3 => 'Non à charge',
+        4 => 'ASE / placé',
+        5 => 'Tiers',
+        6 => 'Garde alternée',
         7 => "Droit d'hébergement",
-        8 => "Droit de visite",
+        8 => 'Droit de visite',
         9 => "À l'étranger",
-        97 => "Autre",
-        99 => "Non renseigné"
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**

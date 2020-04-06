@@ -2,9 +2,9 @@
 
 namespace App\Tests\Repository;
 
+use App\Entity\Accommodation;
 use App\Entity\Pole;
 use App\Entity\Service;
-use App\Entity\Accommodation;
 use App\Form\Model\AccommodationSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -19,7 +19,7 @@ class AccommodationRepositoryTest extends WebTestCase
     /** @var AccommodationRepository */
     protected $repo;
 
-    /** @var Accommodation  */
+    /** @var Accommodation */
     protected $accommodation;
 
     /** @var Service */
@@ -31,30 +31,29 @@ class AccommodationRepositoryTest extends WebTestCase
     /** @var AccommodationSearch */
     protected $accommodationSearch;
 
-
     protected function setUp()
     {
         $datafixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml"
+            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var AccommodationRepository */
+        /* @var AccommodationRepository */
         $this->repo = $this->entityManager->getRepository(Accommodation::class);
 
-        $this->service = $datafixtures["service"];
+        $this->service = $datafixtures['service'];
         $this->accommodationSearch = (new AccommodationSearch())
-            ->setName("Logement")
+            ->setName('Logement')
             ->setPlacesNumber(6)
-            ->setStartDate(new \DateTime("2010-01-01"))
-            ->setEndDate(new \DateTime("2020-01-01"))
-            ->setCity("Houille")
-            ->setPole($this->entityManager->getRepository(Pole::class)->findOneBy(["name" => "AVDL"]));
+            ->setStartDate(new \DateTime('2010-01-01'))
+            ->setEndDate(new \DateTime('2020-01-01'))
+            ->setCity('Houille')
+            ->setPole($this->entityManager->getRepository(Pole::class)->findOneBy(['name' => 'AVDL']));
     }
 
     public function testCount()

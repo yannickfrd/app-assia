@@ -2,13 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
 use App\Entity\ServiceUser;
+use App\Entity\User;
 use App\Repository\ServiceRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ServiceUserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class B_UserFixtures extends Fixture
@@ -25,7 +25,7 @@ class B_UserFixtures extends Fixture
         $this->passwordEncoder = $passwordEncoder;
         $this->repo = $repo;
         $this->repoService = $repoService;
-        $this->faker = \Faker\Factory::create("fr_FR");
+        $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager)
@@ -88,14 +88,14 @@ class B_UserFixtures extends Fixture
     {
         $user = new User();
 
-        $user->setUsername("r.madelaine")
-            ->setFirstName("Romain")
-            ->setLastName("Madelaine")
+        $user->setUsername('r.madelaine')
+            ->setFirstName('Romain')
+            ->setLastName('Madelaine')
             ->setStatus(6)
-            ->setRoles(["ROLE_SUPER_ADMIN"])
+            ->setRoles(['ROLE_SUPER_ADMIN'])
             // ->addServiceUser($serviceUser)
-            ->setPassword($this->passwordEncoder->encodePassword($user, "test123"))
-            ->setEmail("romain.madelaine@esperer-95.org")
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
+            ->setEmail('romain.madelaine@esperer-95.org')
             ->setEnabled(true)
             ->setLoginCount(1)
             ->setLastLogin(new \DateTime())
@@ -110,23 +110,23 @@ class B_UserFixtures extends Fixture
     {
         $user = new User();
         // Définit la date de création et de mise à jour
-        $createdAt = AppFixtures::getDateTimeBeetwen("-2 years", "-12 month");
-        $lastLogin = AppFixtures::getDateTimeBeetwen("-2 months", "now");
+        $createdAt = AppFixtures::getDateTimeBeetwen('-2 years', '-12 month');
+        $lastLogin = AppFixtures::getDateTimeBeetwen('-2 months', 'now');
 
         $firstname = $this->faker->firstName();
         $lastname = $this->faker->lastName();
 
-        $phone = "01";
-        for ($i = 1; $i < 5; $i++) {
-            $phone  = $phone  . " " . strval(mt_rand(0, 9)) . strval(mt_rand(0, 9));
+        $phone = '01';
+        for ($i = 1; $i < 5; ++$i) {
+            $phone = $phone.' '.strval(mt_rand(0, 9)).strval(mt_rand(0, 9));
         }
 
         $user->setUsername($firstname)
             ->setFirstName($firstname)
             ->setLastName($lastname)
-            ->setPassword($this->passwordEncoder->encodePassword($user, "test2020"))
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'test2020'))
             ->setStatus(1)
-            ->setEmail(mb_strtolower($firstname) . "." . mb_strtolower($lastname) . "@esperer-95.org")
+            ->setEmail(mb_strtolower($firstname).'.'.mb_strtolower($lastname).'@esperer-95.org')
             ->setphone($phone)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($createdAt)

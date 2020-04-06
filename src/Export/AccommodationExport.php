@@ -2,8 +2,8 @@
 
 namespace App\Export;
 
-use App\Service\Export;
 use App\Entity\Accommodation;
+use App\Service\Export;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class AccommodationExport
@@ -16,7 +16,7 @@ class AccommodationExport
     }
 
     /**
-     * Exporte les données
+     * Exporte les données.
      */
     public function exportData($accommodations)
     {
@@ -24,21 +24,21 @@ class AccommodationExport
         $i = 0;
 
         foreach ($accommodations as $accommodation) {
-            if ($i == 0) {
+            if (0 == $i) {
                 $arrayData[] = array_keys($this->getDatas($accommodation));
             }
             $arrayData[] = $this->getDatas($accommodation);
-            $i++;
+            ++$i;
         }
 
-        $export = new Export("export_suivis", "xlsx", $arrayData, null);
+        $export = new Export('export_suivis', 'xlsx', $arrayData, null);
 
         return $export->exportFile();
     }
 
     /**
-     * Retourne les résultats sous forme de tableau
-     * @param Accommodation $accommodation
+     * Retourne les résultats sous forme de tableau.
+     *
      * @return array
      */
     public function getDatas(Accommodation $accommodation)
@@ -49,32 +49,32 @@ class AccommodationExport
         foreach ($accommodation->getAccommodationGroups() as $accommodationGroup) {
             foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPerson) {
                 $endDate = $accommodationPerson->getEndDate();
-                if (!$endDate || $endDate->format("d/m/Y") >= $today->format("d/m/Y")) {
-                    $numberPeople++;
+                if (!$endDate || $endDate->format('d/m/Y') >= $today->format('d/m/Y')) {
+                    ++$numberPeople;
                 }
             }
         }
 
         return [
-            "Nom du groupe de places" => $accommodation->getName(),
-            "Service" => $accommodation->getService()->getName(),
-            "Dispositif" => $accommodation->getDevice()->getName(),
-            "Nombre de places" => $accommodation->getPlacesNumber(),
+            'Nom du groupe de places' => $accommodation->getName(),
+            'Service' => $accommodation->getService()->getName(),
+            'Dispositif' => $accommodation->getDevice()->getName(),
+            'Nombre de places' => $accommodation->getPlacesNumber(),
             "Date d'ouverture" => $this->formatDate($accommodation->getOpeningDate()),
-            "Date de fermeture" => $this->formatDate($accommodation->getClosingDate()),
-            "Adresse" => $accommodation->getAddress(),
-            "Ville" => $accommodation->getCity(),
-            "Code postal" => $accommodation->getDepartment(),
-            "Type" => $accommodation->getAccommodationType() ? $accommodation->getAccommodationTypeToString() : null,
-            "Configuration (Diffus ou regroupé)" => $accommodation->getConfiguration() ? $accommodation->getConfigurationToString() : null,
-            "Individuel ou collectif" => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveToString() : null,
-            "Commentaire" => $accommodation->getComment(),
-            "Occupation actuelle (Nb de personnes)" => $numberPeople,
+            'Date de fermeture' => $this->formatDate($accommodation->getClosingDate()),
+            'Adresse' => $accommodation->getAddress(),
+            'Ville' => $accommodation->getCity(),
+            'Code postal' => $accommodation->getDepartment(),
+            'Type' => $accommodation->getAccommodationType() ? $accommodation->getAccommodationTypeToString() : null,
+            'Configuration (Diffus ou regroupé)' => $accommodation->getConfiguration() ? $accommodation->getConfigurationToString() : null,
+            'Individuel ou collectif' => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveToString() : null,
+            'Commentaire' => $accommodation->getComment(),
+            'Occupation actuelle (Nb de personnes)' => $numberPeople,
         ];
     }
 
     public function formatDate($date)
     {
-        return $date ? Date::PHPToExcel($date->format("Y-m-d")) : null;
+        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }
 }

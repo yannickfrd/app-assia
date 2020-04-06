@@ -2,24 +2,24 @@
 
 namespace App\Form\Export;
 
-use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\Model\Export;
-use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
-use App\Repository\UserRepository;
-use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
-use App\Repository\ServiceRepository;
+use App\Entity\User;
+use App\Form\Model\Export;
 use App\Form\Model\SupportGroupSearch;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Utils\Choices;
+use App\Repository\DeviceRepository;
+use App\Repository\ServiceRepository;
+use App\Repository\UserRepository;
+use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExportType extends AbstractType
 {
@@ -33,158 +33,157 @@ class ExportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("status", ChoiceType::class, [
-                "multiple" => true,
-                "choices" => Choices::getChoices(SupportGroup::STATUS),
-                "attr" => [
-                    "class" => "multi-select js-status",
+            ->add('status', ChoiceType::class, [
+                'multiple' => true,
+                'choices' => Choices::getChoices(SupportGroup::STATUS),
+                'attr' => [
+                    'class' => 'multi-select js-status',
                 ],
-                "placeholder" => "-- Status --",
-                "required" => false
+                'placeholder' => '-- Status --',
+                'required' => false,
             ])
-            ->add("supportDates", ChoiceType::class, [
-                "choices" => Choices::getChoices(SupportGroupSearch::SUPPORT_DATES),
-                "attr" => [
-                    "class" => "",
+            ->add('supportDates', ChoiceType::class, [
+                'choices' => Choices::getChoices(SupportGroupSearch::SUPPORT_DATES),
+                'attr' => [
+                    'class' => '',
                 ],
-                "placeholder" => "-- Date de suivi --",
-                "required" => false
+                'placeholder' => '-- Date de suivi --',
+                'required' => false,
             ])
-            ->add("startDate", DateType::class, [
-
-                "widget" => "single_text",
-                "attr" => [
-                    "class" => "w-max-165",
+            ->add('startDate', DateType::class, [
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'w-max-165',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("endDate", DateType::class, [
-                "widget" => "single_text",
-                "attr" => [
-                    "class" => "w-max-165",
+            ->add('endDate', DateType::class, [
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'w-max-165',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("referent", EntityType::class, [
-                "class" => User::class,
-                "choice_label" => "fullname",
-                "query_builder" => function (UserRepository $repo) {
+            ->add('referent', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'fullname',
+                'query_builder' => function (UserRepository $repo) {
                     return $repo->getAllUsersFromServicesQueryList($this->currentUser);
                 },
-                "placeholder" => "-- Référent --",
-                "attr" => [
-                    "class" => "w-max-180"
+                'placeholder' => '-- Référent --',
+                'attr' => [
+                    'class' => 'w-max-180',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("services", EntityType::class, [
-                "class" => Service::class,
-                "choice_label" => "name",
-                "multiple" => true,
-                "query_builder" => function (ServiceRepository $repo) {
+            ->add('services', EntityType::class, [
+                'class' => Service::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
-                "placeholder" => "-- Service --",
-                "attr" => [
-                    "class" => "multi-select js-service"
+                'placeholder' => '-- Service --',
+                'attr' => [
+                    'class' => 'multi-select js-service',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("devices", EntityType::class, [
-                "class" => Device::class,
-                "choice_label" => "name",
-                "multiple" => true,
-                "query_builder" => function (DeviceRepository $repo) {
+            ->add('devices', EntityType::class, [
+                'class' => Device::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'query_builder' => function (DeviceRepository $repo) {
                     return $repo->getDevicesFromUserQueryList($this->currentUser);
                 },
-                "placeholder" => "-- Device --",
-                "attr" => [
-                    "class" => "multi-select js-device"
+                'placeholder' => '-- Device --',
+                'attr' => [
+                    'class' => 'multi-select js-device',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("evalSocial", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+            ->add('evalSocial', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
-            ])
-            ->add("evalAdm", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
             ])
-            ->add("evalFamily", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+            ->add('evalAdm', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
-            ])
-            ->add("evalBudget", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
             ])
-            ->add("evalProf", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+            ->add('evalFamily', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
-            ])
-            ->add("evalHousing", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
             ])
-            ->add("evalJustice", CheckBoxType::class, [
-                "required" => false,
-                "label_attr" => [
-                    "class" => "custom-control-label",
+            ->add('evalBudget', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
                 ],
-                "attr" => [
-                    "class" => "custom-control-input checkbox"
-                ]
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
+                ],
             ])
-            ->add("calcul", null, [
-                "mapped" => false
+            ->add('evalProf', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
+                ],
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
+                ],
             ])
-            ->add("export", null, [
-                "mapped" => false
+            ->add('evalHousing', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
+                ],
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
+                ],
+            ])
+            ->add('evalJustice', CheckBoxType::class, [
+                'required' => false,
+                'label_attr' => [
+                    'class' => 'custom-control-label',
+                ],
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
+                ],
+            ])
+            ->add('calcul', null, [
+                'mapped' => false,
+            ])
+            ->add('export', null, [
+                'mapped' => false,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => Export::class,
-            "csrf_protection" => false,
-            "translation_domain" => "support",
+            'data_class' => Export::class,
+            'csrf_protection' => false,
+            'translation_domain' => 'support',
         ]);
     }
 
     public function getBlockPrefix()
     {
-        return "";
+        return '';
     }
 }

@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\AccommodationGroup;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationRepository")
@@ -21,32 +19,32 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Accommodation
 {
     public const ACCOMMODATION_TYPE = [
-        1 =>  "Chambre individuelle",
-        2 =>  "Chambre collective",
-        3 =>  "Chambre d'hôtel",
-        4 =>  "Dortoir",
-        5 =>  "Logement T1",
-        6 =>  "Logement T2",
-        7 =>  "Logement T3",
-        8 =>  "Logement T4",
-        9 =>  "Logement T5",
-        10 =>  "Logement T6",
-        11 =>  "Logement T7",
-        12 =>  "Logement T8",
-        13 =>  "Logement T9",
-        97 =>  "Autre",
-        99 =>  "Non renseigné"
+        1 => 'Chambre individuelle',
+        2 => 'Chambre collective',
+        3 => "Chambre d'hôtel",
+        4 => 'Dortoir',
+        5 => 'Logement T1',
+        6 => 'Logement T2',
+        7 => 'Logement T3',
+        8 => 'Logement T4',
+        9 => 'Logement T5',
+        10 => 'Logement T6',
+        11 => 'Logement T7',
+        12 => 'Logement T8',
+        13 => 'Logement T9',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const CONFIGURATION = [
-        1 => "Diffus",
-        2 => "Regroupé"
+        1 => 'Diffus',
+        2 => 'Regroupé',
     ];
 
     public const INDIVIDUAL_COLLECTIVE = [
-        1 => "Individuel",
-        2 => "Collectif",
-        97 => "Autre"
+        1 => 'Individuel',
+        2 => 'Collectif',
+        97 => 'Autre',
     ];
 
     /**
@@ -156,7 +154,6 @@ class Accommodation
     //  */
     // private $accommodationPersons;
 
-
     public function __construct()
     {
         $this->accommodationGroups = new ArrayCollection();
@@ -181,9 +178,8 @@ class Accommodation
 
     public function getFullName(): ?string
     {
-        return $this->getService()->getName() . " - " . $this->name;
+        return $this->getService()->getName().' - '.$this->name;
     }
-
 
     public function getPlacesNumber(): ?int
     {
@@ -208,7 +204,6 @@ class Accommodation
 
         return $this;
     }
-
 
     public function getAddress(): ?string
     {

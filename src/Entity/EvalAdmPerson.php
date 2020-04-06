@@ -12,33 +12,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalAdmPerson
 {
     public const NATIONALITY = [
-        1 => "France",
-        2 => "Union-Européenne",
-        3 => "Hors-UE",
-        4 => "Apatride",
-        99 => "Non renseignée"
+        1 => 'France',
+        2 => 'Union-Européenne',
+        3 => 'Hors-UE',
+        4 => 'Apatride',
+        99 => 'Non renseignée',
     ];
 
     public const PAPER_TYPE = [
-        22 => "Autorisation provisoire de séjour",
-        20 => "Carte de résident",
-        21 => "Carte de séjour temporaire",
-        01 => "CNI",
-        03 => "Papiers étrangers",
-        02 => "Passeport",
-        30 => "Récépissé asile",
-        31 => "Récépissé renouvellement de titre",
-        97 => "Autre",
-        99 => "Non renseigné"
+        22 => 'Autorisation provisoire de séjour',
+        20 => 'Carte de résident',
+        21 => 'Carte de séjour temporaire',
+        01 => 'CNI',
+        03 => 'Papiers étrangers',
+        02 => 'Passeport',
+        30 => 'Récépissé asile',
+        31 => 'Récépissé renouvellement de titre',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const RIGHT_TO_RESIDE = [
         1 => "Débouté du droit d'asile",
         2 => "Demandeur d'asile",
-        3 => "Protection subsidiaire",
-        4 => "Réfugié",
-        97 => "Autre",
-        99 => "Non renseigné"
+        3 => 'Protection subsidiaire',
+        4 => 'Réfugié',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**

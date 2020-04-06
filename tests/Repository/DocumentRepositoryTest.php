@@ -2,9 +2,9 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\User;
 use App\Entity\Document;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Form\Model\DocumentSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -28,26 +28,25 @@ class DocumentRepositoryTest extends WebTestCase
     /** @var DocumentSearch */
     protected $documentSearch;
 
-
     protected function setUp()
     {
-        $dataFixtures  = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/DocumentFixturesTest.yaml",
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/DocumentFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var DocumentRepository */
+        /* @var DocumentRepository */
         $this->repo = $this->entityManager->getRepository(Document::class);
 
-        $this->supportGroup = $dataFixtures["supportGroup"];
-        $this->user = $dataFixtures["userSuperAdmin"];
+        $this->supportGroup = $dataFixtures['supportGroup'];
+        $this->user = $dataFixtures['userSuperAdmin'];
         $this->documentSearch = (new DocumentSearch())
-            ->setName("Document 666")
+            ->setName('Document 666')
             ->setType(1);
     }
 
@@ -70,7 +69,7 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testFindAllDocumentsQueryWithFilterByContent()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->documentSearch->setName("Description"));
+        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->documentSearch->setName('Description'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -81,7 +80,7 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testCountAllDocumentsWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllDocuments(["user" => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countAllDocuments(['user' => $this->user]));
     }
 
     public function testSumSizeAllDocuments()

@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -16,23 +16,23 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Pole
 {
     public const POLES = [
-        1 => "Accueil Publics Migrants",
-        2 => "Insertion-Formation",
-        3 => "Habitat et Accès au Logement",
-        4 => "Hébergement Social",
-        5 => "SIAO",
-        6 => "Socio-judiciaire"
+        1 => 'Accueil Publics Migrants',
+        2 => 'Insertion-Formation',
+        3 => 'Habitat et Accès au Logement',
+        4 => 'Hébergement Social',
+        5 => 'SIAO',
+        6 => 'Socio-judiciaire',
     ];
 
     public const COLOR = [
-        "beige" => "Beige",
-        "primary" => "Bleu",
-        "cyan2" => "Cyan",
-        "brown" => "Marron",
-        "dark" => "Noir",
-        "orange2" => "Orange",
-        "green2" => "Vert",
-        "purple" => "Violet"
+        'beige' => 'Beige',
+        'primary' => 'Bleu',
+        'cyan2' => 'Cyan',
+        'brown' => 'Marron',
+        'dark' => 'Noir',
+        'orange2' => 'Orange',
+        'green2' => 'Vert',
+        'purple' => 'Violet',
     ];
 
     /**
@@ -111,7 +111,6 @@ class Pole
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $chief;
-
 
     public function __construct()
     {

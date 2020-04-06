@@ -2,10 +2,9 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\RolePerson;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method RolePerson|null find($id, $lockMode = null, $lockVersion = null)

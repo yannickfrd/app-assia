@@ -668,7 +668,6 @@ class InitEvalPerson
         return $this;
     }
 
-
     public function getMinimumIncome(): ?int
     {
         return $this->minimumIncome;
@@ -952,7 +951,6 @@ class InitEvalPerson
 
         return $this;
     }
-
 
     public function getSupportPerson(): ?SupportPerson
     {

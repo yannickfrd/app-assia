@@ -4,7 +4,6 @@ namespace App\Tests\Entity;
 
 use App\Entity\Document;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DocumentTest extends WebTestCase
@@ -15,13 +14,12 @@ class DocumentTest extends WebTestCase
     /** @var Document */
     protected $document;
 
-
     protected function setUp()
     {
-        $faker = \Faker\Factory::create("fr_FR");
+        $faker = \Faker\Factory::create('fr_FR');
 
         $this->document = (new Document())
-            ->setName("Document 666")
+            ->setName('Document 666')
             ->setType(1)
             ->setInternalFileName($faker->slug());
     }
@@ -33,7 +31,7 @@ class DocumentTest extends WebTestCase
 
     public function testBlankName()
     {
-        $this->assertHasErrors($this->document->setName(""), 1);
+        $this->assertHasErrors($this->document->setName(''), 1);
     }
 
     public function testNullType()

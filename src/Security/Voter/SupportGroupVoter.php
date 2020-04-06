@@ -2,9 +2,9 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class SupportGroupVoter extends Voter
 {
@@ -20,7 +20,7 @@ class SupportGroupVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ["VIEW", "EDIT", "DELETE"])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\SupportGroup;
     }
 
@@ -37,22 +37,23 @@ class SupportGroupVoter extends Voter
         }
 
         switch ($attribute) {
-            case "VIEW":
+            case 'VIEW':
                 return $this->canView();
                 break;
-            case "EDIT":
+            case 'EDIT':
                 return $this->canView();
                 break;
-            case "DELETE":
+            case 'DELETE':
                 return $this->canDelete();
                 break;
         }
+
         return false;
     }
 
     protected function canView()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || ($this->isAdminService())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminService())) {
             return true;
         }
 
@@ -61,12 +62,13 @@ class SupportGroupVoter extends Voter
                 return true;
             }
         }
+
         return false;
     }
 
     protected function canEdit()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || $this->isAdminService()) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminService()) {
             return true;
         }
 
@@ -76,12 +78,13 @@ class SupportGroupVoter extends Voter
         ) {
             return true;
         }
+
         return false;
     }
 
     protected function canDelete()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || ($this->isAdminService())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminService())) {
             return true;
         }
 
@@ -97,13 +100,14 @@ class SupportGroupVoter extends Voter
     // If current user is administrator
     protected function isAdminService()
     {
-        if ($this->security->isGranted("ROLE_ADMIN")) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             foreach ($this->user->getServiceUser() as $serviceUser) {
                 if ($this->supportGroup->getService()->getId() == $serviceUser->getService()->getId()) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 }

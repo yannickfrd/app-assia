@@ -4,7 +4,6 @@ namespace App\Tests\Entity;
 
 use App\Entity\Note;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class NoteTest extends WebTestCase
@@ -15,13 +14,12 @@ class NoteTest extends WebTestCase
     /** @var Note */
     protected $note;
 
-
     protected function setUp()
     {
-        $faker = \Faker\Factory::create("fr_FR");
+        $faker = \Faker\Factory::create('fr_FR');
 
         $this->note = (new Note())
-            ->setTitle("Note 666")
+            ->setTitle('Note 666')
             ->setContent($faker->paragraphs(6, true))
             ->setType(1)
             ->setStatus(1);
@@ -34,7 +32,7 @@ class NoteTest extends WebTestCase
 
     public function testBlankContent()
     {
-        $this->assertHasErrors($this->note->setContent(""), 1);
+        $this->assertHasErrors($this->note->setContent(''), 1);
     }
 
     protected function tearDown(): void

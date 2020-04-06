@@ -2,13 +2,12 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Pole;
-use App\Entity\User;
+use App\DataFixtures\A_ServiceFixtures;
+use App\DataFixtures\B_UserFixtures;
 use App\Entity\Service;
+use App\Entity\User;
 use App\Form\Model\UserSearch;
 use App\Repository\UserRepository;
-use App\DataFixtures\B_UserFixtures;
-use App\DataFixtures\A_ServiceFixtures;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -48,6 +47,6 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUserByUsername()
     {
-        $this->assertNotNull($this->repo->findUserByUsernameOrEmail("r.madelaine"));
+        $this->assertNotNull($this->repo->findUserByUsernameOrEmail('r.madelaine'));
     }
 }

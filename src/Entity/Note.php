@@ -11,18 +11,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Note
 {
     public const TYPE = [
-        1 => "Note",
-        2 => "Rapport social",
-        3 => "Autre"
+        1 => 'Note',
+        2 => 'Rapport social',
+        3 => 'Autre',
     ];
 
     public const TYPE_DEFAULT = 1;
 
     public const STATUS = [
-        1 => "Brouillon",
-        2 => "Finalisé",
-        3 => "En attente validation",
-        4 => "Validé"
+        1 => 'Brouillon',
+        2 => 'Finalisé',
+        3 => 'En attente validation',
+        4 => 'Validé',
     ];
 
     public const STATUS_DEFAULT = 1;
@@ -89,7 +89,6 @@ class Note
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportPerson", inversedBy="notes")
      */
     private $supportPerson;
-
 
     public function getId(): ?int
     {

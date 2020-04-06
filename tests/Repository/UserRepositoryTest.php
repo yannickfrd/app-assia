@@ -3,8 +3,8 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Pole;
-use App\Entity\User;
 use App\Entity\Service;
+use App\Entity\User;
 use App\Form\Model\UserSearch;
 use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -33,29 +33,29 @@ class UserRepositoryTest extends WebTestCase
     {
         // $this->loadFixtures([A_ServiceFixtures::class, B_UserFixtures::class]);
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var UserRepository */
+        /* @var UserRepository */
         $this->repo = $this->entityManager->getRepository(User::class);
 
-        $this->user = $dataFixtures["userSuperAdmin"];
-        $this->service = $dataFixtures["service"];
-        $this->userSearch = $this->getUserSearch($dataFixtures["pole"]);
+        $this->user = $dataFixtures['userSuperAdmin'];
+        $this->service = $dataFixtures['service'];
+        $this->userSearch = $this->getUserSearch($dataFixtures['pole']);
     }
 
     protected function getUserSearch(Pole $pole)
     {
         return (new UserSearch())
-            ->setFirstname("Rom")
-            ->setLastname("mad")
-            ->setPhone("01 00 00 00 00")
+            ->setFirstname('Rom')
+            ->setLastname('mad')
+            ->setPhone('01 00 00 00 00')
             ->setStatus(6)
             ->setPole($pole)
             ->setEnabled(true);
@@ -68,12 +68,12 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUserByUsername()
     {
-        $this->assertNotNull($this->repo->findUserByUsernameOrEmail("r.madelaine"));
+        $this->assertNotNull($this->repo->findUserByUsernameOrEmail('r.madelaine'));
     }
 
     public function testFindUserByEmail()
     {
-        $this->assertNotNull($this->repo->findUserByUsernameOrEmail("romain.madelaine@esperer-95.org"));
+        $this->assertNotNull($this->repo->findUserByUsernameOrEmail('romain.madelaine@esperer-95.org'));
     }
 
     public function testFindUserById()
@@ -83,7 +83,7 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindAllUsersQueryWithoutFilters()
     {
-        $query = $this->repo->findAllUsersQuery(new UserSearch);
+        $query = $this->repo->findAllUsersQuery(new UserSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
@@ -100,7 +100,7 @@ class UserRepositoryTest extends WebTestCase
     }
 
     /**
-     * Méthodes non testatables
+     * Méthodes non testatables.
      */
 
     // public function testGetUsersQueryList()
@@ -126,7 +126,7 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUsersWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findUsers(["status" => 1])));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findUsers(['status' => 1])));
     }
 
     protected function tearDown(): void

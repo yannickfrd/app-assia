@@ -5,9 +5,9 @@ namespace App\Repository;
 use App\Entity\Note;
 use App\Entity\User;
 use App\Form\Model\NoteSearch;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Note|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,55 +23,50 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     * Return all notes of group support
-     *
-     * @param integer $supportGroupId
-     * @param NoteSearch $noteSearch
-     * @return Query
+     * Return all notes of group support.
      */
     public function findAllNotesQuery(int $supportGroupId, NoteSearch $noteSearch): Query
     {
-        $query =  $this->createQueryBuilder("n")
-            ->andWhere("n.supportGroup = :supportGroup")
-            ->setParameter("supportGroup", $supportGroupId);
+        $query = $this->createQueryBuilder('n')
+            ->andWhere('n.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
 
         if ($noteSearch->getContent()) {
-            $query->andWhere("n.title LIKE :content OR n.content LIKE :content")
-                ->setParameter("content", '%' . $noteSearch->getContent() . '%');
+            $query->andWhere('n.title LIKE :content OR n.content LIKE :content')
+                ->setParameter('content', '%'.$noteSearch->getContent().'%');
         }
         if ($noteSearch->getStatus()) {
-            $query->andWhere("n.status = :status")
-                ->setParameter("status", $noteSearch->getStatus());
+            $query->andWhere('n.status = :status')
+                ->setParameter('status', $noteSearch->getStatus());
         }
         if ($noteSearch->getType()) {
-            $query->andWhere("n.type = :type")
-                ->setParameter("type", $noteSearch->getType());
+            $query->andWhere('n.type = :type')
+                ->setParameter('type', $noteSearch->getType());
         }
-        $query = $query->orderBy("n.createdAt", "DESC");
+        $query = $query->orderBy('n.createdAt', 'DESC');
+
         return $query->getQuery();
     }
 
     /**
-     *  Donne toutes les notes créées par l'utilisateur
+     *  Donne toutes les notes créées par l'utilisateur.
      *
-     * @param User $user
-     * @param integer $maxResults
      * @return mixed
      */
     public function findAllNotesFromUser(User $user, int $maxResults = 1000)
     {
-        return $this->createQueryBuilder("n")
-            ->addselect("PARTIAL n.{id, title, status, createdAt, updatedAt}")
+        return $this->createQueryBuilder('n')
+            ->addselect('PARTIAL n.{id, title, status, createdAt, updatedAt}')
 
-            ->leftJoin("n.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
-            ->leftJoin("sg.supportPerson", "sp")->addselect("PARTIAL sp.{id, head, role}")
-            ->leftJoin("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
+            ->leftJoin('n.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPerson', 'sp')->addselect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
 
-            ->andWhere("n.createdBy = :user")
-            ->setParameter("user", $user)
-            ->andWhere("sp.head = TRUE")
+            ->andWhere('n.createdBy = :user')
+            ->setParameter('user', $user)
+            ->andWhere('sp.head = TRUE')
 
-            ->orderBy("n.updatedAt", "DESC")
+            ->orderBy('n.updatedAt', 'DESC')
 
             ->setMaxResults($maxResults)
 
@@ -80,35 +75,35 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     * Compte le nombre de notes
+     * Compte le nombre de notes.
      *
      * @param array $criteria
+     *
      * @return mixed
      */
     public function countAllNotes(array $criteria = null)
     {
-        $query = $this->createQueryBuilder("n")->select("COUNT(n.id)");
+        $query = $this->createQueryBuilder('n')->select('COUNT(n.id)');
 
         if ($criteria) {
-
             // $query = $query->leftJoin("n.supportGroup", "sg")->addselect("PARTIAL sg.{id, referent, status, service, device}");
 
             foreach ($criteria as $key => $value) {
-                if ($key == "user") {
-                    $query = $query->andWhere("n.createdBy = :user")
-                        ->setParameter("user", $value);
+                if ('user' == $key) {
+                    $query = $query->andWhere('n.createdBy = :user')
+                        ->setParameter('user', $value);
                 }
-                if ($key == "status") {
-                    $query = $query->andWhere("sg.status = :status")
-                        ->setParameter("status", $value);
+                if ('status' == $key) {
+                    $query = $query->andWhere('sg.status = :status')
+                        ->setParameter('status', $value);
                 }
-                if ($key == "service") {
-                    $query = $query->andWhere("sg.service = :service")
-                        ->setParameter("service", $value);
+                if ('service' == $key) {
+                    $query = $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
                 }
-                if ($key == "device") {
-                    $query = $query->andWhere("sg.device = :device")
-                        ->setParameter("device", $value);
+                if ('device' == $key) {
+                    $query = $query->andWhere('sg.device = :device')
+                        ->setParameter('device', $value);
                 }
             }
         }

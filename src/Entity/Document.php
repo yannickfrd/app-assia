@@ -11,16 +11,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Document
 {
     public const TYPE = [
-        2 => "Administratif",
-        9 => "Emploi",
-        1 => "Identité/Etat civil",
-        4 => "Impôts",
-        6 => "Logement",
-        8 => "Orientation",
-        5 => "Redevance",
-        3 => "Ressources",
-        7 => "Santé",
-        97 => "Autre"
+        2 => 'Administratif',
+        9 => 'Emploi',
+        1 => 'Identité/Etat civil',
+        4 => 'Impôts',
+        6 => 'Logement',
+        8 => 'Orientation',
+        5 => 'Redevance',
+        3 => 'Ressources',
+        7 => 'Santé',
+        97 => 'Autre',
     ];
 
     /**
@@ -82,7 +82,6 @@ class Document
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="documents")
      */
     private $supportGroup;
-
 
     public function getId(): ?int
     {

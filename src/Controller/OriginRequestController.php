@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\SupportGroup;
 use App\Entity\OriginRequest;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
-use App\Repository\OriginRequestRepository;
+use App\Entity\SupportGroup;
 use App\Form\OriginRequest\OriginRequestType;
+use App\Repository\OriginRequestRepository;
+use App\Repository\SupportGroupRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OriginRequestController extends AbstractController
 {
@@ -27,19 +27,17 @@ class OriginRequestController extends AbstractController
     }
 
     /**
-     * Modification de la pré-admission
-     * 
+     * Modification de la pré-admission.
+     *
      * @Route("/support/{id}/originRequest", name="support_originRequest", methods="GET|POST")
-     * @param integer $id //SupportGroup
-     * @param Request $request
-     * @return Response
+     *
+     * @param int $id //SupportGroup
      */
-
     public function editOriginRequest(int $id, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $originRequest = $this->repo->findOriginRequest($supportGroup);
 
@@ -55,17 +53,15 @@ class OriginRequestController extends AbstractController
             $this->updateOriginRequest($originRequest);
         }
 
-        return $this->render("app/originRequest/originRequest.html.twig", [
-            "support" => $supportGroup,
-            "form" => $form->createView(),
-            "edit_mode" => true
+        return $this->render('app/originRequest/originRequest.html.twig', [
+            'support' => $supportGroup,
+            'form' => $form->createView(),
+            'edit_mode' => true,
         ]);
     }
 
     /**
-     * Met à jour l'évaluation sociale du groupe
-     * 
-     * @param OriginRequest $originRequest
+     * Met à jour l'évaluation sociale du groupe.
      */
     protected function updateOriginRequest(OriginRequest $originRequest)
     {
@@ -75,6 +71,6 @@ class OriginRequestController extends AbstractController
         $this->manager->persist($originRequest);
         $this->manager->flush();
 
-        $this->addFlash("success", "Les informations ont été mises à jour.");
+        $this->addFlash('success', 'Les informations ont été mises à jour.');
     }
 }

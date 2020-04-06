@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,15 +14,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GroupPeople
 {
     public const FAMILY_TYPOLOGY = [
-        1 => "Femme seule",
-        2 => "Homme seul",
-        3 => "Couple sans enfant",
-        4 => "Femme seule avec enfant(s)",
-        5 => "Homme seul avec enfant(s)",
-        6 => "Couple avec enfant(s)",
+        1 => 'Femme seule',
+        2 => 'Homme seul',
+        3 => 'Couple sans enfant',
+        4 => 'Femme seule avec enfant(s)',
+        5 => 'Homme seul avec enfant(s)',
+        6 => 'Couple avec enfant(s)',
         7 => "Groupe d'adultes sans enfant",
         8 => "Groupe d'adultes avec enfant(s)",
-        9 => "Autre"
+        9 => 'Autre',
     ];
 
     /**
@@ -72,7 +71,7 @@ class GroupPeople
      * @Assert\All(constraints={
      *      @Assert\NotBlank(),
      *      @Assert\NotNull,
-     * })  
+     * })
      * @Assert\Valid
      */
     private $rolePerson;

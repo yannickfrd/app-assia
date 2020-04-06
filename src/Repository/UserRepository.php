@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use App\Entity\Service;
-use Doctrine\ORM\Query;
+use App\Entity\User;
 use App\Form\Model\UserSearch;
 use App\Security\CurrentUserService;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,211 +24,202 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Trouve l'utilisateur par son login ou son adresse email
+     * Trouve l'utilisateur par son login ou son adresse email.
      *
-     * @param string $username
      * @return User|null
      */
     public function findUserByUsernameOrEmail(string $username)
     {
-        return $this->createQueryBuilder("u")
-            ->select("u")
-            ->andWhere("u.username = :username")
-            ->setParameter("username", $username)
-            ->orWhere("u.email = :email")
-            ->setParameter("email", $username)
+        return $this->createQueryBuilder('u')
+            ->select('u')
+            ->andWhere('u.username = :username')
+            ->setParameter('username', $username)
+            ->orWhere('u.email = :email')
+            ->setParameter('email', $username)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-
     /**
-     * Donne l'utilisateur avec tous ses suivis et rdvs
-     *
-     * @param int $id
-     * @return User|null
+     * Donne l'utilisateur avec tous ses suivis et rdvs.
      */
     public function findUserById(int $id): ?User
     {
-        return $this->createQueryBuilder("u")
-            ->select("u")
-            ->leftJoin("u.referentSupport", "sg")->addselect("PARTIAL sg.{id, status, startDate, endDate, updatedAt}")
-            ->leftJoin("sg.service", "s")->addselect("PARTIAL s.{id, name, email, phone}")
-            ->leftJoin("sg.groupPeople", "g")->addselect("PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}")
-            ->leftJoin("g.rolePerson", "r")->addselect("PARTIAL r.{id, role, head}")
-            ->leftJoin("r.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
-            ->leftJoin("u.serviceUser", "su")->addselect("su")
-            ->leftJoin("su.service", "service")->addselect("PARTIAL service.{id, name, email, phone}")
-            ->leftJoin("s.pole", "pole")->addselect("PARTIAL pole.{id, name}")
+        return $this->createQueryBuilder('u')
+            ->select('u')
+            ->leftJoin('u.referentSupport', 'sg')->addselect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
+            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone}')
+            ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
+            ->leftJoin('g.rolePerson', 'r')->addselect('PARTIAL r.{id, role, head}')
+            ->leftJoin('r.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('u.serviceUser', 'su')->addselect('su')
+            ->leftJoin('su.service', 'service')->addselect('PARTIAL service.{id, name, email, phone}')
+            ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
 
-            ->andWhere("u.id = :id")
-            ->setParameter("id", $id)
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $id)
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
     /**
-     * Retourne tous les utilisateurs
-     *
-     * @param UserSearch $userSearch
-     * @return Query
+     * Retourne tous les utilisateurs.
      */
     public function findAllUsersQuery(UserSearch $userSearch): Query
     {
-        $query =  $this->createQueryBuilder("u")
-            ->select("u")
-            ->leftJoin("u.createdBy", "creatorUser")->addselect("creatorUser")
-            ->leftJoin("u.serviceUser", "su")->addselect("su")
-            ->leftJoin("su.service", "s")->addSelect("PARTIAL s.{id,name}")
-            ->leftJoin("s.pole", "p")->addSelect("PARTIAL p.{id,name}");
+        $query = $this->createQueryBuilder('u')
+            ->select('u')
+            ->leftJoin('u.createdBy', 'creatorUser')->addselect('creatorUser')
+            ->leftJoin('u.serviceUser', 'su')->addselect('su')
+            ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id,name}')
+            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id,name}');
 
         if ($userSearch->getFirstname()) {
-            $query->andWhere("u.firstname LIKE :firstname")
-                ->setParameter("firstname", $userSearch->getFirstname() . '%');
+            $query->andWhere('u.firstname LIKE :firstname')
+                ->setParameter('firstname', $userSearch->getFirstname().'%');
         }
         if ($userSearch->getLastname()) {
-            $query->andWhere("u.lastname LIKE :lastname")
-                ->setParameter("lastname", $userSearch->getLastname() . '%');
+            $query->andWhere('u.lastname LIKE :lastname')
+                ->setParameter('lastname', $userSearch->getLastname().'%');
         }
         if ($userSearch->getPhone()) {
-            $query->andWhere("u.phone = :phone")
-                ->setParameter("phone", $userSearch->getPhone());
+            $query->andWhere('u.phone = :phone')
+                ->setParameter('phone', $userSearch->getPhone());
         }
         if ($userSearch->getStatus()) {
-            $query->andWhere("u.status = :status")
-                ->setParameter("status", $userSearch->getStatus());
+            $query->andWhere('u.status = :status')
+                ->setParameter('status', $userSearch->getStatus());
         }
         if ($userSearch->getPole()) {
-            $query->andWhere("p.id = :pole_id")
-                ->setParameter("pole_id", $userSearch->getPole());
+            $query->andWhere('p.id = :pole_id')
+                ->setParameter('pole_id', $userSearch->getPole());
         }
         if ($userSearch->getenabled()) {
-            $query->andWhere("u.enabled = TRUE");
+            $query->andWhere('u.enabled = TRUE');
         }
 
         if ($userSearch->getService()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($userSearch->getService() as $service) {
-                $orX->add($expr->eq("s.id", $service));
+                $orX->add($expr->eq('s.id', $service));
             }
             $query->andWhere($orX);
         }
 
-        $query = $query->orderBy("u.lastname", "ASC");
+        $query = $query->orderBy('u.lastname', 'ASC');
 
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
-     * Trouve les utilisateurs pour l'export des données
+     * Trouve les utilisateurs pour l'export des données.
      *
-     * @param UserSearch $userSearch
      * @param mixed
      */
     public function findUsersToExport(UserSearch $userSearch)
     {
         $query = $this->findAllUsersQuery($userSearch);
+
         return $query->getResult();
     }
 
     /**
-     * Donne la liste des utilisateurs
+     * Donne la liste des utilisateurs.
      *
-     * @param CurrentUserService $currentUser
      * @param User $user
+     *
      * @return void
      */
     public function getUsersQueryList(CurrentUserService $currentUser, User $user = null)
     {
-        $query =  $this->createQueryBuilder("u")
-            ->select("PARTIAL u.{id, firstname, lastname, enabled}");
+        $query = $this->createQueryBuilder('u')
+            ->select('PARTIAL u.{id, firstname, lastname, enabled}');
 
         $expr = $query->expr();
         $orX = $expr->orX();
 
-        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
-            $query = $query->leftJoin("u.serviceUser", "r")
-                ->andWhere("r.service IN (:services)")
-                ->setParameter("services", $currentUser->getServices());
-            $orX->add($expr->eq("u.id", $currentUser->getUser()));
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->leftJoin('u.serviceUser', 'r')
+                ->andWhere('r.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+            $orX->add($expr->eq('u.id', $currentUser->getUser()));
         }
 
         // if ($currentUser->isRole("ROLE_ADMIN")) {
-        $orX->add($expr->eq("u.enabled", true));
+        $orX->add($expr->eq('u.enabled', true));
         // }
         if ($user) {
-            $orX->add($expr->eq("u.id", $user));
+            $orX->add($expr->eq('u.id', $user));
         }
         $query->andWhere($orX);
 
-        return $query->orderBy("u.lastname", "ASC");
+        return $query->orderBy('u.lastname', 'ASC');
     }
 
     /**
-     * Donne la liste des utilisateurs pour les listes déroulantes
+     * Donne la liste des utilisateurs pour les listes déroulantes.
      *
-     * @param CurrentUserService $currentUser
      * @return void
      */
     public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser)
     {
-        $query =  $this->createQueryBuilder("u")
-            ->select("PARTIAL u.{id, firstname, lastname, enabled}")
-            ->where("u.enabled = TRUE");
+        $query = $this->createQueryBuilder('u')
+            ->select('PARTIAL u.{id, firstname, lastname, enabled}')
+            ->where('u.enabled = TRUE');
 
-        if (!$currentUser->isRole("ROLE_SUPER_ADMIN")) {
-            $query = $query->leftJoin("u.serviceUser", "r")
-                ->andWhere("r.service IN (:services)")
-                ->setParameter("services", $currentUser->getServices());
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->leftJoin('u.serviceUser', 'r')
+                ->andWhere('r.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
         }
-        return $query->orderBy("u.lastname", "ASC");
+
+        return $query->orderBy('u.lastname', 'ASC');
     }
 
     /**
-     * Donne tous les utilisateurs du service
+     * Donne tous les utilisateurs du service.
      *
-     * @param Service $service
      * @return mixed
      */
     public function findUsersFromService(Service $service)
     {
-        return $this->createQueryBuilder("u")
-            ->select("PARTIAL u.{id, firstname, lastname, status, phone, email, enabled}")
-            ->leftJoin("u.serviceUser", "su")->addselect("su")
+        return $this->createQueryBuilder('u')
+            ->select('PARTIAL u.{id, firstname, lastname, status, phone, email, enabled}')
+            ->leftJoin('u.serviceUser', 'su')->addselect('su')
 
-            ->where("su.service = :service")
-            ->setParameter("service", $service)
-            ->andWhere("u.enabled = TRUE")
+            ->where('su.service = :service')
+            ->setParameter('service', $service)
+            ->andWhere('u.enabled = TRUE')
 
-            ->orderBy("u.lastname", "ASC")
+            ->orderBy('u.lastname', 'ASC')
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
     /**
-     *
      * @param array $criteria
+     *
      * @return mixed
      */
     public function findUsers(array $criteria = null)
     {
-        $query = $this->createQueryBuilder("u")
+        $query = $this->createQueryBuilder('u')
             // ->select("u")
             // ->leftJoin("u.referentSupport", "s")->addSelect("PARTIAL s.{id, status, startDate, endDate}")
             // ->join("u.notesCreated", "n")->addSelect("COUNT(n.id)")
             // ->leftJoin("u.rdvs", "r")->addSelect("PARTIAL r.{id, start}")
             // ->leftJoin("u.documents", "d")->addSelect("PARTIAL d.{id}")
 
-            ->andWhere("u.enabled = TRUE");
+            ->andWhere('u.enabled = TRUE');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ($key == "status") {
-                    $query = $query->andWhere("u.status = :status")
-                        ->setParameter("status", $value);
+                if ('status' == $key) {
+                    $query = $query->andWhere('u.status = :status')
+                        ->setParameter('status', $value);
                 }
             }
         }

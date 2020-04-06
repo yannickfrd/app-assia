@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use App\Service\Phone;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -18,25 +18,24 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *  message="Ce nom d'utilisateur existe déjà."
  * )
  */
-
 class User implements UserInterface
 {
     public const STATUS = [
-        1 => "Travailleur social",
-        5 => "Administratif",
-        6 => "Chargé·e de mission",
-        3 => "Chef·fe de service",
-        2 => "Coordinatrice/teur",
-        4 => "Directrice/teur",
-        7 => "Stagiaire",
-        8 => "Responsable informatique",
-        97 => "Autre"
+        1 => 'Travailleur social',
+        5 => 'Administratif',
+        6 => 'Chargé·e de mission',
+        3 => 'Chef·fe de service',
+        2 => 'Coordinatrice/teur',
+        4 => 'Directrice/teur',
+        7 => 'Stagiaire',
+        8 => 'Responsable informatique',
+        97 => 'Autre',
     ];
 
     public const ROLES = [
-        "ROLE_USER" => "Utilisateur",
-        "ROLE_ADMIN" => "Administrateur",
-        "ROLE_SUPER_ADMIN" => "Administrateur général"
+        'ROLE_USER' => 'Utilisateur',
+        'ROLE_ADMIN' => 'Administrateur',
+        'ROLE_SUPER_ADMIN' => 'Administrateur général',
     ];
 
     /**
@@ -71,7 +70,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     *@Assert\NotBlank()    
+     *@Assert\NotBlank()
      * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le mot de passe est invalide.")
      */
     private $password;
@@ -90,7 +89,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      * @Assert\Length(min=2, max=50,
-     * minMessage="Le nom est trop court (2 caractères min).", 
+     * minMessage="Le nom est trop court (2 caractères min).",
      * maxMessage="Le nom est trop long (50 caractères max).")
      */
     private $lastname;
@@ -99,7 +98,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      * @Assert\Length(min=2, max=50,
-     * minMessage="Le prénom est trop court (2 caractères min).", 
+     * minMessage="Le prénom est trop court (2 caractères min).",
      * maxMessage="Le prénom est trop long (50 caractères max).")
      */
     private $firstname;
@@ -375,12 +374,12 @@ class User implements UserInterface
 
     public function getFullname(): ?string
     {
-        return $this->lastname . " " . $this->firstname;
+        return $this->lastname.' '.$this->firstname;
     }
 
     public function getInitials(): ?string
     {
-        return substr($this->firstname, 0, 1) . substr($this->lastname, 0, 1);
+        return substr($this->firstname, 0, 1).substr($this->lastname, 0, 1);
     }
 
     public function eraseCredentials()
@@ -390,7 +389,6 @@ class User implements UserInterface
     public function getSalt()
     {
     }
-
 
     public function getStatus(): ?int
     {
@@ -409,11 +407,10 @@ class User implements UserInterface
         return $this;
     }
 
-
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = "ROLE_USER";
+        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -514,7 +511,6 @@ class User implements UserInterface
 
         return $this;
     }
-
 
     /**
      * @return Collection|Person[]
@@ -617,10 +613,6 @@ class User implements UserInterface
         return $this->serviceUser;
     }
 
-    /**
-     * @param ServiceUser $serviceUser
-     * @return self
-     */
     public function addServiceUser(ServiceUser $serviceUser): self
     {
         if (!$this->serviceUser->contains($serviceUser)) {
@@ -640,6 +632,7 @@ class User implements UserInterface
                 $serviceUser->setUser(null);
             }
         }
+
         return $this;
     }
 

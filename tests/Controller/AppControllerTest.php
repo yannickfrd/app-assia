@@ -3,9 +3,9 @@
 namespace App\Tests\Controller;
 
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppControllerTest extends WebTestCase
 {
@@ -21,7 +21,7 @@ class AppControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
         $this->client = static::createClient();
@@ -30,21 +30,21 @@ class AppControllerTest extends WebTestCase
 
     public function testHomepageIsUp()
     {
-        $this->client->request("GET", "/");
+        $this->client->request('GET', '/');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Merci de vous connecter");
+        $this->assertSelectorTextContains('h1', 'Merci de vous connecter');
     }
 
     public function testAccessHomePage()
     {
-        $this->client->request("POST", $this->generateUri("security_login"), [
-            "_username" => "r.madelaine",
-            "_password" => "Test123*",
-            "_csrf_token" => $this->client->getContainer()->get("security.csrf.token_manager")->getToken("authenticate")
+        $this->client->request('POST', $this->generateUri('security_login'), [
+            '_username' => 'r.madelaine',
+            '_password' => 'Test123*',
+            '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),
         ]);
 
-        $this->assertSelectorExists(".alert.alert-success");
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     protected function tearDown(): void

@@ -5,20 +5,18 @@ namespace App\Service;
 class Grammar
 {
     /**
-     * Accorde en fonction du sexe de la personne (féminin, masculin)
-     * @return String
+     * Accorde en fonction du sexe de la personne (féminin, masculin).
      */
-    public static function gender($gender): String
+    public static function gender($gender): string
     {
-        return $gender == 1 ? "e" : "";
+        return 1 == $gender ? 'e' : '';
     }
 
     /**
-     * Met un "s" si plusieurs éléments
-     * @return String
+     * Met un "s" si plusieurs éléments.
      */
-    public static function plural($plural): String
+    public static function plural($plural): string
     {
-        return $plural == 1 ? "s" : "";
+        return 1 == $plural ? 's' : '';
     }
 }

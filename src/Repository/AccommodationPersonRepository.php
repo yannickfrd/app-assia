@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\AccommodationPerson;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method AccommodationPerson|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,22 +21,21 @@ class AccommodationPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne la prise en charge de la personne
+     * Donne la prise en charge de la personne.
      *
      * @param int $id
-     * @return AccommodationPerson|null
      */
     public function findOneById($id): ?AccommodationPerson
     {
-        return $this->createQueryBuilder("pa")
-            ->select("pa")
-            ->leftJoin("pa.createdBy", "user")->addselect("user")
-            ->leftJoin("pa.person", "p")->addselect("p")
-            ->leftJoin("pa.accommodationGroup", "gpa")->addselect("gpa")
-            ->leftJoin("gpa.supportGroup", "sg")->addselect("sg")
+        return $this->createQueryBuilder('pa')
+            ->select('pa')
+            ->leftJoin('pa.createdBy', 'user')->addselect('user')
+            ->leftJoin('pa.person', 'p')->addselect('p')
+            ->leftJoin('pa.accommodationGroup', 'gpa')->addselect('gpa')
+            ->leftJoin('gpa.supportGroup', 'sg')->addselect('sg')
 
-            ->andWhere("pa.id = :id")
-            ->setParameter("id", $id)
+            ->andWhere('pa.id = :id')
+            ->setParameter('id', $id)
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();

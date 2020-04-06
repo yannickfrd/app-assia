@@ -2,9 +2,8 @@
 
 namespace App\Tests;
 
-use App\Tests\AppTestTrait;
-use Symfony\Component\Panther\PantherTestCase;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Component\Panther\PantherTestCase;
 
 class E2eTest extends PantherTestCase
 {
@@ -52,7 +51,6 @@ class E2eTest extends PantherTestCase
 
     //     $this->client->request("GET", "/person/new/");
 
-
     //     $this->assertSelectorTextContains("h1", "Tableau de bord");
     // }
 
@@ -60,20 +58,20 @@ class E2eTest extends PantherTestCase
     {
         $this->createPantherLogin();
 
-        $crawler = $this->client->request("GET", $this->generatePantherUri("person_new"));
+        $crawler = $this->client->request('GET', $this->generatePantherUri('person_new'));
 
-        $form = $crawler->selectButton("send")->form([
-            "role_person_group[person][firstname]" => "Larissa",
-            "role_person_group[person][lastname]" => "MULLER",
-            "role_person_group[person][birthdate]" => "09/05/1987",
-            "role_person_group[person][gender]" => 1,
-            "role_person_group[groupPeople][nbPeople]" => 1,
-            "role_person_group[role]" => 5,
-            "role_person_group[groupPeople][familyTypology]" => 2
+        $form = $crawler->selectButton('send')->form([
+            'role_person_group[person][firstname]' => 'Larissa',
+            'role_person_group[person][lastname]' => 'MULLER',
+            'role_person_group[person][birthdate]' => '09/05/1987',
+            'role_person_group[person][gender]' => 1,
+            'role_person_group[groupPeople][nbPeople]' => 1,
+            'role_person_group[role]' => 5,
+            'role_person_group[groupPeople][familyTypology]' => 2,
         ]);
 
         $this->client->submit($form);
 
-        $this->assertSelectorExists(".alert.alert-success");
+        $this->assertSelectorExists('.alert.alert-success');
     }
 }

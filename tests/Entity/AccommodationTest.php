@@ -2,10 +2,9 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Service;
 use App\Entity\Accommodation;
+use App\Entity\Service;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccommodationTest extends WebTestCase
@@ -22,11 +21,10 @@ class AccommodationTest extends WebTestCase
     /** @var Service */
     protected $service;
 
-
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/AccommodationFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
         ]);
 
         $this->accommodation = $this->getAccommodation();
@@ -34,22 +32,21 @@ class AccommodationTest extends WebTestCase
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-
-        $this->service = $dataFixtures["service"];
+        $this->service = $dataFixtures['service'];
     }
 
     protected function getAccommodation()
     {
-        $faker = \Faker\Factory::create("fr_FR");
+        $faker = \Faker\Factory::create('fr_FR');
         $now = new \DateTime();
 
         return (new Accommodation())
-            ->setName("Logement " . $faker->numberBetween(1, 100))
+            ->setName('Logement '.$faker->numberBetween(1, 100))
             ->setPlacesNumber($faker->numberBetween(1, 10))
-            ->setOpeningDate($faker->dateTimeBetween("-10 years", "now"))
+            ->setOpeningDate($faker->dateTimeBetween('-10 years', 'now'))
             ->setCity($faker->city)
             ->setDepartment($faker->numberBetween(1, 95))
             ->setAddress($faker->address)
@@ -64,7 +61,7 @@ class AccommodationTest extends WebTestCase
 
     public function testBlankName()
     {
-        $this->assertHasErrors($this->accommodation->setName(""), 1);
+        $this->assertHasErrors($this->accommodation->setName(''), 1);
     }
 
     public function testNullOrBlankPlaceNumber()
@@ -90,7 +87,7 @@ class AccommodationTest extends WebTestCase
     public function testAccommodationExists()
     {
         $accommodation = $this->accommodation
-            ->setName("Logement 666")
+            ->setName('Logement 666')
             ->setService($this->service);
 
         $this->assertHasErrors($accommodation, 1);

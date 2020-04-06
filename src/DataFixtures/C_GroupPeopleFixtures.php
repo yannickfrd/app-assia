@@ -2,13 +2,13 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\GroupPeople;
 use App\Entity\Person;
 use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class C_GroupPeopleFixtures extends Fixture
 {
@@ -16,15 +16,25 @@ class C_GroupPeopleFixtures extends Fixture
 
     private $user;
 
-    private $groupPeople, $familyTypology, $nbPeople, $groupCreatedAt, $groupUpdatedAt;
-    private $rolePerson, $head, $role;
-    private $person, $lastname, $firstname, $birthdate, $sex;
+    private $groupPeople;
+    private $familyTypology;
+    private $nbPeople;
+    private $groupCreatedAt;
+    private $groupUpdatedAt;
+    private $rolePerson;
+    private $head;
+    private $role;
+    private $person;
+    private $lastname;
+    private $firstname;
+    private $birthdate;
+    private $sex;
 
     public function __construct(EntityManagerInterface $manager, UserRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;
-        $this->faker = \Faker\Factory::create("fr_FR");
+        $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager)
@@ -40,12 +50,12 @@ class C_GroupPeopleFixtures extends Fixture
             $this->user = $user;
 
             // Crée des faux groupes
-            for ($i = 1; $i <= mt_rand(10, 15); $i++) {
+            for ($i = 1; $i <= mt_rand(10, 15); ++$i) {
                 $this->setTypology();
                 $this->addGroupPeople();
 
                 // Crée des fausses personnes dans le groupe
-                for ($j = 1; $j <= $this->nbPeople; $j++) {
+                for ($j = 1; $j <= $this->nbPeople; ++$j) {
                     $this->familyTypology($j);
                     $this->addRolePerson();
                     $this->addPerson();
@@ -56,7 +66,6 @@ class C_GroupPeopleFixtures extends Fixture
         $this->manager->flush();
     }
 
-
     // Définit la typologie familiale et le nombre de personnes
     protected function setTypology()
     {
@@ -64,9 +73,9 @@ class C_GroupPeopleFixtures extends Fixture
         $this->familyTypology = mt_rand(1, 6);
         if ($this->familyTypology <= 2) {
             $this->nbPeople = 1;
-        } elseif ($this->familyTypology == 3) {
+        } elseif (3 == $this->familyTypology) {
             $this->nbPeople = 2;
-        } elseif ($this->familyTypology == 6) {
+        } elseif (6 == $this->familyTypology) {
             $this->nbPeople = mt_rand(3, 6);
         } else {
             $this->nbPeople = mt_rand(2, 5);
@@ -77,8 +86,8 @@ class C_GroupPeopleFixtures extends Fixture
     public function addGroupPeople()
     {
         // Définit la date de création et de mise à jour
-        $this->groupCreatedAt = AppFixtures::getDateTimeBeetwen("-24 months", "now");
-        $this->groupUpdatedAt = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->groupCreatedAt), "now");
+        $this->groupCreatedAt = AppFixtures::getDateTimeBeetwen('-24 months', 'now');
+        $this->groupUpdatedAt = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->groupCreatedAt), 'now');
 
         $this->lastname = $this->faker->lastName();
 
@@ -96,34 +105,34 @@ class C_GroupPeopleFixtures extends Fixture
     // Détermine différentes infos sur la personne en fonction de la typologie familiale
     protected function familyTypology($l)
     {
-        if ($this->familyTypology == 1) {
-            $this->setPerson("adult", 1, true, 5);
-        } elseif ($this->familyTypology == 2) {
-            $this->setPerson("adult", 2, true, 5);
-        } elseif ($this->familyTypology == 3 || $this->familyTypology == 6) {
-            if ($l == 1) {
-                $this->setPerson("adult", 1, true, 1);
-            } elseif ($l == 2) {
-                $this->setPerson("adult", 2, false, 1);
+        if (1 == $this->familyTypology) {
+            $this->setPerson('adult', 1, true, 5);
+        } elseif (2 == $this->familyTypology) {
+            $this->setPerson('adult', 2, true, 5);
+        } elseif (3 == $this->familyTypology || 6 == $this->familyTypology) {
+            if (1 == $l) {
+                $this->setPerson('adult', 1, true, 1);
+            } elseif (2 == $l) {
+                $this->setPerson('adult', 2, false, 1);
             }
-        } elseif ($this->familyTypology == 4) {
-            if ($l == 1) {
-                $this->setPerson("adult", 1, true, 4);
+        } elseif (4 == $this->familyTypology) {
+            if (1 == $l) {
+                $this->setPerson('adult', 1, true, 4);
             }
-        } elseif ($this->familyTypology == 5) {
-            if ($l == 1) {
-                $this->setPerson("adult", 2, true, 4);
+        } elseif (5 == $this->familyTypology) {
+            if (1 == $l) {
+                $this->setPerson('adult', 2, true, 4);
             }
         }
 
-        if (($this->familyTypology >= 4 && $this->familyTypology <= 5 && $l >= 2) || ($this->familyTypology == 6 && $l >= 3)) {
-            $this->setPerson("child", mt_rand(1, 2), false, 3);
+        if (($this->familyTypology >= 4 && $this->familyTypology <= 5 && $l >= 2) || (6 == $this->familyTypology && $l >= 3)) {
+            $this->setPerson('child', mt_rand(1, 2), false, 3);
         }
     }
 
     protected function setPerson($age, $sex, $head, $role)
     {
-        $this->firstname = $this->faker->firstName($sex == 1 ? "female" : "male");
+        $this->firstname = $this->faker->firstName(1 == $sex ? 'female' : 'male');
         $this->birthdate = $this->birthdate($age);
         $this->sex = $sex;
         $this->head = $head;
@@ -149,9 +158,9 @@ class C_GroupPeopleFixtures extends Fixture
         $this->person = new Person();
         $this->firstname = $this->faker->firstName();
 
-        $phone = "06";
-        for ($i = 1; $i < 5; $i++) {
-            $phone  = $phone  . " " . strval(mt_rand(0, 9)) . strval(mt_rand(0, 9));
+        $phone = '06';
+        for ($i = 1; $i < 5; ++$i) {
+            $phone = $phone.' '.strval(mt_rand(0, 9)).strval(mt_rand(0, 9));
         }
 
         $this->person->setFirstName($this->firstname)
@@ -170,13 +179,14 @@ class C_GroupPeopleFixtures extends Fixture
     }
 
     // Donne une date de naissanc en fonction du role de la personne
-    protected function birthdate($role = "adult")
+    protected function birthdate($role = 'adult')
     {
-        if ($role == "adult") {
-            $birthdate = $this->faker->dateTimeBetween($startDate = "-55 years", $endDate = "-18 years", $timezone = null);
+        if ('adult' == $role) {
+            $birthdate = $this->faker->dateTimeBetween($startDate = '-55 years', $endDate = '-18 years', $timezone = null);
         } else {
-            $birthdate = $this->faker->dateTimeBetween($startDate = "-18 years", $endDate = "now", $timezone = null);
+            $birthdate = $this->faker->dateTimeBetween($startDate = '-18 years', $endDate = 'now', $timezone = null);
         }
+
         return $birthdate;
     }
 }

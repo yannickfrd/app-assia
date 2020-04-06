@@ -6,9 +6,9 @@ use App\Entity\Service;
 use App\Entity\ServiceUser;
 use App\Repository\ServiceRepository;
 use App\Security\CurrentUserService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceUserType extends AbstractType
@@ -23,24 +23,24 @@ class ServiceUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("service", EntityType::class, [
-                "class" => Service::class,
-                "choice_label" => "name",
-                "query_builder" => function (ServiceRepository $repo) {
+            ->add('service', EntityType::class, [
+                'class' => Service::class,
+                'choice_label' => 'name',
+                'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
-                "placeholder" => "-- Select --",
-                "attr" => [
-                    "class" => "col-auto my-1",
-                ]
+                'placeholder' => '-- Select --',
+                'attr' => [
+                    'class' => 'col-auto my-1',
+                ],
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => ServiceUser::class,
-            "translation_domain" => "forms",
+            'data_class' => ServiceUser::class,
+            'translation_domain' => 'forms',
         ]);
     }
 }

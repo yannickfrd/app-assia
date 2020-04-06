@@ -3,12 +3,11 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Referent;
-use Symfony\Component\DomCrawler\Crawler;
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReferentControllerTest extends WebTestCase
 {
@@ -27,42 +26,42 @@ class ReferentControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/ReferentFixturesTest.yaml"
+            dirname(__DIR__).'/DataFixturesTest/ReferentFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $this->referent = $this->dataFixtures["referent1"];
+        $this->referent = $this->dataFixtures['referent1'];
     }
 
     public function testNewReferentIsUp()
     {
-        $this->client->request("GET", $this->generateUri("referent_new", [
-            "id" => $this->dataFixtures["groupPeople"]->getId()
+        $this->client->request('GET', $this->generateUri('referent_new', [
+            'id' => $this->dataFixtures['groupPeople']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Nouveau service social référent");
+        $this->assertSelectorTextContains('h1', 'Nouveau service social référent');
     }
 
     public function testEditReferentIsUp()
     {
-        $this->client->request("GET", $this->generateUri("referent_edit", [
-            "id" => $this->referent->getId()
+        $this->client->request('GET', $this->generateUri('referent_edit', [
+            'id' => $this->referent->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", $this->referent->getName());
+        $this->assertSelectorTextContains('h1', $this->referent->getName());
     }
 
     public function testDeleteReferent()
     {
-        $this->client->request("GET", $this->generateUri("referent_delete", [
-            "id" => $this->referent->getId()
+        $this->client->request('GET', $this->generateUri('referent_delete', [
+            'id' => $this->referent->getId(),
         ]));
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Group");
+        $this->assertSelectorTextContains('h1', 'Group');
     }
 
     protected function tearDown(): void

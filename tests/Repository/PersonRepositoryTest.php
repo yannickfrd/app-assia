@@ -24,36 +24,34 @@ class PersonRepositoryTest extends WebTestCase
     /** @var PersonSearch */
     protected $personSearch;
 
-
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/PersonFixturesTest.yaml"
+            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var PersonRepository */
+        /* @var PersonRepository */
         $this->repo = $this->entityManager->getRepository(Person::class);
 
-        $this->person = $dataFixtures["userSuperAdmin"];
+        $this->person = $dataFixtures['userSuperAdmin'];
         $this->personSearch = $this->getPersonSearch();
     }
 
     protected function getPersonSearch()
     {
         return (new PersonSearch())
-            ->setFirstname("John")
-            ->setLastname("DOE")
-            ->setBirthdate(new \DateTime("1980-01-01"))
+            ->setFirstname('John')
+            ->setLastname('DOE')
+            ->setBirthdate(new \DateTime('1980-01-01'))
             ->setGender(2)
-            ->setPhone("01 00 00 00 00");
+            ->setPhone('01 00 00 00 00');
     }
-
 
     public function testCount()
     {
@@ -80,7 +78,7 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testFindAllPeopleQueryWithSearch()
     {
-        $query = $this->repo->findAllPeopleQuery(new PersonSearch(), "John");
+        $query = $this->repo->findAllPeopleQuery(new PersonSearch(), 'John');
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -91,7 +89,7 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testFindPeopleByResearch()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findPeopleByResearch("do")));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findPeopleByResearch('do')));
     }
 
     public function testFindAllPeople()

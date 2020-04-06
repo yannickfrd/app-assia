@@ -51,7 +51,6 @@ class InitEvalGroup
      */
     private $supportGroup;
 
-
     public function getId(): ?int
     {
         return $this->id;

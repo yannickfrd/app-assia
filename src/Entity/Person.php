@@ -4,13 +4,12 @@ namespace App\Entity;
 
 use App\Service\Phone;
 use Cocur\Slugify\Slugify;
-
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
@@ -22,10 +21,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Person
 {
     public const GENDER = [
-        1 => "Femme",
-        2 => "Homme",
-        3 => "Autre",
-        99 => "Non renseigné"
+        1 => 'Femme',
+        2 => 'Homme',
+        3 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -36,13 +35,13 @@ class Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)   
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotNull(message="Le nom ne doit pas être vide.")
      * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      * @Assert\Length(
-     * min=2, 
+     * min=2,
      * max=50,
-     * minMessage="Le nom est trop court (2 caractères min).", 
+     * minMessage="Le nom est trop court (2 caractères min).",
      * maxMessage="Le nom est trop long (50 caractères max).")
      * Groups("export")
      */
@@ -68,7 +67,7 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères max).")     
+     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères max).")
      */
     private $usename;
 
@@ -81,7 +80,7 @@ class Person
 
     /**
      * @Assert\Range(
-     * min = 0, 
+     * min = 0,
      * max = 90,
      * minMessage = "La date de naissance est incorrect.",
      * maxMessage = "La date de naissance est incorrect.")
@@ -97,7 +96,7 @@ class Person
     private $gender;
 
     /**
-     * Groups("export")
+     * Groups("export").
      */
     private $genderToString;
 
@@ -174,7 +173,7 @@ class Person
 
     public function __toString()
     {
-        return $this->lastname . " " . $this->firstname;
+        return $this->lastname.' '.$this->firstname;
     }
 
     public function getId(): ?int
@@ -210,12 +209,12 @@ class Person
     {
         $slugify = new Slugify();
 
-        return $slugify->slugify($this->firstname . "-" . $this->lastname);
+        return $slugify->slugify($this->firstname.'-'.$this->lastname);
     }
 
     public function getFullname(): ?string
     {
-        return $this->lastname . " " . $this->firstname;
+        return $this->lastname.' '.$this->firstname;
     }
 
     public function getMaidenName(): ?string
@@ -253,6 +252,7 @@ class Person
         if ($birthdate) {
             $this->age = $birthdate->diff(new \DateTime())->y;
         }
+
         return $this;
     }
 
@@ -271,6 +271,7 @@ class Person
             $now = new \DateTime();
             $this->age = $birthdate->diff($now)->y;
         }
+
         return $this;
     }
 
@@ -426,6 +427,7 @@ class Person
                 $rolesPerson->setPerson(null);
             }
         }
+
         return $this;
     }
 

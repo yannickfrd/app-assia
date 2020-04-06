@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
-use App\Entity\SupportGroup;
 use App\Entity\EvaluationGroup;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\SupportGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method EvaluationGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,40 +22,39 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne toute l'évaluation sociale du groupe
+     * Donne toute l'évaluation sociale du groupe.
      *
      * @param SupportGroup $supportGroup
-     * @return EvaluationGroup|null
      */
     public function findEvaluationById($id): ?EvaluationGroup
     {
-        return $this->createQueryBuilder("eg")
-            ->select("eg")
-            ->join("eg.supportGroup", "sg")->addselect("PARTIAL sg.{id}")
-            ->join("sg.groupPeople", "gp")->addselect("PARTIAL gp.{id, familyTypology, nbPeople}")
+        return $this->createQueryBuilder('eg')
+            ->select('eg')
+            ->join('eg.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
+            ->join('sg.groupPeople', 'gp')->addselect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
-            ->leftJoin("eg.evaluationPeople", "ep")->addselect("ep")
-            ->join("ep.supportPerson", "sp")->addselect("PARTIAL sp.{id, person, head, role}")
-            ->join("sp.person", "p")->addselect("PARTIAL p.{id, firstname, lastname, birthdate, gender}")
+            ->leftJoin('eg.evaluationPeople', 'ep')->addselect('ep')
+            ->join('ep.supportPerson', 'sp')->addselect('PARTIAL sp.{id, person, head, role}')
+            ->join('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
-            ->leftJoin("eg.initEvalGroup", "initEvalGroup")->addselect("initEvalGroup")
-            ->leftJoin("eg.evalSocialGroup", "evalSocialGroup")->addselect("evalSocialGroup")
-            ->leftJoin("eg.evalBudgetGroup", "evalBudgetGroup")->addselect("evalBudgetGroup")
-            ->leftJoin("eg.evalFamilyGroup", "evalFamilyGroup")->addselect("evalFamilyGroup")
-            ->leftJoin("eg.evalHousingGroup", "evalHousingGroup")->addselect("evalHousingGroup")
+            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addselect('initEvalGroup')
+            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addselect('evalSocialGroup')
+            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addselect('evalBudgetGroup')
+            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addselect('evalFamilyGroup')
+            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addselect('evalHousingGroup')
 
-            ->leftJoin("ep.initEvalPerson", "initEvalPerson")->addselect("initEvalPerson")
-            ->leftJoin("ep.evalAdmPerson", "evalAdmPerson")->addselect("evalAdmPerson")
-            ->leftJoin("ep.evalBudgetPerson", "evalBudgetPerson")->addselect("evalBudgetPerson")
-            ->leftJoin("ep.evalFamilyPerson", "evalFamilyPerson")->addselect("evalFamilyPerson")
-            ->leftJoin("ep.evalJusticePerson", "evalJusticePerson")->addselect("evalJusticePerson")
-            ->leftJoin("ep.evalProfPerson", "evalProfPerson")->addselect("evalProfPerson")
-            ->leftJoin("ep.evalSocialPerson", "evalSocialPerson")->addselect("evalSocialPerson")
+            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addselect('initEvalPerson')
+            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addselect('evalAdmPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addselect('evalBudgetPerson')
+            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addselect('evalFamilyPerson')
+            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addselect('evalJusticePerson')
+            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addselect('evalProfPerson')
+            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addselect('evalSocialPerson')
 
-            ->andWhere("eg.supportGroup = :supportGroup")
-            ->setParameter("supportGroup", $id)
+            ->andWhere('eg.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $id)
 
-            ->orderBy("p.birthdate", "ASC")
+            ->orderBy('p.birthdate', 'ASC')
             // ->setMaxResults(1)
 
             ->getQuery()
@@ -64,20 +63,17 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne toute l'évaluation sociale du groupe
-     *
-     * @param SupportGroup $supportGroup
-     * @return EvaluationGroup|null
+     * Donne toute l'évaluation sociale du groupe.
      */
     public function findLastEvaluationFromSupport(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        return $this->createQueryBuilder("eg")
-            ->select("eg")
+        return $this->createQueryBuilder('eg')
+            ->select('eg')
 
-            ->andWhere("eg.supportGroup = :supportGroup")
-            ->setParameter("supportGroup", $supportGroup)
+            ->andWhere('eg.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup)
 
-            ->orderBy("eg.id", "DESC")
+            ->orderBy('eg.id', 'DESC')
             ->setMaxResults(1)
 
             ->getQuery()

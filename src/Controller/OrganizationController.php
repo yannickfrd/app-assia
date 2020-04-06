@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
-use App\Service\Pagination;
 use App\Entity\Organization;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\OrganizationRepository;
 use App\Form\Organization\OrganizationType;
+use App\Repository\OrganizationRepository;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OrganizationController extends AbstractController
 {
@@ -25,29 +25,25 @@ class OrganizationController extends AbstractController
     }
 
     /**
-     * Affiche la liste des dispositifs
-     * 
+     * Affiche la liste des dispositifs.
+     *
      * @Route("/admin/organizations", name="admin_organizations", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
-     * @param Request $request
-     * @param Pagination $pagination
-     * @return Response
      */
     public function listOrganization(Request $request, Pagination $pagination): Response
     {
-        return $this->render("app/organization/listOrganizations.html.twig", [
-            "organizations" => $pagination->paginate($this->repo->findAllOrganizationsQuery(), $request) ?? null
+        return $this->render('app/organization/listOrganizations.html.twig', [
+            'organizations' => $pagination->paginate($this->repo->findAllOrganizationsQuery(), $request) ?? null,
         ]);
     }
 
     /**
-     * Nouveau dispositif
-     * 
+     * Nouveau dispositif.
+     *
      * @Route("/admin/organization/new", name="admin_organization_new", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
+     *
      * @param Organization $organization
-     * @param Request $request
-     * @return Response
      */
     public function newOrganization(Organization $organization = null, Request $request): Response
     {
@@ -60,20 +56,17 @@ class OrganizationController extends AbstractController
             return $this->createOrganization($organization);
         }
 
-        return $this->render("app/organization/organization.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => false
+        return $this->render('app/organization/organization.html.twig', [
+            'form' => $form->createView(),
+            'edit_mode' => false,
         ]);
     }
 
     /**
-     * Modification d'un dispositif
-     * 
+     * Modification d'un dispositif.
+     *
      * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
-     *  @param Organization $organization
-     * @param Request $request
-     * @return Response
      */
     public function editOrganization(Organization $organization, Request $request): Response
     {
@@ -84,18 +77,16 @@ class OrganizationController extends AbstractController
             return $this->updateOrganization($organization);
         }
 
-        $this->addFlash("success", "Le dispositif a été mis à jour.");
+        $this->addFlash('success', 'Le dispositif a été mis à jour.');
 
-        return $this->render("app/organization/organization.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
+        return $this->render('app/organization/organization.html.twig', [
+            'form' => $form->createView(),
+            'edit_mode' => true,
         ]);
     }
 
     /**
-     * Crée un dispositif
-     *
-     * @param Organization $organization
+     * Crée un dispositif.
      */
     protected function createOrganization(Organization $organization)
     {
@@ -109,15 +100,13 @@ class OrganizationController extends AbstractController
         $this->manager->persist($organization);
         $this->manager->flush();
 
-        $this->addFlash("success", "Le dispositif a été créé.");
+        $this->addFlash('success', 'Le dispositif a été créé.');
 
-        return $this->redirectToRoute("admin_organizations");
+        return $this->redirectToRoute('admin_organizations');
     }
 
     /**
-     * Met à jour un dispositif
-     *
-     * @param Organization $organization
+     * Met à jour un dispositif.
      */
     protected function updateOrganization(Organization $organization)
     {
@@ -126,7 +115,8 @@ class OrganizationController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash("success", "Les modifications ont été enregistrées.");
-        return $this->redirectToRoute("admin_organizations");
+        $this->addFlash('success', 'Les modifications ont été enregistrées.');
+
+        return $this->redirectToRoute('admin_organizations');
     }
 }

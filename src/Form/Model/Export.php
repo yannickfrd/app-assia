@@ -2,17 +2,17 @@
 
 namespace App\Form\Model;
 
-use App\Entity\User;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Export
 {
     public const SUPPORT_DATES = [
-        1 => "Début du suivi",
-        2 => "Fin du suivi",
-        3 => "Période de suivi"
+        1 => 'Début du suivi',
+        2 => 'Fin du suivi',
+        3 => 'Période de suivi',
     ];
 
     /**
@@ -27,7 +27,7 @@ class Export
     private $nbPeople;
 
     /**
-     * @var Array
+     * @var array
      */
     private $status;
 
@@ -125,10 +125,6 @@ class Export
         return $this;
     }
 
-    /**
-     *
-     * @return Array|null
-     */
     public function getStatus(): ?array
     {
         return $this->status;
@@ -180,6 +176,7 @@ class Export
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
         return $this;
     }
 
@@ -195,10 +192,6 @@ class Export
         return $this;
     }
 
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getServices(): ?ArrayCollection
     {
         return $this->services;
@@ -211,10 +204,6 @@ class Export
         return $this;
     }
 
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getDevices(): ?ArrayCollection
     {
         return $this->devices;
@@ -226,7 +215,6 @@ class Export
 
         return $this;
     }
-
 
     public function getEvalAdm(): ?bool
     {

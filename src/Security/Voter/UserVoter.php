@@ -3,10 +3,9 @@
 namespace App\Security\Voter;
 
 use App\Entity\User;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class UserVoter extends Voter
 {
@@ -22,7 +21,7 @@ class UserVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ["VIEW", "EDIT", "DESACTIVATE"])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DESACTIVATE'])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -37,43 +36,46 @@ class UserVoter extends Voter
         }
 
         switch ($attribute) {
-            case "VIEW":
+            case 'VIEW':
                 return true;
                 break;
-            case "EDIT":
+            case 'EDIT':
                 return $this->canEdit();
                 break;
-            case "DEACTIVATE":
+            case 'DEACTIVATE':
                 return $this->canDeactivate();
                 break;
         }
+
         return false;
     }
 
     protected function canEdit()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || $this->isAdminUser()) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUser()) {
             return true;
         }
 
         if ($this->currentUser->getId() == $this->user->getId()) {
             return true;
         }
+
         return false;
     }
 
     protected function canDeactivate()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || ($this->isAdminUser())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser())) {
             return true;
         }
+
         return false;
     }
 
     // If current user is administrator
     protected function isAdminUser()
     {
-        if ($this->security->isGranted("ROLE_ADMIN")) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
                 foreach ($this->user->getServiceUser() as $serviceUser) {
                     if ($serviceCurrentUser->getService() && $serviceCurrentUser->getService()->getId() == $serviceUser->getService()->getId()) {
@@ -82,6 +84,7 @@ class UserVoter extends Voter
                 }
             }
         }
+
         return false;
     }
 }

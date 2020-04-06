@@ -12,7 +12,6 @@ class UserChangeInfo
      */
     private $email;
 
-
     /**
      * @Assert\Length(min = 10,max = 15)
      */

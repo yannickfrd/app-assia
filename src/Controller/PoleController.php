@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Pole;
 use App\Form\Pole\PoleType;
-use App\Service\Pagination;
 use App\Repository\PoleRepository;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PoleController extends AbstractController
 {
@@ -25,26 +25,22 @@ class PoleController extends AbstractController
     }
 
     /**
-     * Liste des pôles
-     * 
+     * Liste des pôles.
+     *
      * @Route("/poles", name="poles", methods="GET")
-     * @param Request $request
-     * @param Pagination $pagination
-     * @return Response
      */
     public function listPole(Request $request, Pagination $pagination): Response
     {
-        return $this->render("app/pole/listPoles.html.twig", [
-            "poles" => $pagination->paginate($this->repo->findAllPolesQuery(), $request) ?? null
+        return $this->render('app/pole/listPoles.html.twig', [
+            'poles' => $pagination->paginate($this->repo->findAllPolesQuery(), $request) ?? null,
         ]);
     }
 
     /**
-     * Nouveau pôle
-     * 
+     * Nouveau pôle.
+     *
      * @Route("/pole/new", name="pole_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
-     *  @return Response
      */
     public function newPole(Pole $pole = null, Request $request): Response
     {
@@ -57,21 +53,20 @@ class PoleController extends AbstractController
             return $this->createPole($pole);
         }
 
-        return $this->render("app/pole/pole.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => false
+        return $this->render('app/pole/pole.html.twig', [
+            'form' => $form->createView(),
+            'edit_mode' => false,
         ]);
     }
 
     /**
-     * Modification d'un pôle
-     * 
+     * Modification d'un pôle.
+     *
      * @Route("/pole/{id}", name="pole_edit", methods="GET|POST")
-     *  @return Response
      */
     public function editPole(Pole $pole, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $pole);
+        $this->denyAccessUnlessGranted('EDIT', $pole);
 
         $form = ($this->createForm(PoleType::class, $pole))
             ->handleRequest($request);
@@ -80,16 +75,14 @@ class PoleController extends AbstractController
             $this->updatePole($pole);
         }
 
-        return $this->render("app/pole/pole.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
+        return $this->render('app/pole/pole.html.twig', [
+            'form' => $form->createView(),
+            'edit_mode' => true,
         ]);
     }
 
     /**
-     * Crée un pôle
-     *
-     * @param Pole $pole
+     * Crée un pôle.
      */
     protected function createPole(Pole $pole)
     {
@@ -103,15 +96,13 @@ class PoleController extends AbstractController
         $this->manager->persist($pole);
         $this->manager->flush();
 
-        $this->addFlash("success", "Le pôle a été créé.");
+        $this->addFlash('success', 'Le pôle a été créé.');
 
-        return $this->redirectToRoute("pole_edit", ["id" => $pole->getId()]);
+        return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
     }
 
     /**
-     * Met à jour un pôle
-     *
-     * @param Pole $pole
+     * Met à jour un pôle.
      */
     protected function updatePole(Pole $pole)
     {
@@ -120,6 +111,6 @@ class PoleController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash("success", "Les modifications ont été enregistrées.");
+        $this->addFlash('success', 'Les modifications ont été enregistrées.');
     }
 }

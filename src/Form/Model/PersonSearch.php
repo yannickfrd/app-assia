@@ -3,7 +3,6 @@
 namespace App\Form\Model;
 
 use App\Service\Phone;
-use App\Entity\Person;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PersonSearch
@@ -51,9 +50,6 @@ class PersonSearch
     {
     }
 
-    /**
-     * @return string|null
-     */
     public function getLastname(): ?string
     {
         return $this->lastname;
@@ -66,9 +62,6 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -81,9 +74,6 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getUsename(): ?string
     {
         return $this->usename;
@@ -111,13 +101,11 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getAge(): ?int
     {
         if ($this->birthdate) {
-            $now   = new \DateTime();
+            $now = new \DateTime();
+
             return $this->birthdate->diff($now)->y;
         } else {
             return null;
@@ -134,9 +122,6 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getGender(): ?int
     {
         return $this->gender;
@@ -149,9 +134,6 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhone(): ?string
     {
         return $this->phone;
@@ -164,9 +146,6 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;
@@ -179,9 +158,6 @@ class PersonSearch
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getExport(): ?bool
     {
         return $this->export;

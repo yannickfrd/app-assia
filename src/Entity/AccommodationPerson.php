@@ -68,7 +68,6 @@ class AccommodationPerson
      */
     private $person;
 
-
     public function getId(): ?int
     {
         return $this->id;

@@ -3,24 +3,21 @@
 namespace App\Form\Person;
 
 use App\Entity\RolePerson;
-
-use App\Form\Person\PersonType;
 use App\Form\Utils\Choices;
-
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class PersonRolePersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("person", PersonType::class)
-            ->add("role", ChoiceType::class, [
-                "choices" => Choices::getChoices(RolePerson::ROLE),
-                "placeholder" => "-- Select --",
+            ->add('person', PersonType::class)
+            ->add('role', ChoiceType::class, [
+                'choices' => Choices::getChoices(RolePerson::ROLE),
+                'placeholder' => '-- Select --',
             ]);
     }
 
@@ -28,7 +25,7 @@ class PersonRolePersonType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => RolePerson::class,
-            "translation_domain" => "forms",
+            'translation_domain' => 'forms',
         ]);
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class PoleVoter extends Voter
 {
@@ -21,7 +20,7 @@ class PoleVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ["VIEW", "EDIT", "DESACTIVATE"])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DESACTIVATE'])
             && $subject instanceof \App\Entity\Pole;
     }
 
@@ -36,26 +35,27 @@ class PoleVoter extends Voter
         }
 
         switch ($attribute) {
-            case "VIEW":
+            case 'VIEW':
                 return true;
                 break;
-            case "EDIT":
+            case 'EDIT':
                 return $this->canEdit();
                 break;
-            case "DEACTIVATE":
+            case 'DEACTIVATE':
                 return $this->canDeactivate();
                 break;
         }
+
         return false;
     }
 
     protected function canEdit()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN")) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 
-        if ($this->security->isGranted("ROLE_ADMIN") && $this->currentUser->getStatus() == 4) {
+        if ($this->security->isGranted('ROLE_ADMIN') && 4 == $this->currentUser->getStatus()) {
             foreach ($this->currentUser->getServiceUser() as $serviceUser) {
                 foreach ($this->pole->getServices() as $service) {
                     if ($service->getId() == $serviceUser->getService()->getId()) {
@@ -64,14 +64,16 @@ class PoleVoter extends Voter
                 }
             }
         }
+
         return false;
     }
 
     protected function canDeactivate()
     {
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN")) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
+
         return false;
     }
 }

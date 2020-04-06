@@ -12,14 +12,14 @@ class DeviceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("name")
-            ->add("coefficient", null, [
-                "help" => "Coefficient entre 0 et 10. Les décimales sont prises en compte."
+            ->add('name')
+            ->add('coefficient', null, [
+                'help' => 'Coefficient entre 0 et 10. Les décimales sont prises en compte.',
             ])
-            ->add("comment", null, [
-                "attr" => [
-                    "rows" => 5,
-                    "placeholder" => "Description..."
+            ->add('comment', null, [
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'Description...',
                 ],
             ]);
     }
@@ -27,8 +27,8 @@ class DeviceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => Device::class,
-            "translation_domain" => "forms"
+            'data_class' => Device::class,
+            'translation_domain' => 'forms',
         ]);
     }
 }

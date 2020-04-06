@@ -3,12 +3,11 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Pole;
-use Symfony\Component\DomCrawler\Crawler;
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class PoleControllerTest extends WebTestCase
 {
@@ -27,38 +26,38 @@ class PoleControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/ServiceFixturesTest.yaml"
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures["userSuperAdmin"]);
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $this->pole = $this->dataFixtures["pole"];
+        $this->pole = $this->dataFixtures['pole'];
     }
 
     public function testListPolesIsUp()
     {
-        $this->client->request("GET", $this->generateUri("poles"));
+        $this->client->request('GET', $this->generateUri('poles'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Pôles");
+        $this->assertSelectorTextContains('h1', 'Pôles');
     }
 
     public function testNewPoleIsUp()
     {
-        $this->client->request("GET", $this->generateUri("pole_new"));
+        $this->client->request('GET', $this->generateUri('pole_new'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", "Nouveau pôle");
+        $this->assertSelectorTextContains('h1', 'Nouveau pôle');
     }
 
     public function testEditPoleIsUp()
     {
-        $this->client->request("GET", $this->generateUri("pole_edit", [
-            "id" => $this->pole->getId()
+        $this->client->request('GET', $this->generateUri('pole_edit', [
+            'id' => $this->pole->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains("h1", $this->pole->getName());
+        $this->assertSelectorTextContains('h1', $this->pole->getName());
     }
 
     protected function tearDown(): void

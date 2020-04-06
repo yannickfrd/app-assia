@@ -11,43 +11,43 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalJusticePerson
 {
     public const JUSTICE_STATUS = [
-        1 => "Contrainte pénale",
-        2 => "Contrôle judiciaire (CJ)", // Sursis probatoire
-        3 => "Convocation sur procès-verbal en matière pénale (CPPV)",
-        4 => "Détention",
-        5 => "Libération conditionnelle (LC)",
-        6 => "Placement extérieur (PE)",
-        7 => "Placement sous surveillannce électronique (PSE)", // détention à domicile sous surveillance électronique (DDSE) 
-        8 => "Semi-liberté",
-        9 => "Sortie de détention",
-        10 => "Suivi socio-judiciaire (SSJ)",
+        1 => 'Contrainte pénale',
+        2 => 'Contrôle judiciaire (CJ)', // Sursis probatoire
+        3 => 'Convocation sur procès-verbal en matière pénale (CPPV)',
+        4 => 'Détention',
+        5 => 'Libération conditionnelle (LC)',
+        6 => 'Placement extérieur (PE)',
+        7 => 'Placement sous surveillannce électronique (PSE)', // détention à domicile sous surveillance électronique (DDSE)
+        8 => 'Semi-liberté',
+        9 => 'Sortie de détention',
+        10 => 'Suivi socio-judiciaire (SSJ)',
         11 => "Sursis de mise à l'épreuve (SME)",
-        12 => "Suspension de peine pour raison médicale",
+        12 => 'Suspension de peine pour raison médicale',
         13 => "Travail d'intérêt général (TIG)",
-        97 => "Autre",
-        98 => "Non concerné",
-        99 => "Non renseigné"
+        97 => 'Autre',
+        98 => 'Non concerné',
+        99 => 'Non renseigné',
     ];
 
     public const JUSTICE_ACT = [
-        1 => "Composition pénale (CP)",
-        2 => "Contrôle judiciaire socio-éducatif (CJS)", // Sursis probatoire
-        3 => "Enquête de personnalité auteur (EP)",
-        4 => "Enquête de personnalité victime",
-        5 => "Enquête sociale rapide",
-        6 => "Placement extérieur (PE)",
-        7 => "Placement sous surveillannce électronique (PSE)", // détention à domicile sous surveillance électronique (DDSE) 
-        8 => "Placement sous surveillannce électronique mobile (PSEM)", // détention à domicile sous surveillance électronique (DDSE) 
-        9 => "Libération conditionnelle (LC)",
-        10 => "Réduction conditionnelle de peine",
-        11 => "Stage de citoyenneté",
-        12 => "Stage de sensibilisation",
-        13 => "Suivi socio-judiciaire (SSJ)",
+        1 => 'Composition pénale (CP)',
+        2 => 'Contrôle judiciaire socio-éducatif (CJS)', // Sursis probatoire
+        3 => 'Enquête de personnalité auteur (EP)',
+        4 => 'Enquête de personnalité victime',
+        5 => 'Enquête sociale rapide',
+        6 => 'Placement extérieur (PE)',
+        7 => 'Placement sous surveillannce électronique (PSE)', // détention à domicile sous surveillance électronique (DDSE)
+        8 => 'Placement sous surveillannce électronique mobile (PSEM)', // détention à domicile sous surveillance électronique (DDSE)
+        9 => 'Libération conditionnelle (LC)',
+        10 => 'Réduction conditionnelle de peine',
+        11 => 'Stage de citoyenneté',
+        12 => 'Stage de sensibilisation',
+        13 => 'Suivi socio-judiciaire (SSJ)',
         14 => "Sursis de mise à l'épreuve (SME)",
         14 => "Travail d'intérêt général (TIG)",
-        97 => "Autre",
-        98 => "Non concerné",
-        99 => "Non renseigné"
+        97 => 'Autre',
+        98 => 'Non concerné',
+        99 => 'Non renseigné',
     ];
 
     /**

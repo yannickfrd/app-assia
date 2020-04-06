@@ -3,10 +3,10 @@
 namespace App\Notification;
 
 use App\Entity\User;
-use Twig\Environment;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use Twig\Environment;
 
 class MailNotification
 {
@@ -21,7 +21,7 @@ class MailNotification
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
 
-        if ($_SERVER["SERVER_NAME"] != "127.0.0.1") {
+        if ('127.0.0.1' != $_SERVER['SERVER_NAME']) {
             $this->mail->isSMTP(); // Send using SMTP
         }
 
@@ -30,7 +30,7 @@ class MailNotification
         $this->mail->Password = $password;
         $this->mail->Port = $port;
 
-        $this->mail->CharSet = "UTF-8";
+        $this->mail->CharSet = 'UTF-8';
         $this->mail->isHTML(true); // Set email format to HTML
 
         $this->renderer = $renderer;
@@ -40,8 +40,8 @@ class MailNotification
     {
         try {
             //Recipients
-            $this->mail->setFrom("noreply@romain-mad.fr", "Esperer95.app");
-            $this->mail->addAddress($to["email"], $to["name"]); // Add a recipient
+            $this->mail->setFrom('noreply@romain-mad.fr', 'Esperer95.app');
+            $this->mail->addAddress($to['email'], $to['name']); // Add a recipient
             // $this->mail->addAddress("ellen@example.com"); // Name is optional
             // $this->mail->addReplyTo("info@example.com", "Information");
             // $this->mail->addCC("cc@example.com");
@@ -70,51 +70,50 @@ class MailNotification
     public function altSend($to, $subject, $htmlBody)
     {
         $headers = [
-            "MIME-Version" => "1.0",
-            "Content-type" => "text/html;charset=UTF-8",
-            "From" => "Esperer95.app <noreply@esperer95-app.fr>",
+            'MIME-Version' => '1.0',
+            'Content-type' => 'text/html;charset=UTF-8',
+            'From' => 'Esperer95.app <noreply@esperer95-app.fr>',
             // "CC" => $cc,
             // "Bcc" => $bcc,
             // "Reply-To" => "Esperer95.app <romain.madelaine@esperer-95.org>",
-            "X-Mailer" => "PHP/" . phpversion()
+            'X-Mailer' => 'PHP/'.phpversion(),
         ];
         mail($to, $subject, $htmlBody, $headers);
     }
 
     /**
-     * Mail de réinitialisation du mot de psasse
-     *
-     * @param User $user
+     * Mail de réinitialisation du mot de psasse.
      */
     public function reinitPassword(User $user)
     {
         $to = [
-            "email" => $user->getEmail(),
-            "name" =>  $user->getFullname()
+            'email' => $user->getEmail(),
+            'name' => $user->getFullname(),
         ];
 
-        $subject = "Esperer95.app : Réinitialisation du mot de passe";
+        $subject = 'Esperer95.app : Réinitialisation du mot de passe';
 
         $htmlBody = $this->renderer->render(
-            "emails/reinitPassword.html.twig",
-            ["user" => $user]
+            'emails/reinitPassword.html.twig',
+            ['user' => $user]
         );
         $txtBody = $this->renderer->render(
-            "emails/reinitPassword.txt.twig",
-            ["user" => $user]
+            'emails/reinitPassword.txt.twig',
+            ['user' => $user]
         );
 
         $send = $this->send($to, $subject, $htmlBody, $txtBody);
 
         if ($send) {
             return [
-                "type" => "success",
-                "content" => "Un mail vous a été envoyé. Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables."
+                'type' => 'success',
+                'content' => "Un mail vous a été envoyé. Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables.",
             ];
         }
+
         return [
-            "type" => "danger",
-            "content" => "Une erreur s'est produite. L'email n'a pas pu être envoyé."
+            'type' => 'danger',
+            'content' => "Une erreur s'est produite. L'email n'a pas pu être envoyé.",
         ];
     }
 }

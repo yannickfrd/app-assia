@@ -41,16 +41,12 @@ class RdvSearch
      */
     private $devices;
 
-
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->devices = new ArrayCollection();
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
@@ -63,9 +59,6 @@ class RdvSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFullname(): ?string
     {
         return $this->fullname;
@@ -100,6 +93,7 @@ class RdvSearch
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
         return $this;
     }
 
@@ -115,10 +109,6 @@ class RdvSearch
         return $this;
     }
 
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getServices(): ?ArrayCollection
     {
         return $this->services;
@@ -131,10 +121,6 @@ class RdvSearch
         return $this;
     }
 
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getDevices(): ?ArrayCollection
     {
         return $this->devices;

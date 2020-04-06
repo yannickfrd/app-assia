@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Form\Utils\Choices;
-use App\Entity\EvaluationGroup;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -13,48 +12,48 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalSocialGroup
 {
     public const REASON_REQUEST = [
-        1 => "Absence de ressource",
-        2 => "Départ du département initial",
-        3 => "Dort dans la rue",
-        4 => "Exil économique",
-        5 => "Exil familial",
-        6 => "Exil politique",
-        7 => "Exil soins",
-        8 => "Exil autre motif",
-        9 => "Expulsion locative",
-        10 => "Fin de prise en charge ASE",
+        1 => 'Absence de ressource',
+        2 => 'Départ du département initial',
+        3 => 'Dort dans la rue',
+        4 => 'Exil économique',
+        5 => 'Exil familial',
+        6 => 'Exil politique',
+        7 => 'Exil soins',
+        8 => 'Exil autre motif',
+        9 => 'Expulsion locative',
+        10 => 'Fin de prise en charge ASE',
         11 => "Fin d'hébergement chez des tiers",
         12 => "Fin d'hospitalisation",
-        13 => "Fin prise en charge Conseil Départemental",
-        14 => "Grande exclusion",
-        15 => "Inadaptation du logement",
-        16 => "Logement insalubre",
-        17 => "Logement repris par le propriétaire",
-        18 => "Rapprochement du lieu de travail",
-        19 => "Regroupement familial",
+        13 => 'Fin prise en charge Conseil Départemental',
+        14 => 'Grande exclusion',
+        15 => 'Inadaptation du logement',
+        16 => 'Logement insalubre',
+        17 => 'Logement repris par le propriétaire',
+        18 => 'Rapprochement du lieu de travail',
+        19 => 'Regroupement familial',
         20 => "Risque d'expulsion locative",
-        21 => "Séparation ou rupture des liens familiaux",
-        22 => "Sortie de détention",
-        23 => "Sortie de logement accompagné",
+        21 => 'Séparation ou rupture des liens familiaux',
+        22 => 'Sortie de détention',
+        23 => 'Sortie de logement accompagné',
         24 => "Sortie d'hébergement",
-        25 => "Sortie dispositif asile",
-        26 => "Traite humaine",
-        27 => "Violences familiales-conjugales",
-        97 => "Autre",
-        99 => "Non renseigné"
+        25 => 'Sortie dispositif asile',
+        26 => 'Traite humaine',
+        27 => 'Violences familiales-conjugales',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     public const WANDERING_TIME = [
         1 => "Moins d'une semaine",
-        2 => "1 semaine - 1 mois",
-        3 => "1 mois - 6 mois",
-        4 => "6 mois - 1 an",
-        5 => "1 an - 2 ans",
-        6 => "2 ans - 5 ans",
-        7 => "5 ans - 10 ans",
-        8 => "Plus de 10 ans",
-        97 => "Autre",
-        99 => "Non renseigné"
+        2 => '1 semaine - 1 mois',
+        3 => '1 mois - 6 mois',
+        4 => '6 mois - 1 an',
+        5 => '1 an - 2 ans',
+        6 => '2 ans - 5 ans',
+        7 => '5 ans - 10 ans',
+        8 => 'Plus de 10 ans',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**

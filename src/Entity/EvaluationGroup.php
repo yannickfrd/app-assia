@@ -79,7 +79,6 @@ class EvaluationGroup
      */
     private $initEvalGroup;
 
-
     public function __construct()
     {
         $this->evaluationPeople = new ArrayCollection();

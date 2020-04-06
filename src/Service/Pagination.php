@@ -3,9 +3,9 @@
 namespace App\Service;
 
 use Doctrine\ORM\Query;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 
 class Pagination
 {
@@ -17,21 +17,17 @@ class Pagination
     }
 
     /**
-     * Pagination
-     *
-     * @param Query $query
-     * @param int $limit
-     * @return PaginationInterface
+     * Pagination.
      */
     public function paginate(Query $query, Request $request, int $limit = 20): PaginationInterface
     {
         $pagination = $this->paginator->paginate(
             $query,
-            $request->query->getInt("page", 1), // page number
+            $request->query->getInt('page', 1), // page number
             $limit // limit per page
         );
         $pagination->setCustomParameters([
-            "align" => "right", // align pagination
+            'align' => 'right', // align pagination
         ]);
 
         return $pagination;

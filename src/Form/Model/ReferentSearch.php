@@ -2,8 +2,6 @@
 
 namespace App\Form\Model;
 
-use App\Entity\Referent;
-
 class ReferentSearch
 {
     /**

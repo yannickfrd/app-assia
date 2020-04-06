@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Referent;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Referent|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,29 +21,28 @@ class ReferentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne tous les groupes de personnes
-     * 
-     * @return Query
+     * Donne tous les groupes de personnes.
      */
     public function findAllReferentsQuery($supportGroupId, $referentSearch): Query
     {
-        $query =  $this->createQueryBuilder("ref")
-            ->andWhere("ref.supportGroup = :supportGroup")
-            ->setParameter("supportGroup", $supportGroupId);
+        $query = $this->createQueryBuilder('ref')
+            ->andWhere('ref.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
 
         if ($referentSearch->getName()) {
-            $query->andWhere("ref.name LIKE :name")
-                ->setParameter("name", '%' . $referentSearch->getName() . '%');
+            $query->andWhere('ref.name LIKE :name')
+                ->setParameter('name', '%'.$referentSearch->getName().'%');
         }
         if ($referentSearch->getSocialWorker()) {
-            $query->andWhere("ref.socialWorker LIKE :socialWorker")
-                ->setParameter("socialWorker", '%' . $referentSearch->getSocialWorker() . '%');
+            $query->andWhere('ref.socialWorker LIKE :socialWorker')
+                ->setParameter('socialWorker', '%'.$referentSearch->getSocialWorker().'%');
         }
         if ($referentSearch->getType()) {
-            $query->andWhere("ref.type = :type")
-                ->setParameter("type", $referentSearch->getType());
+            $query->andWhere('ref.type = :type')
+                ->setParameter('type', $referentSearch->getType());
         }
-        $query = $query->orderBy("ref.createdAt", "DESC");
+        $query = $query->orderBy('ref.createdAt', 'DESC');
+
         return $query->getQuery();
     }
 }

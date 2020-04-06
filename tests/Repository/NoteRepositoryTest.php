@@ -2,9 +2,9 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\User;
 use App\Entity\Note;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Form\Model\NoteSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -28,26 +28,25 @@ class NoteRepositoryTest extends WebTestCase
     /** @var NoteSearch */
     protected $noteSearch;
 
-
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/NoteFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/NoteFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var NoteRepository */
+        /* @var NoteRepository */
         $this->repo = $this->entityManager->getRepository(Note::class);
 
-        $this->supportGroup = $dataFixtures["supportGroup"];
-        $this->user = $dataFixtures["userSuperAdmin"];
+        $this->supportGroup = $dataFixtures['supportGroup'];
+        $this->user = $dataFixtures['userSuperAdmin'];
         $this->noteSearch = (new NoteSearch())
-            ->setContent("Contenu de la note")
+            ->setContent('Contenu de la note')
             ->setType(1)
             ->setStatus(1);
     }
@@ -71,7 +70,7 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testFindAllNotesQueryWithFilterByTitle()
     {
-        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), $this->noteSearch->setContent("Note 666"));
+        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), $this->noteSearch->setContent('Note 666'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -80,7 +79,6 @@ class NoteRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, count($this->repo->findAllNotesFromUser($this->user)));
     }
 
-
     public function testCountAllNotesWithoutCriteria()
     {
         $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes());
@@ -88,7 +86,7 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testCountAllNotesWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes(["user" => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes(['user' => $this->user]));
     }
 
     protected function tearDown(): void

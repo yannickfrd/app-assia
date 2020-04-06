@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Choice;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvalBudgePersonRepository")
@@ -13,11 +12,11 @@ use Symfony\Component\Validator\Constraints\Choice;
 class EvalBudgetPerson
 {
     public const SETTLEMENT_PLAN = [
-        1 => "Proposé",
-        2 => "Accepté",
-        3 => "Refusé",
-        4 => "En cours",
-        99 => "Non renseigné"
+        1 => 'Proposé',
+        2 => 'Accepté',
+        3 => 'Refusé',
+        4 => 'En cours',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -731,7 +730,6 @@ class EvalBudgetPerson
         return $this;
     }
 
-
     public function getMinimumIncome(): ?int
     {
         return $this->minimumIncome;
@@ -1071,7 +1069,7 @@ class EvalBudgetPerson
 
     public function getElectricityGasToString(): ?string
     {
-        return $this->electricityGas ? Choices::YES_NO_BOOLEAN[$this->electricityGas]  : null;
+        return $this->electricityGas ? Choices::YES_NO_BOOLEAN[$this->electricityGas] : null;
     }
 
     public function setElectricityGas(?int $electricityGas): self

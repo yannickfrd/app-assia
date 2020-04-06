@@ -27,7 +27,6 @@ class UserConnection
      */
     private $user;
 
-
     public function getId(): ?int
     {
         return $this->id;

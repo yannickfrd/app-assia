@@ -2,11 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\RolePerson;
 use App\Form\Utils\Choices;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,7 +37,7 @@ class SupportPerson
     private $head;
 
     /**
-     * Groups("export")
+     * Groups("export").
      */
     private $headToString;
 
@@ -125,7 +124,6 @@ class SupportPerson
      */
     private $initEvalPerson;
 
-
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -207,7 +205,6 @@ class SupportPerson
         return $this;
     }
 
-
     public function getEndStatus(): ?int
     {
         return $this->endStatus;
@@ -236,7 +233,6 @@ class SupportPerson
 
         return $this;
     }
-
 
     public function getComment(): ?string
     {
@@ -364,7 +360,6 @@ class SupportPerson
 
         return $this;
     }
-
 
     public function getInitEvalPerson(): ?InitEvalPerson
     {

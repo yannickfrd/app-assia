@@ -19,9 +19,6 @@ class SupportRdvSearch
      */
     private $endDate;
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
@@ -56,6 +53,7 @@ class SupportRdvSearch
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
         return $this;
     }
 }

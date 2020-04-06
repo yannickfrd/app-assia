@@ -2,20 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Service;
-use App\Service\Pagination;
 use App\Entity\Accommodation;
+use App\Entity\Service;
 use App\Export\AccommodationExport;
-use App\Form\Model\AccommodationSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\AccommodationRepository;
+use App\Form\Accommodation\AccommodationSearchType;
 use App\Form\Accommodation\AccommodationType;
+use App\Form\Model\AccommodationSearch;
+use App\Repository\AccommodationRepository;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Accommodation\AccommodationSearchType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AccommodationController extends AbstractController
 {
@@ -29,12 +29,9 @@ class AccommodationController extends AbstractController
     }
 
     /**
-     * Affiche la liste des groupes de places
-     * 
+     * Affiche la liste des groupes de places.
+     *
      * @Route("/admin/accommodations", name="admin_accommodations", methods="GET|POST")
-     * @param AccommodationSearch $accommodationSearch
-     * @param Request $request
-     * @return Response
      */
     public function listAccommodations(AccommodationSearch $accommodationSearch, Request $request, Pagination $pagination): Response
     {
@@ -47,22 +44,20 @@ class AccommodationController extends AbstractController
             return $this->exportData($accommodationSearch);
         }
 
-        return $this->render("app/accommodation/listAccommodations.html.twig", [
-            "accommodationSearch" => $accommodationSearch,
-            "form" => $form->createView(),
-            "accommodations" => $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request) ?? null
+        return $this->render('app/accommodation/listAccommodations.html.twig', [
+            'accommodationSearch' => $accommodationSearch,
+            'form' => $form->createView(),
+            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request) ?? null,
         ]);
     }
 
     /**
-     * Nouveau groupe de places
-     * 
+     * Nouveau groupe de places.
+     *
      * @Route("/admin/service/{id}/accommodation/new", name="service_accommodation_new", methods="GET|POST")
      * @IsGranted("EDIT", subject="accommodation")
-     * @param Service $service
+     *
      * @param Accommodation $accommodation
-     * @param Request $request
-     * @return Response
      */
     public function newAccommodation(Service $service, Accommodation $accommodation = null, Request $request): Response
     {
@@ -72,23 +67,20 @@ class AccommodationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->createAccommodation($accommodation, $service);
         }
-        return $this->render("app/accommodation/accommodation.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => false
+
+        return $this->render('app/accommodation/accommodation.html.twig', [
+            'form' => $form->createView(),
+            'edit_mode' => false,
         ]);
     }
 
     /**
-     * Modification d'un groupe de places
-     * 
+     * Modification d'un groupe de places.
+     *
      * @Route("/accommodation/{id}", name="accommodation_edit", methods="GET|POST")
      * @IsGranted("VIEW", subject="accommodation")
-     * @param Accommodation $accommodation
-     * @param Request $request
-     * @return Response
      */
     public function editAccommodation(Accommodation $accommodation, Request $request): Response
     {
@@ -96,38 +88,35 @@ class AccommodationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted("EDIT", $accommodation->getService());
+            $this->denyAccessUnlessGranted('EDIT', $accommodation->getService());
+
             return $this->updateAccommodation($accommodation);
         }
-        return $this->render("app/accommodation/accommodation.html.twig", [
-            "form" => $form->createView(),
-            "edit_mode" => true
+
+        return $this->render('app/accommodation/accommodation.html.twig', [
+            'form' => $form->createView(),
+            'edit_mode' => true,
         ]);
     }
 
     /**
-     * Supprime le groupe de places
-     * 
+     * Supprime le groupe de places.
+     *
      * @Route("admin/accommodation/{id}/delete", name="admin_accommodation_delete", methods="GET")
      * @IsGranted("DELETE", subject="accommodation")
-     * @param Accommodation $accommodation
-     * @return Response
      */
     public function deleteAccommodation(Accommodation $accommodation): Response
     {
         $this->manager->remove($accommodation);
         $this->manager->flush();
 
-        $this->addFlash("danger", "Le groupe de places a été supprimé.");
+        $this->addFlash('danger', 'Le groupe de places a été supprimé.');
 
-        return $this->redirectToRoute("service_edit", ["id" => $accommodation->getService()->getId()]);
+        return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
     }
 
     /**
-     * Crée un groupe de places
-     *
-     * @param Accommodation $accommodation
-     * @param Service $service
+     * Crée un groupe de places.
      */
     protected function createAccommodation(Accommodation $accommodation, Service $service)
     {
@@ -141,15 +130,13 @@ class AccommodationController extends AbstractController
         $this->manager->persist($accommodation);
         $this->manager->flush();
 
-        $this->addFlash("success", "Le groupe de places a été créé.");
+        $this->addFlash('success', 'Le groupe de places a été créé.');
 
-        return $this->redirectToRoute("service_edit", ["id" => $service->getId()]);
+        return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
     }
 
     /**
-     * Met à jour un groupe de place
-     *
-     * @param Accommodation $accommodation
+     * Met à jour un groupe de place.
      */
     protected function updateAccommodation(Accommodation $accommodation)
     {
@@ -158,25 +145,22 @@ class AccommodationController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash("success", "Les modifications ont été enregistrées.");
+        $this->addFlash('success', 'Les modifications ont été enregistrées.');
 
-        return $this->redirectToRoute("service_edit", ["id" => $accommodation->getService()->getId()]);
+        return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
     }
 
     /**
-     * Exporte les données
-     * 
-     * @param AccommodationSearch $accommodationSearch
+     * Exporte les données.
      */
     protected function exportData(AccommodationSearch $accommodationSearch)
     {
         $accommodations = $this->repo->findAccommodationsToExport($accommodationSearch);
 
         if (!$accommodations) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-            $this->addFlash("warning", "Aucun résultat à exporter.");
-
-            return $this->redirectToRoute("supports");
+            return $this->redirectToRoute('supports');
         }
 
         $export = new AccommodationExport();

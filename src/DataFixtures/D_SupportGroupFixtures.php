@@ -5,11 +5,10 @@ namespace App\DataFixtures;
 use App\Entity\Person;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use PhpParser\Node\Stmt\Foreach_;
+use Doctrine\ORM\EntityManagerInterface;
 
 class D_SupportGroupFixtures extends Fixture
 {
@@ -20,14 +19,18 @@ class D_SupportGroupFixtures extends Fixture
 
     private $groupPeople;
 
-    private $supportGroup, $nbSupports, $startDate, $endDate, $status;
+    private $supportGroup;
+    private $nbSupports;
+    private $startDate;
+    private $endDate;
+    private $status;
     public $supports;
 
     public function __construct(EntityManagerInterface $manager, GroupPeopleRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;
-        $this->faker = \Faker\Factory::create("fr_FR");
+        $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager)
@@ -35,7 +38,6 @@ class D_SupportGroupFixtures extends Fixture
         $groupsPeople = $this->repo->findAll();
 
         foreach ($groupsPeople as $groupPeople) {
-
             $this->user = $groupPeople->getCreatedBy();
             $this->groupPeople = $groupPeople;
 
@@ -43,9 +45,9 @@ class D_SupportGroupFixtures extends Fixture
                 $this->service = $serviceUser->getService();
             }
 
-            //Crée des faux suivis sociaux 
+            //Crée des faux suivis sociaux
             $this->nbSupports = mt_rand(1, 2);
-            for ($i = 1; $i <= 1; $i++) {
+            for ($i = 1; $i <= 1; ++$i) {
                 $this->addSupportGroup($i);
 
                 foreach ($this->groupPeople->getRolePerson() as $rolePerson) {
@@ -61,19 +63,19 @@ class D_SupportGroupFixtures extends Fixture
     {
         $this->supportGroup = new SupportGroup();
 
-        if ($this->nbSupports >= 2 && $k == 1) {
+        if ($this->nbSupports >= 2 && 1 == $k) {
             $this->status = 2; // 4
-            $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), "now");
-            $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, "now"));
-        } else if ($this->nbSupports >= 2 && $k == 2) {
+            $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), 'now');
+            $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, 'now'));
+        } elseif ($this->nbSupports >= 2 && 2 == $k) {
             $this->status = 2;
-            $this->startDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->endDate, "now"));
+            $this->startDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->endDate, 'now'));
             $this->endDate = null;
         } else {
             $this->status = 2; // $this->status = mt_rand(2, 4);
-            $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), "now");
-            if ($this->status == 4) {
-                $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, "now"));
+            $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), 'now');
+            if (4 == $this->status) {
+                $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, 'now'));
             } else {
                 $this->endDate = null;
             }

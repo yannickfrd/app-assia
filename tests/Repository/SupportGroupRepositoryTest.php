@@ -2,9 +2,9 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\User;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Form\Model\SupportGroupSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -33,34 +33,33 @@ class SupportGroupRepositoryTest extends WebTestCase
     /** @var SupportGroupSearch */
     protected $supportGroupSearch;
 
-
     protected function setUp()
     {
-        $dataFixtures  = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/SupportFixturesTest.yaml",
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var SupportGroupRepository */
+        /* @var SupportGroupRepository */
         $this->repo = $this->entityManager->getRepository(SupportGroup::class);
 
-        $this->supportGroup = $dataFixtures["supportGroup1"];
-        $this->service =  $dataFixtures["service"];
-        $this->user = $dataFixtures["userSuperAdmin"];
+        $this->supportGroup = $dataFixtures['supportGroup1'];
+        $this->service = $dataFixtures['service'];
+        $this->user = $dataFixtures['userSuperAdmin'];
         $this->supportGroupSearch = $this->getSupportGroupSearch();
     }
 
     protected function getSupportGroupSearch()
     {
         return (new SupportGroupSearch())
-            ->setFullName("John Doe")
+            ->setFullName('John Doe')
             ->setFamilyTypology(1)
-            ->setStartDate(new \DateTime("2018-01-01"))
+            ->setStartDate(new \DateTime('2018-01-01'))
             ->setEndDate(new \DateTime())
             ->setReferent($this->user);
     }

@@ -3,8 +3,8 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Rdv;
-use App\Entity\User;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Form\Model\RdvSearch;
 use App\Form\Model\SupportRdvSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -32,34 +32,33 @@ class RdvRepositoryTest extends WebTestCase
     /** @var SupportRdvSearch */
     protected $supportRdvSearch;
 
-
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/RdvFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var RdvRepository */
+        /* @var RdvRepository */
         $this->repo = $this->entityManager->getRepository(Rdv::class);
 
-        $this->supportGroup = $dataFixtures["supportGroup"];
-        $this->user = $dataFixtures["userSuperAdmin"];
+        $this->supportGroup = $dataFixtures['supportGroup'];
+        $this->user = $dataFixtures['userSuperAdmin'];
 
         $this->rdvSearch = (new RdvSearch())
-            ->setTitle("Rdv 666")
-            ->setStartDate(new \DateTime("2020-01-01"))
+            ->setTitle('Rdv 666')
+            ->setStartDate(new \DateTime('2020-01-01'))
             ->setEndDate(new \DateTime())
-            ->setReferent("Romain");
+            ->setReferent('Romain');
 
         $this->supportRdvSearch = (new SupportRdvSearch())
-            ->setTitle("Rdv 666")
-            ->setStartDate(new \DateTime("2020-01-01"))
+            ->setTitle('Rdv 666')
+            ->setStartDate(new \DateTime('2020-01-01'))
             ->setEndDate(new \DateTime());
     }
 
@@ -79,7 +78,6 @@ class RdvRepositoryTest extends WebTestCase
         $query = $this->repo->findAllRdvsQuery($this->rdvSearch);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
-
 
     public function testFindAllRdvsQueryFromSupportWithoutFilters()
     {
@@ -113,7 +111,7 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testCountAllRdvsWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllRdvs(["user" => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countAllRdvs(['user' => $this->user]));
     }
 
     protected function tearDown(): void

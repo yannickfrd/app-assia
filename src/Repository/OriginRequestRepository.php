@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
-use App\Entity\SupportGroup;
 use App\Entity\OriginRequest;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\SupportGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method OriginRequest|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,20 +22,17 @@ class OriginRequestRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne l'origine de la demande du suivi social
-     *
-     * @param SupportGroup $supportGroup
-     * @return OriginRequest|null
+     * Donne l'origine de la demande du suivi social.
      */
     public function findOriginRequest(SupportGroup $supportGroup): ?OriginRequest
     {
-        return $this->createQueryBuilder("o")
-            ->select("o")
-            ->leftJoin("o.supportGroup", "sg")->addselect("PARTIAL sg.{id, updatedAt, updatedBy}")
-            ->leftJoin("o.organization", "organization")->addselect("PARTIAL organization.{id, name}")
+        return $this->createQueryBuilder('o')
+            ->select('o')
+            ->leftJoin('o.supportGroup', 'sg')->addselect('PARTIAL sg.{id, updatedAt, updatedBy}')
+            ->leftJoin('o.organization', 'organization')->addselect('PARTIAL organization.{id, name}')
 
-            ->where("o.supportGroup = :supportGroup")
-            ->setParameter("supportGroup", $supportGroup)
+            ->where('o.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup)
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)

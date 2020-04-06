@@ -2,9 +2,9 @@
 
 namespace App\EventListener;
 
-use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Twig\Environment;
 
 class MaintenanceListener
 {
@@ -22,7 +22,7 @@ class MaintenanceListener
         if ($this->maintenance) {
             $event->setResponse(
                 new Response(
-                    $this->renderer->render("bundles/TwigBundle/Exception/maintenance.html.twig"),
+                    $this->renderer->render('bundles/TwigBundle/Exception/maintenance.html.twig'),
                     Response::HTTP_SERVICE_UNAVAILABLE
                 )
             );

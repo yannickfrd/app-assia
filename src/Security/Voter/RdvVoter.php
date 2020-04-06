@@ -2,10 +2,9 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Rdv;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class RdvVoter extends Voter
 {
@@ -21,7 +20,7 @@ class RdvVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ["VIEW", "EDIT", "DELETE"])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Rdv;
     }
 
@@ -36,19 +35,19 @@ class RdvVoter extends Voter
         }
 
         switch ($attribute) {
-            case "VIEW":
+            case 'VIEW':
                 return $this->canView();
                 break;
-            case "EDIT":
+            case 'EDIT':
                 return $this->canEdit();
                 break;
-            case "DELETE":
+            case 'DELETE':
                 return $this->canDelete();
                 break;
         }
+
         return false;
     }
-
 
     protected function canView()
     {
@@ -64,9 +63,10 @@ class RdvVoter extends Voter
                 }
             }
         }
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN")) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
+
         return false;
     }
 
@@ -76,7 +76,7 @@ class RdvVoter extends Voter
             return true;
         }
 
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || ($this->isAdminUser())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser())) {
             return true;
         }
 
@@ -89,7 +89,7 @@ class RdvVoter extends Voter
             return true;
         }
 
-        if ($this->security->isGranted("ROLE_SUPER_ADMIN") || ($this->isAdminUser())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser())) {
             return true;
         }
 
@@ -99,7 +99,7 @@ class RdvVoter extends Voter
     // If current user is administrator
     protected function isAdminUser()
     {
-        if ($this->security->isGranted("ROLE_ADMIN")) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
                 foreach ($this->rdv->getCreatedBy()->getServiceUser() as $serviceUser) {
                     if ($serviceUser->getService()->getId() == $serviceCurrentUser->getService()->getId()) {
@@ -108,6 +108,7 @@ class RdvVoter extends Voter
                 }
             }
         }
+
         return false;
     }
 }

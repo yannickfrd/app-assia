@@ -10,14 +10,14 @@ use Doctrine\ORM\Mapping as ORM;
 class ServiceUser
 {
     public const ROLE = [
-        1 => "Travailleur social",
-        2 => "Coordinatrice/teur",
-        3 => "Chef·fe de service",
-        4 => "Directrice/teur",
-        5 => "Administratif",
-        6 => "Chargé·e de mission",
-        7 => "Stagiaire",
-        97 => "Autre",
+        1 => 'Travailleur social',
+        2 => 'Coordinatrice/teur',
+        3 => 'Chef·fe de service',
+        4 => 'Directrice/teur',
+        5 => 'Administratif',
+        6 => 'Chargé·e de mission',
+        7 => 'Stagiaire',
+        97 => 'Autre',
     ];
 
     /**
@@ -29,7 +29,6 @@ class ServiceUser
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * 
      */
     private $role;
 
@@ -42,7 +41,6 @@ class ServiceUser
      * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="serviceUser", cascade={"persist"})
      */
     private $service;
-
 
     // public function __toString()
     // {

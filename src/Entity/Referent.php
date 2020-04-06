@@ -10,26 +10,26 @@ use Doctrine\ORM\Mapping as ORM;
 class Referent
 {
     public const TYPE = [
-        1 => "115/AMH",
-        2 => "Accueil de jour",
-        3 => "AVDL",
-        4 => "CCAS",
+        1 => '115/AMH',
+        2 => 'Accueil de jour',
+        3 => 'AVDL',
+        4 => 'CCAS',
         5 => "Centre d'hébergement",
-        6 => "Conseil Départemental",
-        7 => "Dispositif asile",
-        8 => "Dispositif logement adapté",
-        9 => "ESPERER 95",
-        10 => "Service de tutelle",
-        11 => "Service hospitalier",
-        12 => "Service Justice",
-        97 => "Autre",
-        99 => "Non renseigné"
+        6 => 'Conseil Départemental',
+        7 => 'Dispositif asile',
+        8 => 'Dispositif logement adapté',
+        9 => 'ESPERER 95',
+        10 => 'Service de tutelle',
+        11 => 'Service hospitalier',
+        12 => 'Service Justice',
+        97 => 'Autre',
+        99 => 'Non renseigné',
     ];
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -187,6 +187,7 @@ class Referent
 
         return $this;
     }
+
     public function getEmail2(): ?string
     {
         return $this->email2;

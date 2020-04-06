@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,53 +13,53 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SupportGroup
 {
     public const STATUS = [
-        1 => "Orientation / Pré-admission",
-        2 => "En cours",
-        3 => "Suspendu",
-        4 => "Terminé",
-        5 => "Autre"
+        1 => 'Orientation / Pré-admission',
+        2 => 'En cours',
+        3 => 'Suspendu',
+        4 => 'Terminé',
+        5 => 'Autre',
     ];
 
     public const END_STATUS = [
-        001 => "A la rue - abri de fortune",
-        303 => "Accès à la propriété",
-        400 => "CADA",
-        304 => "Colocation",
-        900 => "Décès",
-        700 => "Départ volontaire de la personne",
-        500 => "Détention",
-        105 => "Dispositif hivernal",
-        602 => "Dispositif de soin ou médical (LAM, autre)",
-        502 => "DLSAP",
-        701 => "Exclusion de la structure",
-        106 => "Foyer maternel",
-        010 => "Hébergé chez des tiers",
-        011 => "Hébergé chez famille",
-        100 => "Hôtel 115",
-        101 => "Hôtel (hors 115)",
-        102 => "Hébergement d’urgence",
-        103 => "Hébergement de stabilisation",
-        104 => "Hébergement d’insertion",
-        600 => "Hôpital",
-        401 => "HUDA",
-        601 => "LHSS",
-        200 => "Logement adapté - ALT",
-        201 => "Logement adapté - FJT",
-        202 => "Logement adapté - FTM",
-        203 => "Logement adapté - Maison relais",
-        204 => "Logement adapté - Résidence sociale",
-        205 => "Logement adapté - RHVS",
-        206 => "Logement adapté - Solibail/IML",
-        207 => "Logement foyer",
-        300 => "Logement privé",
-        301 => "Logement social",
-        305 => "Maison de retraite",
-        501 => "Placement extérieur",
+        001 => 'A la rue - abri de fortune',
+        303 => 'Accès à la propriété',
+        400 => 'CADA',
+        304 => 'Colocation',
+        900 => 'Décès',
+        700 => 'Départ volontaire de la personne',
+        500 => 'Détention',
+        105 => 'Dispositif hivernal',
+        602 => 'Dispositif de soin ou médical (LAM, autre)',
+        502 => 'DLSAP',
+        701 => 'Exclusion de la structure',
+        106 => 'Foyer maternel',
+        010 => 'Hébergé chez des tiers',
+        011 => 'Hébergé chez famille',
+        100 => 'Hôtel 115',
+        101 => 'Hôtel (hors 115)',
+        102 => 'Hébergement d’urgence',
+        103 => 'Hébergement de stabilisation',
+        104 => 'Hébergement d’insertion',
+        600 => 'Hôpital',
+        401 => 'HUDA',
+        601 => 'LHSS',
+        200 => 'Logement adapté - ALT',
+        201 => 'Logement adapté - FJT',
+        202 => 'Logement adapté - FTM',
+        203 => 'Logement adapté - Maison relais',
+        204 => 'Logement adapté - Résidence sociale',
+        205 => 'Logement adapté - RHVS',
+        206 => 'Logement adapté - Solibail/IML',
+        207 => 'Logement foyer',
+        300 => 'Logement privé',
+        301 => 'Logement social',
+        305 => 'Maison de retraite',
+        501 => 'Placement extérieur',
         704 => "Retour dans le pays d'origine",
-        302 => "Sous-location",
-        002 => "Squat",
-        97 => "Autre",
-        99 => "Non renseignée"
+        302 => 'Sous-location',
+        002 => 'Squat',
+        97 => 'Autre',
+        99 => 'Non renseignée',
     ];
 
     /**
@@ -199,7 +198,6 @@ class SupportGroup
      */
     private $originRequest;
 
-
     public function __construct()
     {
         $this->supportPerson = new ArrayCollection();
@@ -237,6 +235,7 @@ class SupportGroup
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
         return $this;
     }
 

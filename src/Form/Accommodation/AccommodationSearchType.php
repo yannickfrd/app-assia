@@ -2,126 +2,123 @@
 
 namespace App\Form\Accommodation;
 
-use App\Entity\Pole;
 use App\Entity\Device;
+use App\Entity\Pole;
 use App\Entity\Service;
-use App\Form\Utils\Choices;
-
 use App\Form\Model\AccommodationSearch;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AccommodationSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("name", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
+            ->add('name', null, [
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
-                "attr" => [
-                    "class" => "w-max-140",
-                    "placeholder" => "Name",
-                ]
+                'attr' => [
+                    'class' => 'w-max-140',
+                    'placeholder' => 'Name',
+                ],
             ])
-            ->add("placesNumber", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
+            ->add('placesNumber', null, [
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
-                "attr" => [
-                    "class" => "w-max-140",
-                    "placeholder" => "Places number"
-                ]
+                'attr' => [
+                    'class' => 'w-max-140',
+                    'placeholder' => 'Places number',
+                ],
             ])
-            ->add("supportDates", ChoiceType::class, [
-                "label_attr" => ["class" => "sr-only"],
-                "choices" => Choices::getChoices(AccommodationSearch::ACCOMMODATION_DATES),
-                "placeholder" => "-- Date --",
-                "required" => false
+            ->add('supportDates', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(AccommodationSearch::ACCOMMODATION_DATES),
+                'placeholder' => '-- Date --',
+                'required' => false,
             ])
-            ->add("startDate", DateType::class, [
-                "label_attr" => ["class" => "sr-only"],
-                "widget" => "single_text",
-                "attr" => [
-                    "class" => "w-max-165",
+            ->add('startDate', DateType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'w-max-165',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("endDate", DateType::class, [
-                "label_attr" => ["class" => "sr-only"],
-                "widget" => "single_text",
-                "attr" => [
-                    "class" => "w-max-165",
+            ->add('endDate', DateType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'w-max-165',
                 ],
-                "required" => false
+                'required' => false,
             ])
-            ->add("city", null, [
-                "label_attr" => [
-                    "class" => "sr-only"
+            ->add('city', null, [
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
-                "attr" => [
-                    "class" => "w-max-140",
-                    "placeholder" => "City",
-                ]
+                'attr' => [
+                    'class' => 'w-max-140',
+                    'placeholder' => 'City',
+                ],
             ])
-            ->add("service", EntityType::class, [
-                "class" => Service::class,
-                "choice_label" => "name",
-                "multiple" => true,
-                "label_attr" => [
-                    "class" => "sr-only"
+            ->add('service', EntityType::class, [
+                'class' => Service::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
-                "placeholder" => "-- Service --",
-                "attr" => [
-                    "class" => "multi-select js-service"
+                'placeholder' => '-- Service --',
+                'attr' => [
+                    'class' => 'multi-select js-service',
                 ],
-                "required" => false
-
+                'required' => false,
             ])
-            ->add("device", EntityType::class, [
-                "class" => Device::class,
-                "choice_label" => "name",
-                "multiple" => true,
-                "label_attr" => [
-                    "class" => "sr-only"
+            ->add('device', EntityType::class, [
+                'class' => Device::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
-                "placeholder" => "-- Device --",
-                "attr" => [
-                    "class" => "multi-select js-device"
+                'placeholder' => '-- Device --',
+                'attr' => [
+                    'class' => 'multi-select js-device',
                 ],
-                "required" => false
-
+                'required' => false,
             ])
-            ->add("pole", EntityType::class, [
-                "class" => Pole::class,
-                "choice_label" => "name",
-                "label_attr" => [
-                    "class" => "sr-only"
+            ->add('pole', EntityType::class, [
+                'class' => Pole::class,
+                'choice_label' => 'name',
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
-                "placeholder" => "-- Pole --",
-                "required" => false,
+                'placeholder' => '-- Pole --',
+                'required' => false,
             ])
-            ->add("export");
+            ->add('export');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "data_class" => AccommodationSearch::class,
-            "method" => "get",
-            "translation_domain" => "forms",
-            "csrf_protection" => false,
-            "allow_extra_fields" => true
+            'data_class' => AccommodationSearch::class,
+            'method' => 'get',
+            'translation_domain' => 'forms',
+            'csrf_protection' => false,
+            'allow_extra_fields' => true,
         ]);
     }
 
     public function getBlockPrefix()
     {
-        return "";
+        return '';
     }
 }

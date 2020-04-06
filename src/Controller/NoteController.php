@@ -3,19 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Note;
-use App\Form\Note\NoteType;
-use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
 use App\Form\Note\NoteSearchType;
+use App\Form\Note\NoteType;
 use App\Repository\NoteRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class NoteController extends AbstractController
 {
@@ -31,21 +31,19 @@ class NoteController extends AbstractController
     }
 
     /**
-     * Liste des notes
-     * 
+     * Liste des notes.
+     *
      * @Route("support/{id}/notes", name="support_notes", methods="GET")
-     * @param integer $id // SupportGroup
+     *
+     * @param int        $id         // SupportGroup
      * @param NoteSearch $noteSearch
-     * @param Note $note
-     * @param Request $request
-     * @param Pagination $pagination
-     * @return Response
+     * @param Note       $note
      */
     public function listNotes(int $id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("VIEW", $supportGroup);
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
         $noteSearch = new NoteSearch();
 
@@ -54,28 +52,27 @@ class NoteController extends AbstractController
 
         $form = $this->createForm(NoteType::class, new Note());
 
-        return $this->render("app/note/listNotes.html.twig", [
-            "support" => $supportGroup,
-            "form_search" => $formSearch->createView(),
-            "form" => $form->createView(),
-            "notes" => $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request) ?? null
+        return $this->render('app/note/listNotes.html.twig', [
+            'support' => $supportGroup,
+            'form_search' => $formSearch->createView(),
+            'form' => $form->createView(),
+            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request) ?? null,
         ]);
     }
 
     /**
-     * Nouvelle note
-     * 
+     * Nouvelle note.
+     *
      * @Route("support/{id}/note/new", name="note_new", methods="POST") *
-     * @param int $id // SupportGroup
+     *
+     * @param int  $id   // SupportGroup
      * @param Note $note
-     * @param Request $request
-     * @return Response
      */
     public function newNote(int $id, Note $note = null, Request $request): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-        $this->denyAccessUnlessGranted("EDIT", $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $note = new Note();
 
@@ -85,37 +82,34 @@ class NoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createNote($supportGroup, $note);
         }
+
         return $this->errorMessage();
     }
 
     /**
-     * Modification d'une note
-     * 
+     * Modification d'une note.
+     *
      * @Route("note/{id}/edit", name="note_edit", methods="POST")
-     * @param Note $note
-     * @param Request $request
-     * @return Response
      */
     public function editNote(Note $note, Request $request): Response
     {
-        $this->denyAccessUnlessGranted("EDIT", $note);
+        $this->denyAccessUnlessGranted('EDIT', $note);
 
         $form = ($this->createForm(NoteType::class, $note))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateNote($note, "update");
+            return $this->updateNote($note, 'update');
         }
+
         return $this->errorMessage();
     }
 
     /**
-     * Supprime la note
-     * 
+     * Supprime la note.
+     *
      * @Route("note/{id}/delete", name="note_delete", methods="GET")
      * @IsGranted("DELETE", subject="note")
-     * @param Note $note
-     * @return Response
      */
     public function deleteNote(Note $note): Response
     {
@@ -123,19 +117,15 @@ class NoteController extends AbstractController
         $this->manager->flush();
 
         return $this->json([
-            "code" => 200,
-            "action" => "delete",
-            "alert" => "warning",
-            "msg" => "La note sociale a été supprimée.",
+            'code' => 200,
+            'action' => 'delete',
+            'alert' => 'warning',
+            'msg' => 'La note sociale a été supprimée.',
         ], 200);
     }
 
     /**
-     * Crée la note une fois le formulaire soumis et validé
-     *
-     * @param SupportGroup $supportGroup
-     * @param Note $note
-     * @return Response
+     * Crée la note une fois le formulaire soumis et validé.
      */
     protected function createNote(SupportGroup $supportGroup, Note $note): Response
     {
@@ -151,24 +141,21 @@ class NoteController extends AbstractController
         $this->manager->flush();
 
         return $this->json([
-            "code" => 200,
-            "action" => "create",
-            "alert" => "success",
-            "msg" => "La note sociale a été enregistrée.",
-            "data" => [
-                "noteId" => $note->getId(),
-                "type" => $note->getTypeToString(),
-                "status" => $note->getStatusToString(),
-                "editInfo" => "| Créé le " . date_format($now, "d/m/Y à H:i") .  " par " . $note->getCreatedBy()->getFullname()
-            ]
+            'code' => 200,
+            'action' => 'create',
+            'alert' => 'success',
+            'msg' => 'La note sociale a été enregistrée.',
+            'data' => [
+                'noteId' => $note->getId(),
+                'type' => $note->getTypeToString(),
+                'status' => $note->getStatusToString(),
+                'editInfo' => '| Créé le '.date_format($now, 'd/m/Y à H:i').' par '.$note->getCreatedBy()->getFullname(),
+            ],
         ], 200);
     }
 
     /**
-     * Met à jour la note une fois le formulaire soumis et validé
-     *
-     * @param Note $note
-     * @return Response
+     * Met à jour la note une fois le formulaire soumis et validé.
      */
     protected function updateNote(Note $note, $typeSave): Response
     {
@@ -178,30 +165,28 @@ class NoteController extends AbstractController
         $this->manager->flush();
 
         return $this->json([
-            "code" => 200,
-            "action" => $typeSave,
-            "alert" => "success",
-            "msg" => "La note sociale a été modifiée.",
-            "data" => [
-                "noteId" => $note->getId(),
-                "type" => $note->getTypeToString(),
-                "status" => $note->getStatusToString(),
-                "editInfo" => "(modifié le " . date_format($note->getUpdatedAt(), "d/m/Y à H:i") . " par " . $note->getUpdatedBy()->getFullname() . ")"
-            ]
+            'code' => 200,
+            'action' => $typeSave,
+            'alert' => 'success',
+            'msg' => 'La note sociale a été modifiée.',
+            'data' => [
+                'noteId' => $note->getId(),
+                'type' => $note->getTypeToString(),
+                'status' => $note->getStatusToString(),
+                'editInfo' => '(modifié le '.date_format($note->getUpdatedAt(), 'd/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
+            ],
         ], 200);
     }
 
     /**
-     * Retourne un message d'erreur au format JSON
-     * 
-     * @return Response
+     * Retourne un message d'erreur au format JSON.
      */
     protected function errorMessage(): Response
     {
         return $this->json([
-            "code" => 200,
-            "alert" => "danger",
-            "msg" => "Une erreur s'est produite. La note n'a pas pu être enregistrée.",
+            'code' => 200,
+            'alert' => 'danger',
+            'msg' => "Une erreur s'est produite. La note n'a pas pu être enregistrée.",
         ], 200);
     }
 }

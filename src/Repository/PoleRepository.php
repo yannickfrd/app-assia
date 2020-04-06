@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Pole;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Pole|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,14 +21,14 @@ class PoleRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les personnes
-     * @return Query
+     * Retourne toutes les personnes.
      */
     public function findAllPolesQuery(): Query
     {
-        $query =  $this->createQueryBuilder("p")
-            ->select("p");
-        return $query->orderBy("p.name", "ASC")
+        $query = $this->createQueryBuilder('p')
+            ->select('p');
+
+        return $query->orderBy('p.name', 'ASC')
             ->getQuery();
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Export;
 
-use App\Service\Export;
 use App\Entity\SupportPerson;
+use App\Service\Export;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
@@ -16,7 +16,7 @@ class SupportPersonExport
     }
 
     /**
-     * Exporte les données
+     * Exporte les données.
      */
     public function exportData($supports)
     {
@@ -24,21 +24,21 @@ class SupportPersonExport
         $i = 0;
 
         foreach ($supports as $supportPerson) {
-            if ($i == 0) {
+            if (0 == $i) {
                 $arrayData[] = array_keys($this->getDatas($supportPerson));
             }
             $arrayData[] = $this->getDatas($supportPerson);
-            $i++;
+            ++$i;
         }
 
-        $export = new Export("export_suivis", "xlsx", $arrayData, null);
+        $export = new Export('export_suivis', 'xlsx', $arrayData, null);
 
         return $export->exportFile();
     }
 
     /**
-     * Retourne les résultats sous forme de tableau
-     * @param SupportPerson $supportPerson
+     * Retourne les résultats sous forme de tableau.
+     *
      * @return array
      */
     public function getDatas(SupportPerson $supportPerson)
@@ -62,36 +62,36 @@ class SupportPersonExport
         }
 
         return [
-            "N° Groupe" => $groupPeople->getId(),
-            "N° Suivi groupe" => $supportGroup->getId(),
+            'N° Groupe' => $groupPeople->getId(),
+            'N° Suivi groupe' => $supportGroup->getId(),
             // "N° Personne" => $person->getId(),
             // "N° Suivi personne" => $supportPerson->getId(),
-            "Nom" => $person->getLastname(),
-            "Prénom" => $person->getFirstname(),
-            "Date de naissance" => $this->formatDate($person->getBirthdate()),
-            "Typologie familiale" => $groupPeople->getFamilyTypologyToString(),
-            "Nb de personnes" => $groupPeople->getNbPeople(),
-            "Rôle dans le groupe" => $supportPerson->getRoleToString(),
-            "DP" => $supportPerson->getHead() ? "Oui" : "Non",
-            "Statut" => $supportPerson->getStatusToString(),
-            "Date début suivi" => $this->formatDate($supportPerson->getStartDate()),
-            "Date fin suivi" => $this->formatDate($supportPerson->getEndDate()),
-            "Situation à la fin" => $supportPerson->getEndStatus() ? $supportPerson->getEndStatusToString() : null,
-            "Commentaire situation à la fin" => $supportPerson->getEndStatusComment(),
-            "Référent social" => $supportGroup->getReferent()->getFullname(),
-            "Référent social suppléant" => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
-            "Pôle" => $supportGroup->getService()->getPole()->getName(),
-            "Service" => $supportGroup->getService()->getName(),
-            "Dispositif" => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : "",
-            "Nom du logement/ hébergement" => join(", ", $nameAccommodations),
-            "Adresse" => join(", ", $addressAccommodations),
-            "Ville" => join(", ", $cityAccommodations),
-            "Département" => join(", ", $departmentAccommodations)
+            'Nom' => $person->getLastname(),
+            'Prénom' => $person->getFirstname(),
+            'Date de naissance' => $this->formatDate($person->getBirthdate()),
+            'Typologie familiale' => $groupPeople->getFamilyTypologyToString(),
+            'Nb de personnes' => $groupPeople->getNbPeople(),
+            'Rôle dans le groupe' => $supportPerson->getRoleToString(),
+            'DP' => $supportPerson->getHead() ? 'Oui' : 'Non',
+            'Statut' => $supportPerson->getStatusToString(),
+            'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
+            'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
+            'Situation à la fin' => $supportPerson->getEndStatus() ? $supportPerson->getEndStatusToString() : null,
+            'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
+            'Référent social' => $supportGroup->getReferent()->getFullname(),
+            'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
+            'Pôle' => $supportGroup->getService()->getPole()->getName(),
+            'Service' => $supportGroup->getService()->getName(),
+            'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
+            'Nom du logement/ hébergement' => join(', ', $nameAccommodations),
+            'Adresse' => join(', ', $addressAccommodations),
+            'Ville' => join(', ', $cityAccommodations),
+            'Département' => join(', ', $departmentAccommodations),
         ];
     }
 
     public function formatDate($date)
     {
-        return $date ? Date::PHPToExcel($date->format("Y-m-d")) : null;
+        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }
 }

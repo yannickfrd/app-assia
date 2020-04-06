@@ -2,20 +2,19 @@
 
 namespace App\Service;
 
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
-use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Ods;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Export
-
 {
     private $name;
     private $format;
@@ -28,7 +27,7 @@ class Export
     private $contentType;
     private $now;
 
-    public function __construct($name, $format, $arrayData,  $columnsWidth)
+    public function __construct($name, $format, $arrayData, $columnsWidth)
     {
         $this->name = $name;
         $this->format = $format;
@@ -40,8 +39,8 @@ class Export
 
         $this->sheet->fromArray(
             $arrayData,  // The data to set
-            NULL,        // Array values with this value will not be set
-            "A1"         // Top left coordinate of the worksheet range where
+            null,        // Array values with this value will not be set
+            'A1'         // Top left coordinate of the worksheet range where
         );
 
         $this->nbColumns = count($arrayData[0]);
@@ -49,8 +48,8 @@ class Export
         $this->highestColumn = $this->sheet->getHighestColumn();
         // $this->selectedCells = $this->sheet->getSelectedCells();
 
-        $this->headers = "A1:" . $this->highestColumn . "1";
-        $this->allCells = "A1:" . $this->highestColumn . $this->nbRows;
+        $this->headers = 'A1:'.$this->highestColumn.'1';
+        $this->allCells = 'A1:'.$this->highestColumn.$this->nbRows;
 
         $this->now = new \DateTime();
 
@@ -71,26 +70,26 @@ class Export
     {
         $this->getFormat($this->format);
 
-        $path = "public/uploads/exports/" . $this->now->format("Y/m/d/");
+        $path = 'public/uploads/exports/'.$this->now->format('Y/m/d/');
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
 
-        $filename = $this->name . $this->now->format("_Y_m_d_His") . "." . $this->format;
-        $this->writer->save($path . $filename);
+        $filename = $this->name.$this->now->format('_Y_m_d_His').'.'.$this->format;
+        $this->writer->save($path.$filename);
 
         $response = new StreamedResponse();
 
         $writer = $this->writer;
 
-        $response->headers->set("Content-Type", $this->contentType);
-        $response->headers->set("Content-Disposition", "attachment;filename=" . $filename);
+        $response->headers->set('Content-Type', $this->contentType);
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
         $response->setPrivate();
-        $response->headers->addCacheControlDirective("no-cache", true);
-        $response->headers->addCacheControlDirective("must-revalidate", true);
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
         $response->setCallback(function () use ($writer) {
-            $writer->save("php://output");
+            $writer->save('php://output');
         });
 
         return $response;
@@ -99,20 +98,20 @@ class Export
     // Format the widht of columns
     protected function formatColumnsWidth()
     {
-        $columnLetter = "A";
+        $columnLetter = 'A';
 
         if ($this->columnsWidth) {
-            $method = "setWidth";
+            $method = 'setWidth';
             $value = $this->columnsWidth;
         } else {
-            $method = "setAutoSize";
+            $method = 'setAutoSize';
             $value = true;
             $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWidth);
         }
 
-        for ($i = 0; $i < $this->nbColumns; $i++) {
+        for ($i = 0; $i < $this->nbColumns; ++$i) {
             $this->sheet->getColumnDimension($columnLetter)->$method($value);
-            $columnLetter++;
+            ++$columnLetter;
         }
     }
 
@@ -121,9 +120,8 @@ class Export
     {
         // Format les colonnes de date
         foreach ($this->getDateColumns() as  $value) {
-            for ($i = 2; $i <= $this->nbRows; $i++) {
-
-                $this->sheet->getStyle($value . $i)
+            for ($i = 2; $i <= $this->nbRows; ++$i) {
+                $this->sheet->getStyle($value.$i)
                     ->getNumberFormat()
                     ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
             }
@@ -133,18 +131,20 @@ class Export
     // Return the columns with date
     protected function getDateColumns()
     {
-        $alphas = range("A", "Z");
+        $alphas = range('A', 'Z');
         $columnsWithDate = [];
         foreach ($this->arrayData[0] as $key => $value) {
-            if (stristr($value, "Date"))
+            if (stristr($value, 'Date')) {
                 if ($key < 26) {
                     $columnsWithDate[] = $alphas[$key];
                 } else {
                     $xAlphas = floor($key / 26);
                     $diff = $key - ($xAlphas * 26);
-                    $columnsWithDate[] = $alphas[$xAlphas - 1] . $alphas[$diff];
+                    $columnsWithDate[] = $alphas[$xAlphas - 1].$alphas[$diff];
                 }
+            }
         }
+
         return $columnsWithDate;
     }
 
@@ -160,8 +160,8 @@ class Export
         $this->sheet->getPageMargins()->setFooter(0.1);
 
         // Header and footer for print
-        $this->sheet->getHeaderFooter()->setOddHeader("&C&B" .  $this->name);
-        $this->sheet->getHeaderFooter()->setOddFooter("&L" .  $this->name . "&C" . $this->now->format("d/m/Y") . "&RPage &P sur &N");
+        $this->sheet->getHeaderFooter()->setOddHeader('&C&B'.$this->name);
+        $this->sheet->getHeaderFooter()->setOddFooter('&L'.$this->name.'&C'.$this->now->format('d/m/Y').'&RPage &P sur &N');
 
         // Repeat first row  for print
         $this->sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
@@ -185,33 +185,33 @@ class Export
         // set table style
         $this->sheet->getStyle($this->allCells)->applyFromArray($this->getStyleTable());
 
-        $this->sheet->getRowDimension("1")->setRowHeight(20); // hauteur de la ligne
+        $this->sheet->getRowDimension('1')->setRowHeight(20); // hauteur de la ligne
 
         // Hide gridlines
         $this->sheet->setShowGridlines(false);
 
         // Position on cell "A1"
-        $this->sheet->getStyle("A1");
+        $this->sheet->getStyle('A1');
     }
 
-    // Get format of file 
+    // Get format of file
     protected function getFormat($format)
     {
         switch ($format) {
-            case "ods":
-                $this->contentType = "application/vnd.oasis.opendocument.spreadsheet";
+            case 'ods':
+                $this->contentType = 'application/vnd.oasis.opendocument.spreadsheet';
                 $this->writer = new Ods($this->spreadsheet);
                 break;
-            case "xlsx":
-                $this->contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            case 'xlsx':
+                $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $this->writer = new Xlsx($this->spreadsheet);
                 break;
-            case "csv":
-                $this->contentType = "text/csv";
+            case 'csv':
+                $this->contentType = 'text/csv';
                 $this->writer = new Csv($this->spreadsheet);
                 break;
             default:
-                $this->contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $this->writer = new Xlsx($this->spreadsheet);
         }
     }
@@ -220,25 +220,25 @@ class Export
     protected function getStyleHeaders()
     {
         return [
-            "font" => [
-                "bold" => true,
+            'font' => [
+                'bold' => true,
             ],
-            "alignment" => [
-                "vertical" => Alignment::VERTICAL_CENTER,
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_CENTER,
             ],
-            "borders" => [
-                "top" => [
-                    "borderStyle" => Border::BORDER_THIN,
+            'borders' => [
+                'top' => [
+                    'borderStyle' => Border::BORDER_THIN,
                 ],
             ],
-            "fill" => [
-                "fillType" => Fill::FILL_GRADIENT_LINEAR,
-                "rotation" => 90,
-                "startColor" => [
-                    "argb" => "FFA0A0A0",
+            'fill' => [
+                'fillType' => Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => 'FFA0A0A0',
                 ],
-                "endColor" => [
-                    "argb" => "FFFFFFFF",
+                'endColor' => [
+                    'argb' => 'FFFFFFFF',
                 ],
             ],
         ];
@@ -248,13 +248,13 @@ class Export
     protected function getStyleTable()
     {
         return  [
-            "alignment" => [
-                "vertical" => Alignment::VERTICAL_CENTER,
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_CENTER,
             ],
-            "borders" => [
-                "allBorders" => [
-                    "borderStyle" => Border::BORDER_THIN,
-                    "color" => ["argb" => "a6a6a6"],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'a6a6a6'],
                 ],
             ],
         ];

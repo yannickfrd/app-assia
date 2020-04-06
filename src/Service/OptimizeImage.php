@@ -7,13 +7,13 @@ use Tinify\Tinify;
 // Une classe pour compresser et optimiser les images avec Tinify
 class OptimizeImage
 {
-    protected $tinify,
-        $file,
-        $fileName,
-        $fileExtension,
-        $toFolder,
-        $originalFile,
-        $optimizedFile;
+    protected $tinify;
+    protected $file;
+    protected $fileName;
+    protected $fileExtension;
+    protected $toFolder;
+    protected $originalFile;
+    protected $optimizedFile;
 
     public function __construct(Tinify $tinify, $tinifyKey)
     {
@@ -27,7 +27,7 @@ class OptimizeImage
         try {
             // Use the Tinify API client.
         } catch (\Tinify\AccountException $e) {
-            print("The error message is: " . $e->getMessage());
+            echo 'The error message is: '.$e->getMessage();
             // Verify your API key and account limit.
         } catch (\Tinify\ClientException $e) {
             // Check your source image and request options.
@@ -43,10 +43,10 @@ class OptimizeImage
     // Compresse l'image
     public function compressImage()
     {
-        move_uploaded_file($this->file["tmp_name"], $this->toFolder . $this->originalFile);
-        $source = \Tinify\fromFile($this->toFolder . $this->originalFile);
-        $this->optimizedFile = $this->fileName . "-optimized." . $this->fileExtension;
-        $newfile = $source->toFile($this->toFolder . $this->optimizedFile);
+        move_uploaded_file($this->file['tmp_name'], $this->toFolder.$this->originalFile);
+        $source = \Tinify\fromFile($this->toFolder.$this->originalFile);
+        $this->optimizedFile = $this->fileName.'-optimized.'.$this->fileExtension;
+        $newfile = $source->toFile($this->toFolder.$this->optimizedFile);
     }
 
     // Redimmensionne l'image
@@ -56,14 +56,15 @@ class OptimizeImage
             $this->compressImage();
         }
         // Method : fit (ex 800x450), cover (ex: 800x450), thumb (ex: 150x150)
-        $source = \Tinify\fromFile($this->toFolder . $this->optimizedFile);
+        $source = \Tinify\fromFile($this->toFolder.$this->optimizedFile);
         $resized = $source->resize([
-            "method" => $method,
-            "width" => $width,
-            "height" => $height
+            'method' => $method,
+            'width' => $width,
+            'height' => $height,
         ]);
-        $resized->toFile($this->toFolder . $this->fileName . "-" . $method . "-" . $width . "x" . $height . "." . $this->fileExtension);
-        return "L'image a été redimesionnée avec la méthode \"" . $method . "\".";
+        $resized->toFile($this->toFolder.$this->fileName.'-'.$method.'-'.$width.'x'.$height.'.'.$this->fileExtension);
+
+        return "L'image a été redimesionnée avec la méthode \"".$method.'".';
     }
 
     // Créé une icone
@@ -72,14 +73,15 @@ class OptimizeImage
         if (!$this->optimizedFile) {
             $this->compressImage();
         }
-        $source = \Tinify\fromFile($this->toFolder . $this->optimizedFile);
-        $resized = $source->resize(array(
-            "method" => "thumb",
-            "width" => 64,
-            "height" => 64
-        ));
+        $source = \Tinify\fromFile($this->toFolder.$this->optimizedFile);
+        $resized = $source->resize([
+            'method' => 'thumb',
+            'width' => 64,
+            'height' => 64,
+        ]);
         $resized->toFile($toFolder);
-        return "Le nouveau logo a été enregistré.";
+
+        return 'Le nouveau logo a été enregistré.';
     }
 
     // Récupère les métadonnées
@@ -88,16 +90,18 @@ class OptimizeImage
         if (!$this->optimizedFile) {
             $this->compressImage();
         }
-        $source = \Tinify\fromFile($this->toFolder . $this->optimizedFile);
-        $copyrighted = $source->preserve("copyright", "creation");
-        $copyrighted->toFile($this->toFolder . $this->optimizedFile);
-        return "Les métadonnées ont été récupérées.";
+        $source = \Tinify\fromFile($this->toFolder.$this->optimizedFile);
+        $copyrighted = $source->preserve('copyright', 'creation');
+        $copyrighted->toFile($this->toFolder.$this->optimizedFile);
+
+        return 'Les métadonnées ont été récupérées.';
     }
 
     // Donne le nombre de compressions réalisées au cours du mois
     public function compressionCount()
     {
         $compressionsThisMonth = \Tinify\compressionCount();
-        return $compressionsThisMonth . "/500 compressions réalisées au cours du mois.";
+
+        return $compressionsThisMonth.'/500 compressions réalisées au cours du mois.';
     }
 }

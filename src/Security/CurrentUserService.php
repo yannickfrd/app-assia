@@ -24,7 +24,7 @@ class CurrentUserService
 
         foreach ($this->user->getServiceUser() as $role) {
             $services[] = $role->getService()->getId();
-        };
+        }
 
         return $services;
     }
@@ -36,6 +36,7 @@ class CurrentUserService
                 return true;
             }
         }
+
         return false;
     }
 }

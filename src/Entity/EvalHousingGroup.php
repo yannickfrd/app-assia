@@ -11,42 +11,41 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class EvalHousingGroup
 {
-
     public const HOUSING_STATUS = [
-        001 => "A la rue - abri de fortune",
-        400 => "CADA",
-        304 => "Colocation",
-        500 => "Détention",
-        105 => "Dispositif hivernal",
-        602 => "Dispositif médical (LAM, autre)",
-        003 => "Errance résidentielle",
-        502 => "DLSAP",
-        010 => "Hébergé chez des tiers",
-        011 => "Hébergé chez famille",
-        100 => "Hôtel 115",
-        101 => "Hôtel (hors 115)",
-        102 => "Hébergement d’urgence",
-        103 => "Hébergement de stabilisation",
-        104 => "Hébergement d’insertion",
-        600 => "Hôpital",
-        401 => "HUDA",
-        601 => "LHSS",
-        200 => "Logement adapté - ALT",
-        201 => "Logement adapté - FJT",
-        202 => "Logement adapté - FTM",
-        203 => "Logement adapté - Maison relais",
-        204 => "Logement adapté - Résidence sociale",
-        205 => "Logement adapté - RHVS",
-        206 => "Logement adapté - Solibail/IML",
-        207 => "Logement foyer",
-        300 => "Logement privé",
-        301 => "Logement social",
-        501 => "Placement extérieur",
+        001 => 'A la rue - abri de fortune',
+        400 => 'CADA',
+        304 => 'Colocation',
+        500 => 'Détention',
+        105 => 'Dispositif hivernal',
+        602 => 'Dispositif médical (LAM, autre)',
+        003 => 'Errance résidentielle',
+        502 => 'DLSAP',
+        010 => 'Hébergé chez des tiers',
+        011 => 'Hébergé chez famille',
+        100 => 'Hôtel 115',
+        101 => 'Hôtel (hors 115)',
+        102 => 'Hébergement d’urgence',
+        103 => 'Hébergement de stabilisation',
+        104 => 'Hébergement d’insertion',
+        600 => 'Hôpital',
+        401 => 'HUDA',
+        601 => 'LHSS',
+        200 => 'Logement adapté - ALT',
+        201 => 'Logement adapté - FJT',
+        202 => 'Logement adapté - FTM',
+        203 => 'Logement adapté - Maison relais',
+        204 => 'Logement adapté - Résidence sociale',
+        205 => 'Logement adapté - RHVS',
+        206 => 'Logement adapté - Solibail/IML',
+        207 => 'Logement foyer',
+        300 => 'Logement privé',
+        301 => 'Logement social',
+        501 => 'Placement extérieur',
         303 => "Propriétaire d'un logement",
-        302 => "Sous-location",
-        002 => "Squat",
-        97 => "Autre",
-        99 => "Non renseignée"
+        302 => 'Sous-location',
+        002 => 'Squat',
+        97 => 'Autre',
+        99 => 'Non renseignée',
     ];
 
     /**
@@ -336,7 +335,6 @@ class EvalHousingGroup
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationGroup;
-
 
     public function getId(): ?int
     {
@@ -1038,6 +1036,7 @@ class EvalHousingGroup
 
         return $this;
     }
+
     public function getEndDomiciliationDate(): ?\DateTimeInterface
     {
         return $this->endDomiciliationDate;
@@ -1105,6 +1104,7 @@ class EvalHousingGroup
 
         return $this;
     }
+
     public function getHousingArrivalDate(): ?\DateTimeInterface
     {
         return $this->housingArrivalDate;

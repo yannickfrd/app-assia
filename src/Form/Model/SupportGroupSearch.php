@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SupportGroupSearch
 {
     public const SUPPORT_DATES = [
-        1 => "Début du suivi",
-        2 => "Fin du suivi",
-        3 => "Période de suivi"
+        1 => 'Début du suivi',
+        2 => 'Fin du suivi',
+        3 => 'Période de suivi',
     ];
 
     /**
@@ -37,7 +37,7 @@ class SupportGroupSearch
     private $nbPeople;
 
     /**
-     * @var Array
+     * @var array
      */
     private $status;
 
@@ -82,9 +82,6 @@ class SupportGroupSearch
         $this->devices = new ArrayCollection();
     }
 
-    /**
-     * @return string|null
-     */
     public function getFullname(): ?string
     {
         return $this->fullname;
@@ -136,10 +133,6 @@ class SupportGroupSearch
         return $this;
     }
 
-    /**
-     *
-     * @return Array|null
-     */
     public function getStatus(): ?array
     {
         return $this->status;
@@ -186,6 +179,7 @@ class SupportGroupSearch
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
         return $this;
     }
 
@@ -201,11 +195,6 @@ class SupportGroupSearch
         return $this;
     }
 
-
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getServices(): ?ArrayCollection
     {
         return $this->services;
@@ -218,10 +207,6 @@ class SupportGroupSearch
         return $this;
     }
 
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getDevices(): ?ArrayCollection
     {
         return $this->devices;
@@ -234,9 +219,6 @@ class SupportGroupSearch
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getExport(): ?bool
     {
         return $this->export;

@@ -3,8 +3,8 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Pole;
-use App\Entity\User;
 use App\Entity\Service;
+use App\Entity\User;
 use App\Form\Model\ServiceSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -16,7 +16,7 @@ class ServiceRepositoryTest extends WebTestCase
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
-    /** @var ServiceRepository  */
+    /** @var ServiceRepository */
     protected $repo;
 
     /** @var Service */
@@ -31,31 +31,30 @@ class ServiceRepositoryTest extends WebTestCase
     /** @var ServiceSearch */
     protected $serviceSearch;
 
-
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__) . "/DataFixturesTest/ServiceFixturesTest.yaml",
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
-            ->get("doctrine")
+            ->get('doctrine')
             ->getManager();
 
-        /** @var ServiceRepository */
+        /* @var ServiceRepository */
         $this->repo = $this->entityManager->getRepository(Service::class);
 
-        $this->service = $dataFixtures["service1"];
-        $this->pole = $dataFixtures["pole"];
-        $this->user = $dataFixtures["userSuperAdmin"];
+        $this->service = $dataFixtures['service1'];
+        $this->pole = $dataFixtures['pole'];
+        $this->user = $dataFixtures['userSuperAdmin'];
         $this->serviceSearch = (new ServiceSearch())
-            ->setName("AVDL")
-            ->setEmail("avdl@esperer-95.org")
-            ->setCity("Pontoise")
+            ->setName('AVDL')
+            ->setEmail('avdl@esperer-95.org')
+            ->setCity('Pontoise')
             ->setPole($this->pole)
-            ->setPhone("01 00 00 00 00");
+            ->setPhone('01 00 00 00 00');
     }
 
     public function testCount()

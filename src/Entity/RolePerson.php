@@ -2,13 +2,11 @@
 
 namespace App\Entity;
 
-use App\Entity\Person;
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RolePersonRepository")
@@ -20,13 +18,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class RolePerson
 {
     public const ROLE = [
-        1 => "Conjoint·e",
-        2 => "Époux/se",
-        3 => "Enfant",
-        4 => "Parent isolé",
-        5 => "Personne isolée",
-        6 => "Autre membre de la famille",
-        7 => "Autre"
+        1 => 'Conjoint·e',
+        2 => 'Époux/se',
+        3 => 'Enfant',
+        4 => 'Parent isolé',
+        5 => 'Personne isolée',
+        6 => 'Autre membre de la famille',
+        7 => 'Autre',
     ];
 
     /**
@@ -42,7 +40,7 @@ class RolePerson
     private $head;
 
     /**
-     * Groups("export")
+     * Groups("export").
      */
     private $headToString;
 
@@ -54,13 +52,13 @@ class RolePerson
     private $role;
 
     /**
-     * Groups("export")
+     * Groups("export").
      */
     private $roleToString;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson", cascade={"persist"})
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)   
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
      * @Assert\Valid
      */
     private $person;

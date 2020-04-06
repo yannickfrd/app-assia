@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\AccommodationGroup;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method AccommodationGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,27 +21,26 @@ class AccommodationGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne la prise en charge avec le groupe et les personnes rattachées
+     * Donne la prise en charge avec le groupe et les personnes rattachées.
      *
-     * @param integer $id // AccomodationGroup
-     * @return AccommodationGroup|null
+     * @param int $id // AccomodationGroup
      */
     public function findOneById(int $id): ?AccommodationGroup
     {
-        return $this->createQueryBuilder("gpa")
-            ->select("gpa")
-            ->leftJoin("gpa.createdBy", "user")->addselect("PARTIAL user.{id, firstname, lastname}")
-            ->leftJoin("gpa.accommodation", "a")->addselect("PARTIAL a.{id, name}")
-            ->leftJoin("gpa.accommodationPersons", "pa")->addselect("pa")
-            ->leftJoin("pa.person", "p")->addselect("PARTIAL p.{id, firstname, lastname}")
-            ->leftJoin("gpa.supportGroup", "sg")->addselect("PARTIAL sg.{id, startDate, endDate}")
-            ->leftJoin("sg.groupPeople", "gp")->addselect("PARTIAL gp.{id, familyTypology, nbPeople}")
-            ->leftJoin("sg.service", "sv")->addselect("PARTIAL sv.{id, name, accommodation}")
-            ->leftJoin("gp.rolePerson", "rp")->addselect("PARTIAL rp.{id, role, head}")
-            ->leftJoin("rp.person", "p1")->addselect("PARTIAL p1.{id, firstname, lastname}")
+        return $this->createQueryBuilder('gpa')
+            ->select('gpa')
+            ->leftJoin('gpa.createdBy', 'user')->addselect('PARTIAL user.{id, firstname, lastname}')
+            ->leftJoin('gpa.accommodation', 'a')->addselect('PARTIAL a.{id, name}')
+            ->leftJoin('gpa.accommodationPersons', 'pa')->addselect('pa')
+            ->leftJoin('pa.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('gpa.supportGroup', 'sg')->addselect('PARTIAL sg.{id, startDate, endDate}')
+            ->leftJoin('sg.groupPeople', 'gp')->addselect('PARTIAL gp.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.service', 'sv')->addselect('PARTIAL sv.{id, name, accommodation}')
+            ->leftJoin('gp.rolePerson', 'rp')->addselect('PARTIAL rp.{id, role, head}')
+            ->leftJoin('rp.person', 'p1')->addselect('PARTIAL p1.{id, firstname, lastname}')
 
-            ->andWhere("gpa.id = :id")
-            ->setParameter("id", $id)
+            ->andWhere('gpa.id = :id')
+            ->setParameter('id', $id)
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();

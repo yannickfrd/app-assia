@@ -68,9 +68,6 @@ class UserSearch
         $this->service = new ArrayCollection();
     }
 
-    /**
-     * @return string|null
-     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -83,9 +80,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLastname(): ?string
     {
         return $this->lastname;
@@ -98,9 +92,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getUsername(): ?string
     {
         return $this->username;
@@ -113,9 +104,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getStatus(): ?int
     {
         return $this->status;
@@ -128,9 +116,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getServiceUser(): ?int
     {
         return $this->serviceUser;
@@ -143,9 +128,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhone(): ?string
     {
         return $this->phone;
@@ -158,9 +140,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;
@@ -173,10 +152,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     *
-     * @return ArrayCollection|null
-     */
     public function getService(): ?ArrayCollection
     {
         return $this->service;
@@ -204,9 +179,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getEnabled(): ?bool
     {
         return $this->enabled;
@@ -219,9 +191,6 @@ class UserSearch
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getExport(): ?bool
     {
         return $this->export;

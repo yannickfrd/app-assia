@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Referent;
 use App\Entity\GroupPeople;
+use App\Entity\Referent;
 use App\Form\Referent\ReferentType;
-use App\Repository\ReferentRepository;
 use App\Repository\GroupPeopleRepository;
+use App\Repository\ReferentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ReferentController extends AbstractController
 {
@@ -27,13 +27,12 @@ class ReferentController extends AbstractController
     }
 
     /**
-     * Nouveau service référent
-     * 
+     * Nouveau service référent.
+     *
      * @Route("group/{id}/referent/new", name="referent_new", methods="GET|POST")
-     * @param integer $id //GroupPeople
+     *
+     * @param int      $id       //GroupPeople
      * @param Referent $referent
-     * @param Request $request
-     * @return Response
      */
     public function newReferent(int $id, Referent $referent = null, Request $request): Response
     {
@@ -47,20 +46,18 @@ class ReferentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createReferent($groupPeople, $referent);
         }
-        return $this->render("app/referent/referent.html.twig", [
-            "group_people" => $groupPeople,
-            "form" => $form->createView(),
-            "edit_mode" => false
+
+        return $this->render('app/referent/referent.html.twig', [
+            'group_people' => $groupPeople,
+            'form' => $form->createView(),
+            'edit_mode' => false,
         ]);
     }
 
     /**
-     * Modification d'un service référent
-     * 
+     * Modification d'un service référent.
+     *
      * @Route("referent/{id}/edit", name="referent_edit", methods="GET|POST")
-     * @param Referent $referent
-     * @param Request $request
-     * @return Response
      */
     public function editReferent(Referent $referent, Request $request): Response
     {
@@ -70,19 +67,18 @@ class ReferentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->updateReferent($referent);
         }
-        return $this->render("app/referent/referent.html.twig", [
-            "group_people" => $referent->getGroupPeople(),
-            "form" => $form->createView(),
-            "edit_mode" => true
+
+        return $this->render('app/referent/referent.html.twig', [
+            'group_people' => $referent->getGroupPeople(),
+            'form' => $form->createView(),
+            'edit_mode' => true,
         ]);
     }
 
     /**
-     * Supprime un service référent
-     * 
+     * Supprime un service référent.
+     *
      * @Route("referent/{id}/delete", name="referent_delete", methods="GET")
-     * @param Referent $referent
-     * @return Response
      */
     public function deleteReferent(Referent $referent): Response
     {
@@ -91,19 +87,15 @@ class ReferentController extends AbstractController
         $this->manager->remove($referent);
         $this->manager->flush();
 
-        $this->addFlash("danger", "Le service social \"" . $name . "\" a été supprimé.");
+        $this->addFlash('danger', 'Le service social "'.$name.'" a été supprimé.');
 
-        return $this->redirectToRoute("group_people_show", [
-            "id" => $referent->getGroupPeople()->getId()
+        return $this->redirectToRoute('group_people_show', [
+            'id' => $referent->getGroupPeople()->getId(),
         ]);
     }
 
     /**
-     * Crée un service référent une fois le formulaire soumis et validé
-     *
-     * @param GroupPeople $groupPeople
-     * @param Referent $referent
-     * @return Response
+     * Crée un service référent une fois le formulaire soumis et validé.
      */
     protected function createReferent(GroupPeople $groupPeople, Referent $referent): Response
     {
@@ -118,18 +110,15 @@ class ReferentController extends AbstractController
         $this->manager->persist($referent);
         $this->manager->flush();
 
-        $this->addFlash("success", "Le service social \"" . $referent->getName() . "\" a été créé.");
+        $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été créé.');
 
-        return $this->redirectToRoute("referent_edit", [
-            "id" => $referent->getId()
+        return $this->redirectToRoute('referent_edit', [
+            'id' => $referent->getId(),
         ]);
     }
 
     /**
-     * Met à jour le service référent une fois le formulaire soumis et validé
-     *
-     * @param Referent $referent
-     * @return Response
+     * Met à jour le service référent une fois le formulaire soumis et validé.
      */
     protected function updateReferent(Referent $referent): Response
     {
@@ -138,10 +127,10 @@ class ReferentController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash("success", "Le service social \"" . $referent->getName() . "\" a été mis à jour.");
+        $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été mis à jour.');
 
-        return $this->redirectToRoute("referent_edit", [
-            "id" => $referent->getId()
+        return $this->redirectToRoute('referent_edit', [
+            'id' => $referent->getId(),
         ]);
     }
 }
