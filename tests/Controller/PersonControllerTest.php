@@ -5,18 +5,18 @@ namespace App\Tests\Controller;
 use App\Entity\Person;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Component\Panther\Client;
 
-class PersonControllerTest extends PantherTestCase
+class PersonControllerTest extends WebTestCase
 {
     use FixturesTrait;
     use AppTestTrait;
 
-    // /** @var KernelBrowser */
-    // protected $client;
+    /** @var Client */
+    protected $client;
 
     /** @var array */
     protected $dataFixtures;
@@ -33,49 +33,6 @@ class PersonControllerTest extends PantherTestCase
 
         $this->user = $this->dataFixtures['userSuperAdmin'];
         $this->person = $this->dataFixtures['person1'];
-    }
-
-    public function testPantherEditPersonInGroupWithAjax()
-    {
-        $this->createPantherLogin($this->user);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generatePantherUri('group_person_show', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
-            'person_id' => $this->person->getId(),
-            'slug' => $this->person->getSlug(),
-        ]));
-
-        $form = $crawler->selectButton('updatePerson')->form([]);
-
-        $this->client->submit($form);
-
-        $this->client->waitFor('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-
-        // testPantherEditPersonWithAjax
-        $form = $crawler->selectButton('updatePerson')->form([]);
-
-        $this->client->submit($form);
-
-        $this->client->waitFor('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-
-        // testPantherSuccessToAddNewGroupToPerson
-        $crawler->selectButton('btn-close-msg')->click();
-        $this->client->waitFor('#btn-new-group');
-        $crawler->selectButton('btn-new-group')->click();
-
-        sleep(1); // $this->client->waitFor("#js-btn-confirm");
-        $form = $crawler->selectButton('js-btn-confirm')->form([
-            'person_new_group[groupPeople][familyTypology]' => 1,
-            'person_new_group[groupPeople][nbPeople]' => 1,
-            'person_new_group[role]' => 1,
-        ]);
-
-        $this->client->submit($form);
-
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe a été créé.');
     }
 
     public function testListPeoplePageIsUp()

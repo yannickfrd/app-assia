@@ -41,3 +41,8 @@ yarn-error.log
 ###< secrets keys ###
 .env.local
 .env.local
+
+###> friendsofphp/php-cs-fixer ###
+/.php_cs
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###

@@ -94,9 +94,6 @@ class SupportGroupSearch
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getBirthdate(): ?\DateTimeInterface
     {
         return $this->birthdate;

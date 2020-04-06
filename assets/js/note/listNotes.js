@@ -183,7 +183,7 @@ export default class ListNotes {
     deleteNote() {
         if (window.confirm("Voulez-vous vraiment supprimer cette note ?")) {
             this.loader.on(true);
-            this.ajaxRequest.init("POST", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
+            this.ajaxRequest.init("GET", this.btnDeleteElt.href, this.responseAjax.bind(this), true, null);
         }
     }
 
