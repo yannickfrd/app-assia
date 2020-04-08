@@ -137,7 +137,7 @@ class PersonControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
-    public function testCreatePersonThanExists()
+    public function testCreatePersonWhoExists()
     {
         $this->createLogin($this->user);
 

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationGroupRepository")
@@ -28,6 +29,7 @@ class AccommodationGroup
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull()
      */
     private $startDate;
 
@@ -48,6 +50,7 @@ class AccommodationGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Accommodation", inversedBy="accommodationGroups")
+     * @Assert\NotNull()
      */
     private $accommodation;
 
@@ -103,7 +106,7 @@ class AccommodationGroup
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 

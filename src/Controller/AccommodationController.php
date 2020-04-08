@@ -55,12 +55,13 @@ class AccommodationController extends AbstractController
      * Nouveau groupe de places.
      *
      * @Route("/admin/service/{id}/accommodation/new", name="service_accommodation_new", methods="GET|POST")
-     * @IsGranted("EDIT", subject="accommodation")
      *
      * @param Accommodation $accommodation
      */
     public function newAccommodation(Service $service, Accommodation $accommodation = null, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('EDIT', $service);
+
         $accommodation = (new Accommodation())->setService($service);
 
         $form = ($this->createForm(AccommodationType::class, $accommodation))
@@ -68,6 +69,9 @@ class AccommodationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createAccommodation($accommodation, $service);
+        }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('danger', "Une erreur s'est produite.");
         }
 
         return $this->render('app/accommodation/accommodation.html.twig', [

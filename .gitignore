@@ -3,6 +3,7 @@
 /.env.local
 /.env.local.php
 # /.env.*.local
+/php.ini.lnk
 /public/bundles/
 /uploads/
 /var/

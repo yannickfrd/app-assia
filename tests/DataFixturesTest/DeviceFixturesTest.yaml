@@ -1,0 +1,49 @@
+App\Entity\Device:
+  device1:
+    name: AVDL
+    coefficient: 1
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
+
+  device{2..5}:
+    name: <sentence(3, true)>
+    coefficient: <numberBetween(1, 3)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@user*"
+    updatedBy: "@user*"
+
+App\Entity\ServiceDevice:
+  servDevice1:
+    device: "@device1"
+    service: "@service"
+
+  servDevice{2..5}:
+    device: "@device*"
+    service: "@service*"
+
+App\Entity\User:
+  userSuperAdmin:
+    firstname: Romain
+    lastname: Madelaine
+    username: r.madelaine
+    email: romain.madelaine@esperer-95.org
+    status: 1
+    roles: ["ROLE_SUPER_ADMIN"]
+    plainPassword: Test123*
+
+App\Entity\Service:
+  service:
+    name: AVDL
+    pole: "@pole"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\Pole:
+  pole:
+    name: Habitat
+    createdAt: <date_create()>
+    updatedAt: <date_create()>

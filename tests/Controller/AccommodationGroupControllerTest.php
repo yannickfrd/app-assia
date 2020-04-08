@@ -41,8 +41,7 @@ class AccommodationGroupControllerTest extends WebTestCase
 
     public function testListSupportAccommodationsIsUp()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('support_accommodations', [
+        $this->client->request('GET', $this->generateUri('support_accommodations', [
             'id' => $this->supportGroup->getId(),
         ]));
 
@@ -60,6 +59,43 @@ class AccommodationGroupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Logement/hébergement');
     }
 
+    public function testSuccessToCreateNewAccommodationGroup()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_accommodation_new', [
+            'id' => $this->supportGroup->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([
+            'accommodation_group[accommodation]' => 1,
+            'accommodation_group[startDate]' => (new \DateTime())->format('Y-m-d'),
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->assertSelectorTextContains('.alert.alert-success', 'L\'hébergement a été créé.');
+    }
+
+    public function testFailToCreateNewAccommodationGroup()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_accommodation_new', [
+            'id' => $this->supportGroup->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([
+            'accommodation_group[accommodation]' => 1,
+            'accommodation_group[startDate]' => null,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-danger');
+    }
+
     public function testEditAccommodationGroupIsUp()
     {
         $this->client->request('POST', $this->generateUri('support_accommodation_edit', [
@@ -68,6 +104,21 @@ class AccommodationGroupControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Logement/hébergement');
+    }
+
+    public function testEditAccommodationGroup()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_accommodation_edit', [
+            'id' => $this->accommodationGroup->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     public function testAddPeopleInAccommodation()

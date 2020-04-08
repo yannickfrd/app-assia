@@ -56,6 +56,10 @@ class DeviceController extends AbstractController
             return $this->createDevice($device);
         }
 
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('danger', 'Une erreur s\'est produite.');
+        }
+
         return $this->render('app/device/device.html.twig', [
             'form' => $form->createView(),
             'edit_mode' => false,

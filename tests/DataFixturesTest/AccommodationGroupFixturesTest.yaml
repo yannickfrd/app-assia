@@ -53,7 +53,7 @@ App\Entity\Accommodation:
     name: Logement 666
     placesNumber: 6
     openingDate: <date_create("2010-01-01")>
-    closingDate: <date_create("2020-01-01")>
+    # closingDate: <date_create("2020-01-01")>
     city: Houilles
     department: <numberBetween(1, 95)>
     address : <fr_FR:address()>
@@ -162,3 +162,8 @@ App\Entity\Pole:
 App\Entity\Device:
   device:
     name: AVDL
+
+# App\Entity\ServiceDevice:
+#   servDevice:
+#     device: "@device"
+#     service: "@service"

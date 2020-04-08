@@ -82,6 +82,10 @@ class AccommodationGroupController extends AbstractController
             return $this->createAccommodationGroup($accommodationGroup);
         }
 
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('danger', "Une erreur s'est produite");
+        }
+
         return $this->render('app/accommodation/accommodationGroup.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
@@ -251,10 +255,9 @@ class AccommodationGroupController extends AbstractController
 
         foreach ($accommodationGroup->getSupportGroup()->getGroupPeople()->getrolePerson() as $rolePerson) {
             if (!in_array($rolePerson->getPerson()->getId(), $people)) {
-                $accommodationPerson = new AccommodationPerson();
                 $now = new \DateTime();
-
-                $accommodationPerson->setAccommodationGroup($accommodationGroup)
+                $accommodationPerson = (new AccommodationPerson())
+                    ->setAccommodationGroup($accommodationGroup)
                     ->setPerson($rolePerson->getPerson())
                     ->setStartDate($accommodationGroup->getStartDate())
                     ->setEndDate($accommodationGroup->getEndDate())

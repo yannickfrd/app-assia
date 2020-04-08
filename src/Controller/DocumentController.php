@@ -34,14 +34,13 @@ class DocumentController extends AbstractController
     /**
      * Liste des documents du suivi.
      *
-     * @Route("support/{id}/documents", name="support_documents", methods="GET")
+     * @Route("support/{supportId}/documents", name="support_documents", methods="GET|POST")
      *
      * @param DocumentSearch $documentSearch
-     * @param int            $id             // Document
      */
-    public function listDocuments(int $id, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $supportId, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findSupportById($supportId);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -63,11 +62,11 @@ class DocumentController extends AbstractController
     /**
      * Nouveau document.
      *
-     * @Route("support/{id}/document/new", name="document_new", methods="POST")
+     * @Route("support/{supportId}/document/new", name="document_new", methods="POST")
      */
-    public function newDocument($id, Request $request, FileUploader $fileUploader): Response
+    public function newDocument($supportId, Request $request, FileUploader $fileUploader): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findSupportById($supportId);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -80,7 +79,7 @@ class DocumentController extends AbstractController
             return $this->createDocument($supportGroup, $form, $fileUploader, $document);
         }
 
-        return $this->errorMessage();
+        return $this->errorMessage($form);
     }
 
     /**
@@ -99,7 +98,7 @@ class DocumentController extends AbstractController
             return $this->updateDocument($document);
         }
 
-        return $this->errorMessage();
+        return $this->errorMessage($form);
     }
 
     /**
@@ -196,12 +195,17 @@ class DocumentController extends AbstractController
     /**
      * Retourne un message d'erreur au format JSON.
      */
-    protected function errorMessage(): Response
+    protected function errorMessage($form): Response
     {
+        $msg = [];
+        foreach ($form->getErrors(true) as $error) {
+            $msg[] = $error->getOrigin()->getName().' => '.$error->getMessage();
+        }
+
         return $this->json([
-            'code' => 200,
+            'code' => 403,
             'alert' => 'danger',
-            'msg' => "Une erreur s'est produite. Le document n'a pas pu être enregistré.",
+            'msg' => "Une erreur s'est produite : ".join(' ', $msg),
         ], 200);
     }
 }

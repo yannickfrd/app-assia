@@ -36,12 +36,16 @@ class PersonControllerTest extends PantherTestCase
     {
         $this->createPantherLogin();
 
+        dump('Test : go to person page');
+
         /** @var PanterCrawler */
         $crawler = $this->client->request('GET', $this->generatePantherUri('group_person_show', [
             'id' => $this->dataFixtures['groupPeople1']->getId(),
             'person_id' => $this->person->getId(),
             'slug' => $this->person->getSlug(),
         ]));
+
+        dump('Test : update information from the person');
 
         $form = $crawler->selectButton('updatePerson')->form([]);
 
@@ -52,15 +56,10 @@ class PersonControllerTest extends PantherTestCase
 
         // testPantherEditPersonWithAjax
         $crawler->selectButton('btn-close-msg')->click();
-        $form = $crawler->selectButton('updatePerson')->form([]);
 
-        $this->client->submit($form);
-
-        $this->client->waitFor('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        dump('Test : create a new group for the person');
 
         // testPantherSuccessToAddNewGroupToPerson
-        $crawler->selectButton('btn-close-msg')->click();
         $this->client->waitFor('#btn-new-group');
         $crawler->selectButton('btn-new-group')->click();
 

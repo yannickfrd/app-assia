@@ -49,6 +49,8 @@ trait AppTestTrait
 
         $crawler = $this->client->request('GET', '/');
 
+        dump('Test : try to login');
+
         $form = $crawler->selectButton('send')->form([
             '_username' => 'r.madelaine',
             '_password' => 'Test123*',

@@ -20,3 +20,4 @@ script:
   - php bin/phpunit tests/Entity
   - php bin/phpunit tests/Repository
   - php bin/phpunit tests/Controller
+  - php bin/phpunit tests/EndToEnd
