@@ -51,6 +51,24 @@ class OrganizationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Nouvel organisme');
     }
 
+    public function testCreateNewOrganizationIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('admin_organization_new'));
+
+        $faker = \Faker\Factory::create('fr_FR');
+
+        $form = $crawler->selectButton('send')->form([
+            'organization[name]' => 'Organisme test',
+            'organization[comment]' => $faker->paragraphs(6, true),
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
     public function testEditOrganizationisUp()
     {
         $this->client->request('GET', $this->generateUri('admin_organization_edit', [
@@ -59,6 +77,21 @@ class OrganizationControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->organization->getName());
+    }
+
+    public function testEditOrganizationIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('admin_organization_edit', [
+            'id' => $this->organization->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     protected function tearDown(): void

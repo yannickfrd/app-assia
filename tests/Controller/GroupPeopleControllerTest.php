@@ -38,8 +38,20 @@ class GroupPeopleControllerTest extends WebTestCase
 
     public function testListGroupsPeopleIsUp()
     {
+        $this->client->request('GET', $this->generateUri('groups_people'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Groupes de personnes');
+    }
+
+    public function testSearchGroupsPeopleIsSucessful()
+    {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('groups_people'));
+
+        $form = $crawler->selectButton('search')->form([]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupes de personnes');
@@ -50,6 +62,27 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('group_people_show', [
             'id' => $this->groupPeople->getId(),
         ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Groupe');
+    }
+
+    public function testEditGroupPeopleIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('group_people_show', [
+            'id' => $this->groupPeople->getId(),
+        ]));
+
+        $faker = \Faker\Factory::create('fr_FR');
+
+        $form = $crawler->selectButton('send')->form([
+            'group_people[familyTypology]' => 1,
+            'group_people[nbPeople]' => 1,
+            'group_people[comment]' => $faker->paragraphs(6, true),
+        ]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupe');
@@ -85,7 +118,7 @@ class GroupPeopleControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame(403, $data['code']);
+        $this->assertSame("danger", $data['alert']);
     }
 
     protected function tearDown(): void

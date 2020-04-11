@@ -22,6 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RdvController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repo;
 
@@ -78,7 +80,10 @@ class RdvController extends AbstractController
     /**
      * Affiche l'agenda de l'utilisateur (vue mensuelle).
      *
-     * @Route("/calendar/{year}/{month}", name="calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
+     * @Route("/calendar/{year}/{month}", name="calendar_show", methods="GET", requirements={
+     * "year" : "\d{4}",
+     * "month" : "[1-9]|[01-9]|1[0-2]",
+     * })
      * @Route("/calendar", name="calendar", methods="GET")
      */
     public function showCalendar(int $year = null, int $month = null): Response
@@ -97,7 +102,10 @@ class RdvController extends AbstractController
     /**
      * Affiche l'agenda d'un suivi (vue mensuelle).
      *
-     * @Route("/support/{id}/calendar/{year}/{month}", name="support_calendar_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*"}, methods="GET")
+     * @Route("/support/{id}/calendar/{year}/{month}", name="support_calendar_show", methods="GET", requirements={
+     * "year" : "\d{4}",
+     * "month" : "0?[1-9]|1[0-2]",
+     * })
      * @Route("/support/{id}/calendar", name="support_calendar", methods="GET")
      *
      * @param int $id // SupportGroup
@@ -123,13 +131,13 @@ class RdvController extends AbstractController
     /**
      * Affiche un jour du mois (vue journalière).
      *
-     * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", requirements={"year" : "[0-9]*", "month" : "[0-9]*", "day" : "[0-9]*"}, methods="GET")
-     *
-     * @param int $year
-     * @param int $month
-     * @param int $day
+     * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", methods="GET", requirements={
+     * "year" : "\d{4}",
+     * "month" : "0?[1-9]|1[0-2]",
+     * "day" : "[1-9]|[0-3][0-9]",
+     * })
      */
-    public function showDay($year = null, $month = null, $day = null, Request $request): Response
+    public function showDay(int $year = null, int $month = null, int $day = null, Request $request): Response
     {
         $startDay = new \Datetime($year.'-'.$month.'-'.$day);
         $endDay = new \Datetime($year.'-'.$month.'-'.($day + 1));
@@ -150,7 +158,6 @@ class RdvController extends AbstractController
      * @Route("rdv/new", name="rdv_new", methods="POST")
      *
      * @param int $id  // SupportGroup
-     * @param Rdv $rdv
      */
     public function newRdv(int $id = null, SupportGroupRepository $repoSupport, Rdv $rdv = null, Request $request): Response
     {
@@ -248,10 +255,8 @@ class RdvController extends AbstractController
      * Crée le RDV une fois le formulaire soumis et validé.
      *
      * @param SupportGroup $supportGroup
-     *
-     * @return Response
      */
-    protected function createRdv(Rdv $rdv, SupportGroup $supportGroup = null)
+    protected function createRdv(Rdv $rdv, SupportGroup $supportGroup = null): Response
     {
         $now = new \DateTime();
 
@@ -280,10 +285,8 @@ class RdvController extends AbstractController
 
     /**
      * Met à jour le RDV une fois le formulaire soumis et validé.
-     *
-     * @param string $typeSave
      */
-    protected function updateRdv(Rdv $rdv, $typeSave): Response
+    protected function updateRdv(Rdv $rdv, string $typeSave): Response
     {
         $rdv->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->getUser());

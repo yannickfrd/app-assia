@@ -44,11 +44,46 @@ class ReferentControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Nouveau service social référent');
     }
 
+    public function testCreateNewReferentIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('referent_new', [
+            'id' => $this->dataFixtures['groupPeople']->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([
+            'referent[name]' => 'Référent test',
+            'referent[type]' => 1,
+            'referent[socialWorker]' => "XXXX",
+            'referent[socialWorker2]' => "XXXX",
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
     public function testEditReferentIsUp()
     {
         $this->client->request('GET', $this->generateUri('referent_edit', [
             'id' => $this->referent->getId(),
         ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', $this->referent->getName());
+    }
+
+    public function testEditReferentIsSucessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('referent_edit', [
+            'id' => $this->referent->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->referent->getName());

@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EvaluationController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repoSupportGroup;
     private $repo;
@@ -60,7 +62,7 @@ class EvaluationController extends AbstractController
     /**
      * Modification d'une évaluation sociale.
      *
-     * @Route("/support/{id}/evaluation_edit", name="support_evaluation_edit", methods="GET|POST")
+     * @Route("/support/{id}/evaluation_edit", name="support_evaluation_edit", methods="POST")
      */
     public function editEvaluation(int $id, Request $request, Normalisation $normalisation): Response
     {
@@ -76,7 +78,7 @@ class EvaluationController extends AbstractController
             return $this->updateEvaluationGroup($evaluationGroup);
         }
 
-        return $this->errorMessage($form, $normalisation);
+        return $this->getErrorMessage($form, $normalisation);
     }
 
     /**
@@ -84,10 +86,9 @@ class EvaluationController extends AbstractController
      */
     protected function createEvaluationGroup(SupportGroup $supportGroup)
     {
-        $evaluationGroup = new EvaluationGroup();
         $now = new \DateTime();
-
-        $evaluationGroup->setSupportGroup($supportGroup)
+        $evaluationGroup = (new EvaluationGroup())
+            ->setSupportGroup($supportGroup)
             ->setDate($now)
             ->setCreatedAt($now)
             ->setUpdatedAt($now);
@@ -111,9 +112,8 @@ class EvaluationController extends AbstractController
      */
     protected function createEvaluationPerson(SupportPerson $supportPerson, EvaluationGroup $evaluationGroup)
     {
-        $evaluationPerson = new EvaluationPerson();
-
-        $evaluationPerson->setEvaluationGroup($evaluationGroup)
+        $evaluationPerson = (new EvaluationPerson())
+            ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson);
 
         $supportPerson->setInitEvalPerson(new InitEvalPerson());
@@ -185,22 +185,5 @@ class EvaluationController extends AbstractController
         // Ressources et dettes initiales
         $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
-    }
-
-    /**
-     * Retourne un message d'erreur au format JSON.
-     */
-    protected function errorMessage($form, Normalisation $normalisation): Response
-    {
-        $msg = [];
-        foreach ($form->getErrors(true) as $error) {
-            $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName()).' => '.$error->getMessage();
-        }
-
-        return $this->json([
-            'code' => 403,
-            'alert' => 'danger',
-            'msg' => "Une erreur s'est produite : ".join(' ', $msg),
-        ], 200);
     }
 }

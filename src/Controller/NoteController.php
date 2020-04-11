@@ -19,6 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NoteController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repo;
     private $repoSupportGroup;
@@ -33,10 +35,9 @@ class NoteController extends AbstractController
     /**
      * Liste des notes.
      *
-     * @Route("support/{id}/notes", name="support_notes", methods="GET")
+     * @Route("support/{id}/notes", name="support_notes", methods="GET|POST")
      *
-     * @param int        $id         // SupportGroup
-     * @param NoteSearch $noteSearch
+     * @param int $id // SupportGroup
      */
     public function listNotes(int $id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
     {
@@ -62,10 +63,9 @@ class NoteController extends AbstractController
     /**
      * Nouvelle note.
      *
-     * @Route("support/{id}/note/new", name="note_new", methods="POST") *
+     * @Route("support/{id}/note/new", name="note_new", methods="POST")
      *
-     * @param int  $id   // SupportGroup
-     * @param Note $note
+     * @param int $id // SupportGroup
      */
     public function newNote(int $id, Note $note = null, Request $request): Response
     {
@@ -82,7 +82,7 @@ class NoteController extends AbstractController
             return $this->createNote($supportGroup, $note);
         }
 
-        return $this->errorMessage();
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -101,7 +101,7 @@ class NoteController extends AbstractController
             return $this->updateNote($note, 'update');
         }
 
-        return $this->errorMessage();
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -174,18 +174,6 @@ class NoteController extends AbstractController
                 'status' => $note->getStatusToString(),
                 'editInfo' => '(modifié le '.date_format($note->getUpdatedAt(), 'd/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
             ],
-        ], 200);
-    }
-
-    /**
-     * Retourne un message d'erreur au format JSON.
-     */
-    protected function errorMessage(): Response
-    {
-        return $this->json([
-            'code' => 200,
-            'alert' => 'danger',
-            'msg' => "Une erreur s'est produite. La note n'a pas pu être enregistrée.",
         ], 200);
     }
 }

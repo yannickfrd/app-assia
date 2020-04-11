@@ -32,7 +32,6 @@ class ReferentController extends AbstractController
      * @Route("group/{id}/referent/new", name="referent_new", methods="GET|POST")
      *
      * @param int      $id       //GroupPeople
-     * @param Referent $referent
      */
     public function newReferent(int $id, Referent $referent = null, Request $request): Response
     {

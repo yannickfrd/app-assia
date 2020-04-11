@@ -23,6 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GroupPeopleController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repo;
 
@@ -130,7 +132,7 @@ class GroupPeopleController extends AbstractController
             return $this->removePersonInGroup($rolePerson);
         }
 
-        return $this->errorMessage();
+        return $this->getErrorMessage();
     }
 
     /**
@@ -229,18 +231,6 @@ class GroupPeopleController extends AbstractController
             'code' => 403,
             'alert' => 'danger',
             'msg' => "Vous n'avez pas les droits pour cette action. Demandez à un administrateur de votre service.",
-        ], 200);
-    }
-
-    /**
-     * Retourne un message d'erreur au format JSON.
-     */
-    protected function errorMessage(): Response
-    {
-        return $this->json([
-            'code' => 403,
-            'alert' => 'danger',
-            'msg' => "Une erreur s'est produite.",
         ], 200);
     }
 }

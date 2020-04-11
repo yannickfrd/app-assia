@@ -18,8 +18,7 @@
     <div class="container-fluid mt-4">
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Total : {{ users.getTotalItemCount | number_format(0,'', ' ')}} utilisateurs.
-                </p>
+                <p class="align-middle">Total : {{ users.getTotalItemCount | number_format(0,'', ' ')}} utilisateurs.</p>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(users) }}</div>
@@ -37,21 +36,11 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}
                         </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Fonction
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            Téléphone
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Email
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Service
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            Pôle
-                        </th>
+                        <th scope="col" class="align-middle th-w-120">Fonction</th>
+                        <th scope="col" class="align-middle th-w-120">Téléphone</th>
+                        <th scope="col" class="align-middle th-w-150">Email</th>
+                        <th scope="col" class="align-middle th-w-150">Service</th>
+                        <th scope="col" class="align-middle th-w-150">Pôle</th>
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(users, "Nombre de connexion", "u.loginCount") }}
                         </th>
@@ -73,12 +62,10 @@
                             {% if is_granted("EDIT", user) %}
                             <a href="{{ path('security_user', {'id':user.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir la fiche">
-                                <span class="fas fa-eye"></span>
+                                title="Voir la fiche"><span class="fas fa-eye"></span>
                             </a>
                             {% else %}
-                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span
-                                    class="fas fa-ban"></span></span>
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow"><span class="fas fa-ban"></span></span>
                             {% endif %}
                         </th>
                         <td class="text-uppercase">{{ user.lastname }}</td>
@@ -86,20 +73,17 @@
                         <td>{{ user.statusToString }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.email }}</td>
-                        <td>
-                        {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
-                            <a href="{{ path('service_edit', {'id': role.service.id}) }}"
-                                class="text-{{ theme_color }}">
-                                {{  role.service.name }}</a>, 
+                        <td>{% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
+                            <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
+                                class="text-{{ theme_color }}">{{  role.service.name }}</a>{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>
                         {% set poles = [] %}
                         <td>{% for role in user.serviceUser %}
                             {% if role.service.pole.id not in poles %}
                             {% set poles = poles|merge([role.service.pole.id]) %}
-                            <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}"
-                                class="text-{{ theme_color }}">
-                                {{  role.service.pole.name }}</a><br>
+                            <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
+                                class="text-{{ theme_color }}">{{  role.service.pole.name }}</a><br>
                             {% endif %}
                             {% endfor %}
                         </td>

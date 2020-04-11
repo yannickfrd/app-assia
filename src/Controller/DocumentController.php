@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DocumentController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repo;
     private $repoSupportGroup;
@@ -79,7 +81,7 @@ class DocumentController extends AbstractController
             return $this->createDocument($supportGroup, $form, $fileUploader, $document);
         }
 
-        return $this->errorMessage($form);
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -98,7 +100,7 @@ class DocumentController extends AbstractController
             return $this->updateDocument($document);
         }
 
-        return $this->errorMessage($form);
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -189,23 +191,6 @@ class DocumentController extends AbstractController
             'data' => [
                 'type' => $document->getTypeToString(),
             ],
-        ], 200);
-    }
-
-    /**
-     * Retourne un message d'erreur au format JSON.
-     */
-    protected function errorMessage($form): Response
-    {
-        $msg = [];
-        foreach ($form->getErrors(true) as $error) {
-            $msg[] = $error->getOrigin()->getName().' => '.$error->getMessage();
-        }
-
-        return $this->json([
-            'code' => 403,
-            'alert' => 'danger',
-            'msg' => "Une erreur s'est produite : ".join(' ', $msg),
         ], 200);
     }
 }

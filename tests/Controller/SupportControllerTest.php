@@ -37,8 +37,25 @@ class SupportControllerTest extends WebTestCase
 
     public function testViewListSupportsIsUp()
     {
+        $this->client->request('GET', $this->generateUri('supports'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Suivis');
+    }
+
+    public function testSearchSupportsIsSuccessful()
+    {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('supports'));
+
+        $form = $crawler->selectButton('search')->form([
+            'fullname' => 'John Doe',
+            'familyTypology' => 1,
+            'startDate' => '2018-01-01',
+            'endDate' => (new \DateTime())->format('Y-m-d'),
+        ]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Suivis');
@@ -54,6 +71,28 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Nouveau suivi social');
     }
 
+    public function testCreateNewSupportGroupIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_new', [
+            'id' => ($this->dataFixtures['groupPeople'])->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([
+            'support_group[service]' => 1,
+            'support_group[device]' => 1,
+            'support_group[status]' => 2,
+            'support_group[referent]' => 1,
+            'support_group[startDate]' => 2,
+            'support_group[agreement]' => true,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        // $this->assertSelectorExists('.alert.alert-success');
+    }
+
     public function testEditSupportGroupIsUp()
     {
         $this->client->request('GET', $this->generateUri('support_edit', [
@@ -62,6 +101,21 @@ class SupportControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Suivi social');
+    }
+
+    public function testEditSupportGroupIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_edit', [
+            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     public function testSuccessDeleteSupport()

@@ -26,10 +26,10 @@ export default class AutoLogout {
     // Compte le temps restant
     count() {
         this.time--;
-        if (this.time === 120) {
+        if (this.time === (5 * 60)) {
             this.modalElt.modal("show");
         }
-        if (this.time <= 120) {
+        if (this.time <= (5 * 60)) {
             this.timerElt.textContent = this.getFullTime();
         }
         if (this.time <= 0) {

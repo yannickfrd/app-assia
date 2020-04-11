@@ -37,11 +37,41 @@ class UserControllerTest extends WebTestCase
 
     public function testListUsersPageIsUp()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('users'));
+        $this->client->request('GET', $this->generateUri('users'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Utilisateurs');
+    }
+
+    public function testSearchUsersPageIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('users'));
+
+
+        $form = $crawler->selectButton('search')->form([
+            'lastname' => 'MADELAINE',
+            'firstname' => 'Romain',
+            'status' => 6,
+            'phone' => '01 00 00 00 00',
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('table tbody tr td', 'MADELAINE');
+    }
+
+    public function testExportPeopleIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('users'));
+
+        $form = $crawler->selectButton('export')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminListUsersIsUp()

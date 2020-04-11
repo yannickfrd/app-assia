@@ -50,11 +50,41 @@ class PoleControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Nouveau pôle');
     }
 
+    public function testCreateNewPoleIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('pole_new'));
+
+        $form = $crawler->selectButton('send')->form([
+            'pole[name]' => 'Pôle test',
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
     public function testEditPoleIsUp()
     {
         $this->client->request('GET', $this->generateUri('pole_edit', [
             'id' => $this->pole->getId(),
         ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', $this->pole->getName());
+    }
+
+    public function testEditPoleIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('pole_edit', [
+            'id' => $this->pole->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->pole->getName());

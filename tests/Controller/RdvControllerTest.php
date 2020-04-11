@@ -41,8 +41,24 @@ class RdvControllerTest extends WebTestCase
 
     public function testViewListRdvsIsUp()
     {
+        $this->client->request('GET', $this->generateUri('rdvs'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Rendez-vous');
+    }
+
+    public function testSearchRvsIsSuccessful()
+    {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('rdvs'));
+
+        $form = $crawler->selectButton('search')->form([
+            'title' => 'RDV 666',
+            'startDate' => '2020-01-01',
+            'endDate' => (new \DateTime())->format('Y-m-d'),
+        ]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
@@ -94,7 +110,7 @@ class RdvControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame('error', $data['action']);
+        $this->assertSame('danger', $data['alert']);
     }
 
     public function testFailToCreateNewRdv()
@@ -103,7 +119,7 @@ class RdvControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame('error', $data['action']);
+        $this->assertSame('danger', $data['alert']);
     }
 
     public function testGetRdv()
@@ -125,7 +141,7 @@ class RdvControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame('error', $data['action']);
+        $this->assertSame('danger', $data['alert']);
     }
 
     public function testDeleteRdv()

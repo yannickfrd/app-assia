@@ -9,7 +9,7 @@ use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
-class PersonControllerTest extends PantherTestCase
+class SupportControllerTest extends PantherTestCase
 {
     use FixturesTrait;
     use AppTestTrait;
@@ -187,7 +187,70 @@ class PersonControllerTest extends PantherTestCase
         //
         //
         //
+        //
         // Test de la page des rendez-vous
+
+        dump('Test : go to calendar page');
+
+        $link = $crawler->filter('a#scroll-top')->click();
+        sleep(1);
+
+        $link = $crawler->filter('a[title="Rendez-vous"]')->link();
+
+        /** @var Crawler */
+        $crawler = $this->client->click($link);
+
+        $this->assertSelectorTextContains('h1', 'Rendez-vous');
+        // $this->client->waitFor('#js-new-rdv');
+        sleep(1);
+
+        dump('Test : select a new rdv');
+
+        $crawler->selectButton('js-new-rdv')->click();
+        sleep(1); //pop-up effect
+
+        dump('Test : success to create a new rdv');
+
+        $form = $crawler->selectButton('js-btn-save')->form([
+            'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
+            'start' => '10:30',
+            'end' => '12:30',
+            'rdv[content]' => join('. ', $faker->paragraphs(mt_rand(1, 2))),
+            ]);
+
+        /** @var Crawler */
+        $crawler = $this->client->submit($form);
+        sleep(1);
+
+        $this->client->waitFor('#js-msg-flash', 2);
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        
+        $crawler->selectButton('btn-close-msg')->click();
+        sleep(1); //pop-up effect
+        
+        dump('Test : get an old rdv');
+        
+        $link = $crawler->filter('a.calendar-event')->eq(0)->click();
+        sleep(1); //pop-up effect
+        
+        dump('Test : success to edit an old rdv');
+        
+        $form = $crawler->selectButton('js-btn-save')->form([
+            'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
+            'rdv[content]' => join('. ', $faker->paragraphs(mt_rand(1, 2))),
+            ]);
+            
+        /** @var Crawler */
+        $crawler = $this->client->submit($form);
+
+        sleep(1);
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+
+        //
+        //
+        //
+        //
+        // Test de la page des documents
 
         dump('Test : go to documents page');
 
@@ -250,66 +313,5 @@ class PersonControllerTest extends PantherTestCase
 
         $crawler->selectButton('btn-close-msg')->click();
         // sleep(1);
-
-        //
-        //
-        //
-        //
-        //
-        // Test de la page des rendez-vous
-
-        dump('Test : go to calendar page');
-
-        $link = $crawler->filter('a#scroll-top')->click();
-        sleep(1);
-
-        $link = $crawler->filter('a[title="Rendez-vous"]')->link();
-
-        /** @var Crawler */
-        $crawler = $this->client->click($link);
-
-        $this->assertSelectorTextContains('h1', 'Rendez-vous');
-        // $this->client->waitFor('#js-new-rdv');
-        sleep(1);
-
-        dump('Test : select a new rdv');
-
-        $crawler->selectButton('js-new-rdv')->click();
-        sleep(1); //pop-up effect
-
-        dump('Test : success to create a rdv');
-
-        $form = $crawler->selectButton('js-btn-save')->form([
-            'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
-            'start' => '10:30',
-            'end' => '12:30',
-            'rdv[content]' => join('. ', $faker->paragraphs(mt_rand(1, 2))),
-            ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
-        sleep(1);
-
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
-
-        dump('Test : get an old rdv');
-
-        $link = $crawler->filter('a.calendar-event')->eq(0)->click();
-        sleep(1); //pop-up effect
-
-        dump('Test : success to edit an old rdv');
-
-        $form = $crawler->selectButton('js-btn-save')->form([
-            'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
-            'rdv[content]' => join('. ', $faker->paragraphs(mt_rand(1, 2))),
-        ]);
-
-        $crawler = $this->client->submit($form);
-
-        sleep(1);
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
     }
 }

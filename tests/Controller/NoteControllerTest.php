@@ -41,10 +41,28 @@ class NoteControllerTest extends WebTestCase
 
     public function testListNotesIsUp()
     {
+        $this->client->request('GET', $this->generateUri('support_notes', [
+            'id' => $this->supportGroup->getId(),
+        ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Notes sociales');
+    }
+
+    public function testSearchNotesIsSuccessful()
+    {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('support_notes', [
             'id' => $this->supportGroup->getId(),
         ]));
+
+        $form = $crawler->selectButton('search')->form([
+            'note_search[content]' => 'Note 666',
+            'note_search[type]' => 1,
+            'note_search[status]' => 1,
+        ]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Notes sociales');

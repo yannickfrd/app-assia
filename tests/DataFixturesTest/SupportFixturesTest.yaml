@@ -92,3 +92,13 @@ App\Entity\Pole:
 App\Entity\Device:
   device:
     name: AVDL
+
+App\Entity\Organization:
+  organization1:
+    name: ESPERER 95
+    type: <numberBetween(1, 9)>
+    comment: <sentence(6, true)>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"

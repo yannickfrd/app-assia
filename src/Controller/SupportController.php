@@ -31,6 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SupportController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repoSupportGroup;
     private $repoSupportPerson;
@@ -253,7 +255,7 @@ class SupportController extends AbstractController
             ], 200);
         }
 
-        return $this->errorMessage();
+        return $this->getErrorMessage();
     }
 
     /**
@@ -406,17 +408,5 @@ class SupportController extends AbstractController
                 $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
             }
         }
-    }
-
-    /**
-     * Retourne un message d'erreur au format JSON.
-     */
-    protected function errorMessage(): Response
-    {
-        return $this->json([
-            'code' => 403,
-            'alert' => 'danger',
-            'msg' => "Une erreur s'est produite. La personne n'a pas été retiré du suivi.",
-        ], 200);
     }
 }

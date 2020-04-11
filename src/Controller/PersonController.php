@@ -2,31 +2,34 @@
 
 namespace App\Controller;
 
-use App\Entity\GroupPeople;
 use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Export\PersonExport;
-use App\Form\Model\PersonSearch;
-use App\Form\Person\PersonNewGroupType;
-use App\Form\Person\PersonRolePersonType;
-use App\Form\Person\PersonSearchType;
-use App\Form\Person\PersonType;
-use App\Form\Person\RolePersonGroupType;
-use App\Form\RolePerson\RolePersonType;
-use App\Repository\PersonRepository;
 use App\Service\Grammar;
+use App\Entity\RolePerson;
+use App\Entity\GroupPeople;
 use App\Service\Pagination;
+use App\Export\PersonExport;
+use App\Service\Normalisation;
+use App\Form\Person\PersonType;
+use App\Form\Model\PersonSearch;
+use App\Repository\PersonRepository;
+use App\Form\Person\PersonSearchType;
+use App\Form\Person\PersonNewGroupType;
+use App\Form\RolePerson\RolePersonType;
+use App\Form\Person\RolePersonGroupType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Person\PersonRolePersonType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PersonController extends AbstractController
 {
+    use ErrorMessageTrait;
+
     private $manager;
     private $repo;
 
@@ -214,7 +217,7 @@ class PersonController extends AbstractController
      *
      * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
      */
-    public function editPerson(Person $person, Request $request, ValidatorInterface $validator): Response
+    public function editPerson(Person $person, Request $request): Response
     {
         $form = ($this->createForm(PersonType::class, $person))
             ->handleRequest($request);
@@ -223,7 +226,7 @@ class PersonController extends AbstractController
             return $this->updatePerson($person);
         }
 
-        return $this->errorMessage($validator, $form);
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -443,25 +446,5 @@ class PersonController extends AbstractController
         $this->addFlash('success', 'Le nouveau groupe a été créé.');
 
         return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
-    }
-
-    /**
-     * Retourne un message d'erreur au format JSON.
-     *
-     * @param ValidatorInterface $validator
-     */
-    protected function errorMessage(ValidatorInterface $validator = null, $form): Response
-    {
-        $errors = $validator->validate($form);
-        $msg = [];
-        foreach ($errors as $error) {
-            $msg[] = $error->getMessage();
-        }
-
-        return $this->json([
-            'code' => 403,
-            'alert' => 'danger',
-            'msg' => "Une erreur s'est produite : ".join(' ', $msg),
-        ], 200);
     }
 }

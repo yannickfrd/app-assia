@@ -42,12 +42,49 @@ class ServiceControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Services');
     }
 
+    public function testSearchServicesIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('services'));
+
+        $form = $crawler->selectButton('search')->form([
+            'name' => 'AVDL',
+            'city' => 'Pontoise',
+            'phone' => '01 00 00 00 00',
+            'pole' => 1,
+
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Services');
+    }
+
     public function testNewServiceIsUp()
     {
         $this->client->request('GET', $this->generateUri('service_new'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau service');
+    }
+
+    public function testCreateNewServiceIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('service_new'));
+
+        $form = $crawler->selectButton('send')->form([
+            'service[name]' => 'Service test',
+            'service[city]' => 'Pontoise',
+            'service[phone]' => '01 00 00 00 00',
+            'service[pole]' => 1,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     public function testEditServiceisUp()
@@ -58,6 +95,21 @@ class ServiceControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->service->getName());
+    }
+
+    public function testEditServiceisSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('service_edit', [
+            'id' => $this->service->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     protected function tearDown(): void

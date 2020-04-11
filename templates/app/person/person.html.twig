@@ -98,7 +98,7 @@ Esperer95.app
                 <div class="mb-4 float-right">
                     {% if edit_mode %}
                     <button type="submit" id="updatePerson" name="updatePerson"
-                        class="btn btn-{{ theme_color }} btn-sm shadow"
+                        class="btn btn-{{ theme_color }} shadow"
                         data-url="{{ path('person_edit_ajax', {'id':person.id}) }}"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
                     {% else %}
                 	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>

@@ -6,6 +6,7 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class EvaluationControllerTest extends WebTestCase
@@ -50,6 +51,21 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('support_evaluation_show', [
             'id' => ($this->dataFixtures['supportGroupWithEval'])->getId(),
         ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Évaluation sociale');
+    }
+
+    public function testEditEvaluation()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_evaluation_show', [
+            'id' => ($this->dataFixtures['supportGroupWithEval'])->getId(),
+        ]));
+
+        $form = $crawler->selectButton('send')->form([]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
