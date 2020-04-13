@@ -68,7 +68,12 @@ class ServiceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createService($service);
+            $this->manager->persist($service);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le service a été créé.');
+
+            return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
 
         return $this->render('app/service/service.html.twig', [
@@ -95,7 +100,10 @@ class ServiceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('EDIT', $service);
-            $this->updateService($service);
+
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Les modifications ont été enregistrées.');
         }
 
         return $this->render('app/service/service.html.twig', [
@@ -115,38 +123,5 @@ class ServiceController extends AbstractController
         $export = new ServiceExport();
 
         return $export->exportData($services);
-    }
-
-    /**
-     * Crée un service.
-     */
-    protected function createService(Service $service)
-    {
-        $now = new \DateTime();
-
-        $service->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($service);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le service a été créé.');
-
-        return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
-    }
-
-    /**
-     * Met à jour un service.
-     */
-    protected function updateService(Service $service)
-    {
-        $service->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
     }
 }

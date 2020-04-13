@@ -8,7 +8,6 @@ use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Service\Pagination;
 use App\Export\PersonExport;
-use App\Service\Normalisation;
 use App\Form\Person\PersonType;
 use App\Form\Model\PersonSearch;
 use App\Repository\PersonRepository;
@@ -21,7 +20,6 @@ use App\Form\Person\PersonRolePersonType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -173,8 +171,6 @@ class PersonController extends AbstractController
         ]);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $person->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->getUser());
             $this->manager->flush();
         }
 
@@ -325,24 +321,15 @@ class PersonController extends AbstractController
             return;
         }
 
-        $now = new \DateTime();
-
-        $groupPeople->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
         $this->manager->persist($groupPeople);
 
         $rolePerson->setHead(true)
-            ->setCreatedAt($now)
             ->setGroupPeople($groupPeople);
+
         $this->manager->persist($rolePerson);
 
-        $person->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser())
-            ->addRolesPerson($rolePerson);
+        $person->addRolesPerson($rolePerson);
+
         $this->manager->persist($person);
 
         $this->manager->flush();
@@ -373,18 +360,11 @@ class PersonController extends AbstractController
      */
     protected function createPersonInGroup(Person $person, RolePerson $rolePerson = null, GroupPeople $groupPeople)
     {
-        $now = new \DateTime();
-
         $rolePerson->setHead(false)
-            ->setCreatedAt($now)
             ->setGroupPeople($groupPeople);
         $this->manager->persist($rolePerson);
 
-        $person->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser())
-            ->addRolesPerson($rolePerson);
+        $person->addRolesPerson($rolePerson);
         $this->manager->persist($person);
 
         $nbPeople = $groupPeople->getRolePerson()->count();
@@ -400,11 +380,6 @@ class PersonController extends AbstractController
      */
     protected function updatePerson(Person $person): Response
     {
-        $now = new \DateTime();
-
-        $person->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
         $this->manager->flush();
 
         return $this->json([
@@ -412,7 +387,7 @@ class PersonController extends AbstractController
             'alert' => 'success',
             'msg' => 'Les modifications ont été enregistrées.',
             'user' => $this->getUser()->getFullname(),
-            'date' => date_format($now, 'd/m/Y à H:i'),
+            'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
         ], 200);
     }
 
@@ -421,24 +396,17 @@ class PersonController extends AbstractController
      */
     protected function createNewGroupToPerson(Person $person, RolePerson $rolePerson)
     {
-        $now = new \DateTime();
-
         $groupPeople = $rolePerson->getGroupPeople();
 
-        $groupPeople->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
         $this->manager->persist($groupPeople);
 
         $rolePerson->setHead(true)
-            ->setCreatedAt($now)
             ->setGroupPeople($groupPeople);
+
         $this->manager->persist($rolePerson);
 
-        $person->addRolesPerson($rolePerson)
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $person->addRolesPerson($rolePerson);
+
         $this->manager->persist($person);
 
         $this->manager->flush();

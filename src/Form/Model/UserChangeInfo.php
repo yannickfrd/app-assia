@@ -15,7 +15,7 @@ class UserChangeInfo
     /**
      * @Assert\Length(min = 10,max = 15)
      */
-    private $phone;
+    private $phone1;
 
     /**
      * @Assert\Length(min = 10,max = 15)
@@ -34,14 +34,14 @@ class UserChangeInfo
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getPhone1(): ?string
     {
-        return $this->phone;
+        return $this->phone1;
     }
 
-    public function setPhone(?string $phone): self
+    public function setPhone1(?string $phone1): self
     {
-        $this->phone = $phone;
+        $this->phone1 = $phone1;
 
         return $this;
     }

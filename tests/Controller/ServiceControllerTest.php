@@ -52,7 +52,6 @@ class ServiceControllerTest extends WebTestCase
             'city' => 'Pontoise',
             'phone' => '01 00 00 00 00',
             'pole' => 1,
-
         ]);
 
         $this->client->submit($form);
@@ -77,7 +76,7 @@ class ServiceControllerTest extends WebTestCase
         $form = $crawler->selectButton('send')->form([
             'service[name]' => 'Service test',
             'service[city]' => 'Pontoise',
-            'service[phone]' => '01 00 00 00 00',
+            'service[phone1]' => '01 00 00 00 00',
             'service[pole]' => 1,
         ]);
 

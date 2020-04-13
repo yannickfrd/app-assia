@@ -54,8 +54,8 @@ class ReferentControllerTest extends WebTestCase
         $form = $crawler->selectButton('send')->form([
             'referent[name]' => 'Référent test',
             'referent[type]' => 1,
-            'referent[socialWorker]' => "XXXX",
-            'referent[socialWorker2]' => "XXXX",
+            'referent[socialWorker]' => 'XXXX',
+            'referent[socialWorker2]' => 'XXXX',
         ]);
 
         $this->client->submit($form);

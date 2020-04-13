@@ -48,10 +48,8 @@ class AccommodationTest extends WebTestCase
             ->setPlacesNumber($faker->numberBetween(1, 10))
             ->setOpeningDate($faker->dateTimeBetween('-10 years', 'now'))
             ->setCity($faker->city)
-            ->setDepartment($faker->numberBetween(1, 95))
-            ->setAddress($faker->address)
-            ->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setZipCode($faker->numberBetween(1, 95))
+            ->setAddress($faker->address);
     }
 
     public function testValidAccommodation()

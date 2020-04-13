@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use App\Entity\Traits\LocationEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationRepository")
@@ -15,9 +19,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     fields={"name", "service"},
  *     errorPath="name",
  *     message="Ce groupe de places existe déjà !")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Accommodation
 {
+    use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
+    use LocationEntityTrait;
+
     public const ACCOMMODATION_TYPE = [
         1 => 'Chambre individuelle',
         2 => 'Chambre collective',
@@ -79,19 +88,9 @@ class Accommodation
     private $closingDate;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(name="department", length=10, nullable=true)
      */
-    private $city;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $department;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $address;
+    private $zipCode; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -118,26 +117,6 @@ class Accommodation
      * @ORM\JoinColumn(nullable=false)
      */
     private $service;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notesCreated")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notesUpdated")
-     */
-    private $updatedBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Device", inversedBy="accommodations")
@@ -189,42 +168,6 @@ class Accommodation
     public function setPlacesNumber(?int $placesNumber): self
     {
         $this->placesNumber = $placesNumber;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getDepartment(): ?string
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(?string $department): self
-    {
-        $this->department = $department;
 
         return $this;
     }
@@ -333,54 +276,6 @@ class Accommodation
     public function setService(?Service $service): self
     {
         $this->service = $service;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }

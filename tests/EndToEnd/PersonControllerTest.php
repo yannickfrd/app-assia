@@ -6,7 +6,7 @@ use App\Entity\Person;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Component\Panther\Client as PantherClient;
-use Symfony\Component\Panther\DomCrawler\Crawler as PanterCrawler;
+use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
 class PersonControllerTest extends PantherTestCase
@@ -36,14 +36,29 @@ class PersonControllerTest extends PantherTestCase
     {
         $this->createPantherLogin();
 
+        dump('Test : go to people search page');
+
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generatePantherUri('people'));
+
+        $form = $crawler->selectButton('search')->form([
+            'firstname' => 'John',
+            'lastname' => 'DOE',
+        ]);
+
+        /** @var Crawler */
+        $crawler = $this->client->submit($form);
+
+        $this->client->waitFor('table');
+
+        $link = $crawler->selectLink('DOE')->link();
+
         dump('Test : go to person page');
 
-        /** @var PanterCrawler */
-        $crawler = $this->client->request('GET', $this->generatePantherUri('group_person_show', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
-            'person_id' => $this->person->getId(),
-            'slug' => $this->person->getSlug(),
-        ]));
+        /** @var Crawler */
+        $crawler = $this->client->click($link);
+
+        $this->client->waitFor('#updatePerson');
 
         dump('Test : update information from the person');
 
@@ -62,8 +77,8 @@ class PersonControllerTest extends PantherTestCase
         // testPantherSuccessToAddNewGroupToPerson
         $this->client->waitFor('#btn-new-group');
         $crawler->selectButton('btn-new-group')->click();
-
         sleep(1); // $this->client->waitFor("#js-btn-confirm");
+
         $form = $crawler->selectButton('js-btn-confirm')->form([
             'person_new_group[groupPeople][familyTypology]' => 1,
             'person_new_group[groupPeople][nbPeople]' => 1,

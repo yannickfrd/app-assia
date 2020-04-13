@@ -157,7 +157,7 @@ class RdvController extends AbstractController
      * @Route("support/{id}/rdv/new", name="support_rdv_new", methods="POST")
      * @Route("rdv/new", name="rdv_new", methods="POST")
      *
-     * @param int $id  // SupportGroup
+     * @param int $id // SupportGroup
      */
     public function newRdv(int $id = null, SupportGroupRepository $repoSupport, Rdv $rdv = null, Request $request): Response
     {
@@ -258,13 +258,7 @@ class RdvController extends AbstractController
      */
     protected function createRdv(Rdv $rdv, SupportGroup $supportGroup = null): Response
     {
-        $now = new \DateTime();
-
-        $rdv->setSupportGroup($supportGroup)
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $rdv->setSupportGroup($supportGroup);
 
         $this->manager->persist($rdv);
         $this->manager->flush();
@@ -288,9 +282,6 @@ class RdvController extends AbstractController
      */
     protected function updateRdv(Rdv $rdv, string $typeSave): Response
     {
-        $rdv->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
         $this->manager->flush();
 
         return $this->json([

@@ -139,9 +139,7 @@ class DocumentController extends AbstractController
 
         $groupPeople = $supportGroup->getGroupPeople();
 
-        $now = new \DateTime();
-
-        $path = '/'.$groupPeople->getId().'/'.$now->format('Y/m');
+        $path = '/'.$groupPeople->getId().'/'.(new \DateTime())->format('Y/m');
 
         $fileName = $fileUploader->upload($file, $path);
 
@@ -150,10 +148,7 @@ class DocumentController extends AbstractController
         $document->setInternalFileName($fileName)
             ->setSize($size)
             ->setGroupPeople($groupPeople)
-            ->setSupportGroup($supportGroup)
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now);
+            ->setSupportGroup($supportGroup);
 
         $this->manager->persist($document);
         $this->manager->flush();
@@ -169,7 +164,7 @@ class DocumentController extends AbstractController
                 'type' => $document->getTypeToString(),
                 'path' => $path.'/'.$fileName,
                 'size' => $size,
-                'createdAt' => date_format($now, 'd/m/Y H:i'),
+                'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
             ],
         ], 200);
     }
@@ -179,8 +174,6 @@ class DocumentController extends AbstractController
      */
     protected function updateDocument(Document $document): Response
     {
-        $document->setUpdatedAt(new \DateTime());
-
         $this->manager->flush();
 
         return $this->json([

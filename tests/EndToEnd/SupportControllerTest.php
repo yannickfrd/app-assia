@@ -35,7 +35,7 @@ class SupportControllerTest extends PantherTestCase
 
         // Test de la page du suivi social
 
-        dump('Test : go to supports page');
+        dump('Test : go to supports search page');
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generatePantherUri('supports'));
@@ -224,27 +224,30 @@ class SupportControllerTest extends PantherTestCase
 
         $this->client->waitFor('#js-msg-flash', 2);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-        
+
         $crawler->selectButton('btn-close-msg')->click();
         sleep(1); //pop-up effect
-        
+
         dump('Test : get an old rdv');
-        
+
         $link = $crawler->filter('a.calendar-event')->eq(0)->click();
         sleep(1); //pop-up effect
-        
+
         dump('Test : success to edit an old rdv');
-        
+
         $form = $crawler->selectButton('js-btn-save')->form([
             'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
             'rdv[content]' => join('. ', $faker->paragraphs(mt_rand(1, 2))),
             ]);
-            
+
         /** @var Crawler */
         $crawler = $this->client->submit($form);
 
         sleep(1);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+
+        $crawler->selectButton('btn-close-msg')->click();
+        sleep(1); //pop-up effect
 
         //
         //

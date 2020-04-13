@@ -2,16 +2,23 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SupportGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class SupportGroup
 {
+    use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
+
     public const STATUS = [
         1 => 'Orientation / Pré-admission',
         2 => 'En cours',
@@ -123,30 +130,16 @@ class SupportGroup
     private $comment;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supports")
      */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updatedAt;
+    private $createdBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="supports")
      * @ORM\JoinColumn(nullable=false)
      */
     private $groupPeople;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGroupCreated")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supportsGroupUpdated")
-     */
-    private $updatedBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="supportGroup", orphanRemoval=true)
@@ -345,30 +338,6 @@ class SupportGroup
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     public function getGroupPeople(): ?GroupPeople
     {
         return $this->groupPeople;
@@ -377,30 +346,6 @@ class SupportGroup
     public function setGroupPeople(?GroupPeople $groupPeople): self
     {
         $this->groupPeople = $groupPeople;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }

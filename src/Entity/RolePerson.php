@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,9 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     fields={"person", "groupPeople"},
  *     errorPath="person",
  *     message="Cette personne est déjà dans le groupe.")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class RolePerson
 {
+    use SoftDeleteableEntity;
+
     public const ROLE = [
         1 => 'Conjoint·e',
         2 => 'Époux/se',
@@ -77,14 +82,11 @@ class RolePerson
     private $groupPeople;
 
     /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $createdBy;
 
     public function getId(): ?int
     {
@@ -157,18 +159,6 @@ class RolePerson
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?int
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?int $createdBy): self
-    {
-        $this->createdBy = $createdBy;
 
         return $this;
     }

@@ -2,14 +2,17 @@
 
 namespace App\Entity;
 
-use App\Service\Phone;
+use App\Entity\Traits\ContactEntityTrait;
 use Cocur\Slugify\Slugify;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
@@ -17,9 +20,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     fields={"firstname", "lastname", "birthdate"},
  *     errorPath="firstname",
  *     message="Cette personne existe déjà !")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Person
 {
+    use CreatedUpdatedEntityTrait;
+    use ContactEntityTrait;
+    use SoftDeleteableEntity;
+
     public const GENDER = [
         1 => 'Femme',
         2 => 'Homme',
@@ -101,24 +109,6 @@ class Person
     private $genderToString;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
-     */
-    private $phone1;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
-     */
-    private $phone2;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     * @Assert\Email(message="L'adresse email n'est pas valide.")
-     */
-    private $email;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $contactOtherPerson;
@@ -127,26 +117,6 @@ class Person
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
-     */
-    private $updatedBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="person", orphanRemoval=true, cascade={"persist"})
@@ -165,7 +135,6 @@ class Person
 
     public function __construct()
     {
-        $this->updatedAt = new \DateTime();
         $this->rolesPerson = new ArrayCollection();
         $this->supports = new ArrayCollection();
         $this->accommodationPersons = new ArrayCollection();
@@ -292,42 +261,6 @@ class Person
         return self::GENDER[$this->gender];
     }
 
-    public function getPhone1(): ?string
-    {
-        return Phone::getPhoneFormat($this->phone1);
-    }
-
-    public function setPhone1(?string $phone1): self
-    {
-        $this->phone1 = Phone::formatPhone($phone1);
-
-        return $this;
-    }
-
-    public function getPhone2(): ?string
-    {
-        return Phone::getPhoneFormat($this->phone2);
-    }
-
-    public function setPhone2(?string $phone2): self
-    {
-        $this->phone2 = Phone::formatPhone($phone2);
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getContactOtherPerson(): ?string
     {
         return $this->contactOtherPerson;
@@ -348,54 +281,6 @@ class Person
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }

@@ -33,10 +33,8 @@ class AccommodationGroupController extends AbstractController
      * Liste des hébergements du suivi social.
      *
      * @Route("support/{id}/accommodations", name="support_accommodations", methods="GET")
-     *
-     * @param int $id
      */
-    public function listSupportAccommodations($id, SupportGroupRepository $supportRepo): Response
+    public function listSupportAccommodations(int $id, SupportGroupRepository $supportRepo): Response
     {
         $supportGroup = $supportRepo->findSupportById($id);
 
@@ -186,13 +184,7 @@ class AccommodationGroupController extends AbstractController
      */
     protected function createAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
-        $now = new \DateTime();
-
-        $accommodationGroup->setGroupPeople($accommodationGroup->getSupportGroup()->getGroupPeople())
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $accommodationGroup->setGroupPeople($accommodationGroup->getSupportGroup()->getGroupPeople());
 
         $this->manager->persist($accommodationGroup);
 
@@ -212,17 +204,7 @@ class AccommodationGroupController extends AbstractController
      */
     protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
-        $now = new \DateTime();
-
-        $accommodationGroup->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
         foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPerson) {
-            $accommodationPerson
-                // ->setAccommodation($accommodationGroup->getAccommodation())
-                ->setUpdatedAt($now)
-                ->setUpdatedBy($this->getUser());
-
             if (null == $accommodationPerson->getEndDate()) {
                 $accommodationPerson->setEndDate($accommodationGroup->getEndDate());
             }
@@ -255,16 +237,11 @@ class AccommodationGroupController extends AbstractController
 
         foreach ($accommodationGroup->getSupportGroup()->getGroupPeople()->getrolePerson() as $rolePerson) {
             if (!in_array($rolePerson->getPerson()->getId(), $people)) {
-                $now = new \DateTime();
                 $accommodationPerson = (new AccommodationPerson())
                     ->setAccommodationGroup($accommodationGroup)
                     ->setPerson($rolePerson->getPerson())
                     ->setStartDate($accommodationGroup->getStartDate())
-                    ->setEndDate($accommodationGroup->getEndDate())
-                    ->setCreatedAt($now)
-                    ->setCreatedBy($this->getUser())
-                    ->setUpdatedAt($now)
-                    ->setUpdatedBy($this->getUser());
+                    ->setEndDate($accommodationGroup->getEndDate());
 
                 $this->manager->persist($accommodationPerson);
             }

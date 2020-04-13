@@ -65,8 +65,9 @@ class OriginRequestController extends AbstractController
      */
     protected function updateOriginRequest(OriginRequest $originRequest)
     {
-        $originRequest->getSupportGroup()->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
+        $originRequest->getSupportGroup()
+                        ->setUpdatedAt(new \DateTime())
+                        ->setUpdatedBy($this->getUser());
 
         $this->manager->persist($originRequest);
         $this->manager->flush();

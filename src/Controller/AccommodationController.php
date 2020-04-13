@@ -68,8 +68,14 @@ class AccommodationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createAccommodation($accommodation, $service);
+            $this->manager->persist($accommodation);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le groupe de places a été créé.');
+
+            return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
+
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash('danger', "Une erreur s'est produite.");
         }
@@ -94,7 +100,11 @@ class AccommodationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('EDIT', $accommodation->getService());
 
-            return $this->updateAccommodation($accommodation);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+
+            return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
         }
 
         return $this->render('app/accommodation/accommodation.html.twig', [
@@ -115,41 +125,6 @@ class AccommodationController extends AbstractController
         $this->manager->flush();
 
         $this->addFlash('danger', 'Le groupe de places a été supprimé.');
-
-        return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
-    }
-
-    /**
-     * Crée un groupe de places.
-     */
-    protected function createAccommodation(Accommodation $accommodation, Service $service)
-    {
-        $now = new \DateTime();
-
-        $accommodation->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($accommodation);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le groupe de places a été créé.');
-
-        return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
-    }
-
-    /**
-     * Met à jour un groupe de place.
-     */
-    protected function updateAccommodation(Accommodation $accommodation)
-    {
-        $accommodation->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
 
         return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
     }

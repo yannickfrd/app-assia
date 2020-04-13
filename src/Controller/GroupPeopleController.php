@@ -140,9 +140,6 @@ class GroupPeopleController extends AbstractController
      */
     protected function updateGroupPeople(GroupPeople $groupPeople)
     {
-        $groupPeople->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
         $this->manager->flush();
 
         $this->addFlash('success', 'Les modifications ont été enregistrées.');
@@ -162,8 +159,7 @@ class GroupPeopleController extends AbstractController
 
         $rolePerson
             ->setHead(false)
-            ->setGroupPeople($groupPeople)
-            ->setCreatedAt(new \DateTime());
+            ->setGroupPeople($groupPeople);
 
         $person->addRolesPerson($rolePerson);
 

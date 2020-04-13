@@ -168,7 +168,7 @@ class C_GroupPeopleFixtures extends Fixture
             ->setBirthdate($this->birthdate)
             ->setGender($this->sex)
             ->setEmail($this->faker->freeEmail())
-            ->setphone1($phone)
+            ->setPhone1($phone)
             ->setCreatedAt($this->groupCreatedAt)
             ->setUpdatedAt($this->groupUpdatedAt)
             ->setCreatedBy($this->user)

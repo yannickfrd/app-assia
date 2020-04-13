@@ -63,7 +63,7 @@
                         <td class="text-uppercase">{{ user.lastname }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.statusToString }}</td>
-                        <td>{{ user.phone }}</td>
+                        <td>{{ user.phone1}}</td>
                         <td>{{ user.email }}</td>
                         <td>
                             {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}

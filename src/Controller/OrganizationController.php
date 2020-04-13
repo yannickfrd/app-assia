@@ -53,7 +53,12 @@ class OrganizationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createOrganization($organization);
+            $this->manager->persist($organization);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le dispositif a été créé.');
+
+            return $this->redirectToRoute('admin_organizations');
         }
 
         return $this->render('app/organization/organization.html.twig', [
@@ -74,7 +79,11 @@ class OrganizationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateOrganization($organization);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+
+            return $this->redirectToRoute('admin_organizations');
         }
 
         $this->addFlash('success', 'Le dispositif a été mis à jour.');
@@ -83,40 +92,5 @@ class OrganizationController extends AbstractController
             'form' => $form->createView(),
             'edit_mode' => true,
         ]);
-    }
-
-    /**
-     * Crée un dispositif.
-     */
-    protected function createOrganization(Organization $organization)
-    {
-        $now = new \DateTime();
-
-        $organization->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($organization);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le dispositif a été créé.');
-
-        return $this->redirectToRoute('admin_organizations');
-    }
-
-    /**
-     * Met à jour un dispositif.
-     */
-    protected function updateOrganization(Organization $organization)
-    {
-        $organization->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
-
-        return $this->redirectToRoute('admin_organizations');
     }
 }

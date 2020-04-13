@@ -1,7 +1,7 @@
 App\Entity\Pole:
   pole1:
     name: Habitat
-    phone: <fr_FR:phoneNumber()>
+    phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     city: Pontoise
     zipCode: 95 000
@@ -14,7 +14,7 @@ App\Entity\Pole:
 
   pole{2..5}:
     name: <sentence(3, true)>
-    phone: <fr_FR:phoneNumber()>
+    phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     city: <fr_FR:city()>
     zipCode: <numberBetween(1, 95)>

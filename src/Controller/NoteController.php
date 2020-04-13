@@ -128,13 +128,7 @@ class NoteController extends AbstractController
      */
     protected function createNote(SupportGroup $supportGroup, Note $note): Response
     {
-        $now = new \DateTime();
-
-        $note->setSupportGroup($supportGroup)
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $note->setSupportGroup($supportGroup);
 
         $this->manager->persist($note);
         $this->manager->flush();
@@ -148,7 +142,7 @@ class NoteController extends AbstractController
                 'noteId' => $note->getId(),
                 'type' => $note->getTypeToString(),
                 'status' => $note->getStatusToString(),
-                'editInfo' => '| Créé le '.date_format($now, 'd/m/Y à H:i').' par '.$note->getCreatedBy()->getFullname(),
+                'editInfo' => '| Créé le '.$note->getCreatedAt()->format('d/m/Y à H:i').' par '.$note->getCreatedBy()->getFullname(),
             ],
         ], 200);
     }
@@ -158,9 +152,6 @@ class NoteController extends AbstractController
      */
     protected function updateNote(Note $note, $typeSave): Response
     {
-        $note->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
         $this->manager->flush();
 
         return $this->json([
@@ -172,7 +163,7 @@ class NoteController extends AbstractController
                 'noteId' => $note->getId(),
                 'type' => $note->getTypeToString(),
                 'status' => $note->getStatusToString(),
-                'editInfo' => '(modifié le '.date_format($note->getUpdatedAt(), 'd/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
+                'editInfo' => '(modifié le '.$note->getUpdatedAt()->format('d/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
             ],
         ], 200);
     }

@@ -115,7 +115,11 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateSupportGroup($supportGroup);
+            $this->updateSupportPeople($supportGroup);
+
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le suivi social a été modifié.');
         }
 
         if (!$form->isSubmitted() && $supportGroup->getService()->getAccommodation() && 0 == count($supportGroup->getAccommodationGroups())) {
@@ -161,9 +165,6 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportGroup->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->getUser());
-
             $this->manager->flush();
 
             $this->addFlash('success', 'Le suivi social a été modifié.');
@@ -206,9 +207,6 @@ class SupportController extends AbstractController
         }
 
         if ($addPeople) {
-            $supportGroup->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->getUser());
-
             $this->manager->flush();
         } else {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
@@ -321,13 +319,7 @@ class SupportController extends AbstractController
      */
     protected function createSupportGroup(GroupPeople $groupPeople, SupportGroup $supportGroup): Response
     {
-        $now = new \DateTime();
-
-        $supportGroup->setGroupPeople($groupPeople)
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $supportGroup->setGroupPeople($groupPeople);
 
         $this->manager->persist($supportGroup);
 
@@ -356,39 +348,18 @@ class SupportController extends AbstractController
      */
     protected function createSupportPerson(RolePerson $rolePerson, SupportGroup $supportGroup)
     {
-        $now = new \DateTime();
-        $supportPerson = new SupportPerson();
-
-        $supportPerson->setSupportGroup($supportGroup)
+        $supportPerson = (new SupportPerson())
+            ->setSupportGroup($supportGroup)
             ->setPerson($rolePerson->getPerson())
             ->setHead($rolePerson->getHead())
             ->setRole($rolePerson->getRole())
             ->setStartDate($supportGroup->getStartDate())
             ->setEndDate($supportGroup->getEndDate())
-            ->setStatus($supportGroup->getStatus())
-            ->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setStatus($supportGroup->getStatus());
 
         $this->manager->persist($supportPerson);
 
         return $supportPerson;
-    }
-
-    /**
-     * Met à jour le suivi social du groupe.
-     */
-    protected function updateSupportGroup(SupportGroup $supportGroup)
-    {
-        $supportGroup->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->updateSupportPeople($supportGroup);
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le suivi social a été modifié.');
-
-        return;
     }
 
     /**

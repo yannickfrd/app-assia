@@ -53,7 +53,12 @@ class DeviceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createDevice($device);
+            $this->manager->persist($device);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le dispositif a été créé.');
+
+            return $this->redirectToRoute('admin_devices');
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
@@ -78,7 +83,11 @@ class DeviceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateDevice($device);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+
+            return $this->redirectToRoute('admin_devices');
         }
 
         $this->addFlash('success', 'Le dispositif a été mis à jour.');
@@ -87,40 +96,5 @@ class DeviceController extends AbstractController
             'form' => $form->createView(),
             'edit_mode' => true,
         ]);
-    }
-
-    /**
-     * Crée un dispositif.
-     */
-    protected function createDevice(Device $device)
-    {
-        $now = new \DateTime();
-
-        $device->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($device);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le dispositif a été créé.');
-
-        return $this->redirectToRoute('admin_devices');
-    }
-
-    /**
-     * Met à jour un dispositif.
-     */
-    protected function updateDevice(Device $device)
-    {
-        $device->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
-
-        return $this->redirectToRoute('admin_devices');
     }
 }

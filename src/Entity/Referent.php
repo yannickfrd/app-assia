@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ContactEntityTrait;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Referent
 {
+    use CreatedUpdatedEntityTrait;
+    use LocationEntityTrait;
+    use ContactEntityTrait;
+
     public const TYPE = [
         1 => '115/AMH',
         2 => 'Accueil de jour',
@@ -54,63 +61,24 @@ class Referent
     private $socialWorker2;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(name="email1", type="string", length=100, nullable=true)
      */
-    private $email1;
+    private $email;
+
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $email2;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(name="departement", length=10, nullable=true)
      */
-    private $phone1;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $phone2;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $city;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $departement;
+    private $zipCode; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
-     */
-    private $updatedBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="referents")
@@ -176,18 +144,6 @@ class Referent
         return $this;
     }
 
-    public function getEmail1(): ?string
-    {
-        return $this->email1;
-    }
-
-    public function setEmail1(?string $email1): self
-    {
-        $this->email1 = $email1;
-
-        return $this;
-    }
-
     public function getEmail2(): ?string
     {
         return $this->email2;
@@ -200,66 +156,6 @@ class Referent
         return $this;
     }
 
-    public function getPhone1(): ?string
-    {
-        return $this->phone1;
-    }
-
-    public function setPhone1(?string $phone1): self
-    {
-        $this->phone1 = $phone1;
-
-        return $this;
-    }
-
-    public function getPhone2(): ?string
-    {
-        return $this->phone2;
-    }
-
-    public function setPhone2(?string $phone2): self
-    {
-        $this->phone2 = $phone2;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getDepartement(): ?string
-    {
-        return $this->departement;
-    }
-
-    public function setDepartement(?string $departement): self
-    {
-        $this->departement = $departement;
-
-        return $this;
-    }
-
     public function getComment(): ?string
     {
         return $this->comment;
@@ -268,54 +164,6 @@ class Referent
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }

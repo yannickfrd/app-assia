@@ -34,7 +34,7 @@ class ReferentType extends AbstractType
                     'placeholder' => 'Social worker name 2',
                 ],
             ])
-            ->add('email1', null, [
+            ->add('email', null, [
                 'attr' => [
                     'placeholder' => 'Email1',
                 ],
@@ -58,7 +58,7 @@ class ReferentType extends AbstractType
             ])
             ->add('address')
             ->add('city')
-            ->add('departement', null, [
+            ->add('zipCode', null, [
                 'attr' => [
                     'class' => 'js-zip-code',
                 ],

@@ -31,7 +31,7 @@ class ReferentController extends AbstractController
      *
      * @Route("group/{id}/referent/new", name="referent_new", methods="GET|POST")
      *
-     * @param int      $id       //GroupPeople
+     * @param int $id //GroupPeople
      */
     public function newReferent(int $id, Referent $referent = null, Request $request): Response
     {
@@ -64,7 +64,11 @@ class ReferentController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateReferent($referent);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été mis à jour.');
+
+            return $this->redirectToRoute('referent_edit', ['id' => $referent->getId()]);
         }
 
         return $this->render('app/referent/referent.html.twig', [
@@ -98,35 +102,12 @@ class ReferentController extends AbstractController
      */
     protected function createReferent(GroupPeople $groupPeople, Referent $referent): Response
     {
-        $now = new \DateTime();
-
-        $referent->setGroupPeople($groupPeople)
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $referent->setGroupPeople($groupPeople);
 
         $this->manager->persist($referent);
         $this->manager->flush();
 
         $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été créé.');
-
-        return $this->redirectToRoute('referent_edit', [
-            'id' => $referent->getId(),
-        ]);
-    }
-
-    /**
-     * Met à jour le service référent une fois le formulaire soumis et validé.
-     */
-    protected function updateReferent(Referent $referent): Response
-    {
-        $referent->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été mis à jour.');
 
         return $this->redirectToRoute('referent_edit', [
             'id' => $referent->getId(),

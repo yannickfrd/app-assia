@@ -62,9 +62,9 @@ class AccommodationType extends AbstractType
                 'required' => false,
             ])
             ->add('city')
-            ->add('department', null, [
+            ->add('zipCode', null, [
                 'attr' => [
-                    'class' => 'js-zip-code ',
+                    'class' => 'js-zip-code',
                 ],
             ])
             ->add('accommodationType', ChoiceType::class, [

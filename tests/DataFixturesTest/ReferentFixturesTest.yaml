@@ -3,11 +3,11 @@ App\Entity\referent:
     name: Reférent 666
     type: <numberBetween(1, 12)>
     socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
-    email1: <fr_FR:email()>
+    email: <fr_FR:email()>
     phone1: 01 00 00 00 00
     address : <fr_FR:address()>
     city: <fr_FR:city()>
-    departement: <numberBetween(1, 95)>
+    zipCode: <numberBetween(1, 95)>
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
@@ -19,11 +19,11 @@ App\Entity\referent:
     name: <sentence(3, true)>
     type: <numberBetween(1, 12)>
     socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
-    email1: <fr_FR:email()>
+    email: <fr_FR:email()>
     phone1: 01 00 00 00 00
     address : <fr_FR:address()>
     city: <fr_FR:city()>
-    departement: <numberBetween(1, 95)>
+    zipCode: <numberBetween(1, 95)>
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>

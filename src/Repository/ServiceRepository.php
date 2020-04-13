@@ -37,7 +37,7 @@ class ServiceRepository extends ServiceEntityRepository
                 ->setParameter('name', $serviceSearch->getName().'%');
         }
         if ($serviceSearch->getPhone()) {
-            $query->andWhere('s.phone = :phone')
+            $query->andWhere('s.phone1 = :phone')
                 ->setParameter('phone', $serviceSearch->getPhone());
         }
         if ($serviceSearch->getPole()) {
@@ -81,7 +81,7 @@ class ServiceRepository extends ServiceEntityRepository
     public function findAllServicesFromUser(User $user)
     {
         return $this->createQueryBuilder('s')
-            ->select('PARTIAL s.{id, name, email, phone}')
+            ->select('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'p')->addselect('PARTIAL p.{id, name}')
             ->leftJoin('s.serviceUser', 'su')->addselect('su')
 
@@ -104,7 +104,7 @@ class ServiceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.pole', 'p')->addselect('PARTIAL p.{id, name}')
 
-            ->leftJoin('s.chief', 'chief')->addselect('PARTIAL chief.{id, firstname, lastname, status, phone, email}')
+            ->leftJoin('s.chief', 'chief')->addselect('PARTIAL chief.{id, firstname, lastname, status, phone1, email}')
 
             ->leftJoin('s.serviceDevices', 'sd')->addselect('sd')
             ->leftJoin('sd.device', 'd')->addselect('PARTIAL d.{id, name}')
@@ -112,7 +112,7 @@ class ServiceRepository extends ServiceEntityRepository
             ->leftJoin('s.accommodations', 'a')->addselect('a')
 
             ->leftJoin('s.serviceUser', 'su')->addselect('su')
-            ->leftJoin('su.user', 'u')->addselect('PARTIAL u.{id, firstname, lastname, status, phone, email}')
+            ->leftJoin('su.user', 'u')->addselect('PARTIAL u.{id, firstname, lastname, status, phone1, email}')
 
             ->where('s.id = :id')
             ->setParameter('id', $id)

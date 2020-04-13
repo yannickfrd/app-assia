@@ -50,7 +50,12 @@ class PoleController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createPole($pole);
+            $this->manager->persist($pole);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le pôle a été créé.');
+
+            return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
         }
 
         return $this->render('app/pole/pole.html.twig', [
@@ -72,45 +77,14 @@ class PoleController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updatePole($pole);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Les modifications ont été enregistrées.');
         }
 
         return $this->render('app/pole/pole.html.twig', [
             'form' => $form->createView(),
             'edit_mode' => true,
         ]);
-    }
-
-    /**
-     * Crée un pôle.
-     */
-    protected function createPole(Pole $pole)
-    {
-        $now = new \DateTime();
-
-        $pole->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($pole);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le pôle a été créé.');
-
-        return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
-    }
-
-    /**
-     * Met à jour un pôle.
-     */
-    protected function updatePole(Pole $pole)
-    {
-        $pole->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
     }
 }

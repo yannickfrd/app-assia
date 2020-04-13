@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,9 +20,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  fields={"username"},
  *  message="Ce nom d'utilisateur existe déjà."
  * )
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class User implements UserInterface
 {
+    use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
+
     public const STATUS = [
         1 => 'Travailleur social',
         5 => 'Administratif',
@@ -59,9 +66,9 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
-    private $phone;
+    private $phone1;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
@@ -119,28 +126,6 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="people")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="peopleUpdated")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    private $updatedBy;
-
-    /**
      * @ORM\Column(type="integer", options={"default":0})
      */
     private $loginCount = 0;
@@ -156,34 +141,9 @@ class User implements UserInterface
     private $failureLoginCount = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="createdBy")
-     */
-    private $people;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="updatedBy")
-     */
-    private $peopleUpdated;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\GroupPeople", mappedBy="createdBy")
-     */
-    private $groupPeople;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\GroupPeople", mappedBy="updatedBy")
-     */
-    private $groupPeopleUpdated;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="createdBy")
      */
-    private $supportsGroupCreated;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="updatedBy")
-     */
-    private $supportsGroupUpdated;
+    private $supports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="user", orphanRemoval=true, cascade={"persist"})
@@ -223,12 +183,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="createdBy")
      */
-    private $notesCreated;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="updatedBy")
-     */
-    private $notesUpdated;
+    private $notes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="createdBy")
@@ -242,14 +197,12 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->people = new ArrayCollection();
-        $this->groupPeople = new ArrayCollection();
-        $this->supportsGroupCreated = new ArrayCollection();
+        $this->supports = new ArrayCollection();
         $this->serviceUser = new ArrayCollection();
         $this->userConnections = new ArrayCollection();
         $this->referentSupport = new ArrayCollection();
         $this->referent2Support = new ArrayCollection();
-        $this->notesCreated = new ArrayCollection();
+        $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
@@ -288,14 +241,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getPhone1(): ?string
     {
-        return Phone::getPhoneFormat($this->phone);
+        return Phone::getPhoneFormat($this->phone1);
     }
 
-    public function setPhone(?string $phone): self
+    public function setPhone1(?string $phone1): self
     {
-        $this->phone = Phone::formatPhone($phone);
+        $this->phone1 = Phone::formatPhone($phone1);
 
         return $this;
     }
@@ -464,141 +417,31 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Person[]
-     */
-    public function getPeople(): ?Collection
-    {
-        return $this->people;
-    }
-
-    public function addPerson(Person $person): self
-    {
-        if (!$this->people->contains($person)) {
-            $this->people[] = $person;
-            $person->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removePerson(Person $person): self
-    {
-        if ($this->people->contains($person)) {
-            $this->people->removeElement($person);
-            // set the owning side to null (unless already changed)
-            if ($person->getCreatedBy() === $this) {
-                $person->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|GroupPeople[]
-     */
-    public function getGroupPeople(): ?Collection
-    {
-        return $this->groupPeople;
-    }
-
-    public function addGroupPerson(GroupPeople $groupPerson): self
-    {
-        if (!$this->groupPeople->contains($groupPerson)) {
-            $this->groupPeople[] = $groupPerson;
-            $groupPerson->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGroupPerson(GroupPeople $groupPerson): self
-    {
-        if ($this->groupPeople->contains($groupPerson)) {
-            $this->groupPeople->removeElement($groupPerson);
-            // set the owning side to null (unless already changed)
-            if ($groupPerson->getCreatedBy() === $this) {
-                $groupPerson->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|SupportGroup[]
      */
-    public function getsupportsGroupCreated(): ?Collection
+    public function getSupports(): ?Collection
     {
-        return $this->supportsGroupCreated;
+        return $this->supports;
     }
 
-    public function addsupportsGroupCreated(SupportGroup $supportsGroupCreated): self
+    public function addSupports(SupportGroup $supports): self
     {
-        if (!$this->supportsGroupCreated->contains($supportsGroupCreated)) {
-            $this->supportsGroupCreated[] = $supportsGroupCreated;
-            $supportsGroupCreated->setCreatedBy($this);
+        if (!$this->supports->contains($supports)) {
+            $this->supports[] = $supports;
+            $supports->setCreatedBy($this);
         }
 
         return $this;
     }
 
-    public function removesupportsGroupCreated(SupportGroup $supportsGroupCreated): self
+    public function removeSupports(SupportGroup $supports): self
     {
-        if ($this->supportsGroupCreated->contains($supportsGroupCreated)) {
-            $this->supportsGroupCreated->removeElement($supportsGroupCreated);
+        if ($this->supports->contains($supports)) {
+            $this->supports->removeElement($supports);
             // set the owning side to null (unless already changed)
-            if ($supportsGroupCreated->getCreatedBy() === $this) {
-                $supportsGroupCreated->setCreatedBy(null);
+            if ($supports->getCreatedBy() === $this) {
+                $supports->setCreatedBy(null);
             }
         }
 
@@ -768,15 +611,15 @@ class User implements UserInterface
     /**
      * @return Collection|Note[]
      */
-    public function getNotesCreated(): ?Collection
+    public function getNotes(): ?Collection
     {
-        return $this->notesCreated;
+        return $this->notes;
     }
 
     public function addNote(Note $note): self
     {
-        if (!$this->notesCreated->contains($note)) {
-            $this->notesCreated[] = $note;
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
             $note->setCreatedBy($this);
         }
 
@@ -785,8 +628,8 @@ class User implements UserInterface
 
     public function removeNote(Note $note): self
     {
-        if ($this->notesCreated->contains($note)) {
-            $this->notesCreated->removeElement($note);
+        if ($this->notes->contains($note)) {
+            $this->notes->removeElement($note);
             // set the owning side to null (unless already changed)
             if ($note->getCreatedBy() === $this) {
                 $note->setCreatedBy(null);

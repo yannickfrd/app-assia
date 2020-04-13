@@ -49,12 +49,12 @@ class UserRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('u')
             ->select('u')
             ->leftJoin('u.referentSupport', 'sg')->addselect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
-            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone}')
+            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
             ->leftJoin('g.rolePerson', 'r')->addselect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'su')->addselect('su')
-            ->leftJoin('su.service', 'service')->addselect('PARTIAL service.{id, name, email, phone}')
+            ->leftJoin('su.service', 'service')->addselect('PARTIAL service.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
 
             ->andWhere('u.id = :id')
@@ -85,7 +85,7 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('lastname', $userSearch->getLastname().'%');
         }
         if ($userSearch->getPhone()) {
-            $query->andWhere('u.phone = :phone')
+            $query->andWhere('u.phone1 = :phone')
                 ->setParameter('phone', $userSearch->getPhone());
         }
         if ($userSearch->getStatus()) {
@@ -181,7 +181,7 @@ class UserRepository extends ServiceEntityRepository
     public function findUsersFromService(Service $service)
     {
         return $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, status, phone, email, enabled}')
+            ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, enabled}')
             ->leftJoin('u.serviceUser', 'su')->addselect('su')
 
             ->where('su.service = :service')

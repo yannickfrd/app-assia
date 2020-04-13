@@ -2,17 +2,24 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GroupPeopleRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class GroupPeople
 {
+    use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
+
     public const FAMILY_TYPOLOGY = [
         1 => 'Femme seule',
         2 => 'Homme seul',
@@ -52,21 +59,6 @@ class GroupPeople
     private $comment;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="groupPeople")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updatedAt;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", orphanRemoval=true)
      * @Assert\All(constraints={
      *      @Assert\NotBlank(),
@@ -81,11 +73,6 @@ class GroupPeople
      * @Assert\Valid
      */
     private $supports;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="groupPeopleUpdated")
-     */
-    private $updatedBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Referent", mappedBy="groupPeople", orphanRemoval=true)
@@ -106,8 +93,6 @@ class GroupPeople
     {
         $this->supports = new ArrayCollection();
         $this->rolePerson = new ArrayCollection();
-        $this->createdAt = new \Datetime();
-        $this->updatedAt = new \Datetime();
         $this->referents = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->accommodationGroups = new ArrayCollection();
@@ -158,54 +143,6 @@ class GroupPeople
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }

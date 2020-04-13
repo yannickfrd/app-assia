@@ -31,7 +31,7 @@ class ServiceType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => '-- Select --',
             ])
-            ->add('phone', null, [
+            ->add('phone1', null, [
                 'attr' => [
                     'class' => 'js-phone',
                     'placeholder' => 'Phone',

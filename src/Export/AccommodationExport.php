@@ -64,7 +64,7 @@ class AccommodationExport
             'Date de fermeture' => $this->formatDate($accommodation->getClosingDate()),
             'Adresse' => $accommodation->getAddress(),
             'Ville' => $accommodation->getCity(),
-            'Code postal' => $accommodation->getDepartment(),
+            'Code postal' => $accommodation->getZipCode(),
             'Type' => $accommodation->getAccommodationType() ? $accommodation->getAccommodationTypeToString() : null,
             'Configuration (Diffus ou regroupé)' => $accommodation->getConfiguration() ? $accommodation->getConfigurationToString() : null,
             'Individuel ou collectif' => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveToString() : null,

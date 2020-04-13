@@ -19,7 +19,7 @@ class PoleType extends AbstractType
         $builder
             ->add('name')
             ->add('email')
-            ->add('phone', null, [
+            ->add('phone1', null, [
                 'attr' => [
                     'class' => 'js-phone',
                 ],

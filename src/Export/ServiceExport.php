@@ -35,7 +35,7 @@ class ServiceExport
             'N° service' => $service->getId(),
             'Service' => $service->getName(),
             'Pôle' => $service->getPole()->getName(),
-            'Téléphone' => $service->getPhone(),
+            'Téléphone' => $service->getPhone1(),
             'Email' => $service->getEmail(),
             'Adresse' => $service->getAddress(),
             'Ville' => $service->getCity(),

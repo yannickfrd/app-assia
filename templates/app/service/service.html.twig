@@ -44,7 +44,7 @@
             <div class="col-md-6">{{ form_row(form.pole) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.phone) }}</div>
+            <div class="col-md-6">{{ form_row(form.phone1) }}</div>
             <div class="col-md-6">{{ form_row(form.email) }}</div>
         </div>
         <div class="form-group row">
@@ -185,7 +185,7 @@
                         <td>{% if accommodation.closingDate %}{{ accommodation.closingDate | date("d/m/Y") }}{% endif %}
                         </td>
                         <td>{{ accommodation.city }}</td>
-                        <td>{{ accommodation.department }}</td>
+                        <td>{{ accommodation.zipCode }}</td>
                         <td>{{ accommodation.address }}</td>
                     </tr>
                     {% endfor %}
@@ -233,7 +233,7 @@
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
                         <td>{% if user.status %}{{ user.statusToString }}{% endif %}</td>
-                        <td>{{ user.phone }}</td>
+                        <td>{{ user.phone1}}</td>
                         <td>{{ user.email }}</td>
                     </tr>
                     {% endfor %}

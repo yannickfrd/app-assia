@@ -50,7 +50,7 @@ class SupportPersonExport
         $nameAccommodations = [];
         $addressAccommodations = [];
         $cityAccommodations = [];
-        $departmentAccommodations = [];
+        $zipCodeAccommodations = [];
 
         $accommodationPersons = $person->getAccommodationPersons();
         foreach ($accommodationPersons as $accommodationPerson) {
@@ -58,7 +58,7 @@ class SupportPersonExport
             $nameAccommodations[] = $accommodations->getName();
             $addressAccommodations[] = $accommodations->getAddress();
             $cityAccommodations[] = $accommodations->getCity();
-            $departmentAccommodations[] = $accommodations->getDepartment();
+            $zipCodeAccommodations[] = $accommodations->geZipCode();
         }
 
         return [
@@ -86,7 +86,7 @@ class SupportPersonExport
             'Nom du logement/ hébergement' => join(', ', $nameAccommodations),
             'Adresse' => join(', ', $addressAccommodations),
             'Ville' => join(', ', $cityAccommodations),
-            'Département' => join(', ', $departmentAccommodations),
+            'Département' => join(', ', $zipCodeAccommodations),
         ];
     }
 

@@ -195,8 +195,6 @@ https://demo.esperer95.app
     debtUnpaidMaint: Pension alimentaire non réglée
     debtUnpaidMaintAmt: Montant Pension alimentaire non réglée
     decisionDate: Date de décision
-    department: Département
-    department: Département 
     director: Nom du directeur
     disAdultAllowance: Allocation adulte handicapé
     disAdultAllowanceAmt: Montant AAH
@@ -287,7 +285,6 @@ https://demo.esperer95.app
     password: Mot de passe
     pensionBenefit: Retraite
     pensionBenefitAmt: Montant retraire
-    phone: Téléphone
     phone1: Téléphone 1
     phone2: Téléphone 2
     phoneAmt: Montant Téléphone

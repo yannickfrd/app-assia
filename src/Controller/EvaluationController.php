@@ -86,12 +86,9 @@ class EvaluationController extends AbstractController
      */
     protected function createEvaluationGroup(SupportGroup $supportGroup)
     {
-        $now = new \DateTime();
         $evaluationGroup = (new EvaluationGroup())
             ->setSupportGroup($supportGroup)
-            ->setDate($now)
-            ->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setDate(new \DateTime());
 
         $supportGroup->setInitEvalGroup(new InitEvalGroup());
         $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());
@@ -127,11 +124,9 @@ class EvaluationController extends AbstractController
      */
     protected function updateEvaluationGroup(EvaluationGroup $evaluationGroup)
     {
-        $now = new \DateTime();
-
-        $evaluationGroup->setUpdatedAt($now);
-        $evaluationGroup->getSupportGroup()->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+        $evaluationGroup->getSupportGroup()
+                            ->setUpdatedAt(new \DateTime())
+                            ->setUpdatedBy($this->getUser());
 
         $this->updateBudgetGroup($evaluationGroup);
 
@@ -142,7 +137,7 @@ class EvaluationController extends AbstractController
             'code' => 200,
             'alert' => 'success',
             'msg' => 'Les modifications ont été enregistrées.',
-            'date' => date_format($now, 'd/m/Y à H:i'),
+            'date' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
             'user' => $this->getUser()->getFullName(),
         ], 200);
     }

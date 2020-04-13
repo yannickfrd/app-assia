@@ -89,7 +89,7 @@ class SecurityController extends AbstractController
     /**
      * Création du mot de passe par l'utilisateur à sa première connexion.
      *
-     * @Route("/login/after_login", name="security_after_login", methods="GET")
+     * @Route("/login/after_login", name="security_after_login", methods="GET|POST")
      */
     public function afterLogin(): Response
     {
@@ -133,7 +133,7 @@ class SecurityController extends AbstractController
     public function showCurrentUser(UserChangeInfo $userChangeInfo = null, UserChangePassword $userChangePassword = null, SupportGroupRepository $repoSupport, ServiceRepository $repoService, Request $request): Response
     {
         $userChangeInfo->setEmail($this->getUser()->getEmail())
-            ->setPhone($this->getUser()->getPhone())
+            ->setPhone1($this->getUser()->getPhone1())
             ->setPhone2($this->getUser()->getPhone2());
 
         $form = ($this->createForm(UserChangeInfoType::class, $userChangeInfo))
@@ -172,9 +172,6 @@ class SecurityController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setUpdatedAt(new \DateTime())
-                ->setUpdatedBy($this->getUser());
-
             $this->manager->flush();
 
             $this->addFlash('success', 'Le compte utilisateur a été mis à jour.');
@@ -263,17 +260,11 @@ class SecurityController extends AbstractController
      */
     protected function createUser(User $user): Response
     {
-        $now = new \DateTime();
-
         $hashPassword = $this->encoder->encodePassword($user, $user->getPassword());
 
         $user->setPassword($hashPassword)
             ->setLoginCount(0)
-            ->setEnabled(true)
-            ->setCreatedAt($now)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($this->getUser());
+            ->setEnabled(true);
 
         $this->manager->persist($user);
         $this->manager->flush();
@@ -312,10 +303,8 @@ class SecurityController extends AbstractController
     protected function updateInfoCurrentUser(UserChangeInfo $userChangeInfo)
     {
         $this->getUser()->setEmail($userChangeInfo->getEmail())
-            ->setPhone($userChangeInfo->getPhone())
-            ->setPhone2($userChangeInfo->getPhone2())
-            ->setUpdatedAt(new \DateTime())
-            ->setUpdatedBy($this->getUser());
+            ->setPhone($userChangeInfo->getPhone1())
+            ->setPhone2($userChangeInfo->getPhone2());
 
         $this->manager->flush();
 

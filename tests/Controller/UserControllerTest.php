@@ -48,7 +48,6 @@ class UserControllerTest extends WebTestCase
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('users'));
 
-
         $form = $crawler->selectButton('search')->form([
             'lastname' => 'MADELAINE',
             'firstname' => 'Romain',
