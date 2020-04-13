@@ -222,7 +222,7 @@ class SupportControllerTest extends PantherTestCase
         $crawler = $this->client->submit($form);
         sleep(1);
 
-        $this->client->waitFor('#js-msg-flash', 2);
+        $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();

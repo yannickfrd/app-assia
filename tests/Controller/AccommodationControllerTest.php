@@ -163,9 +163,9 @@ class AccommodationControllerTest extends WebTestCase
             'accommodation[placesNumber]' => 6,
             'accommodation[openingDate]' => '2019-01-01',
             'accommodation[closingDate]' => '2020-01-01',
-            'accommodation[city]' => 'Houilles',
-            'accommodation[zipCode]' => '78 800',
-            'accommodation[address]' => 'xxx',
+            'accommodation[location][city]' => 'Houilles',
+            'accommodation[location][zipCode]' => '78 800',
+            'accommodation[location][address]' => 'xxx',
             'accommodation[service]' => 1,
         ]);
 

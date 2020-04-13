@@ -3,18 +3,19 @@
 namespace App\Form\Service;
 
 use App\Entity\Pole;
-use App\Entity\Service;
 use App\Entity\User;
+use App\Entity\Service;
 use App\Form\Utils\Choices;
+use App\Form\Type\LocationType;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ServiceType extends AbstractType
 {
@@ -53,13 +54,6 @@ class ServiceType extends AbstractType
                 },
                 'placeholder' => '-- Select --',
                 'required' => false,
-            ])
-            ->add('address')
-            ->add('city')
-            ->add('zipCode', null, [
-                'attr' => [
-                    'class' => 'js-zip-code',
-                ],
             ])
             ->add('finessId')
             ->add('siretId')
@@ -115,6 +109,9 @@ class ServiceType extends AbstractType
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],
+            ])
+            ->add('location', LocationType::class, [
+                'data_class' => Service::class,
             ]);
     }
 

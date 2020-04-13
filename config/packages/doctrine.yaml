@@ -6,6 +6,7 @@ doctrine:
         server_version: '5.7'
         charset: utf8mb4
         default_table_options:
+            default_timezone: Europe/Paris
             charset: utf8mb4
             collate: utf8mb4_unicode_ci
         url: '%env(resolve:DATABASE_URL)%'

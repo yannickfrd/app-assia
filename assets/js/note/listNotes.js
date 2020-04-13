@@ -38,22 +38,22 @@ export default class ListNotes {
             noteElt.addEventListener("click", this.getNote.bind(this, noteElt));
         });
 
-        this.btnSaveElt.addEventListener("click", function (e) {
+        this.btnSaveElt.addEventListener("click", e => {
             e.preventDefault();
             this.clearTimer();
             this.saveNote();
-        }.bind(this));
+        });
 
-        this.btnCancelElt.addEventListener("click", function (e) {
+        this.btnCancelElt.addEventListener("click", e => {
             e.preventDefault();
             this.clearTimer();
-        }.bind(this));
+        });
 
-        this.btnDeleteElt.addEventListener("click", function (e) {
+        this.btnDeleteElt.addEventListener("click", e => {
             e.preventDefault();
             this.clearTimer();
             this.deleteNote();
-        }.bind(this));
+        });
     }
 
     // Initialise CKEditor
@@ -126,9 +126,9 @@ export default class ListNotes {
             this.autoSave = true;
             this.count = 0;
             this.autoSaveElt.classList.add("d-block");
-            setTimeout(function () {
+            setTimeout(e => {
                 this.autoSaveElt.classList.remove("d-block");
-            }.bind(this), 5000);
+            }, 5000);
             this.saveNote();
         }
     }

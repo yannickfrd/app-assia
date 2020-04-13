@@ -114,7 +114,7 @@ export default class evaluation {
             let i = personElt.getAttribute("data-key");
             new DisplayInputs(prefix, i + "_initEvalPerson_rightSocialSecurity", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_initEvalPerson_profStatus", "select", [3, 5, 8]);
-            new DisplayInputs(prefix, i + "_initEvalPerson_resources", "select", [1, 3]);
+            new DisplayInputs(prefix, i + "_initEvalPerson_resources_resources", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_initEvalPerson_debts", "select", [1]);
             this.editElt(i, "_initEvalPerson_resources_type", "d-table-row");
             this.selectTrElts("init_eval", "initEvalPerson", i, "resources_type");
@@ -171,7 +171,7 @@ export default class evaluation {
         let entity = "evalBudgetPerson";
         document.getElementById("accordion-eval_budget").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_evalBudgetPerson_resources", "select", [1, 3]);
+            new DisplayInputs(prefix, i + "_evalBudgetPerson_resources_resources", "select", [1, 3]);
             new DisplayInputs(prefix, i + "_evalBudgetPerson_charges", "select", [1]);
             new DisplayInputs(prefix, i + "_evalBudgetPerson_debts", "select", [1]);
             new DisplayInputs(prefix, i + "_evalBudgetPerson_overIndebtRecord", "select", [1]);
@@ -246,9 +246,7 @@ export default class evaluation {
     getOption(selectElt) {
         let value = null;
         selectElt.querySelectorAll("option").forEach(optionElt => {
-            if (optionElt.selected) {
-                value = optionElt.value;
-            }
+            optionElt.selected ? value = optionElt.value : null;
         });
         return value;
     }
@@ -256,11 +254,7 @@ export default class evaluation {
     // Modifie l'option d'un Select
     setOption(selectElt, value) {
         selectElt.querySelectorAll("option").forEach(option => {
-            if (option.value === value) {
-                option.setAttribute("selected", "selected");
-            } else {
-                option.selected = "";
-            }
+            option.value === value ? option.setAttribute("selected", "selected") : option.selected = "";
         });
     }
 
@@ -271,9 +265,9 @@ export default class evaluation {
         let inputElts = document.querySelectorAll(".js-" + i + eltId);
         selectElt.addEventListener("change", this.addOption.bind(this, selectElt, i, eltId, display));
         inputElts.forEach(inputElt => {
-            inputElt.addEventListener("click", function () {
+            inputElt.addEventListener("click", e => {
                 this.displayNone(inputElt, display);
-            }.bind(this));
+            });
             this.displayNone(inputElt, display);
         })
     }
@@ -327,38 +321,36 @@ export default class evaluation {
             });
         });
         // Remplace le select sur l'option par défaut
-        window.setTimeout(function () {
+        window.setTimeout(e => {
             selectElt.querySelector("option").selected = "selected";
             let inputTextElt = this.trElt.querySelector("input[type='text']");
-            if (display === "d-table-row" && inputTextElt) {
+            if (display === "" && inputTextElt) {
                 inputTextElt.focus();
             }
-        }.bind(this), 200);
+        }, 200);
     }
 
     // Sélectionne toutes les lignes d'un tableau
     selectTrElts(collapseId, entity, i, type) {
         let trElts = document.querySelectorAll(".js-" + i + "_" + entity + "_" + type);
         trElts.forEach(trElt => {
-            trElt.querySelector("button.js-remove").addEventListener("click", function (e) {
+            trElt.querySelector("button.js-remove").addEventListener("click", e => {
                 e.preventDefault();
                 this.removeTr(collapseId, entity, i, trElt);
-            }.bind(this));
+            });
         });
     }
 
     // Retire la ligne correspondante dans le tableau
     removeTr(collapseId, entity, i, trElt) {
         trElt.querySelectorAll("input").forEach(inputElt => {
-            if (inputElt.getAttribute("type") === "number")
-                inputElt.value = 0;
-            else {
-                inputElt.value = null;
-            }
+            inputElt.getAttribute("type") === "number" ? inputElt.value = 0 : inputElt.value = null;
         });
         trElt.classList.replace("d-table-row", "d-none");
-        if (entity === "evalBudgetPerson") {
+        if (entity === "evalBudgetPerson" || entity === "initEvalPerson") {
             this.updateSumAmt(collapseId, entity, i, "resources");
+        }
+        if (entity === "evalBudgetPerson") {
             this.updateSumAmt(collapseId, entity, i, "charges");
         }
     }
@@ -366,31 +358,30 @@ export default class evaluation {
     // Met à jour la somme des montants après la saisie d'un input
     editAmt(prefix, collapseId, entity, i, type) {
         let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type);
-        let amtElt = document.getElementById(prefix + i + "_" + entity + "_" + type + "Amt");
-
+        let amtElt = document.getElementById(prefix + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt");
         inputElts.forEach(inputElt => {
-            inputElt.addEventListener("input", function () {
+            inputElt.addEventListener("input", e => {
                 amtElt.value = this.getSumAmts(inputElts);
                 this.updateAmtGroup(type);
-            }.bind(this));
+            });
         });
 
         inputElts.forEach(inputElt => {
-            inputElt.addEventListener("focusout", function () {
+            inputElt.addEventListener("focusout", e => {
                 this.resourcesAmtElts.forEach(ressourcesAmtElt => {
                     ressourcesAmtElt.click();
-                })
-            }.bind(this));
+                });
+            });
         });
 
         if (amtElt) {
-            amtElt.addEventListener("click", function () {
+            amtElt.addEventListener("click", e => {
                 let sumAlts = this.getSumAmts(inputElts);
                 if (sumAlts != 0) {
                     amtElt.value = sumAlts;
                     this.updateAmtGroup(type);
                 }
-            }.bind(this));
+            });
         }
     }
 
@@ -414,7 +405,7 @@ export default class evaluation {
     // Met à jour la somme des montants de la personne
     updateSumAmt(collapseId, entity, i, type) {
         let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type);
-        document.getElementById("evaluation_group_evaluationPeople_" + i + "_" + entity + "_" + type + "Amt").value = this.getSumAmts(inputElts);
+        document.getElementById("evaluation_group_evaluationPeople_" + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt").value = this.getSumAmts(inputElts);
         this.updateAmtGroup(type);
     }
 

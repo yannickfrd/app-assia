@@ -50,14 +50,14 @@ export default class NewGroupPeople {
             this.form + "_groupPeople_nbPeople"
         );
 
-        document.getElementById("send").addEventListener("click", function (e) {
+        document.getElementById("send").addEventListener("click", e => {
             if (validationPerson.getNbErrors()) {
                 e.preventDefault(), {
                     once: true
                 };
                 new MessageFlash("danger", "Veuillez corriger les erreurs avant d'enregistrer.");
             }
-        }.bind(this));
+        });
 
         let firstname = this.parametersUrl.getOne("firstname");
         if (firstname) {

@@ -9,10 +9,10 @@ export default class DeleteTr {
     init() {
         this.trElts.forEach(trElt => {
             let btnRemoveElt = trElt.querySelector("button.js-remove");
-            btnRemoveElt.addEventListener("click", function (e) {
+            btnRemoveElt.addEventListener("click", e => {
                 e.preventDefault();
                 trElt.remove();
-            }.bind(this));
+            });
         });
     }
 }

@@ -5,11 +5,11 @@ import CheckChange from "../utils/checkChange";
 import AddCollectionWidget from "../utils/addCollectionWidget";
 import "../utils/maskPhone";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", e => {
     new SeePassword();
     new DeleteTr("function-table");
-    new Username("registration");
-    new CheckChange("registration"); // form name
+    new Username("security_user");
+    new CheckChange("security_user"); // form name
     let addCollectionWidget = new AddCollectionWidget();
 
     if (parseInt(addCollectionWidget.counter) === 0) {

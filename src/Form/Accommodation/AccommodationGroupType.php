@@ -16,19 +16,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AccommodationGroupType extends AbstractType
 {
-    protected $service;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $accommodationGroup = $options['data'];
-        $this->service = $accommodationGroup->getSupportGroup()->getService();
+        $service = ($options['data'])->getSupportGroup()->getService();
 
         $builder
             ->add('accommodation', EntityType::class, [
                 'class' => Accommodation::class,
                 'choice_label' => 'name',
-                'query_builder' => function (AccommodationRepository $repo) {
-                    return $repo->getAccommodationsQueryList($this->service);
+                'query_builder' => function (AccommodationRepository $repo) use ($service) {
+                    return $repo->getAccommodationsQueryList($service);
                 },
                 'placeholder' => '-- Select --',
             ])

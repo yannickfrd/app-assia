@@ -31,9 +31,7 @@ class AccommodationExport
             ++$i;
         }
 
-        $export = new Export('export_suivis', 'xlsx', $arrayData, null);
-
-        return $export->exportFile();
+        return (new Export('export_suivis', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**
@@ -44,12 +42,10 @@ class AccommodationExport
     public function getDatas(Accommodation $accommodation)
     {
         $numberPeople = 0;
-        $today = new \Datetime();
-
         foreach ($accommodation->getAccommodationGroups() as $accommodationGroup) {
             foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPerson) {
                 $endDate = $accommodationPerson->getEndDate();
-                if (!$endDate || $endDate->format('d/m/Y') >= $today->format('d/m/Y')) {
+                if (!$endDate || $endDate->format('d/m/Y') >= (new \Datetime())->format('d/m/Y')) {
                     ++$numberPeople;
                 }
             }

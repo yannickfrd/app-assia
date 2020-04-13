@@ -40,38 +40,38 @@ export default class Calendar {
 
         this.dayElts.forEach(dayElt => {
             this.hideRdvElts(dayElt);
-            dayElt.addEventListener("click", function () {
+            dayElt.addEventListener("click", e => {
                 this.resetData();
                 this.dateInput.value = dayElt.id;
                 this.modalRdvElt.querySelector("#rdv_start").value = dayElt.id + "T00:00";
                 this.modalRdvElt.querySelector("#rdv_end").value = dayElt.id + "T00:00";
-            }.bind(this));
+            });
         });
 
         this.rdvElts.forEach(rdvElt => {
-            rdvElt.addEventListener("click", function () {
+            rdvElt.addEventListener("click", e => {
                 this.resetData();
                 this.requestGetRdv(rdvElt);
-            }.bind(this));
+            });
         });
 
         this.dateInput.addEventListener("focusout", this.checkDate.bind(this));
         this.startInput.addEventListener("input", this.checkStart.bind(this));
         this.endInput.addEventListener("focusout", this.checkEnd.bind(this));
 
-        this.btnSaveElt.addEventListener("click", function (e) {
+        this.btnSaveElt.addEventListener("click", e => {
             e.preventDefault();
             this.requestSaveRdv();
-        }.bind(this));
+        });
 
-        // this.btnCancelElt.addEventListener("click", function (e) {
+        // this.btnCancelElt.addEventListener("click", e => {
         //     e.preventDefault();
-        // }.bind(this));
+        // });
 
-        this.btnDeleteElt.addEventListener("click", function (e) {
+        this.btnDeleteElt.addEventListener("click", e => {
             e.preventDefault();
             this.requestDeleteRdv();
-        }.bind(this));
+        });
     }
 
     // Réinialise le formulaire modal de rdv

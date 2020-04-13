@@ -17,16 +17,16 @@ import autoLogout from "./utils/autoLogout";
 // Requête Ajax
 let ajaxRequest = new AjaxRequest();
 
-$(function () {
+$(e => {
     $("[data-toggle='tooltip']").tooltip();
 });
 
-$(function () {
+$(e => {
     $("[data-toggle='popover']").popover();
 });
 
 // Masque le loader lorsque le DOM est chargé
-window.onload = function () {
+window.onload = e => {
     // Stop spinner loader 
     document.getElementById("loader").classList.add("d-none");
     // Smooth Scroll animationa

@@ -10,9 +10,9 @@ use App\Form\Model\UserResetPassword;
 use App\Form\Security\ChangePasswordType;
 use App\Form\Security\ForgotPasswordType;
 use App\Form\Security\InitPasswordType;
-use App\Form\Security\RegistrationType;
-use App\Form\Security\ReinitPasswordType;
 use App\Form\Security\SecurityUserType;
+use App\Form\Security\ReinitPasswordType;
+use App\Form\Security\SecurityUserEditType;
 use App\Form\User\UserChangeInfoType;
 use App\Notification\MailNotification;
 use App\Repository\ServiceRepository;
@@ -46,14 +46,14 @@ class SecurityController extends AbstractController
     {
         $user = new User();
 
-        $form = ($this->createForm(RegistrationType::class, $user))
+        $form = ($this->createForm(SecurityUserType::class, $user))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (count($user->getServiceUser()) > 0) {
                 return $this->createUser($user);
             }
-            $this->addFlash('danger', "Veuillez rattacher l'utilisateur à au moins un service.");
+            $this->addFlash('danger', "Veuillez rattacher l'utilisateur au minimum à un service.");
         }
 
         return $this->render('app/security/registration.html.twig', [
@@ -168,7 +168,7 @@ class SecurityController extends AbstractController
      */
     public function editUser(User $user, Request $request)
     {
-        $form = ($this->createForm(SecurityUserType::class, $user))
+        $form = ($this->createForm(SecurityUserEditType::class, $user))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -303,7 +303,7 @@ class SecurityController extends AbstractController
     protected function updateInfoCurrentUser(UserChangeInfo $userChangeInfo)
     {
         $this->getUser()->setEmail($userChangeInfo->getEmail())
-            ->setPhone($userChangeInfo->getPhone1())
+            ->setPhone1($userChangeInfo->getPhone1())
             ->setPhone2($userChangeInfo->getPhone2());
 
         $this->manager->flush();

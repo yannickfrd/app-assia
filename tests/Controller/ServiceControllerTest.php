@@ -75,7 +75,7 @@ class ServiceControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('send')->form([
             'service[name]' => 'Service test',
-            'service[city]' => 'Pontoise',
+            'service[location][city]' => 'Pontoise',
             'service[phone1]' => '01 00 00 00 00',
             'service[pole]' => 1,
         ]);

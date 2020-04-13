@@ -4,7 +4,7 @@ import AddCollectionWidget from "../utils/addCollectionWidget";
 import "../utils/maskPhone";
 import "../utils/maskZipCode";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", e => {
     new DeleteTr("function-table");
     new CheckChange("service"); // form name
     new AddCollectionWidget();

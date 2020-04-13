@@ -8,12 +8,12 @@ export default class DeleteAccommodation {
 
     init() {
         if (this.btnDeleteElt) {
-            this.btnDeleteElt.addEventListener("click", function (e) {
+            this.btnDeleteElt.addEventListener("click", e => {
                 // e.preventDefault();
                 this.modalConfirmElt.removeAttribute("data-dismiss");
                 this.modalConfirmElt.removeAttribute("type");
                 this.modalConfirmElt.setAttribute("href", this.btnDeleteElt.getAttribute("data-url"));
-            }.bind(this));
+            });
         }
     }
 }

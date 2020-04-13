@@ -12,9 +12,13 @@ class LocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('address', TextType::class)
-            ->add('city', TextType::class)
-            ->add('zipCode', TextType::class);
+            ->add('address')
+            ->add('city')
+            ->add('zipCode', null, [
+                'attr' => [
+                    'class' => 'js-zip-code',
+                ],
+            ]);
         // ->add('country', TextType::class);
     }
 

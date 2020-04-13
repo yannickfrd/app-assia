@@ -93,8 +93,7 @@ class UserController extends AbstractController
     protected function exportData(UserSearch $userSearch)
     {
         $users = $this->repo->findUsersToExport($userSearch);
-        $export = new UserExport();
 
-        return $export->exportData($users);
+        return (new UserExport())->exportData($users);
     }
 }

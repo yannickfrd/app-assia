@@ -22,7 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SupportGroupType extends AbstractType
 {
     private $currentUser;
-    private $data;
 
     public function __construct(CurrentUserService $currentUser)
     {
@@ -31,7 +30,7 @@ class SupportGroupType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->data = $options['data'];
+        $supportGroup = $options['data'];
 
         $builder
             ->add('service', EntityType::class, [
@@ -61,16 +60,16 @@ class SupportGroupType extends AbstractType
             ->add('referent', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
-                'query_builder' => function (UserRepository $repo) {
-                    return $repo->getUsersQueryList($this->currentUser, $this->data->getReferent());
+                'query_builder' => function (UserRepository $repo) use ($supportGroup) {
+                    return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent());
                 },
                 'placeholder' => '-- Select --',
             ])
             ->add('referent2', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
-                'query_builder' => function (UserRepository $repo) {
-                    return $repo->getUsersQueryList($this->currentUser, $this->data->getReferent2());
+                'query_builder' => function (UserRepository $repo) use ($supportGroup) {
+                    return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent2());
                 },
                 'placeholder' => '-- Select --',
                 'required' => false,

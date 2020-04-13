@@ -9,6 +9,7 @@ use App\Security\CurrentUserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -69,20 +70,42 @@ class SecurityUserType extends AbstractType
                 'attr' => ['class' => 'h-max-76'],
                 'placeholder' => '-- Select --',
             ])
+            ->add('password', PasswordType::class, [
+                'attr' => [
+                    'class' => 'js-password',
+                    'placeholder' => 'Password',
+                ],
+                'help' => '8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)',
+            ])
+            ->add('confirmPassword', PasswordType::class, [
+                'attr' => [
+                    'class' => 'js-password',
+                    'placeholder' => 'Confirm password',
+                ],
+                'help' => 'Veuillez re-saisir le mot de passe pour confirmation',
+            ])
             ->add('serviceUser', CollectionType::class, [
                 'entry_type' => ServiceUserType::class,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'prototype' => true,
                 'by_reference' => false,
+                'label_attr' => [
+                    'class' => 'sr-only',
+                ],
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'translation_domain' => 'forms',
+        ]);
     }
 
     public function getRoles()
@@ -95,13 +118,5 @@ class SecurityUserType extends AbstractType
             'Utilisateur' => 'ROLE_USER',
             'Administrateur' => 'ROLE_ADMIN',
         ];
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-            'translation_domain' => 'forms',
-        ]);
     }
 }

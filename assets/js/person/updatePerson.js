@@ -23,7 +23,7 @@ export default class UpdatePerson {
             "person_email"
         );
 
-        this.updatePersonBtn.addEventListener("click", function (e) {
+        this.updatePersonBtn.addEventListener("click", e => {
             e.preventDefault();
             if (!validationPerson.getNbErrors()) {
                 this.loader.on();
@@ -33,7 +33,7 @@ export default class UpdatePerson {
             } else {
                 new MessageFlash("danger", "Veuillez corriger les erreurs avant de mettre à jour.");
             }
-        }.bind(this));
+        });
     }
 
     response(data) {

@@ -42,9 +42,9 @@ export default class CheckChange {
 
 
         this.aElts.forEach(aElt => {
-            aElt.addEventListener("click", function (e) {
+            aElt.addEventListener("click", e => {
                 this.checkChange(e);
-            }.bind(this))
+            })
         });
     }
 
@@ -62,7 +62,7 @@ export default class CheckChange {
     }
 
     test() {
-        this.modalNoteElt.querySelector(".modal-content").addEventListener("click", function (e) {
+        this.modalNoteElt.querySelector(".modal-content").addEventListener("click", e => {
             this.change = false;
             return false;
         });

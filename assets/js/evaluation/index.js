@@ -8,7 +8,7 @@ let ajaxRequest = new AjaxRequest();
 
 document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
     let spanFaElt = cardHeaderElt.querySelector("span.fa");
-    cardHeaderElt.addEventListener("click", function () {
+    cardHeaderElt.addEventListener("click", e => {
         if (cardHeaderElt.classList.contains("collapsed")) {
             spanFaElt.classList.replace("fa-chevron-right", "fa-chevron-down");
         } else {
@@ -17,7 +17,7 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", e => {
     new Evaluation();
     new UpdateEvaluation(ajaxRequest);
     new CheckChange("evaluation_group"); // form name

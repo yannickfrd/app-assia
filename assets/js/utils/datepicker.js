@@ -11,7 +11,7 @@
     }
 }(jQuery);
 
-$(document).ready(function () {
+$(document).ready(e => {
     $(".datepicker").datepicker({
         format: "dd/mm/yyyy",
         weekStart: 1,

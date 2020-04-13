@@ -15,7 +15,7 @@ $("select.multi-select").select2({
 
 document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
     let spanFaElt = cardHeaderElt.querySelector("span.fa");
-    cardHeaderElt.addEventListener("click", function () {
+    cardHeaderElt.addEventListener("click", e => {
         if (cardHeaderElt.classList.contains("collapsed")) {
             spanFaElt.classList.replace("fa-chevron-right", "fa-chevron-down");
         } else {
@@ -24,7 +24,7 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", e => {
     new ValidationSupport();
     new RemoveSupportPerson();
     new CheckChange("support_group"); // form name

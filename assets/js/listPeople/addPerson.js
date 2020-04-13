@@ -14,11 +14,11 @@ export default class AddPerson {
 
     init() {
         this.addPersonElts.forEach(person => {
-            person.addEventListener("click", function (e) {
+            person.addEventListener("click", e => {
                 e.preventDefault();
                 let href = person.href;
                 this.formModal.action = href;
-            }.bind(this));
+            });
         });
 
         if (this.aCreatePersonElt) {

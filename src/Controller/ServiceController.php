@@ -120,8 +120,7 @@ class ServiceController extends AbstractController
     protected function exportData(ServiceSearch $serviceSearch)
     {
         $services = $this->repo->findServicesToExport($serviceSearch);
-        $export = new ServiceExport();
 
-        return $export->exportData($services);
+        return (new ServiceExport())->exportData($services);
     }
 }

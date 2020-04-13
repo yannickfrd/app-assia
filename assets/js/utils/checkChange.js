@@ -27,9 +27,9 @@ export default class CheckChange {
             btnSubmitElt.addEventListener("click", this.clearChange.bind(this))
         });
         this.aElts.forEach(aElt => {
-            aElt.addEventListener("click", function (e) {
+            aElt.addEventListener("click", e => {
                 this.checkChange(e);
-            }.bind(this))
+            })
         });
     }
 

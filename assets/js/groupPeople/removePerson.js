@@ -17,12 +17,12 @@ export default class RemovePerson {
     init() {
         this.trElts.forEach(trElt => {
             let btnElt = trElt.querySelector("button.js-remove");
-            btnElt.addEventListener("click", function (e) {
+            btnElt.addEventListener("click", e => {
                 e.preventDefault();
                 this.modalConfirmElt.addEventListener("click", this.validate.bind(this, btnElt, trElt), {
                     once: true
                 });
-            }.bind(this));
+            });
         });
     }
 

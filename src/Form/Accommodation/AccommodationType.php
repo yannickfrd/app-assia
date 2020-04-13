@@ -2,25 +2,24 @@
 
 namespace App\Form\Accommodation;
 
-use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Form\Utils\Choices;
+use App\Entity\Accommodation;
+use App\Form\Type\LocationType;
 use App\Repository\DeviceRepository;
-use App\Repository\ServiceRepository;
 use App\Security\CurrentUserService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AccommodationType extends AbstractType
 {
     protected $currentUser;
-    protected $place;
-    protected $data;
 
     public function __construct(CurrentUserService $currentUser)
     {
@@ -29,68 +28,64 @@ class AccommodationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->place = $options['data'];
+        $place = $options['data'];
 
         $builder
-            ->add('name', null, [
-                'attr' => [
-                    'placeholder' => 'Nom du groupe de places',
-                ],
-            ])
-            ->add('service', EntityType::class, [
-                'class' => Service::class,
-                'choice_label' => 'name',
-                'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesFromUserQueryList($this->currentUser);
-                },
-                'placeholder' => '-- Select --',
-            ])
-            ->add('device', EntityType::class, [
-                'class' => Device::class,
-                'choice_label' => 'name',
-                'query_builder' => function (DeviceRepository $repo) {
-                    return $repo->getDevicesFromServiceQueryList($this->place);
-                },
-                'placeholder' => '-- Select --',
-            ])
-            ->add('placesNumber')
-            ->add('openingDate', DateType::class, [
-                'widget' => 'single_text',
-            ])
-            ->add('closingDate', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('city')
-            ->add('zipCode', null, [
-                'attr' => [
-                    'class' => 'js-zip-code',
-                ],
-            ])
-            ->add('accommodationType', ChoiceType::class, [
-                'choices' => Choices::getChoices(Accommodation::ACCOMMODATION_TYPE),
-                'placeholder' => '-- Select --',
-                'help' => 'Chambre, T1, T2, T3...',
-                'required' => false,
-            ])
-            ->add('configuration', ChoiceType::class, [
-                'choices' => Choices::getChoices(Accommodation::CONFIGURATION),
-                'placeholder' => '-- Select --',
-                'help' => 'Diffus ou regroupé',
-                'required' => false,
-            ])
-            ->add('individualCollective', ChoiceType::class, [
-                'choices' => Choices::getChoices(Accommodation::INDIVIDUAL_COLLECTIVE),
-                'placeholder' => '-- Select --',
-                'required' => false,
-            ])
-            ->add('address')
-            ->add('comment', null, [
-                'attr' => [
-                    'rows' => 5,
-                    'placeholder' => 'Description...',
-                ],
-            ]);
+        ->add('name', null, [
+            'attr' => [
+                'placeholder' => 'Nom du groupe de places',
+            ],
+        ])
+        ->add('service', EntityType::class, [
+            'class' => Service::class,
+            'choice_label' => 'name',
+            'query_builder' => function (ServiceRepository $repo) {
+                return $repo->getServicesFromUserQueryList($this->currentUser);
+            },
+            'placeholder' => '-- Select --',
+        ])
+        ->add('device', EntityType::class, [
+            'class' => Device::class,
+            'choice_label' => 'name',
+            'query_builder' => function (DeviceRepository $repo) use ($place) {
+                return $repo->getDevicesFromServiceQueryList($place);
+            },
+            'placeholder' => '-- Select --',
+        ])
+        ->add('placesNumber')
+        ->add('openingDate', DateType::class, [
+            'widget' => 'single_text',
+        ])
+        ->add('closingDate', DateType::class, [
+            'widget' => 'single_text',
+            'required' => false,
+        ])
+        ->add('accommodationType', ChoiceType::class, [
+            'choices' => Choices::getChoices(Accommodation::ACCOMMODATION_TYPE),
+            'placeholder' => '-- Select --',
+            'help' => 'Chambre, T1, T2, T3...',
+            'required' => false,
+        ])
+        ->add('configuration', ChoiceType::class, [
+            'choices' => Choices::getChoices(Accommodation::CONFIGURATION),
+            'placeholder' => '-- Select --',
+            'help' => 'Diffus ou regroupé',
+            'required' => false,
+        ])
+        ->add('individualCollective', ChoiceType::class, [
+            'choices' => Choices::getChoices(Accommodation::INDIVIDUAL_COLLECTIVE),
+            'placeholder' => '-- Select --',
+            'required' => false,
+        ])
+        ->add('comment', null, [
+            'attr' => [
+                'rows' => 5,
+                'placeholder' => 'Description...',
+            ],
+        ])
+        ->add('location', LocationType::class, [
+            'data_class' => Accommodation::class,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

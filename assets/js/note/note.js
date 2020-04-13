@@ -4,7 +4,7 @@ import CheckChangeModal from "../utils/checkChangeModal";
 
 let ajaxRequest = new AjaxRequest();
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", e => {
     new ListNotes(ajaxRequest);
     // new CheckChangeModal("note"); // form name
 });

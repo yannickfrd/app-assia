@@ -76,9 +76,7 @@ class SupportPersonFullExport
             $arrayData[] = $this->getDatas($supportPerson);
         }
 
-        $export = new Export('export_suivis', 'xlsx', $arrayData, 12.5);
-
-        return $export->exportFile();
+        return (new Export('export_suivis', 'xlsx', $arrayData, 12.5))->exportFile();
     }
 
     /**
@@ -88,8 +86,7 @@ class SupportPersonFullExport
      */
     protected function getDatas(SupportPerson $supportPerson)
     {
-        $supportPersonExport = new SupportPersonExport();
-        $this->datas = $supportPersonExport->getDatas($supportPerson);
+        $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
 
         $evaluations = $supportPerson->getEvaluationsPerson();
         $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();

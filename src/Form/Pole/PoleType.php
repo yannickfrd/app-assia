@@ -5,12 +5,13 @@ namespace App\Form\Pole;
 use App\Entity\Pole;
 use App\Entity\User;
 use App\Form\Utils\Choices;
+use App\Form\Type\LocationType;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class PoleType extends AbstractType
 {
@@ -22,13 +23,6 @@ class PoleType extends AbstractType
             ->add('phone1', null, [
                 'attr' => [
                     'class' => 'js-phone',
-                ],
-            ])
-            ->add('address')
-            ->add('city')
-            ->add('zipCode', null, [
-                'attr' => [
-                    'class' => 'js-zip-code ',
                 ],
             ])
             ->add('chief', EntityType::class, [
@@ -47,6 +41,9 @@ class PoleType extends AbstractType
             ->add('color', ChoiceType::class, [
                 'choices' => Choices::getChoices(Pole::COLOR),
                 'placeholder' => '-- Select --',
+            ])
+            ->add('location', LocationType::class, [
+                'data_class' => Pole::class,
             ]);
     }
 

@@ -19,9 +19,7 @@ class ServiceExport
             $arrayData[] = $this->getDatas($service);
         }
 
-        $export = new Export('export_services', 'xlsx', $arrayData, null);
-
-        return $export->exportFile();
+        return (new Export('export_services', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**

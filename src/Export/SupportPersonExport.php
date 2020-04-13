@@ -31,9 +31,7 @@ class SupportPersonExport
             ++$i;
         }
 
-        $export = new Export('export_suivis', 'xlsx', $arrayData, null);
-
-        return $export->exportFile();
+        return (new Export('export_suivis', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**

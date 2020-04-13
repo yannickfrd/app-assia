@@ -142,8 +142,6 @@ class AccommodationController extends AbstractController
             return $this->redirectToRoute('supports');
         }
 
-        $export = new AccommodationExport();
-
-        return $export->exportData($accommodations);
+        return (new AccommodationExport())->exportData($accommodations);
     }
 }

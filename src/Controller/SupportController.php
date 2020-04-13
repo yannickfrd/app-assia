@@ -53,7 +53,7 @@ class SupportController extends AbstractController
      */
     public function viewListSupports(Request $request, SupportGroupSearch $supportGroupSearch = null, Pagination $pagination): Response
     {
-        $supportGroupSearch = new SupportGroupSearch();
+        $supportGroupSearch = (new SupportGroupSearch())->setStatus([2]);
 
         $form = ($this->createForm(SupportGroupSearchType::class, $supportGroupSearch))
             ->handleRequest($request);
@@ -79,6 +79,7 @@ class SupportController extends AbstractController
         $groupPeople = $repo->findGroupPeopleById($id);
 
         $supportGroup = (new SupportGroup())
+            ->setStatus(2)
             ->setStartDate(new \DateTime())
             ->setReferent($this->getUser());
 
@@ -295,9 +296,7 @@ class SupportController extends AbstractController
             return $this->redirectToRoute('supports');
         }
 
-        $export = new SupportPersonExport();
-
-        return $export->exportData($supports);
+        return (new SupportPersonExport())->exportData($supports);
     }
 
     /**

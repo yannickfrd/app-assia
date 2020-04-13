@@ -4,10 +4,11 @@ namespace App\Form\Referent;
 
 use App\Entity\Referent;
 use App\Form\Utils\Choices;
+use App\Form\Type\LocationType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ReferentType extends AbstractType
 {
@@ -56,12 +57,8 @@ class ReferentType extends AbstractType
                     'placeholder' => 'Phone2',
                 ],
             ])
-            ->add('address')
-            ->add('city')
-            ->add('zipCode', null, [
-                'attr' => [
-                    'class' => 'js-zip-code',
-                ],
+            ->add('location', LocationType::class, [
+                'data_class' => Referent::class,
             ])
             ->add('comment', null, [
                 'attr' => [

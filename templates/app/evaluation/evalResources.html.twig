@@ -1,8 +1,8 @@
 {# Resources #}
 <div class="col-md-6">
     <div class="form-group row">
-        <div class="col-md-12">{{ form_row(evalBudgetPerson.resources) }}</div>
-        <div class="col-md-12 js-{{ key }}_{{ entity }}_resources d-block">
+        <div class="col-md-12">{{ form_row(evalBudgetPerson.resources.resources) }}</div>
+        <div class="col-md-12 js-{{ key }}_{{ entity }}_resources_resources d-block">
             <div class="row">
                 <div class="col-form-label col-sm-4 js-resources d-block">Type de ressources</div>
                 <div class="col-sm-8">
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="table-responsive js-{{ key }}_{{ entity }}_resources d-block">
+            <div class="table-responsive js-{{ key }}_{{ entity }}_resources_resources d-block">
                 <table class="table table-sm table-hover text-dark">
                     <thead>
                         <tr>
@@ -43,108 +43,108 @@
                     <tbody>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-disAdultAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="disAdultAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.disAdultAllowance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.disAdultAllowance) }}</div></th>
                             <td class="align-middle">AAH</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.disAdultAllowanceAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.disAdultAllowanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-disChildAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="disChildAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.disChildAllowance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.disChildAllowance) }}</div></th>
                             <td class="align-middle">AEEH</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.disChildAllowanceAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.disChildAllowanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-unemplBenefit" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="unemplBenefit" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.unemplBenefit) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.unemplBenefit) }}</div></th>
                             <td class="align-middle">ARE</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.unemplBenefitAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.unemplBenefitAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-asylumAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="unemplBenefitAmt" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.asylumAllowance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.asylumAllowance) }}</div></th>
                             <td class="align-middle">ADA</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.asylumAllowanceAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.asylumAllowanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-tempWaitingAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="tempWaitingAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.tempWaitingAllowance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.tempWaitingAllowance) }}</div></th>
                             <td class="align-middle">ATA</td>
-                            <td class="align-middle"> {{ form_widget(evalBudgetPerson.tempWaitingAllowanceAmt) }}</td>
+                            <td class="align-middle"> {{ form_widget(evalBudgetPerson.resources.tempWaitingAllowanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-familyAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="familyAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.familyAllowance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.familyAllowance) }}</div></th>
                             <td class="align-middle">AF</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.familyAllowanceAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.familyAllowanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-solidarityAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="solidarityAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.solidarityAllowance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.solidarityAllowance) }}</div></th>
                             <td class="align-middle">ASS</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.solidarityAllowanceAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.solidarityAllowanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-paidTraining" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="paidTraining" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.paidTraining) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.paidTraining) }}</div></th>
                             <td class="align-middle">Formation rémunérée</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.paidTrainingAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.paidTrainingAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-youthGuarantee" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="youthGuarantee" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.youthGuarantee) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.youthGuarantee) }}</div></th>
                             <td class="align-middle">Garantie jeunes</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.youthGuaranteeAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.youthGuaranteeAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-maintenance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="maintenance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.maintenance) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.maintenance) }}</div></th>
                             <td class="align-middle">Pension alimentaire</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.maintenanceAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.maintenanceAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
                             </td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-activityBonus" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="activityBonus" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.activityBonus) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.activityBonus) }}</div></th>
                             <td class="align-middle">Prime d'activité</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.activityBonusAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.activityBonusAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-pensionBenefit" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="pensionBenefit" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.pensionBenefit) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.pensionBenefit) }}</div></th>
                             <td class="align-middle">Retraite</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.pensionBenefitAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.pensionBenefitAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-minimumIncome" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="minimumIncome" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.minimumIncome) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.minimumIncome) }}</div></th>
                             <td class="align-middle">RSA</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.minimumIncomeAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.minimumIncomeAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-salary" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="salary" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.salary) }}</div></th>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.salary) }}</div></th>
                             <td class="align-middle">Salaire</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.salaryAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.salaryAmt) }}</td>
                             <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         <tr id="js-{{ key }}_{{ entity }}_resources_type-ressourceOther" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
                             data-id="ressourceOther" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.ressourceOther) }}</div></th>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.ressourceOtherPrecision) }}</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.ressourceOtherAmt) }}</td>
+                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.ressourceOther) }}</div></th>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.ressourceOtherAmt) }}</td>
                             <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                     </tbody>
@@ -152,7 +152,7 @@
                         <tr id="js-{{ key }}_{{ entity }}_resourcesAmt" class="font-weight-bold">
                             <th scope="row"></th>
                             <td class="align-middle">Total des resources</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resourcesAmt) }}</td>
+                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.resourcesAmt) }}</td>
                             <td>
                         </tr>
                     </tfoot>

@@ -33,29 +33,29 @@ export default class ListDocuments {
         document.querySelectorAll(".js-document").forEach(documentElt => {
             documentElt.addEventListener("click", this.getDocument.bind(this, documentElt));
             let btnElt = documentElt.querySelector("button.js-delete");
-            btnElt.addEventListener("click", function (e) {
+            btnElt.addEventListener("click", e => {
                 this.modalConfirmElt.setAttribute("data-url", btnElt.getAttribute("data-url"));
-            }.bind(this));
+            });
         });
 
-        this.btnSaveElt.addEventListener("click", function (e) {
+        this.btnSaveElt.addEventListener("click", e => {
             e.preventDefault();
             this.saveDocument();
-        }.bind(this));
+        });
 
-        document.getElementById("js-btn-cancel").addEventListener("click", function (e) {
+        document.getElementById("js-btn-cancel").addEventListener("click", e => {
             e.preventDefault();
-        }.bind(this));
+        });
 
-        this.btnDeleteElt.addEventListener("click", function (e) {
+        this.btnDeleteElt.addEventListener("click", e => {
             e.preventDefault();
             this.deleteDocument(this.btnDeleteElt.href);
-        }.bind(this));
+        });
 
-        this.modalConfirmElt.addEventListener("click", function (e) {
+        this.modalConfirmElt.addEventListener("click", e => {
             e.preventDefault();
             this.ajaxRequest(this.modalConfirmElt.getAttribute("data-url"), "GET", null, false, false);
-        }.bind(this));
+        });
     }
 
     // Affiche un formulaire modal vierge
@@ -241,9 +241,9 @@ export default class ListDocuments {
         this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + 1;
         documentElt.addEventListener("click", this.getDocument.bind(this, documentElt));
         let btnElt = documentElt.querySelector("button.js-delete");
-        btnElt.addEventListener("click", function (e) {
+        btnElt.addEventListener("click", e => {
             this.modalConfirmElt.setAttribute("data-url", btnElt.getAttribute("data-url"));
-        }.bind(this));
+        });
     }
 
     // Met à jour la ligne du tableau correspondant au document

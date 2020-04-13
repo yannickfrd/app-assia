@@ -5,7 +5,7 @@ import CheckChange from "../utils/checkChange";
 
 let ajaxRequest = new AjaxRequest();
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", e => {
     new SelectRadioJS("table-people");
     new RemovePerson(ajaxRequest);
     new CheckChange("group_people"); // form name

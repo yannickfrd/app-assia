@@ -11,10 +11,10 @@ export default class Search {
     }
 
     init() {
-        this.btnClearElt.addEventListener("click", function (e) {
+        this.btnClearElt.addEventListener("click", e => {
             e.preventDefault();
             this.clearSearch();
-        }.bind(this));
+        });
     }
 
     // Efface les données du formulaire de recherche au clic

@@ -19,10 +19,10 @@ export default class SearchPerson {
         }
 
         this.searchElt.addEventListener("keyup", this.timer.bind(this));
-        this.searchElt.addEventListener("click", function () {
+        this.searchElt.addEventListener("click", e => {
             this.resultsSearchElt.classList.replace("fade-out", "fade-in");
             setTimeout(this.hideListResults.bind(this), 100);
-        }.bind(this));
+        });
     }
 
     // Timer avant de lancer la requête Ajax
@@ -63,9 +63,9 @@ export default class SearchPerson {
             aElt.href = "/person/" + person.id;
             aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 font-size-10";
             this.resultsSearchElt.appendChild(aElt);
-            aElt.addEventListener("click", function () {
+            aElt.addEventListener("click", e => {
                 aElt.classList.add("active");
-            }.bind(this));
+            });
         });
     }
 
@@ -79,7 +79,7 @@ export default class SearchPerson {
 
     // Supprime la liste des résultats au click
     hideListResults() {
-        window.addEventListener("click", function (e) {
+        window.addEventListener("click", function () {
             this.resultsSearchElt.classList.replace("fade-in", "fade-out");
             this.resultsSearchElt.classList.replace("d-block", "d-none");
         }.bind(this), {

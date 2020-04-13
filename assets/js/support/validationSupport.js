@@ -35,14 +35,14 @@ export default class ValidationSupport {
         }
         this.statusSelectElt.addEventListener("change", this.checkStatus.bind(this));
 
-        document.getElementById("send").addEventListener("click", function (e) {
+        document.getElementById("send").addEventListener("click", e => {
             if (this.getNbErrors()) {
                 e.preventDefault(), {
                     once: true
                 };
                 new MessageFlash("danger", "Veuillez corriger les erreurs avant d'enregistrer.");
             }
-        }.bind(this));
+        });
 
         new DisplayInputs("support_group_", "status", "select", [4]);
     }

@@ -19,9 +19,7 @@ class UserExport
             $arrayData[] = $this->getDatas($user);
         }
 
-        $export = new Export('export_utilisateurs', 'xlsx', $arrayData, null);
-
-        return $export->exportFile();
+        return (new Export('export_utilisateurs', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**
