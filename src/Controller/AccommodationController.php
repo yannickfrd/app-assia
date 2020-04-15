@@ -55,8 +55,6 @@ class AccommodationController extends AbstractController
      * Nouveau groupe de places.
      *
      * @Route("/admin/service/{id}/accommodation/new", name="service_accommodation_new", methods="GET|POST")
-     *
-     * @param Accommodation $accommodation
      */
     public function newAccommodation(Service $service, Accommodation $accommodation = null, Request $request): Response
     {

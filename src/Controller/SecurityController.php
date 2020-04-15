@@ -193,7 +193,7 @@ class SecurityController extends AbstractController
      */
     public function disableUser(User $user): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('DISABLE', $user);
 
         if ($user == $this->getUser()) {
             $this->addFlash('danger', 'Vous ne pouvez pas vous-même désactiver votre compte utilisateur.');

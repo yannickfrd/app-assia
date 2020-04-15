@@ -60,8 +60,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=100, nullable=false)
-     * @Assert\Email(message="L'adresse email n'est pas valide.")
      * @Assert\NotBlank(message = "L'email ne doit pas être vide.")
+     * @Assert\Email(message="L'adresse email n'est pas valide.")
      */
     private $email; // NE PAS SUPPRIMER
 
@@ -92,8 +92,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      * @Assert\Length(min=2, max=50,
-     * minMessage="Le nom est trop court (2 caractères min).",
-     * maxMessage="Le nom est trop long (50 caractères max).")
+     * minMessage="Le nom est trop court ({{ limit }} caractères min).",
+     * maxMessage="Le nom est trop long ({{ limit }} caractères max).")
      */
     private $lastname;
 
@@ -101,8 +101,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      * @Assert\Length(min=2, max=50,
-     * minMessage="Le prénom est trop court (2 caractères min).",
-     * maxMessage="Le prénom est trop long (50 caractères max).")
+     * minMessage="Le prénom est trop court ({{ limit }} caractères min).",
+     * maxMessage="Le prénom est trop long ({{ limit }} caractères max).")
      */
     private $firstname;
 

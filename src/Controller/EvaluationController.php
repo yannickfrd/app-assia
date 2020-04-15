@@ -45,6 +45,8 @@ class EvaluationController extends AbstractController
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
 
+        // dump($evaluationGroup);
+
         if (!$evaluationGroup) {
             return $this->createEvaluationGroup($supportGroup);
         }
@@ -124,8 +126,12 @@ class EvaluationController extends AbstractController
      */
     protected function updateEvaluationGroup(EvaluationGroup $evaluationGroup)
     {
+        $now = new \DateTime();
+
+        $evaluationGroup->setUpdatedAt($now);
+
         $evaluationGroup->getSupportGroup()
-                            ->setUpdatedAt(new \DateTime())
+                            ->setUpdatedAt($now)
                             ->setUpdatedBy($this->getUser());
 
         $this->updateBudgetGroup($evaluationGroup);

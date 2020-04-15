@@ -28,7 +28,6 @@ class DeviceController extends AbstractController
      * Affiche la liste des dispositifs.
      *
      * @Route("/admin/devices", name="admin_devices", methods="GET")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function listDevice(Request $request, Pagination $pagination): Response
     {
@@ -41,9 +40,6 @@ class DeviceController extends AbstractController
      * Nouveau dispositif.
      *
      * @Route("/admin/device/new", name="admin_device_new", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
-     *
-     * @param Device $device
      */
     public function newDevice(Device $device = null, Request $request): Response
     {
@@ -75,7 +71,6 @@ class DeviceController extends AbstractController
      * Modification d'un dispositif.
      *
      * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function editDevice(Device $device, Request $request): Response
     {

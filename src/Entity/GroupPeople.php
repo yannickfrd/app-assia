@@ -61,16 +61,15 @@ class GroupPeople
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", orphanRemoval=true)
      * @Assert\All(constraints={
-     *      @Assert\NotBlank(),
      *      @Assert\NotNull,
      * })
-     * @Assert\Valid
+     * @Assert\Valid()
      */
     private $rolePerson;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="groupPeople", orphanRemoval=true)
-     * @Assert\Valid
+     * @Assert\Valid()
      */
     private $supports;
 

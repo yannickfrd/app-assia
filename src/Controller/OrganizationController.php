@@ -28,7 +28,6 @@ class OrganizationController extends AbstractController
      * Affiche la liste des dispositifs.
      *
      * @Route("/admin/organizations", name="admin_organizations", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function listOrganization(Request $request, Pagination $pagination): Response
     {
@@ -41,9 +40,6 @@ class OrganizationController extends AbstractController
      * Nouveau dispositif.
      *
      * @Route("/admin/organization/new", name="admin_organization_new", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
-     *
-     * @param Organization $organization
      */
     public function newOrganization(Organization $organization = null, Request $request): Response
     {
@@ -71,7 +67,6 @@ class OrganizationController extends AbstractController
      * Modification d'un dispositif.
      *
      * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function editOrganization(Organization $organization, Request $request): Response
     {

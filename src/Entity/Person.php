@@ -44,26 +44,24 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotNull(message="Le nom ne doit pas être vide.")
      * @Assert\NotBlank(message = "Le nom ne doit pas être vide.")
      * @Assert\Length(
      * min=2,
      * max=50,
-     * minMessage="Le nom est trop court (2 caractères min).",
-     * maxMessage="Le nom est trop long (50 caractères max).")
+     * minMessage="Le nom est trop court ({{ limit }} caractères min).",
+     * maxMessage="Le nom est trop long ({{ limit }} caractères max).")
      * Groups("export")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\NotNull(message="Le prénom ne doit pas être vide.")
      * @Assert\NotBlank(message = "Le prénom ne doit pas être vide.")
      * @Assert\Length(
      * min=2,
      * max=50,
-     * minMessage="Le prénom est trop court (2 caractères min).",
-     * maxMessage="Le prénom est trop long (50 caractères max).")
+     * minMessage="Le prénom est trop court ({{ limit }} caractères min).",
+     * maxMessage="Le prénom est trop long ({{ limit }} caractères max).")
      * Groups("export")
      */
     private $firstname;
@@ -75,7 +73,7 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long (50 caractères max).")
+     * @Assert\Length(max=50,maxMessage="Le nom d'usage est trop long ({{ limit }} caractères max).")
      */
     private $usename;
 
@@ -120,6 +118,7 @@ class Person
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="person", orphanRemoval=true, cascade={"persist"})
+     * @Assert\Valid()
      */
     private $rolesPerson;
 

@@ -64,20 +64,14 @@ class RolePerson
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="rolesPerson", cascade={"persist"})
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
-     * @Assert\Valid
+     * @Assert\Valid()
      */
     private $person;
-
-    //  * @Assert\All(constraints={
-    //  *      @Assert\NotBlank(),
-    //  *      @Assert\NotNull,
-    //  *      @Assert\Length(min=2, max=50),
-    //  * })
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePerson", cascade={"persist"})
      * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
-     * @Assert\Valid
+     * @Assert\Valid()
      */
     private $groupPeople;
 

@@ -29,7 +29,6 @@ class Device
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotNull();
      * @Assert\NotBlank();
      */
     private $name;
@@ -37,7 +36,9 @@ class Device
     /**
      * @ORM\Column(type="float", nullable=true, options={"default":1})
      * @Assert\NotNull();
-     * @Assert\Range(min = 0, max = 10, minMessage="Le coefficient ne peut être inférieur à 0",  maxMessage="Le coefficient ne peut être supérieur à 10")
+     * @Assert\Range(min = 0, max = 10,
+     * minMessage="Le coefficient ne peut être inférieur à {{ limit }}",
+     * maxMessage="Le coefficient ne peut être supérieur à {{ limit }}")
      */
     private $coefficient = 1;
 

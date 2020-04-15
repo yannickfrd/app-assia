@@ -71,7 +71,6 @@ class Accommodation
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotNull()
      * @Assert\NotBlank()
      */
     private $placesNumber;

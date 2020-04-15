@@ -43,8 +43,7 @@ class Service
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotNull(message="Le nom du service ne doit pas être vide.")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Le nom du service ne doit pas être vide.")
      * Groups("export")
      */
     private $name;
