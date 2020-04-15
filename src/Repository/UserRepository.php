@@ -96,10 +96,9 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere('p.id = :pole_id')
                 ->setParameter('pole_id', $userSearch->getPole());
         }
-        if ($userSearch->getenabled()) {
-            $query->andWhere('u.enabled = TRUE');
+        if (!$userSearch->getDisabled()) {
+            $query->andWhere('u.disabledAt IS NULL');
         }
-
         if ($userSearch->getService()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -132,7 +131,7 @@ class UserRepository extends ServiceEntityRepository
     public function getUsersQueryList(CurrentUserService $currentUser, User $user = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, enabled}');
+            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}');
 
         $expr = $query->expr();
         $orX = $expr->orX();
@@ -143,9 +142,8 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('services', $currentUser->getServices());
             $orX->add($expr->eq('u.id', $currentUser->getUser()));
         }
-
         // if ($currentUser->isRole("ROLE_ADMIN")) {
-        $orX->add($expr->eq('u.enabled', true));
+        $orX->add($expr->isNull('u.disabledAt'));
         // }
         if ($user) {
             $orX->add($expr->eq('u.id', $user));
@@ -161,8 +159,8 @@ class UserRepository extends ServiceEntityRepository
     public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, enabled}')
-            ->where('u.enabled = TRUE');
+            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+            ->where('u.disabledAt IS NULL');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->leftJoin('u.serviceUser', 'r')
@@ -181,12 +179,12 @@ class UserRepository extends ServiceEntityRepository
     public function findUsersFromService(Service $service)
     {
         return $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, enabled}')
+            ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, disabledAt}')
             ->leftJoin('u.serviceUser', 'su')->addselect('su')
 
             ->where('su.service = :service')
             ->setParameter('service', $service)
-            ->andWhere('u.enabled = TRUE')
+            ->andWhere('u.disabledAt IS NULL')
 
             ->orderBy('u.lastname', 'ASC')
 
@@ -202,13 +200,13 @@ class UserRepository extends ServiceEntityRepository
     public function findUsers(array $criteria = null)
     {
         $query = $this->createQueryBuilder('u')
-            // ->select("u")
-            // ->leftJoin("u.referentSupport", "s")->addSelect("PARTIAL s.{id, status, startDate, endDate}")
-            // ->join("u.notesCreated", "n")->addSelect("COUNT(n.id)")
-            // ->leftJoin("u.rdvs", "r")->addSelect("PARTIAL r.{id, start}")
-            // ->leftJoin("u.documents", "d")->addSelect("PARTIAL d.{id}")
+        // ->select("u")
+        // ->leftJoin("u.referentSupport", "s")->addSelect("PARTIAL s.{id, status, startDate, endDate}")
+        // ->join("u.notesCreated", "n")->addSelect("COUNT(n.id)")
+        // ->leftJoin("u.rdvs", "r")->addSelect("PARTIAL r.{id, start}")
+        // ->leftJoin("u.documents", "d")->addSelect("PARTIAL d.{id}")
 
-            ->andWhere('u.enabled = TRUE');
+        ->andWhere('u.disabledAt IS NULL');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {

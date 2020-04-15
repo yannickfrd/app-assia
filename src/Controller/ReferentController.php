@@ -90,7 +90,7 @@ class ReferentController extends AbstractController
         $this->manager->remove($referent);
         $this->manager->flush();
 
-        $this->addFlash('danger', 'Le service social "'.$name.'" a été supprimé.');
+        $this->addFlash('warning', 'Le service social "'.$name.'" a été supprimé.');
 
         return $this->redirectToRoute('group_people_show', [
             'id' => $referent->getGroupPeople()->getId(),

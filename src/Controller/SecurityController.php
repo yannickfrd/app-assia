@@ -4,27 +4,27 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\Model\UserChangeInfo;
-use App\Form\Model\UserChangePassword;
+use App\Repository\UserRepository;
 use App\Form\Model\UserInitPassword;
 use App\Form\Model\UserResetPassword;
-use App\Form\Security\ChangePasswordType;
-use App\Form\Security\ForgotPasswordType;
+use App\Form\User\UserChangeInfoType;
+use App\Repository\ServiceRepository;
+use App\Form\Model\UserChangePassword;
+use App\Notification\MailNotification;
 use App\Form\Security\InitPasswordType;
 use App\Form\Security\SecurityUserType;
-use App\Form\Security\ReinitPasswordType;
-use App\Form\Security\SecurityUserEditType;
-use App\Form\User\UserChangeInfoType;
-use App\Notification\MailNotification;
-use App\Repository\ServiceRepository;
-use App\Repository\SupportGroupRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Security\ChangePasswordType;
+use App\Form\Security\ForgotPasswordType;
+use App\Form\Security\ReinitPasswordType;
+use App\Repository\SupportGroupRepository;
+use App\Form\Security\SecurityUserEditType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
@@ -177,9 +177,51 @@ class SecurityController extends AbstractController
             $this->addFlash('success', 'Le compte utilisateur a été mis à jour.');
         }
 
+        if (!$form->isSubmitted() && $user->isDisabled()) {
+            $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
+        }
+
         return $this->render('app/security/securityUser.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Désactive l'utilisateur.
+     *
+     * @Route("/admin/user/{id}/disable", name="security_user_disable", methods="GET")
+     */
+    public function disableUser(User $user): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if ($user == $this->getUser()) {
+            $this->addFlash('danger', 'Vous ne pouvez pas vous-même désactiver votre compte utilisateur.');
+
+            return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
+        }
+
+        $user->setDisabledAt(new \DateTime());
+        $this->manager->flush();
+
+        return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
+    }
+
+    /**
+     * Active l'utilisateur.
+     *
+     * @Route("/admin/user/{id}/enable", name="security_user_enable", methods="GET")
+     */
+    public function enableUser(User $user): Response
+    {
+        $this->denyAccessUnlessGranted('DISABLE', $user);
+
+        $user->setDisabledAt(null);
+        $this->manager->flush();
+
+        $this->addFlash('success', 'Ce compte utilisateur est ré-activé.');
+
+        return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
     }
 
     /**
@@ -263,8 +305,7 @@ class SecurityController extends AbstractController
         $hashPassword = $this->encoder->encodePassword($user, $user->getPassword());
 
         $user->setPassword($hashPassword)
-            ->setLoginCount(0)
-            ->setEnabled(true);
+            ->setLoginCount(0);
 
         $this->manager->persist($user);
         $this->manager->flush();

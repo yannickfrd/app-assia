@@ -4,14 +4,18 @@ namespace App\Entity;
 
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class AccommodationPerson
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
 
     /**
      * @ORM\Id()
@@ -41,12 +45,12 @@ class AccommodationPerson
     private $commentEndReason;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\AccommodationGroup", inversedBy="accommodationPersons")
+     * @ORM\ManyToOne(targetEntity="App\Entity\AccommodationGroup", inversedBy="accommodationPeople")
      */
     private $accommodationGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="accommodationPersons")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="accommodationPeople")
      * @ORM\JoinColumn(nullable=false)
      */
     private $person;

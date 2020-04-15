@@ -390,7 +390,7 @@ export default class evaluation {
         let array = [];
         inputElts.forEach(inputElt => {
             if (inputElt.value) {
-                array.push(parseInt(inputElt.value));
+                array.push(parseFloat(inputElt.value));
             }
         });
 
@@ -421,13 +421,13 @@ export default class evaluation {
         let array = [];
         this.amtElts(type).forEach(amountElt => {
             if (amountElt.value) {
-                array.push(parseInt(amountElt.value));
+                array.push(parseFloat(amountElt.value));
             }
         });
 
         this.groupAmtElt(type).textContent = array.reduce((a, b) => a + b, 0);
 
-        this.budgetBalanceGroupAmtElt.textContent = parseInt(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent);
+        this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent);
     }
 
     groupAmtElt(type) {
@@ -470,6 +470,7 @@ export default class evaluation {
 
     checkMoney(moneyElt) {
         moneyElt.value = moneyElt.value.replace(" ", "");
+        moneyElt.value = moneyElt.value.replace(",", ".");
         if (Number(moneyElt.value) >= 0) {
             return this.validationInput.valid(moneyElt);
         }

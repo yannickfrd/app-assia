@@ -20,7 +20,7 @@ class ServiceVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ['VIEW', 'EDIT', 'DESACTIVATE'])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
             && $subject instanceof \App\Entity\Service;
     }
 
@@ -41,8 +41,8 @@ class ServiceVoter extends Voter
             case 'EDIT':
                 return $this->canEdit();
                 break;
-            case 'DEACTIVATE':
-                return $this->canDeactivate();
+            case 'DISABLE':
+                return $this->canDisable();
                 break;
         }
 
@@ -65,7 +65,7 @@ class ServiceVoter extends Voter
         return false;
     }
 
-    protected function canDeactivate()
+    protected function canDisable()
     {
         if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;

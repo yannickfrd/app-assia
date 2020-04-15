@@ -10,6 +10,8 @@ use App\Form\Type\LocationType;
 use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,8 +30,6 @@ class AccommodationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $place = $options['data'];
-
         $builder
         ->add('name', null, [
             'attr' => [
@@ -41,14 +41,6 @@ class AccommodationType extends AbstractType
             'choice_label' => 'name',
             'query_builder' => function (ServiceRepository $repo) {
                 return $repo->getServicesFromUserQueryList($this->currentUser);
-            },
-            'placeholder' => '-- Select --',
-        ])
-        ->add('device', EntityType::class, [
-            'class' => Device::class,
-            'choice_label' => 'name',
-            'query_builder' => function (DeviceRepository $repo) use ($place) {
-                return $repo->getDevicesFromServiceQueryList($place);
             },
             'placeholder' => '-- Select --',
         ])
@@ -86,6 +78,19 @@ class AccommodationType extends AbstractType
         ->add('location', LocationType::class, [
             'data_class' => Accommodation::class,
         ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $accommodation = $event->getData();
+
+            $event->getForm()->add('device', EntityType::class, [
+                'class' => Device::class,
+                'choice_label' => 'name',
+                'query_builder' => function (DeviceRepository $repo) use ($accommodation) {
+                    return $repo->getDevicesFromServiceQueryList($accommodation);
+                },
+                'placeholder' => '-- Select --',
+            ]);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -61,7 +61,7 @@ Logement/hébergement | Esperer95.app
 						</tr>
 					</thead>
 					<tbody>
-						{% for form_person_accommodation in form.accommodationPersons.children %}
+						{% for form_person_accommodation in form.accommodationPeople.children %}
 							{% set person = form_person_accommodation.vars.data.person %}
 							<tr class="js-tr-person-place">
 								<th scope="row"></th>

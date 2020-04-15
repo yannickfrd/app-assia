@@ -38,7 +38,6 @@ class UserTest extends WebTestCase
             ->setRoles(['ROLE_USER'])
             ->setPassword('Test123*')
             ->setEmail($faker->email())
-            ->setEnabled(true)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($now);
     }

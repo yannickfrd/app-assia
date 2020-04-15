@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -24,8 +24,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Accommodation
 {
     use CreatedUpdatedEntityTrait;
-    use SoftDeleteableEntity;
     use LocationEntityTrait;
+    use SoftDeleteableEntity;
 
     public const ACCOMMODATION_TYPE = [
         1 => 'Chambre individuelle',
@@ -88,6 +88,11 @@ class Accommodation
     private $closingDate;
 
     /**
+     * @ORM\Column(name="department", length=10, nullable=true)
+     */
+    private $zipCode; // NE PAS SUPPRIMER
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $accommodationType;
@@ -119,14 +124,14 @@ class Accommodation
     private $device;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="accommodation")
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="accommodation", orphanRemoval=true)
      */
     private $accommodationGroups;
 
     // /**
     //  * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="accommodation")
     //  */
-    // private $accommodationPersons;
+    // private $accommodationPeople;
 
     public function __construct()
     {
@@ -150,7 +155,7 @@ class Accommodation
         return $this;
     }
 
-    public function getFullName(): ?string
+    public function getFullname(): ?string
     {
         return $this->getService()->getName().' - '.$this->name;
     }

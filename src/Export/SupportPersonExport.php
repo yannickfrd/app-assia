@@ -50,8 +50,8 @@ class SupportPersonExport
         $cityAccommodations = [];
         $zipCodeAccommodations = [];
 
-        $accommodationPersons = $person->getAccommodationPersons();
-        foreach ($accommodationPersons as $accommodationPerson) {
+        $accommodationPeople = $person->getAccommodationPeople();
+        foreach ($accommodationPeople as $accommodationPerson) {
             $accommodations = $accommodationPerson->getAccommodationGroup()->getAccommodation();
             $nameAccommodations[] = $accommodations->getName();
             $addressAccommodations[] = $accommodations->getAddress();

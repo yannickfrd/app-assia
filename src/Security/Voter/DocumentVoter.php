@@ -2,12 +2,15 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Security\Voter\UserIsAdminTrait;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DocumentVoter extends Voter
 {
+    use UserIsAdminTrait;
+
     private $security;
     protected $currentUser;
     protected $currentUserId;
@@ -76,7 +79,7 @@ class DocumentVoter extends Voter
             return true;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->document->getCreatedBy()))) {
             return true;
         }
 
@@ -89,24 +92,8 @@ class DocumentVoter extends Voter
             return true;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->document->getCreatedBy()))) {
             return true;
-        }
-
-        return false;
-    }
-
-    // If current user is administrator
-    protected function isAdminUser()
-    {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
-                foreach ($this->document->getCreatedBy()->getServiceUser() as $serviceUser) {
-                    if ($serviceUser->getService()->getId() == $serviceCurrentUser->getService()->getId()) {
-                        return true;
-                    }
-                }
-            }
         }
 
         return false;

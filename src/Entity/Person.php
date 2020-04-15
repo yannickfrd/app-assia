@@ -131,13 +131,13 @@ class Person
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="person", orphanRemoval=true)
      */
-    private $accommodationPersons;
+    private $accommodationPeople;
 
     public function __construct()
     {
         $this->rolesPerson = new ArrayCollection();
         $this->supports = new ArrayCollection();
-        $this->accommodationPersons = new ArrayCollection();
+        $this->accommodationPeople = new ArrayCollection();
     }
 
     public function __toString()
@@ -350,15 +350,15 @@ class Person
     /**
      * @return Collection|AccommodationPerson[]
      */
-    public function getAccommodationPersons(): ?Collection
+    public function getAccommodationPeople(): ?Collection
     {
-        return $this->accommodationPersons;
+        return $this->accommodationPeople;
     }
 
     public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if (!$this->accommodationPersons->contains($accommodationPerson)) {
-            $this->accommodationPersons[] = $accommodationPerson;
+        if (!$this->accommodationPeople->contains($accommodationPerson)) {
+            $this->accommodationPeople[] = $accommodationPerson;
             $accommodationPerson->setPerson($this);
         }
 
@@ -367,8 +367,8 @@ class Person
 
     public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if ($this->accommodationPersons->contains($accommodationPerson)) {
-            $this->accommodationPersons->removeElement($accommodationPerson);
+        if ($this->accommodationPeople->contains($accommodationPerson)) {
+            $this->accommodationPeople->removeElement($accommodationPerson);
             // set the owning side to null (unless already changed)
             if ($accommodationPerson->getPerson() === $this) {
                 $accommodationPerson->setPerson(null);

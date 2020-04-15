@@ -204,7 +204,7 @@ class AccommodationGroupController extends AbstractController
      */
     protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
-        foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPerson) {
+        foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
             if (null == $accommodationPerson->getEndDate()) {
                 $accommodationPerson->setEndDate($accommodationGroup->getEndDate());
             }
@@ -231,8 +231,8 @@ class AccommodationGroupController extends AbstractController
     {
         $people = [];
 
-        foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPersons) {
-            $people[] = $accommodationPersons->getPerson()->getId();
+        foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
+            $people[] = $accommodationPerson->getPerson()->getId();
         }
 
         foreach ($accommodationGroup->getSupportGroup()->getGroupPeople()->getrolePerson() as $rolePerson) {

@@ -67,7 +67,7 @@ class Note
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notes")
      */
-    private $createdBy;
+    private $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="notes")

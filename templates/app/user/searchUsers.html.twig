@@ -17,10 +17,11 @@
 </div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.service) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.pole) }}</div>
+{% if disabled_users %}
 <div class="form-group col-auto my-1 px-1 d-inline-flex">
     <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
-        data-placement="bottom" title="Utilisateur actif">
-        {{ form_row(form.enabled) }}
+        data-placement="bottom" title="Utilisateur actif">{{ form_row(form.disabled) }}
     </div>
 </div>
+{% endif %}
 {% endblock %}

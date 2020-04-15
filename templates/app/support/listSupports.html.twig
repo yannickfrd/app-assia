@@ -19,7 +19,8 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ supports.getTotalItemCount | number_format(0,'', ' ')  }} suivis.</span>
+                <span class="align-middle">Résultat : {{ supports.getTotalItemCount | number_format(0,'', ' ') }} <!--
+                -->suivi{% if supports.getTotalItemCount %}s{% endif %}.</span>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -47,7 +48,7 @@
                     {% for support in supports %}
                     {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
 
-                    {% if support.supportPerson|filter(a => a.role != 3)|length  %}
+                    {% if support.supportPerson|filter(a => a.role != 3)|length %}
                     {% set supportPeople = support.supportPerson|filter(a => a.role != 3) %}
                     {% else %} 
                     {% set supportPeople = support.supportPerson %}
@@ -79,7 +80,7 @@
                         </td>
                         <td class="align-middle">
                             {% for supportPerson in supportPeople %}
-                            {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />                           
+                            {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />
                             {% endfor %}
                         </td>
                         <td class="align-middle">

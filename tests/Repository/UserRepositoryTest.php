@@ -57,8 +57,7 @@ class UserRepositoryTest extends WebTestCase
             ->setLastname('mad')
             ->setPhone('01 00 00 00 00')
             ->setStatus(6)
-            ->setPole($pole)
-            ->setEnabled(true);
+            ->setPole($pole);
     }
 
     public function testCount()

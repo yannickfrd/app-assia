@@ -124,7 +124,7 @@ class AccommodationController extends AbstractController
         $this->manager->remove($accommodation);
         $this->manager->flush();
 
-        $this->addFlash('danger', 'Le groupe de places a été supprimé.');
+        $this->addFlash('warning', 'Le groupe de places a été supprimé.');
 
         return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
     }

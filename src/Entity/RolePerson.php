@@ -86,7 +86,7 @@ class RolePerson
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $createdAt;
+    private $createdAt; // NE PAS SUPPRIMER
 
     public function getId(): ?int
     {

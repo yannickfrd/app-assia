@@ -60,7 +60,6 @@ class B_UserFixtures extends Fixture
         //         ->setEmail($email)
         //         ->setCreatedAt(new \DateTime())
         //         ->setUpdatedAt(new \DateTime())
-        //         ->setEnabled(true)
         //         ->setLoginCount(0)
         //         ->setLastLogin(new \DateTime());
 
@@ -96,7 +95,6 @@ class B_UserFixtures extends Fixture
             // ->addServiceUser($serviceUser)
             ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
             ->setEmail('romain.madelaine@esperer-95.org')
-            ->setEnabled(true)
             ->setLoginCount(1)
             ->setLastLogin(new \DateTime())
             ->setCreatedAt(new \DateTime())
@@ -130,7 +128,6 @@ class B_UserFixtures extends Fixture
             ->setphone1($phone)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin)
-            ->setEnabled(true)
             ->addServiceUser($serviceUser);
 
         $this->users[] = $user;

@@ -2,17 +2,17 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Service\Phone;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Traits\ContactEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -20,12 +20,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  fields={"username"},
  *  message="Ce nom d'utilisateur existe déjà."
  * )
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class User implements UserInterface
 {
+    use ContactEntityTrait;
     use CreatedUpdatedEntityTrait;
-    use SoftDeleteableEntity;
+    use DisableEntityTrait;
 
     public const STATUS = [
         1 => 'Travailleur social',
@@ -59,21 +59,17 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank(message = "L'email ne doit pas être vide.")
+     * @ORM\Column(type="string", length=100, nullable=false)
      * @Assert\Email(message="L'adresse email n'est pas valide.")
+     * @Assert\NotBlank(message = "L'email ne doit pas être vide.")
      */
-    private $email;
+    private $email; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
+     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
-    private $phone1;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $phone2;
+    private $phone1; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -161,11 +157,6 @@ class User implements UserInterface
     private $token;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $enabled;
-
-    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $tokenCreatedAt;
@@ -225,42 +216,6 @@ class User implements UserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPhone1(): ?string
-    {
-        return Phone::getPhoneFormat($this->phone1);
-    }
-
-    public function setPhone1(?string $phone1): self
-    {
-        $this->phone1 = Phone::formatPhone($phone1);
-
-        return $this;
-    }
-
-    public function getPhone2(): ?string
-    {
-        return Phone::getPhoneFormat($this->phone2);
-    }
-
-    public function setPhone2(?string $phone2): self
-    {
-        $this->phone2 = Phone::formatPhone($phone2);
 
         return $this;
     }
@@ -530,18 +485,6 @@ class User implements UserInterface
     public function setTokenCreatedAt(?\DateTimeInterface $tokenCreatedAt): self
     {
         $this->tokenCreatedAt = $tokenCreatedAt;
-
-        return $this;
-    }
-
-    public function getEnabled(): ?bool
-    {
-        return $this->enabled;
-    }
-
-    public function setEnabled(?bool $enabled): self
-    {
-        $this->enabled = $enabled;
 
         return $this;
     }

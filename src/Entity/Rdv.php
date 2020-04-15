@@ -63,7 +63,7 @@ class Rdv
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="rdvs")
      */
-    private $createdBy;
+    private $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="rdvs", fetch="EXTRA_LAZY")

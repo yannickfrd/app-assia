@@ -103,7 +103,7 @@ class AccommodationRepository extends ServiceEntityRepository
             ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id,name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id,name}')
             ->leftJoin('a.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id,startDate, endDate}')
-            ->leftJoin('ag.accommodationPersons', 'ap')->addSelect('PARTIAL ap.{id,startDate, endDate}');
+            ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id,startDate, endDate}');
         // ->leftJoin("ap.person", "p")->addSelect("PARTIAL p.{id,firstname, lastname}");
     }
 

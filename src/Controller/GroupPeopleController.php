@@ -86,7 +86,7 @@ class GroupPeopleController extends AbstractController
         $this->manager->remove($groupPeople);
         $this->manager->flush();
 
-        $this->addFlash('danger', 'Le groupe a été supprimé.');
+        $this->addFlash('warning', 'Le groupe a été supprimé.');
 
         return $this->redirectToRoute('home');
     }

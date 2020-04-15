@@ -15,7 +15,6 @@ App\Entity\User:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     loginCount: 1
     lastlogin: <dateTimeBetween($updatedAt, "now")>
-    enabled: true
 
   user{2..10}:
     firstname: <fr_FR:firstName()>
@@ -29,6 +28,5 @@ App\Entity\User:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     loginCount: <numberBetween(0, 99)>
     lastlogin: <dateTimeBetween($updatedAt, "now")>
-    enabled: true
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"

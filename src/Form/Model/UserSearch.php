@@ -56,7 +56,7 @@ class UserSearch
     /**
      * @var bool|null
      */
-    private $enabled = true;
+    private $disabled = false;
 
     /**
      * @var bool
@@ -176,14 +176,14 @@ class UserSearch
         return $this;
     }
 
-    public function getEnabled(): ?bool
+    public function getDisabled(): ?bool
     {
-        return $this->enabled;
+        return $this->disabled;
     }
 
-    public function setEnabled(bool $enabled): self
+    public function setDisabled(bool $disabled): self
     {
-        $this->enabled = $enabled;
+        $this->disabled = $disabled;
 
         return $this;
     }

@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,13 +19,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(
  *     fields={"name"},
  *     message="Ce service existe déjà !")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Service
 {
-    use CreatedUpdatedEntityTrait;
-    use SoftDeleteableEntity;
+    use ContactEntityTrait;
     use LocationEntityTrait;
+    use CreatedUpdatedEntityTrait;
+    use DisableEntityTrait;
 
     public const SUPPORT_ACCESS = [
         1 => 'Uniquement le référent du suivi',
@@ -66,16 +66,9 @@ class Service
     private $supportGroup;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     * @Assert\Email(message="L'adresse email n'est pas valide.")
-     */
-    private $email;
-
-    /**
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
-     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone1 est incorrect.")
      */
-    private $phone1;
+    private $phone1; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -116,11 +109,6 @@ class Service
      * @ORM\Column(type="date", nullable=true)
      */
     private $closingDate;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $enabled;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -252,30 +240,6 @@ class Service
         return $this;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPhone1(): ?string
-    {
-        return Phone::getPhoneFormat($this->phone1);
-    }
-
-    public function setPhone1(?string $phone1): self
-    {
-        $this->phone1 = Phone::formatPhone($phone1);
-
-        return $this;
-    }
-
     public function getSupportAccess(): ?int
     {
         return $this->supportAccess;
@@ -373,18 +337,6 @@ class Service
     public function setClosingDate(?\DateTimeInterface $closingDate): self
     {
         $this->closingDate = $closingDate;
-
-        return $this;
-    }
-
-    public function getEnabled(): ?bool
-    {
-        return $this->enabled;
-    }
-
-    public function setEnabled(?bool $enabled): self
-    {
-        $this->enabled = $enabled;
 
         return $this;
     }

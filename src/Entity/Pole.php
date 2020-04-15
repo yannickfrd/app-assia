@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use App\Entity\Traits\ContactEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -16,13 +16,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(
  *     fields={"name"},
  *     message="Ce pôle existe déjà !")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Pole
 {
-    use CreatedUpdatedEntityTrait;
-    use SoftDeleteableEntity;
+    use ContactEntityTrait;
     use LocationEntityTrait;
+    use CreatedUpdatedEntityTrait;
+    use DisableEntityTrait;
 
     public const POLES = [
         1 => 'Accueil Publics Migrants',
@@ -62,14 +62,9 @@ class Pole
     private $services;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $email;
-
-    /**
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
-    private $phone1;
+    private $phone1; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -104,30 +99,6 @@ class Pole
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPhone1(): ?string
-    {
-        return $this->phone1;
-    }
-
-    public function setPhone1(?string $phone1): self
-    {
-        $this->phone1 = $phone1;
 
         return $this;
     }

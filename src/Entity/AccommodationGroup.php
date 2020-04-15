@@ -6,15 +6,19 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class AccommodationGroup
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
 
     public const END_REASON = [
         1 => 'Fin du suivi',
@@ -66,7 +70,7 @@ class AccommodationGroup
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="accommodationGroup", orphanRemoval=true)
      */
-    private $accommodationPersons;
+    private $accommodationPeople;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="accommodationGroups")
@@ -76,7 +80,7 @@ class AccommodationGroup
 
     public function __construct()
     {
-        $this->accommodationPersons = new ArrayCollection();
+        $this->accommodationPeople = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,15 +171,15 @@ class AccommodationGroup
     /**
      * @return Collection|AccommodationPerson[]
      */
-    public function getAccommodationPersons(): ?Collection
+    public function getAccommodationPeople(): ?Collection
     {
-        return $this->accommodationPersons;
+        return $this->accommodationPeople;
     }
 
     public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if (!$this->accommodationPersons->contains($accommodationPerson)) {
-            $this->accommodationPersons[] = $accommodationPerson;
+        if (!$this->accommodationPeople->contains($accommodationPerson)) {
+            $this->accommodationPeople[] = $accommodationPerson;
             $accommodationPerson->setAccommodationGroup($this);
         }
 
@@ -184,8 +188,8 @@ class AccommodationGroup
 
     public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
     {
-        if ($this->accommodationPersons->contains($accommodationPerson)) {
-            $this->accommodationPersons->removeElement($accommodationPerson);
+        if ($this->accommodationPeople->contains($accommodationPerson)) {
+            $this->accommodationPeople->removeElement($accommodationPerson);
             // set the owning side to null (unless already changed)
             if ($accommodationPerson->getAccommodationGroup() === $this) {
                 $accommodationPerson->setAccommodationGroup(null);

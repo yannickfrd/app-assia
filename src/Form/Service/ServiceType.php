@@ -48,7 +48,7 @@ class ServiceType extends AbstractType
                 'choice_label' => 'fullname',
                 'query_builder' => function (UserRepository $repo) {
                     return $repo->createQueryBuilder('u')
-                        ->where('u.enabled = TRUE')
+                        ->where('u.disabledAt IS NULL')
                         ->andWhere('u.status = 2 OR u.status = 3  OR u.status = 4')
                         ->orderBy('u.lastname', 'ASC');
                 },
@@ -63,11 +63,6 @@ class ServiceType extends AbstractType
             ])
             ->add('closingDate', DateType::class, [
                 'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('enabled', CheckBoxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('supportAccess', ChoiceType::class, [

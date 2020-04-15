@@ -8,7 +8,6 @@ App\Entity\Service:
     city: Pontoise
     zipCode: 95 000
     accommodation: true
-    enabled: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
     createdBy: "@userSuperAdmin"
@@ -22,7 +21,6 @@ App\Entity\Service:
     zipCode: <numberBetween(1, 95)>
     address : <fr_FR:address()>
     accommodation: true
-    enabled: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
     pole: "@pole"

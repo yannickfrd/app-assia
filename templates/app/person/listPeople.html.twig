@@ -9,8 +9,6 @@
 {% else %}Rechercher une personne{% endif %} | Esperer95.app
 {% endblock %}
 
-{% block stylesheets %}{% endblock %}
-
 {% block body %}
 
 <section class="my-0">
@@ -40,7 +38,8 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Résultat : {{ people.getTotalItemCount | number_format(0,'', ' ')}} personne(s).</p>
+                <p class="align-middle">Résultat : {{ people.getTotalItemCount | number_format(0,'', ' ')}} <!--
+                -->personne{% if people.getTotalItemCount %}s{% endif %}.</p>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(people) }}</div>

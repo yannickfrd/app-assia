@@ -31,7 +31,7 @@ class PoleType extends AbstractType
                 'query_builder' => function (UserRepository $repo) {
                     return $repo->createQueryBuilder('u')
                         ->where('u.status = 4')
-                        ->andWhere('u.enabled = TRUE')
+                        ->andWhere('u.disabledAt IS NULL')
                         ->orderBy('u.lastname', 'ASC');
                 },
                 'placeholder' => '-- Select --',

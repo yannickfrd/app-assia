@@ -65,7 +65,7 @@ class Document
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="documents")
      */
-    private $createdBy;
+    private $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="documents")

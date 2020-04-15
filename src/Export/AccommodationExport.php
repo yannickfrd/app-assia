@@ -43,7 +43,7 @@ class AccommodationExport
     {
         $numberPeople = 0;
         foreach ($accommodation->getAccommodationGroups() as $accommodationGroup) {
-            foreach ($accommodationGroup->getAccommodationPersons() as $accommodationPerson) {
+            foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
                 $endDate = $accommodationPerson->getEndDate();
                 if (!$endDate || $endDate->format('d/m/Y') >= (new \Datetime())->format('d/m/Y')) {
                     ++$numberPeople;
