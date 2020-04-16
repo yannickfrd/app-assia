@@ -119,6 +119,7 @@ export default class evaluation {
             this.editElt(i, "_initEvalPerson_resources_type", "d-table-row");
             this.selectTrElts("init_eval", "initEvalPerson", i, "resources_type");
             this.editAmt(prefix, "init_eval", "initEvalPerson", i, "resources");
+            this.changeResources("eval_budget", prefix, i, "initEvalPerson");
         });
     }
 
@@ -183,6 +184,20 @@ export default class evaluation {
             this.selectTrElts("eval_budget", entity, i, "debts_type");
             this.editAmt(prefix, "eval_budget", entity, i, "resources");
             this.editAmt(prefix, "eval_budget", entity, i, "charges");
+            this.changeResources("eval_budget", prefix, i, entity);
+        });
+    }
+
+    // Si changement des ressources à "Non", alors efface tous les types de ressources saisies de la personne
+    changeResources(collapseId, prefix, i, entity) {
+        let resourceInput = document.getElementById(prefix + i + "_" + entity + "_resources_resources");
+        resourceInput.addEventListener("change", e => {
+            if (this.getOption(resourceInput) === "2") {
+                document.querySelectorAll(".js-" + i + "_" + entity + "_resources_type").forEach(trElt => {
+                    this.removeTr(collapseId, entity, i, trElt);
+                });
+                document.getElementById(prefix + i + "_" + entity + "_resources_resourcesAmt").value = 0; // met le total des ressources à zéro
+            }
         });
     }
 
@@ -254,10 +269,14 @@ export default class evaluation {
     // Modifie l'option d'un Select
     setOption(selectElt, value) {
         selectElt.querySelectorAll("option").forEach(option => {
-            option.value === value ? option.setAttribute("selected", "selected") : option.selected = "";
+            if (option.value === value) {
+                option.setAttribute("selected", "selected")
+            } else {
+                option.removeAttribute("selected");
+                option.selected = "";
+            }
         });
     }
-
 
     // Masque ou affiche un élement
     editElt(i, eltId, display) {
@@ -324,7 +343,7 @@ export default class evaluation {
         window.setTimeout(e => {
             selectElt.querySelector("option").selected = "selected";
             let inputTextElt = this.trElt.querySelector("input[type='text']");
-            if (display === "" && inputTextElt) {
+            if (inputTextElt) {
                 inputTextElt.focus();
             }
         }, 200);
