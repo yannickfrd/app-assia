@@ -38,8 +38,6 @@ class GroupPeopleController extends AbstractController
      * Liste des groupes de personnes.
      *
      * @Route("/groups_people", name="groups_people", methods="GET|POST")
-     *
-     * @param GroupPeopleSearch $groupPeopleSearch
      */
     public function listGroupsPeople(GroupPeopleSearch $groupPeopleSearch = null, Request $request, Pagination $pagination): Response
     {
@@ -96,8 +94,6 @@ class GroupPeopleController extends AbstractController
      *
      * @Route("/group/{id}/add/person/{person_id}", name="group_add_person", methods="POST")
      * @ParamConverter("person", options={"id" = "person_id"})
-     *
-     * @param RolePerson $rolePerson
      */
     public function tryAddPersonInGroup(int $id, Person $person, RolePerson $rolePerson = null, RolePersonRepository $repoRolePerson, Request $request): Response
     {
@@ -177,10 +173,8 @@ class GroupPeopleController extends AbstractController
 
     /**
      *  Vérifie si la personne est déjà rattachée à ce groupe.
-     *
-     * @return RolePerson|null
      */
-    protected function personExists(GroupPeople $groupPeople, Person $person, RolePersonRepository $repoRolePerson)
+    protected function personExists(GroupPeople $groupPeople, Person $person, RolePersonRepository $repoRolePerson): ?RolePerson
     {
         return $repoRolePerson->findOneBy([
             'person' => $person->getId(),

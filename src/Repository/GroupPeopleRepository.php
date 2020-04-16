@@ -22,10 +22,8 @@ class GroupPeopleRepository extends ServiceEntityRepository
 
     /**
      * Donne le groupe de personnes.
-     *
-     * @param int $id
      */
-    public function findGroupPeopleById($id): ?GroupPeople
+    public function findGroupPeopleById(int $id): ?GroupPeople
     {
         return $this->createQueryBuilder('g')
             ->select('g')

@@ -45,14 +45,18 @@ class EvaluationController extends AbstractController
 
         $evaluationGroup = $this->repo->findEvaluationById($id);
 
-        // dump($evaluationGroup);
-
         if (!$evaluationGroup) {
             return $this->createEvaluationGroup($supportGroup);
         }
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->updateEvaluation($evaluationGroup);
+        }
+
+        // dump($evaluationGroup);
 
         return $this->render('app/evaluation/evaluation.html.twig', [
             'support' => $supportGroup,
@@ -77,7 +81,7 @@ class EvaluationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateEvaluationGroup($evaluationGroup);
+            return $this->updateAjax($evaluationGroup);
         }
 
         return $this->getErrorMessage($form, $normalisation);
@@ -92,7 +96,12 @@ class EvaluationController extends AbstractController
             ->setSupportGroup($supportGroup)
             ->setDate(new \DateTime());
 
-        $supportGroup->setInitEvalGroup(new InitEvalGroup());
+        $initEvalGroup = (new InitEvalGroup())
+            ->setSupportGroup($supportGroup);
+
+        $this->manager->persist($initEvalGroup);
+
+        $supportGroup->setInitEvalGroup($initEvalGroup);
         $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());
 
         $this->manager->persist($evaluationGroup);
@@ -115,7 +124,12 @@ class EvaluationController extends AbstractController
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson);
 
-        $supportPerson->setInitEvalPerson(new InitEvalPerson());
+        $initEvalPerson = (new InitEvalPerson())
+            ->setSupportPerson($supportPerson);
+
+        $this->manager->persist($initEvalPerson);
+
+        $supportPerson->setInitEvalPerson($initEvalPerson);
         $evaluationPerson->setInitEvalPerson($supportPerson->getInitEvalPerson());
 
         $this->manager->persist($evaluationPerson);
@@ -124,7 +138,28 @@ class EvaluationController extends AbstractController
     /**
      * Met à jour l'évaluation sociale du groupe.
      */
-    protected function updateEvaluationGroup(EvaluationGroup $evaluationGroup)
+    protected function updateEvaluation(EvaluationGroup $evaluationGroup)
+    {
+        $now = new \DateTime();
+
+        $evaluationGroup->setUpdatedAt($now);
+
+        $evaluationGroup->getSupportGroup()
+            ->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser());
+
+        $this->updateBudgetGroup($evaluationGroup);
+
+        $this->manager->persist($evaluationGroup);
+        $this->manager->flush();
+
+        $this->addFlash('success', 'Les modifications ont été enregistrées.');
+    }
+
+    /**
+     * Met à jour l'évaluation sociale du groupe.
+     */
+    protected function updateAjax(EvaluationGroup $evaluationGroup)
     {
         $now = new \DateTime();
 

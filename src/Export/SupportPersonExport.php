@@ -2,8 +2,9 @@
 
 namespace App\Export;
 
-use App\Entity\SupportPerson;
 use App\Service\Export;
+use App\Entity\Accommodation;
+use App\Entity\SupportPerson;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
@@ -36,10 +37,8 @@ class SupportPersonExport
 
     /**
      * Retourne les résultats sous forme de tableau.
-     *
-     * @return array
      */
-    public function getDatas(SupportPerson $supportPerson)
+    public function getDatas(SupportPerson $supportPerson): array
     {
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
@@ -52,18 +51,19 @@ class SupportPersonExport
 
         $accommodationPeople = $person->getAccommodationPeople();
         foreach ($accommodationPeople as $accommodationPerson) {
-            $accommodations = $accommodationPerson->getAccommodationGroup()->getAccommodation();
-            $nameAccommodations[] = $accommodations->getName();
-            $addressAccommodations[] = $accommodations->getAddress();
-            $cityAccommodations[] = $accommodations->getCity();
-            $zipCodeAccommodations[] = $accommodations->geZipCode();
+            /** @var Accommodation */
+            $accommodation = $accommodationPerson->getAccommodationGroup()->getAccommodation();
+            $nameAccommodations[] = $accommodation->getName();
+            $addressAccommodations[] = $accommodation->getAddress();
+            $cityAccommodations[] = $accommodation->getCity();
+            $zipCodeAccommodations[] = $accommodation->getZipCode();
         }
 
         return [
             'N° Groupe' => $groupPeople->getId(),
             'N° Suivi groupe' => $supportGroup->getId(),
-            // "N° Personne" => $person->getId(),
-            // "N° Suivi personne" => $supportPerson->getId(),
+            'N° Personne' => $person->getId(),
+            'N° Suivi personne' => $supportPerson->getId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),

@@ -37,8 +37,6 @@ class DocumentController extends AbstractController
      * Liste des documents du suivi.
      *
      * @Route("support/{supportId}/documents", name="support_documents", methods="GET|POST")
-     *
-     * @param DocumentSearch $documentSearch
      */
     public function listDocuments(int $supportId, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
     {

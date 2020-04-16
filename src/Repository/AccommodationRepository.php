@@ -41,8 +41,6 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places pour l'export.
      *
-     * @param AccommodationSearch $accommodationSearch
-     *
      * @return mixed
      */
     public function findAccommodationsToExport(AccommodationSearch $accommodationSearch = null)

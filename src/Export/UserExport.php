@@ -24,10 +24,8 @@ class UserExport
 
     /**
      * Retourne les résultats sous forme de tableau.
-     *
-     * @return array
      */
-    protected function getDatas(User $user)
+    protected function getDatas(User $user): array
     {
         $services = [];
         $poles = [];

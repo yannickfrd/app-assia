@@ -24,10 +24,8 @@ class ServiceExport
 
     /**
      * Retourne les résultats sous forme de tableau.
-     *
-     * @return array
      */
-    protected function getDatas(Service $service)
+    protected function getDatas(Service $service): array
     {
         return [
             'N° service' => $service->getId(),

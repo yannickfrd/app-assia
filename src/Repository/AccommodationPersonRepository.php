@@ -22,10 +22,8 @@ class AccommodationPersonRepository extends ServiceEntityRepository
 
     /**
      * Donne la prise en charge de la personne.
-     *
-     * @param int $id
      */
-    public function findOneById($id): ?AccommodationPerson
+    public function findOneById(int $id): ?AccommodationPerson
     {
         return $this->createQueryBuilder('pa')
             ->select('pa')

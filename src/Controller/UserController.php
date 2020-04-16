@@ -26,8 +26,6 @@ class UserController extends AbstractController
      * Liste des utilisateurs.
      *
      * @Route("directory/users", name="users", methods="GET|POST")
-     *
-     * @param UserSearch $userSearch
      */
     public function listUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
     {
@@ -53,8 +51,6 @@ class UserController extends AbstractController
      *
      * @Route("admin/users", name="admin_users", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
-     *
-     * @param UserSearch $userSearch
      */
     public function adminListUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
     {

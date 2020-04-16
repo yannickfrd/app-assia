@@ -9,9 +9,10 @@ trait ContactEntityTrait
 {
     /**
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
-     * @Assert\Email(message="L'adresse email n'est pas valide.")
+     * @Assert\Regex(pattern="^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^", match=true, message="L'adresse email n'est pas valide !")
      */
     private $email;
+    // * @Assert\Email(message="L'adresse email n'est pas valide.")
 
     /**
      * @ORM\Column(name="phone1", type="string", length=20, nullable=true)

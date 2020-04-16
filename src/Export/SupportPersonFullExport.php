@@ -81,16 +81,19 @@ class SupportPersonFullExport
 
     /**
      * Retourne les résultats sous forme de tableau.
-     *
-     * @return array
      */
-    protected function getDatas(SupportPerson $supportPerson)
+    protected function getDatas(SupportPerson $supportPerson): array
     {
         $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
 
         $evaluations = $supportPerson->getEvaluationsPerson();
         $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();
         $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
+
+        $this->datas = array_merge($this->datas, [
+                'ID évaluation groupe' => $this->evaluationGroup->getId(),
+                'ID évaluation personne' => $this->evaluationPerson->getId(),
+            ]);
 
         $this->add($this->evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
         $this->add($this->evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
@@ -110,8 +113,6 @@ class SupportPersonFullExport
 
     /**
      * Ajoute l'objet normalisé.
-     *
-     * @param string $name
      */
     protected function add(object $object, string $name = null)
     {

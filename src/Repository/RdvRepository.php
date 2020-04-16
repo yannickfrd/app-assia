@@ -120,10 +120,6 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Trouve tous les RDV entre 2 dates.
      *
-     * @return Rdv[]
-     *
-     * @param SupportGroup $supportGroup
-     *
      * @return mixed
      */
     public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null)
@@ -150,8 +146,6 @@ class RdvRepository extends ServiceEntityRepository
 
     /**
      * Donne tous les RDV entre 2 dates par jour.
-     *
-     * @param SupportGroup $supportGroup
      */
     public function findRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null): array
     {

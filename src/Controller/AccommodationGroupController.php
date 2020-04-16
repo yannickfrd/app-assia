@@ -52,8 +52,6 @@ class AccommodationGroupController extends AbstractController
      * Nouvel hébergement.
      *
      * @Route("/support/{id}/accommodation/new", name="support_accommodation_new", methods="GET|POST")
-     *
-     * @param AccommodationGroup $accommodationGroup
      */
     public function newAccommodationGroup(SupportGroup $supportGroup, AccommodationGroup $accommodationGroup = null, Request $request): Response
     {
@@ -224,10 +222,8 @@ class AccommodationGroupController extends AbstractController
 
     /**
      * Crée les prises en charge individuelles.
-     *
-     * @return void
      */
-    protected function createpPeopleAccommodation(AccommodationGroup $accommodationGroup)
+    protected function createpPeopleAccommodation(AccommodationGroup $accommodationGroup): void
     {
         $people = [];
 

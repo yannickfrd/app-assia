@@ -26,10 +26,8 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * Trouve l'utilisateur par son login ou son adresse email.
-     *
-     * @return User|null
      */
-    public function findUserByUsernameOrEmail(string $username)
+    public function findUserByUsernameOrEmail(string $username): ?User
     {
         return $this->createQueryBuilder('u')
             ->select('u')
@@ -193,8 +191,6 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array $criteria
-     *
      * @return mixed
      */
     public function findUsers(array $criteria = null)

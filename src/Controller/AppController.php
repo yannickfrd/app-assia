@@ -96,7 +96,7 @@ class AppController extends AbstractController
         if (!$usersIndicators->isHit()) {
             $users = [];
 
-            /** @param User $user */
+            /** @var User $user */
             foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
                 $users[] = [
                     'id' => $user->getId(),

@@ -8,6 +8,7 @@ export default class UpdateEvaluation {
         this.ajaxRequest = ajaxRequest;
         this.formElt = document.querySelector("form[name='evaluation_group']");
         this.btnSubmitElts = this.formElt.querySelectorAll("button[type='submit']");
+        this.editMode = document.querySelector("div[data-editMode]").getAttribute("data-editMode");
         this.loader = new Loader();
         this.init();
     }
@@ -15,10 +16,12 @@ export default class UpdateEvaluation {
     init() {
         this.btnSubmitElts.forEach(btnSubmitElt => {
             btnSubmitElt.addEventListener("click", e => {
-                e.preventDefault();
                 this.loader.on();
-                let formToString = new URLSearchParams(new FormData(this.formElt)).toString();
-                this.ajaxRequest.init("POST", btnSubmitElt.getAttribute("data-url"), this.response.bind(this), true, formToString);
+                if (this.editMode === "true") {
+                    e.preventDefault();
+                    let formToString = new URLSearchParams(new FormData(this.formElt)).toString();
+                    this.ajaxRequest.init("POST", btnSubmitElt.getAttribute("data-url"), this.response.bind(this), true, formToString);
+                }
             });
         })
     }

@@ -42,5 +42,5 @@ window.onload = e => {
     new SearchPerson(ajaxRequest, 3, 500); // lengthSearch, time
 
     // Déconnexion automatique de l'utilisateur
-    new autoLogout(ajaxRequest, 30); // minutes
+    new autoLogout(ajaxRequest, 40); // minutes
 };

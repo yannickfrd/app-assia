@@ -25,9 +25,8 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      *
-     * @param int $supportGroupId
      */
-    public function findAllDocumentsQuery($supportGroupId, DocumentSearch $documentSearch): Query
+    public function findAllDocumentsQuery(int $supportGroupId, DocumentSearch $documentSearch): Query
     {
         $query = $this->createQueryBuilder('d')
             ->andWhere('d.supportGroup = :supportGroup')

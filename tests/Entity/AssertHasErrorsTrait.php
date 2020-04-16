@@ -6,10 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 trait AssertHasErrorsTrait
 {
-    /**
-     * @return void
-     */
-    public function assertHasErrors(object $object, int $nbErrors = 0)
+    public function assertHasErrors(object $object, int $nbErrors = 0): void
     {
         self::bootKernel();
         $errors = KernelTestCase::$container->get('validator')->validate($object); // Valide l'objet et donne les erreurs

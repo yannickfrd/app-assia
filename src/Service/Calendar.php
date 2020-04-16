@@ -61,9 +61,6 @@ class Calendar
 
     /**
      * Month constructor.
-     *
-     * @param int $year
-     * @param int $month
      */
     public function __construct(?int $year = null, ?int $month = null, ?int $day = null)
     {

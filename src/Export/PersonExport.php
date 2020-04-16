@@ -24,10 +24,8 @@ class PersonExport
 
     /**
      * Retourne les résultats sous forme de tableau.
-     *
-     * @return array
      */
-    protected function getDatas(Person $person)
+    protected function getDatas(Person $person): array
     {
         $typologies = [];
         $nbPeople = [];

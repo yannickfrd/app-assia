@@ -28,8 +28,6 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les places pour l'export.
-     *
-     * @param SupportGroupSearch $supportGroupSearch
      */
     public function findSupportsToExport(SupportGroupSearch $supportGroupSearch = null)
     {

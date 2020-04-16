@@ -48,8 +48,6 @@ class SupportController extends AbstractController
      * Liste des suivis sociaux.
      *
      * @Route("/supports", name="supports", methods="GET|POST")
-     *
-     * @param SupportGroupSearch $supportGroupSearch
      */
     public function viewListSupports(Request $request, SupportGroupSearch $supportGroupSearch = null, Pagination $pagination): Response
     {
@@ -220,10 +218,8 @@ class SupportController extends AbstractController
 
     /**
      * Vérifie si la personne est déjà dans le suivi social.
-     *
-     * @return true|false
      */
-    protected function personIsInSupport(Person $person, SupportGroup $supportGroup)
+    protected function personIsInSupport(Person $person, SupportGroup $supportGroup): bool
     {
         foreach ($supportGroup->getSupportPerson() as $supportPerson) {
             if ($person == $supportPerson->getPerson()) {
@@ -262,8 +258,6 @@ class SupportController extends AbstractController
      *
      * @Route("export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
-     *
-     * @param Export $export
      */
     public function export(Request $request, Export $export = null, SupportPersonFullExport $exportSupport): Response
     {
@@ -301,12 +295,10 @@ class SupportController extends AbstractController
 
     /**
      * Vérifie si un suivi social est déjà en cours dans le même service.
-     *
-     * @return SupportGroup|null
      */
-    protected function activeSupport(GroupPeople $groupPeople, SupportGroup $supportGroup)
+    protected function activeSupport(GroupPeople $groupPeople, SupportGroup $supportGroup): ?SupportGroup
     {
-        return $this->repoSupportGroup->findBy([
+        return $this->repoSupportGroup->findOneBy([
             'groupPeople' => $groupPeople,
             'status' => 2,
             'service' => $supportGroup->getService(),

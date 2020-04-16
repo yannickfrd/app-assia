@@ -14,12 +14,8 @@ trait AppTestTrait
 
     /**
      * Crée une connexion.
-     *
-     * @param bool $followRedirects
-     *
-     * @return void
      */
-    protected function createLogin(User $user, $followRedirects = true)
+    protected function createLogin(User $user, bool $followRedirects = true): void
     {
         /* @var KernelBrowser */
         $this->client = static::createClient();
@@ -61,20 +57,16 @@ trait AppTestTrait
 
     /**
      * Generate an URI.
-     *
-     * @return string $uri
      */
-    protected function generateUri(string $route, array $parameters = [])
+    protected function generateUri(string $route, array $parameters = []): string
     {
         return $this->client->getContainer()->get('router')->generate($route, $parameters);
     }
 
     /**
      * Generate an URI.
-     *
-     * @return string $uri
      */
-    protected function generatePantherUri(string $route, array $parameters = [])
+    protected function generatePantherUri(string $route, array $parameters = []): string
     {
         return self::$container->get('router')->generate($route, $parameters);
     }

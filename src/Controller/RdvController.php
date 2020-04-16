@@ -253,8 +253,6 @@ class RdvController extends AbstractController
 
     /**
      * Crée le RDV une fois le formulaire soumis et validé.
-     *
-     * @param SupportGroup $supportGroup
      */
     protected function createRdv(Rdv $rdv, SupportGroup $supportGroup = null): Response
     {

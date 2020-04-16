@@ -36,10 +36,8 @@ class AccommodationExport
 
     /**
      * Retourne les résultats sous forme de tableau.
-     *
-     * @return array
      */
-    public function getDatas(Accommodation $accommodation)
+    public function getDatas(Accommodation $accommodation): array
     {
         $numberPeople = 0;
         foreach ($accommodation->getAccommodationGroups() as $accommodationGroup) {

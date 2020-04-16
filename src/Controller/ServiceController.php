@@ -33,8 +33,6 @@ class ServiceController extends AbstractController
      * Liste des services.
      *
      * @Route("/services", name="services", methods="GET")
-     *
-     * @param ServiceSearch $serviceSearch
      */
     public function listServices(Request $request, ServiceSearch $serviceSearch = null, Pagination $pagination): Response
     {

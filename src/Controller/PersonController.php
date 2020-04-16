@@ -42,8 +42,6 @@ class PersonController extends AbstractController
      *
      * @Route("/people", name="people", methods="GET|POST")
      * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
-     *
-     * @param PersonSearch $personSearch
      */
     public function listPeople(Request $request, PersonSearch $personSearch = null, Pagination $pagination): Response
     {
@@ -67,8 +65,6 @@ class PersonController extends AbstractController
      * Rechercher une personne pour l'ajouter dans un groupe.
      *
      * @Route("/group/{id}/search_person", name="group_search_person", methods="GET|POST")
-     *
-     * @param PersonSearch $personSearch
      */
     public function addPersonInGroup(GroupPeople $groupPeople, PersonSearch $personSearch = null, Request $request, Pagination $pagination): Response
     {
@@ -118,8 +114,6 @@ class PersonController extends AbstractController
      * Crée une nouvelle personne dans un group existant.
      *
      * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
-     *
-     * @param RolePerson $rolePerson
      */
     public function newPersonInGroup(GroupPeople $groupPeople, RolePerson $rolePerson = null, Request $request): Response
     {
@@ -187,8 +181,6 @@ class PersonController extends AbstractController
      *
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @Route("/person/{id}", name="person_show", methods="GET")
-     *
-     * @param RolePerson $rolePerson
      */
     public function personShow(Person $person, RolePerson $rolePerson = null, Request $request): Response
     {
@@ -229,8 +221,6 @@ class PersonController extends AbstractController
      * Ajoute un nouveau groupe à la personne.
      *
      * @Route("/person/{id}/new_group", name="person_new_group", methods="POST")
-     *
-     * @param RolePerson $rolePerson
      */
     public function addNewGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
     {
@@ -341,10 +331,8 @@ class PersonController extends AbstractController
 
     /**
      * Vérifie si la personne existe déjà.
-     *
-     * @return Person|null
      */
-    protected function personExists(Person $person)
+    protected function personExists(Person $person): ?Person
     {
         return $this->repo->findOneBy([
             'lastname' => $person->getLastname(),
@@ -355,8 +343,6 @@ class PersonController extends AbstractController
 
     /**
      * Crée une personne avec son rôle.
-     *
-     * @param RolePerson $rolePerson
      */
     protected function createPersonInGroup(Person $person, RolePerson $rolePerson = null, GroupPeople $groupPeople)
     {

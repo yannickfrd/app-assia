@@ -77,8 +77,6 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Compte le nombre de notes.
      *
-     * @param array $criteria
-     *
      * @return mixed
      */
     public function countAllNotes(array $criteria = null)

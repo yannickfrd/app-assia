@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EvaluationPerson
 {
+    use CreatedUpdatedEntityTrait;  // A supprimer après test
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

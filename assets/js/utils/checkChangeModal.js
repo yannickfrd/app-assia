@@ -48,17 +48,12 @@ export default class CheckChange {
         });
     }
 
-
-
-
     onChange() {
         this.change = true;
-        console.log(this.change);
     }
 
     clearChange() {
         this.change = false;
-        console.log(this.change);
     }
 
     test() {

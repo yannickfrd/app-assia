@@ -23,10 +23,8 @@ class PersonRepository extends ServiceEntityRepository
 
     /**
      * Donne le groupe de personnes.
-     *
-     * @param int $id
      */
-    public function findPersonById($id): ?Person
+    public function findPersonById(int $id): ?Person
     {
         return $this->createQueryBuilder('p')
             ->select('p')
@@ -50,8 +48,6 @@ class PersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les personnes.
-     *
-     * @param string $search
      */
     public function findAllPeopleQuery(PersonSearch $personSearch, string $search = null): Query
     {
@@ -90,7 +86,7 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * Trouve toutes les personnes à exporter.
      *
-     * @return mixed *
+     * @return mixed
      */
     public function findPeopleToExport(PersonSearch $personSearch)
     {
@@ -101,8 +97,6 @@ class PersonRepository extends ServiceEntityRepository
 
     /**
      *  Trouve toutes les personnes.
-     *
-     * @param string $search
      *
      * @return mixed
      */

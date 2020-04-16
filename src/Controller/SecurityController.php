@@ -127,8 +127,6 @@ class SecurityController extends AbstractController
      * Fiche de l'utilisateur connecté.
      *
      * @Route("/my_profile", name="my_profile", methods="GET|POST")
-     *
-     * @param UserChangePassword $userChangePassword
      */
     public function showCurrentUser(UserChangeInfo $userChangeInfo = null, UserChangePassword $userChangePassword = null, SupportGroupRepository $repoSupport, ServiceRepository $repoService, Request $request): Response
     {
@@ -228,8 +226,6 @@ class SecurityController extends AbstractController
      * Page dans le cas d'un mot de passe oublié.
      *
      * @Route("/login/forgot_password", name="security_forgot_password", methods="GET|POST")
-     *
-     * @param UserResetPassword $userResetPassword
      */
     public function forgotPassword(Request $request, UserResetPassword $userResetPassword = null, MailNotification $notification): Response
     {
@@ -256,8 +252,6 @@ class SecurityController extends AbstractController
      * Réinitialise le mot de passe de l'utilisateur.
      *
      * @Route("/login/reinit_password", name="security_reinit_password", methods="GET|POST")
-     *
-     * @param UserResetPassword $user
      */
     public function reinitPassword(Request $request, UserResetPassword $user = null): Response
     {
@@ -319,10 +313,8 @@ class SecurityController extends AbstractController
 
     /**
      * En cas d'erreur lors de la tentative de connexion.
-     *
-     * @param User $user
      */
-    protected function errorLogin(User $user = null)
+    protected function errorLogin(User $user = null): void
     {
         if ($user) {
             $user->setFailureLoginCount($user->getFailureLoginCount() + 1);
@@ -354,10 +346,8 @@ class SecurityController extends AbstractController
 
     /**
      * Met à jour le mot de passe.
-     *
-     * @param string $password
      */
-    protected function updatePassword($password): Response
+    protected function updatePassword(string $password): Response
     {
         $hashPassword = $this->encoder->encodePassword($this->getUser(), $password);
         $this->getUser()->setPassword($hashPassword);
@@ -371,10 +361,8 @@ class SecurityController extends AbstractController
 
     /**
      * Vérifie si l'utilisateur existe.
-     *
-     * @return User|null
      */
-    protected function userExists(UserResetPassword $userResetPassword)
+    protected function userExists(UserResetPassword $userResetPassword): ?User
     {
         return $this->repo->findOneBy([
             'username' => $userResetPassword->getUsername(),
@@ -384,12 +372,8 @@ class SecurityController extends AbstractController
 
     /**
      * Vérifie si l'utilisateur avvec un token existe.
-     *
-     * @param string $token
-     *
-     * @return User|null
      */
-    protected function userWithTokenExists(UserResetPassword $userResetPassword, $token)
+    protected function userWithTokenExists(UserResetPassword $userResetPassword, string $token = null): ?User
     {
         return $this->repo->findOneBy([
             'username' => $userResetPassword->getUsername(),
