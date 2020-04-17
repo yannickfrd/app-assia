@@ -64,9 +64,9 @@
 							<div class="calendar-week-number text-secondary">
 								<div class="my-auto">{{ week_number }}</div>
 							</div>
-							{% for j in 0..6 %}
-								{% if j < 5 %}
-									{% set day = start_day |date_modify("+" ~ (j + week * 7) ~ " day") %}
+							{% for day in 0..6 %}
+								{% if day < 5 %}
+									{% set day = start_day |date_modify("+" ~ (day + week * 7) ~ " day") %}
 									<div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}{% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day| date("Y-m-d") }}" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" title="Ajouter un rendez-vous">
 										<div class="text-dark calendar-day">{{ day| date("d") }}
 											{{ calendar.otherMonth(day) }}
