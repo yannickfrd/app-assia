@@ -130,7 +130,7 @@ class AccommodationGroupController extends AbstractController
 
         $this->createpPeopleAccommodation($accommodationGroup);
 
-        $this->addFlash('success', 'Les personnes ont été ajoutées à la prise en charge.');
+        $this->addFlash('success', 'Les personnes sont ajoutées à la prise en charge.');
 
         return $this->redirectToRoute('support_accommodation_edit', [
             'id' => $accommodationGroup->getId(),
@@ -151,7 +151,7 @@ class AccommodationGroupController extends AbstractController
         $this->manager->remove($accommodationGroup);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'La prise en charge a été supprimé.');
+        $this->addFlash('warning', 'La prise en charge est supprimé.');
 
         return $this->redirectToRoute('support_accommodations', ['id' => $supportGroup->getId()]);
     }
@@ -168,7 +168,7 @@ class AccommodationGroupController extends AbstractController
         $this->manager->remove($accommodationPerson);
         $this->manager->flush();
 
-        $this->addFlash('warning', $accommodationPerson->getPerson()->getFullname().' a été retiré de la prise en charge.');
+        $this->addFlash('warning', $accommodationPerson->getPerson()->getFullname().' est retiré de la prise en charge.');
 
         return $this->redirectToRoute('support_accommodation_edit', [
             'id' => $accommodationPerson->getAccommodationGroup()->getId(),
@@ -188,7 +188,7 @@ class AccommodationGroupController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', "L'hébergement a été créé.");
+        $this->addFlash('success', "L'hébergement est créé.");
 
         return $this->redirectToRoute('support_accommodations', [
             'id' => $accommodationGroup->getSupportGroup()->getId(),
@@ -211,7 +211,7 @@ class AccommodationGroupController extends AbstractController
         }
         $this->manager->flush();
 
-        $this->addFlash('success', "L'hébergement a été mis à jour.");
+        $this->addFlash('success', "L'hébergement est mis à jour.");
 
         return $this->redirectToRoute('support_accommodation_edit', [
             'id' => $accommodationGroup->getId(),

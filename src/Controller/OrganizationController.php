@@ -7,7 +7,6 @@ use App\Form\Organization\OrganizationType;
 use App\Repository\OrganizationRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +51,7 @@ class OrganizationController extends AbstractController
             $this->manager->persist($organization);
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le dispositif a été créé.');
+            $this->addFlash('success', 'Le dispositif est créé.');
 
             return $this->redirectToRoute('admin_organizations');
         }
@@ -75,12 +74,12 @@ class OrganizationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+            $this->addFlash('success', 'Les modifications sont enregistrées.');
 
             return $this->redirectToRoute('admin_organizations');
         }
 
-        $this->addFlash('success', 'Le dispositif a été mis à jour.');
+        $this->addFlash('success', 'Le dispositif est mis à jour.');
 
         return $this->render('app/organization/organization.html.twig', [
             'form' => $form->createView(),

@@ -84,7 +84,7 @@ class GroupPeopleController extends AbstractController
         $this->manager->remove($groupPeople);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'Le groupe a été supprimé.');
+        $this->addFlash('warning', 'Le groupe est supprimé.');
 
         return $this->redirectToRoute('home');
     }
@@ -138,7 +138,7 @@ class GroupPeopleController extends AbstractController
     {
         $this->manager->flush();
 
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
+        $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
 
     /**
@@ -166,7 +166,7 @@ class GroupPeopleController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+        $this->addFlash('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
 
         return;
     }
@@ -207,7 +207,7 @@ class GroupPeopleController extends AbstractController
 
         return $this->json([
             'code' => 200,
-            'msg' => $person->getFullname().' a été retiré'.Grammar::gender($person->getGender()).' du groupe.',
+            'msg' => $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.',
             'data' => $nbPeople - 1,
         ], 200);
     }

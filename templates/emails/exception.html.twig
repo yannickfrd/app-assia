@@ -1,0 +1,12 @@
+<html>
+
+<body>
+    <h1>Error {{ exception.code }} : {{ exception.message }}</h1>
+    <p style="font-weight: bold;">Datetime : {{ "now"|date("d/m/Y H:i") }}</p>
+    <p>Url : {{ app.request.requestUri }}</p>
+    <p>File : {{ exception.file }} </p>
+    <p>Line : {{ exception.line }} </p>
+    <p>{{ exception }}</p>
+</body>
+
+</html>

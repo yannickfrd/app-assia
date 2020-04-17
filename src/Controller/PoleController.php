@@ -53,7 +53,7 @@ class PoleController extends AbstractController
             $this->manager->persist($pole);
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le pôle a été créé.');
+            $this->addFlash('success', 'Le pôle est créé.');
 
             return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
         }
@@ -78,7 +78,7 @@ class PoleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+            $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
         return $this->render('app/pole/pole.html.twig', [

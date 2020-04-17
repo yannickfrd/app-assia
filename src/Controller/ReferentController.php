@@ -65,7 +65,7 @@ class ReferentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été mis à jour.');
+            $this->addFlash('success', 'Le service social "'.$referent->getName().'" est mis à jour.');
 
             return $this->redirectToRoute('referent_edit', ['id' => $referent->getId()]);
         }
@@ -88,7 +88,7 @@ class ReferentController extends AbstractController
         $this->manager->remove($referent);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'Le service social "'.$name.'" a été supprimé.');
+        $this->addFlash('warning', 'Le service social "'.$name.'" est supprimé.');
 
         return $this->redirectToRoute('group_people_show', [
             'id' => $referent->getGroupPeople()->getId(),
@@ -105,7 +105,7 @@ class ReferentController extends AbstractController
         $this->manager->persist($referent);
         $this->manager->flush();
 
-        $this->addFlash('success', 'Le service social "'.$referent->getName().'" a été créé.');
+        $this->addFlash('success', 'Le service social "'.$referent->getName().'" est créé.');
 
         return $this->redirectToRoute('referent_edit', [
             'id' => $referent->getId(),

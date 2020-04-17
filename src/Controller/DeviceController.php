@@ -51,7 +51,7 @@ class DeviceController extends AbstractController
             $this->manager->persist($device);
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le dispositif a été créé.');
+            $this->addFlash('success', 'Le dispositif est créé.');
 
             return $this->redirectToRoute('admin_devices');
         }
@@ -78,12 +78,8 @@ class DeviceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Les modifications ont été enregistrées.');
-
-            return $this->redirectToRoute('admin_devices');
+            $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
-
-        $this->addFlash('success', 'Le dispositif a été mis à jour.');
 
         return $this->render('app/device/device.html.twig', [
             'form' => $form->createView(),

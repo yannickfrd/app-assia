@@ -306,7 +306,7 @@ class PersonControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-warning', 'La personne a été supprimée.');
+        $this->assertSelectorTextContains('.alert.alert-warning', 'La personne est supprimée.');
     }
 
     public function testSearchPersonWithResults()

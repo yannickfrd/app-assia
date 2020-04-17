@@ -244,7 +244,7 @@ class PersonController extends AbstractController
         $this->manager->remove($person);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'La personne a été supprimée.');
+        $this->addFlash('warning', 'La personne est supprimée.');
 
         return $this->redirectToRoute('people');
     }
@@ -320,7 +320,7 @@ class PersonController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', $person->getFullname().' a été créé'.Grammar::gender($person->getGender()).', ainsi que son groupe.');
+        $this->addFlash('success', $person->getFullname().' est créé'.Grammar::gender($person->getGender()).', ainsi que son groupe.');
 
         return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
     }
@@ -354,7 +354,7 @@ class PersonController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+        $this->addFlash('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
     }
 
     /**
@@ -367,7 +367,7 @@ class PersonController extends AbstractController
         return $this->json([
             'code' => 200,
             'alert' => 'success',
-            'msg' => 'Les modifications ont été enregistrées.',
+            'msg' => 'Les modifications sont enregistrées.',
             'user' => $this->getUser()->getFullname(),
             'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
         ], 200);
@@ -393,7 +393,7 @@ class PersonController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', 'Le nouveau groupe a été créé.');
+        $this->addFlash('success', 'Le nouveau groupe est créé.');
 
         return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
     }

@@ -124,7 +124,7 @@ class DocumentController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'Le document "'.$documentName.'" a été supprimé.',
+            'msg' => 'Le document "'.$documentName.'" est supprimé.',
         ], 200);
     }
 
@@ -155,7 +155,7 @@ class DocumentController extends AbstractController
             'code' => 200,
             'action' => 'create',
             'alert' => 'success',
-            'msg' => 'Le document "'.$document->getName().'" a été enregistré.',
+            'msg' => 'Le document "'.$document->getName().'" est enregistré.',
             'data' => [
                 'documentId' => $document->getId(),
                 'groupPeopleId' => $groupPeople->getId(),
@@ -178,7 +178,7 @@ class DocumentController extends AbstractController
             'code' => 200,
             'action' => 'update',
             'alert' => 'success',
-            'msg' => 'Les informations du document "'.$document->getName().'" ont été mises à jour.',
+            'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
             'data' => [
                 'type' => $document->getTypeToString(),
             ],

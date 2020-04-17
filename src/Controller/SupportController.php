@@ -117,7 +117,7 @@ class SupportController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le suivi social a été modifié.');
+            $this->addFlash('success', 'Le suivi social est modifié.');
         }
 
         if (!$form->isSubmitted() && $supportGroup->getService()->getAccommodation() && 0 == count($supportGroup->getAccommodationGroups())) {
@@ -140,7 +140,7 @@ class SupportController extends AbstractController
         $this->manager->remove($supportGroup);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'Le suivi social a été supprimé.');
+        $this->addFlash('warning', 'Le suivi social est supprimé.');
 
         return $this->redirectToRoute('group_people_show', ['id' => $supportGroup->getGroupPeople()->getId()]);
     }
@@ -164,7 +164,7 @@ class SupportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le suivi social a été modifié.');
+            $this->addFlash('success', 'Le suivi social est modifié.');
         }
 
         return $this->render('app/support/supportPeople.html.twig', [
@@ -198,14 +198,14 @@ class SupportController extends AbstractController
 
                 $addPeople = true;
 
-                $this->addFlash('success', $rolePerson->getPerson()->getFullname().' a été ajouté(e) au suivi.');
+                $this->addFlash('success', $rolePerson->getPerson()->getFullname().' est ajouté(e) au suivi.');
             }
         }
 
         if ($addPeople) {
             $this->manager->flush();
         } else {
-            $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
+            $this->addFlash('warning', "Aucune personne n'est ajoutée au suivi.");
         }
 
         return $this->redirectToRoute('support_pers_edit', [
@@ -242,7 +242,7 @@ class SupportController extends AbstractController
 
             return $this->json([
                 'code' => 200,
-                'msg' => $supportPerson->getPerson()->getFullname().' a été retiré(e) du suivi social.',
+                'msg' => $supportPerson->getPerson()->getFullname().' est retiré(e) du suivi social.',
                 'data' => null,
             ], 200);
         }
@@ -318,7 +318,7 @@ class SupportController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', 'Le suivi social a été créé.');
+        $this->addFlash('success', 'Le suivi social est créé.');
 
         if ($supportGroup->getService()->getAccommodation()) {
             return $this->redirectToRoute('support_accommodation_new', [

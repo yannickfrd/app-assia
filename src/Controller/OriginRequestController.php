@@ -71,6 +71,6 @@ class OriginRequestController extends AbstractController
         $this->manager->persist($originRequest);
         $this->manager->flush();
 
-        $this->addFlash('success', 'Les informations ont été mises à jour.');
+        $this->addFlash('success', 'Les informations sont mises à jour.');
     }
 }

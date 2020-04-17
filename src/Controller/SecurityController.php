@@ -172,7 +172,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le compte utilisateur a été mis à jour.');
+            $this->addFlash('success', 'Le compte utilisateur est mis à jour.');
         }
 
         if (!$form->isSubmitted() && $user->isDisabled()) {
@@ -304,7 +304,7 @@ class SecurityController extends AbstractController
         $this->manager->persist($user);
         $this->manager->flush();
 
-        $this->addFlash('success', 'Le compte a été créé.');
+        $this->addFlash('success', 'Le compte est créé.');
 
         return $this->redirectToRoute('security_user', [
             'id' => $user->getId(),
@@ -320,7 +320,7 @@ class SecurityController extends AbstractController
             $user->setFailureLoginCount($user->getFailureLoginCount() + 1);
 
             if ($user->getFailureLoginCount() >= 5) {
-                $this->addFlash('danger', "Ce compte a été bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
+                $this->addFlash('danger', "Ce compte est bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
             }
             $this->manager->flush();
         }
@@ -341,7 +341,7 @@ class SecurityController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
+        $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
 
     /**
@@ -354,7 +354,7 @@ class SecurityController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', 'Votre mot de passe a été mis à jour !');
+        $this->addFlash('success', 'Votre mot de passe est mis à jour !');
 
         return $this->redirectToRoute('home');
     }
@@ -399,7 +399,7 @@ class SecurityController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash('success', 'Votre mot de passe a été réinitialisé !');
+            $this->addFlash('success', 'Votre mot de passe est réinitialisé !');
 
             return $this->redirectToRoute('security_login');
         }

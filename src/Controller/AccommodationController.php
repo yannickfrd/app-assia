@@ -69,7 +69,7 @@ class AccommodationController extends AbstractController
             $this->manager->persist($accommodation);
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le groupe de places a été créé.');
+            $this->addFlash('success', 'Le groupe de places est créé.');
 
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
@@ -99,7 +99,7 @@ class AccommodationController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+            $this->addFlash('success', 'Les modifications sont enregistrées.');
 
             return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
         }
@@ -120,7 +120,7 @@ class AccommodationController extends AbstractController
         $this->manager->remove($accommodation);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'Le groupe de places a été supprimé.');
+        $this->addFlash('warning', 'Le groupe de places est supprimé.');
 
         return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
     }

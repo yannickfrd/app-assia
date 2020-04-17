@@ -69,7 +69,7 @@ class ServiceController extends AbstractController
             $this->manager->persist($service);
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le service a été créé.');
+            $this->addFlash('success', 'Le service est créé.');
 
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
@@ -100,7 +100,7 @@ class ServiceController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash('success', 'Les modifications ont été enregistrées.');
+            $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
         return $this->render('app/service/service.html.twig', [

@@ -13,16 +13,19 @@ class MailNotification
     protected $mail;
     protected $renderer;
 
-    public function __construct(Environment $renderer, $host = null, $username = null, $password = null, $port = null)
+    public function __construct(Environment $renderer, $host = 'localhost', $username = null, $password = null, $port = 25)
     {
         $this->mail = new PHPMailer(true);
 
-        $this->mail->SMTPAuth = true; // Enable SMTP authentication
-        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
+        $this->mail->isSMTP(); // Send using SMTP
 
-        if ('127.0.0.1' != $_SERVER['SERVER_NAME']) {
-            $this->mail->isSMTP(); // Send using SMTP
+        if ($_SERVER['SERVER_NAME'] != '127.0.0.1:8000') {
+            $this->mail->SMTPAuth = true; // Enable SMTP authentication
+            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
+        } else {
+            $this->mail->SMTPAuth = false;
+            $this->mail->SMTPAutoTLS = false;
         }
 
         $this->mail->Host = $host;
@@ -62,7 +65,8 @@ class MailNotification
             return true;
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
-            // dd($e);
+            dd($e);
+
             return false;
         }
     }

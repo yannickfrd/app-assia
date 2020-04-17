@@ -119,7 +119,7 @@ class NoteController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'La note sociale a été supprimée.',
+            'msg' => 'La note sociale est supprimée.',
         ], 200);
     }
 
@@ -137,7 +137,7 @@ class NoteController extends AbstractController
             'code' => 200,
             'action' => 'create',
             'alert' => 'success',
-            'msg' => 'La note sociale a été enregistrée.',
+            'msg' => 'La note sociale est enregistrée.',
             'data' => [
                 'noteId' => $note->getId(),
                 'type' => $note->getTypeToString(),
@@ -158,7 +158,7 @@ class NoteController extends AbstractController
             'code' => 200,
             'action' => $typeSave,
             'alert' => 'success',
-            'msg' => 'La note sociale a été modifiée.',
+            'msg' => 'La note sociale est modifiée.',
             'data' => [
                 'noteId' => $note->getId(),
                 'type' => $note->getTypeToString(),

@@ -64,7 +64,7 @@ class OptimizeImage
         ]);
         $resized->toFile($this->toFolder.$this->fileName.'-'.$method.'-'.$width.'x'.$height.'.'.$this->fileExtension);
 
-        return "L'image a été redimesionnée avec la méthode \"".$method.'".';
+        return "L'image est redimesionnée avec la méthode \"".$method.'".';
     }
 
     // Créé une icone
@@ -81,7 +81,7 @@ class OptimizeImage
         ]);
         $resized->toFile($toFolder);
 
-        return 'Le nouveau logo a été enregistré.';
+        return 'Le nouveau logo est enregistré.';
     }
 
     // Récupère les métadonnées
@@ -94,7 +94,7 @@ class OptimizeImage
         $copyrighted = $source->preserve('copyright', 'creation');
         $copyrighted->toFile($this->toFolder.$this->optimizedFile);
 
-        return 'Les métadonnées ont été récupérées.';
+        return 'Les métadonnées sont récupérées.';
     }
 
     // Donne le nombre de compressions réalisées au cours du mois

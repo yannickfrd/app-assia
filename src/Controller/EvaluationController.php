@@ -152,7 +152,7 @@ class EvaluationController extends AbstractController
         $this->manager->persist($evaluationGroup);
         $this->manager->flush();
 
-        $this->addFlash('success', 'Les modifications ont été enregistrées.');
+        $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
 
     /**
@@ -176,7 +176,7 @@ class EvaluationController extends AbstractController
         return $this->json([
             'code' => 200,
             'alert' => 'success',
-            'msg' => 'Les modifications ont été enregistrées.',
+            'msg' => 'Les modifications sont enregistrées.',
             'date' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
             'user' => $this->getUser()->getFullName(),
         ], 200);

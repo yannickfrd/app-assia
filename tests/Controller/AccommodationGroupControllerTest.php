@@ -75,7 +75,7 @@ class AccommodationGroupControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'L\'hébergement a été créé.');
+        $this->assertSelectorTextContains('.alert.alert-success', 'L\'hébergement est créé.');
     }
 
     public function testFailToCreateNewAccommodationGroup()
@@ -129,7 +129,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Logement/hébergement');
-        $this->assertSelectorTextContains('.alert.alert-success', 'Les personnes ont été ajoutées à la prise en charge.');
+        $this->assertSelectorTextContains('.alert.alert-success', 'Les personnes sont ajoutées à la prise en charge.');
     }
 
     public function testDeleteAccommodationGroup()
@@ -139,7 +139,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         ]));
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-warning', 'La prise en charge a été supprimé.');
+        $this->assertSelectorTextContains('.alert.alert-warning', 'La prise en charge est supprimé.');
     }
 
     public function testDeleteAccommodationPerson()

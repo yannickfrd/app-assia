@@ -87,6 +87,6 @@ class PersonControllerTest extends PantherTestCase
 
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe a été créé.');
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
     }
 }

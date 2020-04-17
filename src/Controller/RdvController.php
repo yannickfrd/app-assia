@@ -247,7 +247,7 @@ class RdvController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'Le RDV a été supprimé.',
+            'msg' => 'Le RDV est supprimé.',
         ], 200);
     }
 
@@ -265,7 +265,7 @@ class RdvController extends AbstractController
             'code' => 200,
             'action' => 'create',
             'alert' => 'success',
-            'msg' => 'Le RDV a été enregistré.',
+            'msg' => 'Le RDV est enregistré.',
             'data' => [
                 'rdvId' => $rdv->getId(),
                 'title' => $rdv->getTitle(),
@@ -286,7 +286,7 @@ class RdvController extends AbstractController
             'code' => 200,
             'action' => $typeSave,
             'alert' => 'success',
-            'msg' => 'Le RDV a été modifié.',
+            'msg' => 'Le RDV est modifié.',
             'data' => [
                 'rdvId' => $rdv->getId(),
                 'title' => $rdv->getTitle(),
