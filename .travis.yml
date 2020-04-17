@@ -2,14 +2,14 @@ language: php
 
 sudo: required
 
+addons:
+  chrome: stable
+  # firefox: latest
+
 before_install:
   - sudo installation/geckodriver.sh latest
   - sudo installation/chromedriver.sh latest
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
-
-addons:
-  firefox: latest
-  chrome: stable
+  - chrome --headless --disable-gpu --remote-debugging-port=9222
 
 php:
   # - "7.2"
@@ -25,7 +25,7 @@ script:
   - php bin/console doctrine:database:create --env=dev   
   - php bin/console doctrine:schema:update --env=dev --force   
   - php bin/console hautelook:fixtures:load --env=dev --no-interaction
+  - php bin/phpunit tests/EndToEnd
   - php bin/phpunit tests/Entity
   - php bin/phpunit tests/Repository
   - php bin/phpunit tests/Controller
-  - php bin/phpunit tests/EndToEnd
