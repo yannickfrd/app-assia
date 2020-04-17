@@ -59,7 +59,6 @@ class OrganizationController extends AbstractController
 
         return $this->render('app/organization/organization.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -85,7 +84,6 @@ class OrganizationController extends AbstractController
 
         return $this->render('app/organization/organization.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 }

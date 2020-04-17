@@ -49,7 +49,6 @@ class ReferentController extends AbstractController
         return $this->render('app/referent/referent.html.twig', [
             'group_people' => $groupPeople,
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -74,7 +73,6 @@ class ReferentController extends AbstractController
         return $this->render('app/referent/referent.html.twig', [
             'group_people' => $referent->getGroupPeople(),
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 

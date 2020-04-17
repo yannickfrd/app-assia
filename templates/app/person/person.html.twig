@@ -1,13 +1,13 @@
 {% extends "base.html.twig" %}
 
+{% set person = form.vars.value %}
+{% if person.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
+
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 {% if edit_mode %}{% form_theme form_new_group "form/bootstrap_4_horizontal.html.twig" %}{% endif %}
 
-{% set person = form.vars.value %}
-
 {% block title %}
-{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} |
-Esperer95.app
+{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} | {{ title_website }}
 {% endblock %}
 
 {% block stylesheets %}{% endblock %}

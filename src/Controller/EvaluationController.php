@@ -61,7 +61,6 @@ class EvaluationController extends AbstractController
         return $this->render('app/evaluation/evaluation.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 

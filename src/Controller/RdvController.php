@@ -55,7 +55,7 @@ class RdvController extends AbstractController
     /**
      * Liste des rendez-vous.
      *
-     * @Route("support/{id}/rdvs", name="support_rdvs", methods="GET")
+     * @Route("support/{id}/rdvs", name="support_rdvs", methods="GET|POST")
      *
      * @param int $id // SupportGroup
      */

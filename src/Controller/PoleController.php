@@ -60,7 +60,6 @@ class PoleController extends AbstractController
 
         return $this->render('app/pole/pole.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -84,7 +83,6 @@ class PoleController extends AbstractController
 
         return $this->render('app/pole/pole.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 }

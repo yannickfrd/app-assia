@@ -95,7 +95,6 @@ class SupportController extends AbstractController
         return $this->render('app/support/supportGroup.html.twig', [
             'group_people' => $groupPeople,
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -127,7 +126,6 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportGroup.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 
@@ -171,7 +169,6 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportPeople.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 

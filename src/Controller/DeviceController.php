@@ -7,7 +7,6 @@ use App\Form\Device\DeviceType;
 use App\Repository\DeviceRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,7 +62,6 @@ class DeviceController extends AbstractController
 
         return $this->render('app/device/device.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -89,7 +87,6 @@ class DeviceController extends AbstractController
 
         return $this->render('app/device/device.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 }

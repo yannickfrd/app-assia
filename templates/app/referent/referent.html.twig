@@ -3,6 +3,7 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set referent = form.vars.value %}
+{% if referent.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
 
 {% if edit_mode %}
 {% set title = referent.name %}
@@ -10,7 +11,7 @@
 {% set title = "Nouveau service social référent" %}
 {% endif %}
 
-{% block title %} | Esperer95.app{% endblock %}
+{% block title %} | {{ title_website }}{% endblock %}
 
 {% block body %}
 

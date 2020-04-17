@@ -76,7 +76,6 @@ class ServiceController extends AbstractController
 
         return $this->render('app/service/service.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -108,7 +107,6 @@ class ServiceController extends AbstractController
             'form' => $form->createView(),
             'users' => $repoUser->findUsersFromService($service),
             'accommodations' => $repoAccommodation->findAccommodationsFromService($service),
-            'edit_mode' => true,
         ]);
     }
 

@@ -2,9 +2,8 @@
 <html lang="fr">
 
 <head>
-	<title>
-		{% block title %}Esperer95.app{% endblock %}
-	</title>
+	{% set title_website = "Esperer95.app" %}
+	<title>{% block title %}{{ title_website }}{% endblock %}</title>
 	<meta charset="utf-8" />
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,13 +11,12 @@
 		integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	{{ encore_entry_link_tags("app") }}
 	{% block stylesheets %}{% endblock %}
-
 	<link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
 	<meta property="og:title" content="AppE95" />
 	<meta property="og:type" content="application" />
-	<meta property="og:url" content="https://Esperer95.app.romain-mad.fr" />
+	<meta property="og:url" content="https://esperer95.app" />
 	<meta property="og:image" content="" />
-	<meta name="description" content="Application de gestion de l'accompagnement social d'ESPERER 95" />
+	<meta name="description" content="Application de gestion de l'accompagnement social de l'association ESPERER 95" />
 
 </head>
 
@@ -159,7 +157,6 @@
 			</p>
 			<p>Version 1.2.0 - 06/04/2020</p>
 		</div>
-
 	</footer>
 
 {{ encore_entry_script_tags("app") }}

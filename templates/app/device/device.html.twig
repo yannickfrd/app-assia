@@ -3,8 +3,9 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set device = form.vars.value %}
+{% if device.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
 
-{% block title %}{% if edit_mode %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %} | Esperer95.app{% endblock %}
+{% block title %}{% if edit_mode %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %} | {{ title_website }}{% endblock %}
 
 {% block body %}
 

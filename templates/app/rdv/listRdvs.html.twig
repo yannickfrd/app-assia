@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Rendez-vous | Esperer95.app{% endblock %}
+{% block title %}Rendez-vous | {{ title_website }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -19,7 +19,8 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ rdvs.getTotalItemCount | number_format(0,'', ' ')  }} rdv(s).</span>
+                <span class="align-middle">Résultat : {{ rdvs.getTotalItemCount | number_format(0,'', ' ')  }} <!--
+                -->RDV{% if rdvs.getTotalItemCount %}s{% endif %}.</span>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>

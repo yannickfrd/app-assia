@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Pôles | Esperer95.app{% endblock %}
+{% block title %}Pôles | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -13,7 +13,8 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">{{ poles.getTotalItemCount | number_format(0,'', ' ')}}pôles.</p>
+                <p class="align-middle">{{ poles.getTotalItemCount | number_format(0,'', ' ')}} <!--
+                -->pôle{% if poles.getTotalItemCount %}s{% endif %}.</p>
             </div>
         </div>
 

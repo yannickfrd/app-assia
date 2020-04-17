@@ -80,7 +80,6 @@ class AccommodationController extends AbstractController
 
         return $this->render('app/accommodation/accommodation.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -107,7 +106,6 @@ class AccommodationController extends AbstractController
 
         return $this->render('app/accommodation/accommodation.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 

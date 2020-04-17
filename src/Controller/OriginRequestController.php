@@ -56,7 +56,6 @@ class OriginRequestController extends AbstractController
         return $this->render('app/originRequest/originRequest.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 

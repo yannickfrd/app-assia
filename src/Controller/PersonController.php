@@ -106,7 +106,6 @@ class PersonController extends AbstractController
 
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -143,7 +142,6 @@ class PersonController extends AbstractController
         return $this->render('app/person/person.html.twig', [
             'group_people' => $groupPeople,
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -172,7 +170,6 @@ class PersonController extends AbstractController
             'group_people' => $groupPeople,
             'form' => $form->createView(),
             'form_new_group' => $formNewGroup->createView(),
-            'edit_mode' => true,
         ]);
     }
 
@@ -196,7 +193,6 @@ class PersonController extends AbstractController
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
             'form_new_group' => $formNewGroup->createView(),
-            'edit_mode' => true,
         ]);
     }
 

@@ -85,7 +85,6 @@ class AccommodationGroupController extends AbstractController
         return $this->render('app/accommodation/accommodationGroup.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
-            'edit_mode' => false,
         ]);
     }
 
@@ -113,7 +112,6 @@ class AccommodationGroupController extends AbstractController
         return $this->render('app/accommodation/accommodationGroup.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
-            'edit_mode' => true,
         ]);
     }
 

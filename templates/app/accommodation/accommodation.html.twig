@@ -3,9 +3,9 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set accommodation = form.vars.value %}
+{% if accommodation.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
 
-{% block title %}{% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %} |
-Esperer95.app{% endblock %}
+{% block title %}{% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %} | {{ title_website }}{% endblock %}
 
 {% block body %}
 

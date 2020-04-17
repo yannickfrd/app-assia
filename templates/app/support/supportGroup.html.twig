@@ -2,6 +2,8 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
+{% if form.vars.value.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
+
 {% if edit_mode %}
 	{% set people = form.vars.value.supportPerson %}
 	{% set title = "Suivi social" %}
@@ -10,9 +12,7 @@
 	{% set title = "Nouveau suivi social" %}
 {% endif %}
 
-{% block title %}
-{{ title }} | Esperer95.app
-{% endblock %}
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -77,22 +77,22 @@
 					href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" 
 					title="Personnes rattachées au suivi social">Personnes</a>
 			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" 
-				title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
-			</div>
 			{% if support.service.accommodation %}
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a id='support-accommodations' class="btn btn-{{ theme_color }} btn-block shadow" 
 				href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" 
-				title="Mdalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
+				title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
 			</div>
 			{#<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
 				<a id='support-pf'class="btn btn-{{ theme_color }} btn-block shadow" 
 					href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a>
 			</div> #}
 			{% endif %}
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" 
+				title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
+			</div>
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a id='support-calendar' class="btn btn-{{ theme_color }} btn-block shadow" 
 					href="{{ path('support_calendar_show', {'id':support.id}) }}" data-placement="bottom" 
@@ -188,7 +188,6 @@
 	{{ form_row(form._token) }}
 	{{ form_end(form, {"render_rest": false}) }}
 
-	{# {% include "app/document/modalDeleteSupport.html.twig" %} #}
 </div>
 
 {% endblock %}
