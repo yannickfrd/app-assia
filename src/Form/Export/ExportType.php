@@ -179,6 +179,7 @@ class ExportType extends AbstractType
             'data_class' => Export::class,
             'csrf_protection' => false,
             'translation_domain' => 'support',
+            'block_name' => 'xxx',
         ]);
     }
 

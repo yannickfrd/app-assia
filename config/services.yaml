@@ -34,9 +34,16 @@ services:
 
     App\EventListener\ExceptionListener:
         arguments:
+            $exceptionListener: '%env(EXCEPTION_LISTENER)%'
             $adminEmail: '%admin_email%'
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.exception' }
+            
+    App\EventListener\TerminateListener:
+        # arguments: 
+        #     $security: ['@security.token_storage']
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.terminate' }
 
     App\EventListener\LoginListener:
         tags:

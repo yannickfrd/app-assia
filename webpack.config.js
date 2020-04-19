@@ -27,6 +27,7 @@ Encore
     .addEntry('accommodation', './assets/js/accommodation/accommodation.js')
     .addEntry('directory', './assets/js/directory/directory.js')
     .addEntry('document', './assets/js/document/document.js')
+    .addEntry('export', './assets/js/export/exportPage.js')
     .addEntry('evaluation', './assets/js/evaluation/index.js')
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('groupPeople', './assets/js/groupPeople/groupPeople.js')

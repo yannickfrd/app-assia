@@ -1,0 +1,8 @@
+{% extends "emails/baseEmail.html.twig" %}
+
+{% block body %}
+
+    <p>Votre <b>fichier d'export</b> est prêt.</p>
+    <p>Vous pouvez le télécharger en cliquant sur <a href="{{ absolute_url(path) }}">ce lien</a>.</p>
+
+{% endblock %}

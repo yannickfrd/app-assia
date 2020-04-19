@@ -73,7 +73,7 @@ class Export
     }
 
     // Export the file
-    public function exportFile()
+    public function exportFile($asynch = false)
     {
         $this->getFormat($this->format);
 
@@ -85,6 +85,10 @@ class Export
 
         $filename = $this->name.$this->now->format('_Y_m_d_His').'.'.$this->format;
         $this->writer->save($path.$filename);
+
+        if ($asynch) {
+            return  $path.$filename;
+        }
 
         $response = new StreamedResponse();
 

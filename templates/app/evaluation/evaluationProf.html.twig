@@ -14,7 +14,6 @@
             <button type="button" id="heading-eval_prof-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
                 data-toggle="collapse" data-target="#collapse-eval_prof-{{ key }}" aria-expanded="false"
                 aria-controls="collapse-eval_prof-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
-                {# {{ dump(key) }} #}
             {% endfor %}
         </div>
 

@@ -98,11 +98,11 @@ class MailNotification
         $subject = 'Esperer95.app : Réinitialisation du mot de passe';
 
         $htmlBody = $this->renderer->render(
-            'emails/reinitPassword.html.twig',
+            'emails/reinitPasswordEmail.html.twig',
             ['user' => $user]
         );
         $txtBody = $this->renderer->render(
-            'emails/reinitPassword.txt.twig',
+            'emails/reinitPasswordEmail.txt.twig',
             ['user' => $user]
         );
 

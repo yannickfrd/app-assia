@@ -66,11 +66,11 @@
                 <div class="form-group row">
                     <div class="col-md-12">
                         <div class="mb-4 float-right">
-                            <button type="reset" class="btn btn-secondary ml-2 shadow" data-placement="bottom"
+                            <button type="reset" id="reset" name="reset" class="btn btn-secondary ml-2 shadow" data-placement="bottom"
                                 title="Effacer les filtres"><span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
                             </button>
                             <button type="submit" id="calcul" name="calcul" class="btn btn-{{ theme_color }} shadow">Calculer</button>
-                            <button type="submit" id="export" name="export" class="btn btn-{{ theme_color }} shadow">Exporter</button>
+                            <button type="submit" id="export" name="export" data-url="{{ path('export') }}" class="btn btn-{{ theme_color }} shadow">Exporter</button>
                         </div>
                     </div>
                 </div>
@@ -83,4 +83,5 @@
 
 {% block javascripts %}
 {{ encore_entry_script_tags("search") }}
+{# {{ encore_entry_script_tags("export") }} #}
 {% endblock javascripts %}

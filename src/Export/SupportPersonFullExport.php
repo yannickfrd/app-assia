@@ -76,7 +76,7 @@ class SupportPersonFullExport
             $arrayData[] = $this->getDatas($supportPerson);
         }
 
-        return (new Export('export_suivis', 'xlsx', $arrayData, 12.5))->exportFile();
+        return (new Export('export_suivis', 'xlsx', $arrayData, 12.5))->exportFile(true);
     }
 
     /**
