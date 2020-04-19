@@ -267,24 +267,24 @@ class SupportController extends AbstractController
             // $supports = $this->repoSupportPerson->findSupportsFullToExport($export);
             // return $exportSupport->exportData($supports);
 
-            ob_end_clean();
-            header('Connection: close');
-            ignore_user_abort(true); // optional
-            ob_start();
-            echo ' ';
-            $size = ob_get_length();
-            header("Content-Length: $size");
-            ob_end_flush(); // Strange behaviour, will not work
-            flush(); // Unless both are called !
-            // echo'Text user will never see';
+            // ob_end_clean();
+            // header('Connection: close');
+            // ignore_user_abort(true); // optional
+            // ob_start();
+            // echo ' ';
+            // $size = ob_get_length();
+            // header("Content-Length: $size");
+            // ob_end_flush(); // Strange behaviour, will not work
+            // flush(); // Unless both are called !
+            // // echo'Text user will never see';
 
-            $this->addFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.');
+            // $this->addFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.');
 
-            // return $this->json([
-            //     'code' => 200,
-            //     'alert' => 'success',
-            //     'msg' => 'Votre export est en cours de préparation...  Vous recevrez le lien de téléchargement par email.',
-            // ], 200);
+            return $this->json([
+                'code' => 200,
+                'alert' => 'success',
+                'msg' => 'Votre fichier d\'export est prêt. Un mail vous a été envoyé.',
+            ], 200);
         }
 
         return $this->render('app/export/export.html.twig', [

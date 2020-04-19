@@ -2,14 +2,13 @@
 
 namespace App\EventListener;
 
+use App\Entity\SupportGroup;
 use Twig\Environment;
 use App\Form\Model\Export;
 use App\Entity\SupportPerson;
 use App\Form\Export\ExportType;
-use App\Form\Model\UserResetPassword;
 use App\Notification\MailNotification;
 use App\Export\SupportPersonFullExport;
-use App\Form\Security\ForgotPasswordType;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,20 +41,23 @@ class TerminateListener
         $response = $event->getResponse();
         $route = $request->attributes->get('_route');
 
-        if (!$event->isMasterRequest()) {
-            return;
-        }
+        // if (!$event->isMasterRequest()) {
+        //     return;
+        // }
 
         switch ($route) {
             case 'export':
                 $this->export($request);
-            break;
+                break;
             case 'security_forgot_password':
                 $this->reinitPassword($request);
-            break;
-            // case '_wdt':
-            //     return;
-            //     break;
+                break;
+            case 'support_evaluation_show':
+                $this->editEvaluation($request);
+                break;
+            case 'support_evaluation_edit':
+                $this->editEvaluation($request);
+                break;
             default:
                 return;
                 break;
@@ -87,7 +89,7 @@ class TerminateListener
 
             $this->notification->send(
                     ['email' => $user->getEmail(), 'name' => $user->getFirstname()],
-                    'Esperer 95 | Export de données',
+                    'Esperer95.app | Export de données',
                     $htmlBody,
                 );
         }
@@ -109,5 +111,38 @@ class TerminateListener
 
         //     $message = $this->notification->reinitPassword($user); // Envoie l'email
         // }
+    }
+
+    public function editEvaluation($request)
+    {
+        if ($request->request->get('evaluation_group')) {
+            $entityManager = $this->container->get('doctrine')->getManager();
+            $repo = $entityManager->getRepository(SupportGroup::class);
+            $supportId = $request->attributes->get('id');
+            $supportGroup = $repo->findFullSupportById($supportId);
+
+            $fullnamePerson = '';
+
+            foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+                if ($supportPerson->getHead()) {
+                    $fullnamePerson = $supportPerson->getPerson()->getFullname();
+                }
+            }
+
+            $htmlBody = $this->renderer->render(
+            'emails/EvaluationEmail.html.twig',
+            [
+                'supportId' => $supportId,
+                'fullnamePerson' => $fullnamePerson,
+                'request' => $request,
+                ]
+            );
+
+            $this->notification->send(
+                ['email' => ('romain.madelaine@esperer-95.org'), 'name' => 'Admin'],
+                'Esperer95.app | Evaluation enregistrée : '.$fullnamePerson.' ('.$supportId.')',
+                $htmlBody,
+            );
+        }
     }
 }

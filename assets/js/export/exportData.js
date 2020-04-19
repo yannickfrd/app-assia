@@ -3,7 +3,7 @@ import Loader from "../utils/loader";
 
 export default class ExportData {
 
-    constructor(rRequest) {
+    constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
         this.formElt = document.querySelector("#form-search>form");
         this.btnSubmitElts = this.formElt.querySelectorAll("button[type='submit']");
@@ -18,6 +18,8 @@ export default class ExportData {
                 e.preventDefault();
                 let formToString = new URLSearchParams(new FormData(this.formElt)).toString();
                 this.ajaxRequest.init("POST", btnSubmitElt.getAttribute("data-url"), this.response.bind(this), true, formToString);
+                this.loader.off();
+                new MessageFlash("success", "Votre export est en cours de préparation...  Vous recevrez le lien de téléchargement par email.");
             });
         })
     }

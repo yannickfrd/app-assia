@@ -1,0 +1,9 @@
+{% extends "emails/baseEmail.html.twig" %}
+
+{% block body %}
+
+    <p>Nom du suivi : {{ fullnamePerson }}</p>
+    <p>N° suivi : {{ supportId }}</p>
+    <p>{{ dump(request.request.get('evaluation_group')) }}</p>
+
+{% endblock %}
