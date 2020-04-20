@@ -14,7 +14,7 @@ class LocationType extends AbstractType
         $builder
             ->add('address')
             ->add('city')
-            ->add('zipCode', null, [
+            ->add('zipcode', null, [
                 'attr' => [
                     'class' => 'js-zip-code',
                 ],

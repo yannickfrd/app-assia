@@ -42,10 +42,7 @@ class ExceptionListener
 
         $htmlBody = $this->renderer->render(
             'emails/exceptionEmail.html.twig',
-            [
-                'exception' => $exception,
-                'user' => $user,
-            ]
+            ['exception' => $exception]
         );
 
         $this->notification->send(

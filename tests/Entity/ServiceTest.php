@@ -40,7 +40,7 @@ class ServiceTest extends WebTestCase
         $this->service = (new Service())
             ->setName('Service '.$faker->numberBetween(1, 100))
             ->setCity($faker->city)
-            ->setZipCode($faker->numberBetween(1, 95))
+            ->setZipcode($faker->numberBetween(1, 95))
             ->setAddress($faker->address)
             ->setPole($this->pole);
     }

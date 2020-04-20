@@ -89,7 +89,7 @@ class Accommodation
     /**
      * @ORM\Column(name="department", length=10, nullable=true)
      */
-    private $zipCode; // NE PAS SUPPRIMER
+    private $zipcode; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

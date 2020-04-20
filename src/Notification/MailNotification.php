@@ -42,7 +42,6 @@ class MailNotification
     public function send($to, $subject, $htmlBody, $txtBody = null)
     {
         try {
-            //Recipients
             $this->mail->setFrom('noreply@romain-mad.fr', 'Esperer95.app');
             $this->mail->addAddress($to['email'], $to['name']); // Add a recipient
             // $this->mail->addAddress("ellen@example.com"); // Name is optional
@@ -61,11 +60,10 @@ class MailNotification
 
             $this->mail->send();
 
-            // echo "Message has been sent";
             return true;
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
-            dd($e);
+            // dd($e);
 
             return false;
         }

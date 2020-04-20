@@ -73,7 +73,7 @@ class Referent
     /**
      * @ORM\Column(name="departement", length=10, nullable=true)
      */
-    private $zipCode; // NE PAS SUPPRIMER
+    private $zipcode; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="text", nullable=true)

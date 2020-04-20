@@ -4,6 +4,6 @@
 
     <p>Nom du suivi : {{ fullnamePerson }}</p>
     <p>N° suivi : {{ supportId }}</p>
-    <p>{{ dump(request.request.get('evaluation_group')) }}</p>
+    <p>{{ evaluation_group|json_encode(constant('JSON_PRETTY_PRINT')) }}</p>
 
 {% endblock %}

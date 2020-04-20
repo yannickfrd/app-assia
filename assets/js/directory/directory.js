@@ -1,5 +1,5 @@
 import "select2";
-import "../utils/maskZipCode";
+import "../utils/maskZipcode";
 import "../utils/maskPhone";
 
 $("select.multi-select.js-service").select2({

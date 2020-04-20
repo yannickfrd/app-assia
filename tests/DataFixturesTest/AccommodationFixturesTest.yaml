@@ -5,7 +5,7 @@ App\Entity\Accommodation:
     openingDate: <date_create("2010-01-01")>
     closingDate: <date_create("2020-01-01")>
     city: Houilles
-    zipCode: <numberBetween(1, 95)>
+    zipcode: <numberBetween(1, 95)>
     address : <fr_FR:address()>
     accommodationType:  <numberBetween(1, 13)>
     configuration:  <numberBetween(1, 2)>
@@ -22,7 +22,7 @@ App\Entity\Accommodation:
     placesNumber: <numberBetween(1, 10)>
     openingDate: <datetimeBetween("-10 years", "now")>
     city: <fr_FR:city()>
-    zipCode: <numberBetween(1, 95)>
+    zipcode: <numberBetween(1, 95)>
     address : <fr_FR:address()>
     accommodationType:  <numberBetween(1, 13)>
     configuration:  <numberBetween(1, 2)>

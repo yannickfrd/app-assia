@@ -78,7 +78,7 @@
                             {% if role.service.pole.id not in poles %}
                             {% set poles = poles|merge([role.service.pole.id]) %}
                             <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
-                            class="text-{{ theme_color }}">{{  role.service.pole.name }}</a><br>
+                                class="text-{{ theme_color }}">{{  role.service.pole.name }}</a><br>
                             {% endif %}
                             {% endfor %}
                         </td>

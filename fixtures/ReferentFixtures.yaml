@@ -7,7 +7,7 @@ App\Entity\referent:
     phone1: "01 00 00 00 00"
     address : <fr_FR:address()>
     city: <fr_FR:city()>
-    zipCode: <numberBetween(1, 95)>
+    zipcode: <numberBetween(1, 95)>
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
@@ -23,7 +23,7 @@ App\Entity\referent:
     phone1: "01 00 00 00 00"
     address : <fr_FR:address()>
     city: <fr_FR:city()>
-    zipCode: <numberBetween(1, 95)>
+    zipcode: <numberBetween(1, 95)>
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>

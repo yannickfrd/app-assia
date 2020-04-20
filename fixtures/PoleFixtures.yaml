@@ -4,7 +4,7 @@ App\Entity\Pole:
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     city: Pontoise
-    zipCode: 95 000
+    zipcode: 95 000
     address : <fr_FR:address()>  
     color: brown
     createdAt: <date_create()>
@@ -17,7 +17,7 @@ App\Entity\Pole:
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     city: <fr_FR:city()>
-    zipCode: <numberBetween(1, 95)>
+    zipcode: <numberBetween(1, 95)>
     address : <fr_FR:address()>
     color: brown
     createdAt: <date_create()>

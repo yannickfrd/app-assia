@@ -81,10 +81,7 @@ class TerminateListener
 
             $htmlBody = $this->renderer->render(
                     'emails/exportFileEmail.html.twig',
-                    [
-                        'user' => $user,
-                        'path' => $this->exportSupport->exportData($supports),
-                    ]
+                    ['path' => $this->exportSupport->exportData($supports)]
                 );
 
             $this->notification->send(
@@ -115,7 +112,9 @@ class TerminateListener
 
     public function editEvaluation($request)
     {
-        if ($request->request->get('evaluation_group')) {
+        $evaluationGroup = $request->request->get('evaluation_group');
+
+        if ($evaluationGroup) {
             $entityManager = $this->container->get('doctrine')->getManager();
             $repo = $entityManager->getRepository(SupportGroup::class);
             $supportId = $request->attributes->get('id');
@@ -134,7 +133,7 @@ class TerminateListener
             [
                 'supportId' => $supportId,
                 'fullnamePerson' => $fullnamePerson,
-                'request' => $request,
+                'evaluation_group' => $evaluationGroup,
                 ]
             );
 

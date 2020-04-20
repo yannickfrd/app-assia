@@ -1,6 +1,6 @@
 import DeleteAccommodation from "./deleteAccommodation";
 import CheckChange from "../utils/checkChange";
-import "../utils/maskZipCode";
+import "../utils/maskZipcode";
 
 
 document.addEventListener("DOMContentLoaded", e => {

@@ -15,12 +15,12 @@ trait LocationEntityTrait
     private $city;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="zipCode", type="string", length=10, nullable=true)
      */
-    private $zipCode;
+    private $zipcode;
 
     // /**
-    //  * @ORM\Column(type="string", length=10, nullable=true)
+    //  * @ORM\Column(type="string", length=50, nullable=true)
     //  */
     // private $country;
 
@@ -48,14 +48,14 @@ trait LocationEntityTrait
         return $this;
     }
 
-    public function getZipCode(): ?string
+    public function getZipcode(): ?string
     {
-        return $this->zipCode;
+        return $this->zipcode;
     }
 
-    public function setZipCode(?string $zipCode): self
+    public function setZipcode(?string $zipcode): self
     {
-        $this->zipCode = $zipCode;
+        $this->zipcode = $zipcode;
 
         return $this;
     }

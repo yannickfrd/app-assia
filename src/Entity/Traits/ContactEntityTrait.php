@@ -40,8 +40,7 @@ trait ContactEntityTrait
 
     public function getPhone1(): ?string
     {
-        return $this->phone1;
-        // return Phone::getPhoneFormat($this->phone1);
+        return Phone::getPhoneFormat($this->phone1);
     }
 
     public function setPhone1(?string $phone1): self
@@ -53,8 +52,7 @@ trait ContactEntityTrait
 
     public function getPhone2(): ?string
     {
-        return $this->phone2;
-        // return Phone::getPhoneFormat($this->phone2);
+        return Phone::getPhoneFormat($this->phone2);
     }
 
     public function setPhone2(?string $phone2): self

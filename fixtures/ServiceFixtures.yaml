@@ -6,7 +6,7 @@ App\Entity\Service:
     phone1: "01 00 00 00 00"
     address: Pontoise
     city: Pontoise
-    zipCode: 95 000
+    zipcode: 95 000
     accommodation: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
@@ -18,7 +18,7 @@ App\Entity\Service:
     city: <fr_FR:city()>
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
-    zipCode: <numberBetween(1, 95)>
+    zipcode: <numberBetween(1, 95)>
     address : <fr_FR:address()>
     accommodation: true
     createdAt: <date_create()>

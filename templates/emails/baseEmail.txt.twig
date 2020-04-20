@@ -1,4 +1,4 @@
-Bonjour {{ user.firstname }},<br>
+Bonjour {% if app.user %} {{ app.user.firstname }}{% endif %}, <br>
 <br>
 
 {% block body %}{% endblock %}

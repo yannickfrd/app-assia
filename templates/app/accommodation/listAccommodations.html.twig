@@ -54,7 +54,7 @@
                             {{ knp_pagination_sortable(accommodations, "Ville", "a.city") }}
                         </th>
                         <th scope="col" class="align-middle th-w-60">
-                            {{ knp_pagination_sortable(accommodations, "Département", "a.zipCode") }}
+                            {{ knp_pagination_sortable(accommodations, "Département", "a.zipcode") }}
                         </th>
                         <th scope="col" class="align-middle th-w-150">Occupation actuelle (Nb de personnes)</th>
                         {# <th scope="col" class="align-middle th-w-150">
@@ -81,7 +81,7 @@
                         <td>{% if accommodation.closingDate %} {{ accommodation.closingDate | date("d/m/Y") }}{% endif %}</td>
                         <td>{{ accommodation.address }}</td>
                         <td>{{ accommodation.city }}</td>
-                        <td>{{ accommodation.zipCode }}</td>
+                        <td>{{ accommodation.zipcode }}</td>
                         <td>
                             {% for  accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
                             {{ accommodationGroup.accommodationPeople|length }}<br />
