@@ -35,10 +35,10 @@ export default class RemovePerson {
         };
     }
 
-    // Récupère les données envoyés par le serveur
+    // Récupère les données envoyées par le serveur
     response(data) {
         let dataJSON = JSON.parse(data);
-        if (dataJSON.code === 200) {
+        if (dataJSON.alert === 'warning') {
             this.deleteTr(this.trElt);
             this.inputNbPeople.value = dataJSON.data;
             new MessageFlash("warning", dataJSON.msg);

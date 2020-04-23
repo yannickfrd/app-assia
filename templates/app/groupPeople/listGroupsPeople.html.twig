@@ -63,7 +63,7 @@
 
                 <tbody>
                     {% for groupPeople in groupsPeople %}
-                    {% set rolePerson = groupPeople.rolePerson|first %}
+                    {% set rolePerson = groupPeople.rolePeople|first %}
                     <tr>
                         <th scope="row">
                             {% if groupPeople.nbPeople > 1 %}

@@ -65,7 +65,7 @@ class GroupPeople
      * })
      * @Assert\Valid()
      */
-    private $rolePerson;
+    private $rolePeople;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="groupPeople", orphanRemoval=true)
@@ -91,7 +91,7 @@ class GroupPeople
     public function __construct()
     {
         $this->supports = new ArrayCollection();
-        $this->rolePerson = new ArrayCollection();
+        $this->rolePeople = new ArrayCollection();
         $this->referents = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->accommodationGroups = new ArrayCollection();
@@ -180,15 +180,15 @@ class GroupPeople
     /**
      * @return Collection|RolePerson[]
      */
-    public function getrolePerson(): ?Collection
+    public function getRolePeople(): ?Collection
     {
-        return $this->rolePerson;
+        return $this->rolePeople;
     }
 
     public function addRolePerson(RolePerson $rolePerson): self
     {
-        if (!$this->rolePerson->contains($rolePerson)) {
-            $this->rolePerson[] = $rolePerson;
+        if (!$this->rolePeople->contains($rolePerson)) {
+            $this->rolePeople[] = $rolePerson;
             $rolePerson->setGroupPeople($this);
         }
 
@@ -197,8 +197,8 @@ class GroupPeople
 
     public function removeRolePerson(RolePerson $rolePerson): self
     {
-        if ($this->rolePerson->contains($rolePerson)) {
-            $this->rolePerson->removeElement($rolePerson);
+        if ($this->rolePeople->contains($rolePerson)) {
+            $this->rolePeople->removeElement($rolePerson);
             // set the owning side to null (unless already changed)
             if ($rolePerson->getGroupPeople() === $this) {
                 $rolePerson->setGroupPeople(null);

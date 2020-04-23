@@ -349,8 +349,7 @@ class PersonController extends AbstractController
         $person->addRolesPerson($rolePerson);
         $this->manager->persist($person);
 
-        $nbPeople = $groupPeople->getRolePerson()->count();
-        $groupPeople->setNbPeople($nbPeople + 1);
+        $groupPeople->setNbPeople($groupPeople->getRolePeople()->count() + 1);
 
         $this->manager->flush();
 

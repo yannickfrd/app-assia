@@ -22,7 +22,7 @@ class SupportGroupWithPeopleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('supportPerson', CollectionType::class, [
+            ->add('supportPeople', CollectionType::class, [
                 'entry_type' => SupportPersonType::class,
                 'label_attr' => [
                     'class' => 'sr-only',

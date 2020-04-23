@@ -78,7 +78,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.createdBy', 'user')->addselect('PARTIAL user.{id, firstname, lastname}')
             ->leftJoin('sg.updatedBy', 'user2')->addselect('PARTIAL user2.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, preAdmission, accommodation, justice}')
-            ->leftJoin('sg.supportPerson', 'sp')->addselect('sp')
+            ->leftJoin('sg.supportPeople', 'sp')->addselect('sp')
             ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
 
@@ -95,7 +95,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
             ->leftJoin('sg.accommodationGroups', 'ag')->addselect('PARTIAL ag.{id, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addselect('PARTIAL a.{id, name, address, city}')
-            ->leftJoin('sg.supportPerson', 'sp')->addselect('sp')
+            ->leftJoin('sg.supportPeople', 'sp')->addselect('sp')
             ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addselect('PARTIAL u.{id, firstname, lastname}');
@@ -118,7 +118,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id,name}')
             ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id,name}')
-            ->leftJoin('sg.supportPerson', 'sp')->addSelect('sp')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addselect('p')
             ->leftJoin('sg.groupPeople', 'g')->addselect('g')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id,fullname}')
@@ -229,7 +229,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.service', 'sv')->addselect('PARTIAL sv.{id, name}')
             ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
-            ->leftJoin('sg.supportPerson', 'sp')->addselect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('sg.referent = :referent')

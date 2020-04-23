@@ -48,10 +48,10 @@
                     {% for support in supports %}
                     {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
 
-                    {% if support.supportPerson|filter(a => a.role != 3)|length %}
-                    {% set supportPeople = support.supportPerson|filter(a => a.role != 3) %}
+                    {% if support.supportPeople|filter(a => a.role != 3)|length %}
+                    {% set supportPeople = support.supportPeople|filter(a => a.role != 3) %}
                     {% else %} 
-                    {% set supportPeople = support.supportPerson %}
+                    {% set supportPeople = support.supportPeople %}
                     {% endif %}
 
                     <tr>
@@ -85,7 +85,7 @@
                         </td>
                         <td class="align-middle">
                             {{ support.groupPeople.familyTypologyToString }}
-                            {% if support.supportPerson|length > 1 %} | {{ support.supportPerson|length }} pers.{% endif %}
+                            {% if support.supportPeople|length > 1 %} | {{ support.supportPeople|length }} pers.{% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>
                         <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>

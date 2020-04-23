@@ -172,7 +172,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le compte utilisateur est mis à jour.');
+            $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est mis à jour.');
         }
 
         if (!$form->isSubmitted() && $user->isDisabled()) {
@@ -304,7 +304,7 @@ class SecurityController extends AbstractController
         $this->manager->persist($user);
         $this->manager->flush();
 
-        $this->addFlash('success', 'Le compte est créé.');
+        $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est créé.');
 
         return $this->redirectToRoute('security_user', [
             'id' => $user->getId(),

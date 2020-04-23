@@ -29,7 +29,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->select('g')
             ->leftJoin('g.createdBy', 'createdBy')->addselect('PARTIAL createdBy.{id, firstname, lastname}')
             ->leftJoin('g.updatedBy', 'updatedBy')->addselect('PARTIAL updatedBy.{id, firstname, lastname}')
-            ->leftJoin('g.rolePerson', 'r')->addselect('PARTIAL r.{id, role, head}')
+            ->leftJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addselect('p')
             ->leftJoin('g.supports', 'sg')->addselect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
             ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
@@ -55,7 +55,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('g')
             ->select('PARTIAL g.{id, familyTypology, nbPeople}')
 
-            ->innerJoin('g.rolePerson', 'r')->addselect('PARTIAL r.{id, role, head}')
+            ->innerJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
             ->innerJoin('r.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
             ->andWhere('r.head = TRUE');

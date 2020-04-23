@@ -59,7 +59,7 @@ class NoteRepository extends ServiceEntityRepository
             ->addselect('PARTIAL n.{id, title, status, createdAt, updatedAt}')
 
             ->leftJoin('n.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->leftJoin('sg.supportPerson', 'sp')->addselect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('n.createdBy = :user')

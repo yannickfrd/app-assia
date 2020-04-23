@@ -37,7 +37,7 @@ class RdvRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.supportPerson', 'sp')->addSelect('sp')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
         if ($rdvSearch->getTitle()) {
@@ -174,7 +174,7 @@ class RdvRepository extends ServiceEntityRepository
             ->addselect('PARTIAL rdv.{id, title, start, end, location}')
 
             ->leftJoin('rdv.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->leftJoin('sg.supportPerson', 'sp')->addselect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('rdv.createdBy = :createdBy')

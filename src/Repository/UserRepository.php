@@ -49,7 +49,7 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin('u.referentSupport', 'sg')->addselect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
             ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
-            ->leftJoin('g.rolePerson', 'r')->addselect('PARTIAL r.{id, role, head}')
+            ->leftJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'su')->addselect('su')
             ->leftJoin('su.service', 'service')->addselect('PARTIAL service.{id, name, email, phone1}')

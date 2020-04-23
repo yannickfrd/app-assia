@@ -118,7 +118,7 @@ class GroupPeopleControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame("danger", $data['alert']);
+        $this->assertSame('danger', $data['alert']);
     }
 
     protected function tearDown(): void

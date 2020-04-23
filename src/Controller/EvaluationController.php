@@ -56,8 +56,6 @@ class EvaluationController extends AbstractController
             $this->updateEvaluation($evaluationGroup);
         }
 
-        // dump($evaluationGroup);
-
         return $this->render('app/evaluation/evaluation.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
@@ -105,7 +103,7 @@ class EvaluationController extends AbstractController
 
         $this->manager->persist($evaluationGroup);
 
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             $this->createEvaluationPerson($supportPerson, $evaluationGroup);
         }
 
@@ -164,9 +162,9 @@ class EvaluationController extends AbstractController
 
         $evaluationGroup->setUpdatedAt($now);
 
-        $evaluationGroup->getSupportGroup()
-                            ->setUpdatedAt($now)
-                            ->setUpdatedBy($this->getUser());
+        $supportGroup = $evaluationGroup->getSupportGroup();
+        $supportGroup->setUpdatedAt($now)
+            ->setUpdatedBy($this->getUser());
 
         $this->updateBudgetGroup($evaluationGroup);
 

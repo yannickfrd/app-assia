@@ -1,5 +1,4 @@
 // Vérifie que l'utilisateur à sauvegarder ses modifications avant de changer de page
-
 export default class CheckChange {
 
     constructor(formName) {

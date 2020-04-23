@@ -35,7 +35,7 @@
                         {% if edit_mode %}Édition{% else %}Création{% endif %} Rendez-vous</li>
                 </ol>
             </nav>
-            {% for supportPerson in support.supportPerson %}
+            {% for supportPerson in support.supportPeople %}
             <span class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ supportPerson.person.fullname }}</span>
             {% endfor %}
             {% else %}

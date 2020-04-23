@@ -39,11 +39,16 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.exception' }
             
-    App\EventListener\TerminateListener:
-        # arguments: 
-        #     $security: ['@security.token_storage']
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.terminate' }
+    # App\EventSubscriber\ExceptionSubscriber:
+    #     arguments:
+    #         $exceptionListener: '%env(EXCEPTION_LISTENER)%'
+    #         $adminEmail: '%admin_email%'
+
+    # App\EventListener\EvaluationEditListener: # Test
+    #     arguments: 
+    #         $evaluationListener: '%env(EVALUATION_LISTENER)%'
+    #     tags:
+    #         - { name: 'kernel.event_listener', event: 'evaluation.monitoring.send_mail', method: 'onEdit' }  
 
     App\EventListener\LoginListener:
         tags:
@@ -54,6 +59,12 @@ services:
             $maintenance: '%env(MAINTENANCE)%'
         tags:
         - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest' }
+    
+    App\EventListener\TerminateListener:
+        arguments: 
+            $evaluationListener: '%env(EVALUATION_LISTENER)%'
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.terminate' }
 
     App\Notification\MailNotification:
         arguments:

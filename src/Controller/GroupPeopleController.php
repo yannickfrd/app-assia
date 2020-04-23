@@ -161,8 +161,7 @@ class GroupPeopleController extends AbstractController
 
         $this->manager->persist($rolePerson);
 
-        $nbPeople = $groupPeople->getRolePerson()->count(); // Compte le nombre de personnes dans le groupe
-        $groupPeople->setNbPeople($nbPeople + 1);
+        $groupPeople->setNbPeople($groupPeople->getRolePeople()->count() + 1); // Compte le nombre de personnes dans le groupe et ajoute 1
 
         $this->manager->flush();
 
@@ -189,12 +188,13 @@ class GroupPeopleController extends AbstractController
     {
         $person = $rolePerson->getPerson();
         $groupPeople = $rolePerson->getGroupPeople();
+        $nbPeople = $groupPeople->getRolePeople()->count(); // // Compte le nombre de personnes dans le groupe
 
-        $nbPeople = $groupPeople->getRolePerson()->count(); // // Compte le nombre de personnes dans le groupe
         // Vérifie que le groupe est composé de plus d'1 personne
         if ($rolePerson->getHead()) {
             return $this->json([
-                'code' => null,
+                'code' => 200,
+                'alert' => 'danger',
                 'msg' => 'Le/la demandeur/euse principal·e ne peut pas être retiré·e du groupe.',
                 'data' => null,
             ], 200);
@@ -207,6 +207,7 @@ class GroupPeopleController extends AbstractController
 
         return $this->json([
             'code' => 200,
+            'alert' => 'warning',
             'msg' => $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.',
             'data' => $nbPeople - 1,
         ], 200);

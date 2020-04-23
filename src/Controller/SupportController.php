@@ -2,32 +2,30 @@
 
 namespace App\Controller;
 
-use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
-use App\Entity\Person;
-use App\Entity\RolePerson;
+use App\Service\Grammar;
+use App\Form\Model\Export;
+use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Export\SupportPersonExport;
-use App\Export\SupportPersonFullExport;
 use App\Form\Export\ExportType;
-use App\Form\Model\Export;
+use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
-use App\Form\Support\SupportGroupSearchType;
 use App\Form\Support\SupportGroupType;
-use App\Form\Support\SupportGroupWithPeopleType;
-use App\Repository\EvaluationGroupRepository;
+use App\Export\SupportPersonFullExport;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
-use App\Service\Pagination;
-use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Support\SupportGroupSearchType;
+use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Support\SupportGroupWithPeopleType;
+use App\Service\SupportGroup\SupportGroupService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class SupportController extends AbstractController
 {
@@ -49,21 +47,21 @@ class SupportController extends AbstractController
      *
      * @Route("/supports", name="supports", methods="GET|POST")
      */
-    public function viewListSupports(Request $request, SupportGroupSearch $supportGroupSearch = null, Pagination $pagination): Response
+    public function viewListSupports(Request $request, SupportGroupSearch $search = null, Pagination $pagination): Response
     {
-        $supportGroupSearch = (new SupportGroupSearch())->setStatus([2]);
+        $search = (new SupportGroupSearch())->setStatus([2]);
 
-        $form = ($this->createForm(SupportGroupSearchType::class, $supportGroupSearch))
+        $form = ($this->createForm(SupportGroupSearchType::class, $search))
             ->handleRequest($request);
 
-        if ($supportGroupSearch->getExport()) {
-            return $this->exportData($supportGroupSearch);
+        if ($search->getExport()) {
+            return $this->exportData($search);
         }
 
         return $this->render('app/support/listSupports.html.twig', [
-            'supportGroupSearch' => $supportGroupSearch,
+            'supportGroupSearch' => $search,
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->repoSupportGroup->findAllSupportsQuery($supportGroupSearch), $request),
+            'supports' => $pagination->paginate($this->repoSupportGroup->findAllSupportsQuery($search), $request),
         ]);
     }
 
@@ -72,22 +70,25 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(int $id, GroupPeopleRepository $repo, Request $request): Response
+    public function newSupportGroup(int $id, GroupPeopleRepository $repo, Request $request, SupportGroupService $supportGroupService): Response
     {
         $groupPeople = $repo->findGroupPeopleById($id);
 
-        $supportGroup = (new SupportGroup())
-            ->setStatus(2)
-            ->setStartDate(new \DateTime())
-            ->setReferent($this->getUser());
+        $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser());
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if (!$this->activeSupport($groupPeople, $supportGroup)) {
-                return $this->createSupportGroup($groupPeople, $supportGroup);
+            if ($supportGroupService->createSupportGroup($groupPeople, $supportGroup)) {
+                $this->addFlash('success', 'Le suivi social est créé.');
+
+                if ($supportGroup->getService()->getAccommodation()) {
+                    return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
+                }
+
+                return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
             }
             $this->addFlash('danger', 'Attention, un suivi social est déjà en cours pour ce groupe.');
         }
@@ -103,7 +104,7 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request): Response
+    public function editSupportGroup(int $id, Request $request, SupportGroupService $supportGroupService): Response
     {
         $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
@@ -113,15 +114,24 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateSupportPeople($supportGroup);
+            $supportGroupService->updateSupportPeople($supportGroup);
 
             $this->manager->flush();
 
             $this->addFlash('success', 'Le suivi social est modifié.');
         }
 
-        if (!$form->isSubmitted() && $supportGroup->getService()->getAccommodation() && 0 == count($supportGroup->getAccommodationGroups())) {
-            $this->addFlash('warning', 'Attention, aucun hébergement enregistré pour ce suivi.');
+        if (!$form->isSubmitted()) {
+            if ($supportGroup->getService()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
+                $this->addFlash('warning', 'Attention, aucun hébergement enregistré pour ce suivi.');
+            }
+            $supportPeople = $supportGroup->getSupportPeople()->count();
+            $people = $supportGroup->getGroupPeople()->getNbPeople();
+            if (!$form->isSubmitted() && $supportPeople != $people) {
+                $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$supportPeople.') 
+                ne correspond pas à la composition familiale du groupe ('.$people.' personnes). 
+                Allez dans l\'onglet "Personnes" ci-dessous pour ajouter les personnes au suivi.');
+            }
         }
 
         return $this->render('app/support/supportGroup.html.twig', [
@@ -177,54 +187,15 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupService $supportGroupService): Response
     {
-        $addPeople = false;
-
-        foreach ($supportGroup->getGroupPeople()->getrolePerson() as $rolePerson) {
-            if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
-                $supportPerson = $this->createSupportPerson($rolePerson, $supportGroup);
-
-                $evaluationGroup = $repo->findLastEvaluationFromSupport($supportGroup);
-
-                if ($evaluationGroup) {
-                    $evaluationPerson = new EvaluationPerson();
-
-                    $evaluationPerson->setEvaluationGroup($evaluationGroup)
-                        ->setSupportPerson($supportPerson);
-
-                    $this->manager->persist($evaluationPerson);
-                }
-
-                $addPeople = true;
-
-                $this->addFlash('success', $rolePerson->getPerson()->getFullname().' est ajouté(e) au suivi.');
-            }
-        }
-
-        if ($addPeople) {
-            $this->manager->flush();
-        } else {
+        if (!$supportGroupService->addPeopleInSupport($supportGroup, $repo)) {
             $this->addFlash('warning', "Aucune personne n'est ajoutée au suivi.");
         }
 
         return $this->redirectToRoute('support_pers_edit', [
             'id' => $supportGroup->getId(),
         ]);
-    }
-
-    /**
-     * Vérifie si la personne est déjà dans le suivi social.
-     */
-    protected function personIsInSupport(Person $person, SupportGroup $supportGroup): bool
-    {
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-            if ($person == $supportPerson->getPerson()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -242,7 +213,7 @@ class SupportController extends AbstractController
 
             return $this->json([
                 'code' => 200,
-                'msg' => $supportPerson->getPerson()->getFullname().' est retiré(e) du suivi social.',
+                'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
                 'data' => null,
             ], 200);
         }
@@ -266,18 +237,6 @@ class SupportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // $supports = $this->repoSupportPerson->findSupportsFullToExport($export);
             // return $exportSupport->exportData($supports);
-
-            // ob_end_clean();
-            // header('Connection: close');
-            // ignore_user_abort(true); // optional
-            // ob_start();
-            // echo ' ';
-            // $size = ob_get_length();
-            // header("Content-Length: $size");
-            // ob_end_flush(); // Strange behaviour, will not work
-            // flush(); // Unless both are called !
-            // // echo'Text user will never see';
-
             // $this->addFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.');
 
             return $this->json([
@@ -295,9 +254,9 @@ class SupportController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(SupportGroupSearch $supportGroupSearch)
+    protected function exportData(SupportGroupSearch $search)
     {
-        $supports = $this->repoSupportPerson->findSupportsToExport($supportGroupSearch);
+        $supports = $this->repoSupportPerson->findSupportsToExport($search);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -306,84 +265,5 @@ class SupportController extends AbstractController
         }
 
         return (new SupportPersonExport())->exportData($supports);
-    }
-
-    /**
-     * Vérifie si un suivi social est déjà en cours dans le même service.
-     */
-    protected function activeSupport(GroupPeople $groupPeople, SupportGroup $supportGroup): ?SupportGroup
-    {
-        return $this->repoSupportGroup->findOneBy([
-            'groupPeople' => $groupPeople,
-            'status' => 2,
-            'service' => $supportGroup->getService(),
-        ]);
-    }
-
-    /**
-     * Crée un suivi.
-     */
-    protected function createSupportGroup(GroupPeople $groupPeople, SupportGroup $supportGroup): Response
-    {
-        $supportGroup->setGroupPeople($groupPeople);
-
-        $this->manager->persist($supportGroup);
-
-        // Créé un suivi social individuel pour chaque personne du groupe
-        foreach ($groupPeople->getRolePerson() as $rolePerson) {
-            $this->createSupportPerson($rolePerson, $supportGroup);
-        }
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Le suivi social est créé.');
-
-        if ($supportGroup->getService()->getAccommodation()) {
-            return $this->redirectToRoute('support_accommodation_new', [
-                'id' => $supportGroup->getId(),
-            ]);
-        }
-
-        return $this->redirectToRoute('support_edit', [
-            'id' => $supportGroup->getId(),
-        ]);
-    }
-
-    /**
-     * Crée un suivi individuel.
-     */
-    protected function createSupportPerson(RolePerson $rolePerson, SupportGroup $supportGroup)
-    {
-        $supportPerson = (new SupportPerson())
-            ->setSupportGroup($supportGroup)
-            ->setPerson($rolePerson->getPerson())
-            ->setHead($rolePerson->getHead())
-            ->setRole($rolePerson->getRole())
-            ->setStartDate($supportGroup->getStartDate())
-            ->setEndDate($supportGroup->getEndDate())
-            ->setStatus($supportGroup->getStatus());
-
-        $this->manager->persist($supportPerson);
-
-        return $supportPerson;
-    }
-
-    /**
-     * Met à jour le suivi social de la personne.
-     */
-    protected function updateSupportPeople(SupportGroup $supportGroup)
-    {
-        $nbPeople = count($supportGroup->getSupportPerson());
-        foreach ($supportGroup->getSupportPerson() as $supportPerson) {
-            if (1 == $nbPeople) {
-                $supportPerson->setStartDate($supportGroup->getStartDate());
-            }
-            if (1 == $nbPeople || !$supportPerson->getEndDate()) {
-                $supportPerson->setStatus($supportGroup->getStatus());
-                $supportPerson->setEndDate($supportGroup->getEndDate());
-                $supportPerson->setEndStatus($supportGroup->getEndStatus());
-                $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
-            }
-        }
     }
 }

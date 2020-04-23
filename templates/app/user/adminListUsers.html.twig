@@ -75,7 +75,7 @@
                         <td>{{ user.email }}</td>
                         <td>{% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
                             <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
-                                class="text-{{ theme_color }}">{{  role.service.name }}</a>{% if not loop.last %}, {% endif %}
+                                class="text-{{ theme_color }}">{{ role.service.name }}</a>{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>
                         {% set poles = [] %}
@@ -83,12 +83,12 @@
                             {% if role.service.pole.id not in poles %}
                             {% set poles = poles|merge([role.service.pole.id]) %}
                             <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
-                                class="text-{{ theme_color }}">{{  role.service.pole.name }}</a><br>
+                                class="text-{{ theme_color }}">{{ role.service.pole.name }}</a><br>
                             {% endif %}
                             {% endfor %}
                         </td>
                         <td>{{ user.loginCount }}</td>
-                        <td>{{ user.lastLogin | date("d/m/Y H:i") }}</td>
+                        <td>{% if user.lastLogin %}{{ user.lastLogin | date("d/m/Y H:i") }}{% endif %}</td>
                         <td>{{ user.createdAt | date("d/m/Y") }}</td>
                     </tr>
                     {# {% endcache %} #}
@@ -97,9 +97,7 @@
             </table>
         </div>
 
-        <div class="navigation">
-            {{ knp_pagination_render(users) }}
-        </div>
+        <div class="navigation">{{ knp_pagination_render(users) }}</div>
 
         <div class="row">
             <div class="col-md-12">

@@ -43,7 +43,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for form_support_pers in form.supportPerson.children %}
+							{% for form_support_pers in form.supportPeople.children %}
 								{% set person = form_support_pers.vars.data.person %}
 								<tr class="js-tr-support_pers">
 									<th scope="row">
@@ -75,7 +75,7 @@
 
 		<div class="form-group row">
 			<div class="col-md-12">
-				<a href="{{ path('support_add_people', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
+				<a id="add-people" href="{{ path('support_add_people', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
 					<span class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe au suivi</a>
 				<div class="mb-4 float-right">
 					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
@@ -95,5 +95,5 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("supportPers") }}
+{{ encore_entry_script_tags("supportPeople") }}
 {% endblock javascripts %}

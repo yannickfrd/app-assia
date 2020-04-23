@@ -4,11 +4,11 @@ namespace App\EventListener;
 
 use App\Entity\User;
 use App\Entity\UserConnection;
-use App\Repository\UserConnectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UserConnectionRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 
 class LoginListener
 {
@@ -33,35 +33,28 @@ class LoginListener
             ['connectionAt' => 'DESC']
         );
 
-        if ($lastConnection) {
-            $user->setLastLogin($lastConnection->getConnectionAt());
-        } else {
-            $user->setLastLogin(new \DateTime());
-        }
+        $lastConnection ? $user->setLastLogin($lastConnection->getConnectionAt()) : $user->setLastLogin(new \DateTime());
 
-        $user->setLogincount($user->getLogincount() + 1);
-        $user->setFailureLogincount(0);
+        $user->setLogincount($user->getLogincount() + 1)
+            ->setFailureLogincount(0);
 
-        $connection = new UserConnection();
-
-        $connection->setConnectionAt(new \DateTime())
+        $connection = (new UserConnection())
+            ->setConnectionAt(new \DateTime())
             ->setUser($user);
 
         $this->manager->persist($connection);
         $this->manager->flush();
 
-        // Récupère en session les services rattachés à l'utilisateur et le code couleur du 1er service
-        $servicesUser = [];
-        $i = 0;
-
-        foreach ($user->getServiceUser() as $serviceUser) {
-            if (0 == $i && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $this->session->set('themeColor', $serviceUser->getService()->getPole()->getColor());
-            }
-            $servicesUser[] = $serviceUser->getService()->getName();
-            ++$i;
+        // Récupère en session le code couleur du 1er service
+        if (count($user->getServiceUser()) > 0) {
+            $this->session->set('themeColor', $user->getServiceUser()[0]->getService()->getPole()->getColor());
         }
 
+        // Récupère en session les services rattachés à l'utilisateur
+        $servicesUser = [];
+        foreach ($user->getServiceUser() as $serviceUser) {
+            $servicesUser[] = $serviceUser->getService()->getName();
+        }
         $this->session->set('servicesUser', $servicesUser);
     }
 
@@ -70,8 +63,8 @@ class LoginListener
         /** @var User */
         $user = $event->getAuthenticationToken()->getUser();
 
-        $count = $user->getFailureLogincount() + 1;
-        $user->setFailureLogincount($count);
+        $user->setFailureLogincount($user->getFailureLogincount() + 1);
+
         $this->manager->flush();
     }
 }

@@ -1,13 +1,17 @@
 import MessageFlash from "../utils/messageFlash";
+import Loader from "../utils/loader";
 
 // Retire une personne du suivi du social du groupe
-export default class RemoveSupportPerson {
+export default class UpdateSupportPeople {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
         this.trElts = document.querySelectorAll(".js-tr-support_pers");
         this.modalConfirmElt = document.getElementById("modal-confirm");
+        this.addPeopleBtElt = document.getElementById("add-people");
+        this.sendBtnElt = document.getElementById("send");
         this.trElt = null;
+        this.loader = new Loader();
         this.init();
     }
 
@@ -21,10 +25,17 @@ export default class RemoveSupportPerson {
                 });
             });
         });
+        this.addPeopleBtElt.addEventListener("click", e => {
+            this.loader.on();
+        });
+        this.sendBtnElt.addEventListener("click", e => {
+            this.loader.on();
+        });
     }
 
     // Envoie la requête Ajax après confirmation de l'action
     validate(btnElt, trElt) {
+        this.loader.on();
         this.trElt = trElt;
         this.ajaxRequest.init("GET", btnElt.getAttribute("data-url"), this.response.bind(this), true), {
             once: true
@@ -40,6 +51,7 @@ export default class RemoveSupportPerson {
         } else {
             new MessageFlash("danger", dataJSON.msg);
         }
+        this.loader.off();
     }
 
     // Supprime la ligne correspondant à la personne dans le tableau

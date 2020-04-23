@@ -229,7 +229,7 @@ class AccommodationGroupController extends AbstractController
             $people[] = $accommodationPerson->getPerson()->getId();
         }
 
-        foreach ($accommodationGroup->getSupportGroup()->getGroupPeople()->getrolePerson() as $rolePerson) {
+        foreach ($accommodationGroup->getSupportGroup()->getGroupPeople()->getRolePeople() as $rolePerson) {
             if (!in_array($rolePerson->getPerson()->getId(), $people)) {
                 $accommodationPerson = (new AccommodationPerson())
                     ->setAccommodationGroup($accommodationGroup)

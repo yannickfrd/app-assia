@@ -19,7 +19,7 @@ class MailNotification
 
         $this->mail->isSMTP(); // Send using SMTP
 
-        if ($_SERVER['SERVER_NAME'] != '127.0.0.1:8000') {
+        if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '127.0.0.1:8000') {
             $this->mail->SMTPAuth = true; // Enable SMTP authentication
             $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $this->mail->SMTPDebug = SMTP::DEBUG_OFF;

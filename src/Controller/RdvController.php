@@ -190,7 +190,7 @@ class RdvController extends AbstractController
         // Obtenir le nom de la personne suivie
         if ($rdv->getSupportGroup()) {
             $supportFullname = '';
-            foreach ($rdv->getSupportGroup()->getSupportPerson() as $supportPerson) {
+            foreach ($rdv->getSupportGroup()->getSupportPeople() as $supportPerson) {
                 if (true == $supportPerson->getHead()) {
                     $supportFullname = $supportPerson->getPerson()->getFullname();
                 }

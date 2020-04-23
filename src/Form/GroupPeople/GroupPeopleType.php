@@ -21,7 +21,7 @@ class GroupPeopleType extends AbstractType
                 'placeholder' => '-- Select --',
             ])
             ->add('nbPeople')
-            ->add('rolePerson', CollectionType::class, [
+            ->add('rolePeople', CollectionType::class, [
                 'entry_type' => RolePersonMinType::class,
                 'allow_add' => false,
                 'allow_delete' => false,

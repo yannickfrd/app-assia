@@ -146,7 +146,7 @@ class SupportGroup
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="supportGroup", orphanRemoval=true)
      */
-    private $supportPerson;
+    private $supportPeople;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="supportGroup")
@@ -195,7 +195,7 @@ class SupportGroup
 
     public function __construct()
     {
-        $this->supportPerson = new ArrayCollection();
+        $this->supportPeople = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -353,17 +353,17 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|SupportPerson[]
+     * @return Collection|SupportPeople[]
      */
-    public function getSupportPerson(): ?Collection
+    public function getSupportPeople(): ?Collection
     {
-        return $this->supportPerson;
+        return $this->supportPeople;
     }
 
     public function addSupportPerson(SupportPerson $supportPerson): self
     {
-        if (!$this->supportPerson->contains($supportPerson)) {
-            $this->supportPerson[] = $supportPerson;
+        if (!$this->supportPeople->contains($supportPerson)) {
+            $this->supportPeople[] = $supportPerson;
             $supportPerson->setSupportGroup($this);
         }
 
@@ -372,8 +372,8 @@ class SupportGroup
 
     public function removeSupportPerson(SupportPerson $supportPerson): self
     {
-        if ($this->supportPerson->contains($supportPerson)) {
-            $this->supportPerson->removeElement($supportPerson);
+        if ($this->supportPeople->contains($supportPerson)) {
+            $this->supportPeople->removeElement($supportPerson);
             // set the owning side to null (unless already changed)
             if ($supportPerson->getSupportGroup() === $this) {
                 $supportPerson->setSupportGroup(null);

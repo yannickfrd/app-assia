@@ -59,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for form_person in form.rolePerson.children %}
+                            {% for form_person in form.rolePeople.children %}
                             {% set person = form_person.vars.value.person %}
                             <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                 <th scope="row" class="align-middle">

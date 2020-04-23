@@ -101,7 +101,7 @@ class SupportPerson
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="supportPerson")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="supportPeople")
      * @ORM\JoinColumn(nullable=false)
      */
     private $supportGroup;

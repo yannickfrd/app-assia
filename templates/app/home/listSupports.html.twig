@@ -36,11 +36,11 @@
                         </a>
                     </th>
                     <td class="align-middle">
-                        {% for supportPerson in support.supportPerson|filter(a => a.role != 3) %}
+                        {% for supportPerson in support.supportPeople|filter(a => a.role != 3) %}
                         {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
                     <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<br />
-                        {% if support.supportPerson|length > 1 %}{{ support.supportPerson|length }} personnes{% endif %}
+                        {% if support.supportPeople|length > 1 %}{{ support.supportPeople|length }} personnes{% endif %}
                     </td>
                     <td class="align-middle">
                         {{ support.service.name }}<br />

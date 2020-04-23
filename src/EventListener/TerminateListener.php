@@ -17,28 +17,31 @@ class TerminateListener
 {
     private $security;
     private $container;
-    private $exportSupport;
     private $renderer;
     private $notification;
+    private $exportSupport;
+    private $evaluationListener;
 
     public function __construct(
         Security $security,
         ContainerInterface $container,
         Environment $renderer,
         MailNotification $notification,
-        SupportPersonFullExport $exportSupport)
-    {
+        SupportPersonFullExport $exportSupport,
+        bool $evaluationListener
+    ) {
         $this->security = $security;
         $this->container = $container;
-        $this->exportSupport = $exportSupport;
         $this->renderer = $renderer;
         $this->notification = $notification;
+        $this->exportSupport = $exportSupport;
+        $this->evaluationListener = $evaluationListener;
     }
 
     public function onKernelTerminate(TerminateEvent $event)
     {
         $request = $event->getRequest();
-        $response = $event->getResponse();
+        // $response = $event->getResponse();
         $route = $request->attributes->get('_route');
 
         // if (!$event->isMasterRequest()) {
@@ -48,9 +51,6 @@ class TerminateListener
         switch ($route) {
             case 'export':
                 $this->export($request);
-                break;
-            case 'security_forgot_password':
-                $this->reinitPassword($request);
                 break;
             case 'support_evaluation_show':
                 $this->editEvaluation($request);
@@ -92,48 +92,35 @@ class TerminateListener
         }
     }
 
-    protected function reinitPassword($request)
-    {
-        // $userResetPassword = new UserResetPassword();
-
-        // $form = ($this->container->get('form.factory')->create(ForgotPasswordType::class, $userResetPassword)) // FormFactoryInterface $formFactory
-        //     ->handleRequest($request);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-
-        //     $user->setToken(bin2hex(random_bytes(32))) // Enregistre le token dans la base
-        //         ->setTokenCreatedAt(new \DateTime());
-
-        //     $this->manager->flush();
-
-        //     $message = $this->notification->reinitPassword($user); // Envoie l'email
-        // }
-    }
-
     public function editEvaluation($request)
     {
+        if (!$this->evaluationListener) {
+            return;
+        }
+
         $evaluationGroup = $request->request->get('evaluation_group');
 
         if ($evaluationGroup) {
             $entityManager = $this->container->get('doctrine')->getManager();
+
             $repo = $entityManager->getRepository(SupportGroup::class);
             $supportId = $request->attributes->get('id');
-            $supportGroup = $repo->findFullSupportById($supportId);
+            $supportGroup = $repo->findSupportById($supportId);
 
             $fullnamePerson = '';
 
-            foreach ($supportGroup->getSupportPerson() as $supportPerson) {
+            foreach ($supportGroup->getSupportPeople() as $supportPerson) {
                 if ($supportPerson->getHead()) {
                     $fullnamePerson = $supportPerson->getPerson()->getFullname();
                 }
             }
 
             $htmlBody = $this->renderer->render(
-            'emails/EvaluationEmail.html.twig',
-            [
-                'supportId' => $supportId,
-                'fullnamePerson' => $fullnamePerson,
-                'evaluation_group' => $evaluationGroup,
+                'emails/EvaluationEmail.html.twig',
+                [
+                    'supportId' => $supportId,
+                    'fullnamePerson' => $fullnamePerson,
+                    'evaluation_group' => $evaluationGroup,
                 ]
             );
 
