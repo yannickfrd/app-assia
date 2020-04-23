@@ -6,7 +6,6 @@ use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
-use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -63,11 +62,6 @@ class Service
      * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="service")
      */
     private $supportGroup;
-
-    /**
-     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
-     */
-    private $phone1; // NE PAS SUPPRIMER
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

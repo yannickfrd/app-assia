@@ -87,11 +87,6 @@ class Accommodation
     private $closingDate;
 
     /**
-     * @ORM\Column(name="department", length=10, nullable=true)
-     */
-    private $zipcode; // NE PAS SUPPRIMER
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $accommodationType;

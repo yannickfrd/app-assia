@@ -62,11 +62,6 @@ class Pole
     private $services;
 
     /**
-     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
-     */
-    private $phone1; // NE PAS SUPPRIMER
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;

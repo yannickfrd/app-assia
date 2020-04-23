@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.2.0 20/04/2020
+1.2.0 23/04/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,13 +16,18 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.2.0 - 20/04/2020
-- Mise à niveau de Symfony 4.4.7 à Symfony 5.0.7
-- Mise en place des tests unitaires et fonctionnels (entities, repositories, routes...)
-- Ajout système de désactivation des utilisateurs
-- Page de recherche de tous les rendez-vous du/des services (Onglet "Agenda" > "Voir tous les rendez-vous"), ainsi que qu'une page avec la liste de tous les rendez-vous d'un suivi.
-- Correction de la mise à jour des dates de suivis individuelles en fonction du suivi du groupe
-
+## Version 1.2.0 - 23/04/2020
+- Mise à niveau du framework Symfony 4.4.7 à 5.0.7.
+- Mise en place des tests unitaires et fonctionnels (entity, repository, controller...).
+- Ajout d'un système de désactivation des utilisateurs, des personnes, des groupes et des suivis (réservé au profil administrateur).
+- Page de recherche de tous les rendez-vous du/des services (Onglet "Agenda" > "Voir tous les rendez-vous"), ainsi qu'une page avec la liste de tous les rendez-vous d'un suivi.
+- Modification du délai de déconnexion automatique en cas d'inactivité : passage de 20 à 40 minutes avant déconnexion.
+- Recherche des suivis : possibilité de sélectionner plusieurs référents dans la liste déroulante.
+- Modification de l'export global des suivis sur Excel.
+- Correction de la mise à jour des dates de suivis individuelles en fonction du suivi du groupe.
+- Création d'un template pour les emails.
+- Création Event Listeners (en cas d'exception levée et d'export global des données).
+- Corrections diverses et factorisation.
 
 ## Version 1.1.2 - 12/03/2020
 - Ajout de contrôles de saisie dans l'évaluation sociales (date et montant)

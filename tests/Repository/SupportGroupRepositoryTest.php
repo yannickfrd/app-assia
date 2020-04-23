@@ -6,6 +6,7 @@ use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\SupportGroupSearch;
+use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -56,12 +57,15 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     protected function getSupportGroupSearch()
     {
+        $referents = new ArrayCollection();
+        $referents->add($this->user);
+
         return (new SupportGroupSearch())
             ->setFullName('John Doe')
             ->setFamilyTypology(1)
             ->setStartDate(new \DateTime('2018-01-01'))
             ->setEndDate(new \DateTime())
-            ->setReferent($this->user);
+            ->setReferents($referents);
     }
 
     public function testCount()

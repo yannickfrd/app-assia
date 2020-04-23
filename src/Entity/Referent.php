@@ -71,11 +71,6 @@ class Referent
     private $email2;
 
     /**
-     * @ORM\Column(name="departement", length=10, nullable=true)
-     */
-    private $zipcode; // NE PAS SUPPRIMER
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
