@@ -2,7 +2,6 @@
 
 namespace App\Form\Model;
 
-use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -57,9 +56,9 @@ class SupportGroupSearch
     private $endDate;
 
     /**
-     * @var User
+     * @var ArrayCollection
      */
-    private $referent;
+    private $referents;
 
     /**
      * @var ArrayCollection
@@ -78,6 +77,7 @@ class SupportGroupSearch
 
     public function __construct()
     {
+        $this->referents = new ArrayCollection();
         $this->services = new ArrayCollection();
         $this->devices = new ArrayCollection();
     }
@@ -180,14 +180,14 @@ class SupportGroupSearch
         return $this;
     }
 
-    public function getReferent(): ?User
+    public function getReferents(): ?ArrayCollection
     {
-        return $this->referent;
+        return $this->referents;
     }
 
-    public function setReferent(?User $referent): self
+    public function setReferents(?ArrayCollection $referents): self
     {
-        $this->referent = $referent;
+        $this->referents = $referents;
 
         return $this;
     }

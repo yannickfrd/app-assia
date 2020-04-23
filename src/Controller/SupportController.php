@@ -125,12 +125,12 @@ class SupportController extends AbstractController
             if ($supportGroup->getService()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
                 $this->addFlash('warning', 'Attention, aucun hébergement enregistré pour ce suivi.');
             }
-            $supportPeople = $supportGroup->getSupportPeople()->count();
-            $people = $supportGroup->getGroupPeople()->getNbPeople();
-            if (!$form->isSubmitted() && $supportPeople != $people) {
-                $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$supportPeople.') 
-                ne correspond pas à la composition familiale du groupe ('.$people.' personnes). 
-                Allez dans l\'onglet "Personnes" ci-dessous pour ajouter les personnes au suivi.');
+            $nbSupportPeople = $supportGroup->getSupportPeople()->count();
+            $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
+            if ($nbSupportPeople != $nbPeople) {
+                $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
+                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes). 
+                Allez dans l\'onglet [Personnes] ci-dessous pour ajouter les personnes au suivi.');
             }
         }
 

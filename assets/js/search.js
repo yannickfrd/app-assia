@@ -2,6 +2,11 @@ import Search from "./utils/search";
 import "./utils/maskPhone";
 import "select2";
 
+$("select.multi-select.js-referent").select2({
+    // theme: "bootstrap4",
+    placeholder: "  -- Référent --",
+});
+
 $("select.multi-select.js-service").select2({
     // theme: "bootstrap4",
     placeholder: "  -- Service --",

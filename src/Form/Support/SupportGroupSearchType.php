@@ -87,16 +87,17 @@ class SupportGroupSearchType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('referent', EntityType::class, [
+            ->add('referents', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
+                'multiple' => true,
                 'query_builder' => function (UserRepository $repo) {
                     return $repo->getAllUsersFromServicesQueryList($this->currentUser);
                 },
                 'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => '-- Référent --',
                 'attr' => [
-                    'class' => 'w-max-180',
+                    'class' => 'multi-select js-referent w-min-150 w-max-180',
                 ],
                 'required' => false,
             ])

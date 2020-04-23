@@ -194,12 +194,16 @@ class SupportGroupRepository extends ServiceEntityRepository
             }
         }
 
-        if ($supportGroupSearch->getReferent()) {
-            $query->andWhere('sg.referent = :referent')
-                ->setParameter('referent', $supportGroupSearch->getReferent());
+        if ($supportGroupSearch->getReferents()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($supportGroupSearch->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
         }
 
-        if ($supportGroupSearch->getServices() && count($supportGroupSearch->getServices())) {
+        if ($supportGroupSearch->getServices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($supportGroupSearch->getServices() as $service) {
@@ -208,7 +212,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if ($supportGroupSearch->getDevices() && count($supportGroupSearch->getDevices())) {
+        if ($supportGroupSearch->getDevices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($supportGroupSearch->getDevices() as $device) {

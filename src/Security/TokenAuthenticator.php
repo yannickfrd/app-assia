@@ -29,8 +29,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        dump('TEST ! ');
-
         return $request->headers->has('X-AUTH-TOKEN');
     }
 
@@ -47,8 +45,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        dump('GET USER  ! ');
-
         $apiToken = $credentials['token'];
 
         if (null === $apiToken) {

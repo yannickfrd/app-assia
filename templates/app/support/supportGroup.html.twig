@@ -113,15 +113,21 @@
 
 	{% if form.vars.value.evaluationsGroup|last %}
 	{% set evaluation = form.vars.value.evaluationsGroup|last %}
-	{% if evaluation.evalHousingGroup and evaluation.evalHousingGroup.housingAddress %}
+	{% if evaluation.evalHousingGroup and (evaluation.evalHousingGroup.housingAddress or evaluation.domiciliation.domiciliationAddress) %}
 
 	<div class="form-group row">
-		<div class="col-4 col-sm-2">Adresse du logement ou hébergement :</div>
+		<div class="col-4 col-sm-2 mb-3">Adresse du logement ou d'hébergement :</div>
 		<div class="col-8 col-sm-4">
 			<div class="p-2">
-				{{ evaluation.evalHousingGroup.housingAddress }}
-				{% if evaluation.evalHousingGroup.housingDept %} - {{ evaluation.evalHousingGroup.housingDept }}{% endif %}
-				{% if evaluation.evalHousingGroup.housingCity %} - {{ evaluation.evalHousingGroup.housingCity }}{% endif %}
+				{{ evaluation.evalHousingGroup.housingAddress }}{% if evaluation.evalHousingGroup.housingCity %} - {% endif %}<!--
+				--> {{ evaluation.evalHousingGroup.housingDept }} {{ evaluation.evalHousingGroup.housingCity }}
+			</div>
+		</div>
+		<div class="col-4 col-sm-2 mb-3">Adresse de domiciliation :</div>
+		<div class="col-8 col-sm-4">
+			<div class="p-2">
+				{{ evaluation.evalHousingGroup.domiciliationAddress }}{% if evaluation.evalHousingGroup.domiciliationCity %} - {% endif %}<!--
+				--> {{ evaluation.evalHousingGroup.domiciliationDept }} {{ evaluation.evalHousingGroup.domiciliationCity }}
 			</div>
 		</div>
 	</div>

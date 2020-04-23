@@ -7,7 +7,7 @@ $("select.multi-select.js-service").select2({
     placeholder: "  -- Service --",
 });
 
-$("select.multi-select.js-service").select2({
+$("select.multi-select.js-device").select2({
     // theme: "bootstrap4",
     placeholder: "  -- Dispositif --",
 });
