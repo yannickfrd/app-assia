@@ -1,33 +1,31 @@
 <?php
 
-namespace App\Form\Document;
+namespace App\Form\Type;
 
-use App\Entity\Document;
-use App\Form\Model\DocumentSearch;
-use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class DocumentSearchType extends AbstractType
+class DateSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, [
+            ->add('start', DateType::class, [
                 'label_attr' => ['class' => 'sr-only'],
+                'widget' => 'single_text',
                 'attr' => [
-                    'placeholder' => 'Search',
+                    'class' => 'w-max-165',
                 ],
+                'required' => false,
             ])
-            ->add('type', ChoiceType::class, [
+            ->add('end', DateType::class, [
                 'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getchoices(Document::TYPE),
+                'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'w-max-150',
+                    'class' => 'w-max-165',
                 ],
-                'placeholder' => '-- Type --',
                 'required' => false,
             ]);
     }
@@ -35,15 +33,12 @@ class DocumentSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => DocumentSearch::class,
-            'translation_domain' => 'forms',
-            'allow_extra_fields' => true,
-            'csrf_protection' => false,
+            'inherit_data' => true,
         ]);
     }
 
     public function getBlockPrefix()
     {
-        return 'search';
+        return '';
     }
 }

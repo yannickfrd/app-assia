@@ -2,9 +2,9 @@
 
 namespace App\Form\Rdv;
 
+use App\Form\Type\DateSearchType;
 use App\Form\Model\SupportRdvSearch;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,21 +20,8 @@ class SupportRdvSearchType extends AbstractType
                     'class' => 'w-max-170',
                 ],
             ])
-            ->add('startDate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                ],
-                'required' => false,
-            ])
-            ->add('endDate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                ],
-                'required' => false,
+            ->add('date', DateSearchType::class, [
+                'data_class' => SupportRdvSearch::class,
             ]);
     }
 
@@ -46,5 +33,10 @@ class SupportRdvSearchType extends AbstractType
             'allow_extra_fields' => true,
             'csrf_protection' => false,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'search';
     }
 }

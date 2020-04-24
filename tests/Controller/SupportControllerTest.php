@@ -51,14 +51,26 @@ class SupportControllerTest extends WebTestCase
         $form = $crawler->selectButton('search')->form([
             'fullname' => 'John Doe',
             'familyTypology' => 1,
-            'startDate' => '2018-01-01',
-            'endDate' => (new \DateTime())->format('Y-m-d'),
+            'date[start]' => '2018-01-01',
+            'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);
 
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Suivis');
+    }
+
+    public function testExportSupports()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('supports'));
+
+        $form = $crawler->selectButton('export')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testNewSupportGroupIsUp()
@@ -79,12 +91,12 @@ class SupportControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('send')->form([
-            'support_group[service]' => 1,
-            'support_group[device]' => 1,
-            'support_group[status]' => 2,
-            'support_group[referent]' => 1,
-            'support_group[startDate]' => 2,
-            'support_group[agreement]' => true,
+            'support[service]' => 1,
+            'support[device]' => 1,
+            'support[status]' => 2,
+            'support[referent]' => 1,
+            'support[startDate]' => 2,
+            'support[agreement]' => true,
         ]);
 
         $this->client->submit($form);
@@ -166,7 +178,7 @@ class SupportControllerTest extends WebTestCase
     //     $this->assertSame(200, $result["code"]);
     // }
 
-    public function testExportUsUp()
+    public function testExportIsUp()
     {
         $this->client->request('GET', $this->generateUri('export'));
 

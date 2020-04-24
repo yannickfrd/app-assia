@@ -41,6 +41,30 @@ class NoteControllerTest extends WebTestCase
 
     public function testListNotesIsUp()
     {
+        $this->client->request('GET', $this->generateUri('notes'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Notes');
+    }
+
+    public function testSearchNotesIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('notes'));
+
+        $form = $crawler->selectButton('search')->form([
+            'content' => 'Note 666',
+            'type' => 1,
+            'status' => 1,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testSupportListNotesIsUp()
+    {
         $this->client->request('GET', $this->generateUri('support_notes', [
             'id' => $this->supportGroup->getId(),
         ]));
@@ -49,7 +73,7 @@ class NoteControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Notes sociales');
     }
 
-    public function testSearchNotesIsSuccessful()
+    public function testSearchSupportNotesIsSuccessful()
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('support_notes', [
@@ -57,9 +81,9 @@ class NoteControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('search')->form([
-            'note_search[content]' => 'Note 666',
-            'note_search[type]' => 1,
-            'note_search[status]' => 1,
+            'search[content]' => 'Note 666',
+            'search[type]' => 1,
+            'search[status]' => 1,
         ]);
 
         $this->client->submit($form);

@@ -26,7 +26,7 @@ class DocumentRepositoryTest extends WebTestCase
     protected $user;
 
     /** @var DocumentSearch */
-    protected $documentSearch;
+    protected $search;
 
     protected function setUp()
     {
@@ -45,7 +45,7 @@ class DocumentRepositoryTest extends WebTestCase
 
         $this->supportGroup = $dataFixtures['supportGroup'];
         $this->user = $dataFixtures['userSuperAdmin'];
-        $this->documentSearch = (new DocumentSearch())
+        $this->search = (new DocumentSearch())
             ->setName('Document 666')
             ->setType(1);
     }
@@ -63,13 +63,13 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testFindAllDocumentsQueryWithFilters()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->documentSearch);
+        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindAllDocumentsQueryWithFilterByContent()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->documentSearch->setName('Description'));
+        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->search->setName('Description'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -96,6 +96,6 @@ class DocumentRepositoryTest extends WebTestCase
         $this->repo = null;
         $this->supportGroup = null;
         $this->user = null;
-        $this->documentSearch = null;
+        $this->search = null;
     }
 }

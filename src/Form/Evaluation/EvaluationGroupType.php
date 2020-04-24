@@ -32,4 +32,9 @@ class EvaluationGroupType extends AbstractType
             'data_class' => EvaluationGroup::class,
         ]);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'evaluation';
+    }
 }

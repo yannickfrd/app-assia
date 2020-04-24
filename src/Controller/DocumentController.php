@@ -38,15 +38,15 @@ class DocumentController extends AbstractController
      *
      * @Route("support/{supportId}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listDocuments(int $supportId, DocumentSearch $documentSearch = null, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $supportId, DocumentSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($supportId);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $documentSearch = new DocumentSearch();
+        $search = new DocumentSearch();
 
-        $formSearch = $this->createForm(DocumentSearchType::class, $documentSearch);
+        $formSearch = $this->createForm(DocumentSearchType::class, $search);
         $formSearch->handleRequest($request);
 
         $form = $this->createForm(DocumentType::class, new Document());
@@ -55,7 +55,7 @@ class DocumentController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'documents' => $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $documentSearch), $request),
+            'documents' => $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request),
         ]);
     }
 

@@ -77,9 +77,9 @@ class GroupPeopleControllerTest extends WebTestCase
         $faker = \Faker\Factory::create('fr_FR');
 
         $form = $crawler->selectButton('send')->form([
-            'group_people[familyTypology]' => 1,
-            'group_people[nbPeople]' => 1,
-            'group_people[comment]' => $faker->paragraphs(6, true),
+            'group[familyTypology]' => 1,
+            'group[nbPeople]' => 1,
+            'group[comment]' => $faker->paragraphs(6, true),
         ]);
 
         $this->client->submit($form);

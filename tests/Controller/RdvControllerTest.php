@@ -54,8 +54,8 @@ class RdvControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('search')->form([
             'title' => 'RDV 666',
-            'startDate' => '2020-01-01',
-            'endDate' => (new \DateTime())->format('Y-m-d'),
+            'date[start]' => '2020-01-01',
+            'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);
 
         $this->client->submit($form);

@@ -50,7 +50,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
     /**
      * Donne tous les groupes de personnes.
      */
-    public function findAllGroupPeopleQuery($groupPeopleSearch): Query
+    public function findAllGroupPeopleQuery($search): Query
     {
         $query = $this->createQueryBuilder('g')
             ->select('PARTIAL g.{id, familyTypology, nbPeople}')
@@ -60,29 +60,29 @@ class GroupPeopleRepository extends ServiceEntityRepository
 
             ->andWhere('r.head = TRUE');
 
-        if ($groupPeopleSearch->getFirstname()) {
+        if ($search->getFirstname()) {
             $query->andWhere('p.firstname LIKE :firstname')
-                ->setParameter('firstname', $groupPeopleSearch->getFirstname().'%');
+                ->setParameter('firstname', $search->getFirstname().'%');
         }
-        if ($groupPeopleSearch->getLastname()) {
+        if ($search->getLastname()) {
             $query->andWhere('p.lastname LIKE :lastname')
-                ->setParameter('lastname', $groupPeopleSearch->getLastname().'%');
+                ->setParameter('lastname', $search->getLastname().'%');
         }
-        if ($groupPeopleSearch->getBirthdate()) {
+        if ($search->getBirthdate()) {
             $query->andWhere('p.birthdate = :birthdate')
-                ->setParameter('birthdate', $groupPeopleSearch->getBirthdate());
+                ->setParameter('birthdate', $search->getBirthdate());
         }
-        if ($groupPeopleSearch->getHead()) {
+        if ($search->getHead()) {
             $query->andWhere('r.head = :head')
-                ->setParameter('head', $groupPeopleSearch->getHead());
+                ->setParameter('head', $search->getHead());
         }
-        if ($groupPeopleSearch->getFamilyTypology()) {
+        if ($search->getFamilyTypology()) {
             $query->andWhere('g.familyTypology = :familyTypology')
-                ->setParameter('familyTypology', $groupPeopleSearch->getFamilyTypology());
+                ->setParameter('familyTypology', $search->getFamilyTypology());
         }
-        if ($groupPeopleSearch->getNbPeople()) {
+        if ($search->getNbPeople()) {
             $query->andWhere('g.nbPeople = :nbPeople')
-                ->setParameter('nbPeople', $groupPeopleSearch->getNbPeople());
+                ->setParameter('nbPeople', $search->getNbPeople());
         }
 
         return $query->orderBy('g.id', 'ASC')

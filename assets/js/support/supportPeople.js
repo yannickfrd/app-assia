@@ -8,5 +8,5 @@ let ajaxRequest = new AjaxRequest();
 document.addEventListener("DOMContentLoaded", e => {
     new SelectRadioJS("table-support-people");
     new UpdateSupportPeople(ajaxRequest);
-    new CheckChange("support_group_with_people"); // form name
+    new CheckChange("support"); // form name
 });

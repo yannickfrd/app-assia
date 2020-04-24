@@ -26,12 +26,12 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places.
      */
-    public function findAllAccommodationsQuery(AccommodationSearch $accommodationSearch = null): Query
+    public function findAllAccommodationsQuery(AccommodationSearch $search = null): Query
     {
         $query = $this->getAccommodations();
 
-        if ($accommodationSearch) {
-            $query = $this->filter($query, $accommodationSearch);
+        if ($search) {
+            $query = $this->filter($query, $search);
         }
 
         return $query->orderBy('a.name', 'ASC')
@@ -43,12 +43,12 @@ class AccommodationRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findAccommodationsToExport(AccommodationSearch $accommodationSearch = null)
+    public function findAccommodationsToExport(AccommodationSearch $search = null)
     {
         $query = $this->getAccommodations();
 
-        if ($accommodationSearch) {
-            $query = $this->filter($query, $accommodationSearch);
+        if ($search) {
+            $query = $this->filter($query, $search);
         }
 
         return $query->orderBy('a.name', 'DESC')
@@ -108,74 +108,74 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Filtre la recherche.
      */
-    protected function filter($query, AccommodationSearch $accommodationSearch)
+    protected function filter($query, AccommodationSearch $search)
     {
-        if ($accommodationSearch->getName()) {
+        if ($search->getName()) {
             $query->andWhere('a.name LIKE :name')
-                ->setParameter('name', '%'.$accommodationSearch->getName().'%');
+                ->setParameter('name', '%'.$search->getName().'%');
         }
-        if ($accommodationSearch->getCity()) {
+        if ($search->getCity()) {
             $query->andWhere('a.city LIKE :city')
-                ->setParameter('city', '%'.$accommodationSearch->getCity().'%');
+                ->setParameter('city', '%'.$search->getCity().'%');
         }
-        if ($accommodationSearch->getPlacesNumber()) {
+        if ($search->getPlacesNumber()) {
             $query->andWhere('a.placesNumber = :placesNumber')
-                ->setParameter('placesNumber', $accommodationSearch->getPlacesNumber());
+                ->setParameter('placesNumber', $search->getPlacesNumber());
         }
 
-        $supportDates = $accommodationSearch->getSupportDates();
+        $supportDates = $search->getSupportDates();
 
         if (1 == $supportDates) {
-            if ($accommodationSearch->getStartDate()) {
-                $query->andWhere('a.openingDate >= :startDate')
-                    ->setParameter('startDate', $accommodationSearch->getStartDate());
+            if ($search->getStart()) {
+                $query->andWhere('a.openingDate >= :start')
+                    ->setParameter('start', $search->getStart());
             }
-            if ($accommodationSearch->getEndDate()) {
-                $query->andWhere('a.openingDate <= :endDate')
-                    ->setParameter('endDate', $accommodationSearch->getEndDate());
+            if ($search->getEnd()) {
+                $query->andWhere('a.openingDate <= :end')
+                    ->setParameter('end', $search->getEnd());
             }
         }
         if (2 == $supportDates) {
-            if ($accommodationSearch->getStartDate()) {
-                if ($accommodationSearch->getStartDate()) {
-                    $query->andWhere('a.closingDate >= :startDate')
-                        ->setParameter('startDate', $accommodationSearch->getStartDate());
+            if ($search->getStart()) {
+                if ($search->getStart()) {
+                    $query->andWhere('a.closingDate >= :start')
+                        ->setParameter('start', $search->getStart());
                 }
-                if ($accommodationSearch->getEndDate()) {
-                    $query->andWhere('a.closingDate <= :endDate')
-                        ->setParameter('endDate', $accommodationSearch->getEndDate());
+                if ($search->getEnd()) {
+                    $query->andWhere('a.closingDate <= :end')
+                        ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 == $supportDates || !$supportDates) {
-            if ($accommodationSearch->getStartDate()) {
-                $query->andWhere('a.closingDate >= :startDate OR a.closingDate IS NULL')
-                    ->setParameter('startDate', $accommodationSearch->getStartDate());
+            if ($search->getStart()) {
+                $query->andWhere('a.closingDate >= :start OR a.closingDate IS NULL')
+                    ->setParameter('start', $search->getStart());
             }
-            if ($accommodationSearch->getEndDate()) {
-                $query->andWhere('a.openingDate <= :endDate')
-                    ->setParameter('endDate', $accommodationSearch->getEndDate());
+            if ($search->getEnd()) {
+                $query->andWhere('a.openingDate <= :end')
+                    ->setParameter('end', $search->getEnd());
             }
         }
 
-        if ($accommodationSearch->getPole()) {
-            $query->andWhere('p.id = :pole_id')
-                ->setParameter('pole_id', $accommodationSearch->getPole());
+        if ($search->getPole()) {
+            $query->andWhere('pole.id = :pole_id')
+                ->setParameter('pole_id', $search->getPole());
         }
 
-        if ($accommodationSearch->getService()->count()) {
+        if ($search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($accommodationSearch->getService() as $service) {
+            foreach ($search->getServices() as $service) {
                 $orX->add($expr->eq('s.id', $service));
             }
             $query->andWhere($orX);
         }
 
-        if ($accommodationSearch->getDevice() && $accommodationSearch->getDevice()->count()) {
+        if ($search->getDevices() && $search->getDevices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($accommodationSearch->getDevice() as $device) {
+            foreach ($search->getDevices() as $device) {
                 $orX->add($expr->eq('d.id', $device));
             }
             $query->andWhere($orX);

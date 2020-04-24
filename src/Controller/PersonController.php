@@ -43,21 +43,21 @@ class PersonController extends AbstractController
      * @Route("/people", name="people", methods="GET|POST")
      * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
      */
-    public function listPeople(Request $request, PersonSearch $personSearch = null, Pagination $pagination): Response
+    public function listPeople(Request $request, PersonSearch $search = null, Pagination $pagination): Response
     {
-        $personSearch = new PersonSearch();
+        $search = new PersonSearch();
 
-        $form = ($this->createForm(PersonSearchType::class, $personSearch))
+        $form = ($this->createForm(PersonSearchType::class, $search))
             ->handleRequest($request);
 
-        if ($personSearch->getExport()) {
-            return $this->exportData($personSearch);
+        if ($search->getExport()) {
+            return $this->exportData($search);
         }
 
         return $this->render('app/person/listPeople.html.twig', [
-            'personSearch' => $personSearch,
+            'personSearch' => $search,
             'form' => $form->createView(),
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($personSearch, $request->query->get('search-person')), $request) : null,
+            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search, $request->query->get('search-person')), $request) : null,
         ]);
     }
 
@@ -66,11 +66,11 @@ class PersonController extends AbstractController
      *
      * @Route("/group/{id}/search_person", name="group_search_person", methods="GET|POST")
      */
-    public function addPersonInGroup(GroupPeople $groupPeople, PersonSearch $personSearch = null, Request $request, Pagination $pagination): Response
+    public function addPersonInGroup(GroupPeople $groupPeople, PersonSearch $search = null, Request $request, Pagination $pagination): Response
     {
-        $personSearch = new PersonSearch();
+        $search = new PersonSearch();
 
-        $form = ($this->createForm(PersonSearchType::class, $personSearch))
+        $form = ($this->createForm(PersonSearchType::class, $search))
             ->handleRequest($request);
 
         $formRolePerson = ($this->createForm(RolePersonType::class, new RolePerson()))
@@ -80,8 +80,8 @@ class PersonController extends AbstractController
             'form' => $form->createView(),
             'form_role_person' => $formRolePerson->createView() ?? null,
             'group_people' => $groupPeople,
-            'personSearch' => $personSearch,
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($personSearch), $request) : null,
+            'personSearch' => $search,
+            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search), $request) : null,
         ]);
     }
 
@@ -285,9 +285,9 @@ class PersonController extends AbstractController
     /**
      * Export des données.
      */
-    protected function exportData(PersonSearch $personSearch)
+    protected function exportData(PersonSearch $search)
     {
-        $people = $this->repo->findPeopleToExport($personSearch);
+        $people = $this->repo->findPeopleToExport($search);
 
         return (new PersonExport())->exportData($people);
     }

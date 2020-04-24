@@ -57,8 +57,8 @@ class AccommodationControllerTest extends WebTestCase
         $form = $crawler->selectButton('search')->form([
             'name' => 'Logement 666',
             'placesNumber' => 6,
-            'startDate' => '2019-01-01',
-            'endDate' => '2020-01-01',
+            'date[start]' => '2019-01-01',
+            'date[end]' => '2020-01-01',
             'city' => 'Houilles',
         ]);
 

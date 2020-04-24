@@ -27,7 +27,7 @@ class UserRepositoryTest extends WebTestCase
     protected $service;
 
     /** @var UserSearch */
-    protected $userSearch;
+    protected $search;
 
     protected function setUp()
     {
@@ -47,7 +47,7 @@ class UserRepositoryTest extends WebTestCase
 
         $this->user = $dataFixtures['userSuperAdmin'];
         $this->service = $dataFixtures['service'];
-        $this->userSearch = $this->getUserSearch($dataFixtures['pole']);
+        $this->search = $this->getUserSearch($dataFixtures['pole']);
     }
 
     protected function getUserSearch(Pole $pole)
@@ -88,13 +88,13 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindAllUsersQueryWithFilters()
     {
-        $query = $this->repo->findAllUsersQuery($this->userSearch);
+        $query = $this->repo->findAllUsersQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindUsersToExport()
     {
-        $users = $this->repo->findUsersToExport($this->userSearch);
+        $users = $this->repo->findUsersToExport($this->search);
         $this->assertGreaterThanOrEqual(1, count($users));
     }
 
@@ -137,6 +137,6 @@ class UserRepositoryTest extends WebTestCase
         $this->repo = null;
         $this->user = null;
         $this->service = null;
-        $this->userSearch = null;
+        $this->search = null;
     }
 }

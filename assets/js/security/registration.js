@@ -8,8 +8,8 @@ import "../utils/maskPhone";
 document.addEventListener("DOMContentLoaded", e => {
     new SeePassword();
     new DeleteTr("function-table");
-    new Username("security_user");
-    new CheckChange("security_user"); // form name
+    new Username("user");
+    new CheckChange("user"); // form name
     let addCollectionWidget = new AddCollectionWidget();
 
     if (parseInt(addCollectionWidget.counter) === 0) {

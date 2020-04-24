@@ -20,19 +20,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RdvRepository extends ServiceEntityRepository
 {
-    private $currentUserService;
+    private $currentUser;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUserService)
+    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
     {
         parent::__construct($registry, Rdv::class);
 
-        $this->currentUserService = $currentUserService;
+        $this->currentUser = $currentUser;
     }
 
     /**
      * Return all rdvs of group support.
      */
-    public function findAllRdvsQuery(RdvSearch $rdvSearch): Query
+    public function findAllRdvsQuery(RdvSearch $search): Query
     {
         $query = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
@@ -40,43 +40,52 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
-        if ($rdvSearch->getTitle()) {
+        if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query->where('sg.service IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        if ($search->getTitle()) {
             $query->andWhere('r.title LIKE :title')
-                ->setParameter('title', '%'.$rdvSearch->getTitle().'%');
+                ->setParameter('title', '%'.$search->getTitle().'%');
         }
 
-        if ($rdvSearch->getFullname()) {
+        if ($search->getFullname()) {
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                ->setParameter('fullname', '%'.$rdvSearch->getFullname().'%');
+                ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
 
-        if ($rdvSearch->getStartDate()) {
-            $query->andWhere('r.start >= :startDate')
-                ->setParameter('startDate', $rdvSearch->getStartDate());
+        if ($search->getStart()) {
+            $query->andWhere('r.start >= :start')
+                ->setParameter('start', $search->getStart());
         }
-        if ($rdvSearch->getEndDate()) {
-            $query->andWhere('r.start <= :endDate')
-                ->setParameter('endDate', $rdvSearch->getEndDate());
-        }
-
-        if ($rdvSearch->getReferent()) {
-            $query->andWhere("CONCAT(u.lastname,' ' ,u.firstname) LIKE :referent")
-                ->setParameter('referent', '%'.$rdvSearch->getReferent().'%');
+        if ($search->getEnd()) {
+            $query->andWhere('r.start <= :end')
+                ->setParameter('end', $search->getEnd());
         }
 
-        if ($rdvSearch->getServices() && count($rdvSearch->getServices())) {
+        if ($search->getReferents() && count($search->getReferents())) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($rdvSearch->getServices() as $service) {
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getServices() && count($search->getServices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getServices() as $service) {
                 $orX->add($expr->eq('sg.service', $service));
             }
             $query->andWhere($orX);
         }
 
-        if ($rdvSearch->getDevices() && count($rdvSearch->getDevices())) {
+        if ($search->getDevices() && count($search->getDevices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($rdvSearch->getDevices() as $device) {
+            foreach ($search->getDevices() as $device) {
                 $orX->add($expr->eq('sg.device', $device));
             }
             $query->andWhere($orX);
@@ -89,7 +98,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findAllRdvsQueryFromSupport(int $supportGroupId, SupportRdvSearch $rdvSearch): Query
+    public function findAllRdvsQueryFromSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
         $query = $this->createQueryBuilder('r')
             ->select('r')
@@ -99,18 +108,18 @@ class RdvRepository extends ServiceEntityRepository
             ->andWhere('sg.id = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($rdvSearch->getTitle()) {
+        if ($search->getTitle()) {
             $query->andWhere('r.title LIKE :title')
-                ->setParameter('title', '%'.$rdvSearch->getTitle().'%');
+                ->setParameter('title', '%'.$search->getTitle().'%');
         }
 
-        if ($rdvSearch->getStartDate()) {
-            $query->andWhere('r.start >= :startDate')
-                ->setParameter('startDate', $rdvSearch->getStartDate());
+        if ($search->getStart()) {
+            $query->andWhere('r.start >= :start')
+                ->setParameter('start', $search->getStart());
         }
-        if ($rdvSearch->getEndDate()) {
-            $query->andWhere('r.start <= :endDate')
-                ->setParameter('endDate', $rdvSearch->getEndDate());
+        if ($search->getEnd()) {
+            $query->andWhere('r.start <= :end')
+                ->setParameter('end', $search->getEnd());
         }
 
         return  $query->orderBy('r.createdAt', 'DESC')
@@ -135,7 +144,7 @@ class RdvRepository extends ServiceEntityRepository
             $query->andWhere('r.supportGroup = :supportGroup')->setParameter('supportGroup', $supportGroup);
         } else {
             $query->andWhere('r.createdBy = :user')
-                ->setParameter('user', $this->currentUserService->getUser());
+                ->setParameter('user', $this->currentUser->getUser());
         }
 
         return $query->orderBy('r.start', 'ASC')

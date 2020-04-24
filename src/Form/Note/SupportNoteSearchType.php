@@ -3,32 +3,24 @@
 namespace App\Form\Note;
 
 use App\Entity\Note;
+use App\Form\Model\SupportNoteSearch;
 use App\Form\Utils\Choices;
-use App\Form\Model\NoteSearch;
-use App\Form\Type\DateSearchType;
-use App\Form\Type\ServiceSearchType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class NoteSearchType extends AbstractType
+class SupportNoteSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('content', null, [
-                'label_attr' => ['class' => 'sr-only'],
+                'label_attr' => [
+                    'class' => 'sr-only',
+                ],
                 'attr' => [
                     'placeholder' => 'Search',
-                    'class' => 'w-max-170',
-                ],
-            ])
-            ->add('fullname', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'placeholder' => 'Suivi concerné',
-                    'class' => 'w-max-170',
                 ],
             ])
             ->add('type', ChoiceType::class, [
@@ -37,7 +29,7 @@ class NoteSearchType extends AbstractType
                 ],
                 'choices' => Choices::getchoices(Note::TYPE),
                 'attr' => [
-                    'class' => 'w-max-160',
+                    'class' => 'w-max-150',
                 ],
                 'placeholder' => '-- Type --',
                 'required' => false,
@@ -48,24 +40,17 @@ class NoteSearchType extends AbstractType
                 ],
                 'choices' => Choices::getchoices(Note::STATUS),
                 'attr' => [
-                    'class' => 'w-max-160',
+                    'class' => 'w-max-150',
                 ],
                 'placeholder' => '-- Statut --',
                 'required' => false,
-            ])
-            ->add('date', DateSearchType::class, [
-                'data_class' => NoteSearch::class,
-            ])
-            ->add('service', ServiceSearchType::class, [
-                'data_class' => NoteSearch::class,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => NoteSearch::class,
-            'method' => 'get',
+            'data_class' => SupportNoteSearch::class,
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,
             'csrf_protection' => false,
@@ -74,6 +59,6 @@ class NoteSearchType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return '';
+        return 'search';
     }
 }

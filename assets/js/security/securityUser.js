@@ -9,6 +9,6 @@ document.addEventListener("DOMContentLoaded", e => {
     // let username = new Username("security_user");
     new SeePassword();
     new DeleteTr("function-table");
-    new CheckChange("security_user_edit"); // form name
+    new CheckChange("user"); // form name
     new AddCollectionWidget();
 });

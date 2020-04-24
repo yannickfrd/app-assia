@@ -18,4 +18,9 @@ class SecurityUserEditType extends AbstractType
     {
         return SecurityUserType::class;
     }
+
+    public function getBlockPrefix()
+    {
+        return 'user';
+    }
 }

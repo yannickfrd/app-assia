@@ -8,5 +8,5 @@ let ajaxRequest = new AjaxRequest();
 document.addEventListener("DOMContentLoaded", e => {
     new SelectRadioJS("table-people");
     new RemovePerson(ajaxRequest);
-    new CheckChange("group_people"); // form name
+    new CheckChange("group"); // form name
 });

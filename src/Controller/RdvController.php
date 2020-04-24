@@ -3,22 +3,23 @@
 namespace App\Controller;
 
 use App\Entity\Rdv;
-use App\Entity\SupportGroup;
-use App\Form\Model\RdvSearch;
-use App\Form\Model\SupportRdvSearch;
-use App\Form\Rdv\RdvSearchType;
 use App\Form\Rdv\RdvType;
-use App\Form\Rdv\SupportRdvSearchType;
-use App\Repository\RdvRepository;
-use App\Repository\SupportGroupRepository;
 use App\Service\Calendar;
 use App\Service\Pagination;
+use App\Entity\SupportGroup;
+use App\Form\Model\RdvSearch;
+use App\Form\Rdv\RdvSearchType;
+use App\Repository\RdvRepository;
+use App\Form\Model\SupportRdvSearch;
+use App\Form\Rdv\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
 {
@@ -38,17 +39,22 @@ class RdvController extends AbstractController
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
      */
-    public function viewListRdvs(Request $request, RdvSearch $rdvSearch = null, Pagination $pagination): Response
+    public function viewListRdvs(Request $request, RdvSearch $search = null, Pagination $pagination): Response
     {
-        $rdvSearch = new RdvSearch();
+        $search = new RdvSearch();
+        // if ($this->getUser()->getStatus() == 1) {
+        //     $usersCollection = new ArrayCollection();
+        //     $usersCollection->add($this->getUser());
+        //     $search->setReferent($usersCollection);
+        // }
 
-        $form = ($this->createForm(RdvSearchType::class, $rdvSearch))
+        $form = ($this->createForm(RdvSearchType::class, $search))
             ->handleRequest($request);
 
         return $this->render('app/rdv/listRdvs.html.twig', [
-            'rdvSearch' => $rdvSearch,
+            'rdvSearch' => $search,
             'form' => $form->createView(),
-            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($rdvSearch), $request) ?? null,
+            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search), $request) ?? null,
         ]);
     }
 
@@ -59,21 +65,21 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportGroupRepository $repoSupport, SupportRdvSearch $rdvSearch = null, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportGroupRepository $repoSupport, SupportRdvSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $repoSupport->findSupportById($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $rdvSearch = new SupportRdvSearch();
+        $search = new SupportRdvSearch();
 
-        $formSearch = $this->createForm(SupportRdvSearchType::class, $rdvSearch);
+        $formSearch = $this->createForm(SupportRdvSearchType::class, $search);
         $formSearch->handleRequest($request);
 
         return $this->render('app/rdv/supportRdvs.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
-            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $rdvSearch), $request),
+            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request),
         ]);
     }
 

@@ -65,7 +65,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Retourne tous les utilisateurs.
      */
-    public function findAllUsersQuery(UserSearch $userSearch): Query
+    public function findAllUsersQuery(UserSearch $search): Query
     {
         $query = $this->createQueryBuilder('u')
             ->select('u')
@@ -74,33 +74,33 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id,name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id,name}');
 
-        if ($userSearch->getFirstname()) {
+        if ($search->getFirstname()) {
             $query->andWhere('u.firstname LIKE :firstname')
-                ->setParameter('firstname', $userSearch->getFirstname().'%');
+                ->setParameter('firstname', $search->getFirstname().'%');
         }
-        if ($userSearch->getLastname()) {
+        if ($search->getLastname()) {
             $query->andWhere('u.lastname LIKE :lastname')
-                ->setParameter('lastname', $userSearch->getLastname().'%');
+                ->setParameter('lastname', $search->getLastname().'%');
         }
-        if ($userSearch->getPhone()) {
+        if ($search->getPhone()) {
             $query->andWhere('u.phone1 = :phone')
-                ->setParameter('phone', $userSearch->getPhone());
+                ->setParameter('phone', $search->getPhone());
         }
-        if ($userSearch->getStatus()) {
+        if ($search->getStatus()) {
             $query->andWhere('u.status = :status')
-                ->setParameter('status', $userSearch->getStatus());
+                ->setParameter('status', $search->getStatus());
         }
-        if ($userSearch->getPole()) {
+        if ($search->getPole()) {
             $query->andWhere('p.id = :pole_id')
-                ->setParameter('pole_id', $userSearch->getPole());
+                ->setParameter('pole_id', $search->getPole());
         }
-        if (!$userSearch->getDisabled()) {
+        if (!$search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NULL');
         }
-        if ($userSearch->getService()->count()) {
+        if ($search->getService()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($userSearch->getService() as $service) {
+            foreach ($search->getService() as $service) {
                 $orX->add($expr->eq('s.id', $service));
             }
             $query->andWhere($orX);
@@ -116,9 +116,9 @@ class UserRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findUsersToExport(UserSearch $userSearch)
+    public function findUsersToExport(UserSearch $search)
     {
-        $query = $this->findAllUsersQuery($userSearch);
+        $query = $this->findAllUsersQuery($search);
 
         return $query->getResult();
     }

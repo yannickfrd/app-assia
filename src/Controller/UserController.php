@@ -30,7 +30,7 @@ class UserController extends AbstractController
      *
      * @Route("directory/users", name="users", methods="GET|POST")
      */
-    public function listUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
+    public function listUsers(Request $request, UserSearch $search = null, Pagination $pagination): Response
     {
         // $users = $this->repo->findAll();
 
@@ -40,19 +40,19 @@ class UserController extends AbstractController
 
         // $this->manager->flush();
 
-        $userSearch = new UserSearch();
+        $search = new UserSearch();
 
-        $form = ($this->createForm(UserSearchType::class, $userSearch))
+        $form = ($this->createForm(UserSearchType::class, $search))
             ->handleRequest($request);
 
-        if ($userSearch->getExport()) {
-            return $this->exportData($userSearch);
+        if ($search->getExport()) {
+            return $this->exportData($search);
         }
 
         return $this->render('app/user/listUsers.html.twig', [
-            'userSearch' => $userSearch,
+            'userSearch' => $search,
             'form' => $form->createView(),
-            'users' => $pagination->paginate($this->repo->findAllUsersQuery($userSearch, ), $request) ?? null,
+            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search, ), $request) ?? null,
             'disabled_users' => false,
         ]);
     }
@@ -63,21 +63,21 @@ class UserController extends AbstractController
      * @Route("admin/users", name="admin_users", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function adminListUsers(Request $request, UserSearch $userSearch = null, Pagination $pagination): Response
+    public function adminListUsers(Request $request, UserSearch $search = null, Pagination $pagination): Response
     {
-        $userSearch = new UserSearch();
+        $search = new UserSearch();
 
-        $form = ($this->createForm(UserSearchType::class, $userSearch))
+        $form = ($this->createForm(UserSearchType::class, $search))
             ->handleRequest($request);
 
-        if ($userSearch->getExport()) {
-            return $this->exportData($userSearch);
+        if ($search->getExport()) {
+            return $this->exportData($search);
         }
 
         return $this->render('app/user/adminListUsers.html.twig', [
-            'userSearch' => $userSearch,
+            'userSearch' => $search,
             'form' => $form->createView(),
-            'users' => $pagination->paginate($this->repo->findAllUsersQuery($userSearch), $request),
+            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search), $request),
             'disabled_users' => true,
         ]);
     }
@@ -99,9 +99,9 @@ class UserController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(UserSearch $userSearch)
+    protected function exportData(UserSearch $search)
     {
-        $users = $this->repo->findUsersToExport($userSearch);
+        $users = $this->repo->findUsersToExport($search);
 
         return (new UserExport())->exportData($users);
     }

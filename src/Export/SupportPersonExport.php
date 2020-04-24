@@ -60,10 +60,6 @@ class SupportPersonExport
         }
 
         return [
-            'N° Groupe' => $groupPeople->getId(),
-            'N° Suivi groupe' => $supportGroup->getId(),
-            'N° Personne' => $person->getId(),
-            'N° Suivi personne' => $supportPerson->getId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
@@ -85,6 +81,10 @@ class SupportPersonExport
             'Adresse' => join(', ', $addressAccommodations),
             'Ville' => join(', ', $cityAccommodations),
             'Département' => join(', ', $zipcodeAccommodations),
+            'N° Groupe' => $groupPeople->getId(),
+            'N° Suivi groupe' => $supportGroup->getId(),
+            'N° Personne' => $person->getId(),
+            'N° Suivi personne' => $supportPerson->getId(),
         ];
     }
 

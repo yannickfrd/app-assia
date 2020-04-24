@@ -2,58 +2,11 @@
 
 namespace App\Form\Model;
 
+use App\Form\Model\Traits\RdvSearchTrait;
+use App\Form\Model\Traits\DateSearchTrait;
+
 class SupportRdvSearch
 {
-    /**
-     * @var string|null
-     */
-    private $title;
-
-    /**
-     * @var \DateTimeInterface|null
-     */
-    private $startDate;
-
-    /**
-     * @var \DateTimeInterface|null
-     */
-    private $endDate;
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(?\DateTimeInterface $startDate): self
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(?\DateTimeInterface $endDate): self
-    {
-        if ($endDate) {
-            $this->endDate = $endDate;
-        }
-
-        return $this;
-    }
+    use RdvSearchTrait;
+    use DateSearchTrait;
 }

@@ -25,14 +25,14 @@
                      <th scope="row" class="align-middle">
                          <a href="{{ path('support_notes', {'id':note.supportGroup.id}) }}"
                              class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                             title="Voir le suivi social"><span class="fas fa-eye"></span>
+                             title="Voir la note sociale"><span class="fas fa-eye"></span>
                          </a>
                      </th>
                      <td class="align-middle">{{ note.title }}</td>
                      <td class="align-middle">
-                    {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
-                    {{ supportPerson.person.fullname }}
-                    {% endfor %}                     
+                        {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
+                        {{ supportPerson.person.fullname }}
+                        {% endfor %}                     
                     </td>
                      <td class="align-middle">{{ note.statusToString }}</td>
                      <td class="align-middle">{{ note.createdAt| date("d/m/Y") }}</td>

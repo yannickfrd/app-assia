@@ -6,7 +6,7 @@ export default class UpdateEvaluation {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
-        this.formElt = document.querySelector("form[name='evaluation_group']");
+        this.formElt = document.querySelector("form[name='evaluation']");
         this.btnSubmitElts = this.formElt.querySelectorAll("button[type='submit']");
         this.editMode = document.querySelector("div[data-editMode]").getAttribute("data-editMode");
         this.loader = new Loader();

@@ -6,15 +6,15 @@ import ValidationInput from "../utils/validationInput";
 export default class ValidationSupport {
 
     constructor() {
-        this.startDate = "support_group_startDate";
+        this.startDate = "support_startDate";
         this.startDateInputElt = document.getElementById(this.startDate);
         this.startDateLabelElt = document.querySelector("label[for=" + this.startDate + "]");
 
-        this.endDate = "support_group_endDate";
+        this.endDate = "support_endDate";
         this.endDateInputElt = document.getElementById(this.endDate);
         this.endDateLabelElt = document.querySelector("label[for=" + this.endDate + "]");
 
-        this.status = "support_group_status";
+        this.status = "support_status";
         this.statusSelectElt = document.getElementById(this.status);
         this.statusLabelElt = document.querySelector("label[for=" + this.status + "]");
 
@@ -44,7 +44,7 @@ export default class ValidationSupport {
             }
         });
 
-        new DisplayInputs("support_group_", "status", "select", [4]);
+        new DisplayInputs("support_", "status", "select", [4]);
     }
 
     checkStartDate() {

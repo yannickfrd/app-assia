@@ -19,13 +19,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SupportGroupRepository extends ServiceEntityRepository
 {
-    private $currentUserService;
+    private $currentUser;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUserService)
+    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
     {
         parent::__construct($registry, SupportGroup::class);
 
-        $this->currentUserService = $currentUserService;
+        $this->currentUser = $currentUser;
     }
 
     /**
@@ -57,7 +57,7 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->leftJoin('sg.accommodationGroups', 'ag')->addselect('PARTIAL ag.{id}')
             ->leftJoin('sg.evaluationsGroup', 'eg')->addselect('PARTIAL eg.{id}')
-            ->leftJoin('eg.evalHousingGroup', 'ehg')->addselect('PARTIAL ehg.{id, housingStatus, housingAddress, housingCity, housingDept}')
+            ->leftJoin('eg.evalHousingGroup', 'ehg')->addselect('PARTIAL ehg.{id, housingStatus, housingAddress, housingCity, housingDept, domiciliation, domiciliationAddress, domiciliationCity, domiciliationDept}')
             ->leftJoin('sg.rdvs', 'rdvs')->addselect('PARTIAL rdvs.{id}')
             ->leftJoin('sg.notes', 'notes')->addselect('PARTIAL notes.{id}')
             ->leftJoin('sg.documents', 'docs')->addselect('PARTIAL docs.{id}')
@@ -88,7 +88,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne tous les suivis sociaux.
      */
-    public function findAllSupportsQuery(SupportGroupSearch $supportGroupSearch): Query
+    public function findAllSupportsQuery(SupportGroupSearch $search): Query
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name}')
@@ -100,7 +100,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addselect('PARTIAL u.{id, firstname, lastname}');
 
-        $query = $this->filter($query, $supportGroupSearch);
+        $query = $this->filter($query, $search);
 
         return $query->orderBy('sg.startDate', 'DESC')
             ->getQuery()
@@ -112,7 +112,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function getSupports(SupportGroupSearch $supportGroupSearch)
+    public function getSupports(SupportGroupSearch $search)
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id,name}')
@@ -124,7 +124,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id,fullname}')
             ->andWhere('sp.head = TRUE');
 
-        $query = $this->filter($query, $supportGroupSearch);
+        $query = $this->filter($query, $search);
 
         return $query->orderBy('sg.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
@@ -136,86 +136,86 @@ class SupportGroupRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    protected function filter(QueryBuilder $query, SupportGroupSearch $supportGroupSearch)
+    protected function filter(QueryBuilder $query, SupportGroupSearch $search)
     {
-        if (!$this->currentUserService->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query->where('s.id IN (:services)')
-                ->setParameter('services', $this->currentUserService->getServices());
+                ->setParameter('services', $this->currentUser->getServices());
         }
-        if ($supportGroupSearch->getFullname()) {
+        if ($search->getFullname()) {
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                ->setParameter('fullname', '%'.$supportGroupSearch->getFullname().'%');
+                ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
-        if ($supportGroupSearch->getFamilyTypology()) {
+        if ($search->getFamilyTypology()) {
             $query->andWhere('g.familyTypology = :familyTypology')
-                ->setParameter('familyTypology', $supportGroupSearch->getFamilyTypology());
+                ->setParameter('familyTypology', $search->getFamilyTypology());
         }
-        if ($supportGroupSearch->getStatus()) {
+        if ($search->getStatus()) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getStatus() as $status) {
+            foreach ($search->getStatus() as $status) {
                 $orX->add($expr->eq('sg.status', $status));
             }
             $query->andWhere($orX);
         }
 
-        $supportDates = $supportGroupSearch->getSupportDates();
+        $supportDates = $search->getSupportDates();
 
         if (1 == $supportDates) {
-            if ($supportGroupSearch->getStartDate()) {
-                $query->andWhere('sg.startDate >= :startDate')
-                    ->setParameter('startDate', $supportGroupSearch->getStartDate());
+            if ($search->getStart()) {
+                $query->andWhere('sg.startDate >= :start')
+                    ->setParameter('start', $search->getStart());
             }
-            if ($supportGroupSearch->getEndDate()) {
-                $query->andWhere('sg.startDate <= :endDate')
-                    ->setParameter('endDate', $supportGroupSearch->getEndDate());
+            if ($search->getEnd()) {
+                $query->andWhere('sg.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
             }
         }
         if (2 == $supportDates) {
-            if ($supportGroupSearch->getStartDate()) {
-                if ($supportGroupSearch->getStartDate()) {
-                    $query->andWhere('sg.endDate >= :startDate')
-                        ->setParameter('startDate', $supportGroupSearch->getStartDate());
+            if ($search->getStart()) {
+                if ($search->getStart()) {
+                    $query->andWhere('sg.endDate >= :start')
+                        ->setParameter('start', $search->getStart());
                 }
-                if ($supportGroupSearch->getEndDate()) {
-                    $query->andWhere('sg.endDate <= :endDate')
-                        ->setParameter('endDate', $supportGroupSearch->getEndDate());
+                if ($search->getEnd()) {
+                    $query->andWhere('sg.endDate <= :end')
+                        ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 == $supportDates || !$supportDates) {
-            if ($supportGroupSearch->getStartDate()) {
-                $query->andWhere('sg.endDate >= :startDate OR sg.endDate IS NULL')
-                    ->setParameter('startDate', $supportGroupSearch->getStartDate());
+            if ($search->getStart()) {
+                $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
+                    ->setParameter('start', $search->getStart());
             }
-            if ($supportGroupSearch->getEndDate()) {
-                $query->andWhere('sg.startDate <= :endDate')
-                    ->setParameter('endDate', $supportGroupSearch->getEndDate());
+            if ($search->getEnd()) {
+                $query->andWhere('sg.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
             }
         }
 
-        if ($supportGroupSearch->getReferents()->count() > 0) {
+        if ($search->getReferents() && $search->getReferents()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getReferents() as $referent) {
+            foreach ($search->getReferents() as $referent) {
                 $orX->add($expr->eq('sg.referent', $referent));
             }
             $query->andWhere($orX);
         }
 
-        if ($supportGroupSearch->getServices()->count() > 0) {
+        if ($search->getReferents() && $search->getServices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getServices() as $service) {
+            foreach ($search->getServices() as $service) {
                 $orX->add($expr->eq('sg.service', $service));
             }
             $query->andWhere($orX);
         }
 
-        if ($supportGroupSearch->getDevices()->count() > 0) {
+        if ($search->getReferents() && $search->getDevices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($supportGroupSearch->getDevices() as $device) {
+            foreach ($search->getDevices() as $device) {
                 $orX->add($expr->eq('sg.device', $device));
             }
             $query->andWhere($orX);

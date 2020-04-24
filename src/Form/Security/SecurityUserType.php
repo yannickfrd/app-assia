@@ -119,4 +119,9 @@ class SecurityUserType extends AbstractType
             'Administrateur' => 'ROLE_ADMIN',
         ];
     }
+
+    public function getBlockPrefix()
+    {
+        return 'user';
+    }
 }

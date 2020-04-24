@@ -3,9 +3,10 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Note;
-use App\Entity\SupportGroup;
 use App\Entity\User;
+use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
+use App\Form\Model\SupportNoteSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -25,8 +26,8 @@ class NoteRepositoryTest extends WebTestCase
     /** @var User */
     protected $user;
 
-    /** @var NoteSearch */
-    protected $noteSearch;
+    /** @var SupportNoteSearch */
+    protected $search;
 
     protected function setUp()
     {
@@ -40,12 +41,11 @@ class NoteRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        /* @var NoteRepository */
         $this->repo = $this->entityManager->getRepository(Note::class);
 
         $this->supportGroup = $dataFixtures['supportGroup'];
         $this->user = $dataFixtures['userSuperAdmin'];
-        $this->noteSearch = (new NoteSearch())
+        $this->search = (new SupportNoteSearch())
             ->setContent('Contenu de la note')
             ->setType(1)
             ->setStatus(1);
@@ -58,19 +58,25 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testFindAllNotesQueryWithoutFilters()
     {
-        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), new NoteSearch());
+        $query = $this->repo->findAllNotesQuery(new NoteSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllNotesQueryWithFilters()
+    public function testFindAllNotesFromSupportQueryWithoutFilters()
     {
-        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), $this->noteSearch);
+        $query = $this->repo->findAllNotesFromSupportQuery($this->supportGroup->getId(), new SupportNoteSearch());
+        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+    }
+
+    public function testFindAllNotesFromSupportQueryWithFilters()
+    {
+        $query = $this->repo->findAllNotesFromSupportQuery($this->supportGroup->getId(), $this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllNotesQueryWithFilterByTitle()
+    public function testFindAllNotesFromSupportQueryWithFilterByTitle()
     {
-        $query = $this->repo->findAllNotesQuery($this->supportGroup->getId(), $this->noteSearch->setContent('Note 666'));
+        $query = $this->repo->findAllNotesFromSupportQuery($this->supportGroup->getId(), $this->search->setContent('Note 666'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -97,6 +103,6 @@ class NoteRepositoryTest extends WebTestCase
         $this->repo = null;
         $this->supportGroup = null;
         $this->user = null;
-        $this->noteSearch = null;
+        $this->search = null;
     }
 }

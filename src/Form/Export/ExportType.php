@@ -2,24 +2,24 @@
 
 namespace App\Form\Export;
 
+use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Entity\SupportGroup;
-use App\Entity\User;
 use App\Form\Model\Export;
-use App\Form\Model\SupportGroupSearch;
 use App\Form\Utils\Choices;
-use App\Repository\DeviceRepository;
-use App\Repository\ServiceRepository;
+use App\Entity\SupportGroup;
 use App\Repository\UserRepository;
+use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Repository\ServiceRepository;
+use App\Form\Model\SupportGroupSearch;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ExportType extends AbstractType
 {
@@ -50,29 +50,30 @@ class ExportType extends AbstractType
                 'placeholder' => '-- Date de suivi --',
                 'required' => false,
             ])
-            ->add('startDate', DateType::class, [
+            ->add('start', DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
                     'class' => 'w-max-165',
                 ],
                 'required' => false,
             ])
-            ->add('endDate', DateType::class, [
+            ->add('end', DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
                     'class' => 'w-max-165',
                 ],
                 'required' => false,
             ])
-            ->add('referent', EntityType::class, [
+            ->add('referents', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
+                'multiple' => true,
                 'query_builder' => function (UserRepository $repo) {
                     return $repo->getAllUsersFromServicesQueryList($this->currentUser);
                 },
                 'placeholder' => '-- Référent --',
                 'attr' => [
-                    'class' => 'w-max-180',
+                    'class' => 'multi-select js-referent',
                 ],
                 'required' => false,
             ])
@@ -179,7 +180,6 @@ class ExportType extends AbstractType
             'data_class' => Export::class,
             'csrf_protection' => false,
             'translation_domain' => 'support',
-            'block_name' => 'xxx',
         ]);
     }
 

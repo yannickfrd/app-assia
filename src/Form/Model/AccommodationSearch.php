@@ -3,10 +3,14 @@
 namespace App\Form\Model;
 
 use App\Entity\Pole;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Form\Model\Traits\DateSearchTrait;
+use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 
 class AccommodationSearch
 {
+    use DateSearchTrait;
+    use ReferentServiceDeviceSearchTrait;
+
     public const ACCOMMODATION_DATES = [
         1 => 'Ouverture',
         2 => 'Fermeture',
@@ -29,29 +33,9 @@ class AccommodationSearch
     private $supportDates;
 
     /**
-     * @var \DateTimeInterface|null
-     */
-    private $startDate;
-
-    /**
-     * @var \DateTimeInterface|null
-     */
-    private $endDate;
-
-    /**
      * @var string|null
      */
     private $city;
-
-    /**
-     * @var ArrayCollection
-     */
-    private $service;
-
-    /**
-     * @var ArrayCollection
-     */
-    private $device;
 
     /**
      * @var Pole|null
@@ -62,11 +46,6 @@ class AccommodationSearch
      * @var bool
      */
     private $export;
-
-    public function __construct()
-    {
-        $this->service = new ArrayCollection();
-    }
 
     public function getName(): ?string
     {
@@ -112,56 +91,6 @@ class AccommodationSearch
     public function setSupportDates(int $supportDates): self
     {
         $this->supportDates = $supportDates;
-
-        return $this;
-    }
-
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(?\DateTimeInterface $startDate): self
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(?\DateTimeInterface $endDate): self
-    {
-        if ($endDate) {
-            $this->endDate = $endDate;
-        }
-
-        return $this;
-    }
-
-    public function getService(): ?ArrayCollection
-    {
-        return $this->service;
-    }
-
-    public function setService(?ArrayCollection $service): self
-    {
-        $this->service = $service;
-
-        return $this;
-    }
-
-    public function getDevice(): ?ArrayCollection
-    {
-        return $this->device;
-    }
-
-    public function setDevice(?ArrayCollection $device): self
-    {
-        $this->device = $device;
 
         return $this;
     }

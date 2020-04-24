@@ -22,7 +22,7 @@ class PersonRepositoryTest extends WebTestCase
     protected $person;
 
     /** @var PersonSearch */
-    protected $personSearch;
+    protected $search;
 
     protected function setUp()
     {
@@ -40,7 +40,7 @@ class PersonRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Person::class);
 
         $this->person = $dataFixtures['userSuperAdmin'];
-        $this->personSearch = $this->getPersonSearch();
+        $this->search = $this->getPersonSearch();
     }
 
     protected function getPersonSearch()
@@ -72,7 +72,7 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testFindAllPeopleQueryWithFilters()
     {
-        $query = $this->repo->findAllPeopleQuery($this->personSearch);
+        $query = $this->repo->findAllPeopleQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -104,6 +104,6 @@ class PersonRepositoryTest extends WebTestCase
         $this->entityManager = null;
         $this->repo = null;
         $this->person = null;
-        $this->personSearch = null;
+        $this->search = null;
     }
 }

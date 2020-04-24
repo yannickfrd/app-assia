@@ -57,8 +57,8 @@ class DocumentControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('search')->form([
-            'document_search[name]' => 'Document 666',
-            'document_search[type]' => 1,
+            'search[name]' => 'Document 666',
+            'search[type]' => 1,
         ]);
 
         $this->client->submit($form);

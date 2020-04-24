@@ -26,19 +26,19 @@ class DocumentRepository extends ServiceEntityRepository
      * Return all documents of group support.
      *
      */
-    public function findAllDocumentsQuery(int $supportGroupId, DocumentSearch $documentSearch): Query
+    public function findAllDocumentsQuery(int $supportGroupId, DocumentSearch $search): Query
     {
         $query = $this->createQueryBuilder('d')
             ->andWhere('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($documentSearch->getName()) {
+        if ($search->getName()) {
             $query->andWhere('d.name LIKE :name OR d.content LIKE :name')
-                ->setParameter('name', '%'.$documentSearch->getName().'%');
+                ->setParameter('name', '%'.$search->getName().'%');
         }
-        if ($documentSearch->getType()) {
+        if ($search->getType()) {
             $query->andWhere('d.type = :type')
-                ->setParameter('type', $documentSearch->getType());
+                ->setParameter('type', $search->getType());
         }
         $query = $query->orderBy('d.createdAt', 'DESC');
 

@@ -32,7 +32,7 @@ class SupportGroupRepositoryTest extends WebTestCase
     protected $user;
 
     /** @var SupportGroupSearch */
-    protected $supportGroupSearch;
+    protected $search;
 
     protected function setUp()
     {
@@ -52,7 +52,7 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->supportGroup = $dataFixtures['supportGroup1'];
         $this->service = $dataFixtures['service'];
         $this->user = $dataFixtures['userSuperAdmin'];
-        $this->supportGroupSearch = $this->getSupportGroupSearch();
+        $this->search = $this->getSupportGroupSearch();
     }
 
     protected function getSupportGroupSearch()
@@ -63,8 +63,8 @@ class SupportGroupRepositoryTest extends WebTestCase
         return (new SupportGroupSearch())
             ->setFullName('John Doe')
             ->setFamilyTypology(1)
-            ->setStartDate(new \DateTime('2018-01-01'))
-            ->setEndDate(new \DateTime())
+            ->setStart(new \DateTime('2018-01-01'))
+            ->setEnd(new \DateTime())
             ->setReferents($referents);
     }
 
@@ -91,7 +91,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     // public function testFindAllSupportsQueryWithFilters()
     // {
-    //     $query = $this->repo->findAllSupportsQuery($this->supportGroupSearch);
+    //     $query = $this->repo->findAllSupportsQuery($this->search);
     //     $this->assertGreaterThanOrEqual(50, count($query->getResult()));
     // }
 
@@ -103,7 +103,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     // public function testGetSupportsWithoutFilters()
     // {
-    //     $query = $this->repo->getSupports($this->supportGroupSearch);
+    //     $query = $this->repo->getSupports($this->search);
     //     $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     // }
 
@@ -126,6 +126,6 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->supportGroup = null;
         $this->service = null;
         $this->user = null;
-        $this->supportGroupSearch = null;
+        $this->search = null;
     }
 }

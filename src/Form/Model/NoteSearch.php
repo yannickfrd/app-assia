@@ -2,55 +2,29 @@
 
 namespace App\Form\Model;
 
+use App\Form\Model\Traits\DateSearchTrait;
+use App\Form\Model\Traits\NoteSearchTrait;
+use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
+
 class NoteSearch
 {
+    use NoteSearchTrait;
+    use DateSearchTrait;
+    use ReferentServiceDeviceSearchTrait;
+
     /**
      * @var string|null
      */
-    private $content;
+    private $fullname;
 
-    /**
-     * @var int|null
-     */
-    private $type;
-
-    /**
-     * @var int|null
-     */
-    private $status;
-
-    public function getContent(): ?string
+    public function getFullname(): ?string
     {
-        return $this->content;
+        return $this->fullname;
     }
 
-    public function setContent(string $content): self
+    public function setFullname(string $fullname): self
     {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function setType(?int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?int $status): self
-    {
-        $this->status = $status;
+        $this->fullname = $fullname;
 
         return $this;
     }

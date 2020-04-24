@@ -7,6 +7,7 @@ use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\RdvSearch;
 use App\Form\Model\SupportRdvSearch;
+use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -27,7 +28,7 @@ class RdvRepositoryTest extends WebTestCase
     protected $user;
 
     /** @var RdvSearch */
-    protected $rdvSearch;
+    protected $search;
 
     /** @var SupportRdvSearch */
     protected $supportRdvSearch;
@@ -50,16 +51,19 @@ class RdvRepositoryTest extends WebTestCase
         $this->supportGroup = $dataFixtures['supportGroup'];
         $this->user = $dataFixtures['userSuperAdmin'];
 
-        $this->rdvSearch = (new RdvSearch())
+        $referents = new ArrayCollection();
+        $referents->add($this->user);
+
+        $this->search = (new RdvSearch())
             ->setTitle('Rdv 666')
-            ->setStartDate(new \DateTime('2020-01-01'))
-            ->setEndDate(new \DateTime())
-            ->setReferent('Romain');
+            ->setStart(new \DateTime('2020-01-01'))
+            ->setEnd(new \DateTime())
+            ->setReferents($referents);
 
         $this->supportRdvSearch = (new SupportRdvSearch())
             ->setTitle('Rdv 666')
-            ->setStartDate(new \DateTime('2020-01-01'))
-            ->setEndDate(new \DateTime());
+            ->setStart(new \DateTime('2020-01-01'))
+            ->setEnd(new \DateTime());
     }
 
     public function testCount()
@@ -75,7 +79,7 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryWithFilters()
     {
-        $query = $this->repo->findAllRdvsQuery($this->rdvSearch);
+        $query = $this->repo->findAllRdvsQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -122,6 +126,6 @@ class RdvRepositoryTest extends WebTestCase
         $this->repo = null;
         $this->supportGroup = null;
         $this->user = null;
-        $this->rdvSearch = null;
+        $this->search = null;
     }
 }

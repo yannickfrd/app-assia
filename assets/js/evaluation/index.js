@@ -20,5 +20,5 @@ document.querySelectorAll("div.card-header").forEach(cardHeaderElt => {
 document.addEventListener("DOMContentLoaded", e => {
     new Evaluation();
     new UpdateEvaluation(ajaxRequest);
-    new CheckChange("evaluation_group"); // form name
+    new CheckChange("evaluation"); // form name
 });

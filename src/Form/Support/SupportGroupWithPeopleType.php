@@ -41,4 +41,9 @@ class SupportGroupWithPeopleType extends AbstractType
             'translation_domain' => 'forms',
         ]);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'support';
+    }
 }

@@ -33,21 +33,21 @@ class AccommodationController extends AbstractController
      *
      * @Route("/admin/accommodations", name="admin_accommodations", methods="GET|POST")
      */
-    public function listAccommodations(AccommodationSearch $accommodationSearch, Request $request, Pagination $pagination): Response
+    public function listAccommodations(AccommodationSearch $search, Request $request, Pagination $pagination): Response
     {
-        $accommodationSearch = new AccommodationSearch();
+        $search = new AccommodationSearch();
 
-        $form = ($this->createForm(AccommodationSearchType::class, $accommodationSearch))
+        $form = ($this->createForm(AccommodationSearchType::class, $search))
             ->handleRequest($request);
 
-        if ($accommodationSearch->getExport()) {
-            return $this->exportData($accommodationSearch);
+        if ($search->getExport()) {
+            return $this->exportData($search);
         }
 
         return $this->render('app/accommodation/listAccommodations.html.twig', [
-            'accommodationSearch' => $accommodationSearch,
+            'accommodationSearch' => $search,
             'form' => $form->createView(),
-            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($accommodationSearch), $request) ?? null,
+            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($search), $request) ?? null,
         ]);
     }
 
@@ -128,9 +128,9 @@ class AccommodationController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(AccommodationSearch $accommodationSearch)
+    protected function exportData(AccommodationSearch $search)
     {
-        $accommodations = $this->repo->findAccommodationsToExport($accommodationSearch);
+        $accommodations = $this->repo->findAccommodationsToExport($search);
 
         if (!$accommodations) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

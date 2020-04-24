@@ -121,7 +121,7 @@ class ResourcesType extends AbstractType
                 'data-id' => 'ressourceOther',
             ],
         ])
-        ->add('ressourceOtherPrecision', IntegerType::class, [
+        ->add('ressourceOtherPrecision', null, [
             'attr' => [
                 'class' => 'js-initEval',
                 'data-id' => 'ressourceOtherPrecision',
@@ -240,5 +240,10 @@ class ResourcesType extends AbstractType
         $resolver->setDefaults([
             'inherit_data' => true,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }

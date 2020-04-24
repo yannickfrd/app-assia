@@ -10,18 +10,18 @@ class ExportDataEvent extends Event
 {
     public const NAME = 'data.export';
 
-    private $supportGroupSearch;
+    private $search;
     private $repo;
 
-    public function __construct(SupportGroupSearch $supportGroupSearch, SupportPersonRepository $repo)
+    public function __construct(SupportGroupSearch $search, SupportPersonRepository $repo)
     {
-        $this->supportGroupSearch = $supportGroupSearch;
+        $this->search = $search;
         $this->repo = $repo;
     }
 
     public function getSupportGroupSearch()
     {
-        return $this->supportGroupSearch;
+        return $this->search;
     }
 
     public function getRepo()

@@ -2,17 +2,17 @@
 
 namespace App\Form\Accommodation;
 
-use App\Entity\Device;
 use App\Entity\Pole;
-use App\Entity\Service;
-use App\Form\Model\AccommodationSearch;
 use App\Form\Utils\Choices;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\Model\RdvSearch;
+use App\Form\Type\DateSearchType;
+use App\Form\Type\ServiceSearchType;
+use App\Form\Model\AccommodationSearch;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AccommodationSearchType extends AbstractType
 {
@@ -43,22 +43,6 @@ class AccommodationSearchType extends AbstractType
                 'placeholder' => '-- Date --',
                 'required' => false,
             ])
-            ->add('startDate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                ],
-                'required' => false,
-            ])
-            ->add('endDate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                ],
-                'required' => false,
-            ])
             ->add('city', null, [
                 'label_attr' => [
                     'class' => 'sr-only',
@@ -68,32 +52,6 @@ class AccommodationSearchType extends AbstractType
                     'placeholder' => 'City',
                 ],
             ])
-            ->add('service', EntityType::class, [
-                'class' => Service::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'placeholder' => '-- Service --',
-                'attr' => [
-                    'class' => 'multi-select js-service',
-                ],
-                'required' => false,
-            ])
-            ->add('device', EntityType::class, [
-                'class' => Device::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'placeholder' => '-- Device --',
-                'attr' => [
-                    'class' => 'multi-select js-device',
-                ],
-                'required' => false,
-            ])
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',
@@ -102,6 +60,12 @@ class AccommodationSearchType extends AbstractType
                 ],
                 'placeholder' => '-- Pole --',
                 'required' => false,
+            ])
+            ->add('date', DateSearchType::class, [
+                'data_class' => RdvSearch::class,
+            ])
+            ->add('service', ServiceSearchType::class, [
+                'data_class' => RdvSearch::class,
             ])
             ->add('export');
     }

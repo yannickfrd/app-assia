@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -134,62 +135,74 @@ class SupportGroup
     /**
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="supports")
+     * @MaxDepth(1)
      */
     private $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="supports")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(1)
      */
     private $groupPeople;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="supportGroup", orphanRemoval=true)
+     * @MaxDepth(1)
      */
     private $supportPeople;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="supportGroup")
+     * @MaxDepth(1)
      */
     private $service;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Device", inversedBy="supportGroup")
+     * @MaxDepth(1)
      */
     private $device;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @MaxDepth(1)
      */
     private $notes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @MaxDepth(1)
      */
     private $rdvs;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Document", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @MaxDepth(1)
      */
     private $documents;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="supportGroup", orphanRemoval=true)
+     * @MaxDepth(1)
      */
     private $accommodationGroups;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\EvaluationGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @MaxDepth(1)
      */
     private $evaluationsGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\InitEvalGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @MaxDepth(1)
      */
     private $initEvalGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @MaxDepth(1)
      */
     private $originRequest;
 

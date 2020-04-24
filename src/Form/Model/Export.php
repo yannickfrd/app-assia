@@ -2,12 +2,15 @@
 
 namespace App\Form\Model;
 
-use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Form\Model\Traits\DateSearchTrait;
+use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Export
 {
+    use DateSearchTrait;
+    use ReferentServiceDeviceSearchTrait;
+
     public const SUPPORT_DATES = [
         1 => 'Début du suivi',
         2 => 'Fin du suivi',
@@ -35,30 +38,6 @@ class Export
      */
     private $supportDates;
 
-    /**
-     * @var \DateTimeInterface|null
-     */
-    private $startDate;
-
-    /**
-     * @var \DateTimeInterface|null
-     */
-    private $endDate;
-
-    /**
-     * @var User
-     */
-    private $referent;
-
-    /**
-     * @var ArrayCollection
-     */
-    private $services;
-
-    /**
-     * @var ArrayCollection
-     */
-    private $devices;
     /**
      * @var bool|null
      */
@@ -93,12 +72,6 @@ class Export
      * @var bool|null
      */
     private $evalJustice;
-
-    public function __construct()
-    {
-        $this->services = new ArrayCollection();
-        $this->devices = new ArrayCollection();
-    }
 
     public function getFamilyTypology(): ?int
     {
@@ -144,68 +117,6 @@ class Export
     public function setSupportDates(int $supportDates): self
     {
         $this->supportDates = $supportDates;
-
-        return $this;
-    }
-
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(?\DateTimeInterface $startDate): self
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(?\DateTimeInterface $endDate): self
-    {
-        if ($endDate) {
-            $this->endDate = $endDate;
-        }
-
-        return $this;
-    }
-
-    public function getReferent(): ?User
-    {
-        return $this->referent;
-    }
-
-    public function setReferent(?User $referent): self
-    {
-        $this->referent = $referent;
-
-        return $this;
-    }
-
-    public function getServices(): ?ArrayCollection
-    {
-        return $this->services;
-    }
-
-    public function setServices(?ArrayCollection $services): self
-    {
-        $this->services = $services;
-
-        return $this;
-    }
-
-    public function getDevices(): ?ArrayCollection
-    {
-        return $this->devices;
-    }
-
-    public function setDevices(?ArrayCollection $devices): self
-    {
-        $this->devices = $devices;
 
         return $this;
     }

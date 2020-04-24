@@ -23,23 +23,23 @@ class ReferentRepository extends ServiceEntityRepository
     /**
      * Donne tous les groupes de personnes.
      */
-    public function findAllReferentsQuery($supportGroupId, $referentSearch): Query
+    public function findAllReferentsQuery($supportGroupId, $search): Query
     {
         $query = $this->createQueryBuilder('ref')
             ->andWhere('ref.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($referentSearch->getName()) {
+        if ($search->getName()) {
             $query->andWhere('ref.name LIKE :name')
-                ->setParameter('name', '%'.$referentSearch->getName().'%');
+                ->setParameter('name', '%'.$search->getName().'%');
         }
-        if ($referentSearch->getSocialWorker()) {
+        if ($search->getSocialWorker()) {
             $query->andWhere('ref.socialWorker LIKE :socialWorker')
-                ->setParameter('socialWorker', '%'.$referentSearch->getSocialWorker().'%');
+                ->setParameter('socialWorker', '%'.$search->getSocialWorker().'%');
         }
-        if ($referentSearch->getType()) {
+        if ($search->getType()) {
             $query->andWhere('ref.type = :type')
-                ->setParameter('type', $referentSearch->getType());
+                ->setParameter('type', $search->getType());
         }
         $query = $query->orderBy('ref.createdAt', 'DESC');
 

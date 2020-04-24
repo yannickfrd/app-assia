@@ -99,13 +99,6 @@ class SupportGroupType extends AbstractType
                     'placeholder' => 'Write a comment about the social support',
                 ],
             ]);
-        // ->add("initEvalGroup", InitEvalGroupType::class)
-        // ->add("supportPerson", CollectionType::class, [
-        //     "entry_type"   => SupportPersonInitEvalType::class,
-        //     "allow_add"    => false,
-        //     "allow_delete" => false,
-        //     "required" => false
-        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -114,5 +107,10 @@ class SupportGroupType extends AbstractType
             'data_class' => SupportGroup::class,
             'translation_domain' => 'forms',
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'support';
     }
 }

@@ -52,8 +52,8 @@
 							</div>
 							{% endif %}
 							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.title) }}</div>
-							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.startDate) }}</div>
-							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.endDate) }}</div>
+							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.date.start) }}</div>
+							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.date.end) }}</div>
 							<div class="form-group col-auto my-1 px-1">
 								<div class="form-group">
 									<button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Rechercher">

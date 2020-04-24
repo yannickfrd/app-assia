@@ -29,7 +29,7 @@ class ServiceRepositoryTest extends WebTestCase
     protected $user;
 
     /** @var ServiceSearch */
-    protected $serviceSearch;
+    protected $search;
 
     protected function setUp()
     {
@@ -49,7 +49,7 @@ class ServiceRepositoryTest extends WebTestCase
         $this->service = $dataFixtures['service1'];
         $this->pole = $dataFixtures['pole'];
         $this->user = $dataFixtures['userSuperAdmin'];
-        $this->serviceSearch = (new ServiceSearch())
+        $this->search = (new ServiceSearch())
             ->setName('AVDL')
             ->setEmail('avdl@esperer-95.org')
             ->setCity('Pontoise')
@@ -70,13 +70,13 @@ class ServiceRepositoryTest extends WebTestCase
 
     public function testFindAllServicesQueryWithFilters()
     {
-        $query = $this->repo->findAllServicesQuery($this->serviceSearch);
+        $query = $this->repo->findAllServicesQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindServicesToExportWithFilters()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesToExport($this->serviceSearch)));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesToExport($this->search)));
     }
 
     // public function testGetServicesFromUserQueryList()
@@ -102,6 +102,6 @@ class ServiceRepositoryTest extends WebTestCase
         $this->service = null;
         $this->pole = null;
         $this->user = null;
-        $this->serviceSearch = null;
+        $this->search = null;
     }
 }

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.2.0 23/04/2020
+1.3.0 27/04/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,10 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.3.0 - 27/04/2020
+- Créé page de recherche des notes
+- Factorisation des 'models' et 'formType' de recherche
 
 ## Version 1.2.0 - 23/04/2020
 - Mise à niveau du framework Symfony 4.4.7 à 5.0.7.

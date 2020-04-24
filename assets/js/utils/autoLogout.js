@@ -2,13 +2,14 @@
 
 export default class AutoLogout {
 
-    constructor(ajaxRequest, timeout) {
+    constructor(ajaxRequest, timeout = 30, timeAlert = 5) {
         this.ajaxRequest = ajaxRequest;
         this.userNameElt = document.getElementById("user-name");
         this.modalElt = $("#modal-autoLogout");
         this.timerElt = document.getElementById("timer-logout");
         this.cancelLogoutElt = document.getElementById("cancel-logout");
         this.time = timeout * 60;
+        this.timeAlert = timeAlert * 60;
         this.initTime = this.time;
         this.intervalID = null;
         this.init();
@@ -26,10 +27,10 @@ export default class AutoLogout {
     // Compte le temps restant
     count() {
         this.time--;
-        if (this.time === (5 * 60)) {
+        if (this.time === this.timeAlert) {
             this.modalElt.modal("show");
         }
-        if (this.time <= (5 * 60)) {
+        if (this.time <= this.timeAlert) {
             this.timerElt.textContent = this.getFullTime();
         }
         if (this.time <= 0) {
@@ -55,7 +56,7 @@ export default class AutoLogout {
         this.time = this.initTime;
     }
 
-    // Deconnexion vi requête Ajax
+    // Déconnection via requête Ajax
     deconnection() {
         clearInterval(this.intervalID);
         this.ajaxRequest.init("GET", "/deconnexion", this.reloadPage.bind(this), true);

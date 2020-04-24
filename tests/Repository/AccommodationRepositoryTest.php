@@ -29,7 +29,7 @@ class AccommodationRepositoryTest extends WebTestCase
     protected $pole;
 
     /** @var AccommodationSearch */
-    protected $accommodationSearch;
+    protected $search;
 
     protected function setUp()
     {
@@ -47,11 +47,11 @@ class AccommodationRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Accommodation::class);
 
         $this->service = $datafixtures['service'];
-        $this->accommodationSearch = (new AccommodationSearch())
+        $this->search = (new AccommodationSearch())
             ->setName('Logement')
             ->setPlacesNumber(6)
-            ->setStartDate(new \DateTime('2010-01-01'))
-            ->setEndDate(new \DateTime('2020-01-01'))
+            ->setStart(new \DateTime('2010-01-01'))
+            ->setEnd(new \DateTime('2020-01-01'))
             ->setCity('Houille')
             ->setPole($this->entityManager->getRepository(Pole::class)->findOneBy(['name' => 'AVDL']));
     }
@@ -69,13 +69,13 @@ class AccommodationRepositoryTest extends WebTestCase
 
     public function testFindAllAccommodationsQueryWithFilters()
     {
-        $query = $this->repo->findAllAccommodationsQuery($this->accommodationSearch);
+        $query = $this->repo->findAllAccommodationsQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindAccommodationsToExportQueryWithFilters()
     {
-        $this->assertGreaterThanOrEqual(1, $this->repo->findAccommodationsToExport($this->accommodationSearch));
+        $this->assertGreaterThanOrEqual(1, $this->repo->findAccommodationsToExport($this->search));
     }
 
     public function testGetAccommodationsQueryList()
@@ -96,6 +96,6 @@ class AccommodationRepositoryTest extends WebTestCase
         $this->entityManager = null;
         $this->repo = null;
         $this->service = null;
-        $this->accommodationSearch = null;
+        $this->search = null;
     }
 }

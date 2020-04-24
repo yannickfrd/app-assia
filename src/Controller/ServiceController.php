@@ -34,21 +34,21 @@ class ServiceController extends AbstractController
      *
      * @Route("/services", name="services", methods="GET")
      */
-    public function listServices(Request $request, ServiceSearch $serviceSearch = null, Pagination $pagination): Response
+    public function listServices(Request $request, ServiceSearch $search = null, Pagination $pagination): Response
     {
-        $serviceSearch = new ServiceSearch();
+        $search = new ServiceSearch();
 
-        $form = ($this->createForm(ServiceSearchType::class, $serviceSearch))
+        $form = ($this->createForm(ServiceSearchType::class, $search))
             ->handleRequest($request);
 
-        if ($serviceSearch->getExport()) {
-            return $this->exportData($serviceSearch);
+        if ($search->getExport()) {
+            return $this->exportData($search);
         }
 
         return $this->render('app/service/listServices.html.twig', [
-            'serviceSearch' => $serviceSearch,
+            'serviceSearch' => $search,
             'form' => $form->createView(),
-            'services' => $pagination->paginate($this->repo->findAllServicesQuery($serviceSearch), $request) ?? null,
+            'services' => $pagination->paginate($this->repo->findAllServicesQuery($search), $request) ?? null,
         ]);
     }
 
@@ -113,9 +113,9 @@ class ServiceController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(ServiceSearch $serviceSearch)
+    protected function exportData(ServiceSearch $search)
     {
-        $services = $this->repo->findServicesToExport($serviceSearch);
+        $services = $this->repo->findServicesToExport($search);
 
         return (new ServiceExport())->exportData($services);
     }

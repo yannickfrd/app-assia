@@ -75,11 +75,7 @@ class OrganizationController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
-
-            return $this->redirectToRoute('admin_organizations');
         }
-
-        $this->addFlash('success', 'Le dispositif est mis à jour.');
 
         return $this->render('app/organization/organization.html.twig', [
             'form' => $form->createView(),

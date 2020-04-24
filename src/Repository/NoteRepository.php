@@ -4,10 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Note;
 use App\Entity\User;
-use App\Form\Model\NoteSearch;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use App\Form\Model\NoteSearch;
+use App\Security\CurrentUserService;
+use App\Form\Model\SupportNoteSearch;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Note|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,31 +19,110 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NoteRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $currentUser;
+
+    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
     {
         parent::__construct($registry, Note::class);
+
+        $this->currentUser = $currentUser;
     }
 
     /**
      * Return all notes of group support.
      */
-    public function findAllNotesQuery(int $supportGroupId, NoteSearch $noteSearch): Query
+    public function findAllNotesQuery(NoteSearch $search): Query
+    {
+        $query = $this->createQueryBuilder('n')->select('n')
+            ->leftJoin('n.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('n.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('n.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+
+        if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query->where('sg.service IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        if ($search->getContent()) {
+            $query->andWhere('n.title LIKE :content OR n.content LIKE :content')
+                ->setParameter('content', '%'.$search->getContent().'%');
+        }
+        if ($search->getStatus()) {
+            $query->andWhere('n.status = :status')
+                ->setParameter('status', $search->getStatus());
+        }
+        if ($search->getType()) {
+            $query->andWhere('n.type = :type')
+                ->setParameter('type', $search->getType());
+        }
+
+        if ($search->getFullname()) {
+            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+                ->setParameter('fullname', '%'.$search->getFullname().'%');
+        }
+
+        if ($search->getStart()) {
+            $query->andWhere('n.createdAt >= :start')
+                ->setParameter('startDate', $search->getStart());
+        }
+        if ($search->getEnd()) {
+            $query->andWhere('n.createdAt <= :createdAt')
+                ->setParameter('createdAt', $search->getEnd());
+        }
+
+        if ($search->getReferents() && count($search->getReferents())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getServices() && count($search->getServices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getServices() as $service) {
+                $orX->add($expr->eq('sg.service', $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getDevices() && count($search->getDevices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getDevices() as $device) {
+                $orX->add($expr->eq('sg.device', $device));
+            }
+            $query->andWhere($orX);
+        }
+
+        return  $query->orderBy('n.updatedAt', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Return all notes of group support.
+     */
+    public function findAllNotesFromSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
         $query = $this->createQueryBuilder('n')
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($noteSearch->getContent()) {
+        if ($search->getContent()) {
             $query->andWhere('n.title LIKE :content OR n.content LIKE :content')
-                ->setParameter('content', '%'.$noteSearch->getContent().'%');
+                ->setParameter('content', '%'.$search->getContent().'%');
         }
-        if ($noteSearch->getStatus()) {
+        if ($search->getStatus()) {
             $query->andWhere('n.status = :status')
-                ->setParameter('status', $noteSearch->getStatus());
+                ->setParameter('status', $search->getStatus());
         }
-        if ($noteSearch->getType()) {
+        if ($search->getType()) {
             $query->andWhere('n.type = :type')
-                ->setParameter('type', $noteSearch->getType());
+                ->setParameter('type', $search->getType());
         }
         $query = $query->orderBy('n.createdAt', 'DESC');
 
@@ -49,7 +130,7 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     *  Donne toutes les notes créées par l'utilisateur.
+     *  Donne toutes les notes créées par l'utilisateun.
      *
      * @return mixed
      */

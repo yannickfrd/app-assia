@@ -6,7 +6,7 @@ export default class evaluation {
 
     constructor() {
         this.evalBudgetElt = document.getElementById("accordion-parent-eval_budget");
-        this.prefix = "evaluation_group_";
+        this.prefix = "evaluation_";
         this.editMode = document.querySelector("div[data-editMode]").getAttribute("data-editMode");
 
         this.resourcesGroupAmtElt = document.getElementById("resourcesGroupAmt");
@@ -424,7 +424,7 @@ export default class evaluation {
     // Met à jour la somme des montants de la personne
     updateSumAmt(collapseId, entity, i, type) {
         let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type);
-        document.getElementById("evaluation_group_evaluationPeople_" + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt").value = this.getSumAmts(inputElts);
+        document.getElementById("evaluation_evaluationPeople_" + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt").value = this.getSumAmts(inputElts);
         this.updateAmtGroup(type);
     }
 

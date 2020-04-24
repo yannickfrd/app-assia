@@ -31,8 +31,17 @@ export default class Search {
                 option.selected = "";
             });
         });
-        this.formSearch.querySelectorAll("li.select2-selection__choice").forEach(liElt => {
-            liElt.remove();
+
+        this.formSearch.querySelectorAll(".select2-container").forEach(containerElt => {
+            let removeElts = containerElt.querySelectorAll(".select2-selection__choice__remove");
+            removeElts.forEach(removeElt => {
+                removeElt.click();
+            });
+            if (removeElts.length > 0) {
+                containerElt.querySelector("input").click();
+            }
         });
+
+        this.formSearch.querySelector("input").focus();
     }
 }

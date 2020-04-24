@@ -39,16 +39,16 @@ class GroupPeopleController extends AbstractController
      *
      * @Route("/groups_people", name="groups_people", methods="GET|POST")
      */
-    public function listGroupsPeople(GroupPeopleSearch $groupPeopleSearch = null, Request $request, Pagination $pagination): Response
+    public function listGroupsPeople(GroupPeopleSearch $search = null, Request $request, Pagination $pagination): Response
     {
-        $groupPeopleSearch = new GroupPeopleSearch();
+        $search = new GroupPeopleSearch();
 
-        $form = ($this->createForm(GroupPeopleSearchType::class, $groupPeopleSearch))
+        $form = ($this->createForm(GroupPeopleSearchType::class, $search))
             ->handleRequest($request);
 
         return $this->render('app/groupPeople/listGroupsPeople.html.twig', [
             'form' => $form->createView(),
-            'groupsPeople' => $pagination->paginate($this->repo->findAllGroupPeopleQuery($groupPeopleSearch), $request),
+            'groupsPeople' => $pagination->paginate($this->repo->findAllGroupPeopleQuery($search), $request),
         ]);
     }
 

@@ -3,19 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Form\Note\NoteType;
+use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
 use App\Form\Note\NoteSearchType;
-use App\Form\Note\NoteType;
 use App\Repository\NoteRepository;
-use App\Repository\SupportGroupRepository;
-use App\Service\Pagination;
+use App\Form\Model\SupportNoteSearch;
+use App\Form\Note\SupportNoteSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\SupportGroupRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class NoteController extends AbstractController
 {
@@ -35,28 +38,51 @@ class NoteController extends AbstractController
     /**
      * Liste des notes.
      *
+     * @Route("notes", name="notes", methods="GET|POST")
+     */
+    public function listNotes(NoteSearch $search = null, Request $request, Pagination $pagination): Response
+    {
+        $search = new NoteSearch();
+        if ($this->getUser()->getStatus() == 1) {
+            $usersCollection = new ArrayCollection();
+            $usersCollection->add($this->getUser());
+            $search->setReferents($usersCollection);
+        }
+
+        $form = ($this->createForm(NoteSearchType::class, $search))
+            ->handleRequest($request);
+
+        return $this->render('app/note/listNotes.html.twig', [
+            'form' => $form->createView(),
+            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($search), $request, 10) ?? null,
+        ]);
+    }
+
+    /**
+     * Liste des notes du suivi social.
+     *
      * @Route("support/{id}/notes", name="support_notes", methods="GET|POST")
      *
      * @param int $id // SupportGroup
      */
-    public function listNotes(int $id, NoteSearch $noteSearch = null, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportNoteSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $noteSearch = new NoteSearch();
+        $search = new SupportNoteSearch();
 
-        $formSearch = $this->createForm(NoteSearchType::class, $noteSearch);
+        $formSearch = $this->createForm(SupportNoteSearchType::class, $search);
         $formSearch->handleRequest($request);
 
         $form = $this->createForm(NoteType::class, new Note());
 
-        return $this->render('app/note/listNotes.html.twig', [
+        return $this->render('app/note/supportNotes.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($supportGroup->getId(), $noteSearch), $request) ?? null,
+            'notes' => $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10) ?? null,
         ]);
     }
 
