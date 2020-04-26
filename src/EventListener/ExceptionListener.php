@@ -4,17 +4,20 @@ namespace App\EventListener;
 
 use Twig\Environment;
 use App\Notification\MailNotification;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class ExceptionListener
 {
+    private $security;
     private $renderer;
     private $notification;
     private $adminEmail;
     private $exceptionListener;
 
-    public function __construct(Environment $renderer, MailNotification $notification, string $adminEmail, bool $exceptionListener)
+    public function __construct(Security $security, Environment $renderer, MailNotification $notification, string $adminEmail, bool $exceptionListener)
     {
+        $this->security = $security;
         $this->renderer = $renderer;
         $this->notification = $notification;
         $this->adminEmail = $adminEmail;
@@ -23,7 +26,7 @@ class ExceptionListener
 
     public function onKernelException(ExceptionEvent $event)
     {
-        if (!$this->exceptionListener) {
+        if (!$this->security->getUser() || !$this->exceptionListener) {
             return;
         }
 
