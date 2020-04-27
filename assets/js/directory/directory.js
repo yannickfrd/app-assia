@@ -2,12 +2,14 @@ import "select2";
 import "../utils/maskZipcode";
 import "../utils/maskPhone";
 
-$("select.multi-select.js-service").select2({
-    // theme: "bootstrap4",
-    placeholder: "  -- Service --",
-});
+let select2Array = {
+    "service": "Service",
+    "device": "Dispositif",
+}
 
-$("select.multi-select.js-device").select2({
-    // theme: "bootstrap4",
-    placeholder: "  -- Dispositif --",
-});
+for (let i in select2Array) {
+    $("select.multi-select.js-" + i).select2({
+        // theme: "bootstrap4",
+        placeholder: "  -- " + select2Array[i] + " --",
+    });
+}

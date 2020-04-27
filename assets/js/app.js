@@ -7,7 +7,7 @@ import "select2-bootstrap4-theme/dist/select2-bootstrap4.min.css";
 const $ = require("jquery");
 
 require("bootstrap");
-require("bootstrap-datepicker");
+// require("bootstrap-datepicker");
 
 // import MessageFlash from "./utils/messageFlash";
 import AjaxRequest from "./utils/ajaxRequest";
@@ -29,7 +29,7 @@ $(e => {
 window.onload = e => {
     // Stop spinner loader 
     document.getElementById("loader").classList.add("d-none");
-    // Smooth Scroll animationa
+    // Smooth Scroll animation
     document.getElementById("scroll-top").addEventListener("click", function (e) {
         e.preventDefault();
         let target = this.getAttribute("href");

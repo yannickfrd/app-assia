@@ -25,11 +25,12 @@ class SupportGroupSearchType extends AbstractType
                     'class' => 'w-max-170',
                 ],
             ])
-            ->add('familyTypology', ChoiceType::class, [
+            ->add('familyTypologies', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
+                'multiple' => true,
                 'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 'attr' => [
-                    'class' => 'w-max-220',
+                    'class' => 'multi-select js-typology',
                 ],
                 'placeholder' => '-- Family Typology --',
                 'required' => false,

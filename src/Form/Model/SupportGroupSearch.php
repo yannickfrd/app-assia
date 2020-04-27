@@ -29,20 +29,20 @@ class SupportGroupSearch
     private $birthdate;
 
     /**
-     * @var int|null
+     * @var array
      */
-    private $familyTypology;
+    private $familyTypologies;
+
+    /**
+     * @var array
+     */
+    private $status;
 
     /**
      * @var int|null
      * @Assert\Range(min = 1, max = 9)
      */
     private $nbPeople;
-
-    /**
-     * @var array
-     */
-    private $status;
 
     /**
      * @var int|null
@@ -82,26 +82,14 @@ class SupportGroupSearch
         return $this;
     }
 
-    public function getFamilyTypology(): ?int
+    public function getFamilyTypologies(): ?array
     {
-        return $this->familyTypology;
+        return $this->familyTypologies;
     }
 
-    public function setFamilyTypology(int $familyTypology): self
+    public function setFamilyTypologies(?array $familyTypologies): self
     {
-        $this->familyTypology = $familyTypology;
-
-        return $this;
-    }
-
-    public function getNbPeople(): ?int
-    {
-        return $this->nbPeople;
-    }
-
-    public function setNbPeople(int $nbPeople): self
-    {
-        $this->nbPeople = $nbPeople;
+        $this->familyTypologies = $familyTypologies;
 
         return $this;
     }
@@ -114,6 +102,18 @@ class SupportGroupSearch
     public function setStatus(?array $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getNbPeople(): ?int
+    {
+        return $this->nbPeople;
+    }
+
+    public function setNbPeople(int $nbPeople): self
+    {
+        $this->nbPeople = $nbPeople;
 
         return $this;
     }

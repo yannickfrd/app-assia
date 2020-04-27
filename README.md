@@ -247,7 +247,7 @@ https://demo.esperer95.app
     housingAllowance: Aide au logement
     housingCity: Ville d'hébergement
     housingDept: Département - hébergement
-    housingExpeComment: Commentaire expérience lié au logement
+    housingExpeComment: Commentaire expérience liée au logement
     housingExperience: Expérience de logement autonome
     housingStatus: Evaluation résidentielle
     housingWishes: Type de logement(s) souhaité(s)

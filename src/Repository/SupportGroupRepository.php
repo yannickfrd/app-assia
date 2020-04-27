@@ -146,10 +146,16 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
-        if ($search->getFamilyTypology()) {
-            $query->andWhere('g.familyTypology = :familyTypology')
-                ->setParameter('familyTypology', $search->getFamilyTypology());
+
+        if ($search->getFamilyTypologies()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getFamilyTypologies() as $typology) {
+                $orX->add($expr->eq('g.familyTypology', $typology));
+            }
+            $query->andWhere($orX);
         }
+
         if ($search->getStatus()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -183,7 +189,7 @@ class SupportGroupRepository extends ServiceEntityRepository
                 }
             }
         }
-        if (3 == $supportDates || !$supportDates) {
+        if (!$supportDates || 3 == $supportDates) {
             if ($search->getStart()) {
                 $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
@@ -203,7 +209,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if ($search->getReferents() && $search->getServices()->count() > 0) {
+        if ($search->getServices() && $search->getServices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getServices() as $service) {
@@ -212,7 +218,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if ($search->getReferents() && $search->getDevices()->count() > 0) {
+        if ($search->getDevices() && $search->getDevices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getDevices() as $device) {

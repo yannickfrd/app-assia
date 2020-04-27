@@ -2,26 +2,22 @@ import Search from "./utils/search";
 import "./utils/maskPhone";
 import "select2";
 
-$("select.multi-select.js-referent").select2({
-    // theme: "bootstrap4",
-    placeholder: "  -- Référent --",
-});
+let select2Array = {
+    "typology": "Typologie familiale",
+    "status": "Statut",
+    "referent": "Référent",
+    "service": "Service",
+    "device": "Dispositif",
+}
 
-$("select.multi-select.js-service").select2({
-    // theme: "bootstrap4",
-    placeholder: "  -- Service --",
-});
+for (let i in select2Array) {
+    $("select.multi-select.js-" + i).select2({
+        // theme: 'bootstrap4',
+        placeholder: "  -- " + select2Array[i] + " --",
+    });
+}
 
-$("select.multi-select.js-device").select2({
-    // theme: "bootstrap4",
-    placeholder: "  -- Dispositif --",
-});
-
-$("select.multi-select.js-status").select2({
-    placeholder: "  -- Statut --",
-});
-
-let search = new Search("form-search");
+new Search("form-search");
 
 let headingSearchElt = document.getElementById("headingSearch");
 if (headingSearchElt) {
