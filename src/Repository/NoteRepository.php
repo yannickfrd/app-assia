@@ -65,11 +65,11 @@ class NoteRepository extends ServiceEntityRepository
 
         if ($search->getStart()) {
             $query->andWhere('n.createdAt >= :start')
-                ->setParameter('startDate', $search->getStart());
+                ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('n.createdAt <= :createdAt')
-                ->setParameter('createdAt', $search->getEnd());
+            $query->andWhere('n.createdAt <= :end')
+                ->setParameter('end', $search->getEnd());
         }
 
         if ($search->getReferents() && count($search->getReferents())) {

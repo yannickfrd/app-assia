@@ -7,9 +7,11 @@
 	<meta charset="utf-8" />
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
-		integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
+		integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
 	{{ encore_entry_link_tags("app") }}
+
+	
 	{% block stylesheets %}{% endblock %}
 	<link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
 	<meta property="og:title" content="AppE95" />
@@ -60,7 +62,7 @@
 							</a>
 							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
 								<a class="dropdown-item" href="{{ path("calendar") }}">Mon agenda</a>
-								<a class="dropdown-item" href="{{ path("rdvs", {'startDate': 'now'|date('Y-m-d') }) }}">Voir tous les rendez-vous</a>
+								<a class="dropdown-item" href="{{ path("rdvs", {'date[start]': 'now'|date('Y-m-d') }) }}">Voir tous les rendez-vous</a>
 							</div>
 						</li>
 						{% if is_granted("ROLE_SUPER_ADMIN") %}
@@ -160,7 +162,7 @@
 				<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
 				<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février 1979.</span>
 			</p>
-			<p>Version 1.2.1 - 27/04/2020</p>
+			<p>Version 1.2.2 - 27/04/2020</p>
 		</div>
 	</footer>
 

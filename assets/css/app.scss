@@ -11,15 +11,22 @@ body {
 }
 
 .min-vh-100 {
-    min-height: calc(100vh - 184px) !important;
+    min-height: calc(100vh - 180px) !important;
 }
 
 .min-vh-80 {
-    min-height: calc(100vh - 230px);
+    min-height: calc(100vh - 226px);
 }
 
 section {
     margin: 16px 0 24px 0;
+}
+
+.btn,
+.form-control,
+.dropdown-menu,
+.input-group-text {
+    font-size: $font-size-base;
 }
 
 .cursor-default {
@@ -465,13 +472,7 @@ button.btn-outline-secondary a:hover {
 @media (max-width: 1200px) {}
 
 // Large devices (desktops, 992px and up)
-@media (max-width: 992px) {
-
-    .form-group,
-    .form-control {
-        font-size: .95rem;
-    }
-}
+@media (max-width: 992px) {}
 
 // Medium devices (tablets, 768px and up)
 @media (max-width: 768px) {}

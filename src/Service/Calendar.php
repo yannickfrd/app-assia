@@ -100,6 +100,14 @@ class Calendar
     }
 
     /**
+     * Donne le mois et l'année en toute lettre.
+     */
+    public function getMonthMinToString(): string
+    {
+        return self::MONTHS_MIN[$this->month].' '.$this->year;
+    }
+
+    /**
      * Donne la liste des jours.
      */
     public function getDaysList(): array

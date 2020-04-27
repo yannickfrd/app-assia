@@ -12,32 +12,28 @@
 				{% set title = "Rendez-vous" %}
 				{% include "app/support/navSuppport.html.twig" %}
 			{% endif %}
-			<div class="d-flex flex-row align-items-center justify-content-between mx-2">
-				<div class="d-flex align-items-center mb-3">
-					<h2 class="h2 mr-3"><a class="far fa-list-alt mr-2 text-{{ theme_color }}" href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}" title="Passer en vue liste"></a>Agenda</h2>
-					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" title="Ajouter un rendez-vous">
-						<span class="far fa-calendar-plus"></span>
+			<div class="d-flex flex-row align-items-center justify-content-between mx-2 mb-2">
+				<div class="d-flex align-items-center">
+					<h2 class="h2 mr-3 mb-0"><a class="far fa-list-alt mr-2 text-{{ theme_color }}" 
+						href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}" 
+						title="Passer en vue liste"></a><span class="d-none d-sm-inline">Agenda</span></h2>
+					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-rdv" data-placement="bottom" 
+						title="Ajouter un rendez-vous"><span class="far fa-calendar-plus"></span>
 					</button>
 				</div>
-				<h3 class="h4 text-secondary">{{ calendar.getMonthToString }}</h3>
+				<h3 class="h4 text-secondary">{{ calendar.getMonthMinToString|capitalize }}</h3>
 				<div class="float-right">
-					{% if support is defined %}
-					<a href="{{ path('support_calendar', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
-					<a href="{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
-						<span class="fas fa-angle-left"></span>
+					<a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}" 
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel"><!--
+						--><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline  ml-2">Aujourd'hui</span></a>
+					<a href="{% if support is defined %}{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
+						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}" 
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
 					</a>
-					<a href="{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
-						<span class="fas fa-angle-right"></span>
+					<a href="{% if support is defined %}{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
+						{% else %}{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}{% endif %}" 
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
 					</a>
-					{% else %}
-					<a href="{{ path('calendar') }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois actuel">Aujourd'hui</a>
-					<a href="{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois précédent">
-						<span class="fas fa-angle-left"></span>
-					</a>
-					<a href="{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}" class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-placement="bottom" title="Mois suivant">
-						<span class="fas fa-angle-right"></span>
-					</a>
-					{% endif %}
 				</div>
 			</div>
 

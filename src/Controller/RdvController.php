@@ -42,11 +42,11 @@ class RdvController extends AbstractController
     public function viewListRdvs(Request $request, RdvSearch $search = null, Pagination $pagination): Response
     {
         $search = new RdvSearch();
-        // if ($this->getUser()->getStatus() == 1) {
-        //     $usersCollection = new ArrayCollection();
-        //     $usersCollection->add($this->getUser());
-        //     $search->setReferent($usersCollection);
-        // }
+        if ($this->getUser()->getStatus() == 1) {
+            $usersCollection = new ArrayCollection();
+            $usersCollection->add($this->getUser());
+            $search->setReferents($usersCollection);
+        }
 
         $form = ($this->createForm(RdvSearchType::class, $search))
             ->handleRequest($request);

@@ -27,6 +27,8 @@ $theme-colors: map-merge(( //
 
 $theme-colors: map-remove($theme-colors, "info");
 
+$font-size-base: .95rem;
+
 @import "../../node_modules/bootstrap/scss/root";
 @import "../../node_modules/bootstrap/scss/reboot";
 @import "../../node_modules/bootstrap/scss/type";
