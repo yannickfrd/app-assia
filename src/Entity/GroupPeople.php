@@ -21,8 +21,8 @@ class GroupPeople
     use SoftDeleteableEntity;
 
     public const FAMILY_TYPOLOGY = [
-        1 => 'Femme seule',
-        2 => 'Homme seul',
+        1 => 'Femme isolée',
+        2 => 'Homme isolé',
         3 => 'Couple sans enfant',
         4 => 'Femme seule avec enfant(s)',
         5 => 'Homme seul avec enfant(s)',
