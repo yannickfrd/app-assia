@@ -50,7 +50,7 @@ class SupportControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('search')->form([
             'fullname' => 'John Doe',
-            'familyTypology' => 1,
+            'familyTypologies' => [1],
             'date[start]' => '2018-01-01',
             'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);

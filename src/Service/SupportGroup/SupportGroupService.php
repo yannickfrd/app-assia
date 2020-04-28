@@ -32,7 +32,6 @@ class SupportGroupService
     {
         return  (new SupportGroup())
             ->setStatus(2)
-            ->setStartDate(new \DateTime())
             ->setReferent($user);
     }
 
@@ -67,9 +66,11 @@ class SupportGroupService
             ->setPerson($rolePerson->getPerson())
             ->setHead($rolePerson->getHead())
             ->setRole($rolePerson->getRole())
+            ->setStatus($supportGroup->getStatus())
             ->setStartDate($supportGroup->getStartDate())
             ->setEndDate($supportGroup->getEndDate())
-            ->setStatus($supportGroup->getStatus());
+            ->setEndStatus($supportGroup->getEndStatus())
+            ->setEndStatusComment($supportGroup->getEndStatusComment());
 
         $this->manager->persist($supportPerson);
 

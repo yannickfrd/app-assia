@@ -62,7 +62,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
         return (new SupportGroupSearch())
             ->setFullName('John Doe')
-            ->setFamilyTypology(1)
+            ->setFamilyTypologies([1])
             ->setStart(new \DateTime('2018-01-01'))
             ->setEnd(new \DateTime())
             ->setReferents($referents);

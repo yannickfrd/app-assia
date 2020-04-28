@@ -18,13 +18,13 @@ class Export
     ];
 
     /**
-     * @var int|null
+     * @var array
      */
-    private $familyTypology;
+    private $familyTypologies;
 
     /**
      * @var int|null
-     * @Assert\Range(min = 1, max = 9)
+     * @Assert\Range(min = 1, max = 19)
      */
     private $nbPeople;
 
@@ -73,14 +73,14 @@ class Export
      */
     private $evalJustice;
 
-    public function getFamilyTypology(): ?int
+    public function getFamilyTypologies(): ?array
     {
-        return $this->familyTypology;
+        return $this->familyTypologies;
     }
 
-    public function setFamilyTypology(int $familyTypology): self
+    public function setFamilyTypologies(?array $familyTypologies): self
     {
-        $this->familyTypology = $familyTypology;
+        $this->familyTypologies = $familyTypologies;
 
         return $this;
     }

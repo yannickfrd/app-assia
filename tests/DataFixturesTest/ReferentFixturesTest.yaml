@@ -1,4 +1,4 @@
-App\Entity\referent:
+App\Entity\Referent:
   referent1:
     name: Reférent 666
     type: <numberBetween(1, 12)>

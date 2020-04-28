@@ -6,17 +6,10 @@ import ValidationInput from "../utils/validationInput";
 export default class ValidationSupport {
 
     constructor() {
-        this.startDate = "support_startDate";
-        this.startDateInputElt = document.getElementById(this.startDate);
-        this.startDateLabelElt = document.querySelector("label[for=" + this.startDate + "]");
-
-        this.endDate = "support_endDate";
-        this.endDateInputElt = document.getElementById(this.endDate);
-        this.endDateLabelElt = document.querySelector("label[for=" + this.endDate + "]");
-
-        this.status = "support_status";
-        this.statusSelectElt = document.getElementById(this.status);
-        this.statusLabelElt = document.querySelector("label[for=" + this.status + "]");
+        this.statusSelectElt = document.getElementById("support_status");
+        this.startDateInputElt = document.getElementById("support_startDate");
+        this.endDateInputElt = document.getElementById("support_endDate");
+        this.endStatusInputElt = document.getElementById("support_endStatus");
 
         this.now = new Date();
         this.validationInput = new ValidationInput();
@@ -24,27 +17,37 @@ export default class ValidationSupport {
     }
 
     init() {
-        if (!this.endDateInputElt) {
-            this.startDateInputElt.value = this.getDateNow();
-            this.setOption(this.statusSelectElt, 2);
-        }
-
+        this.statusSelectElt.addEventListener("change", this.checkStatus.bind(this));
         this.startDateInputElt.addEventListener("focusout", this.checkStartDate.bind(this));
         if (this.endDateInputElt) {
             this.endDateInputElt.addEventListener("focusout", this.checkEndDate.bind(this));
+            this.endStatusInputElt.addEventListener("change", this.checkEndStatus.bind(this));
         }
-        this.statusSelectElt.addEventListener("change", this.checkStatus.bind(this));
 
         document.getElementById("send").addEventListener("click", e => {
+            this.checkStatus();
+            this.checkStartDate();
+            this.checkEndDate();
+            this.checkEndStatus();
+
             if (this.getNbErrors()) {
                 e.preventDefault(), {
                     once: true
                 };
-                new MessageFlash("danger", "Veuillez corriger les erreurs avant d'enregistrer.");
+                new MessageFlash("danger", "Veuillez corriger les erreurs indiquées avant d'enregistrer.");
             }
         });
 
         new DisplayInputs("support_", "status", "select", [4]);
+    }
+
+    checkStatus() {
+        let statusValue = this.getOption(this.statusSelectElt);
+
+        if (statusValue >= 1 && statusValue <= 6) {
+            return this.validationInput.valid(this.statusSelectElt);
+        }
+        return this.validationInput.invalid(this.statusSelectElt, "Le statut doit être renseigné.");
     }
 
     checkStartDate() {
@@ -58,13 +61,17 @@ export default class ValidationSupport {
             return this.validationInput.invalid(this.startDateInputElt, "Le début du suivi ne peut pas être supérieur de 30 jours par rapport à la date du jour.");
         }
         if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) {
-            return this.validationInput.invalid(this.startDateInputElt, "Le date de début ne peut pas être vide");
+            return this.validationInput.invalid(this.startDateInputElt, "La date de début ne peut pas être vide.");
+        }
+        if (intervalWithNow && [1, 5].indexOf(status) != -1) {
+            return this.validationInput.invalid(this.startDateInputElt, "Il ne peut pas y avoir de date début de suivi pour une pré-admission.");
         }
         if (intervalWithNow || (!intervalWithNow && status === 1)) {
             return this.validationInput.valid(this.startDateInputElt);
         }
         return this.validationInput.valid(this.startDateInputElt);
     }
+
     checkEndDate() {
         let startDate = new Date(this.startDateInputElt.value);
         let endDate = new Date(this.endDateInputElt.value);
@@ -74,14 +81,13 @@ export default class ValidationSupport {
         if ((this.endDateInputElt.value && !Number.isInteger(intervalWithNow)) || intervalWithNow > (365 * 9)) {
             return this.validationInput.invalid(this.endDateInputElt, "La date est invalide.");
         }
-
         if (intervalWithStart < 0) {
             return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut pas être antérieure au début du suivi.");
         }
         if (intervalWithNow < 0) {
             return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut être postérieur à la date du jour.");
         }
-        if (!this.endDateInputElt.value && this.getOption(this.statusSelectElt) == 4) {
+        if (!this.endDateInputElt.value && this.getOption(this.statusSelectElt) === 4) { // statut égal à Terminé
             return this.validationInput.invalid(this.endDateInputElt, "La date de fin ne peut pas être vide si le suivi est terminé.");
         }
         if (this.endDateInputElt.value) {
@@ -91,13 +97,12 @@ export default class ValidationSupport {
         return this.validationInput.valid(this.endDateInputElt);
     }
 
-    checkStatus() {
-        let statusValue = this.getOption(this.statusSelectElt);
-
-        if (statusValue >= 1 && statusValue <= 5) {
-            return this.validationInput.valid(this.statusSelectElt);
+    checkEndStatus() {
+        if (!this.endStatusInputElt.value && this.getOption(this.statusSelectElt) === 4) { // statut égal à Terminé
+            return this.validationInput.invalid(this.endStatusInputElt, "La situation à la fin du suivi ne peut pas être vide.");
         }
-        return this.validationInput.invalid(this.statusSelectElt, "Le statut doit être renseigné.");
+        return this.validationInput.valid(this.endStatusInputElt);
+
     }
 
     getOption(selectElt) {

@@ -49,7 +49,7 @@ class SupportPerson
     private $headToString;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @Assert\NotNull(message="La date de début ne doit pas être vide.")
      * @Groups("export")
      */

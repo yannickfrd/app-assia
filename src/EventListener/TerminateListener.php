@@ -98,7 +98,7 @@ class TerminateListener
             return;
         }
 
-        $evaluationGroup = $request->request->get('evaluation_group');
+        $evaluationGroup = $request->request->get('evaluation');
 
         if ($evaluationGroup) {
             $entityManager = $this->container->get('doctrine')->getManager();
@@ -120,7 +120,7 @@ class TerminateListener
                 [
                     'supportId' => $supportId,
                     'fullnamePerson' => $fullnamePerson,
-                    'evaluation_group' => $evaluationGroup,
+                    'evaluation' => $evaluationGroup,
                 ]
             );
 

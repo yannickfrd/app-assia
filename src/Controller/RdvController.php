@@ -54,7 +54,7 @@ class RdvController extends AbstractController
         return $this->render('app/rdv/listRdvs.html.twig', [
             'rdvSearch' => $search,
             'form' => $form->createView(),
-            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search), $request) ?? null,
+            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search), $request, 10) ?? null,
         ]);
     }
 

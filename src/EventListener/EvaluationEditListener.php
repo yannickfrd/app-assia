@@ -39,7 +39,7 @@ class EvaluationEditListener
             [
                 'supportId' => $supportGroup->getId(),
                 'fullnamePerson' => $fullnamePerson,
-                'evaluation_group' => $event->getEvaluationGroup(),
+                'evaluation' => $event->getEvaluationGroup(),
                 ]
             );
 

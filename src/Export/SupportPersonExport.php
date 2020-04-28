@@ -60,6 +60,10 @@ class SupportPersonExport
         }
 
         return [
+            'N° Groupe' => $groupPeople->getId(),
+            'N° Suivi groupe' => $supportGroup->getId(),
+            'N° Personne' => $person->getId(),
+            'N° Suivi personne' => $supportPerson->getId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
@@ -67,6 +71,11 @@ class SupportPersonExport
             'Nb de personnes' => $groupPeople->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHead() ? 'Oui' : 'Non',
+            // 'Statut (groupe)' => $supportGroup->getStatusToString(),
+            // 'Date début suivi (groupe)' => $this->formatDate($supportGroup->getStartDate()),
+            // 'Date fin suivi (groupe)' => $this->formatDate($supportGroup->getEndDate()),
+            // 'Situation à la fin (groupe)' => $supportGroup->getEndStatus() ? $supportGroup->getEndStatusToString() : null,
+            // 'Commentaire situation à la fin (groupe)' => $supportGroup->getEndStatusComment(),
             'Statut' => $supportPerson->getStatusToString(),
             'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
             'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
@@ -81,10 +90,6 @@ class SupportPersonExport
             'Adresse' => join(', ', $addressAccommodations),
             'Ville' => join(', ', $cityAccommodations),
             'Département' => join(', ', $zipcodeAccommodations),
-            'N° Groupe' => $groupPeople->getId(),
-            'N° Suivi groupe' => $supportGroup->getId(),
-            'N° Personne' => $person->getId(),
-            'N° Suivi personne' => $supportPerson->getId(),
         ];
     }
 

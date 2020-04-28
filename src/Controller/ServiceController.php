@@ -103,10 +103,18 @@ class ServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
+        $accommodations = $repoAccommodation->findAccommodationsFromService($service);
+
+        $nbPlaces = 0;
+        foreach ($accommodations as $accommodation) {
+            $nbPlaces += $accommodation->getPlacesNumber();
+        }
+
         return $this->render('app/service/service.html.twig', [
             'form' => $form->createView(),
             'users' => $repoUser->findUsersFromService($service),
-            'accommodations' => $repoAccommodation->findAccommodationsFromService($service),
+            'accommodations' => $accommodations,
+            'nbPlaces' => $nbPlaces,
         ]);
     }
 

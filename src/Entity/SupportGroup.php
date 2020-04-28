@@ -21,11 +21,12 @@ class SupportGroup
     use SoftDeleteableEntity;
 
     public const STATUS = [
-        1 => 'Orientation / Pré-admission',
         2 => 'En cours',
         3 => 'Suspendu',
         4 => 'Terminé',
-        5 => 'Autre',
+        1 => 'Orientation/pré-admission en cours',
+        5 => 'Orientation/pré-admission non aboutie',
+        6 => 'Autre',
     ];
 
     public const END_STATUS = [

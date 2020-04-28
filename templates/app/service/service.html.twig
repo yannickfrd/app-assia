@@ -154,6 +154,8 @@
     {% if service.accommodation %}
     <section>
         <h2 class="h4 my-4">Groupes de places rattachés</h2>
+        <p class="align-middle">{{ accommodations|length }} groupe{% if accommodations|length > 0 %}s{% endif %}<!--
+            --> ({{ nbPlaces }} places).</p>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
@@ -207,6 +209,7 @@
 
     <section>
         <h2 class="h4 my-4">Utilisateurs rattachés</h2>
+            <p class="align-middle">{{ users|length }} utilisateur{% if users|length > 0 %}s{% endif %}.</p>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>

@@ -35,6 +35,7 @@ class AccommodationType extends AbstractType
             'attr' => [
                 'placeholder' => 'Nom du groupe de places',
             ],
+            'help' => 'Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).',
         ])
         ->add('service', EntityType::class, [
             'class' => Service::class,
