@@ -44,6 +44,9 @@ class SupportPersonExport
         $supportGroup = $supportPerson->getSupportGroup();
         $groupPeople = $supportGroup->getGroupPeople();
 
+        $startAccommodations = [];
+        $endAccommodations = [];
+        $endReasonAccommodations = [];
         $nameAccommodations = [];
         $addressAccommodations = [];
         $cityAccommodations = [];
@@ -51,9 +54,12 @@ class SupportPersonExport
 
         $accommodationPeople = $person->getAccommodationPeople();
         foreach ($accommodationPeople as $accommodationPerson) {
+            $startAccommodations[] = $this->formatDate($accommodationPerson->getStartDate());
+            $endAccommodations[] = $this->formatDate($accommodationPerson->getEndDate());
+            $accommodationPerson->getEndReason() ? $endReasonAccommodations[] = $accommodationPerson->getEndReasonToString() : null;
             /** @var Accommodation */
             $accommodation = $accommodationPerson->getAccommodationGroup()->getAccommodation();
-            $nameAccommodations[] = $accommodation->getName();
+            $nameAccommodations[] = $accommodation->getName().' ';
             $addressAccommodations[] = $accommodation->getAddress();
             $cityAccommodations[] = $accommodation->getCity();
             $zipcodeAccommodations[] = $accommodation->getZipcode();
@@ -86,6 +92,9 @@ class SupportPersonExport
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Service' => $supportGroup->getService()->getName(),
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
+            'Date début hébergement' => join(', ', $startAccommodations),
+            'Date fin hébergement' => join(', ', $endAccommodations),
+            'Motif fin hébergement' => join(', ', $endReasonAccommodations),
             'Nom du logement/ hébergement' => join(', ', $nameAccommodations),
             'Adresse' => join(', ', $addressAccommodations),
             'Ville' => join(', ', $cityAccommodations),

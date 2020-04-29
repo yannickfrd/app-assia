@@ -63,11 +63,9 @@
 								<a class="dropdown-item" href="{{ path("rdvs", {'date[start]': 'now'|date('Y-m-d') }) }}">Voir tous les rendez-vous</a>
 							</div>
 						</li>
-						{% if is_granted("ROLE_SUPER_ADMIN") %}
 						<li class="nav-item">
 							<a class="nav-link text-light" href="{{ path("notes") }}">Notes</a>
 						</li>
-						{% endif %}
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Répertoire
