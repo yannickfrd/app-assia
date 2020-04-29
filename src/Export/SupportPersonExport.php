@@ -56,7 +56,7 @@ class SupportPersonExport
         foreach ($accommodationPeople as $accommodationPerson) {
             $startAccommodations[] = $this->formatDate($accommodationPerson->getStartDate());
             $endAccommodations[] = $this->formatDate($accommodationPerson->getEndDate());
-            $accommodationPerson->getEndReason() ? $endReasonAccommodations[] = $accommodationPerson->getEndReasonToString() : null;
+            $endReasonAccommodations[] = $accommodationPerson->getEndReasonToString();
             /** @var Accommodation */
             $accommodation = $accommodationPerson->getAccommodationGroup()->getAccommodation();
             $nameAccommodations[] = $accommodation->getName().' ';
@@ -85,7 +85,7 @@ class SupportPersonExport
             'Statut' => $supportPerson->getStatusToString(),
             'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
             'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
-            'Situation à la fin' => $supportPerson->getEndStatus() ? $supportPerson->getEndStatusToString() : null,
+            'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
             'Référent social' => $supportGroup->getReferent()->getFullname(),
             'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,

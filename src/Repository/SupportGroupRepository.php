@@ -54,8 +54,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addselect('PARTIAL ref2.{id, firstname, lastname}')
-
-            ->leftJoin('sg.accommodationGroups', 'ag')->addselect('PARTIAL ag.{id}')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addselect('PARTIAL ag.{id, startDate, endDate, endReason}')
+            ->leftJoin('ag.accommodationPeople', 'ap')->addselect('PARTIAL ap.{id, startDate, endDate, endReason}')
             ->leftJoin('sg.evaluationsGroup', 'eg')->addselect('PARTIAL eg.{id}')
             ->leftJoin('eg.evalHousingGroup', 'ehg')->addselect('PARTIAL ehg.{id, housingStatus, housingAddress, housingCity, housingDept, domiciliation, domiciliationAddress, domiciliationCity, domiciliationDept}')
             ->leftJoin('sg.rdvs', 'rdvs')->addselect('PARTIAL rdvs.{id}')

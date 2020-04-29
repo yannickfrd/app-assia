@@ -122,7 +122,7 @@ class AccommodationGroup
      */
     public function getEndReasonToString(): ?string
     {
-        return self::END_REASON[$this->endReason];
+        return $this->endReason ? self::END_REASON[$this->endReason] : null;
     }
 
     public function setEndReason(?int $endReason): self

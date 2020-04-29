@@ -88,6 +88,9 @@ class SupportGroup
      */
     private $endDate;
 
+    /** @var bool */
+    private $endAccommodation = true;
+
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotNull(message="Le statut doit être renseigné.")
@@ -244,6 +247,18 @@ class SupportGroup
         if ($endDate) {
             $this->endDate = $endDate;
         }
+
+        return $this;
+    }
+
+    public function getEndAccommodation(): ?bool
+    {
+        return $this->endAccommodation;
+    }
+
+    public function setEndAccommodation(?bool $endAccommodation): self
+    {
+        $this->endAccommodation = $endAccommodation;
 
         return $this;
     }

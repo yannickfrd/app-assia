@@ -39,7 +39,10 @@ class AccommodationGroupController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $accommodationGroups = $this->repo->findBy(['supportGroup' => $supportGroup]);
+        $accommodationGroups = $this->repo->findBy(
+            ['supportGroup' => $supportGroup],
+            ['startDate' => 'DESC']
+        );
 
         return $this->render('app/accommodation/listAccommodationsGroup.html.twig', [
             'support' => $supportGroup,

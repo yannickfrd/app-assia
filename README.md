@@ -22,8 +22,11 @@ https://demo.esperer95.app
 - Dans la fiche du service, indique le nombre d'utilisateurs et le nombre de groupes de places (+ nombre de places).
 - Modification des contrôles de saisie dans la fiche du suivi afin d'éviter les incohérences (date de fin sans motif et inversement, statut 'pré-admission' avec une date de début de suivi, etc.)
 - Fiche de suivi : dans la liste déroulante du suivi, modification de "Orientation/Pré-admission" en "Orientation/pré-admission en cours" + ajout "Orientation/pré-admission non aboutie".
+- Ajout d'une cache à cocher 'Mettre fin automatiquement à l'hébergement' dans le formulaire du suivi.
+- Possibilité de mettre à jour automatique les dates de fin d'hébergement dans le cas d'une fin de suivi.
 - Liste des suivis : ajout filtre à choix multiple pour la typologie familiale des suivis.
 - Export des suivis : ajout des dates de début et de fin d'hébergement, ainsi que le motif de fin de prise en charge.
+- Liste des hébergements du suivs : ajout du motif de fin d'hébergement.
 - Modification de l'affichage du calendrier mensuelle (notamment sur smartphone).
 - Corrections diverses d'affichage.
 

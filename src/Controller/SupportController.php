@@ -118,20 +118,11 @@ class SupportController extends AbstractController
 
             $this->manager->flush();
 
-            $this->addFlash('success', 'Le suivi social est modifié.');
+            $this->addFlash('success', 'Le suivi social est mis à jour.');
         }
 
         if (!$form->isSubmitted()) {
-            if ($supportGroup->getService()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
-                $this->addFlash('warning', 'Attention, aucun hébergement enregistré pour ce suivi.');
-            }
-            $nbSupportPeople = $supportGroup->getSupportPeople()->count();
-            $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
-            if ($nbSupportPeople != $nbPeople) {
-                $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
-                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes). 
-                Allez dans l\'onglet [Personnes] ci-dessous pour ajouter les personnes au suivi.');
-            }
+            $this->checkSupportGroup($supportGroup);
         }
 
         return $this->render('app/support/supportGroup.html.twig', [
@@ -249,6 +240,43 @@ class SupportController extends AbstractController
         return $this->render('app/export/export.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Vérifie la cohérence des données du suivi social.
+     *
+     * @param SupportGroup $supportGroup
+     *
+     * @return void
+     */
+    protected function checkSupportGroup(SupportGroup $supportGroup)
+    {
+        // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
+        $nbSupportPeople = $supportGroup->getSupportPeople()->count();
+        $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
+        if ($nbSupportPeople != $nbPeople) {
+            $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
+                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes). 
+                Allez dans l\'onglet [Personnes] ci-dessous pour ajouter les personnes au suivi.');
+        }
+
+        // Vérifie qu'il y a un hébergement créé
+        if ($supportGroup->getService()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
+            $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
+        } else {
+            // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
+            $nbAccommodationPeople = 0;
+            foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
+                if (null == $accommodationGroup->getEndDate()) {
+                    $nbAccommodationPeople += $accommodationGroup->getAccommodationPeople()->count();
+                }
+            }
+            if ($supportGroup->getService()->getAccommodation() && $nbSupportPeople != $nbAccommodationPeople) {
+                $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
+                    ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.') .
+                    Allez dans l\'onglet [Hébergement] ci-dessous pour ajouter les personnes à l\'hébergement.');
+            }
+        }
     }
 
     /**

@@ -94,6 +94,19 @@ class SupportGroupService
                 $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
             }
         }
+
+        if (4 == $supportGroup->getStatus() && $supportGroup->getEndAccommodation()) {
+            foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
+                if (!$accommodationGroup->getEndDate()) {
+                    $accommodationGroup->getEndDate() == null ? $accommodationGroup->setEndDate($supportGroup->getEndDate()) : null;
+                    $accommodationGroup->getEndReason() == null ? $accommodationGroup->setEndReason(1) : null;
+                    foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
+                        $accommodationPerson->getEndDate() == null ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
+                        $accommodationPerson->getEndReason() == null ? $accommodationPerson->setEndReason(1) : null;
+                    }
+                }
+            }
+        }
     }
 
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo)

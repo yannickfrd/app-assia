@@ -94,7 +94,7 @@ class AccommodationPerson
      */
     public function getEndReasonToString(): ?string
     {
-        return AccommodationGroup::END_REASON[$this->endReason];
+        return $this->endReason ? AccommodationGroup::END_REASON[$this->endReason] : null;
     }
 
     public function setEndReason(?int $endReason): self

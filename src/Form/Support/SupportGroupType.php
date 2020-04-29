@@ -83,6 +83,16 @@ class SupportGroupType extends AbstractType
                 'placeholder' => '-- Select --',
                 'required' => false,
             ])
+            ->add('endAccommodation', CheckboxType::class, [
+                'label_attr' => [
+                    'class' => 'custom-control-label',
+                ],
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
+                ],
+                'required' => false,
+                'help' => 'endAccommodation.help',
+            ])
             ->add('endStatusComment')
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
@@ -96,7 +106,7 @@ class SupportGroupType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Write a comment about the social support',
+                    'placeholder' => 'comment.placeholder',
                 ],
             ]);
     }
@@ -106,6 +116,7 @@ class SupportGroupType extends AbstractType
         $resolver->setDefaults([
             'data_class' => SupportGroup::class,
             'translation_domain' => 'forms',
+            'allow_extra_fields' => true,
         ]);
     }
 

@@ -1,8 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}
-Logement/hébergement | {{ title_website }}
-{% endblock %}
+{% block title %}Logement/hébergement | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -17,7 +15,7 @@ Logement/hébergement | {{ title_website }}
 		{% if support_group_accommodations|length == 0 %}
 			<p>Aucun hébergement.</p>
 		{% else %}
-			<div class="table-responsive">
+			<div class="table-responsive mb-5">
 				<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
 					<thead>
 						<tr>
@@ -26,37 +24,36 @@ Logement/hébergement | {{ title_website }}
 							<th scope="col" class="align-middle th-w-100">Dispositif</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
 							<th scope="col" class="align-middle th-date">Date de fin</th>
+							<th scope="col" class="align-middle th-w-100">Motif de fin</th>
 							<th scope="col" class="align-middle th-w-120">Nb de personnes prises en charge</th>
-							<th scope="col" class="align-middle th-w-100">Ville</th>
-							<th scope="col" class="align-middle th-w-150">Adresse</th>
+							<th scope="col" class="align-middle th-w-180">Adresse</th>
 							<th scope="col" class="align-middle th-w-20"></th>
 						</tr>
 					</thead>
 
 					<tbody id="container-accommodationGroups" data-support="{{ support.id }}">
-						{% for support_group_accommodation in support_group_accommodations %}
-							<tr id="accommodationGroup-{{ support_group_accommodation.id }}">
+						{% for accommodationGroup in support_group_accommodations %}
+							<tr id="accommodationGroup-{{ accommodationGroup.id }}">
 								<th scope="row" class="align-middle text-center">
-									<a href="{{ path('support_accommodation_edit', {'id': support_group_accommodation.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom" title="Voir le détail de l'hébergement">
-										<span class="fas fa-eye"></span>
+									<a href="{{ path('support_accommodation_edit', {'id': accommodationGroup.id}) }}" 
+										class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom" 
+										title="Voir le détail de l'hébergement"><span class="fas fa-eye"></span>
 									</a>
 								</th>
-								<td>{{ support_group_accommodation.accommodation.name }}</td>
-								<td>{{ support_group_accommodation.accommodation.device.name }}</td>
-								<td>{{ support_group_accommodation.startDate | date("d/m/Y") }}</td>
-								<td>
-									{% if support_group_accommodation.endDate %}
-										{{ support_group_accommodation.endDate | date("d/m/Y") }}
-									{% endif %}
+								<td>{{ accommodationGroup.accommodation.name }}</td>
+								<td>{{ accommodationGroup.accommodation.device.name }}</td>
+								<td>{{ accommodationGroup.startDate | date("d/m/Y") }}</td>
+								<td>{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate | date("d/m/Y") }}{% endif %}</td>
+								<td>{{ accommodationGroup.endReasonToString }}</td>
+								<td>{{ accommodationGroup.accommodationPeople|length }}</td>
+								<td>{{ accommodationGroup.accommodation.address }}<br>
+									{{ accommodationGroup.accommodation.zipCode }} {{ accommodationGroup.accommodation.city }}
 								</td>
-								<td>{{ support_group_accommodation.accommodationPeople|length }}</td>
-								<td>{{ support_group_accommodation.accommodation.city }}</td>
-								<td>{{ support_group_accommodation.accommodation.address }}</td>
 								<td class="align-middle text-center">
-									<a href="{{ path('support_group_people_accommodation_delete', {'id':support_group_accommodation.id}) }}" 
+									<a href="{{ path('support_group_people_accommodation_delete', {'id':accommodationGroup.id}) }}" 
 										class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" 
-										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
-										<span class="fas fa-trash-alt"></span>
+										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?'))
+										{return true;}else{return false;}"><span class="fas fa-trash-alt"></span>
 									</a>
 								</td>
 							</tr>

@@ -12,6 +12,8 @@ Email: Adresse email
 Email1: Adresse email 1
 Email2: Adresse email 2
 End: Fin
+End accommodation: Mettre fin également à l'hébergement
+endAccommodation.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
 End date: Date de fin
 End status: Situation résidentielle à la fin
 End status comment: Précision sur la situation à la fin
@@ -50,7 +52,7 @@ Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Ecrire une note
 Write a comment about the group: Ecrire un commentaire sur le groupe
 Write a comment about the person: Ecrire un commentaire sur la personne
-Write a comment about the social support: Ecrire un commentaire sur le suivi social
+comment.placeholder: Ecrire un commentaire sur le suivi social
 Write a comment about the service: Ecrire un commentaire sur le service
 Zipcode: Code postal
 -- Family Typology --: -- Typologie familiale --
@@ -68,7 +70,7 @@ Enabled: Actif
 File: Fichier
 File name: Nom du fichier
 Add a comment: Ajouter une description
-Thank to upload a valid file (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip): Merci de télécharger un fichier au format valide (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip)
+Thank to upload a valid file (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip): Merci de télécharger un fichier au format valide (doc, docx, jpg, pdf, png, rar, xls, xlsx, zip)
 
 Agreement: Consentement de la personne
 
