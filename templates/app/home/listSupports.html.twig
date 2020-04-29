@@ -43,11 +43,10 @@
                         {% if support.supportPeople|length > 1 %}{{ support.supportPeople|length }} personnes{% endif %}
                     </td>
                     <td class="align-middle">
-                        {{ support.service.name }}<br />
-                        {% if support.device %}({{ support.device.name }}){% endif %}                    
+                        {{ support.service.name }}<br />{% if support.device %}({{ support.device.name }}){% endif %}                    
                     </td>
                     <td class="align-middle">{{ support.statusToString }}</td>
-                    <td class="align-middle">{{ support.startDate| date("d/m/Y") }}</td>
+                    <td class="align-middle">{% if support.startDate %}{{ support.startDate| date("d/m/Y") }}{% endif %}
                     <td class="align-middle">{% if support.endDate %}{{ support.endDate| date("d/m/Y") }}{% endif %}
                     </td>
                 </tr>

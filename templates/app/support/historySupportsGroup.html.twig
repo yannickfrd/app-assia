@@ -56,10 +56,8 @@
                         {% endif %} #}
                     </th>
                     <td class="align-middle">{{ support.statusToString }}</td>
-                    <td class="align-middle">{{ support.startDate | date("d/m/Y") }}</td>
-                    <td class="align-middle">
-                        {% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}
-                    </td>
+                    <td class="align-middle">{% if support.startDate %}{{ support.startDate | date("d/m/Y") }}{% endif %}</td>
+                    <td class="align-middle">{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}</td>
                     <td class="align-middle">
                         {% if support.referent %}
                         <a href="mailto:{{ support.referent.email }}" class="text-{{ theme_color }}"
@@ -75,9 +73,7 @@
                             {% if support.device %} ({{ support.device.name }}){% endif %}
                         {% endif %}
                     </td>
-                    <td class="align-middle">
-                        {% if support.service %}{{ support.service.pole.name }}{% endif %}
-                    </td>
+                    <td class="align-middle">{% if support.service %}{{ support.service.pole.name }}{% endif %}</td>
                 </tr>
                 {# {% endcache %} #}
                 {% endfor %}
