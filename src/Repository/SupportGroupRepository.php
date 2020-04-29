@@ -9,7 +9,6 @@ use Doctrine\ORM\QueryBuilder;
 use App\Security\CurrentUserService;
 use App\Form\Model\SupportGroupSearch;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -236,7 +235,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findAllSupportsFromUser(User $user, $maxResults = null)
     {
-        $query = $this->createQueryBuilder('sg')->select('sg')
+        return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 'sv')->addselect('PARTIAL sv.{id, name}')
             ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
@@ -245,16 +244,14 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->andWhere('sg.referent = :referent')
             ->setParameter('referent', $user)
-            ->andWhere('sg.status <= 2')
-            ->andWhere('sp.role != 3')
+            ->andWhere('sg.status = 2')
 
             ->orderBy('p.lastname', 'ASC')
 
             ->setMaxResults($maxResults)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
-        return new Paginator($query);
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 
     public function countAllSupports(array $criteria = null)

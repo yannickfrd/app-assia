@@ -39,8 +39,12 @@
                         {% for supportPerson in support.supportPeople|filter(a => a.role != 3) %}
                         {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
-                    <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<br />
-                        {% if support.supportPeople|length > 1 %}{{ support.supportPeople|length }} personnes{% endif %}
+                    <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
+                        {% set nbSupportPeople = support.supportPeople|length %}
+                        {% if nbSupportPeople > 1 %} | {{ nbSupportPeople }} pers.{% endif %}
+                        {% if nbSupportPeople != support.groupPeople.nbPeople %}
+                        <span class="badge badge-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale.">Diff.</span>
+                        {% endif %}
                     </td>
                     <td class="align-middle">
                         {{ support.service.name }}<br />{% if support.device %}({{ support.device.name }}){% endif %}                    

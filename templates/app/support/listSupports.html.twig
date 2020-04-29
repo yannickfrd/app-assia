@@ -81,9 +81,12 @@
                             {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />
                             {% endfor %}
                         </td>
-                        <td class="align-middle">
-                            {{ support.groupPeople.familyTypologyToString }}
-                            {% if support.supportPeople|length > 1 %} | {{ support.supportPeople|length }} pers.{% endif %}
+                        <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
+                            {% set nbSupportPeople = support.supportPeople|length %}
+                            {% if nbSupportPeople > 1 %} | {{ nbSupportPeople }} pers.{% endif %}
+                            {% if nbSupportPeople != support.groupPeople.nbPeople %}
+                            <span class="badge badge-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale.">Diff.</span>
+                            {% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>
                         <td class="align-middle">{% if support.startDate %}{{ support.startDate | date("d/m/Y") }}{% endif %}</td>
