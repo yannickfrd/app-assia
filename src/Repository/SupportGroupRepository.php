@@ -2,14 +2,15 @@
 
 namespace App\Repository;
 
-use App\Entity\SupportGroup;
 use App\Entity\User;
-use App\Form\Model\SupportGroupSearch;
-use App\Security\CurrentUserService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use App\Entity\SupportGroup;
 use Doctrine\ORM\QueryBuilder;
+use App\Security\CurrentUserService;
+use App\Form\Model\SupportGroupSearch;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method SupportGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -235,7 +236,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findAllSupportsFromUser(User $user, $maxResults = null)
     {
-        return $this->createQueryBuilder('sg')->select('sg')
+        $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 'sv')->addselect('PARTIAL sv.{id, name}')
             ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
             ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
@@ -251,9 +252,9 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->setMaxResults($maxResults)
 
-            ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+        return new Paginator($query);
     }
 
     public function countAllSupports(array $criteria = null)

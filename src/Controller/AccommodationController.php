@@ -8,6 +8,7 @@ use App\Export\AccommodationExport;
 use App\Form\Accommodation\AccommodationSearchType;
 use App\Form\Accommodation\AccommodationType;
 use App\Form\Model\AccommodationSearch;
+use App\Repository\AccommodationGroupRepository;
 use App\Repository\AccommodationRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,7 +90,7 @@ class AccommodationController extends AbstractController
      * @Route("/accommodation/{id}", name="accommodation_edit", methods="GET|POST")
      * @IsGranted("VIEW", subject="accommodation")
      */
-    public function editAccommodation(Accommodation $accommodation, Request $request): Response
+    public function editAccommodation(Accommodation $accommodation, Request $request, AccommodationGroupRepository $repo): Response
     {
         $form = ($this->createForm(AccommodationType::class, $accommodation))
             ->handleRequest($request);
@@ -106,6 +107,7 @@ class AccommodationController extends AbstractController
 
         return $this->render('app/accommodation/accommodation.html.twig', [
             'form' => $form->createView(),
+            'accommodations_group' => $repo->findAllFromAccommodation($accommodation),
         ]);
     }
 

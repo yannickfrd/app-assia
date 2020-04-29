@@ -57,9 +57,6 @@
                             {{ knp_pagination_sortable(accommodations, "Département", "a.zipcode") }}
                         </th>
                         <th scope="col" class="align-middle th-w-150">Occupation actuelle (Nb de personnes)</th>
-                        {# <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(accommodations, "Nom des occupants", "a.accommodationPeople") }}
-                        </th> #}
                     </tr>
                 </thead>
 
@@ -69,12 +66,11 @@
                         <th scope="row">
                             <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir le groupe de places">
-                                <span class="fas fa-eye"></span>
+                                title="Voir le groupe de places"><span class="fas fa-eye"></span>
                             </a>
                         </th>
                         <td>{{ accommodation.name }}</td>
-                        <td>{{ accommodation.service.name }}</td>
+                        <td><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
                         <td>{{ accommodation.device.name }}</td>
                         <td>{{ accommodation.placesNumber }}</td>
                         <td>{{ accommodation.openingDate | date("d/m/Y") }}</td>
@@ -82,18 +78,16 @@
                         <td>{{ accommodation.address }}</td>
                         <td>{{ accommodation.city }}</td>
                         <td>{{ accommodation.zipcode }}</td>
-                        <td>
-                            {% for  accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
-                            {{ accommodationGroup.accommodationPeople|length }}<br />
+                        <td>{% set nbPeople = 0 %}
+                            {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
+                            {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
+                            {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
+                            {% set nbPeople = nbPeople + nbAccommodationPeople %}
                             {% endfor %}
+                            {% if accommodation.placesNumber != nbPeople %}
+                            <span class="badge badge-warning" title="Le nombre de personnes ne correspond pas au nombre de places">diff.</span>
+                            {% endif %}
                         </td>
-                        {# <td>
-                            {% for  accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
-                            {% for  accommodationPerson in accommodationGroup.accommodationPeople %}
-                            {{ accommodationPerson.person.fullname }}<br />
-                            {% endfor %}
-                            {% endfor %}
-                        </td> #}
                     </tr>
                     {% endfor %}
                 </tbody>

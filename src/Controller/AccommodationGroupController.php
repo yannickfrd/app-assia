@@ -7,7 +7,6 @@ use App\Entity\AccommodationPerson;
 use App\Entity\SupportGroup;
 use App\Form\Accommodation\AccommodationGroupType;
 use App\Repository\AccommodationGroupRepository;
-use App\Repository\AccommodationPersonRepository;
 use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -151,7 +150,7 @@ class AccommodationGroupController extends AbstractController
         $this->manager->remove($accommodationGroup);
         $this->manager->flush();
 
-        $this->addFlash('warning', 'La prise en charge est supprimé.');
+        $this->addFlash('warning', 'La prise en charge est supprimée.');
 
         return $this->redirectToRoute('support_accommodations', ['id' => $supportGroup->getId()]);
     }
@@ -161,7 +160,7 @@ class AccommodationGroupController extends AbstractController
      *
      * @Route("support/person-accommodation/{id}/delete", name="support_person_accommodation_delete", methods="GET")
      */
-    public function deleteAccommodationPerson(AccommodationPerson $accommodationPerson, AccommodationPersonRepository $repo): Response
+    public function deleteAccommodationPerson(AccommodationPerson $accommodationPerson): Response
     {
         $this->denyAccessUnlessGranted('DELETE', $accommodationPerson->getAccommodationGroup()->getSupportGroup());
 

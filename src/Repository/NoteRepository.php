@@ -130,7 +130,7 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     *  Donne toutes les notes créées par l'utilisateun.
+     *  Donne toutes les notes créées par l'utilisateur.
      *
      * @return mixed
      */

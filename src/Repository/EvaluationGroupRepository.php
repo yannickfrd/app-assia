@@ -23,10 +23,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
     /**
      * Donne toute l'évaluation sociale du groupe.
-     *
-     * @param int $id // SupportGroup
      */
-    public function findEvaluationById(int $id): ?EvaluationGroup
+    public function findEvaluationById(int $supportGroupId): ?EvaluationGroup
     {
         return $this->createQueryBuilder('eg')
             ->select('eg')
@@ -52,7 +50,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addselect('evalSocialPerson')
 
             ->andWhere('eg.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $id)
+            ->setParameter('supportGroup', $supportGroupId)
 
             ->orderBy('p.birthdate', 'ASC')
             // ->setMaxResults(1)
