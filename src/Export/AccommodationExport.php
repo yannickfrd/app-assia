@@ -31,7 +31,7 @@ class AccommodationExport
             ++$i;
         }
 
-        return (new Export('export_suivis', 'xlsx', $arrayData, null))->exportFile();
+        return (new Export('export_places', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**
