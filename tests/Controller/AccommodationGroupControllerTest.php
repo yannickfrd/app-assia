@@ -139,7 +139,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         ]));
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-warning', 'La prise en charge est supprimé.');
+        $this->assertSelectorTextContains('.alert.alert-warning', 'La prise en charge est supprimée.');
     }
 
     public function testDeleteAccommodationPerson()

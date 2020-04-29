@@ -90,13 +90,11 @@
 
     </section>
 
+    {% if accommodation.id is not null %}
+    
     <hr>
-
+ 
     <section>
-
-
-
-
         <h2 class="h4 my-4">Prises en charge</h2>
         <p class="text-secondary">Affiche les 10 dernières prises en charge.</p>
         <div class="table-responsive">
@@ -137,6 +135,7 @@
         </div>
 
     </section>
+    {% endif %}
 
 </div>
 

@@ -187,7 +187,7 @@
                         <td>{{ accommodation.openingDate | date("d/m/Y") }}</td>
                         <td>{% if accommodation.closingDate %}{{ accommodation.closingDate | date("d/m/Y") }}{% endif %}
                         </td>
-                        <td>{{ accommodation.city }}</td>
+                        <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>
                         <td>{{ accommodation.address }}</td>
                     </tr>
