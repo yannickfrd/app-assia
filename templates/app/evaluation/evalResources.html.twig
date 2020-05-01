@@ -1,4 +1,98 @@
 {# Resources #}
+{% set resources = {
+    0 : {
+        'name' : 'disAdultAllowance',
+        'trans' : 'AAH', 
+        'value' : evalBudgetPerson.resources.disAdultAllowance,
+        'amt' : evalBudgetPerson.resources.disAdultAllowanceAmt,
+    },
+    1 : {
+        'name' : 'disChildAllowance',
+        'trans' : 'AEEH',
+        'value' : evalBudgetPerson.resources.disChildAllowance,
+        'amt' : evalBudgetPerson.resources.disChildAllowanceAmt,
+    },
+    2 : {
+        'name' : 'unemplBenefit',
+        'trans' : 'Allocation chômage (ARE)',
+        'value' : evalBudgetPerson.resources.unemplBenefit,
+        'amt' : evalBudgetPerson.resources.unemplBenefitAmt,
+    },
+    3 : {
+        'name' : 'solidarityAllowance',
+        'trans' : 'Allocation de solidarité spécifique (ASS)',
+        'value' : evalBudgetPerson.resources.solidarityAllowance,
+        'amt' : evalBudgetPerson.resources.solidarityAllowanceAmt,
+    },
+    4 : {
+        'name' : 'familyAllowance',
+        'trans' : 'Allocations familiales (AF)',
+        'value' : evalBudgetPerson.resources.familyAllowance,
+        'amt' : evalBudgetPerson.resources.familyAllowanceAmt,
+    },
+    5 : {
+        'name' : 'asylumAllowance',
+        'trans' : 'Allocation pour demandeur d\'asile (ADA)',
+        'value' : evalBudgetPerson.resources.asylumAllowance,
+        'amt' : evalBudgetPerson.resources.asylumAllowanceAmt,
+    },
+    6 : {
+        'name' : 'tempWaitingAllowance',
+        'trans' : 'Allocation temporaire d\'attente (ATA)',
+        'value' : evalBudgetPerson.resources.tempWaitingAllowance,
+        'amt' : evalBudgetPerson.resources.tempWaitingAllowanceAmt,
+    },
+    7 : {
+        'name' : 'paidTraining',
+        'trans' : 'Formation rémunérée',
+        'value' : evalBudgetPerson.resources.paidTraining,
+        'amt' : evalBudgetPerson.resources.paidTrainingAmt,
+    },
+    8 : {
+        'name' : 'youthGuarantee',
+        'trans' : 'Garantie jeunes',
+        'value' : evalBudgetPerson.resources.youthGuarantee,
+        'amt' : evalBudgetPerson.resources.youthGuaranteeAmt,
+    },
+    9 : {
+        'name' : 'maintenance',
+        'trans' : 'Pension alimentaire',
+        'value' : evalBudgetPerson.resources.maintenance,
+        'amt' : evalBudgetPerson.resources.maintenanceAmt,
+    },
+    10 : {
+        'name' : 'activityBonus',
+        'trans' : 'Prime d\'activité',
+        'value' : evalBudgetPerson.resources.activityBonus,
+        'amt' : evalBudgetPerson.resources.activityBonusAmt,
+    },
+    11 : {
+        'name' : 'pensionBenefit',
+        'trans' : 'Retraite',
+        'value' : evalBudgetPerson.resources.pensionBenefit,
+        'amt' : evalBudgetPerson.resources.pensionBenefitAmt,
+    },
+    12 : {
+        'name' : 'minimumIncome',
+        'trans' : 'RSA',
+        'value' : evalBudgetPerson.resources.minimumIncome,
+        'amt' : evalBudgetPerson.resources.minimumIncomeAmt,
+    },
+    13 : {
+        'name' : 'salary',
+        'trans' : 'Salaire',
+        'value' : evalBudgetPerson.resources.salary,
+        'amt' : evalBudgetPerson.resources.salaryAmt,
+    },
+    14 : {
+        'name' : 'ressourceOther',
+        'trans' : 'Autre ressource',
+        'value' : evalBudgetPerson.resources.ressourceOther,
+        'amt' : evalBudgetPerson.resources.ressourceOtherAmt,
+    }
+}
+%}
+
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.resources.resources) }}</div>
@@ -10,21 +104,9 @@
                         name="js-{{ key }}_{{ entity }}_resources_type" class="form-control" 
                         data-id="resourcesType" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
                         <option class="default" value="">-- Ajouter --</option>
-                        <option value="disAdultAllowance">Allocation adulte handicapé (AAH)</option>
-                        <option value="disChildAllowance">Allocation d'éducation de l'enfant handicapé (AEEH)</option>
-                        <option value="unemplBenefit">Allocation chômage (ARE)</option>
-                        <option value="solidarityAllowance">Allocation de solidarité spécifique (ASS)</option>
-                        <option value="familyAllowance">Allocations familiales (AF)</option>
-                        <option value="asylumAllowance">Allocation pour demandeur d'asile (ADA)</option>
-                        <option value="tempWaitingAllowance">Allocation temporaire d'attente (ATA)</option>
-                        <option value="paidTraining">Formation rémunérée</option>
-                        <option value="youthGuarantee">Garantie jeunes</option>
-                        <option value="maintenance">Pension alimentaire</option>
-                        <option value="activityBonus">Prime d'activité</option>
-                        <option value="pensionBenefit">Retraite</option>
-                        <option value="minimumIncome">RSA</option>
-                        <option value="salary">Salaire</option>
-                        <option value="ressourceOther">Autre ressource</option>
+                        {% for resource in resources %}
+                            <option value="{{ resource.name }}">{{ resource.trans }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -40,113 +122,17 @@
                             <th scope="col" class="align-middle th-w-20"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-disAdultAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="disAdultAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.disAdultAllowance) }}</div></th>
-                            <td class="align-middle">AAH</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.disAdultAllowanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-disChildAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="disChildAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.disChildAllowance) }}</div></th>
-                            <td class="align-middle">AEEH</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.disChildAllowanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-unemplBenefit" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="unemplBenefit" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.unemplBenefit) }}</div></th>
-                            <td class="align-middle">ARE</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.unemplBenefitAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-asylumAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="unemplBenefitAmt" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.asylumAllowance) }}</div></th>
-                            <td class="align-middle">ADA</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.asylumAllowanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-tempWaitingAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="tempWaitingAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.tempWaitingAllowance) }}</div></th>
-                            <td class="align-middle">ATA</td>
-                            <td class="align-middle"> {{ form_widget(evalBudgetPerson.resources.tempWaitingAllowanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-familyAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="familyAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.familyAllowance) }}</div></th>
-                            <td class="align-middle">AF</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.familyAllowanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-solidarityAllowance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="solidarityAllowance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.solidarityAllowance) }}</div></th>
-                            <td class="align-middle">ASS</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.solidarityAllowanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-paidTraining" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="paidTraining" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.paidTraining) }}</div></th>
-                            <td class="align-middle">Formation rémunérée</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.paidTrainingAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-youthGuarantee" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="youthGuarantee" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.youthGuarantee) }}</div></th>
-                            <td class="align-middle">Garantie jeunes</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.youthGuaranteeAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-maintenance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="maintenance" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.maintenance) }}</div></th>
-                            <td class="align-middle">Pension alimentaire</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.maintenanceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
-                            </td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-activityBonus" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="activityBonus" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.activityBonus) }}</div></th>
-                            <td class="align-middle">Prime d'activité</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.activityBonusAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-pensionBenefit" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="pensionBenefit" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.pensionBenefit) }}</div></th>
-                            <td class="align-middle">Retraite</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.pensionBenefitAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-minimumIncome" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="minimumIncome" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.minimumIncome) }}</div></th>
-                            <td class="align-middle">RSA</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.minimumIncomeAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-salary" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="salary" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.salary) }}</div></th>
-                            <td class="align-middle">Salaire</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.salaryAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-ressourceOther" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="ressourceOther" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.resources.ressourceOther) }}</div></th>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}</td>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.resources.ressourceOtherAmt) }}</td>
-                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
+                    <tbody> 
+                        {% for resource in resources %}
+                            <tr id="js-{{ key }}_{{ entity }}_resources_type-{{ resource.name }}" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
+                                data-id="{{ resource.name }}" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+                                <th scope="row"><div class="sr-only">{{ form_widget(resource.value) }}</div></th>
+                                <td class="align-middle">{% if not loop.last %}{{ resource.trans }}<!--
+                                    -->{% else %}{{ form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}{% endif %}</td>
+                                <td class="align-middle">{{ form_widget(resource.amt) }}</td>
+                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr id="js-{{ key }}_{{ entity }}_resourcesAmt" class="font-weight-bold">

@@ -14,6 +14,24 @@ class EvalBudgetPerson
 {
     use ResourcesEntityTrait;
 
+    public const RESOURCES_TYPE = [
+        'disAdultAllowance' => 'Allocation adulte handicapé (AAH)',
+        'disChildAllowance' => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',
+        'unemplBenefit' => 'Allocation chômage (ARE)',
+        'solidarityAllowance' => 'Allocation de solidarité spécifique (ASS)',
+        'familyAllowance' => 'Allocations familiales (AF)',
+        'asylumAllowance' => 'Allocation pour demandeur d\'asile (ADA)',
+        'tempWaitingAllowance' => 'Allocation temporaire d\'attente (ATA)',
+        'paidTraining' => 'Formation rémunérée',
+        'youthGuarantee' => 'Garantie jeunes',
+        'maintenance' => 'Pension alimentaire',
+        'activityBonus' => 'Prime d\'activité',
+        'pensionBenefit' => 'Retraite',
+        'minimumIncome' => 'RSA',
+        'salary' => 'Salaire',
+        'ressourceOther' => 'Autre ressource',
+    ];
+
     public const SETTLEMENT_PLAN = [
         1 => 'Proposé',
         2 => 'Accepté',
@@ -277,6 +295,11 @@ class EvalBudgetPerson
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getResourcesTypeArray(): array
+    {
+        return self::RESOURCES_TYPE;
     }
 
     public function getIncomeN1Amt(): ?float

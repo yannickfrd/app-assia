@@ -1,4 +1,74 @@
 {# Charges #}
+{% set charges = {
+    0 : {
+        'name' : 'rent',
+        'trans' : 'Loyer', 
+        'value' : evalBudgetPerson.rent,
+        'amt' : evalBudgetPerson.rentAmt,
+    },
+    1 : {
+        'name' : 'electricityGas',
+        'trans' : 'Electricité / Gaz',
+        'value' : evalBudgetPerson.electricityGas,
+        'amt' : evalBudgetPerson.electricityGasAmt,
+    },
+    2 : {
+        'name' : 'water',
+        'trans' : 'Eau',
+        'value' : evalBudgetPerson.water,
+        'amt' : evalBudgetPerson.waterAmt,
+    },
+    3 : {
+        'name' : 'insurance',
+        'trans' : 'Assurance(s)',
+        'value' : evalBudgetPerson.insurance,
+        'amt' : evalBudgetPerson.insuranceAmt,
+    },
+    4 : {
+        'name' : 'mutual',
+        'trans' : 'Mutuelle(s)',
+        'value' : evalBudgetPerson.mutual,
+        'amt' : evalBudgetPerson.mutualAmt,
+    },
+    5 : {
+        'name' : 'taxes',
+        'trans' : 'Impôts',
+        'value' : evalBudgetPerson.taxes,
+        'amt' : evalBudgetPerson.taxesAmt,
+    },
+    6 : {
+        'name' : 'transport',
+        'trans' : 'Transport',
+        'value' : evalBudgetPerson.transport,
+        'amt' : evalBudgetPerson.transportAmt,
+    },
+    7 : {
+        'name' : 'childcare',
+        'trans' : 'Garde d\'enfant(s)',
+        'value' : evalBudgetPerson.childcare,
+        'amt' : evalBudgetPerson.childcareAmt,
+    },
+    8 : {
+        'name' : 'alimony',
+        'trans' : 'Pension alimentaire',
+        'value' : evalBudgetPerson.alimony,
+        'amt' : evalBudgetPerson.alimonyAmt,
+    },
+    9 : {
+        'name' : 'phone',
+        'trans' : 'Téléphone',
+        'value' : evalBudgetPerson.phone,
+        'amt' : evalBudgetPerson.phoneAmt,
+    },
+    10 : {
+        'name' : 'chargeOther',
+        'trans' : 'Autre charge',
+        'value' : evalBudgetPerson.chargeOther,
+        'amt' : evalBudgetPerson.chargeOtherAmt,
+    }
+}
+%}
+
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.charges) }}</div>
@@ -10,17 +80,9 @@
                         name="js-{{ key }}_{{ entity }}_charges_type" class="form-control"
                         data-id="chargesType" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
                         <option class="default" value="">-- Ajouter --</option>
-                        <option value="rent">Loyer</option>
-                        <option value="electricityGas">Electricité / Gaz</option>
-                        <option value="water">Eau</option>
-                        <option value="insurance">Assurance(s)</option>
-                        <option value="mutual">Mutuelle(s)</option>
-                        <option value="taxes">Impôts</option>
-                        <option value="transport">Transport</option>
-                        <option value="childcare">Garde d'enfant(s)</option>
-                        <option value="alimony">Pension alimentaire</option>
-                        <option value="phone">Téléphone</option>
-                        <option value="chargeOther">Autre charge</option>
+                        {% for charge in charges %}
+                            <option value="{{ charge.name }}">{{ charge.trans }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -37,70 +99,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-rent" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.rent) }}</div></th>
-                            <td class="align-middle">Loyer</td>
-                            <td>{{ form_widget(evalBudgetPerson.rentAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-electricityGas" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.electricityGas) }}</div></th>
-                            <td class="align-middle">Electricité / Gaz</td>
-                            <td>{{ form_widget(evalBudgetPerson.electricityGasAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-water" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.water) }}</div></th>
-                            <td class="align-middle">Eau</td>
-                            <td>{{ form_widget(evalBudgetPerson.waterAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-insurance" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.insurance) }}</div></th>
-                            <td class="align-middle">Assurance(s)</td>
-                            <td>{{ form_widget(evalBudgetPerson.insuranceAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-mutual" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.mutual) }}</div></th>
-                            <td class="align-middle">Mutuelle(s)</td>
-                            <td>{{ form_widget(evalBudgetPerson.mutualAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-taxes" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.taxes) }}</div></th>
-                            <td class="align-middle">Impôts</td>
-                            <td>{{ form_widget(evalBudgetPerson.taxesAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-transport" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.transport) }}</div></th>
-                            <td class="align-middle">Transport</td>
-                            <td>{{ form_widget(evalBudgetPerson.transportAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-childcare" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.childcare) }}</div></th>
-                            <td class="align-middle">Garde d'enfant(s)</td>
-                            <td>{{ form_widget(evalBudgetPerson.childcareAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-alimony" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.alimony) }}</div></th>
-                            <td class="align-middle">Pension alimentaire</td>
-                            <td>{{ form_widget(evalBudgetPerson.alimonyAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-phone" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.phone) }}</div></th>
-                            <td class="align-middle">Téléphone</td>
-                            <td>{{ form_widget(evalBudgetPerson.phoneAmt) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-chargeOther" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.chargeOther) }}</div></th>
-                            <td class="align-middle">{{ form_widget(evalBudgetPerson.chargeOtherPrecision) }}</td>
-                            <td class="align-middle">  {{ form_widget(evalBudgetPerson.chargeOtherAmt) }}</td>
-                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
+                        {% for charge in charges %}
+                            <tr id="js-{{ key }}_{{ entity }}_charges_type-{{ charge.name }}" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
+                                <th scope="row"><div class="sr-only">{{ form_widget(charge.value) }}</div></th>
+                                <td class="align-middle">{% if not loop.last %}{{ charge.trans }}<!--
+                                -->{% else %}{{ form_widget(evalBudgetPerson.chargeOtherPrecision) }}{% endif %}</td>
+                                <td>{{ form_widget(charge.amt) }}</td>
+                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr id="js-{{ key }}_{{ entity }}_chargesAmt" class="font-weight-bold">
