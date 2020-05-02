@@ -111,7 +111,7 @@
 		</div>
 	{% endif %}
 
-	{% if form.vars.value.evaluationsGroup|last %}
+	{# {% if form.vars.value.evaluationsGroup|last %}
 	{% set evaluation = form.vars.value.evaluationsGroup|last %}
 	{% if evaluation.evalHousingGroup and (evaluation.evalHousingGroup.housingAddress or evaluation.evalHousingGroup.domiciliationAddress) %}
 
@@ -133,7 +133,7 @@
 	</div>
 
 	{% endif %}
-	{% endif %}
+	{% endif %} #}
 
 	<div class="form-group row">
 		<div class="col-md-6">{{ form_row(form.service) }}</div>

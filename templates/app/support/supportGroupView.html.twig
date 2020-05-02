@@ -1,0 +1,260 @@
+{% extends "base.html.twig" %}
+{% import 'macros/view.html.twig' as utils %}
+
+
+{% block title %}Suivi social | {{ title_website }}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+	<h1 class="h2 mb-3">Suivi social</h1>
+
+	{% include "model/msgFlash.html.twig" %}
+	<div id="js-msg-flash-content"></div>
+
+    {# {% cache "support.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
+	{% set group_people = support.groupPeople %}
+	<div class="small text-secondary">
+		<p>Créé le {{support.createdAt | date("d/m/Y à H:i") }}
+			{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
+			<span id="js-updatedSupport">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
+		</p>
+	</div>
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
+					<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ group_people.familyTypologyToString }}</span>
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">Suivi social (Accueil)</li>
+		</ol>
+	</nav>
+	{% for person in support.supportPeople %}
+		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
+			class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
+	{% endfor %}
+
+	<hr>
+
+	<div class="d-flex row justify-content-center my-4">
+		{% if support.service.preAdmission %}
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-origin-request' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_originRequest', {'id':support.id}) }}" data-placement="bottom" 
+				title="Origine de la demande et pré-admission">Origine demande</a>
+		</div>			
+		{% endif %}
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-person' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" 
+				title="Personnes rattachées au suivi social">Personnes</a>
+		</div>
+		{% if support.service.accommodation %}
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-accommodations' class="btn btn-{{ theme_color }} btn-block shadow" 
+			href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" 
+			title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
+		</div>
+		{#<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+			<a id='support-pf'class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a>
+		</div> #}
+		{% endif %}
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
+			href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" 
+			title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
+		</div>
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-calendar' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_calendar_show', {'id':support.id}) }}" data-placement="bottom" 
+				title="Rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span></a>
+		</div>
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-notes' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_notes', {'id':support.id}) }}" data-placement="bottom" 
+				title="Notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
+		</div>
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-documents' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_documents', {'supportId':support.id}) }}"data-placement="bottom" 
+				title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span></a>
+		</div>
+	</div>
+
+	<div class="row">
+		{{ utils.view(support.service.name ~ " (" ~ support.device.name ~ ")", "Service (dispositif)") }}
+		{{ utils.view(support.statusToString, "Status") }}
+	</div>
+	<div class="row mb-3">
+		{% set supportDates %}
+		{% if support.startDate %}{{ support.startDate| date("d/m/Y") }}{% endif %}
+		{% if support.endDate %} - {{ support.endDate| date("d/m/Y") }}{% endif %}
+		{% endset %}
+		{{ utils.view(supportDates, "Support dates") }}
+		{% set referents %}
+		{% if support.referent %}{{ support.referent.fullname }}{% endif %}
+		{% if support.referent2 %} ({{ support.referent2.fullname }}){% endif %}
+		{% endset %}
+		{{ utils.view(referents, "Referent") }}
+	</div>
+	<div class="row mb-3">
+		{{ utils.view(support.comment, "Comment") }}
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{% if is_granted("DELETE", support) %}
+			<div class="float-left d-flex">
+				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
+					title="Supprimer le suivi social" data-placement="bottom"
+					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
+					class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+			</div>
+			{% endif %}
+			<div class="mb-4 float-right">
+				<a id="edit" href="{{ path('support_edit', {'id': support.id }) }}" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-edit mr-2"></span>Modifier</a>
+			</div>
+		</div>
+	</div>
+
+	{# {% endcache %} #}
+
+	{% if evaluation %}
+    {# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
+
+	{% if evaluation.evalHousingGroup %}
+	{% set evalHousing = evaluation.evalHousingGroup %}
+	<hr>
+	<section>
+		<div class="row mb-3">
+			<h2 class="col-md-12 h4">Logement - Hébergement</h2>
+		</div>
+
+		{% if evaluation and evaluation.evalHousingGroup and (evaluation.evalHousingGroup.housingAddress or evaluation.evalHousingGroup.domiciliationAddress) %}
+		<div class="row mb-3">
+			{% set housingFullAddress %}
+				{{ evaluation.evalHousingGroup.housingAddress }}{% if evaluation.evalHousingGroup.housingCity %} - {% endif %}<!--
+				--> {{ evaluation.evalHousingGroup.housingDept }} {{ evaluation.evalHousingGroup.housingCity }}
+			{% endset %}
+			{% set domiciliationFullAddress %}
+				{{ evaluation.evalHousingGroup.domiciliationAddress }}{% if evaluation.evalHousingGroup.domiciliationCity %} - {% endif %}<!--
+				--> {{ evaluation.evalHousingGroup.domiciliationDept }} {{ evaluation.evalHousingGroup.domiciliationCity }}
+			{% endset %}
+			{{ utils.view(housingFullAddress, "Adresse du logement ou d'hébergement") }}
+			{{ utils.view(domiciliationFullAddress, "Domiciliation") }}
+		</div>
+		{% endif %}
+		<div class="row mb-2">
+			{{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
+		</div>
+		<div class="row mb-2">
+			{{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
+			{% if evalHousing.siaoRequestDate %}{{ utils.view(evalHousing.siaoRequestDate | date("d/m/Y"), "Siao request date", "evaluation") }}{% endif %}
+			{% if evalHousing.siaoUpdatedRequestDate %}{{ utils.view(evalHousing.siaoUpdatedRequestDate | date("d/m/Y"), "Siao updated request date", "evaluation") }}{% endif %}
+		</div>
+		<div class="row mb-2">
+			{{ utils.view(evalHousing.socialHousingRequestToString, "Social housing request", "evaluation") }}
+			{{ utils.view(evalHousing.socialHousingRequestId, "Social housing request id", "evaluation") }}
+			{% set socialHousing %}
+			{% if evalHousing.socialHousingRequestDate %}{{ evalHousing.socialHousingRequestDate | date("d/m/Y") }}{% endif %}
+			{% if evalHousing.socialHousingUpdatedRequestDate %} (actualisation : {{ evalHousing.socialHousingUpdatedRequestDate | date("d/m/Y") }}){% endif %}
+			{% endset %}
+			{{ utils.view(socialHousing, "Date demande de logement social", "evaluation") }}
+		</div>
+		<div class="row mb-2">
+		{% set syplo %}
+			{{ evalHousing.syploToString }}
+			{% if evalHousing.syploDate %}({{ evalHousing.syploDate | date("d/m/Y") }}){% endif %}
+		{% endset %}
+			{{ utils.view(syplo, "Syplo", "evaluation") }}
+			{{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
+		</div>
+		<div class="row mb-2">
+			{{ utils.view(evalHousing.daloCommissionToString, "Dalo commission", "evaluation") }}
+			{{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
+		</div>
+	</section>
+	{% endif %}
+
+	{% if evaluation.evalBudgetGroup %}
+	<hr>
+	<section>
+		<div class="row mb-3">
+			<h2 class="col-md-12 h4">Budget</h2>
+		</div>
+		<div class="row mb-3">
+			<div class="col-md-6">
+				<table class="table table-sm table-bordered table-hover">
+					<thead>
+						<tr>
+							<th scope="col"></th>
+							<td class="text-right font-weight-bold">Groupe</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row" class="font-weight-normal">Ressources</th>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.resourcesGroupAmt }} €</td>
+						</tr>
+						{% if evaluation.evalBudgetGroup.chargesGroupAmt %}
+						<tr>
+							<th scope="row" class="font-weight-normal">Charges</th>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.chargesGroupAmt }} €</td>
+						</tr>
+						{% endif %}
+						{% if evaluation.evalBudgetGroup.debtsGroupAmt %}
+						<tr>
+							<th scope="row" class="font-weight-normal">Remboursement mensuel des dettes</th>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.debtsGroupAmt }} €</td>
+						</tr>
+						{% endif %}
+					</tbody>
+					<tfooter>
+						<tr>
+							<th scope="row">Reste à vivre</th>
+							<td class="text-right font-weight-bold">{{ evaluation.evalBudgetGroup.budgetBalanceAmt }} €</td>
+						</tr>
+						{% if evaluation.evalBudgetGroup.debtsGroupAmt %}
+						<tr>
+							<th scope="row" class="font-weight-normal">Montant total des dettes</th>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.debtsGroupAmt }} €</td>
+						</tr>
+						{% endif %}
+					</tfooter>
+				</table>
+			</div>
+		</div>
+
+		{% for evalPerson in evaluation.evaluationPeople %}
+		{% set evalBudget = evalPerson.evalBudgetPerson %}
+		{% if evalBudget %}	
+		<div class="row mb-3">
+			<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+		</div>
+		<div class="row mb-3">
+			{{ utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
+			{{ utils.view(evalBudget.resourcesAmt, "Resources amt", "evaluation") }}
+			{{ utils.view(evalBudget.incomeN1Amt, "incomeN1Amt", "evaluation") }}
+			{{ utils.view(evalBudget.incomeN2Amt, "incomeN2Amt", "evaluation") }}
+			{{ utils.view(evalBudget.resourcesComment, "resourcesComment", "evaluation") }}
+			{{ utils.view(evalBudget.chargesAmt, "chargesAmt", "evaluation") }}
+		</div>
+		{% endif %}
+		{% endfor %}
+
+	</section>
+	{% endif %}
+
+	{# {% endcache %} #}
+	{% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

@@ -4,6 +4,7 @@ namespace App\Entity\Traits;
 
 use App\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait CreatedUpdatedEntityTrait
 {
@@ -11,6 +12,7 @@ trait CreatedUpdatedEntityTrait
      * @var \DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("view")
      */
     private $createdAt;
 
@@ -19,6 +21,7 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups("view")
      */
     private $createdBy;
 
@@ -26,6 +29,7 @@ trait CreatedUpdatedEntityTrait
      * @var \DateTime
      * @Gedmo\Timestampable(on="create", on="update")
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("view")
      */
     private $updatedAt;
 
@@ -34,6 +38,7 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create", on="update")
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups("view")
      */
     private $updatedBy;
 

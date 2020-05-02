@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Support\SupportGroupWithPeopleType;
 use App\Service\SupportGroup\SupportGroupService;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -88,12 +89,12 @@ class SupportController extends AbstractController
                     return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
                 }
 
-                return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
+                return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
             }
             $this->addFlash('danger', 'Attention, un suivi social est déjà en cours pour ce groupe.');
         }
 
-        return $this->render('app/support/supportGroup.html.twig', [
+        return $this->render('app/support/supportGroupEdit.html.twig', [
             'group_people' => $groupPeople,
             'form' => $form->createView(),
         ]);
@@ -102,7 +103,7 @@ class SupportController extends AbstractController
     /**
      * Modification d'un suivi social.
      *
-     * @Route("/support/{id}", name="support_edit", methods="GET|POST")
+     * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
     public function editSupportGroup(int $id, Request $request, SupportGroupService $supportGroupService): Response
     {
@@ -119,14 +120,50 @@ class SupportController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Le suivi social est mis à jour.');
+
+            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
-        if (!$form->isSubmitted()) {
-            $this->checkSupportGroup($supportGroup);
-        }
-
-        return $this->render('app/support/supportGroup.html.twig', [
+        return $this->render('app/support/supportGroupEdit.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Voir un suivi social.
+     *
+     * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
+     */
+    public function viewSupportGroup(int $id, EvaluationGroupRepository $repo): Response
+    {
+        $cache = new FilesystemAdapter();
+
+        $cacheSupport = $cache->getItem('support_group'.$id);
+        if (!$cacheSupport->isHit()) {
+            $cacheSupport->set($this->repoSupportGroup->findFullSupportById($id));
+            // $cacheSupport->expiresAfter(365 * 24 * 60 * 60);  // 5 * 60 seconds
+            $cache->save($cacheSupport);
+        }
+        $supportGroup = $cacheSupport->get();
+
+        $this->checkSupportGroup($supportGroup);
+
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+
+        $cacheEvaluation = $cache->getItem('support_group.evaluation'.$id);
+        if (!$cacheEvaluation->isHit()) {
+            $cacheEvaluation->set($repo->findEvaluationById($id));
+            $cache->save($cacheEvaluation);
+        }
+        $evaluation = $cacheEvaluation->get();
+
+        // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        // $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+        // $evaluation = $repo->findEvaluationById($id);
+
+        return $this->render('app/support/supportGroupView.html.twig', [
+            'support' => $supportGroup,
+            'evaluation' => $evaluation,
         ]);
     }
 

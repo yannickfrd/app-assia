@@ -37,7 +37,6 @@ class EvalBudgetPersonType extends AbstractType
                 'attr' => ['class' => 'js-chargesAmt text-right'],
                 'required' => false,
             ])
-
             ->add('rent')
             ->add('electricityGas')
             ->add('water')

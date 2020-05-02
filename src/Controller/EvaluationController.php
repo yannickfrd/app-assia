@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\SupportGroup;
+use App\Entity\InitEvalGroup;
+use App\Entity\SupportPerson;
+use App\Entity\InitEvalPerson;
+use App\Service\Normalisation;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
-use App\Entity\SupportGroup;
-use App\Entity\SupportPerson;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SupportGroupRepository;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
-use App\Repository\SupportGroupRepository;
-use App\Service\Normalisation;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
 {
@@ -25,12 +26,14 @@ class EvaluationController extends AbstractController
     private $manager;
     private $repoSupportGroup;
     private $repo;
+    private $cache;
 
     public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo)
     {
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repo = $repo;
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
@@ -150,6 +153,8 @@ class EvaluationController extends AbstractController
         $this->manager->persist($evaluationGroup);
         $this->manager->flush();
 
+        $this->discachedSupport($evaluationGroup);
+
         $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
 
@@ -170,6 +175,8 @@ class EvaluationController extends AbstractController
 
         $this->manager->persist($evaluationGroup);
         $this->manager->flush();
+
+        $this->discachedSupport($evaluationGroup);
 
         return $this->json([
             'code' => 200,
@@ -218,5 +225,16 @@ class EvaluationController extends AbstractController
         // Ressources et dettes initiales
         $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
+    }
+
+    protected function discachedSupport(EvaluationGroup $evaluationGroup)
+    {
+        $id = $evaluationGroup->getSupportGroup()->getId();
+        $cacheEvaluation = $this->cache->getItem('support_group.evaluation'.$id);
+        $cacheSupport = $this->cache->getItem('support_group'.$id);
+        if ($cacheEvaluation->isHit()) {
+            $this->cache->deleteItem($cacheEvaluation->getKey());
+            $this->cache->deleteItem($cacheSupport->getKey());
+        }
     }
 }

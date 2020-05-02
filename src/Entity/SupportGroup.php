@@ -7,6 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -80,11 +81,13 @@ class SupportGroup
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $endDate;
 
@@ -99,12 +102,19 @@ class SupportGroup
     private $status;
 
     /**
+     * @Groups("export")
+     */
+    private $statusToString;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="referentSupport")
+     * @Groups("export")
      */
     private $referent;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="referent2Support")
+     * @Groups("export")
      */
     private $referent2;
 
@@ -113,16 +123,24 @@ class SupportGroup
      * @Assert\Range(min = 0, max = 10,
      * minMessage="Le coefficient ne peut être inférieur à {{ limit }}",
      * maxMessage="Le coefficient ne peut être supérieur à {{ limit }}")
+     * @Groups("export")
      */
     private $coefficient = 1;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
      */
     private $endStatus;
 
     /**
+     * @Groups("export")
+     */
+    private $endStatusToString;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $endStatusComment;
 
@@ -133,6 +151,7 @@ class SupportGroup
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("view")
      */
     private $comment;
 
@@ -158,13 +177,13 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="supportGroup")
-     * @MaxDepth(1)
+     * @Groups("export")
      */
     private $service;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Device", inversedBy="supportGroup")
-     * @MaxDepth(1)
+     * @Groups("export")
      */
     private $device;
 

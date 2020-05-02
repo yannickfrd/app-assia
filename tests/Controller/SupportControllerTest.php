@@ -130,6 +130,16 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
+    public function testViewSupportGroupIsUp()
+    {
+        $this->client->request('GET', $this->generateUri('support_view', [
+            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
+        ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Suivi social');
+    }
+
     public function testSuccessDeleteSupport()
     {
         $this->client->request('GET', $this->generateUri('support_delete', [

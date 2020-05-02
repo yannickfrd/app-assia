@@ -51,15 +51,16 @@ export default class ValidationSupport {
     }
 
     checkStartDate() {
-        let intervalWithNow = Math.round((this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000));
+        let intervalWithNow = (this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000);
         let status = parseInt(this.getOption(this.statusSelectElt));
 
-        if ((this.startDateInputElt.value && !Number.isInteger(intervalWithNow)) || intervalWithNow > (365 * 9)) {
+        if ((this.startDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             return this.validationInput.invalid(this.startDateInputElt, "La date est invalide.");
         }
         if (intervalWithNow < -30) {
             return this.validationInput.invalid(this.startDateInputElt, "Le début du suivi ne peut pas être supérieur de 30 jours par rapport à la date du jour.");
         }
+
         if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) {
             return this.validationInput.invalid(this.startDateInputElt, "La date de début ne peut pas être vide.");
         }
@@ -75,10 +76,10 @@ export default class ValidationSupport {
     checkEndDate() {
         let startDate = new Date(this.startDateInputElt.value);
         let endDate = new Date(this.endDateInputElt.value);
-        let intervalWithStart = Math.round((endDate - startDate) / (24 * 3600 * 1000));
-        let intervalWithNow = Math.round((this.now - endDate) / (24 * 3600 * 1000));
+        let intervalWithStart = (endDate - startDate) / (24 * 3600 * 1000);
+        let intervalWithNow = (this.now - endDate) / (24 * 3600 * 1000);
 
-        if ((this.endDateInputElt.value && !Number.isInteger(intervalWithNow)) || intervalWithNow > (365 * 9)) {
+        if ((this.endDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 9)) {
             return this.validationInput.invalid(this.endDateInputElt, "La date est invalide.");
         }
         if (intervalWithStart < 0) {

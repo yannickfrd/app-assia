@@ -1,0 +1,9 @@
+{#  #}
+{% macro view(value, key = null, trans = "forms") %}
+    {% if value is not null %}
+        {% if key is not null %}
+            <div class="col-4 col-md-2 pr-0 py-2 text-secondary">{{ key|trans({}, trans) }} : </div>
+        {% endif %}
+        <div class="col-8 col-md-4 pl-4 mb-1 py-2">{{ value }}</div>    
+    {% endif %}
+{% endmacro %}

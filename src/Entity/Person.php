@@ -50,7 +50,7 @@ class Person
      * max=50,
      * minMessage="Le nom est trop court ({{ limit }} caractères min).",
      * maxMessage="Le nom est trop long ({{ limit }} caractères max).")
-     * Groups("export")
+     * @Groups("export")
      */
     private $lastname;
 
@@ -62,7 +62,7 @@ class Person
      * max=50,
      * minMessage="Le prénom est trop court ({{ limit }} caractères min).",
      * maxMessage="Le prénom est trop long ({{ limit }} caractères max).")
-     * Groups("export")
+     * @Groups("export")
      */
     private $firstname;
 
@@ -80,7 +80,7 @@ class Person
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\NotNull(message="La date de naissance ne doit pas être vide.")
-     * Groups("export")
+     * @Groups("export")
      */
     private $birthdate;
 
@@ -90,7 +90,7 @@ class Person
      * max = 90,
      * minMessage = "La date de naissance est incorrect.",
      * maxMessage = "La date de naissance est incorrect.")
-     * Groups("export")
+     * @Groups("export")
      */
     private $age;
 
@@ -102,7 +102,7 @@ class Person
     private $gender;
 
     /**
-     * Groups("export").
+     * @Groups("export").
      */
     private $genderToString;
 

@@ -44,7 +44,7 @@ class SupportPerson
     private $head;
 
     /**
-     * Groups("export").
+     * @Groups("export").
      */
     private $headToString;
 

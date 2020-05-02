@@ -12,16 +12,20 @@ use App\Entity\SupportPerson;
 use App\Entity\EvaluationPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\SupportGroupRepository;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SupportGroupService
 {
     private $container;
+    private $repo;
     private $manager;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $manager)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $manager, SupportGroupRepository $repo)
     {
         $this->container = $container;
+        $this->repo = $repo;
         $this->manager = $manager;
     }
 
@@ -54,6 +58,8 @@ class SupportGroupService
         }
 
         $this->manager->flush();
+
+        return true;
     }
 
     /**
@@ -107,9 +113,10 @@ class SupportGroupService
                 }
             }
         }
+        $this->discached($supportGroup);
     }
 
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo)
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation)
     {
         $addPeople = false;
 
@@ -117,7 +124,7 @@ class SupportGroupService
             if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
                 $supportPerson = $this->createSupportPerson($rolePerson, $supportGroup);
 
-                $evaluationGroup = $repo->findLastEvaluationFromSupport($supportGroup);
+                $evaluationGroup = $repoEvaluation->findLastEvaluationFromSupport($supportGroup);
 
                 if ($evaluationGroup) {
                     $evaluationPerson = (new EvaluationPerson())
@@ -142,7 +149,7 @@ class SupportGroupService
      */
     protected function activeSupportExists(GroupPeople $groupPeople, SupportGroup $supportGroup): ?SupportGroup
     {
-        return $this->repoSupportGroup->findOneBy([
+        return $this->repo->findOneBy([
             'groupPeople' => $groupPeople,
             'status' => 2,
             'service' => $supportGroup->getService(),
@@ -161,5 +168,14 @@ class SupportGroupService
         }
 
         return false;
+    }
+
+    protected function discached(SupportGroup $supportGroup)
+    {
+        $cache = new FilesystemAdapter();
+        $cacheSupport = $cache->getItem('support_group'.$supportGroup->getId());
+        if ($cacheSupport->isHit()) {
+            $cache->deleteItem($cacheSupport->getKey());
+        }
     }
 }

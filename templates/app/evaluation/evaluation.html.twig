@@ -6,16 +6,17 @@
 
 {% block body %}
 
+	{% set evaluationGroup = form.vars.value %}
+    {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %}
+
 	<div class="container">
 
-		{% set evaluationGroup = form.vars.value %}
 		{% set support = evaluationGroup.supportGroup %}
 		{% set typo = support.groupPeople.familyTypology %}
 
 		{% set title = "Évaluation sociale" %}
 		{% include "app/support/navSuppport.html.twig" %}
 
-        {# {% cache "evaluation" ~ evaluationGroup.id evaluationGroup.updatedAt.timestamp %} #}
 		{{ form_start(form) }}
 
 		{% include "model/msgFlash.html.twig" %}
@@ -62,8 +63,9 @@
 
 		{{ form_row(form._token) }}
 		{{ form_end(form, {"render_rest": false}) }}
-        {# {% endcache %} #}
 	</div>
+
+	{% endcache %}
 
 {% endblock %}
 

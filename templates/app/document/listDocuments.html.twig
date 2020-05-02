@@ -72,7 +72,6 @@ Documents | {{ title_website }}
 			</thead>
 
 			<tbody id="container-documents" data-support="{{ support.id }}">
-
 				{% for document in documents %}
 					{% set path = document.groupPeople.id ~ "/" ~ document.createdAt | date("Y/m")  ~ "/" ~ document.internalFileName %}
 					<tr id="document-{{ document.id }}" class="js-document">

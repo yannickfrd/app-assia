@@ -45,7 +45,7 @@ class RolePerson
     private $head;
 
     /**
-     * Groups("export").
+     * @Groups("export").
      */
     private $headToString;
 
@@ -57,7 +57,7 @@ class RolePerson
     private $role;
 
     /**
-     * Groups("export").
+     * @Groups("export").
      */
     private $roleToString;
 

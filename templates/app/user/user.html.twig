@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+{% import 'macros/view.html.twig' as utils %}
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 {% form_theme formPassword "form/bootstrap_4_horizontal.html.twig" %}
@@ -25,14 +26,10 @@
 
         <h2 class="h4 my-4">Coordonnées</h1>
             <div class="form-group row mb-2">
-                <div class="col-4 col-md-2 mb-3">Prénom :</div>
-                <div class="col-8 col-md-4">{{ app.user.firstname }}</div>
-                <div class="col-4 col-md-2 mb-3">Nom :</div>
-                <div class="col-8 col-md-4">{{ app.user.lastname }}</div>
-                <div class="col-4 col-md-2 mb-3">Login :</div>
-                <div class="col-8 col-md-4">{{ app.user.username }}</div>
-                <div class="col-4 col-md-2 mb-3">Fonction :</div>
-                <div class="col-8 col-md-4">{{ app.user.statusToString }}</div>
+                {{ utils.view(app.user.firstname, 'Firstname') }}
+                {{ utils.view(app.user.lastname, 'Lastname') }}
+                {{ utils.view(app.user.username, 'Login') }}
+                {{ utils.view(app.user.statusToString, 'Status') }}
             </div>
             <div class="form-group row mb-2">
                 <div class="col-md-6">{{ form_row(form.email) }}</div>
