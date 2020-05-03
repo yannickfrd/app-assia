@@ -240,7 +240,7 @@
 
 		<div class="row">
 			{{ utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
-			{{ utils.view(evalBudget.chargesToString, "Charge", "evaluation") }}
+			{{ utils.view(evalBudget.chargesToString, "Charges", "evaluation") }}
 		</div>
 
 		<div class="row mb-3">
@@ -257,7 +257,8 @@
 							{% for key, value in evalBudget.resourcesType %}
 								{% if attribute(evalBudget, key) %}
 								<tr>
-									<th scope="row" class="font-weight-normal">{{ value }}</th>
+									<th scope="row" class="font-weight-normal">{% if not loop.last %}{{ value }}{% else %}
+										{{ attribute(evalBudget, key ~ 'Precision')}}{% endif %}</th>
 									<td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ',', ' ') }} €</td>
 								</tr>
 								{% endif %}
@@ -298,8 +299,9 @@
 							{% for key, value in evalBudget.chargesType %}
 								{% if attribute(evalBudget, key) %}
 								<tr>
-									<th scope="row" class="font-weight-normal">{{ value }}</th>
-									<td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ',', ' ') 	 }} €</td>
+									<th scope="row" class="font-weight-normal">{% if not loop.last %}{{ value }}{% else %}
+										{{ attribute(evalBudget, key ~ 'Precision')}}{% endif %}</th>
+									<td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ',', ' ') }} €</td>
 								</tr>
 								{% endif %}
 							{% endfor %}

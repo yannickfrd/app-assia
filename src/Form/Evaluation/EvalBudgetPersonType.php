@@ -36,65 +36,20 @@ class EvalBudgetPersonType extends AbstractType
             ->add('chargesAmt', MoneyType::class, [
                 'attr' => ['class' => 'js-chargesAmt text-right'],
                 'required' => false,
-            ])
-            ->add('rent')
-            ->add('electricityGas')
-            ->add('water')
-            ->add('insurance')
-            ->add('mutual')
-            ->add('taxes')
-            ->add('transport')
-            ->add('childcare')
-            ->add('alimony')
-            ->add('phone')
-            ->add('chargeOther', null, ['label_attr' => ['class' => 'js-noText']])
-            ->add('chargeOtherPrecision', null, ['attr' => ['placeholder' => 'Other charge(s)...']])
-            ->add('rentAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('electricityGasAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('waterAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('insuranceAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('mutualAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('taxesAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('transportAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('childcareAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('alimonyAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('phoneAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('chargeOtherAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
-                'required' => false,
-            ])
-            ->add('chargeComment')
+            ]);
 
+        foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
+            $builder
+            ->add($key)
+            ->add($key.'Amt', MoneyType::class, [
+                'attr' => ['class' => 'js-money js-charges text-right'],
+                'required' => false,
+            ]);
+        }
+
+        $builder
+            ->add('chargeOtherPrecision', null, ['attr' => ['placeholder' => 'Other charge(s)...']])
+            ->add('chargeComment')
             ->add('debts', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'attr' => [
@@ -110,14 +65,13 @@ class EvalBudgetPersonType extends AbstractType
                     'data-id' => 'debtsAmt',
                 ],
                 'required' => false,
-            ])
-            ->add('debtRental')
-            ->add('debtConsrCredit')
-            ->add('debtMortgage')
-            ->add('debtFines')
-            ->add('debtTaxDelays')
-            ->add('debtBankOverdrafts')
-            ->add('debtOther')
+            ]);
+
+        foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
+            $builder->add($key);
+        }
+
+        $builder
             ->add('debtOtherPrecision', null, ['attr' => ['placeholder' => 'Other debt(s)...']])
             ->add('debtComment')
             ->add('monthlyRepaymentAmt', MoneyType::class, [

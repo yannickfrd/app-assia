@@ -7,50 +7,50 @@
 {% block card_body %}
 
 <div class="card mb-4">
-  	<div class="card-body pb-1">
+  	<div class="card-body p-1">
 		<div class="d-flex row justify-content-center">
-			<div class="col-12 col-md-2 mb-2 text-center border-right border-gray">
+			<div class="col-12 col-md-2 my-1 text-center border-right border-gray">
   				<div class="row">
 					<div class="col-8 col-md-12">Total des resources</div>
 					<div class="col-4 col-md-12">
 						<span id="resourcesGroupAmt">{% if evaluationGroup.evalBudgetGroup.resourcesGroupAmt is defined %}
-						{{ evaluationGroup.evalBudgetGroup.resourcesGroupAmt }}{% else %}0{% endif %}</span> €
+						{{ evaluationGroup.evalBudgetGroup.resourcesGroupAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-md-2 mb-2 text-center border-right border-gray">
+			<div class="col-12 col-md-2 my-1 text-center border-right border-gray">
 			  	<div class="row">
 					<div class="col-8 col-md-12">Total des charges</div>
 					<div class="col-4 col-md-12">
 						<span id="chargesGroupAmt">{% if evaluationGroup.evalBudgetGroup.chargesGroupAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt }}{% else %}0{% endif %}</span> €
+							{{ evaluationGroup.evalBudgetGroup.chargesGroupAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-md-2 mb-2 text-center border-right border-gray">
+			<div class="col-12 col-md-2 my-1 text-center border-right border-gray">
 				<div class="row">
 					<div class="col-8 col-md-12">Remboursemt mensuel</div>
 					<div class="col-4 col-md-12">
 						<span id="repaymentGroupAmt">{% if evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt }}{% else %}0{% endif %}</span> €
+							{{ evaluationGroup.evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-md-2 mb-2 text-center font-weight-bold border-right border-gray">
+			<div class="col-12 col-md-2 my-1 text-center font-weight-bold border-right border-gray">
 				<div class="row">
 					<div class="col-8 col-md-12">Reste à vivre</div>
 					<div class="col-4 col-md-12">
 					<span id="budgetBalanceGroupAmt">{% if evaluationGroup.evalBudgetGroup.budgetBalanceAmt is defined %}
-						{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt }}{% else %}0{% endif %}</span> €
+						{{ evaluationGroup.evalBudgetGroup.budgetBalanceAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-md-2 mb-2 text-center">
+			<div class="col-12 col-md-2 my-1 text-center">
 				<div class="row">
 					<div class="col-8 col-md-12">Total des dettes</div>
 					<div class="col-4 col-md-12">
 						<span id="debtsGroupAmt">{% if evaluationGroup.evalBudgetGroup.debtsGroupAmt is defined %}
-							{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt }}{% else %}0{% endif %}</span> €
+							{{ evaluationGroup.evalBudgetGroup.debtsGroupAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
 					</div>
 				</div>
 			</div>
@@ -98,17 +98,16 @@
 				<div class="col-md-6 js-{{ key }}_evalBudgetPerson_debts d-block">
 					<div class="row">
 						<div class="col-form-label col-sm-4">Type de dettes</div>
+						
+						{% set debts = constant('App\\Entity\\evalBudgetPerson::DEBTS_TYPE') %}
+
 						<div class="col-sm-8">
 							<select id="js-{{ key }}_evalBudgetPerson_debts_type"
 								name="js-{{ key }}_evalBudgetPerson_debts_type" class="form-control">
 								<option class="default" value="">-- Ajouter --</option>
-								<option value="debtRental">Dettes locatives</option>
-								<option value="debtConsrCredit">Dette de crédits à la consommation</option>
-								<option value="debtMortgage">Dettes de crédits immobiliers</option>
-								<option value="debtFines">Amendes</option>
-								<option value="debtTaxDelays">Retards d'impôts</option>
-								<option value="debtBankOverdrafts">Découverts bancaires</option>
-								<option value="debtOther">Autres dettes</option>
+								{% for debtKey, debtValue in debts %}
+									<option value="{{ debtKey }}">{{ debtValue }}</option>
+								{% endfor %}
 							</select>
 						</div>
 						<div class="col-md-12 mt-3">
@@ -122,48 +121,14 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtRental"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtRental) }}</div></th>
-											<td class="align-middle">Dettes locatives</td>
+										{% for debtKey, debtValue in debts %}
+										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-{{ debtKey }}" class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, debtKey)) }}</div></th>
+											<td class="align-middle">{% if not loop.last %}{{ debtValue }}<!--
+											-->{% else %}{{ form_widget(evalBudgetPerson.debtOtherPrecision) }}{% endif %}</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtConsrCredit"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtConsrCredit) }}</div></th>
-											<td class="align-middle">Dette de crédits à la consommation</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtMortgage"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtMortgage) }}</div></th>
-											<td class="align-middle">Dettes de crédits immobiliers</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtFines"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtFines) }}</div></th>
-											<td class="align-middle">Amendes</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtTaxDelays"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtTaxDelays) }}</div></th>
-											<td class="align-middle">Retards d'impôts</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtBankOverdrafts"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtBankOverdrafts) }}</div></th>
-											<td class="align-middle">Découverts bancaires</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalBudgetPerson_debts_type-debtOther"
-											class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalBudgetPerson.debtOther) }}</div></th>
-											<td class="align-middle">{{ form_widget(evalBudgetPerson.debtOtherPrecision) }}</td>											
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>

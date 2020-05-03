@@ -58,7 +58,7 @@
 	</nav>
 	{% for person in people %}
 		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
-			class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ person.person.fullname }}</a>
+			class="btn btn-outline-secondary btn-sm rounded-pill smal mb-2">{{ person.person.fullname }}</a>
 	{% endfor %}
 
 </section>

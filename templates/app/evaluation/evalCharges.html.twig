@@ -1,74 +1,5 @@
 {# Charges #}
-{% set charges = {
-    0 : {
-        'name' : 'rent',
-        'trans' : 'Loyer', 
-        'value' : evalBudgetPerson.rent,
-        'amt' : evalBudgetPerson.rentAmt,
-    },
-    1 : {
-        'name' : 'electricityGas',
-        'trans' : 'Electricité / Gaz',
-        'value' : evalBudgetPerson.electricityGas,
-        'amt' : evalBudgetPerson.electricityGasAmt,
-    },
-    2 : {
-        'name' : 'water',
-        'trans' : 'Eau',
-        'value' : evalBudgetPerson.water,
-        'amt' : evalBudgetPerson.waterAmt,
-    },
-    3 : {
-        'name' : 'insurance',
-        'trans' : 'Assurance(s)',
-        'value' : evalBudgetPerson.insurance,
-        'amt' : evalBudgetPerson.insuranceAmt,
-    },
-    4 : {
-        'name' : 'mutual',
-        'trans' : 'Mutuelle(s)',
-        'value' : evalBudgetPerson.mutual,
-        'amt' : evalBudgetPerson.mutualAmt,
-    },
-    5 : {
-        'name' : 'taxes',
-        'trans' : 'Impôts',
-        'value' : evalBudgetPerson.taxes,
-        'amt' : evalBudgetPerson.taxesAmt,
-    },
-    6 : {
-        'name' : 'transport',
-        'trans' : 'Transport',
-        'value' : evalBudgetPerson.transport,
-        'amt' : evalBudgetPerson.transportAmt,
-    },
-    7 : {
-        'name' : 'childcare',
-        'trans' : 'Garde d\'enfant(s)',
-        'value' : evalBudgetPerson.childcare,
-        'amt' : evalBudgetPerson.childcareAmt,
-    },
-    8 : {
-        'name' : 'alimony',
-        'trans' : 'Pension alimentaire',
-        'value' : evalBudgetPerson.alimony,
-        'amt' : evalBudgetPerson.alimonyAmt,
-    },
-    9 : {
-        'name' : 'phone',
-        'trans' : 'Téléphone',
-        'value' : evalBudgetPerson.phone,
-        'amt' : evalBudgetPerson.phoneAmt,
-    },
-    10 : {
-        'name' : 'chargeOther',
-        'trans' : 'Autre charge',
-        'value' : evalBudgetPerson.chargeOther,
-        'amt' : evalBudgetPerson.chargeOtherAmt,
-    }
-}
-%}
-
+{% set charges = constant('App\\Entity\\evalBudgetPerson::CHARGES_TYPE') %}
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.charges) }}</div>
@@ -80,8 +11,8 @@
                         name="js-{{ key }}_{{ entity }}_charges_type" class="form-control"
                         data-id="chargesType" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
                         <option class="default" value="">-- Ajouter --</option>
-                        {% for charge in charges %}
-                            <option value="{{ charge.name }}">{{ charge.trans }}</option>
+                        {% for chargeKey, chargeValue in charges %}
+                            <option value="{{ chargeKey }}">{{ chargeValue }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -99,14 +30,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for charge in charges %}
-                            <tr id="js-{{ key }}_{{ entity }}_charges_type-{{ charge.name }}" class="js-{{ key }}_{{ entity }}_resources_type d-table-row">
-                                <th scope="row"><div class="sr-only">{{ form_widget(charge.value) }}</div></th>
-                                <td class="align-middle">{% if not loop.last %}{{ charge.trans }}<!--
-                                -->{% else %}{{ form_widget(evalBudgetPerson.chargeOtherPrecision) }}{% endif %}</td>
-                                <td>{{ form_widget(charge.amt) }}</td>
-                                <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                            </tr>
+                        {% for chargeKey, chargeValue in charges %}
+                        <tr id="js-{{ key }}_{{ entity }}_charges_type-{{ chargeKey }}" class="js-{{ key }}_{{ entity }}_charges_type d-table-row">
+                            <th scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</div></th>
+                            <td class="align-middle">{% if not loop.last %}{{ chargeValue }}<!--
+                            -->{% else %}{{ form_widget(evalBudgetPerson.chargeOtherPrecision) }}{% endif %}</td>
+                            <td>{{ form_widget(attribute(evalBudgetPerson, chargeKey ~ "Amt")) }}</td>
+                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>

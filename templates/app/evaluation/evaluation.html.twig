@@ -7,7 +7,8 @@
 {% block body %}
 
 	{% set evaluationGroup = form.vars.value %}
-    {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %}
+
+    {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 
 	<div class="container">
 
@@ -65,7 +66,7 @@
 		{{ form_end(form, {"render_rest": false}) }}
 	</div>
 
-	{% endcache %}
+	{# {% endcache %} #}
 
 {% endblock %}
 

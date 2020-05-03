@@ -47,6 +47,16 @@ class EvalBudgetPerson
         'chargeOther' => 'Autre charge',
     ];
 
+    public const DEBTS_TYPE = [
+        'debtRental' => 'Dettes locatives',
+        'debtConsrCredit' => 'Dette de crédits à la consommation',
+        'debtMortgage' => 'Dettes de crédits immobiliers',
+        'debtFines' => 'Amendes',
+        'debtTaxDelays' => 'Retards d\'impôts',
+        'debtBankOverdrafts' => 'Découverts bancaires',
+        'debtOther' => 'Autres dettes',
+    ];
+
     public const SETTLEMENT_PLAN = [
         1 => 'Proposé',
         2 => 'Accepté',
@@ -738,6 +748,11 @@ class EvalBudgetPerson
         $this->debts = $debts;
 
         return $this;
+    }
+
+    public function getDebtsType(): array
+    {
+        return self::DEBTS_TYPE;
     }
 
     /**
