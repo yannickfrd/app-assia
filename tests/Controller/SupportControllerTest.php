@@ -80,7 +80,7 @@ class SupportControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Nouveau suivi social');
+        $this->assertSelectorTextContains('h1', 'Suivi | Nouveau suivi');
     }
 
     public function testCreateNewSupportGroupIsSuccessful()
@@ -90,12 +90,21 @@ class SupportControllerTest extends WebTestCase
             'id' => ($this->dataFixtures['groupPeople'])->getId(),
         ]));
 
+        $now = new \DateTime();
+        $faker = \Faker\Factory::create('fr_FR');
+
         $form = $crawler->selectButton('send')->form([
+            'support[originRequest][organization]' => 1,
+            'support[originRequest][organizationComment]' => $faker->sentence(mt_rand(3, 6), true),
+            'support[originRequest][preAdmissionDate]' => $now->format('Y-m-d'),
+            'support[originRequest][resulPreAdmission]' => 1,
+            'support[originRequest][decisionDate]' => $now->format('Y-m-d'),
+            'support[originRequest][comment]' => $faker->paragraphs(6, true),
             'support[service]' => 1,
             'support[device]' => 1,
             'support[status]' => 2,
             'support[referent]' => 1,
-            'support[startDate]' => 2,
+            'support[startDate]' => $now->format('Y-m-d'),
             'support[agreement]' => true,
         ]);
 
@@ -112,7 +121,7 @@ class SupportControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Suivi social');
+        $this->assertSelectorTextContains('h1', 'Suivi | Édition du suivi');
     }
 
     public function testEditSupportGroupIsSuccessful()
@@ -149,16 +158,6 @@ class SupportControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupe');
         $this->assertSelectorExists('.alert.alert-warning');
-    }
-
-    public function testEditSupportGroupleWithPeopleIsUp()
-    {
-        $this->client->request('GET', $this->generateUri('support_pers_edit', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h2', 'Personnes rattachées au suivi social');
     }
 
     public function testAddPeopleInSupportIsUp()

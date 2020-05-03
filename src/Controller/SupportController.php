@@ -21,7 +21,6 @@ use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Support\SupportGroupWithPeopleType;
 use App\Service\SupportGroup\SupportGroupService;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -82,7 +81,7 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportGroupService->createSupportGroup($groupPeople, $supportGroup)) {
+            if ($supportGroupService->create($groupPeople, $supportGroup)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getService()->getAccommodation()) {
@@ -115,7 +114,7 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportGroupService->updateSupportPeople($supportGroup);
+            $supportGroupService->update($supportGroup);
 
             $this->manager->flush();
 
@@ -184,33 +183,6 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Modification des suivis individuels.
-     *
-     * @Route("/support/{id}/people", name="support_pers_edit", methods="GET|POST")
-     *
-     * @param int $id // SupportGroup
-     */
-    public function editSupportGroupleWithPeople(int $id, Request $request): Response
-    {
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
-
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
-        $form = ($this->createForm(SupportGroupWithPeopleType::class, $supportGroup))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
-
-            $this->addFlash('success', 'Le suivi social est modifié.');
-        }
-
-        return $this->render('app/support/supportPeople.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * Ajout de personnes au suivi.
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
@@ -221,7 +193,7 @@ class SupportController extends AbstractController
             $this->addFlash('warning', "Aucune personne n'est ajoutée au suivi.");
         }
 
-        return $this->redirectToRoute('support_pers_edit', [
+        return $this->redirectToRoute('support_edit', [
             'id' => $supportGroup->getId(),
         ]);
     }

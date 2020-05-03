@@ -2,22 +2,24 @@
 
 namespace App\Form\Support;
 
+use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Entity\SupportGroup;
-use App\Entity\User;
 use App\Form\Utils\Choices;
-use App\Repository\DeviceRepository;
-use App\Repository\ServiceRepository;
+use App\Entity\SupportGroup;
 use App\Repository\UserRepository;
+use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Form\OriginRequest\OriginRequestType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SupportGroupType extends AbstractType
 {
@@ -53,6 +55,7 @@ class SupportGroupType extends AbstractType
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'placeholder' => '-- Select --',
             ])
+            ->add('originRequest', OriginRequestType::class)
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -102,6 +105,16 @@ class SupportGroupType extends AbstractType
                 'attr' => [
                     'class' => 'custom-control-input checkbox',
                 ],
+            ])
+            ->add('supportPeople', CollectionType::class, [
+                'entry_type' => SupportPersonType::class,
+                'label_attr' => [
+                    'class' => 'sr-only',
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'required' => false,
             ])
             ->add('comment', null, [
                 'attr' => [

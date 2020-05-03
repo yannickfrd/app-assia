@@ -60,6 +60,7 @@ class OriginRequest
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="originRequests")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $organization;
 

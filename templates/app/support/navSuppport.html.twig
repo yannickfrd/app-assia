@@ -1,24 +1,24 @@
 <section class="m-0">
 
+	{% if support.id %}
+	{% set group_people = support.groupPeople %}
+	{% set people = support.supportPeople %}
+	{% endif %}
+
 	<div class="d-md-flex justify-content-md-between mb-2">
 		<h1 class="h2">Suivi | {{ title }}</h1>
-		<div>
+		{% if support.id %}
+		<div id="support" data-support="{{ support.id }}">
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_view', {'id':support.id}) }}" data-placement="bottom" title="Page d'accueil du suivi">
 				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
 			</a>
-			</a>
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_originRequest', {'id':support.id}) }}" data-placement="bottom" title="Origine de la demande">
-				<span class="fas fa-step-backward"></span><span class="sr-only">Origine de la demande</span>
-			</a>
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" title="Personnes rattachées au suivi social">
-				<span class="fas fa-users"></span><span class="sr-only">Personnes accompagnées</span>
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Evaluation sociale">
 				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
 			</a>
 			{% if support.service.accommodation %}
-				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Modalités d'hébergement">
-					<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
-				</a>
+			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Modalités d'hébergement">
+				<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
+			</a>
 			{% endif %}
 			<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Rendez-vous">
 				<span class="far fa-calendar-alt"></span><span class="sr-only">Agenda</span>
@@ -30,43 +30,36 @@
 				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
 		</div>
+		{% endif %}
 	</div>
-
-	<div id="support" data-support="{{ support.id }}"></div>
-
+	
+	{% if support.id %}
 	<div class="small text-secondary">
 		<p>Créé le {{support.createdAt | date("d/m/Y à H:i") }}{% if support.createdBy %} par {{ support.createdBy.fullname}}{% endif %}
 			<span id="js-updatedSupport">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
+	{% endif %}
 
-	<div>
-		<nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item">
-					<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}">
-						<span class="fas fa-users mr-2"></span>Fiche groupe
-						<span class="small">{{ support.groupPeople.familyTypologyToString }}</span>
-					</a>
-				</li>
-				<li class="breadcrumb-item">
-					<a class="text-{{ theme_color }}" href="{{ path('support_view', {'id':support.id }) }}">Suivi social</a>
-				</li>
-				{% if previous_page is defined %}
-					<li class="breadcrumb-item">
-						<a class="text-{{ theme_color }}" href="{{ path('{{ previous_path }}', {'id':support.id }) }}">{{ previous_page }}</a>
-					</li>
-				{% endif %}
-				<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
-			</ol>
-		</nav>
-		<div id="support-people">
-		{% for supportPerson in support.supportPeople %}
-			<a href="{{ path("group_person_show", {"id":support.groupPeople.id, "person_id":supportPerson.person.id, "slug":supportPerson.person.slug}) }}" 
-				class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ supportPerson.person.fullname }}</a>
-		{% endfor %}
-		</div>
-	</div>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
+					<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ group_people.familyTypologyToString }}</span>
+				</a>
+			</li>
+			{% if support.id %}
+			<li class="breadcrumb-item">
+				<a class="text-{{ theme_color }}" href="{{ path('support_view', {'id':support.id }) }}">Suivi social</a>
+			</li>
+			{% endif %}
+			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+		</ol>
+	</nav>
+	{% for person in people %}
+		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
+			class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ person.person.fullname }}</a>
+	{% endfor %}
 
 </section>
 

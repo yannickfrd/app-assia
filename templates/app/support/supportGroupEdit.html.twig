@@ -2,14 +2,14 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% if form.vars.value.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
+{% set support = form.vars.value %}
 
-{% if edit_mode %}
+{% if support.id %}
 	{% set people = form.vars.value.supportPeople %}
-	{% set title = "Suivi social" %}
+	{% set title = "Édition du suivi" %}
 {% else %}
 	{% set people = group_people.rolePeople %}
-	{% set title = "Nouveau suivi social" %}
+	{% set title = "Nouveau suivi" %}
 {% endif %}
 
 {% block title %}{{ title }} | {{ title_website }}{% endblock %}
@@ -18,138 +18,46 @@
 
 <div class="container">
 
-	{% if group_people is not defined %}
-	{% set group_people = form.vars.value.groupPeople %}
-	{% endif %}
-
-	{% set typo = group_people.familyTypology %}
-	{% set support = form.vars.value %}
-
-	<h1 class="h2 mb-3">{{ title }}</h1>
-	{% if edit_mode %}
-	<div class="small text-secondary">
-		<p>
-			Créé le {{support.createdAt | date("d/m/Y à H:i") }}
-			{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
-			<span id="js-updatedSupport">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
-		</p>
-	</div>
-	{% else %}
-	<div class="mb-4"></div>
-	{% endif %}
-
-	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item">
-				<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
-					<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ group_people.familyTypologyToString }}</span>
-				</a>
-			</li>
-			<li class="breadcrumb-item active" aria-current="page">
-				{% if edit_mode %}Suivi social (Accueil){% else %}Nouveau suivi social{% endif %}
-			</li>
-		</ol>
-	</nav>
-	{% for person in people %}
-		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
-			class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
-	{% endfor %}
-
-	<hr>
-
-	{{ form_start(form) }}
-
+	{% include "app/support/navSuppport.html.twig" %}
 
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
 
-	{% if edit_mode %}
-		<div class="d-flex row justify-content-center my-4">
-			{% if support.service.preAdmission %}
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-origin-request' class="btn btn-{{ theme_color }} btn-block shadow" 
-					href="{{ path('support_originRequest', {'id':support.id}) }}" data-placement="bottom" 
-					title="Origine de la demande et pré-admission">Origine demande</a>
-			</div>			
-			{% endif %}
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-person' class="btn btn-{{ theme_color }} btn-block shadow" 
-					href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" 
-					title="Personnes rattachées au suivi social">Personnes</a>
-			</div>
-			{% if support.service.accommodation %}
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-accommodations' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" 
-				title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
-			</div>
-			{#<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-				<a id='support-pf'class="btn btn-{{ theme_color }} btn-block shadow" 
-					href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a>
-			</div> #}
-			{% endif %}
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" 
-				title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
-			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-calendar' class="btn btn-{{ theme_color }} btn-block shadow" 
-					href="{{ path('support_calendar_show', {'id':support.id}) }}" data-placement="bottom" 
-					title="Rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span></a>
-			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-notes' class="btn btn-{{ theme_color }} btn-block shadow" 
-					href="{{ path('support_notes', {'id':support.id}) }}" data-placement="bottom" 
-					title="Notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
-			</div>
-			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-documents' class="btn btn-{{ theme_color }} btn-block shadow" 
-					href="{{ path('support_documents', {'supportId':support.id}) }}"data-placement="bottom" 
-					title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span></a>
-			</div>
-		</div>
-	{% endif %}
+    {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %}
 
-	{# {% if form.vars.value.evaluationsGroup|last %}
-	{% set evaluation = form.vars.value.evaluationsGroup|last %}
-	{% if evaluation.evalHousingGroup and (evaluation.evalHousingGroup.housingAddress or evaluation.evalHousingGroup.domiciliationAddress) %}
+	{{ form_start(form) }}
 
-	<div class="form-group row">
-		<div class="col-4 col-sm-2 mb-3">Adresse du logement ou d'hébergement :</div>
-		<div class="col-8 col-sm-4">
-			<div class="p-2">
-				{{ evaluation.evalHousingGroup.housingAddress }}{% if evaluation.evalHousingGroup.housingCity %} - {% endif %}<!--
-				--> {{ evaluation.evalHousingGroup.housingDept }} {{ evaluation.evalHousingGroup.housingCity }}
-			</div>
-		</div>
-		<div class="col-4 col-sm-2 mb-3">Adresse de domiciliation :</div>
-		<div class="col-8 col-sm-4">
-			<div class="p-2">
-				{{ evaluation.evalHousingGroup.domiciliationAddress }}{% if evaluation.evalHousingGroup.domiciliationCity %} - {% endif %}<!--
-				--> {{ evaluation.evalHousingGroup.domiciliationDept }} {{ evaluation.evalHousingGroup.domiciliationCity }}
+	<div class="card mb-4 border border-{{ theme_color }} ">
+	  	<h5 class="card-header">Orientation / pré-admission</h5>
+		<div class="card-body bg-light">
+			<div class="form-group row">
+				<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
+				<div class="col-md-6">{{ form_row(form.originRequest.organizationComment) }}</div>
+				<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
+				<div class="col-md-6">{{ form_row(form.originRequest.preAdmissionDate) }}</div>
+				<div class="col-md-6">{{ form_row(form.originRequest.resulPreAdmission) }}</div>
+				<div class="col-md-6">{{ form_row(form.originRequest.decisionDate) }}</div>
+				<div class="col-md-12">{{ form_label(form.originRequest.comment) }}{{ form_widget(form.originRequest.comment) }}</div>
 			</div>
 		</div>
 	</div>
 
-	{% endif %}
-	{% endif %} #}
-
-	<div class="form-group row">
+	<div class="row mt-5">
 		<div class="col-md-6">{{ form_row(form.service) }}</div>
 		<div class="col-md-6">{{ form_row(form.device) }}</div>
 	</div>
-	<div class="form-group row">
+	<div class="row">
 		<div class="col-md-6">{{ form_row(form.status) }}</div>
 	</div>
-	<div class="form-group row">
+
+	<div class="row">
 		<div class="col-md-6">{{ form_row(form.startDate) }}</div>
 		<div class="col-md-6">{{ form_row(form.endDate) }}</div>
 	</div>
-	<div class="form-group row">
+	<div class="row">
 		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
 		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatusComment) }}</div>
-		{% if edit_mode and support.service.accommodation %}
+		{% if support.id and support.service.accommodation %}
 		<div class="col-md-6 js-status d-block">
 			<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
 			{{ form_row(form.endAccommodation) }}
@@ -161,6 +69,83 @@
 		<div class="col-md-6">{{ form_row(form.referent) }}</div>
 		<div class="col-md-6">{{ form_row(form.referent2) }}</div>
 	</div>
+
+	{% if support.id %}
+
+	<div class="form-group row">
+		<div class="col-md-12">
+			<div class="mb-4 float-right">
+				<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow">
+					<span class="fas fa-save mr-2"></span>Mettre à jour</button>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+	
+	<section>
+		<h2 class="h4 my-4">Personnes rattachées au suivi social</h2>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive mb-3">
+					<table id="table-support-people" class="table table-sm table-striped table-hover text-dark shadow-sm">
+						<thead>
+							<tr>
+								<th scope="col" class="align-middle th-w-20"></th>
+								<th scope="col" class="align-middle th-w-150">Nom et prénom</th>
+								<th scope="col" class="align-middle th-w-20" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
+								<th scope="col" class="align-middle th-w-150">Rôle</th>
+								<th scope="col" class="align-middle th-date">Date de début</th>
+								<th scope="col" class="align-middle th-date">Date de fin</th>
+								<th scope="col" class="align-middle th-w-120">Statut</th>
+								<th scope="col" class="align-middle th-w-150">Situation à la fin</th>
+								<th scope="col" class="align-middle th-w-150">Commentaire situation à la fin</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for form_support_pers in form.supportPeople.children %}
+								{% set person = form_support_pers.vars.data.person %}
+								<tr class="js-tr-support_pers">
+									<th scope="row" class="px-1 align-middle">
+										<button class="js-remove btn btn-danger btn-sm shadow" data-url="{{ path('remove_support_pers', {'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Retirer la personne du suivi">
+											<span class="fas fa-user-times"></span>
+										</button>
+									</th>
+									<td class="px-2 align-middle w-min-150">{{ person.fullname }}</td>
+									<td class="px-1 align-middle">
+										<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
+											{{ form_widget(form_support_pers.head) }}
+										</div>
+									</td>										
+									<td class="px-1">{{ form_widget(form_support_pers.role) }}</td>
+									<td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
+									<td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
+									<td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
+									<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
+									<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-12">
+				<a id="add-people" href="{{ path('support_add_people', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
+					<span class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe au suivi</a>
+				<div class="float-right">
+					<button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">
+						<span class="fas fa-save mr-2"></span>Mettre à jour</button>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	{% endif %}
+
 	<div class="form-group row">
 		<div class="col-md-12">{{ form_widget(form.comment) }}</div>
 	</div>
@@ -182,18 +167,20 @@
 		</div>
 	</div>
 
-	<div class="form-group row mt-5">
+	<div class="form-group row my-5">
 		<div class="col-md-12">
-			{% if edit_mode and is_granted("DELETE", support) %}
+			{% if support.id and is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
 				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
 					title="Supprimer le suivi social" data-placement="bottom"
-					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
+					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). 
+					Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
 					class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
 			</div>
 			{% endif %}
-			<div class="mb-4 float-right">
-				<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+			<div class="float-right">
+				<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>
+				{% if support.id %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 			</div>
 		</div>
 	</div>
@@ -201,7 +188,12 @@
 	{{ form_row(form._token) }}
 	{{ form_end(form, {"render_rest": false}) }}
 
+	{% endcache %}
+
 </div>
+
+{% include "app/support/removeSupportPerson.html.twig" %}
+
 
 {% endblock %}
 

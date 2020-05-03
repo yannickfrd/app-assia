@@ -32,6 +32,21 @@ class EvalBudgetPerson
         'ressourceOther' => 'Autre ressource',
     ];
 
+    public const CHARGES_TYPE = [
+        'rent' => 'Loyer',
+        'electricityGas' => 'Electricité / Gaz',
+        'water' => 'Eau',
+        'insurance' => 'Assurance(s)',
+        'mutual' => 'Mutuelle(s)',
+        'taxes' => 'Impôts',
+        'transport' => 'Loyer',
+        'rent' => 'Transport',
+        'childcare' => 'Garde d\'enfant(s)',
+        'alimony' => 'Pension alimentaire',
+        'phone' => 'Téléphone',
+        'chargeOther' => 'Autre charge',
+    ];
+
     public const SETTLEMENT_PLAN = [
         1 => 'Proposé',
         2 => 'Accepté',
@@ -297,7 +312,7 @@ class EvalBudgetPerson
         return $this->id;
     }
 
-    public function getResourcesTypeArray(): array
+    public function getResourcesType(): array
     {
         return self::RESOURCES_TYPE;
     }
@@ -341,6 +356,11 @@ class EvalBudgetPerson
     public function getCharges(): ?int
     {
         return $this->charges;
+    }
+
+    public function getChargesType(): array
+    {
+        return self::CHARGES_TYPE;
     }
 
     /**

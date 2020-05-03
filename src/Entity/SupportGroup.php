@@ -632,7 +632,7 @@ class SupportGroup
         return $this->originRequest;
     }
 
-    public function setOriginRequest(OriginRequest $originRequest): self
+    public function setOriginRequest(?OriginRequest $originRequest): self
     {
         $this->originRequest = $originRequest;
 

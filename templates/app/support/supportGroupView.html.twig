@@ -1,19 +1,24 @@
 {% extends "base.html.twig" %}
 {% import 'macros/view.html.twig' as utils %}
 
-
 {% block title %}Suivi social | {{ title_website }}{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-	<h1 class="h2 mb-3">Suivi social</h1>
+	<div class="d-md-flex mb-2">
+		<h1 class="h2">Suivi social</h1>
+		<div><a id="edit" href="{{ path('support_edit', {'id': support.id }) }}" class="text-{{ theme_color }} ml-2" title="Modifier le suivi">
+			<span class="fas fa-edit"></span></a>
+		</div>
+	</div>
 
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
 
-    {# {% cache "support.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
+    {% cache "support.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %}
+
 	{% set group_people = support.groupPeople %}
 	<div class="small text-secondary">
 		<p>Créé le {{support.createdAt | date("d/m/Y à H:i") }}
@@ -34,34 +39,18 @@
 	</nav>
 	{% for person in support.supportPeople %}
 		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
-			class="btn btn-outline-{{ theme_color }} btn-sm mb-2">{{ person.person.fullname }}</a>
+			class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ person.person.fullname }}</a>
 	{% endfor %}
 
 	<hr>
 
 	<div class="d-flex row justify-content-center my-4">
-		{% if support.service.preAdmission %}
-		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-			<a id='support-origin-request' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_originRequest', {'id':support.id}) }}" data-placement="bottom" 
-				title="Origine de la demande et pré-admission">Origine demande</a>
-		</div>			
-		{% endif %}
-		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-			<a id='support-person' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_pers_edit', {'id':support.id}) }}" data-placement="bottom" 
-				title="Personnes rattachées au suivi social">Personnes</a>
-		</div>
 		{% if support.service.accommodation %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-accommodations' class="btn btn-{{ theme_color }} btn-block shadow" 
 			href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" 
 			title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
 		</div>
-		{#<div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-			<a id='support-pf'class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="#" data-placement="bottom" title="Voir les participations financières">Redevance</a>
-		</div> #}
 		{% endif %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
@@ -88,30 +77,38 @@
 	<div class="row">
 		{{ utils.view(support.service.name ~ " (" ~ support.device.name ~ ")", "Service (dispositif)") }}
 		{{ utils.view(support.statusToString, "Status") }}
-	</div>
-	<div class="row mb-3">
-		{% set supportDates %}
-		{% if support.startDate %}{{ support.startDate| date("d/m/Y") }}{% endif %}
-		{% if support.endDate %} - {{ support.endDate| date("d/m/Y") }}{% endif %}
+		{% if support.originRequest and support.originRequest.organization %}
+		{% set organization %}
+		{% if support.originRequest.organization %}{{ support.originRequest.organization.name }}{% endif %}
+		{% if support.originRequest.organizationComment %} ({{ support.originRequest.organizationComment }}){% endif %}
 		{% endset %}
-		{{ utils.view(supportDates, "Support dates") }}
+		{{ utils.view(organization, "Organisme orienteur ou prescripteur") }}
+		{% endif %}
+		{% if support.originRequest and support.originRequest.orientationDate %}
+		{{ utils.view(support.originRequest.orientationDate| date("d/m/Y"), "Date d'orientation") }}
+		{% endif %}
+	</div>
+	<div class="row">
+		{% if support.startDate %}{{ utils.view(support.startDate| date("d/m/Y"), "Start date") }}{% endif %}
 		{% set referents %}
 		{% if support.referent %}{{ support.referent.fullname }}{% endif %}
 		{% if support.referent2 %} ({{ support.referent2.fullname }}){% endif %}
 		{% endset %}
 		{{ utils.view(referents, "Referent") }}
+		{% if support.endDate %}{{ utils.view(support.endDate| date("d/m/Y"), "End date") }}{% endif %}
 	</div>
-	<div class="row mb-3">
+	<div class="row">
 		{{ utils.view(support.comment, "Comment") }}
 	</div>
 
-	<div class="row">
+	<div class="row mt-3">
 		<div class="col-md-12">
 			{% if is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
 				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
 					title="Supprimer le suivi social" data-placement="bottom"
-					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
+					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). 
+					Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
 					class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
 			</div>
 			{% endif %}
@@ -121,9 +118,10 @@
 		</div>
 	</div>
 
-	{# {% endcache %} #}
+	{% endcache %}
 
 	{% if evaluation %}
+
     {# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
 
 	{% if evaluation.evalHousingGroup %}
@@ -134,20 +132,22 @@
 			<h2 class="col-md-12 h4">Logement - Hébergement</h2>
 		</div>
 
-		{% if evaluation and evaluation.evalHousingGroup and (evaluation.evalHousingGroup.housingAddress or evaluation.evalHousingGroup.domiciliationAddress) %}
 		<div class="row mb-3">
-			{% set housingFullAddress %}
-				{{ evaluation.evalHousingGroup.housingAddress }}{% if evaluation.evalHousingGroup.housingCity %} - {% endif %}<!--
-				--> {{ evaluation.evalHousingGroup.housingDept }} {{ evaluation.evalHousingGroup.housingCity }}
-			{% endset %}
-			{% set domiciliationFullAddress %}
-				{{ evaluation.evalHousingGroup.domiciliationAddress }}{% if evaluation.evalHousingGroup.domiciliationCity %} - {% endif %}<!--
-				--> {{ evaluation.evalHousingGroup.domiciliationDept }} {{ evaluation.evalHousingGroup.domiciliationCity }}
-			{% endset %}
-			{{ utils.view(housingFullAddress, "Adresse du logement ou d'hébergement") }}
-			{{ utils.view(domiciliationFullAddress, "Domiciliation") }}
+			{% if evaluation.evalHousingGroup.housingAddress %}
+				{% set housingFullAddress %}
+					{{ evaluation.evalHousingGroup.housingAddress }}{% if evaluation.evalHousingGroup.housingCity %} - {% endif %}<!--
+					--> {{ evaluation.evalHousingGroup.housingDept }} {{ evaluation.evalHousingGroup.housingCity }}
+				{% endset %}
+				{{ utils.view(housingFullAddress, "Adresse du logement ou d'hébergement") }}
+			{% endif %}
+			{% if evaluation.evalHousingGroup.domiciliationAddress %}
+				{% set domiciliationFullAddress %}
+					{{ evaluation.evalHousingGroup.domiciliationAddress }}{% if evaluation.evalHousingGroup.domiciliationCity %} - {% endif %}<!--
+					--> {{ evaluation.evalHousingGroup.domiciliationDept }} {{ evaluation.evalHousingGroup.domiciliationCity }}
+				{% endset %}
+				{{ utils.view(domiciliationFullAddress, "Domiciliation") }}
+			{% endif %}
 		</div>
-		{% endif %}
 		<div class="row mb-2">
 			{{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
 		</div>
@@ -198,30 +198,30 @@
 					<tbody>
 						<tr>
 							<th scope="row" class="font-weight-normal">Ressources</th>
-							<td class="text-right">{{ evaluation.evalBudgetGroup.resourcesGroupAmt }} €</td>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.resourcesGroupAmt|number_format(0, ',', ' ') }} €</td>
 						</tr>
 						{% if evaluation.evalBudgetGroup.chargesGroupAmt %}
 						<tr>
 							<th scope="row" class="font-weight-normal">Charges</th>
-							<td class="text-right">{{ evaluation.evalBudgetGroup.chargesGroupAmt }} €</td>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.chargesGroupAmt|number_format(0, ',', ' ') }} €</td>
 						</tr>
 						{% endif %}
 						{% if evaluation.evalBudgetGroup.debtsGroupAmt %}
 						<tr>
 							<th scope="row" class="font-weight-normal">Remboursement mensuel des dettes</th>
-							<td class="text-right">{{ evaluation.evalBudgetGroup.debtsGroupAmt }} €</td>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.debtsGroupAmt|number_format(0, ',', ' ') }} €</td>
 						</tr>
 						{% endif %}
 					</tbody>
 					<tfooter>
 						<tr>
 							<th scope="row">Reste à vivre</th>
-							<td class="text-right font-weight-bold">{{ evaluation.evalBudgetGroup.budgetBalanceAmt }} €</td>
+							<td class="text-right font-weight-bold">{{ evaluation.evalBudgetGroup.budgetBalanceAmt|number_format(0, ',', ' ') }} €</td>
 						</tr>
 						{% if evaluation.evalBudgetGroup.debtsGroupAmt %}
 						<tr>
 							<th scope="row" class="font-weight-normal">Montant total des dettes</th>
-							<td class="text-right">{{ evaluation.evalBudgetGroup.debtsGroupAmt }} €</td>
+							<td class="text-right">{{ evaluation.evalBudgetGroup.debtsGroupAmt|number_format(0, ',', ' ') }} €</td>
 						</tr>
 						{% endif %}
 					</tfooter>
@@ -231,18 +231,97 @@
 
 		{% for evalPerson in evaluation.evaluationPeople %}
 		{% set evalBudget = evalPerson.evalBudgetPerson %}
+
 		{% if evalBudget %}	
-		<div class="row mb-3">
+
+		<div class="row mb-2">
 			<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
 		</div>
-		<div class="row mb-3">
+
+		<div class="row">
 			{{ utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
-			{{ utils.view(evalBudget.resourcesAmt, "Resources amt", "evaluation") }}
+			{{ utils.view(evalBudget.chargesToString, "Charge", "evaluation") }}
+		</div>
+
+		<div class="row mb-3">
+			{% if evalBudget.resources == 1 %}
+				<div class="col-md-6">
+					<table class="table table-sm table-bordered table-hover">
+						<thead>
+							<tr>
+								<th scope="col">Type de ressources</th>
+								<td class="text-right font-weight-bold">Montant</td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, value in evalBudget.resourcesType %}
+								{% if attribute(evalBudget, key) %}
+								<tr>
+									<th scope="row" class="font-weight-normal">{{ value }}</th>
+									<td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ',', ' ') }} €</td>
+								</tr>
+								{% endif %}
+							{% endfor %}
+						</tbody>
+						<tfooter>
+							<tr>
+								<th scope="row">Total des ressources</th>
+								<td class="text-right font-weight-bold">{{ evalBudget.resourcesAmt|number_format(0, ',', ' ') }} €</td>
+							</tr>
+							{% if evalBudget.incomeN1Amt %}
+							<tr>
+								<th scope="row" class="font-weight-normal">Impôts sur le revenu n-1</th>
+								<td class="text-right">{{ evalBudget.incomeN1Amt|number_format(0, ',', ' ') }} €</td>
+							</tr>							
+							{% endif %}
+							{% if evalBudget.incomeN2Amt %}
+							<tr>
+								<th scope="row" class="font-weight-normal">Impôts sur le revenu n-2</th>
+								<td class="text-right">{{ evalBudget.incomeN2Amt|number_format(0, ',', ' ') }} €</td>
+							</tr>
+							{% endif %}
+						</tfooter>
+					</table>
+				</div>
+			{% endif %}
+
+			{% if evalBudget.charges == 1 %}
+				<div class="col-md-6">
+					<table class="table table-sm table-bordered table-hover">
+						<thead>
+							<tr>
+								<th scope="col">Type de charges</th>
+								<td class="text-right font-weight-bold">Montant</td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, value in evalBudget.chargesType %}
+								{% if attribute(evalBudget, key) %}
+								<tr>
+									<th scope="row" class="font-weight-normal">{{ value }}</th>
+									<td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ',', ' ') 	 }} €</td>
+								</tr>
+								{% endif %}
+							{% endfor %}
+						</tbody>
+						<tfooter>
+							<tr>
+								<th scope="row">Total des charges</th>
+								<td class="text-right font-weight-bold">{{ evalBudget.chargesAmt|number_format(0, ',', ' ') }} €</td>
+							</tr>
+						</tfooter>
+					</table>
+				</div>
+			{% endif %}
+
+		</div>
+
+		<div class="row mb-3">
 			{{ utils.view(evalBudget.incomeN1Amt, "incomeN1Amt", "evaluation") }}
 			{{ utils.view(evalBudget.incomeN2Amt, "incomeN2Amt", "evaluation") }}
 			{{ utils.view(evalBudget.resourcesComment, "resourcesComment", "evaluation") }}
-			{{ utils.view(evalBudget.chargesAmt, "chargesAmt", "evaluation") }}
 		</div>
+
 		{% endif %}
 		{% endfor %}
 
@@ -250,11 +329,12 @@
 	{% endif %}
 
 	{# {% endcache %} #}
+
 	{% endif %}
 
 </div>
 
-{% endblock %}
+	{% endblock %}
 
 {% block javascripts %}
 {% endblock javascripts %}

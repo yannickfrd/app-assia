@@ -9,7 +9,6 @@ export default class UpdateSupportPeople {
         this.trElts = document.querySelectorAll(".js-tr-support_pers");
         this.modalConfirmElt = document.getElementById("modal-confirm");
         this.addPeopleBtElt = document.getElementById("add-people");
-        this.sendBtnElt = document.getElementById("send");
         this.trElt = null;
         this.loader = new Loader();
         this.init();
@@ -26,9 +25,6 @@ export default class UpdateSupportPeople {
             });
         });
         this.addPeopleBtElt.addEventListener("click", e => {
-            this.loader.on();
-        });
-        this.sendBtnElt.addEventListener("click", e => {
             this.loader.on();
         });
     }

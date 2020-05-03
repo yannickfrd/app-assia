@@ -51,16 +51,18 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query = $this->getsupportQuery();
 
         return $query
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
-            ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname}')
-            ->leftJoin('sg.referent2', 'ref2')->addselect('PARTIAL ref2.{id, firstname, lastname}')
-            ->leftJoin('sg.accommodationGroups', 'ag')->addselect('PARTIAL ag.{id, startDate, endDate, endReason}')
-            ->leftJoin('ag.accommodationPeople', 'ap')->addselect('PARTIAL ap.{id, startDate, endDate, endReason}')
-            ->leftJoin('sg.evaluationsGroup', 'eg')->addselect('PARTIAL eg.{id, updatedAt}')
-            // ->leftJoin('eg.evalHousingGroup', 'ehg')->addselect('PARTIAL ehg.{id, housingStatus, housingAddress, housingCity, housingDept, domiciliation, domiciliationAddress, domiciliationCity, domiciliationDept}')
-            ->leftJoin('sg.rdvs', 'rdvs')->addselect('PARTIAL rdvs.{id}')
-            ->leftJoin('sg.notes', 'notes')->addselect('PARTIAL notes.{id}')
-            ->leftJoin('sg.documents', 'docs')->addselect('PARTIAL docs.{id}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
+            ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, startDate, endDate, endReason}')
+            ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id, startDate, endDate, endReason}')
+            ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id, updatedAt}')
+            // ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('PARTIAL ehg.{id, housingStatus, housingAddress, housingCity, housingDept, domiciliation, domiciliationAddress, domiciliationCity, domiciliationDept}')
+            ->leftJoin('sg.rdvs', 'rdvs')->addSelect('PARTIAL rdvs.{id}')
+            ->leftJoin('sg.notes', 'notes')->addSelect('PARTIAL notes.{id}')
+            ->leftJoin('sg.documents', 'docs')->addSelect('PARTIAL docs.{id}')
 
             ->andWhere('sg.id = :id')
             ->setParameter('id', $id)
@@ -75,12 +77,12 @@ class SupportGroupRepository extends ServiceEntityRepository
     protected function getsupportQuery()
     {
         return $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.createdBy', 'user')->addselect('PARTIAL user.{id, firstname, lastname}')
-            ->leftJoin('sg.updatedBy', 'user2')->addselect('PARTIAL user2.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, preAdmission, accommodation, justice}')
-            ->leftJoin('sg.supportPeople', 'sp')->addselect('sp')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
-            ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
+            ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, preAdmission, accommodation, justice}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
 
             ->orderBy('p.birthdate', 'ASC');
     }
@@ -91,14 +93,14 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findAllSupportsQuery(SupportGroupSearch $search): Query
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name}')
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
-            ->leftJoin('sg.accommodationGroups', 'ag')->addselect('PARTIAL ag.{id, accommodation}')
-            ->leftJoin('ag.accommodation', 'a')->addselect('PARTIAL a.{id, name, address, city}')
-            ->leftJoin('sg.supportPeople', 'sp')->addselect('sp')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate}')
-            ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
-            ->leftJoin('sg.referent', 'u')->addselect('PARTIAL u.{id, firstname, lastname}');
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
 
         $query = $this->filter($query, $search);
 
@@ -116,11 +118,11 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id,name}')
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id,name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->leftJoin('sp.person', 'p')->addselect('p')
-            ->leftJoin('sg.groupPeople', 'g')->addselect('g')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('g')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id,fullname}')
             ->andWhere('sp.head = TRUE');
 
@@ -236,11 +238,11 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findAllSupportsFromUser(User $user, $maxResults = null)
     {
         return $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.service', 'sv')->addselect('PARTIAL sv.{id, name}')
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
-            ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
-            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('sg.referent = :referent')
             ->setParameter('referent', $user)

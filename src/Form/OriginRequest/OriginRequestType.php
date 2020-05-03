@@ -28,6 +28,7 @@ class OriginRequestType extends AbstractType
                         ->orderBy('o.name', 'ASC');
                 },
                 'placeholder' => '-- Select --',
+                'required' => false,
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
@@ -41,6 +42,7 @@ class OriginRequestType extends AbstractType
             ->add('resulPreAdmission', ChoiceType::class, [
                 'choices' => Choices::getChoices(OriginRequest::RESULT_PRE_ADMISSION),
                 'placeholder' => '-- Select --',
+                'required' => false,
             ])
             ->add('decisionDate', DateType::class, [
                 'widget' => 'single_text',
@@ -49,7 +51,7 @@ class OriginRequestType extends AbstractType
             ->add('comment', TextareaType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'rows' => 5,
+                    'rows' => 2,
                     'placeholder' => 'Write a comment about the origin request',
                 ],
                 'required' => false,
@@ -60,7 +62,7 @@ class OriginRequestType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => OriginRequest::class,
-            'translation_domain' => 'originRequest',
+            'translation_domain' => 'support',
         ]);
     }
 }

@@ -20,7 +20,7 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $disAdultAllowance;
+    public $disAdultAllowance;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

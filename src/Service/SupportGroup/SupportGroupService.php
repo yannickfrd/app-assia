@@ -42,7 +42,7 @@ class SupportGroupService
     /**
      * Créé un nouveau suivi.
      */
-    public function createSupportGroup(GroupPeople $groupPeople, SupportGroup $supportGroup)
+    public function create(GroupPeople $groupPeople, SupportGroup $supportGroup)
     {
         if ($this->activeSupportExists($groupPeople, $supportGroup)) {
             return false;
@@ -86,8 +86,10 @@ class SupportGroupService
     /**
      * Met à jour le suivi social de la personne.
      */
-    public function updateSupportPeople(SupportGroup $supportGroup)
+    public function update(SupportGroup $supportGroup)
     {
+        $supportGroup->setUpdatedAt(new \DateTime());
+
         $nbPeople = count($supportGroup->getSupportPeople());
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             if (1 == $nbPeople) {

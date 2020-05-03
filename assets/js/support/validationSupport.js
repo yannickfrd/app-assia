@@ -11,6 +11,8 @@ export default class ValidationSupport {
         this.endDateInputElt = document.getElementById("support_endDate");
         this.endStatusInputElt = document.getElementById("support_endStatus");
 
+        this.btnSubmitElts = document.querySelectorAll("button[type='submit']");
+
         this.now = new Date();
         this.validationInput = new ValidationInput();
         this.init();
@@ -24,20 +26,22 @@ export default class ValidationSupport {
             this.endStatusInputElt.addEventListener("change", this.checkEndStatus.bind(this));
         }
 
-        document.getElementById("send").addEventListener("click", e => {
-            this.checkStatus();
-            this.checkStartDate();
-            this.checkEndDate();
-            this.checkEndStatus();
+        this.btnSubmitElts.forEach(btnElt => {
 
-            if (this.getNbErrors()) {
-                e.preventDefault(), {
-                    once: true
-                };
-                new MessageFlash("danger", "Veuillez corriger les erreurs indiquées avant d'enregistrer.");
-            }
-        });
+            btnElt.addEventListener("click", e => {
+                this.checkStatus();
+                this.checkStartDate();
+                this.checkEndDate();
+                this.checkEndStatus();
 
+                if (this.getNbErrors()) {
+                    e.preventDefault(), {
+                        once: true
+                    };
+                    new MessageFlash("danger", "Veuillez corriger les erreurs indiquées avant d'enregistrer.");
+                }
+            });
+        })
         new DisplayInputs("support_", "status", "select", [4]);
     }
 
