@@ -21,11 +21,11 @@
             <tbody>
                 {% for rdv in rdvs %}
                  <tr id="rdv-{{ rdv.id }}">
-                    <th scope="row" class="align-middle">
+                    <td scope="row" class="align-middle">
                         <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
-                    </th>
+                    </td>
                     <td class="align-middle">{{ rdv.title }}</td>
                     <td class="align-middle">{{ rdv.start| date("d/m/Y") }}<br/>{{ rdv.start| date("H:i") }} – {{ rdv.end| date("H:i") }}</td>
                     <td class="align-middle">

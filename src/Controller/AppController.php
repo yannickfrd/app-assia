@@ -101,13 +101,13 @@ class AppController extends AbstractController
                 $users[] = [
                     'id' => $user->getId(),
                     'name' => $user->getFullname(),
-                    'supports' => (int) $this->repoSupport->countAllSupports(['user' => $user]),
                     'activeSupports' => (int) $this->repoSupport->countAllSupports([
                         'user' => $user,
                         'status' => 2,
                     ]),
                     'notes' => (int) $this->repoNote->countAllNotes(['user' => $user]),
                     'rdvs' => (int) $this->repoRdv->countAllRdvs(['user' => $user]),
+                    'documents' => (int) $this->repoDocument->countAllDocuments(['user' => $user]),
                 ];
             }
             $usersIndicators->set($users);

@@ -1,6 +1,6 @@
 {#  #}
 {% macro view(value, key = null, trans = "forms") %}
-    {% if value is not null %}
+    {% if value != '' and value != "Non renseigné" %}
         {% if key is not null %}
             <div class="col-4 col-md-2 pr-0 py-2 text-secondary">{{ key|trans({}, trans) }} : </div>
         {% endif %}

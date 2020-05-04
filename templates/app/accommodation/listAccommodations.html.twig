@@ -79,15 +79,15 @@
                         <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>
                         <td>{% set nbPeople = 0 %}
-                            {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("d/m/Y") >= "now"|date("m/d/Y")) %}
-                            {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
-                            {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
-                            {% set nbPeople = nbPeople + nbAccommodationPeople %}
+                            {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
+                                {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
+                                {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
+                                {% set nbPeople = nbPeople + nbAccommodationPeople %}
                             {% endfor %}
                             {% if nbPeople == 0 %}
-                            <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
+                                <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
                             {% elseif accommodation.placesNumber != nbPeople %}
-                            <span class="badge badge-warning" title="Le nombre de personnes ne correspond pas au nombre de places">Diff.</span>
+                                <span class="badge badge-warning" title="Le nombre de personnes ne correspond pas au nombre de places">Diff.</span>
                             {% endif %}
                         </td>
                     </tr>

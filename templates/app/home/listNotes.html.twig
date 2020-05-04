@@ -22,12 +22,12 @@
              <tbody>
                  {% for note in notes %}
                  <tr id="note-{{ note.id }}">
-                     <th scope="row" class="align-middle">
+                     <td scope="row" class="align-middle">
                          <a href="{{ path('support_notes', {'id':note.supportGroup.id}) }}"
                              class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                              title="Voir la note sociale"><span class="fas fa-eye"></span>
                          </a>
-                     </th>
+                     </td>
                      <td class="align-middle">{{ note.title }}</td>
                      <td class="align-middle">
                         {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}

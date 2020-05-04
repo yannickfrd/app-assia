@@ -104,7 +104,7 @@ class SupportGroupRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return $query->orderBy('sg.startDate', 'DESC')
+        return $query->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }

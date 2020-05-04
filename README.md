@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.4.0 29/04/2020
+1.5.0 04/05/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,6 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.5.0 - 04/05/2020
+- Réorganisation de la fiche du suivi social
+
+
 ## Version 1.4.0 - 29/04/2020
 - Fiche du groupe de places : affiche les 10 dernières prises en charge réalisées.
 - Liste des groupes de places : indique s'il y a une différence entre le nombre de places et le nombre de personnes actuellement prises en charge.
@@ -26,7 +30,7 @@ https://demo.esperer95.app
 - Possibilité de mettre à jour automatique les dates de fin d'hébergement dans le cas d'une fin de suivi.
 - Liste des suivis : ajout filtre à choix multiple pour la typologie familiale des suivis.
 - Export des suivis : ajout des dates de début et de fin d'hébergement, ainsi que le motif de fin de prise en charge.
-- Liste des hébergements du suivs : ajout du motif de fin d'hébergement.
+- Liste des hébergements du suivi : ajout du motif de fin d'hébergement.
 - Modification de l'affichage du calendrier mensuelle (notamment sur smartphone).
 - Corrections diverses d'affichage.
 

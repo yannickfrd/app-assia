@@ -29,12 +29,12 @@
                 {% for support in supports %}
                 {# {% cache "referentSupport" ~ user.id ~ support.id support.updatedAt.timestamp %} #}
                  <tr id="support-{{ support.id }}">
-                    <th scope="row" class="align-middle">
+                    <td scope="row" class="align-middle">
                         <a href="{{ path('support_view', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
-                    </th>
+                    </td>
                     <td class="align-middle">
                         {% for supportPerson in support.supportPeople|filter(a => a.role != 3) %}
                         {{ supportPerson.person.fullname }}<br />
