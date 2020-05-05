@@ -224,7 +224,7 @@ class SupportGroup
     private $initEvalGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @MaxDepth(1)
      */
     private $originRequest;
@@ -634,7 +634,9 @@ class SupportGroup
 
     public function setOriginRequest(?OriginRequest $originRequest): self
     {
-        $this->originRequest = $originRequest;
+        if ($originRequest->getId() || false == $this->objectIsEmpty($originRequest)) {
+            $this->originRequest = $originRequest;
+        }
 
         // set the owning side of the relation if necessary
         if ($originRequest->getSupportGroup() !== $this) {
@@ -642,5 +644,16 @@ class SupportGroup
         }
 
         return $this;
+    }
+
+    protected function objectIsEmpty(Object $originRequest)
+    {
+        foreach ((array) $originRequest as $value) {
+            if ($value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -15,13 +15,13 @@ $cyan2: #79c1b7 !default; // Socio-judiciaire
 // $theme-colors: (primary: #343a40);
 
 $theme-colors: map-merge(( //
-        // "dark2": $dark,
-        "purple": $purple,
+        "pink2": $pink2,
         "orange2": $orange2,
         "brown": $brown,
-        "beige": $beige,
-        "green2": $green2,
-        "cyan2": $cyan2 //
+        // "dark2": $dark,
+        // "beige": $beige,
+        // "green2": $green2,
+        // "cyan2": $cyan2 //
     ),
     $theme-colors);
 

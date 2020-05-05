@@ -35,6 +35,7 @@ class Pole
 
     public const COLOR = [
         'beige' => 'Beige',
+        'pink2' => 'Rouge rose',
         'primary' => 'Bleu',
         'cyan2' => 'Cyan',
         'brown' => 'Marron',

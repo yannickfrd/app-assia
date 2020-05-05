@@ -137,7 +137,9 @@ class EvaluationGroup
 
     public function setEvalSocialGroup(EvalSocialGroup $evalSocialGroup): self
     {
-        $this->evalSocialGroup = $evalSocialGroup;
+        if ($evalSocialGroup->getId() || false == $this->objectIsEmpty($evalSocialGroup)) {
+            $this->evalSocialGroup = $evalSocialGroup;
+        }
 
         // set the owning side of the relation if necessary
         if ($this !== $evalSocialGroup->getEvaluationGroup()) {
@@ -147,15 +149,16 @@ class EvaluationGroup
         return $this;
     }
 
-    public function getevalFamilyGroup(): ?EvalFamilyGroup
+    public function getEvalFamilyGroup(): ?EvalFamilyGroup
     {
         return $this->evalFamilyGroup;
     }
 
-    public function setevalFamilyGroup(EvalFamilyGroup $evalFamilyGroup): self
+    public function setEvalFamilyGroup(EvalFamilyGroup $evalFamilyGroup): self
     {
-        $this->evalFamilyGroup = $evalFamilyGroup;
-
+        if ($evalFamilyGroup->getId() || false == $this->objectIsEmpty($evalFamilyGroup)) {
+            $this->evalFamilyGroup = $evalFamilyGroup;
+        }
         // set the owning side of the relation if necessary
         if ($this !== $evalFamilyGroup->getEvaluationGroup()) {
             $evalFamilyGroup->setEvaluationGroup($this);
@@ -171,8 +174,9 @@ class EvaluationGroup
 
     public function setEvalHousingGroup(EvalHousingGroup $evalHousingGroup): self
     {
-        $this->evalHousingGroup = $evalHousingGroup;
-
+        if ($evalHousingGroup->getId() || false == $this->objectIsEmpty($evalHousingGroup)) {
+            $this->evalHousingGroup = $evalHousingGroup;
+        }
         // set the owning side of the relation if necessary
         if ($this !== $evalHousingGroup->getEvaluationGroup()) {
             $evalHousingGroup->setEvaluationGroup($this);
@@ -239,5 +243,16 @@ class EvaluationGroup
         $this->initEvalGroup = $initEvalGroup;
 
         return $this;
+    }
+
+    protected function objectIsEmpty(Object $originRequest)
+    {
+        foreach ((array) $originRequest as $value) {
+            if ($value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

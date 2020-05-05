@@ -156,10 +156,6 @@ class SupportController extends AbstractController
         }
         $evaluation = $cacheEvaluation->get();
 
-        // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
-        // $this->denyAccessUnlessGranted('VIEW', $supportGroup);
-        // $evaluation = $repo->findEvaluationById($id);
-
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
             'evaluation' => $evaluation,
