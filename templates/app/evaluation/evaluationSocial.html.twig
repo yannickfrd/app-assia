@@ -30,6 +30,8 @@
                     {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
             </div>
 
+            {% set healthProblemsType = constant('App\\Entity\\evalSocialPerson::HEALTH_PROBLEMS_TYPE') %}
+
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>
 				<div class="col-md-6 js-{{ key }}_evalSocialPerson_healthProblem d-block">
@@ -39,41 +41,22 @@
 							<select id="js-{{ key }}_evalSocialPerson_healthProblemType"
 								name="js-{{ key }}_evalSocialPerson_healthProblemType" class="form-control">
                                 <option class="default" value="">-- Ajouter --</option>
-                                <option value="physicalHealthProblem">Problématique de santé physique</option>
-                                <option value="mentalHealthProblem">Problématique de santé mentale</option>
-                                <option value="addictionProblem">Problématique d'addiction</option>
-                                <option value="reducedMobility">Personne à mobilité réduite</option>
+								{% for healthKey, healthValue in healthProblemsType %}
+									<option value="{{ healthKey }}">{{ healthValue }}</option>
+								{% endfor %}
 							</select>
 						</div>
 						<div class="col-md-12 mt-3">
 							<div class="table-responsive js-{{ key }}_evalSocialPerson_healthProblemType d-block">
 								<table class="table table-sm table-hover text-dark">
 									<tbody>
-										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-physicalHealthProblem" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.physicalHealthProblem) }}</div></th>
-											<td class="align-middle">Problématique de santé physique</td>
+								        {% for healthKey, healthValue in healthProblemsType %}
+										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-{{ healthKey }}" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row"><div class="sr-only">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</div></th>
+											<td class="align-middle">{{ healthValue }}</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
-										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-mentalHealthProblem" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.mentalHealthProblem) }}</div></th>
-											<td class="align-middle">Problématique de santé mentale</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-addictionProblem" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.addictionProblem) }}</div></th>
-											<td class="align-middle">Problématique d'addiction</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-wheelchair" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.wheelchair) }}</div></th>
-											<td class="align-middle">Personne en fauteuil roulant</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
-										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-reducedMobility" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(evalPerson.evalSocialPerson.reducedMobility) }}</div></th>
-											<td class="align-middle">Personne à mobilité réduite</td>
-											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-										</tr>
+                                        {% endfor %}
 									</tbody>
 								</table>
 							</div>

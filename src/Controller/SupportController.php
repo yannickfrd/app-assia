@@ -266,7 +266,7 @@ class SupportController extends AbstractController
         if ($nbSupportPeople != $nbPeople) {
             $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
                 ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes). 
-                Allez dans l\'onglet [Personnes] ci-dessous pour ajouter les personnes au suivi.');
+                Cliquez sur le bouton [Modifier] pour ajouter les personnes au suivi.');
         }
 
         // Vérifie qu'il y a un hébergement créé

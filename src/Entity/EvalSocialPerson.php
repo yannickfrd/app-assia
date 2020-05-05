@@ -31,6 +31,14 @@ class EvalSocialPerson
         99 => 'Non renseignée',
     ];
 
+    public const HEALTH_PROBLEMS_TYPE = [
+        'physicalHealthProblem' => 'Problématique de santé physique',
+        'mentalHealthProblem' => 'Problématique de santé mentale',
+        'addictionProblem' => 'Problématique d\'addiction',
+        'reducedMobility' => 'Personne à mobilité réduite',
+        'wheelchair' => 'Personne en fauteuil roulant',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -243,6 +251,11 @@ class EvalSocialPerson
         return $this;
     }
 
+    public function getHealthProblemsType(): array
+    {
+        return self::HEALTH_PROBLEMS_TYPE;
+    }
+
     public function getPhysicalHealthProblem(): ?int
     {
         return $this->physicalHealthProblem;
@@ -333,7 +346,7 @@ class EvalSocialPerson
      */
     public function getCareSupportTypeToString(): ?string
     {
-        return $this->careSupport ? self::CARE_SUPPORT[$this->careSupport] : null;
+        return $this->careSupportType ? self::CARE_SUPPORT[$this->careSupportType] : null;
     }
 
     public function setCareSupportType(?int $careSupportType): self
