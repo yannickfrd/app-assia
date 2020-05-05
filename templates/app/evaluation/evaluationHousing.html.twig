@@ -67,6 +67,8 @@
         <div class="col-md-6 js-housingExperience d-block">{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
     </div>
 
+    {% set housingHelps = constant('App\\Entity\\evalHousingGroup::HOUSING_HELPS') %}
+
     <div class="form-group row js-housingStatus d-block">
         <div class="col-md-6">
             <div class="row">
@@ -74,16 +76,23 @@
                 <div class="col-sm-8">
                     <select id="js-_evalHousingGroup_hsgHelps" name="hsgHelps" class="form-control">
                         <option class="default" value="">-- Ajouter --</option>
-                        <option value="fsl">Fonds de solidarité pour le logement (FSL)</option>
-                        <option value="fslEligibility">Eligibilité aide à l'installation FSL</option>
-                        <option value="cafEligibility">Eligibilité CAF</option>
-                        <option value="otherHelps">Autre(s) aide(s)</option>
+                        {% for hsgKey, hsgValue in housingHelps %}
+                            <option value="{{ hsgKey }}">{{ hsgValue }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-12 mt-3">
                     <div class="table-responsive js-_evalSocialPerson_healthProblemType d-block">
                         <table class="table table-sm table-hover text-dark">
                             <tbody>
+                                {# {% for hsgKey, hsgValue in housingHelps %}
+                                <tr id="js-_evalHousingGroup_hsgHelps-{{ hsgKey }}" class="js-_evalHousingGroup_hsgHelps d-table-row">
+                                    <th scope="row"><div class="sr-only">{{ attribute(evaluationGroup.evalHousingGroup, hsgKey) }}</div></th>
+                                    <td class="align-middle">{% if not loop.last %}{{ hsgValue }}<!--
+                                -->{% else %}{{ form_widget(form.evalHousingGroup.hepsPrecision) }}{% endif %}</td>
+                                    <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                                </tr>
+                                {% endfor %} #}
                                 <tr id="js-_evalHousingGroup_hsgHelps-fsl" class="js-_evalHousingGroup_hsgHelps d-table-row">
                                     <th scope="row"><div class="d-none">{{ form_widget(form.evalHousingGroup.fsl) }}</div></th>
                                     <td class="align-middle">Fonds de solidarité pour le logement (FSL)</td>

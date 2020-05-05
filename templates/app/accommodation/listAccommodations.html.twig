@@ -87,7 +87,7 @@
                             {% if nbPeople == 0 %}
                                 <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
                             {% elseif accommodation.placesNumber != nbPeople %}
-                                <span class="badge badge-warning" title="Le nombre de personnes ne correspond pas au nombre de places">Diff.</span>
+                                <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes ne correspond pas au nombre de places"></span>
                             {% endif %}
                         </td>
                     </tr>

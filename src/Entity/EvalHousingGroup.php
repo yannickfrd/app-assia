@@ -48,6 +48,13 @@ class EvalHousingGroup
         99 => 'Non renseignée',
     ];
 
+    public const HOUSING_HELPS = [
+        'fsl' => 'Fonds de solidarité pour le logement (FSL)',
+        'fslEligibility' => 'Eligibilité aide à l\'installation FSL',
+        'cafEligibility' => 'Eligibilité CAF',
+        'otherHelps' => 'Autre(s) aide(s)',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -831,6 +838,11 @@ class EvalHousingGroup
         $this->housingExpeComment = $housingExpeComment;
 
         return $this;
+    }
+
+    public function getHousingHelps(): array
+    {
+        return self::HOUSING_HELPS;
     }
 
     public function getFsl(): ?int
