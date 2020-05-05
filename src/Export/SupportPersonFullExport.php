@@ -70,7 +70,7 @@ class SupportPersonFullExport
     public function exportData($supports)
     {
         $arrayData = [];
-        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])));
+        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), 'evaluation');
 
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->getDatas($supportPerson);
@@ -95,9 +95,9 @@ class SupportPersonFullExport
                 'ID évaluation personne' => $this->evaluationPerson->getId(),
             ]);
 
-        $this->add($this->evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
         $this->add($this->evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
         $this->add($this->evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, 'initEval');
+        $this->add($this->evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
         $this->add($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, 'social');
         $this->add($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, 'social');
         $this->add($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, 'adm');

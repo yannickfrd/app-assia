@@ -4,6 +4,7 @@ namespace App\Export;
 
 use App\Service\Export;
 use App\Entity\Accommodation;
+use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
@@ -43,6 +44,7 @@ class SupportPersonExport
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
         $groupPeople = $supportGroup->getGroupPeople();
+        $originRequest = $supportGroup->getOriginRequest() ? $supportGroup->getOriginRequest() : new OriginRequest();
 
         $startAccommodations = [];
         $endAccommodations = [];
@@ -65,7 +67,7 @@ class SupportPersonExport
             $zipcodeAccommodations[] = $accommodation->getZipcode();
         }
 
-        return [
+        $datas = [
             'N° Groupe' => $groupPeople->getId(),
             'N° Suivi groupe' => $supportGroup->getId(),
             'N° Personne' => $person->getId(),
@@ -99,11 +101,27 @@ class SupportPersonExport
             'Date fin suivi (groupe)' => $this->formatDate($supportGroup->getEndDate()),
             'Situation à la fin (groupe)' => $supportGroup->getEndStatusToString(),
             'Commentaire situation à la fin (groupe)' => $supportGroup->getEndStatusComment(),
+            'Prescripteur/ orienteur' => $originRequest->getOrganization() ? $originRequest->getOrganization()->getName() : null,
+            'Précision prescripteur/ orienteur' => $originRequest->getOrganizationComment(),
+            'Date orientation' => $this->formatDate($originRequest->getOrientationDate()),
+            'Date entretien pré-admission' => $this->formatDate($originRequest->getPreAdmissionDate()),
+            'Résultat de la pré-admission' => $originRequest->getResulPreAdmissionToString(),
+            'Date décision' => $this->formatDate($originRequest->getDecisionDate()),
         ];
+
+        return $datas;
     }
 
     public function formatDate($date)
     {
         return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
+    }
+
+    /**
+     * Ajoute l'objet normalisé.
+     */
+    protected function add(object $object, string $name = null)
+    {
+        $this->datas = array_merge($this->datas, $this->normalisation->normalize($object, $name));
     }
 }

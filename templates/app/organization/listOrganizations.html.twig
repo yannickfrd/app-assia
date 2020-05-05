@@ -19,6 +19,9 @@
             </div>
         </div>
 
+        <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow js-create-organization">
+            <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
@@ -69,9 +72,8 @@
         <div class="navigation">
             {{ knp_pagination_render(organizations) }}
         </div>
-        <p><a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-organization">
-                <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
-        </p>
+        <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow js-create-organization">
+            <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
 </section>
 
 {% endblock %}

@@ -18,7 +18,7 @@ class Normalisation
     }
 
     // Normalise l'entité
-    public function normalize($entity, $nameEntity = null)
+    public function normalize($entity, $name = null)
     {
         $array = $this->normalizer->normalize($entity, null, ['groups' => 'export']);
 
@@ -26,7 +26,7 @@ class Normalisation
             if ($value && stristr($key, 'Date')) {
                 $array[$key] = Date::stringToExcel(substr($value, 0, 10));
             }
-            $newKey = $key.'#'.$nameEntity;
+            $newKey = $key.'#'.$name;
             $array[$newKey] = $array[$key];
             unset($array[$key]);
         }
@@ -34,23 +34,15 @@ class Normalisation
         return $array;
     }
 
-    // Inverse l'écriture en camelCase
-    public function unCamelCase($content, $separator = ' ')
-    {
-        $content = preg_replace('#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#', $separator.'$1', $content);
-
-        return $this->translator->trans(ucfirst(strtolower($content)), [], 'evaluation');
-    }
-
-    public function getKeys($array)
+    public function getKeys($array, $translationFile = 'forms')
     {
         $arrayKeys = [];
         foreach ($array as $value) {
             if (stristr($value, '#')) {
                 $array = explode('#', $value, 2);
                 $nameEntity = $array[1];
-                $value = $this->unCamelCase(str_replace('ToString', '', $array[0]), ' ');
-                $nameEntity = $this->unCamelCase($nameEntity, ' ');
+                $value = $this->unCamelCase(str_replace('ToString', '', $array[0]), ' ', $translationFile);
+                $nameEntity = $this->unCamelCase($nameEntity, ' ', $translationFile);
                 $arrayKeys[] = $value.' ['.$nameEntity.']';
             } else {
                 $arrayKeys[] = $value;
@@ -58,5 +50,13 @@ class Normalisation
         }
 
         return $arrayKeys;
+    }
+
+    // Inverse l'écriture en camelCase
+    public function unCamelCase($content, $separator = ' ', $translationFile = 'forms')
+    {
+        $content = preg_replace('#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#', $separator.'$1', $content);
+
+        return $this->translator->trans(ucfirst(strtolower($content)), [], $translationFile);
     }
 }

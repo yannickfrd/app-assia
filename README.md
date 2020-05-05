@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.5.0 04/05/2020
+1.5.0 07/05/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,9 +16,8 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.5.0 - 04/05/2020
-- Réorganisation de la fiche du suivi social
-
+## Version 1.5.0 - 07/05/2020
+- Réorganisation de la fiche du suivi social avec une page d'accueil avec une vue complète de l'évaluation sociale (en lecture seule). La page d'édition du suivi intègre dorénavant les informations sur la pré-admission/orientation, ainsi que les informations sur les personnes rattachées au suivi. Les pages du suivi "Origine Demande" et "Personnes" ont été supprimées.
 
 ## Version 1.4.0 - 29/04/2020
 - Fiche du groupe de places : affiche les 10 dernières prises en charge réalisées.

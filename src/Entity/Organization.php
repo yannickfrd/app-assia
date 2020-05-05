@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -27,11 +28,13 @@ class Organization
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("export")
      */
     private $name;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
      */
     private $type;
 

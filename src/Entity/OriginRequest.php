@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OriginRequestRepository")
@@ -29,11 +30,13 @@ class OriginRequest
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $orientationDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $preAdmissionDate;
 
@@ -43,7 +46,13 @@ class OriginRequest
     private $resulPreAdmission;
 
     /**
+     * @Groups("export")
+     */
+    private $resulPreAdmissionToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $decisionDate;
 
@@ -61,11 +70,13 @@ class OriginRequest
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="originRequests")
      * @ORM\JoinColumn(nullable=true)
+     * @Groups("export")
      */
     private $organization;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $organizationComment;
 
@@ -101,6 +112,11 @@ class OriginRequest
     public function getResulPreAdmission(): ?int
     {
         return $this->resulPreAdmission;
+    }
+
+    public function getResulPreAdmissionToString(): ?string
+    {
+        return $this->resulPreAdmission ? self::RESULT_PRE_ADMISSION[$this->resulPreAdmission] : null;
     }
 
     public function setResulPreAdmission(?int $resulPreAdmission): self

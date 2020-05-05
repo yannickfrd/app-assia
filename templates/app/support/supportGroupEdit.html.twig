@@ -23,8 +23,6 @@
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
 
-    {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %}
-
 	{{ form_start(form) }}
 
 	<div class="card mb-4 border border-{{ theme_color }} ">
@@ -71,6 +69,8 @@
 	</div>
 
 	{% if support.id %}
+
+    {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %}
 
 	<div class="form-group row">
 		<div class="col-md-12">
@@ -147,6 +147,8 @@
 
 	</section>
 	
+	{% endcache %}
+
 	{% endif %}
 
 	<div class="form-group row">
@@ -190,8 +192,6 @@
 
 	{{ form_row(form._token) }}
 	{{ form_end(form, {"render_rest": false}) }}
-
-	{% endcache %}
 
 </div>
 

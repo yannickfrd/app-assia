@@ -233,6 +233,9 @@ class Export
         return [
             'font' => [
                 'bold' => true,
+                'color' => [
+                    'argb' => 'FFFFFF',
+                ],
             ],
             'alignment' => [
                 'vertical' => Alignment::VERTICAL_CENTER,
@@ -243,13 +246,9 @@ class Export
                 ],
             ],
             'fill' => [
-                'fillType' => Fill::FILL_GRADIENT_LINEAR,
-                'rotation' => 90,
+                'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'FFA0A0A0',
-                ],
-                'endColor' => [
-                    'argb' => 'FFFFFFFF',
+                    'argb' => '595959',
                 ],
             ],
         ];

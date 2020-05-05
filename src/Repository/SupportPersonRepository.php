@@ -55,7 +55,9 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.referent', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}');
+            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.originRequest', 'origin')->addselect('origin')
+            ->leftJoin('origin.organization', 'orga')->addselect('PARTIAL orga.{id, name}');
     }
 
     /**
