@@ -21,9 +21,9 @@
 
 	{% set group_people = support.groupPeople %}
 	<div class="small text-secondary">
-		<p>Créé le {{support.createdAt | date("d/m/Y à H:i") }}
+		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}
 			{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
-			<span id="js-updatedSupport">(modifié le {{ support.updatedAt | date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
+			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
 
@@ -78,12 +78,10 @@
 		{{ utils.view(support.service.name ~ (support.device ? " (" ~ support.device.name ~ ")"), "Service (dispositif)") }}
 		{{ utils.view(support.statusToString, "Status") }}
 		{% set originRequest = support.originRequest %}
-		{% if originRequest and originRequest.organization %}
+		{% if originRequest %}
 		{{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
 			~ originRequest.organizationComment ~ ")" : "") : "", "Organisme orienteur ou prescripteur") }}
-		{% endif %}
-		{% if support.originRequest and support.originRequest.orientationDate %}
-		{{ utils.view(support.originRequest.orientationDate| date("d/m/Y"), "Date d'orientation") }}
+		{{ utils.view(originRequest.orientationDate ? originRequest.orientationDate| date("d/m/Y"), "Date d'orientation") }}
 		{% endif %}
 	</div>
 	<div class="row">
@@ -118,7 +116,7 @@
 
 	{% if evaluation %}
 
-		{% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %}
+		{# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
 		
 		<hr>
 
@@ -156,7 +154,7 @@
 							{% for supportPerson in support.supportPeople %}
 							<tr>
 								<td scope="row">{{ supportPerson.person.fullname }}</td>
-								<td>{{ supportPerson.person.birthdate | date("d/m/Y") }}</td>
+								<td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
 								<td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an{% if supportPerson.person.age > 1 %}s{% endif %}</td>
 								<td>{{ supportPerson.person.genderToString }}</td>
 								<td>{{ supportPerson.roleToString }}</td>
@@ -262,7 +260,7 @@
 							{{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
 							{{ utils.view(evalFamily.protectiveMeasure == 1 and evalFamily.protectiveMeasureType ? evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
 							{{ utils.view(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
-								~ evalFamily.expDateChildbirth | date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
+								~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
 						</div>
 						<div class="row my-2">
 							<div class="col-md-12">{{ evalFamily.commentEvalFamilyPerson }}</div>
@@ -345,9 +343,9 @@
 						{{ utils.view(evalAdm.paper == 1 and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
 						{{ utils.view(evalAdm.asylumBackground == 1 and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
 							evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
-						{{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate | date ("d/m/Y")
+						{{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
 							~ " (Nb de renouvellements : " ~ evalAdm.nbRenewals ~ ")" : "", "Renewal permit date", "evaluation") }}
-						{{ utils.view(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate | date ("d/m/Y") : "", "End valid permit date", "evaluation") }}
+						{{ utils.view(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
 						{{ utils.view(evalAdm.workRightToString, "Work right", "evaluation") }}
 						</div>
 						<div class="row my-2">
@@ -411,7 +409,7 @@
 								~ evalProf.contractTypeToString ~ ")" : "") : "", "Prof status", "evaluation") }}
 							{{ utils.view(evalProf.jobCenterId, "Job center id", "evaluation") }}
 							{{ utils.view(evalProf.jobType, "Job type", "evaluation") }}
-							{{ utils.view(evalProf.contractEndDate, "Contract end date", "evaluation") }}
+							{{ utils.view(evalProf.contractEndDate ? evalProf.contractEndDate|date("d/m/Y"), "Contract end date", "evaluation") }}
 							{{ utils.view(evalProf.workingHours ? evalProf.workingHours ~ (evalProf.nbWorkingHours ? " (nb d'heures : " 
 								~ evalProf.nbWorkingHours ~ ")" : "") : "", "Working hours", "evaluation") }}
 							{{ utils.view(evalProf.employerName ? evalProf.employerName ~ (evalProf.workPlace ? " | " 
@@ -419,7 +417,7 @@
 							{{ utils.view(evalProf.transportMeansType ? evalProf.transportMeansTypeToString ~ (evalProf.transportMeans ? " (" 
 								~ evalProf.transportMeans ~ ")" : ""): "", "Transport means type", "evaluation") }}
 							{{ utils.view(evalProf.rqth ? evalProf.rqthToString ~ (evalProf.endRqthDate ? " (fin de validité : " 
-								~ evalProf.endRqthDate | date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
+								~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
 						</div>
 						<div class="row my-2">
 							<div class="col-md-12">{{ evalProf.commentEvalProf }}</div>
@@ -595,10 +593,10 @@
 						<div class="row mb-2">
 							{{ utils.view(evalBudget.debtComment, "Debt comment", "evaluation") }}
 							{{ utils.view(evalBudget.overIndebtRecord ? evalBudget.overIndebtRecordToString ~ (evalBudget.overIndebtRecordDate ? 
-								" (date de dépôt : " ~ evalBudget.overIndebtRecordDate | date("d/m/Y") ~ ")" : "") : "", "Over indebt record", "evaluation") }}
+								" (date de dépôt : " ~ evalBudget.overIndebtRecordDate|date("d/m/Y") ~ ")" : "") : "", "Over indebt record", "evaluation") }}
 							{{ utils.view(evalBudget.settlementPlanToString, "Settlement plan", "evaluation") }}
 							{{ utils.view(evalBudget.moratoriumToString, "Moratorium", "evaluation") }}
-							{{ utils.view(evalBudget.endRightsDate ? evalBudget.endRightsDate | date("d/m/Y") : "", "End rights date", "evaluation") }}
+							{{ utils.view(evalBudget.endRightsDate ? evalBudget.endRightsDate|date("d/m/Y") : "", "End rights date", "evaluation") }}
 						</div>
 						{% endif %}
 						{% if evalBudget.commentEvalBudget %}
@@ -633,8 +631,8 @@
 				{% if evalHousing.siaoRequest %}
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
-					{{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate | date("d/m/Y") 
-					 ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate | date("d/m/Y") 
+					{{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
+					 ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
 					 ~ ")" : "") : "", "Siao request date", "evaluation") }}
 				</div>
 				{% endif %}
@@ -642,8 +640,8 @@
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.socialHousingRequestToString ~ (evalHousing.socialHousingRequestId ? " (NUR : " 
 						~ evalHousing.socialHousingRequestId ~ ")" : ""), "Social housing request", "evaluation") }}
-					{{ utils.view(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate | date("d/m/Y") 
-						~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate | date("d/m/Y") 
+					{{ utils.view(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate|date("d/m/Y") 
+						~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate|date("d/m/Y") 
 						~ ")" : "") : "", "Date demande de logement social", "evaluation") }}
 					{{ utils.view(evalHousing.housingWishes, "Housing wishes", "evaluation") }}
 					{{ utils.view(evalHousing.citiesWishes, "Cities wishes", "evaluation") }}
@@ -653,7 +651,7 @@
 				{% if evalHousing.syplo %}
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.syploToString ~ (evalHousing.syploDate ? " (" 
-						~ evalHousing.syploDate | date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
+						~ evalHousing.syploDate|date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
 					{{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
 				</div>
 				{% endif %}
@@ -661,24 +659,24 @@
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho ? 
 						" - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
-						~ evalHousing.daloDecisionDate | date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
+						~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
 					{{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
-					{{ utils.view(evalHousing.daloRecordDate ? evalHousing.daloRecordDate | date("d/m/Y"), "Dalo record date", "evaluation") }}
+					{{ utils.view(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
 					{{ utils.view(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
-						" (le " ~ evalHousing.daloTribunalActionDate | date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
+						" (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
 				</div>
 				{% endif %}
 				{% if evalHousing.collectiveAgreementHousing %}
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
-						" (le " ~ evalHousing.collectiveAgreementHousingDate | date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
+						" (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
 				</div>
 				{% endif %}
 				{% if evalHousing.hsgActionEligibility %}					
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
 					{{ utils.view(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
-						" (le " ~ evalHousing.hsgActionDate | date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
+						" (le " ~ evalHousing.hsgActionDate|date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
 					{{ utils.view(evalHousing.hsgActionRecordId, "Hsg action record id", "evaluation") }}
 					{{ utils.view(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
 				</div>
@@ -687,7 +685,7 @@
 				<div class="row mb-3">
 					{{ utils.view(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
 					{{ utils.view(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
-						" (le " ~ evalHousing.publicForceDate | date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
+						" (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
 					{{ utils.view(evalHousing.expulsionComment) }}
 				</div>
 				{% endif %}
@@ -718,7 +716,7 @@
 
 		{% endif %}
 
-		{% endcache %}
+		{# {% endcache %} #}
 
 	{% endif %}
 
