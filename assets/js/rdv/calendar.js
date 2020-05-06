@@ -30,7 +30,7 @@ export default class Calendar {
 
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.supportElt = document.getElementById("support");
-        this.supportPeopleElt = document.getElementById("support-people");
+        this.supportPeopleElt = document.getElementById("js-support-people");
 
         this.init();
     }

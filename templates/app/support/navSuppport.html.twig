@@ -56,11 +56,12 @@
 			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
 		</ol>
 	</nav>
+	<div id="js-support-people">
 	{% for person in people %}
 		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
 			class="btn btn-outline-secondary btn-sm rounded-pill smal mb-2">{{ person.person.fullname }}</a>
 	{% endfor %}
-
+	</div>
 </section>
 
 <hr>

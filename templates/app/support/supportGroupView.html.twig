@@ -21,8 +21,7 @@
 
 	{% set group_people = support.groupPeople %}
 	<div class="small text-secondary">
-		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}
-			{% if support.createdBy %}par {{ support.createdBy.fullname}}{% endif %}
+		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? "par " ~ support.createdBy.fullname }}
 			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
@@ -86,8 +85,8 @@
 	</div>
 	<div class="row">
 		{{ utils.view(support.startDate ? support.startDate| date("d/m/Y") : "", "Start date") }}
-		{{ utils.view(support.referent ? support.referent.fullname ~ (support.referent ? " (" 
-			~ support.referent.fullname ~ ")" : "") : "", "Referent") }}
+		{{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
+			~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
 		{{ utils.view(support.endDate ? support.endDate| date("d/m/Y") : "", "End date") }}
 	</div>
 	<div class="row">
@@ -155,7 +154,7 @@
 							<tr>
 								<td scope="row">{{ supportPerson.person.fullname }}</td>
 								<td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
-								<td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an{% if supportPerson.person.age > 1 %}s{% endif %}</td>
+								<td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an{{ supportPerson.person.age > 1 ? "s" }}</td>
 								<td>{{ supportPerson.person.genderToString }}</td>
 								<td>{{ supportPerson.roleToString }}</td>
 								<td>{{ supportPerson.person.phone1 }}</td>
@@ -285,16 +284,16 @@
 							</thead>
 							<tbody>
 								{% for evalPerson in evaluation.evaluationPeople %}
-								{% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-								{% if evalFamilyPerson and evalPerson.supportPerson.role == 3 %}
-								<tr>
-									<td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-									<td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
-									<td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
-									<td>{{ evalFamilyPerson.childToHostToString }}</td>
-									<td>{{ evalFamilyPerson.childDependanceToString }}</td>
-								</tr>
-								{% endif %}
+									{% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
+									{% if evalFamilyPerson and evalPerson.supportPerson.role == 3 %}
+										<tr>
+											<td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+											<td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
+											<td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
+											<td>{{ evalFamilyPerson.childToHostToString }}</td>
+											<td>{{ evalFamilyPerson.childDependanceToString }}</td>
+										</tr>
+									{% endif %}
 								{% endfor %}
 							</tbody>
 						</table>
@@ -368,14 +367,14 @@
 						</thead>
 						<tbody>
 								{% for evalPerson in evaluation.evaluationPeople %}
-								{% set evalAdm = evalPerson.evalAdmPerson %}
-								{% if evalAdm and evalPerson.supportPerson.role == 3 %}
-								<tr>
-									<td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-									<td>{{ evalAdm.nationalityToString }}</td>
-									<td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
-								</tr>
-								{% endif %}
+									{% set evalAdm = evalPerson.evalAdmPerson %}
+									{% if evalAdm and evalPerson.supportPerson.role == 3 %}
+										<tr>
+											<td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+											<td>{{ evalAdm.nationalityToString }}</td>
+											<td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+										</tr>
+									{% endif %}
 							{% endfor %}
 						</tbody>
 					</table>
