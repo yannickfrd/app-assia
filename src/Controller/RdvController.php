@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\CacheTrait;
 use App\Entity\Rdv;
 use App\Form\Rdv\RdvType;
 use App\Service\Calendar;
@@ -14,6 +15,7 @@ use App\Form\Model\SupportRdvSearch;
 use App\Form\Rdv\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,6 +26,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class RdvController extends AbstractController
 {
     use ErrorMessageTrait;
+    use CacheTrait;
 
     private $manager;
     private $repo;
@@ -263,6 +266,11 @@ class RdvController extends AbstractController
     protected function createRdv(Rdv $rdv, SupportGroup $supportGroup = null): Response
     {
         $rdv->setSupportGroup($supportGroup);
+
+        if ($supportGroup) {
+            $supportGroup->setUpdatedAt(new \DateTime());
+            // $this->discachedSupport($supportGroup);
+        }
 
         $this->manager->persist($rdv);
         $this->manager->flush();

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Service\Grammar;
 use App\Form\Model\Export;
 use App\Service\Pagination;
@@ -137,15 +138,17 @@ class SupportController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
-        $cacheSupport = $cache->getItem('support_group'.$id);
-        if (!$cacheSupport->isHit()) {
-            $cacheSupport->set($this->repoSupportGroup->findFullSupportById($id));
-            // $cacheSupport->expiresAfter(365 * 24 * 60 * 60);  // 5 * 60 seconds
-            $cache->save($cacheSupport);
-        }
-        $supportGroup = $cacheSupport->get();
+        // $cacheSupport = $cache->getItem('support_group'.$id);
+        // if (!$cacheSupport->isHit()) {
+        //     $cacheSupport->set($this->repoSupportGroup->findFullSupportById($id));
+        //     // $cacheSupport->expiresAfter(365 * 24 * 60 * 60);  // 5 * 60 seconds
+        //     $cache->save($cacheSupport);
+        // }
+        // $supportGroup = $cacheSupport->get();
 
-        $this->checkSupportGroup($supportGroup);
+        // $this->checkSupportGroup($supportGroup);
+
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

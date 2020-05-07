@@ -2,25 +2,28 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\CacheTrait;
 use App\Entity\Document;
-use App\Entity\SupportGroup;
-use App\Form\Document\DocumentSearchType;
-use App\Form\Document\DocumentType;
-use App\Form\Model\DocumentSearch;
-use App\Repository\DocumentRepository;
-use App\Repository\SupportGroupRepository;
-use App\Service\FileUploader;
 use App\Service\Pagination;
+use App\Entity\SupportGroup;
+use App\Service\FileUploader;
+use App\Form\Model\DocumentSearch;
+use App\Form\Document\DocumentType;
+use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Document\DocumentSearchType;
+use App\Repository\SupportGroupRepository;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DocumentController extends AbstractController
 {
     use ErrorMessageTrait;
+    use CacheTrait;
 
     private $manager;
     private $repo;
@@ -148,8 +151,12 @@ class DocumentController extends AbstractController
             ->setGroupPeople($groupPeople)
             ->setSupportGroup($supportGroup);
 
+        $supportGroup->setUpdatedAt(new \DateTime());
+
         $this->manager->persist($document);
         $this->manager->flush();
+
+        // $this->discachedSupport($supportGroup);
 
         return $this->json([
             'code' => 200,

@@ -2,24 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\GroupPeople;
 use App\Entity\Person;
+use App\Service\Grammar;
 use App\Entity\RolePerson;
-use App\Form\GroupPeople\GroupPeopleSearchType;
-use App\Form\GroupPeople\GroupPeopleType;
+use App\Entity\GroupPeople;
+use App\Service\Pagination;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
-use App\Repository\GroupPeopleRepository;
 use App\Repository\RolePersonRepository;
-use App\Service\Grammar;
-use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\GroupPeople\GroupPeopleType;
+use App\Repository\GroupPeopleRepository;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\GroupPeople\GroupPeopleSearchType;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GroupPeopleController extends AbstractController
 {

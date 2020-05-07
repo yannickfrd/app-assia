@@ -11,6 +11,7 @@ use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;

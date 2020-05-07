@@ -17,11 +17,11 @@
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
 
-	{% cache "support.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %}
+	{# {% cache "support.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
 
 	{% set group_people = support.groupPeople %}
 	<div class="small text-secondary">
-		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? "par " ~ support.createdBy.fullname }}
+		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? " par " ~ support.createdBy.fullname }}
 			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
@@ -111,11 +111,11 @@
 		</div>
 	</div>
 
-	{% endcache %}
+	{# {% endcache %} #}
 
 	{% if evaluation %}
 
-		{# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
+		{% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %}
 		
 		<hr>
 
@@ -715,7 +715,7 @@
 
 		{% endif %}
 
-		{# {% endcache %} #}
+		{% endcache %}
 
 	{% endif %}
 

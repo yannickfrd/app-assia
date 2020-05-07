@@ -17,6 +17,7 @@ use App\Form\RolePerson\RolePersonType;
 use App\Form\Person\RolePersonGroupType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Person\PersonRolePersonType;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

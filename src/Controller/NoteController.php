@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\CacheTrait;
 use App\Entity\Note;
 use App\Form\Note\NoteType;
 use App\Service\Pagination;
@@ -13,16 +14,18 @@ use App\Form\Model\SupportNoteSearch;
 use App\Form\Note\SupportNoteSearchType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class NoteController extends AbstractController
 {
     use ErrorMessageTrait;
+    use CacheTrait;
 
     private $manager;
     private $repo;
@@ -156,8 +159,12 @@ class NoteController extends AbstractController
     {
         $note->setSupportGroup($supportGroup);
 
+        $supportGroup->setUpdatedAt(new \DateTime());
+
         $this->manager->persist($note);
         $this->manager->flush();
+
+        // $this->discachedSupport($supportGroup);
 
         return $this->json([
             'code' => 200,
