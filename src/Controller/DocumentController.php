@@ -97,7 +97,7 @@ class DocumentController extends AbstractController
     {
         $this->denyAccessUnlessGranted('VIEW', $document);
 
-        $file = 'uploads/documents/'.$document->getGroupPeople()->getId().'/'.(new \DateTime())->format('Y/m').'/'.$document->getInternalFileName();
+        $file = 'uploads/documents/'.$document->getGroupPeople()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
 
         if (file_exists($file)) {
             return $download->send($file);
