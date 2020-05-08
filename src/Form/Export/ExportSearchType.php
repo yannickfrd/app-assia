@@ -5,7 +5,7 @@ namespace App\Form\Export;
 use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\Model\Export;
+use App\Form\Model\ExportSearch;
 use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
 use App\Repository\UserRepository;
@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class ExportType extends AbstractType
+class ExportSearchType extends AbstractType
 {
     private $currentUser;
 
@@ -177,7 +177,7 @@ class ExportType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Export::class,
+            'data_class' => ExportSearch::class,
             'csrf_protection' => false,
             'translation_domain' => 'support',
         ]);

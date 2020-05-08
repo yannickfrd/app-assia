@@ -33,6 +33,17 @@ trait ReferentServiceDeviceSearchTrait
         return $this->referents;
     }
 
+    public function getReferentsToString(): array
+    {
+        $referents = [];
+
+        foreach ($this->referents  as $referent) {
+            $referents[] = $referent->getFullname();
+        }
+
+        return $referents;
+    }
+
     public function setReferents(?ArrayCollection $referents): self
     {
         $this->referents = $referents;
@@ -45,6 +56,17 @@ trait ReferentServiceDeviceSearchTrait
         return $this->services;
     }
 
+    public function getServicesToString(): array
+    {
+        $services = [];
+
+        foreach ($this->services  as $service) {
+            $services[] = $service->getName();
+        }
+
+        return $services;
+    }
+
     public function setServices(?ArrayCollection $services): self
     {
         $this->services = $services;
@@ -55,6 +77,17 @@ trait ReferentServiceDeviceSearchTrait
     public function getDevices(): ?ArrayCollection
     {
         return $this->devices;
+    }
+
+    public function getDevicesToString(): array
+    {
+        $devices = [];
+
+        foreach ($this->devices  as $device) {
+            $devices[] = $device->getName();
+        }
+
+        return $devices;
     }
 
     public function setDevices(?ArrayCollection $devices): self

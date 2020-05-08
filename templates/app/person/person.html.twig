@@ -17,9 +17,9 @@
     <h1 class="h2 mb-3">{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p> Créé le {{person.createdAt | date("d/m/Y à H:i") }}
+        <p> Créé le {{person.createdAt|date("d/m/Y à H:i") }}
             {% if person.createdBy %}par {{ person.createdBy.fullname }}{% endif %}
-            <span id="js-person-updated"> (modifié le {{ person.updatedAt | date("d/m/Y à H:i") }}
+            <span id="js-person-updated"> (modifié le {{ person.updatedAt|date("d/m/Y à H:i") }}
                 {% if person.updatedBy %}par {{ person.updatedBy.fullname }}{% endif %})</span>
         </p>
     </div>
@@ -160,9 +160,9 @@
                         <td class="d-table-row d-sm-table-cell">{{ role.groupPeople.nbPeople }}</td>
                         <td>{{ role.roleToString }} {% if role.head %} (DP){% endif %}</td>
                         <td class="d-none d-sm-table-cell">
-                            {{ role.groupPeople.createdAt | date("d/m/Y H:i") }}</td>
+                            {{ role.groupPeople.createdAt|date("d/m/Y H:i") }}</td>
                         <td class="d-none d-sm-table-cell">
-                            {{ role.groupPeople.updatedAt | date("d/m/Y H:i") }}</td>
+                            {{ role.groupPeople.updatedAt|date("d/m/Y H:i") }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

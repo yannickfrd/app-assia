@@ -2,11 +2,12 @@
 
 namespace App\Form\Model;
 
+use App\Entity\SupportGroup;
 use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Export
+class ExportSearch
 {
     use DateSearchTrait;
     use ReferentServiceDeviceSearchTrait;
@@ -102,6 +103,17 @@ class Export
         return $this->status;
     }
 
+    public function getStatusToString(): array
+    {
+        $status = [];
+
+        foreach ($this->status  as $value) {
+            $status[] = SupportGroup::STATUS[$value];
+        }
+
+        return $status;
+    }
+
     public function setStatus(?array $status): self
     {
         $this->status = $status;
@@ -112,6 +124,11 @@ class Export
     public function getSupportDates(): ?int
     {
         return $this->supportDates;
+    }
+
+    public function getSupportDatesToString(): string
+    {
+        return $this->supportDates ? self::SUPPORT_DATES[$this->supportDates] : null;
     }
 
     public function setSupportDates(int $supportDates): self

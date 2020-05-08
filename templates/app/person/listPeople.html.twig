@@ -38,7 +38,7 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Résultat : {{ people.getTotalItemCount | number_format(0,'', ' ')}} <!--
+                <p class="align-middle">Résultat : {{ people.getTotalItemCount|number_format(0,'', ' ')}} <!--
                 -->personne{% if people.getTotalItemCount > 1 %}s{% endif %}.</p>
             </div>
             <div class="col-md-8">
@@ -96,7 +96,7 @@
                                 class="text-{{ theme_color }} text-uppercase font-weight-bold">{{ person.lastname }}</a>
                         </td>
                         <td class="text-capitalize">{{ person.firstname }}</td>
-                        <td>{% if person.birthdate %} {{person.birthdate | date("d/m/Y") }}<br />
+                        <td>{% if person.birthdate %} {{person.birthdate|date("d/m/Y") }}<br />
                             ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
                             an{% endif %}){% endif %}</td>
                         <td>{% if person.gender == 1 %}
@@ -104,8 +104,8 @@
                             {% elseif person.gender == 2 %}
                             <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
                             {% endif %} </td>
-                        <td>{{ person.createdAt | date("d/m/Y H:i") }}</td>
-                        <td>{{ person.updatedAt | date("d/m/Y H:i") }}</td>
+                        <td>{{ person.createdAt|date("d/m/Y H:i") }}</td>
+                        <td>{{ person.updatedAt|date("d/m/Y H:i") }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

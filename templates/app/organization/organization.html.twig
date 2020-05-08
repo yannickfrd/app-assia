@@ -14,9 +14,9 @@
     <h1 class="h2 mb-3">{% if edit_mode %}Organisme {{ organization.name }}{% else %}Nouvel organisme{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p> Créé le {{organization.createdAt | date("d/m/Y à H:i") }}
+        <p> Créé le {{organization.createdAt|date("d/m/Y à H:i") }}
             {% if organization.createdBy %}par {{ organization.createdBy.fullname }}{% endif %}
-            (modifié le {{ organization.updatedAt | date("d/m/Y à H:i") }}
+            (modifié le {{ organization.updatedAt|date("d/m/Y à H:i") }}
             {% if organization.updatedBy %}par {{ organization.updatedBy.fullname }}{% endif %})
         </p>
     </div>

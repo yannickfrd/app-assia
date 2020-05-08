@@ -14,9 +14,9 @@
     <h1 class="h2 mb-3">{% if edit_mode %}{{ pole.name }}{% else %}Nouveau pôle{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p> Créé le {{pole.createdAt | date("d/m/Y à H:i") }}
+        <p> Créé le {{pole.createdAt|date("d/m/Y à H:i") }}
             {% if pole.createdBy %}par {{ pole.createdBy.fullname }}{% endif %}
-            {% if pole.updatedAt %}(modifié le {{ pole.updatedAt | date("d/m/Y à H:i") }}{% if pole.updatedBy %} par
+            {% if pole.updatedAt %}(modifié le {{ pole.updatedAt|date("d/m/Y à H:i") }}{% if pole.updatedBy %} par
             {{ pole.updatedBy.fullname }}{% endif %}){% endif %}
         </p>
     </div>

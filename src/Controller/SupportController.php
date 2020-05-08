@@ -4,15 +4,12 @@ namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Service\Grammar;
-use App\Form\Model\Export;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Form\Export\ExportType;
 use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
-use App\Export\SupportPersonFullExport;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
@@ -218,36 +215,6 @@ class SupportController extends AbstractController
         }
 
         return $this->getErrorMessage();
-    }
-
-    /**
-     * Export des données.
-     *
-     * @Route("export", name="export", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function export(Request $request, Export $export = null, SupportPersonFullExport $exportSupport): Response
-    {
-        $export = new Export();
-
-        $form = ($this->createForm(ExportType::class, $export))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $supports = $this->repoSupportPerson->findSupportsFullToExport($export);
-            // return $exportSupport->exportData($supports);
-            // $this->addFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.');
-
-            return $this->json([
-                'code' => 200,
-                'alert' => 'success',
-                'msg' => 'Votre fichier d\'export est prêt. Un mail vous a été envoyé.',
-            ], 200);
-        }
-
-        return $this->render('app/export/export.html.twig', [
-            'form' => $form->createView(),
-        ]);
     }
 
     /**

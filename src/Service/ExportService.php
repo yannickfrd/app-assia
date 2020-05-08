@@ -2,19 +2,20 @@
 
 namespace App\Service;
 
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
+use ZipArchive;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Export
+class ExportService
 {
     private $name;
     private $format;
@@ -84,12 +85,39 @@ class Export
         }
 
         $filename = $this->name.$this->now->format('_Y_m_d_His').'.'.$this->format;
-        $this->writer->save($path.$filename);
+        $file = $path.$filename;
+
+        $this->writer->save($file);
 
         if ($asynch) {
-            return  $path.$filename;
+            return $this->getPath($path, $filename);
         }
 
+        return $this->getResponse($filename);
+    }
+
+    protected function getPath(string $path, string $filename)
+    {
+        $file = $path.$filename;
+        $zipFile = $file.'.zip';
+
+        $zip = new \ZipArchive();
+
+        if ($zip->open($zipFile, ZipArchive::CREATE)) {
+            // $zip->addFromString('localname', 'file content goes here');
+            $zip->addFile($file, $filename);
+            $zip->close();
+        }
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        return  $zipFile;
+    }
+
+    protected function getResponse(string $filename)
+    {
         $response = new StreamedResponse();
 
         $writer = $this->writer;

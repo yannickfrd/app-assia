@@ -3,22 +3,22 @@
 namespace App\Export;
 
 use App\Entity\EvalAdmPerson;
+use App\Entity\InitEvalGroup;
+use App\Entity\SupportPerson;
+use App\Entity\EvalProfPerson;
+use App\Entity\InitEvalPerson;
+use App\Service\ExportService;
+use App\Service\Normalisation;
 use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
-use App\Entity\EvalJusticePerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvalSocialGroup;
 use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
-use App\Entity\SupportPerson;
-use App\Service\Export;
-use App\Service\Normalisation;
+use App\Entity\EvalJusticePerson;
 
 class SupportPersonFullExport
 {
@@ -76,7 +76,7 @@ class SupportPersonFullExport
             $arrayData[] = $this->getDatas($supportPerson);
         }
 
-        return (new Export('export_suivis', 'xlsx', $arrayData, 12.5))->exportFile(true);
+        return (new ExportService('export_suivis', 'xlsx', $arrayData, 12.5))->exportFile(true);
     }
 
     /**

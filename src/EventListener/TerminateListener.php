@@ -2,11 +2,12 @@
 
 namespace App\EventListener;
 
-use App\Entity\SupportGroup;
 use Twig\Environment;
-use App\Form\Model\Export;
+use App\Entity\Export;
+use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Form\Export\ExportType;
+use App\Form\Model\ExportSearch;
+use App\Form\Export\ExportSearchType;
 use App\Notification\MailNotification;
 use App\Export\SupportPersonFullExport;
 use Symfony\Component\Security\Core\Security;
@@ -69,19 +70,41 @@ class TerminateListener
         /** @var User */
         $user = $this->security->getUser();
 
-        $export = new Export();
+        $search = new ExportSearch();
 
-        $form = ($this->container->get('form.factory')->create(ExportType::class, $export)) // FormFactoryInterface $formFactory
+        $form = ($this->container->get('form.factory')->create(ExportSearchType::class, $search)) // FormFactoryInterface $formFactory
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->container->get('doctrine')->getManager();
-            $repo = $entityManager->getRepository(SupportPerson::class);
-            $supports = $repo->findSupportsFullToExport($export);
+            $manager = $this->container->get('doctrine')->getManager();
+            $repo = $manager->getRepository(SupportPerson::class);
+            $supports = $repo->findSupportsFullToExport($search);
+
+            $file = $this->exportSupport->exportData($supports);
+
+            $comment = [];
+
+            $comment[] = 'Statut : '.($search->getStatus() ? join(', ', $search->getStatusToString()) : 'tous');
+            $search->getSupportDates() ? $comment[] = $search->getSupportDatesToString() : null;
+            $search->getStart() ? $comment[] = 'Début : '.$search->getStart()->format('d/m/Y') : null;
+            $search->getEnd() ? $comment[] = 'Fin : '.$search->getEnd()->format('d/m/Y') : null;
+            $comment[] = 'Référent(s) : '.($search->getReferentsToString() ? join(', ', $search->getReferentsToString()) : 'tous');
+            $comment[] = 'Service(s) : '.($search->getServicesToString() ? join(', ', $search->getServicesToString()) : 'tous');
+            $comment[] = 'Dispositif(s) : '.($search->getDevicesToString() ? join(', ', $search->getDevicesToString()) : 'tous');
+
+            $export = (new Export())
+                ->setTitle('Export des suivis')
+                ->setFileName($file)
+                ->setSize(filesize($file))
+                ->setNbResults(count($supports))
+                ->setComment(join(' <br/> ', $comment));
+
+            $manager->persist($export);
+            $manager->flush();
 
             $htmlBody = $this->renderer->render(
                     'emails/exportFileEmail.html.twig',
-                    ['path' => $this->exportSupport->exportData($supports)]
+                    ['export' => $export]
                 );
 
             $this->notification->send(
@@ -101,9 +124,9 @@ class TerminateListener
         $evaluationGroup = $request->request->get('evaluation');
 
         if ($evaluationGroup) {
-            $entityManager = $this->container->get('doctrine')->getManager();
+            $manager = $this->container->get('doctrine')->getManager();
 
-            $repo = $entityManager->getRepository(SupportGroup::class);
+            $repo = $manager->getRepository(SupportGroup::class);
             $supportId = $request->attributes->get('id');
             $supportGroup = $repo->findSupportById($supportId);
 

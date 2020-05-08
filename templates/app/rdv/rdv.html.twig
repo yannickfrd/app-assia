@@ -14,9 +14,9 @@
         <h1 class="h2 mb-3">{% if edit_mode %}Édition RDV{% else %}Rendez-vous{% endif %}</h1>
         {% if edit_mode %}
         <div class="small text-secondary">
-            <p> Créé le {{ form.vars.value.createdAt | date("d/m/Y à H:i") }}
+            <p> Créé le {{ form.vars.value.createdAt|date("d/m/Y à H:i") }}
                 {% if form.vars.value.createdBy %}par {{ form.vars.value.createdBy.fullname }}{% endif %}
-                <span id="js-person-updated"> (modifié le {{ form.vars.value.updatedAt | date("d/m/Y à H:i") }}
+                <span id="js-person-updated"> (modifié le {{ form.vars.value.updatedAt|date("d/m/Y à H:i") }}
                     {% if form.vars.value.updatedBy %}par {{ form.vars.value.updatedBy.fullname }}{% endif %})</span>
             </p>
         </div>

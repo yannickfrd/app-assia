@@ -56,8 +56,8 @@
                             {% endif %} #}
                         </th>
                         <td>{{ support.statusToString }}</td>
-                        <td>{% if support.startDate %}{{ support.startDate | date("d/m/Y") }}{% endif %}</td>
-                        <td>{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}</td>
+                        <td>{% if support.startDate %}{{ support.startDate|date("d/m/Y") }}{% endif %}</td>
+                        <td>{% if support.endDate %}{{ support.endDate|date("d/m/Y") }}{% endif %}</td>
                         <td>
                             {% if support.supportGroup.referent %}
                             <a href="mailto:{{ support.supportGroup.referent.email }}" class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="right"

@@ -17,7 +17,7 @@
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ supports.getTotalItemCount | number_format(0,'', ' ') }} <!--
+                <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number_format(0,'', ' ') }} <!--
                 -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
             </div>
             <div class="col-md-8">
@@ -78,7 +78,7 @@
                         </td>
                         <td class="align-middle">
                             {% for supportPerson in supportPeople %}
-                            {{ supportPerson.person.birthdate | date("d/m/Y") }}<br />
+                            {{ supportPerson.person.birthdate|date("d/m/Y") }}<br />
                             {% endfor %}
                         </td>
                         <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
@@ -89,8 +89,8 @@
                             {% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>
-                        <td class="align-middle">{% if support.startDate %}{{ support.startDate | date("d/m/Y") }}{% endif %}</td>
-                        <td class="align-middle">{% if support.endDate %}{{ support.endDate | date("d/m/Y") }}{% endif %}</td>
+                        <td class="align-middle">{% if support.startDate %}{{ support.startDate|date("d/m/Y") }}{% endif %}</td>
+                        <td class="align-middle">{% if support.endDate %}{{ support.endDate|date("d/m/Y") }}{% endif %}</td>
                         <td class="align-middle">{% if support.referent %}{{ support.referent.fullname }}{% endif %}</td>
                         <td class="align-middle">
                             {{ support.service.name }}<br>{% if support.device %}({{ support.device.name }}){% endif %}

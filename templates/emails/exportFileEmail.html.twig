@@ -3,6 +3,7 @@
 {% block body %}
 
     <p>Votre <b>fichier d'export</b> est prêt.</p>
-    <p>Vous pouvez le télécharger en cliquant sur <a href="{{ absolute_url(path) }}">ce lien</a>.</p>
+    <p>Vous pouvez le télécharger en cliquant sur <a href="{{ url('export_get', {'id': export.id}) }}">ce lien</a> si vous êtes déjà connecté à l'application.</p>
+    <p>Dans le cas contraire, merci de vous connecter au préalable.</p>
 
 {% endblock %}

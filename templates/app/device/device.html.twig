@@ -14,8 +14,8 @@
     <h1 class="h2 mb-3">{% if edit_mode %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p> Créé le {{device.createdAt | date("d/m/Y à H:i") }}{% if device.createdBy %} par {{ device.createdBy.fullname }}{% endif %}
-            (modifié le {{ device.updatedAt | date("d/m/Y à H:i") }}{% if device.updatedBy %} par {{ device.updatedBy.fullname }}{% endif %})
+        <p> Créé le {{device.createdAt|date("d/m/Y à H:i") }}{% if device.createdBy %} par {{ device.createdBy.fullname }}{% endif %}
+            (modifié le {{ device.updatedAt|date("d/m/Y à H:i") }}{% if device.updatedBy %} par {{ device.updatedBy.fullname }}{% endif %})
         </p>
     </div>
     {% else %}

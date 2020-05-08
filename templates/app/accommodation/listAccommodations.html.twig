@@ -15,7 +15,7 @@
     <div class="container-fluid mt-4">
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Total : {{ accommodations.getTotalItemCount | number_format(0,'', ' ')}} groupes
+                <p class="align-middle">Total : {{ accommodations.getTotalItemCount|number_format(0,'', ' ')}} groupes
                     de places.</p>
             </div>
             <div class="col-md-8">
@@ -73,8 +73,8 @@
                         <td><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
                         <td>{{ accommodation.device.name }}</td>
                         <td>{{ accommodation.placesNumber }}</td>
-                        <td>{{ accommodation.openingDate | date("d/m/Y") }}</td>
-                        <td>{% if accommodation.closingDate %} {{ accommodation.closingDate | date("d/m/Y") }}{% endif %}</td>
+                        <td>{{ accommodation.openingDate|date("d/m/Y") }}</td>
+                        <td>{% if accommodation.closingDate %} {{ accommodation.closingDate|date("d/m/Y") }}{% endif %}</td>
                         <td>{{ accommodation.address }}</td>
                         <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>

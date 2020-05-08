@@ -36,7 +36,7 @@ export default class MessageFlash {
     }
 
     timer() {
-        if (this.time > 10) {
+        if (this.time > 8) {
             clearInterval(this.timerID);
             this.msg.remove();
         }

@@ -79,8 +79,8 @@
 		{% set originRequest = support.originRequest %}
 		{% if originRequest %}
 		{{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
-			~ originRequest.organizationComment ~ ")" : "") : "", "Organisme orienteur ou prescripteur") }}
-		{{ utils.view(originRequest.orientationDate ? originRequest.orientationDate| date("d/m/Y"), "Date d'orientation") }}
+			~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "support") }}
+		{{ utils.view(originRequest.orientationDate ? originRequest.orientationDate| date("d/m/Y"), "Orientation date", "support") }}
 		{% endif %}
 	</div>
 	<div class="row">
@@ -123,9 +123,9 @@
 		{% if evalHousing %}
 		<div class="row mb-2">
 			{{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
-				~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Adresse du logement ou d'hébergement") }}
+				~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
 			{{ utils.view(evalHousing.domiciliationAddress ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
-				~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliationt") }}
+				~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
 		</div>
 		{% endif %}
 

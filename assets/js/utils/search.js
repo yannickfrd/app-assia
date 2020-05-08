@@ -6,6 +6,7 @@ export default class Search {
         this.inputElts = this.formSearch.getElementsByTagName("input");
         this.checkboxElts = this.formSearch.querySelectorAll("input[type='checkbox']");
         this.selectElts = this.formSearch.getElementsByTagName("select");
+        this.resultsElt = document.getElementById("results");
         this.btnClearElt = this.formSearch.querySelector("button[type='reset']");
         this.init();
     }
@@ -41,6 +42,10 @@ export default class Search {
                 containerElt.querySelector("input").click();
             }
         });
+
+        if (this.resultsElt) {
+            this.resultsElt.textContent = "";
+        }
 
         this.formSearch.querySelector("input").focus();
     }

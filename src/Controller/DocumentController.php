@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\CacheTrait;
 use App\Entity\Document;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Service\FileUploader;
 use App\Form\Model\DocumentSearch;
 use App\Form\Document\DocumentType;
+use App\Controller\Traits\CacheTrait;
 use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Document\DocumentSearchType;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\Download;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,6 +84,28 @@ class DocumentController extends AbstractController
         }
 
         return $this->getErrorMessage($form);
+    }
+
+    /**
+     * Lit le document.
+     *
+     * @Route("document/{id}/read", name="document_read", methods="GET")
+     *
+     * @return mixed
+     */
+    public function readDocument(Document $document, Download $download)
+    {
+        $this->denyAccessUnlessGranted('VIEW', $document);
+
+        $file = 'uploads/documents/'.$document->getGroupPeople()->getId().'/'.(new \DateTime())->format('Y/m').'/'.$document->getInternalFileName();
+
+        if (file_exists($file)) {
+            return $download->send($file);
+        }
+
+        $this->addFlash('danger', 'Ce fichier n\'existe pas.');
+
+        return $this->redirectToRoute('support_documents', ['supportId' => $document->getSupportGroup()->getId()]);
     }
 
     /**
@@ -167,7 +190,6 @@ class DocumentController extends AbstractController
                 'documentId' => $document->getId(),
                 'groupPeopleId' => $groupPeople->getId(),
                 'type' => $document->getTypeToString(),
-                'path' => $path.'/'.$fileName,
                 'size' => $size,
                 'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
             ],

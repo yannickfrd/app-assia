@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\SupportPerson;
-use App\Form\Model\SupportGroupSearch;
-use App\Security\CurrentUserService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use App\Entity\SupportPerson;
+use App\Form\Model\ExportSearch;
+use App\Security\CurrentUserService;
+use App\Form\Model\SupportGroupSearch;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method SupportPerson|null find($id, $lockMode = null, $lockVersion = null)
@@ -160,7 +161,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $query;
     }
 
-    public function findSupportsFullToExport($search = null)
+    public function findSupportsFullToExport(ExportSearch $search = null)
     {
         $query = $this->getSupportsQuery();
 
@@ -180,6 +181,28 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addselect('evalHousingGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addselect('evalSocialGroup');
 
+        $query = $this->filtersExport($query, $search);
+
+        return $query->setMaxResults(5000)
+            ->orderBy('sp.startDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    public function countSupportsToExport($search = null)
+    {
+        $query = $this->createQueryBuilder('sp')->select('sp')
+            ->leftJoin('sp.supportGroup', 'sg')->addselect('sg')
+            ->select('COUNT(sp.id)');
+
+        $query = $this->filtersExport($query, $search);
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    protected function filtersExport($query, ExportSearch $search)
+    {
         if ($search->getStatus()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -215,7 +238,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
         if (3 == $supportDates || !$supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sp.endDate >= :start OR sp.end IS NULL')
+                $query->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
@@ -251,9 +274,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        return $query->setMaxResults(1000)
-            ->orderBy('sp.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+        return $query;
     }
 }

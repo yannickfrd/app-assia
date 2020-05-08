@@ -14,9 +14,9 @@
     <h1 class="h2 mb-3">{{ accommodation.service.name }} : {% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p> Créé le {{accommodation.createdAt | date("d/m/Y à H:i") }}
+        <p> Créé le {{accommodation.createdAt|date("d/m/Y à H:i") }}
             {% if accommodation.createdBy %}par {{ accommodation.createdBy.fullname }}{% endif %}
-            {% if accommodation.updatedAt %}(modifié le {{ accommodation.updatedAt | date("d/m/Y à H:i") }}){% endif %}
+            {% if accommodation.updatedAt %}(modifié le {{ accommodation.updatedAt|date("d/m/Y à H:i") }}){% endif %}
         </p>
     </div>
     {% else %}
@@ -125,8 +125,8 @@
                         </td>
                         <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>
                         <td>{{ accommodation_group.accommodationPeople|length }}</td>
-                        <td>{{ accommodation_group.startDate | date("d/m/Y") }}</td>                    
-                        <td>{% if accommodation_group.endDate %}{{ accommodation_group.endDate | date("d/m/Y") }}{% endif %}</td>                    
+                        <td>{{ accommodation_group.startDate|date("d/m/Y") }}</td>                    
+                        <td>{% if accommodation_group.endDate %}{{ accommodation_group.endDate|date("d/m/Y") }}{% endif %}</td>                    
                         <td>{% if accommodation_group.endReason %}{{ accommodation_group.endReasonToString }}{% endif %}</td>
                     </tr>
                     {% endfor %}

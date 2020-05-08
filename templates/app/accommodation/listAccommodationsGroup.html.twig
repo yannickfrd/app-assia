@@ -42,8 +42,8 @@
 								</th>
 								<td>{{ accommodationGroup.accommodation.name }}</td>
 								<td>{{ accommodationGroup.accommodation.device.name }}</td>
-								<td>{{ accommodationGroup.startDate | date("d/m/Y") }}</td>
-								<td>{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate | date("d/m/Y") }}{% endif %}</td>
+								<td>{{ accommodationGroup.startDate|date("d/m/Y") }}</td>
+								<td>{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate|date("d/m/Y") }}{% endif %}</td>
 								<td>{{ accommodationGroup.endReasonToString }}</td>
 								<td>{{ accommodationGroup.accommodationPeople|length }}</td>
 								<td>{{ accommodationGroup.accommodation.address }}<br>

@@ -187,14 +187,6 @@ class SupportControllerTest extends WebTestCase
     //     $this->assertSame(200, $result["code"]);
     // }
 
-    public function testExportIsUp()
-    {
-        $this->client->request('GET', $this->generateUri('export'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Export des données');
-    }
-
     protected function tearDown(): void
     {
         parent::tearDown();

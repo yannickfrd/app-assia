@@ -3,7 +3,7 @@
 namespace App\Export;
 
 use App\Entity\Service;
-use App\Service\Export;
+use App\Service\ExportService;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ServiceExport
@@ -19,7 +19,7 @@ class ServiceExport
             $arrayData[] = $this->getDatas($service);
         }
 
-        return (new Export('export_services', 'xlsx', $arrayData, null))->exportFile();
+        return (new ExportService('export_services', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**

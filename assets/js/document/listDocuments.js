@@ -259,7 +259,7 @@ export default class ListDocuments {
         let size = Math.floor(data.size / 1000) + " Ko";
 
         return `<th scope="row" class="align-middle text-center">
-                    <a href="/uploads/documents/${data.path}" target="_blank" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
+                    <a href="/document/${data.documentId}/read" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
                 </th>
                     <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
                     <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.type}</td>

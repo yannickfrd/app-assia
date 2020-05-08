@@ -18,10 +18,10 @@
     <h1 class="h2 mb-3">{% if edit_mode %}{{ service.name }}{% else %}Nouveau service{% endif %}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
-        <p> Créé le {{service.createdAt | date("d/m/Y à H:i") }}
+        <p> Créé le {{service.createdAt|date("d/m/Y à H:i") }}
             {% if service.createdBy %} par {{ service.createdBy.fullname }}{% endif %}
             {% if service.updatedAt %}(modifié le
-            {{ service.updatedAt | date("d/m/Y à H:i") }}{% if service.updatedBy %} par
+            {{ service.updatedAt|date("d/m/Y à H:i") }}{% if service.updatedBy %} par
             {{ service.updatedBy.fullname }}{% endif %}){% endif %}
         </p>
     </div>
@@ -184,8 +184,8 @@
                         <td>{{ accommodation.name }}</td>
                         <td>{{ accommodation.device.name }}</td>
                         <td>{{ accommodation.placesNumber }}</td>
-                        <td>{{ accommodation.openingDate | date("d/m/Y") }}</td>
-                        <td>{% if accommodation.closingDate %}{{ accommodation.closingDate | date("d/m/Y") }}{% endif %}
+                        <td>{{ accommodation.openingDate|date("d/m/Y") }}</td>
+                        <td>{% if accommodation.closingDate %}{{ accommodation.closingDate|date("d/m/Y") }}{% endif %}
                         </td>
                         <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>
