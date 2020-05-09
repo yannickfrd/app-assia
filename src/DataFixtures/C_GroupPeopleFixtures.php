@@ -91,8 +91,8 @@ class C_GroupPeopleFixtures extends Fixture
 
         $this->lastname = $this->faker->lastName();
 
-        $this->groupPeople = new GroupPeople();
-        $this->groupPeople->setFamilyTypology($this->familyTypology)
+        $this->groupPeople = (new GroupPeople())
+            ->setFamilyTypology($this->familyTypology)
             ->setNbPeople($this->nbPeople)
             ->setCreatedAt($this->groupCreatedAt)
             ->setCreatedBy($this->user)
@@ -142,9 +142,8 @@ class C_GroupPeopleFixtures extends Fixture
     // Crée le rôle de la personne dans le groupe
     public function addRolePerson()
     {
-        $this->rolePerson = new RolePerson();
-
-        $this->rolePerson->setHead($this->head)
+        $this->rolePerson = (new RolePerson())
+            ->setHead($this->head)
             ->setRole($this->role)
             ->setGroupPeople($this->groupPeople)
             ->setCreatedAt($this->groupCreatedAt);
@@ -155,7 +154,6 @@ class C_GroupPeopleFixtures extends Fixture
     // Crée la personne
     public function addPerson()
     {
-        $this->person = new Person();
         $this->firstname = $this->faker->firstName();
 
         $phone = '06';
@@ -163,7 +161,8 @@ class C_GroupPeopleFixtures extends Fixture
             $phone = $phone.' '.strval(mt_rand(0, 9)).strval(mt_rand(0, 9));
         }
 
-        $this->person->setFirstName($this->firstname)
+        $this->person = (new Person())
+            ->setFirstName($this->firstname)
             ->setLastName($this->lastname)
             ->setBirthdate($this->birthdate)
             ->setGender($this->sex)

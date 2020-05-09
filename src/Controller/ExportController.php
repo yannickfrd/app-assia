@@ -2,15 +2,18 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Export;
-use App\Form\Model\ExportSearch;
-use App\Form\Export\ExportSearchType;
-use App\Repository\ExportRepository;
-use App\Repository\SupportPersonRepository;
 use App\Service\Download;
+use App\Form\Model\Import;
 use App\Service\Pagination;
+use App\Service\ImportDatas;
+use App\Form\Export\ImportType;
+use App\Form\Model\ExportSearch;
+use App\Repository\ExportRepository;
+use App\Form\Export\ExportSearchType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SupportPersonRepository;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,13 +24,22 @@ class ExportController extends AbstractController
 {
     use ErrorMessageTrait;
 
+    protected $manager;
+    protected $repo;
+
+    public function __construct(EntityManagerInterface $manager, ExportRepository $repo)
+    {
+        $this->manager = $manager;
+        $this->repo = $repo;
+    }
+
     /**
      * Export des données.
      *
      * @Route("export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function export(Request $request, ExportSearch $search = null, Pagination $pagination, ExportRepository $repo): Response
+    public function export(Request $request, ExportSearch $search = null, Pagination $pagination): Response
     {
         $search = new ExportSearch();
 
@@ -49,7 +61,34 @@ class ExportController extends AbstractController
 
         return $this->render('app/export/export.html.twig', [
             'form' => $form->createView(),
-            'exports' => $pagination->paginate($repo->findExportsQuery(), $request, 10) ?? null,
+            'exports' => $pagination->paginate($this->repo->findExportsQuery(), $request, 10) ?? null,
+        ]);
+    }
+
+    /**
+     * Import de données.
+     *
+     * @Route("import", name="import", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function import(Request $request, Import $import, ImportDatas $importDatas): Response
+    {
+        $fileName = 'uploads/import.csv';
+
+        $datas = $importDatas->getDatas($fileName);
+
+        $form = ($this->createForm(ImportType::class, $import))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $importDatas->importInDatabase($fileName, $import->getService());
+        } else {
+            dump($datas);
+        }
+
+        return $this->render('app/import.html.twig', [
+            'form' => $form->createView(),
+            'datas' => $datas,
         ]);
     }
 
@@ -103,14 +142,14 @@ class ExportController extends AbstractController
      *
      * @Route("export/{id}/delete", name="export_delete", methods="GET")
      */
-    public function deleteExport(Export $export, EntityManagerInterface $manager): Response
+    public function deleteExport(Export $export): Response
     {
         if (file_exists($export->getFileName())) {
             unlink($export->getFileName());
         }
 
-        $manager->remove($export);
-        $manager->flush();
+        $this->manager->remove($export);
+        $this->manager->flush();
 
         $this->addFlash('danger', 'Le fichier d\'export est supprimé.');
 

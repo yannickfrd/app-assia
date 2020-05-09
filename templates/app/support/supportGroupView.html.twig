@@ -508,7 +508,8 @@
 												<tr>
 													<td scope="row">{% if not loop.last %}{{ value }}{% else %}
 														{{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)" }}{% endif %}</td>
-													<td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") }} €</td>
+														{% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
+													<td class="text-right">{{ amt > 0 ? amt ~ ' €' }}</td>
 												</tr>
 												{% endif %}
 											{% endfor %}
@@ -558,7 +559,8 @@
 										<tfooter>
 											<tr class="font-weight-bold">
 												<td scope="row">Total des charges</td>
-												<td class="text-right">{{ evalBudget.chargesAmt|number_format(0, ",", " ") }} €</td>
+												{% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
+												<td class="text-right">{{ amt > 0 ? amt ~ ' €' }}</td>
 											</tr>
 										</tfooter>
 									</table>

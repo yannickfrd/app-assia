@@ -84,7 +84,7 @@ class SupportPersonExport
             'Date fin suivi (personne)' => $this->formatDate($supportPerson->getEndDate()),
             'Situation à la fin (personne)' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin (personne)' => $supportPerson->getEndStatusComment(),
-            'Référent social' => $supportGroup->getReferent()->getFullname(),
+            'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
             'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Service' => $supportGroup->getService()->getName(),
