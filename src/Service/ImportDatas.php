@@ -308,10 +308,9 @@ class ImportDatas
                     $cel = iconv('CP1252', 'UTF-8', $data[$col]);
                     $date = DateTime::createFromFormat('d/m/Y', $cel, new DateTimeZone(('UTC')));
                     if ($date) {
-                        $row[] = $date->format('Y-m-d');
-                    } else {
-                        $row[] = $cel;
+                        $cel = $date->format('Y-m-d');
                     }
+                    isset($this->datas[0]) ? $row[$this->datas[0][$col]] = $cel : $row[] = $cel;
                 }
                 $this->datas[] = $row;
             }
@@ -332,14 +331,14 @@ class ImportDatas
                 $device = $this->getDevice($row);
                 $accommodation = $this->getAccommodation($row, $service, $device);
 
-                $typology = $this->findInArray($row[9], self::FAMILY_TYPOLOGY) ?? 9;
+                $typology = $this->findInArray($row['Typologie familiale'], self::FAMILY_TYPOLOGY) ?? 9;
 
                 $this->checkGroupExists($row, $typology, $service, $accommodation, $device);
 
-                $groupPeople = $this->groups[$row[0]][0];
-                $supportGroup = $this->groups[$row[0]][1];
-                $accommodationGroup = $this->groups[$row[0]][2];
-                $evaluationGroup = $this->groups[$row[0]][3];
+                $groupPeople = $this->groups[$row['N° ménage']][0];
+                $supportGroup = $this->groups[$row['N° ménage']][1];
+                $accommodationGroup = $this->groups[$row['N° ménage']][2];
+                $evaluationGroup = $this->groups[$row['N° ménage']][3];
 
                 $this->getRoleAndGender($row, $typology);
                 $person = $this->createPerson($row);
@@ -360,18 +359,18 @@ class ImportDatas
         $deviceExists = false;
 
         foreach ($this->devices as $key => $value) {
-            if ($key == $row[2]) {
+            if ($key == $row['Dispositif']) {
                 $deviceExists = true;
             }
         }
 
         if (!$deviceExists) {
-            $this->devices[$row[2]] = [
+            $this->devices[$row['Dispositif']] = [
                 $this->findDevice($row),
             ];
         }
 
-        return  $this->devices[$row[2]][0];
+        return  $this->devices[$row['Dispositif']][0];
     }
 
     protected function getAccommodation(array $row, Service $service, Device $device): Accommodation
@@ -379,25 +378,25 @@ class ImportDatas
         $accommodationExists = false;
 
         foreach ($this->accommodations as $key => $value) {
-            if ($key == $row[1]) {
+            if ($key == $row['Nom place']) {
                 $accommodationExists = true;
             }
         }
 
         if (!$accommodationExists) {
-            $this->accommodations[$row[1]] = [
+            $this->accommodations[$row['Nom place']] = [
                 $this->createAccommodation($row, $service, $device),
             ];
         }
 
-        return $this->accommodations[$row[1]][0];
+        return $this->accommodations[$row['Nom place']][0];
     }
 
     protected function checkGroupExists(array $row, int $typology, Service $service, Accommodation $accommodation, Device $device)
     {
         $groupExists = false;
         foreach ($this->groups as $key => $value) {
-            if ($key == $row[0]) {
+            if ($key == $row['N° ménage']) {
                 $groupExists = true;
             }
         }
@@ -408,7 +407,7 @@ class ImportDatas
             $accommodationGroup = $this->createAccommodationGroup($groupPeople, $supportGroup, $accommodation);
             $evaluationGroup = $this->createEvaluationGroup($row, $supportGroup);
 
-            $this->groups[$row[0]] = [
+            $this->groups[$row['N° ménage']] = [
                 $groupPeople,
                 $supportGroup,
                 $accommodationGroup,
@@ -420,9 +419,9 @@ class ImportDatas
     protected function createAccommodation(array $row, Service $service, Device $device): Accommodation
     {
         $accommodation = (new Accommodation())
-            ->setName($row[1])
-            ->setAddress($row[3])
-            ->setPlacesNumber((int) $row[10])
+            ->setName($row['Nom place'])
+            ->setAddress($row['Adresse logement'])
+            ->setPlacesNumber((int) $row['Nb pers'])
             ->setOpeningDate(new DateTime())
             ->setDevice($device)
             ->setService($service)
@@ -438,8 +437,8 @@ class ImportDatas
     {
         $groupPeople = (new GroupPeople())
                     ->setFamilyTypology($typology)
-                    ->setNbPeople((int) $row[10])
-                    ->setComment($row[0])
+                    ->setNbPeople((int) $row['Nb pers'])
+                    ->setComment($row['N° ménage'])
                     ->setCreatedBy($this->getUser())
                     ->setUpdatedBy($this->getUser());
 
@@ -505,10 +504,10 @@ class ImportDatas
     {
         $initEvalGroup = (new InitEvalGroup())
             ->setSupportGroup($supportGroup)
-            ->setHousingStatus($this->findInArray($row[22], self::HOUSING_STATUS) ?? null)
-            ->setSiaoRequest($this->findInArray($row[65], self::YES_NO) ?? null)
-            ->setSocialHousingRequest($this->findInArray($row[47], self::YES_NO) ?? null)
-            ->setResourcesGroupAmt((float) $row[39]);
+            ->setHousingStatus($this->findInArray($row['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS) ?? null)
+            ->setSiaoRequest($this->findInArray($row['Demande SIAO active'], self::YES_NO) ?? null)
+            ->setSocialHousingRequest($this->findInArray($row['Demande logement social (entrée)'], self::YES_NO) ?? null)
+            ->setResourcesGroupAmt((float) $row['Total ressources ménage (entrée)']);
 
         $this->manager->persist($initEvalGroup);
 
@@ -519,8 +518,8 @@ class ImportDatas
     {
         $evalBudgetGroup = (new EvalBudgetGroup())
             ->setEvaluationGroup($evaluationGroup)
-            ->setResourcesGroupAmt((float) $row[58])
-            ->setBudgetBalanceAmt((float) $row[58]);
+            ->setResourcesGroupAmt((float) $row['Total ressources ménage'])
+            ->setBudgetBalanceAmt((float) $row['Total ressources ménage']);
 
         $this->manager->persist($evalBudgetGroup);
 
@@ -531,9 +530,9 @@ class ImportDatas
     {
         $evalHousingGroup = (new EvalHousingGroup())
             ->setEvaluationGroup($evaluationGroup)
-            ->setHousingStatus($this->findInArray($row[22], self::HOUSING_STATUS) ?? null)
-            ->setSiaoRequest($this->findInArray($row[65], self::YES_NO) ?? null)
-            ->setSocialHousingRequest($this->findInArray($row[68], self::YES_NO) ?? null);
+            ->setHousingStatus($this->findInArray($row['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS) ?? null)
+            ->setSiaoRequest($this->findInArray($row['Demande SIAO active'], self::YES_NO) ?? null)
+            ->setSocialHousingRequest($this->findInArray($row['Demande de logement social active'], self::YES_NO) ?? null);
 
         $this->manager->persist($evalHousingGroup);
 
@@ -543,9 +542,9 @@ class ImportDatas
     protected function createPerson(array $row): Person
     {
         $person = (new Person())
-                    ->setLastname($row[5])
-                    ->setFirstname($row[6])
-                    ->setBirthdate(new Datetime($row[7]))
+                    ->setLastname($row['Nom ménage'])
+                    ->setFirstname($row['Prénom'])
+                    ->setBirthdate(new Datetime($row['Date naissance']))
                     ->setGender($this->gender)
                     ->setCreatedBy($this->getUser())
                     ->setUpdatedBy($this->getUser());
@@ -640,21 +639,21 @@ class ImportDatas
     {
         $initEvalPerson = (new InitEvalPerson())
             ->setSupportPerson($supportPerson)
-            ->setPaperType($this->findInArray($row[30], self::PAPER_TYPE) ?? null)
-            ->setRightSocialSecurity($this->findInArray($row[41], self::RIGHT_SOCIAL_SECURITY) ?? null)
-            ->setSocialSecurity($this->findInArray($row[41], self::SOCIAL_SECURITY) ?? null)
-            ->setFamilyBreakdown($this->findInArray($row[26], self::YES_NO) ?? null)
-            ->setFriendshipBreakdown($this->findInArray($row[26], self::YES_NO) ?? null)
-            ->setProfStatus($this->findInArray($row[40], self::PROF_STATUS) ?? null)
-            ->setContractType($this->findInArray($row[40], self::CONTRACT_TYPE) ?? null)
-            ->setResources($row[32] == 'Oui' ? true : null)
-            ->setResourcesAmt((float) $row[38])
-            ->setUnemplBenefit($row[34] == 'Oui' ? true : null)
-            ->setMinimumIncome($row[35] == 'Oui' ? true : null)
-            ->setFamilyAllowance($row[36] == 'Oui' ? true : null)
-            ->setSalary($row[33] == 'Oui' ? true : null)
-            ->setRessourceOther($row[37] ? true : null)
-            ->setRessourceOtherPrecision($row[37]);
+            ->setPaperType($this->findInArray($row['Situation administrative (entrée)'], self::PAPER_TYPE) ?? null)
+            ->setRightSocialSecurity($this->findInArray($row['Couverture maladie (entrée)'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+            ->setSocialSecurity($this->findInArray($row['Couverture maladie (entrée)'], self::SOCIAL_SECURITY) ?? null)
+            ->setFamilyBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
+            ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
+            ->setProfStatus($this->findInArray($row['Emploi (entrée)'], self::PROF_STATUS) ?? null)
+            ->setContractType($this->findInArray($row['Emploi (entrée)'], self::CONTRACT_TYPE) ?? null)
+            ->setResources($row['Ressources (entrée)'] == 'Oui' ? true : null)
+            ->setResourcesAmt((float) $row['Montant ressources (entrée)'])
+            ->setUnemplBenefit($row['ARE (entrée)'] == 'Oui' ? true : null)
+            ->setMinimumIncome($row['RSA (entrée)'] == 'Oui' ? true : null)
+            ->setFamilyAllowance($row['AF (entrée)'] == 'Oui' ? true : null)
+            ->setSalary($row['Salaire (entrée)'] == 'Oui' ? true : null)
+            ->setRessourceOther($row['Autres ressources (entrée)'] ? true : null)
+            ->setRessourceOtherPrecision($row['Autres ressources (entrée)']);
 
         $this->manager->persist($initEvalPerson);
 
@@ -665,11 +664,11 @@ class ImportDatas
     {
         $evalSocialPerson = (new EvalSocialPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setRightSocialSecurity($this->findInArray($row[41], self::RIGHT_SOCIAL_SECURITY) ?? null)
-            ->setSocialSecurity($this->findInArray($row[41], self::SOCIAL_SECURITY) ?? null)
-            ->setFamilyBreakdown($this->findInArray($row[65], self::YES_NO) ?? null)
-            ->setFriendshipBreakdown($this->findInArray($row[65], self::YES_NO) ?? null)
-            ->setChildWelfareBackground($this->findInArray($row[25], self::YES_NO) ?? null);
+            ->setRightSocialSecurity($this->findInArray($row['Couverture maladie (entrée)'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+            ->setSocialSecurity($this->findInArray($row['Couverture maladie (entrée)'], self::SOCIAL_SECURITY) ?? null)
+            ->setFamilyBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
+            ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
+            ->setChildWelfareBackground($this->findInArray($row['Parcours institutionnel enfance'], self::YES_NO) ?? null);
 
         $this->manager->persist($evalSocialPerson);
 
@@ -680,8 +679,8 @@ class ImportDatas
     {
         $evalFamilyPerson = (new EvalFamilyPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setProtectiveMeasure($this->findInArray($row[61], self::PROTECTIVE_MEASURE) ?? null)
-            ->setProtectiveMeasureType($this->findInArray($row[61], self::PROTECTIVE_MEASURE_TYPE) ?? null);
+            ->setProtectiveMeasure($this->findInArray($row['Mesure de protection'], self::PROTECTIVE_MEASURE) ?? null)
+            ->setProtectiveMeasureType($this->findInArray($row['Mesure de protection'], self::PROTECTIVE_MEASURE_TYPE) ?? null);
 
         $this->manager->persist($evalFamilyPerson);
 
@@ -692,12 +691,12 @@ class ImportDatas
     {
         $evalAdmPerson = (new EvalAdmPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setNationality($this->findInArray($row[28], self::NATIONALITY) ?? null)
-            ->setCountry($row[29])
-            ->setPaper($this->findInArray($row[50], self::PAPER) ?? null)
-            ->setPaperType($this->findInArray($row[50], self::PAPER_TYPE) ?? null)
-            ->setAsylumBackground($this->findInArray($row[31], self::YES_NO) ?? null)
-            ->setCommentEvalAdmPerson($row[50]);
+            ->setNationality($this->findInArray($row['Nationalité'], self::NATIONALITY) ?? null)
+            ->setCountry($row['Pays d\'origine'])
+            ->setPaper($this->findInArray($row['Situation administrative (entrée)'], self::PAPER) ?? null)
+            ->setPaperType($this->findInArray($row['Situation administrative (entrée)'], self::PAPER_TYPE) ?? null)
+            ->setAsylumBackground($this->findInArray($row['Parcours asile'], self::YES_NO) ?? null)
+            ->setCommentEvalAdmPerson($row['Situation administrative (entrée)']);
 
         $this->manager->persist($evalAdmPerson);
 
@@ -708,8 +707,8 @@ class ImportDatas
     {
         $evalProfPerson = (new EvalProfPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setProfStatus($this->findInArray($row[40], self::PROF_STATUS) ?? null)
-            ->setContractType($this->findInArray($row[40], self::CONTRACT_TYPE) ?? null);
+            ->setProfStatus($this->findInArray($row['Emploi (entrée)'], self::PROF_STATUS) ?? null)
+            ->setContractType($this->findInArray($row['Emploi (entrée)'], self::CONTRACT_TYPE) ?? null);
 
         $this->manager->persist($evalProfPerson);
 
@@ -720,14 +719,14 @@ class ImportDatas
     {
         $evalBudgetPerson = (new EvalBudgetPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setResources($row[51] == 'Oui' ? true : null)
-            ->setResourcesAmt((float) $row[57])
-            ->setUnemplBenefit($row[53] == 'Oui' ? true : null)
-            ->setMinimumIncome($row[54] == 'Oui' ? true : null)
-            ->setFamilyAllowance($row[55] == 'Oui' ? true : null)
-            ->setSalary($row[52] == 'Oui' ? true : null)
-            ->setRessourceOther($row[55] ? true : null)
-            ->setRessourceOtherPrecision($row[56]);
+            ->setResources($row['Ressources'] == 'Oui' ? true : null)
+            ->setResourcesAmt((float) $row['Montant ressources'])
+            ->setUnemplBenefit($row['ARE'] == 'Oui' ? true : null)
+            ->setMinimumIncome($row['RSA'] == 'Oui' ? true : null)
+            ->setFamilyAllowance($row['AF'] == 'Oui' ? true : null)
+            ->setSalary($row['Salaire'] == 'Oui' ? true : null)
+            ->setRessourceOther($row['Autres ressources'] ? true : null)
+            ->setRessourceOtherPrecision($row['Autres ressources']);
 
         $this->manager->persist($evalBudgetPerson);
 
@@ -737,7 +736,7 @@ class ImportDatas
     protected function findDevice(array $row): ?Device
     {
         foreach (self::DEVICES as $key => $value) {
-            if ($key == $row[2]) {
+            if ($key == $row['Dispositif']) {
                 return $this->repoDevice->find($value);
             }
         }
@@ -762,7 +761,7 @@ class ImportDatas
         $this->head = false;
         $this->role = 7;
 
-        if ($row[11] == ' DP') {
+        if ($row['Rôle'] == ' DP') {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
                 $this->gender = 1;
@@ -777,26 +776,26 @@ class ImportDatas
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
-        } elseif ($row[11] == 'Enfant') {
+        } elseif ($row['Rôle'] == 'Enfant') {
             $this->role = 3;
-        } elseif ($row[11] == 'Conjoint·e') {
+        } elseif ($row['Rôle'] == 'Conjoint·e') {
             $this->role = 1;
         }
     }
 
     protected function getStatus(array $row): int
     {
-        return $row[74] ? 4 : ($row[21] ? 2 : 5);
+        return $row['Date sortie'] ? 4 : ($row['Date entrée'] ? 2 : 5);
     }
 
     protected function getStartDate(array $row): ?DateTime
     {
-        return $row[21] ? new Datetime($row[21]) : null;
+        return $row['Date entrée'] ? new Datetime($row['Date entrée']) : null;
     }
 
     protected function getEndDate(array $row): ?DateTime
     {
-        return $row[74] ? new Datetime($row[74]) : null;
+        return $row['Date sortie'] ? new Datetime($row['Date sortie']) : null;
     }
 
     protected function getUser(): User
