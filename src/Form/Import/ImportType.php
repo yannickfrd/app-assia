@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Export;
+namespace App\Form\Import;
 
 use App\Entity\Service;
 use App\Form\Model\Import;

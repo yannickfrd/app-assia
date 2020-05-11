@@ -88,6 +88,7 @@
 		{{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
 			~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
 		{{ utils.view(support.endDate ? support.endDate| date("d/m/Y") : "", "End date") }}
+		{{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
 	</div>
 	<div class="row">
 		{{ utils.view(support.comment, "Comment") }}
@@ -99,9 +100,8 @@
 			<div class="float-left d-flex">
 				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
 					title="Supprimer le suivi social" data-placement="bottom"
-					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). 
-					Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
-					class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}">
+					<span class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
 			</div>
 			{% endif %}
 			<div class="mb-3 float-right">
@@ -115,7 +115,7 @@
 
 	{% if evaluation %}
 
-		{% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %}
+		{# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
 		
 		<hr>
 
@@ -131,7 +131,7 @@
 
 		<div class="row mb-2">
 			{{ utils.view(support.groupPeople.familyTypologyToString~ (support.supportPeople|length > 1 ? 
-				" (" ~ support.supportPeople|length ~ " personnes)"), "Family typology") }}
+				", " ~ support.supportPeople|length ~ " personnes"), "Family typology") }}
 		</div>
 
 		<div class="row mb-2">
@@ -205,7 +205,7 @@
 											<li>{{ value }}</li>
 										{% endif %}
 									{% endfor %}									 
-								<ul>
+								</ul>
 							</div>
 						</div>
 						{% endif %}
@@ -517,7 +517,7 @@
 										<tfooter>
 											<tr class="font-weight-bold">
 												<td scope="row">Total des ressources</td>
-												<td class="text-right font-weight-bold">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+												<td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
 											</tr>
 											{% if evalBudget.incomeN1Amt %}
 											<tr>
@@ -559,8 +559,7 @@
 										<tfooter>
 											<tr class="font-weight-bold">
 												<td scope="row">Total des charges</td>
-												{% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
-												<td class="text-right">{{ amt > 0 ? amt ~ ' €' }}</td>
+												<td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
 											</tr>
 										</tfooter>
 									</table>
@@ -582,13 +581,14 @@
 						<div class="row mb-2">
 							{{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
 							<div class="col-md-6">
+								<div class="py-2 text-secondary">Type de dettes :</div>
 								<ul class="mb-0">
 									{% for key, value in evalBudget.debtsType %}
 										{% if attribute(evalBudget, key) %}
 											<li>{{ value }}</li>
 										{% endif %}
 									{% endfor %}
-								<ul>
+								</ul>
 							</div>
 						</div>
 						<div class="row mb-2">
@@ -704,7 +704,7 @@
 									<li>{{ value }}</li>
 								{% endif %}
 							{% endfor %}
-						<ul>
+						</ul>
 					</div>
 				</div>
 				{% if evalHousing.commentEvalHousing %}
@@ -717,7 +717,7 @@
 
 		{% endif %}
 
-		{% endcache %}
+		{# {% endcache %} #}
 
 	{% endif %}
 

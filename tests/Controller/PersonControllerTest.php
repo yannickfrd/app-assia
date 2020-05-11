@@ -66,20 +66,6 @@ class PersonControllerTest extends WebTestCase
         $this->assertSelectorTextContains('table tbody tr td a', 'DOE');
     }
 
-    public function testExportListPeople()
-    {
-        $this->createLogin($this->user);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('people'));
-
-        $form = $crawler->selectButton('export')->form([]);
-
-        $this->client->submit($form);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testAddPersonInGroupIsUp()
     {
         $this->createLogin($this->user);

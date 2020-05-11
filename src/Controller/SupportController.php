@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
@@ -14,6 +13,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Support\SupportCoefficientType;
 use App\Form\Support\SupportGroupSearchType;
 use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,8 +122,22 @@ class SupportController extends AbstractController
             return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
+                ->handleRequest($request);
+
+            if ($formCoeff->isSubmitted() && $formCoeff->isValid()) {
+                $this->manager->flush();
+
+                $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
+
+                return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+            }
+        }
+
         return $this->render('app/support/supportGroupEdit.html.twig', [
             'form' => $form->createView(),
+            'formCoeff' => isset($formCoeff) ? $formCoeff->createView() : null,
         ]);
     }
 

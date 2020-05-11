@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Device;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use App\Entity\Accommodation;
+use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Device|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,7 +37,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs du service.
      */
-    public function getDevicesFromServiceQueryList($accommodation)
+    public function getDevicesFromServiceQueryList(Accommodation $accommodation)
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -49,9 +51,9 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesFromUserQueryList($currentUser)
+    public function getDevicesFromUserQueryList(CurrentUserService $currentUser)
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
@@ -60,5 +62,12 @@ class DeviceRepository extends ServiceEntityRepository
         }
 
         return $query->orderBy('d.name', 'ASC');
+    }
+
+    public function findDevicesForDashboard(CurrentUserService $currentUser)
+    {
+        return ($this->getDevicesFromUserQueryList($currentUser))
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

@@ -7,7 +7,7 @@ use App\Service\Download;
 use App\Form\Model\Import;
 use App\Service\Pagination;
 use App\Service\ImportDatas;
-use App\Form\Export\ImportType;
+use App\Form\Import\ImportType;
 use App\Form\Model\ExportSearch;
 use App\Repository\ExportRepository;
 use App\Form\Export\ExportSearchType;

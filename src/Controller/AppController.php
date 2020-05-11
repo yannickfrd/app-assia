@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
+use App\Repository\RdvRepository;
+use App\Repository\NoteRepository;
+use App\Repository\UserRepository;
+use App\Repository\PersonRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\GroupPeopleRepository;
-use App\Repository\NoteRepository;
-use App\Repository\PersonRepository;
-use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
-use App\Repository\UserRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Service\Indicators;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppController extends AbstractController
 {
@@ -118,6 +119,33 @@ class AppController extends AbstractController
         return $this->render('app/home/dashboard.html.twig', [
             'datas' => $indicators->get(),
             'users' => $usersIndicators->get(),
+        ]);
+    }
+
+    /**
+     * Tableau de bord du/des services.
+     *
+     * @Route("/dashboard/service", name="dashboard_service", methods="GET")
+     */
+    public function showServiceDashboard(Indicators $indicators): Response
+    {
+        $cache = new FilesystemAdapter();
+
+        $cacheStatsService = $cache->getItem('stats.service'.$this->getUser()->getId());
+
+        if (!$cacheStatsService->isHit()) {
+            $cacheStatsService->set($indicators->getStatsService());
+            $cacheStatsService->expiresAfter(2 * 60);
+            $cache->save($cacheStatsService);
+        }
+
+        $statsService = $cacheStatsService->get();
+
+        return $this->render('app/dashboard/dashboardService.html.twig', [
+            'devices' => $statsService['devices'],
+            'dataUsers' => $statsService['dataUsers'],
+            'nbSupports' => $statsService['nbSupports'],
+            'sumCoeffSupports' => $statsService['sumCoeffSupports'],
         ]);
     }
 }

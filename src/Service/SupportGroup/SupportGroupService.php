@@ -48,7 +48,9 @@ class SupportGroupService
             return false;
         }
 
-        $supportGroup->setGroupPeople($groupPeople);
+        $supportGroup
+            ->setGroupPeople($groupPeople)
+            ->setCoefficient($supportGroup->getDevice()->getCoefficient());
 
         $this->manager->persist($supportGroup);
 

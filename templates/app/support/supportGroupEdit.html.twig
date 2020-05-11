@@ -5,6 +5,7 @@
 {% set support = form.vars.value %}
 
 {% if support.id %}
+	{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}
 	{% set people = form.vars.value.supportPeople %}
 	{% set title = "Édition du suivi" %}
 {% else %}
@@ -22,6 +23,25 @@
 
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
+
+	{% if support.id and is_granted("ROLE_ADMIN") %}
+		<section>
+			<h2 class="h4 my-4">Coefficient du suivi</h2>
+			{{ form_start(formCoeff) }}
+				<div class="form-inline">
+					{{ form_label(formCoeff.coefficient) }}
+					<div class="form-group my-1 px-1">{{ form_widget(formCoeff.coefficient) }}</div>
+					<div class="form-group my-1 px-1">
+						<button type="submit" id="send-coeff" name="send-coeff" class="btn btn-{{ theme_color }} shadow">
+							<span class="fas fa-save mr-2"></span>Modifier</button>
+					</div>
+				</div>
+				{{ form_row(formCoeff._token) }}
+
+			{{ form_end(formCoeff, {"render_rest": false}) }}
+		</section>
+	<hr>
+	{% endif %}
 
 	{{ form_start(form) }}
 
@@ -196,7 +216,6 @@
 </div>
 
 {% include "app/support/removeSupportPerson.html.twig" %}
-
 
 {% endblock %}
 

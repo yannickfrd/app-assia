@@ -7,7 +7,6 @@ use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Service\Pagination;
-use App\Export\PersonExport;
 use App\Form\Person\PersonType;
 use App\Form\Model\PersonSearch;
 use App\Repository\PersonRepository;
@@ -50,10 +49,6 @@ class PersonController extends AbstractController
 
         $form = ($this->createForm(PersonSearchType::class, $search))
             ->handleRequest($request);
-
-        if ($search->getExport()) {
-            return $this->exportData($search);
-        }
 
         return $this->render('app/person/listPeople.html.twig', [
             'personSearch' => $search,
@@ -281,16 +276,6 @@ class PersonController extends AbstractController
             'nb_results' => $nbResults,
             'results' => 'Aucun résultat.',
         ], 200);
-    }
-
-    /**
-     * Export des données.
-     */
-    protected function exportData(PersonSearch $search)
-    {
-        $people = $this->repo->findPeopleToExport($search);
-
-        return (new PersonExport())->exportData($people);
     }
 
     /**

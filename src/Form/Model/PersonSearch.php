@@ -41,11 +41,6 @@ class PersonSearch
      */
     private $email;
 
-    /**
-     * @var bool
-     */
-    private $export;
-
     public function __construct()
     {
     }
@@ -151,18 +146,6 @@ class PersonSearch
     public function setEmail(?string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getExport(): ?bool
-    {
-        return $this->export;
-    }
-
-    public function setExport(bool $export): self
-    {
-        $this->export = $export;
 
         return $this;
     }

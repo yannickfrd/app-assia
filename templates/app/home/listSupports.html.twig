@@ -10,6 +10,8 @@
     <div class="row align-items-baseline">
         <div class="col-md-12 count align-middle">
             <p class="align-middle">{{ supports|length }} suivis en cours.</p>
+            <a href="{{ path('new_support_search_person') }}" class="mb-3 btn btn-{{ theme_color }} btn-sm">
+                <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
         </div>
     </div>
     <div class="table-responsive">
@@ -61,6 +63,5 @@
     </div>
     <a href="{{ path('new_support_search_person') }}" class="m-3 btn btn-{{ theme_color }} btn-sm">
         <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
-    <br />
 </div>
 {% endblock %}

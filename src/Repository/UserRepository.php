@@ -140,15 +140,20 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('services', $currentUser->getServices());
             $orX->add($expr->eq('u.id', $currentUser->getUser()));
         }
-        // if ($currentUser->isRole("ROLE_ADMIN")) {
         $orX->add($expr->isNull('u.disabledAt'));
-        // }
         if ($user) {
             $orX->add($expr->eq('u.id', $user));
         }
         $query->andWhere($orX);
 
         return $query->orderBy('u.lastname', 'ASC');
+    }
+
+    public function findAllUsersFromServices(CurrentUserService $currentUser)
+    {
+        return ($this->getAllUsersFromServicesQueryList($currentUser))
+        ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ->getResult();
     }
 
     /**
@@ -196,12 +201,6 @@ class UserRepository extends ServiceEntityRepository
     public function findUsers(array $criteria = null)
     {
         $query = $this->createQueryBuilder('u')
-        // ->select("u")
-        // ->leftJoin("u.referentSupport", "s")->addSelect("PARTIAL s.{id, status, startDate, endDate}")
-        // ->join("u.notesCreated", "n")->addSelect("COUNT(n.id)")
-        // ->leftJoin("u.rdvs", "r")->addSelect("PARTIAL r.{id, start}")
-        // ->leftJoin("u.documents", "d")->addSelect("PARTIAL d.{id}")
-
         ->andWhere('u.disabledAt IS NULL');
 
         if ($criteria) {

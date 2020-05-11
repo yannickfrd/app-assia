@@ -31,10 +31,10 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->leftJoin('g.updatedBy', 'updatedBy')->addselect('PARTIAL updatedBy.{id, firstname, lastname}')
             ->leftJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addselect('p')
-            ->leftJoin('g.supports', 'sg')->addselect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
+            ->leftJoin('g.supports', 'sg')->addselect('sg')
             ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
             ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone1}')
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.device', 'd')->addselect('d')
             ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
             ->leftJoin('g.referents', 'referents')->addselect('referents')
 

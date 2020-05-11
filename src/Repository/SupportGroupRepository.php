@@ -51,7 +51,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query = $this->getsupportQuery();
 
         return $query
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
@@ -254,6 +254,28 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    public function findSupportsForDashboard()
+    {
+        $query = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id}');
+
+        if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->where('s.id IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        $query = $query->andWhere('sg.status = :status')
+            ->setParameter('status', 2)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+
+        return $query;
     }
 
     public function countAllSupports(array $criteria = null)

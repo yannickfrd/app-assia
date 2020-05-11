@@ -160,17 +160,6 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
-    public function testAddPeopleInSupportIsUp()
-    {
-        $this->client->request('GET', $this->generateUri('support_add_people', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
-        // $this->client->followRedirect();
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h2', 'Personnes rattachées au suivi social');
-        $this->assertSelectorExists('.alert.alert-warning');
-    }
-
     // public function testRemoveSupportPerson()
     // {
     //     $supportPerson = ($this->dataFixtures["supportPerson1"]);
