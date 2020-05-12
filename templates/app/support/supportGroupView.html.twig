@@ -75,19 +75,33 @@
 
 	<div class="row">
 		{{ utils.view(support.service.name ~ (support.device ? " (" ~ support.device.name ~ ")"), "Service (dispositif)") }}
-		{{ utils.view(support.statusToString, "Status") }}
+		{{ utils.view(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
 		{% set originRequest = support.originRequest %}
 		{% if originRequest %}
 		{{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
 			~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "support") }}
-		{{ utils.view(originRequest.orientationDate ? originRequest.orientationDate| date("d/m/Y"), "Orientation date", "support") }}
+		{{ utils.view(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "support") }}
 		{% endif %}
 	</div>
 	<div class="row">
-		{{ utils.view(support.startDate ? support.startDate| date("d/m/Y") : "", "Start date") }}
+		{{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+			~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
 		{{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
 			~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
-		{{ utils.view(support.endDate ? support.endDate| date("d/m/Y") : "", "End date") }}
+	</div>
+	{% for accommodationGroup in support.accommodationGroups %}
+		{% if loop.last %}
+			<div class="row">
+				{{ utils.view(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
+					~ (accommodationGroup.endDate ? " - " ~ accommodationGroup.endDate|date("d/m/Y") : "") : "", "Date d'hébergement") }}
+				{{ utils.view(accommodationGroup.accommodation ? accommodationGroup.accommodation.name ~ " (" 
+					~ accommodationGroup.accommodation.address ~ ", " ~ accommodationGroup.accommodation.zipcode ~ " " 
+					~ accommodationGroup.accommodation.city ~  ")" : "", "Hébergement") }}
+				{{ utils.view(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
+			</div>
+		{% endif %}	
+	{% endfor %}
+	<div class="row">
 		{{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
 	</div>
 	<div class="row">
@@ -573,13 +587,12 @@
 						</div>
 						{% endif %}
 						<div class="row mb-2">
-							{{ utils.view(evalBudget.incomeN1Amt, "incomeN1Amt", "evaluation") }}
-							{{ utils.view(evalBudget.incomeN2Amt, "incomeN2Amt", "evaluation") }}
-							{{ utils.view(evalBudget.resourcesComment, "resourcesComment", "evaluation") }}
+							{{ utils.view(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
 						</div>
 						{% if evalBudget.debts %}
 						<div class="row mb-2">
 							{{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
+							{% if evalBudget.debts == 1 %}
 							<div class="col-md-6">
 								<div class="py-2 text-secondary">Type de dettes :</div>
 								<ul class="mb-0">
@@ -590,6 +603,7 @@
 									{% endfor %}
 								</ul>
 							</div>
+							{% endif %}
 						</div>
 						<div class="row mb-2">
 							{{ utils.view(evalBudget.debtComment, "Debt comment", "evaluation") }}
@@ -707,11 +721,9 @@
 						</ul>
 					</div>
 				</div>
-				{% if evalHousing.commentEvalHousing %}
 				<div class="row my-3">
-					<div class="col-md-12">{{ evalHousing.commentEvalHousing }}</div>
+					{{ utils.view(evalHousing.commentEvalHousing, "Comment") }}
 				</div>
-				{% endif %}
 					
 			</section>
 
