@@ -56,7 +56,7 @@ class AccommodationControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('search')->form([
             'name' => 'Logement 666',
-            'placesNumber' => 6,
+            'nbPlaces' => 6,
             'date[start]' => '2019-01-01',
             'date[end]' => '2020-01-01',
             'city' => 'Houilles',
@@ -139,8 +139,8 @@ class AccommodationControllerTest extends WebTestCase
         $form = $crawler->selectButton('send')->form([
             'accommodation[name]' => 'Logement 666',
             'accommodation[service]' => $this->service,
-            'accommodation[placesNumber]' => 6,
-            'accommodation[openingDate]' => '2019-01-01',
+            'accommodation[nbPlaces]' => 6,
+            'accommodation[startDate]' => '2019-01-01',
         ]);
 
         $this->client->submit($form);
@@ -160,9 +160,9 @@ class AccommodationControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('send')->form([
             'accommodation[name]' => 'Nouveau logement',
-            'accommodation[placesNumber]' => 6,
-            'accommodation[openingDate]' => '2019-01-01',
-            'accommodation[closingDate]' => '2020-01-01',
+            'accommodation[nbPlaces]' => 6,
+            'accommodation[startDate]' => '2019-01-01',
+            'accommodation[endDate]' => '2020-01-01',
             'accommodation[location][city]' => 'Houilles',
             'accommodation[location][zipcode]' => '78 800',
             'accommodation[location][address]' => 'xxx',

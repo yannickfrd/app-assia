@@ -25,7 +25,7 @@ class AccommodationSearch
     /**
      * @var int|null
      */
-    private $placesNumber;
+    private $nbPlaces;
 
     /**
      * @var int|null
@@ -59,14 +59,14 @@ class AccommodationSearch
         return $this;
     }
 
-    public function getplacesNumber(): ?int
+    public function getnbPlaces(): ?int
     {
-        return $this->placesNumber;
+        return $this->nbPlaces;
     }
 
-    public function setPlacesNumber(?int $placesNumber): self
+    public function setNbPlaces(?int $nbPlaces): self
     {
-        $this->placesNumber = $placesNumber;
+        $this->nbPlaces = $nbPlaces;
 
         return $this;
     }

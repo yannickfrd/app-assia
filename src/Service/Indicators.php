@@ -26,27 +26,13 @@ class Indicators
         $this->repoSupport = $repoSupport;
     }
 
-    public function getStatsService()
+    public function getSupportsbyDevice()
     {
         $devices = $this->repoDevice->findDevicesForDashboard($this->currentUser);
         $users = $this->repoUser->findAllUsersFromServices($this->currentUser);
         $supports = $this->repoSupport->findSupportsForDashboard();
 
-        $initDevicesUser = [];
-
-        foreach ($devices as $device) {
-            $initDevicesUser[$device->getId()] = [
-                'name' => $device->getName(),
-                'nbSupports' => 0,
-                'sumCoeff' => 0,
-            ];
-        }
-
-        $initDevicesUser['NR'] = [
-                'name' => 'NR',
-                'nbSupports' => 0,
-                'sumCoeff' => 0,
-        ];
+        $initDevicesUser = $this->getInitDevicesUser($devices);
 
         $devices = $initDevicesUser;
         $dataUsers = [];
@@ -86,5 +72,26 @@ class Indicators
             'devices' => $devices,
             'dataUsers' => $dataUsers,
         ];
+    }
+
+    protected function getInitDevicesUser($devices)
+    {
+        $initDevicesUser = [];
+
+        foreach ($devices as $device) {
+            $initDevicesUser[$device->getId()] = [
+                'name' => $device->getName(),
+                'nbSupports' => 0,
+                'sumCoeff' => 0,
+            ];
+        }
+
+        $initDevicesUser['NR'] = [
+                'name' => 'NR',
+                'nbSupports' => 0,
+                'sumCoeff' => 0,
+        ];
+
+        return $initDevicesUser;
     }
 }

@@ -1,0 +1,16 @@
+{#  #}
+{% macro alert_color(value) %}{% spaceless %}
+    {% if value > 150  %}
+    alert-danger
+    {% elseif value > 100 %}
+    alert-warning
+    {% elseif value >= 95 %}
+    alert-success
+    {% elseif value >= 80 %}
+    alert-info
+    {% elseif value > 60 %}
+    alert-warning
+    {% else %}
+    alert-danger
+    {% endif %}
+{% endspaceless %}{% endmacro %}

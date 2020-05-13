@@ -182,8 +182,8 @@ class A_ServiceFixtures extends Fixture
             $place->setService($this->service)
                 ->setDevice($device)
                 ->setName('Logement '.mt_rand(1, 100))
-                ->setPlacesNumber(mt_rand(2, 5))
-                ->setOpeningDate($this->faker->dateTimeBetween('-5years', '-12months'))
+                ->setNbPlaces(mt_rand(2, 5))
+                ->setStartDate($this->faker->dateTimeBetween('-5years', '-12months'))
                 ->setCity('Cergy-Pontoise');
 
             $this->manager->persist($place);

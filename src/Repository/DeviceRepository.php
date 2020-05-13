@@ -64,6 +64,25 @@ class DeviceRepository extends ServiceEntityRepository
         return $query->orderBy('d.name', 'ASC');
     }
 
+    public function findDevicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end)
+    {
+        $query = $this->createQueryBuilder('d')->select('d')
+            ->leftJoin('d.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces}')
+
+            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
+            ->andWhere('a.startDate < :end')->setParameter('end', $end);
+
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('d.id IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
+
+        return $query
+            ->orderBy('d.name', 'ASC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
     public function findDevicesForDashboard(CurrentUserService $currentUser)
     {
         return ($this->getDevicesFromUserQueryList($currentUser))

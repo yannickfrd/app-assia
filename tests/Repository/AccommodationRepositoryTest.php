@@ -49,7 +49,7 @@ class AccommodationRepositoryTest extends WebTestCase
         $this->service = $datafixtures['service'];
         $this->search = (new AccommodationSearch())
             ->setName('Logement')
-            ->setPlacesNumber(6)
+            ->setNbPlaces(6)
             ->setStart(new \DateTime('2010-01-01'))
             ->setEnd(new \DateTime('2020-01-01'))
             ->setCity('Houille')

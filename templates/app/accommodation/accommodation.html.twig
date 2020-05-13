@@ -46,11 +46,11 @@
         </div>
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.device) }}</div>
-            <div class="col-md-6">{{ form_row(form.placesNumber) }}</div>
+            <div class="col-md-6">{{ form_row(form.nbPlaces) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.openingDate) }}</div>
-            <div class="col-md-6">{{ form_row(form.closingDate) }}</div>
+            <div class="col-md-6">{{ form_row(form.startDate) }}</div>
+            <div class="col-md-6">{{ form_row(form.endDate) }}</div>
         </div>
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.location.address) }}</div>
@@ -94,7 +94,7 @@
     
     <hr>
  
-    <section>
+    <section id="accommodation_groups">
         <h2 class="h4 my-4">Prises en charge</h2>
         <p class="text-secondary">Affiche les 10 dernières prises en charge.</p>
         <div class="table-responsive">

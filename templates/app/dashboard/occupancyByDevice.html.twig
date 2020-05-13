@@ -1,0 +1,88 @@
+{% extends "base.html.twig" %}
+{% import "macros/alertColor.html.twig" as utils %}
+
+{% block title %}Taux d'occupation | {{ title_website }}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    {% include "model/msgFlash.html.twig" %}
+    <h1 class="h2 mb-3">Taux d'occupation <span class="fas fa-angle-right fa-sm"></span> Dispositifs</h1>
+</div>
+
+{% include "app/dashboard/searchOccupancy.html.twig" %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {% set interval = date(start).diff(date(end)) %}
+            <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
+            --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive-sm">
+                <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
+                    <thead>
+                        <tr>
+                            <th scope="row" class="align-middle th-w-20"></th>
+                            <th class="align-middle th-w-150">Dispositif</th>
+                            <th class="align-middle th-w-100 text-right">Nombre de groupes de places</th>
+                            <th class="align-middle th-w-100 text-right">Nombre de places</th>
+                            <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
+                            <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
+                            <th class="align-middle th-w-100 text-right">Nb moyen de places/jour</th>
+                            <th class="align-middle th-w-100 text-right">Nb moyen de personnes/jour</th>
+                            <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for deviceId, device in datas.devices %}
+                            <tr>
+                                <td scope="row" class="align-middle text-center">
+                                    <a href="{{ path('occupancy_device_services', {'id': deviceId, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                        title="Voir le détail des groupes de places du device"><span class="fas fa-eye fa-sm"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle">{{ device.name }}</td>
+                                <td class="align-middle text-right">{{ device.nbAccommodations }}</td>
+                                <td class="align-middle text-right">{{ device.nbPlaces }}</td>
+                                <td class="align-middle text-right">{{ device.capacityDays|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ device.occupancyDays|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ device.averageCapacity|round(1, "common") }}</td>
+                                <td class="align-middle text-right">{{ device.averageOccupancy|round(1, "common") }}</td>
+                                {% set ocupancyRate = ((device.occupancyDays / device.capacityDays) * 100)|round(1, "common") %}
+                                <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
+                                <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfooter>
+                        <tr class="font-weight-bold">
+                            <td scope="row" colspan="2" class="align-middle text-center">Total</td>
+                            <td class="align-middle text-right">{{ datas.nbAccommodations|number_format(0, ",", " ") }}</td>
+                            <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
+                            <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
+                            <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
+                            <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
+                            <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
+                            {% set ocupancyRate = ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") %}
+                            <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
+                            <span class="font-weight-bold font-italic">{{  ocupancyRate }} %</span>
+                            </td>
+                        </tr>
+                    </tfooter>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

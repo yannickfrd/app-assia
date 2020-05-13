@@ -67,8 +67,8 @@ class AccommodationRepository extends ServiceEntityRepository
             ->where('a.service = :service')
             ->setParameter('service', $service)
 
-            ->andWhere('a.closingDate IS NULL')
-            ->orWhere('a.closingDate > :date')
+            ->andWhere('a.endDate IS NULL')
+            ->orWhere('a.endDate > :date')
             ->setParameter('date', new \Datetime());
 
         return $query->orderBy('a.name', 'ASC');
@@ -118,42 +118,42 @@ class AccommodationRepository extends ServiceEntityRepository
             $query->andWhere('a.city LIKE :city')
                 ->setParameter('city', '%'.$search->getCity().'%');
         }
-        if ($search->getPlacesNumber()) {
-            $query->andWhere('a.placesNumber = :placesNumber')
-                ->setParameter('placesNumber', $search->getPlacesNumber());
+        if ($search->getNbPlaces()) {
+            $query->andWhere('a.nbPlaces = :nbPlaces')
+                ->setParameter('nbPlaces', $search->getNbPlaces());
         }
 
         $supportDates = $search->getSupportDates();
 
         if (1 == $supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('a.openingDate >= :start')
+                $query->andWhere('a.startDate >= :start')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('a.openingDate <= :end')
+                $query->andWhere('a.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
         if (2 == $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
-                    $query->andWhere('a.closingDate >= :start')
+                    $query->andWhere('a.endDate >= :start')
                         ->setParameter('start', $search->getStart());
                 }
                 if ($search->getEnd()) {
-                    $query->andWhere('a.closingDate <= :end')
+                    $query->andWhere('a.endDate <= :end')
                         ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 == $supportDates || !$supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('a.closingDate >= :start OR a.closingDate IS NULL')
+                $query->andWhere('a.endDate >= :start OR a.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('a.openingDate <= :end')
+                $query->andWhere('a.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }

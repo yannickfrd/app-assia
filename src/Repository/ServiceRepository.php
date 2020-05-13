@@ -2,14 +2,15 @@
 
 namespace App\Repository;
 
-use App\Entity\Service;
 use App\Entity\User;
-use App\Form\Model\ServiceSearch;
-use App\Security\CurrentUserService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Device;
+use App\Entity\Service;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use App\Form\Model\ServiceSearch;
+use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Service|null find($id, $lockMode = null, $lockVersion = null)
@@ -71,6 +72,32 @@ class ServiceRepository extends ServiceEntityRepository
         }
 
         return $query->orderBy('s.name', 'ASC');
+    }
+
+    public function findServicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Device $device = null)
+    {
+        $query = $this->createQueryBuilder('s')->select('s')
+            ->leftJoin('s.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces}')
+            ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
+
+            ->andWhere('s.accommodation = TRUE')
+            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
+            ->andWhere('a.startDate < :end')->setParameter('end', $end);
+
+        if ($device) {
+            $query = $query->andWhere('sd.device = :device')
+                ->setParameter('device', $device);
+        }
+
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('s.id IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
+
+        return $query
+            ->orderBy('s.name', 'ASC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 
     /**

@@ -38,13 +38,13 @@
                             {{ knp_pagination_sortable(accommodations, "Dispositif", "d.name") }}
                         </th>
                         <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(accommodations, "Nombre de places", "a.placesNumber") }}
+                            {{ knp_pagination_sortable(accommodations, "Nombre de places", "a.nbPlaces") }}
                         </th>
                         <th scope="col" class="align-middle th-date">
-                            {{ knp_pagination_sortable(accommodations, "Date d'ouverture", "a.openingDate") }}
+                            {{ knp_pagination_sortable(accommodations, "Date d'ouverture", "a.startDate") }}
                         </th>
                         <th scope="col" class="align-middle th-date">
-                            {{ knp_pagination_sortable(accommodations, "Date de fermeture", "a.closingDate") }}
+                            {{ knp_pagination_sortable(accommodations, "Date de fermeture", "a.endDate") }}
                         </th>
                         </th>
                         <th scope="col" class="align-middle th-w-150">
@@ -72,9 +72,9 @@
                         <td>{{ accommodation.name }}</td>
                         <td><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
                         <td>{{ accommodation.device.name }}</td>
-                        <td>{{ accommodation.placesNumber }}</td>
-                        <td>{{ accommodation.openingDate|date("d/m/Y") }}</td>
-                        <td>{% if accommodation.closingDate %} {{ accommodation.closingDate|date("d/m/Y") }}{% endif %}</td>
+                        <td>{{ accommodation.nbPlaces }}</td>
+                        <td>{{ accommodation.startDate|date("d/m/Y") }}</td>
+                        <td>{% if accommodation.endDate %} {{ accommodation.endDate|date("d/m/Y") }}{% endif %}</td>
                         <td>{{ accommodation.address }}</td>
                         <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>
@@ -86,7 +86,7 @@
                             {% endfor %}
                             {% if nbPeople == 0 %}
                                 <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
-                            {% elseif accommodation.placesNumber != nbPeople %}
+                            {% elseif accommodation.nbPlaces != nbPeople %}
                                 <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes ne correspond pas au nombre de places"></span>
                             {% endif %}
                         </td>

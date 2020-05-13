@@ -61,8 +61,8 @@
             <div class="col-md-6">{{ form_row(form.siretId) }}</div>
         </div>
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.openingDate) }}</div>
-            <div class="col-md-6">{{ form_row(form.closingDate) }}</div>
+            <div class="col-md-6">{{ form_row(form.startDate) }}</div>
+            <div class="col-md-6">{{ form_row(form.endDate) }}</div>
         </div>
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.supportAccess) }}</div>
@@ -183,9 +183,9 @@
                         </th>
                         <td>{{ accommodation.name }}</td>
                         <td>{{ accommodation.device.name }}</td>
-                        <td>{{ accommodation.placesNumber }}</td>
-                        <td>{{ accommodation.openingDate|date("d/m/Y") }}</td>
-                        <td>{% if accommodation.closingDate %}{{ accommodation.closingDate|date("d/m/Y") }}{% endif %}
+                        <td>{{ accommodation.nbPlaces }}</td>
+                        <td>{{ accommodation.startDate|date("d/m/Y") }}</td>
+                        <td>{% if accommodation.endDate %}{{ accommodation.endDate|date("d/m/Y") }}{% endif %}
                         </td>
                         <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>

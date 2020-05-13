@@ -107,7 +107,7 @@ class ServiceController extends AbstractController
 
         $nbPlaces = 0;
         foreach ($accommodations as $accommodation) {
-            $nbPlaces += $accommodation->getPlacesNumber();
+            $nbPlaces += $accommodation->getNbPlaces();
         }
 
         return $this->render('app/service/service.html.twig', [

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.8.0 - 11/05/2020
+1.9.0 - 13/05/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,9 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.9.0 - 13/05/2020
+- Création du module des taux d'occupation par dispositif, service ou groupe de places
 
 ## Version 1.8.0 - 11/05/2020
 - Création de la page de synthèse donnant la répartition des suivis par travailleur social, ainsi que le coefficient attribué.
@@ -195,7 +198,7 @@ https://demo.esperer95.app
     childToHost: A héberger 
     citiesWishes: Communes ou départements souhaités
     city: Ville
-    closingDate: Date de fermeture
+    endDate: Date de fermeture
     comment: Commentaire
     commentEndEvaluation: Commentaire sur la situation à la sortie
     commentEvalAdm: Commentaire relatif à la situation administrative
@@ -315,7 +318,7 @@ https://demo.esperer95.app
     nbRenewals: Nombre de renouvellements
     nbWorkingHours: Nombre d'heures
     workRight: Aucun droit ouvert
-    openingDate: Date d'ouverture
+    startDate: Date d'ouverture
     otherHelps: Autre(s) aide(s)
     overIndebtRecord: Dossier surendettement
     overIndebtRecordDate: Date de dépôt du dossier
@@ -329,7 +332,7 @@ https://demo.esperer95.app
     phone1: Téléphone 1
     phone2: Téléphone 2
     phoneAmt: Montant Téléphone
-    placesNumber: Nombre de places
+    nbPlaces: Nombre de places
     pole: Pole affilié
     pregnancyType: Type de grossesse
     profStatus: Statut professionnel

@@ -2,14 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Device;
+use App\Entity\Service;
+use App\Service\Indicators;
+use App\Service\OccupancyRate;
+use App\Form\OccupancySearchType;
 use App\Repository\RdvRepository;
 use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
+use App\Form\Model\OccupancySearch;
 use App\Repository\PersonRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\Indicators;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -134,7 +140,7 @@ class AppController extends AbstractController
         $cacheStatsService = $cache->getItem('stats.service'.$this->getUser()->getId());
 
         if (!$cacheStatsService->isHit()) {
-            $cacheStatsService->set($indicators->getStatsService());
+            $cacheStatsService->set($indicators->getSupportsbyDevice());
             $cacheStatsService->expiresAfter(2 * 60);
             $cache->save($cacheStatsService);
         }
@@ -146,6 +152,85 @@ class AppController extends AbstractController
             'dataUsers' => $statsService['dataUsers'],
             'nbSupports' => $statsService['nbSupports'],
             'sumCoeffSupports' => $statsService['sumCoeffSupports'],
+        ]);
+    }
+
+    /**
+     * Taux d'occupation des dispositifs.
+     *
+     * @Route("/occupancy/devices", name="occupancy_devices", methods="GET|POST")
+     */
+    public function showOccupancyByDevice(Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    {
+        $today = new \DateTime('midnight');
+        $search = (new OccupancySearch())
+            ->setStart(new \DateTime($today->format('Y').'-01-01'));
+
+        $form = ($this->createForm(OccupancySearchType::class, $search))
+            ->handleRequest($request);
+
+        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
+        $end = $search->getEnd() ?? $today;
+
+        return $this->render('app/dashboard/occupancyByDevice.html.twig', [
+            'start' => $start,
+            'end' => $end,
+            'form' => $form->createView(),
+            'datas' => $occupancyRate->getOccupancyRateByDevice($start, $end),
+        ]);
+    }
+
+    /**
+     * Taux d'occupation des services.
+     *
+     * @Route("/occupancy/services", name="occupancy_services", methods="GET|POST")
+     * @Route("/occupancy/device/{id}/services", name="occupancy_device_services", methods="GET|POST")
+     */
+    public function showOccupancyByService(Device $device = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    {
+        $today = new \DateTime('midnight');
+        $search = (new OccupancySearch())
+            ->setStart(new \DateTime($today->format('Y').'-01-01'));
+
+        $form = ($this->createForm(OccupancySearchType::class, $search))
+            ->handleRequest($request);
+
+        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
+        $end = $search->getEnd() ?? $today;
+
+        return $this->render('app/dashboard/occupancyByService.html.twig', [
+            'device' => $device ?? null,
+            'start' => $start,
+            'end' => $end,
+            'form' => $form->createView(),
+            'datas' => $occupancyRate->getOccupancyRateByService($start, $end, $device),
+        ]);
+    }
+
+    /**
+     * Taux d'occupation des groupes de place.
+     *
+     * @Route("/occupancy/service/{id}/accommodations", name="occupancy_accommodations", methods="GET|POST")
+     */
+    public function showOccupancyByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    {
+        $search = (new OccupancySearch())
+            ->setStart(new \DateTime($request->query->get('start')))
+            ->setEnd(new \DateTime($request->query->get('end')));
+
+        $form = ($this->createForm(OccupancySearchType::class, $search))
+            ->handleRequest($request);
+
+        $today = new \DateTime('midnight');
+        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
+        $end = $search->getEnd() ?? $today;
+
+        return $this->render('app/dashboard/occupancyByAccommodation.html.twig', [
+            'service' => $service ?? null,
+            'start' => $start,
+            'end' => $end,
+            'form' => $form->createView(),
+            'datas' => $occupancyRate->getOccupancyRateByAccommodation($start, $end, $service),
         ]);
     }
 }

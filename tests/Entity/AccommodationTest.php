@@ -45,8 +45,8 @@ class AccommodationTest extends WebTestCase
 
         return (new Accommodation())
             ->setName('Logement '.$faker->numberBetween(1, 100))
-            ->setPlacesNumber($faker->numberBetween(1, 10))
-            ->setOpeningDate($faker->dateTimeBetween('-10 years', 'now'))
+            ->setNbPlaces($faker->numberBetween(1, 10))
+            ->setStartDate($faker->dateTimeBetween('-10 years', 'now'))
             ->setCity($faker->city)
             ->setZipcode($faker->numberBetween(1, 95))
             ->setAddress($faker->address);
@@ -62,24 +62,24 @@ class AccommodationTest extends WebTestCase
         $this->assertHasErrors($this->accommodation->setName(''), 1);
     }
 
-    public function testNotNullPlaceNumber()
+    public function testNotNullNbPlaces()
     {
-        $this->assertHasErrors($this->accommodation->setPlacesNumber(null), 1);
+        $this->assertHasErrors($this->accommodation->setNbPlaces(null), 1);
     }
 
-    public function testPlaceNumber()
+    public function testNbPlaces()
     {
-        $this->assertHasErrors($this->accommodation->setPlacesNumber(0), 0);
+        $this->assertHasErrors($this->accommodation->setNbPlaces(0), 0);
     }
 
-    public function testNullOpeningDate()
+    public function testNullStartDate()
     {
-        $this->assertHasErrors($this->accommodation->setOpeningDate(null), 1);
+        $this->assertHasErrors($this->accommodation->setStartDate(null), 1);
     }
 
-    public function testNullClosingDate()
+    public function testNullEndDate()
     {
-        $this->assertHasErrors($this->accommodation->setClosingDate(null), 0);
+        $this->assertHasErrors($this->accommodation->setEndDate(null), 0);
     }
 
     public function testAccommodationExists()

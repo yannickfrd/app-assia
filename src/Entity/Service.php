@@ -94,14 +94,14 @@ class Service
     private $siretId;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="opening_date", type="date", nullable=true)
      */
-    private $openingDate;
+    private $startDate;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
-    private $closingDate;
+    private $endDate;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -310,26 +310,26 @@ class Service
         return $this;
     }
 
-    public function getOpeningDate(): ?\DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->openingDate;
+        return $this->startDate;
     }
 
-    public function setOpeningDate(?\DateTimeInterface $openingDate): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
-        $this->openingDate = $openingDate;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getClosingDate(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->closingDate;
+        return $this->endDate;
     }
 
-    public function setClosingDate(?\DateTimeInterface $closingDate): self
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        $this->closingDate = $closingDate;
+        $this->endDate = $endDate;
 
         return $this;
     }

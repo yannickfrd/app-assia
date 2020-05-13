@@ -1,9 +1,9 @@
 App\Entity\Accommodation:
   accommodation1:
     name: Logement 666
-    placesNumber: 6
-    openingDate: <date_create("2010-01-01")>
-    closingDate: <date_create("2020-01-01")>
+    nbPlaces: 6
+    startDate: <date_create("2010-01-01")>
+    endDate: <date_create("2020-01-01")>
     city: Houilles
     zipcode: <numberBetween(1, 95)>
     address : <fr_FR:address()>
@@ -19,8 +19,8 @@ App\Entity\Accommodation:
 
   accommodation{2..5}:
     name: <word()> <numberBetween(1, 1000)>
-    placesNumber: <numberBetween(1, 10)>
-    openingDate: <datetimeBetween("-10 years", "now")>
+    nbPlaces: <numberBetween(1, 10)>
+    startDate: <datetimeBetween("-10 years", "now")>
     city: <fr_FR:city()>
     zipcode: <numberBetween(1, 95)>
     address : <fr_FR:address()>

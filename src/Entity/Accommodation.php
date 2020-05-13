@@ -70,21 +70,21 @@ class Accommodation
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="places_number", type="integer")
      * @Assert\NotBlank()
      */
-    private $placesNumber;
+    private $nbPlaces;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(name="opening_date", type="date")
      * @Assert\NotNull()
      */
-    private $openingDate;
+    private $startDate;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
-    private $closingDate;
+    private $endDate;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -154,14 +154,14 @@ class Accommodation
         return $this->getService()->getName().' - '.$this->name;
     }
 
-    public function getPlacesNumber(): ?int
+    public function getNbPlaces(): ?int
     {
-        return $this->placesNumber;
+        return $this->nbPlaces;
     }
 
-    public function setPlacesNumber(?int $placesNumber): self
+    public function setNbPlaces(?int $nbPlaces): self
     {
-        $this->placesNumber = $placesNumber;
+        $this->nbPlaces = $nbPlaces;
 
         return $this;
     }
@@ -238,26 +238,26 @@ class Accommodation
         return $this;
     }
 
-    public function getOpeningDate(): ?\DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->openingDate;
+        return $this->startDate;
     }
 
-    public function setOpeningDate(?\DateTimeInterface $openingDate): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
-        $this->openingDate = $openingDate;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getClosingDate(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->closingDate;
+        return $this->endDate;
     }
 
-    public function setClosingDate(?\DateTimeInterface $closingDate): self
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        $this->closingDate = $closingDate;
+        $this->endDate = $endDate;
 
         return $this;
     }

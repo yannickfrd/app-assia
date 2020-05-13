@@ -28,7 +28,7 @@ class AccommodationSearchType extends AbstractType
                     'placeholder' => 'Name',
                 ],
             ])
-            ->add('placesNumber', null, [
+            ->add('nbPlaces', null, [
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],

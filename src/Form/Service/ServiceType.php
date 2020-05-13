@@ -57,11 +57,11 @@ class ServiceType extends AbstractType
             ])
             ->add('finessId')
             ->add('siretId')
-            ->add('openingDate', DateType::class, [
+            ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('closingDate', DateType::class, [
+            ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
             ])

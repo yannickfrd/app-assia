@@ -45,11 +45,11 @@ class AccommodationType extends AbstractType
             },
             'placeholder' => '-- Select --',
         ])
-        ->add('placesNumber')
-        ->add('openingDate', DateType::class, [
+        ->add('nbPlaces')
+        ->add('startDate', DateType::class, [
             'widget' => 'single_text',
         ])
-        ->add('closingDate', DateType::class, [
+        ->add('endDate', DateType::class, [
             'widget' => 'single_text',
             'required' => false,
         ])
