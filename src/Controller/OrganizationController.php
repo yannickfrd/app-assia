@@ -26,7 +26,7 @@ class OrganizationController extends AbstractController
     /**
      * Affiche la liste des dispositifs.
      *
-     * @Route("/admin/organizations", name="admin_organizations", methods="GET|POST")
+     * @Route("/organizations", name="organizations", methods="GET|POST")
      */
     public function listOrganization(Request $request, Pagination $pagination): Response
     {
@@ -53,7 +53,7 @@ class OrganizationController extends AbstractController
 
             $this->addFlash('success', 'Le dispositif est créé.');
 
-            return $this->redirectToRoute('admin_organizations');
+            return $this->redirectToRoute('organizations');
         }
 
         return $this->render('app/organization/organization.html.twig', [

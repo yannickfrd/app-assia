@@ -7,7 +7,8 @@
 
 <div class="container">
     {% include "model/msgFlash.html.twig" %}
-    <h1 class="h2 mb-3">Taux d'occupation <span class="fas fa-angle-right fa-sm"></span> {{ service.name }}</h1>
+    <h1 class="h2 mb-3">Taux d'occupation<!--
+    -->{% if service %} <span class="fas fa-angle-right fa-sm"></span> {{ service.name }}{% endif %}</h1>
 </div>
 
 {% include "app/dashboard/searchOccupancy.html.twig" %}
@@ -15,11 +16,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            {% if service %}
             <p><a href="{{ path('occupancy_services') }}" class="text-{{ theme_color }}"><!--
-                --><span class="fas fa-undo mr-2"></span>Retour au tableau des services.</a>
+            --><span class="fas fa-undo mr-2"></span>{% if service %}Retour {% else %}<!--
+            -->Accès{% endif %} aux taux d'ocupation par service.</a>
             </p>
-            {% endif %}
             {% set interval = date(start).diff(date(end)) %}
             <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
             --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>
@@ -33,7 +33,7 @@
                         <tr>
                             <th scope="row" class="align-middle th-w-20"></th>
                             <th class="align-middle th-w-150">Groupe de places</th>
-                            <th class="align-middle th-w-150">Dispositif</th>
+                            <th class="align-middle th-w-150">Service (Dispositif)</th>
                             <th class="align-middle th-w-150">Adresse</th>
                             <th class="align-middle th-w-100 text-right">Nombre de places</th>
                             <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
@@ -53,7 +53,7 @@
                                     </a>
                                 </td>
                                 <td class="align-middle">{{ accommodation.accommodation.name }}</td>
-                                <td class="align-middle">{{ accommodation.accommodation.device.name }}</td>
+                                <td class="align-middle">{{ accommodation.accommodation.service.name }} ({{ accommodation.accommodation.device.name }})</td>
                                 <td class="align-middle">{{ accommodation.accommodation.address }}, {{ accommodation.accommodation.city }}</td>
                                 <td class="align-middle text-right">{{ accommodation.nbPlaces }}</td>
                                 <td class="align-middle text-right">{{ accommodation.capacityDays|number_format(0, ",", " ") }}</td>

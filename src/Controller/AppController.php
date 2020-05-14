@@ -210,18 +210,24 @@ class AppController extends AbstractController
     /**
      * Taux d'occupation des groupes de place.
      *
-     * @Route("/occupancy/service/{id}/accommodations", name="occupancy_accommodations", methods="GET|POST")
+     * @Route("/occupancy/service/{id}/accommodations", name="occupancy_service_accommodations", methods="GET|POST")
+     * @Route("/occupancy/accommodations", name="occupancy_accommodations", methods="GET|POST")
      */
     public function showOccupancyByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
     {
-        $search = (new OccupancySearch())
-            ->setStart(new \DateTime($request->query->get('start')))
-            ->setEnd(new \DateTime($request->query->get('end')));
+        $today = new \DateTime('midnight');
+        $search = new OccupancySearch();
+
+        if ($request->query->get('start') and $request->query->get('end')) {
+            $search->setStart(new \DateTime($request->query->get('start')))
+                ->setEnd(new \DateTime($request->query->get('end')));
+        } else {
+            $search->setStart(new \DateTime($today->format('Y').'-01-01'));
+        }
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
 
-        $today = new \DateTime('midnight');
         $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
         $end = $search->getEnd() ?? $today;
 

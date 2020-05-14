@@ -32,7 +32,7 @@ class AccommodationController extends AbstractController
     /**
      * Affiche la liste des groupes de places.
      *
-     * @Route("/admin/accommodations", name="admin_accommodations", methods="GET|POST")
+     * @Route("/accommodations", name="accommodations", methods="GET|POST")
      */
     public function listAccommodations(AccommodationSearch $search, Request $request, Pagination $pagination): Response
     {

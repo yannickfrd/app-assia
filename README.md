@@ -100,9 +100,9 @@ https://demo.esperer95.app
 - Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale sur téléphone mobile
 - Tableau de bord "Super Administrateur" : Nb de suivis,  Nb de RDVs, Nb de documents,  Nb de notes
 - Correctif export des suivis
-- "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom, adresse et ville du groupe de place).
+- "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom, adresse et ville du groupe de places).
 - "Les suivis" : ajout de la possibilité de filtrer par dispositif et typologie familiale.
-- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom, adresse et ville du groupe de place).
+- "Les suivis" : modification de l'export Excel des suivis avec l'ajout des informations sur l'hébergement (nom, adresse et ville du groupe de places).
 - "Groupes de places" : ajout de la colonne "Service" et modification "Occupation actuelle".
 - "Groupes de places : ajout de l'export Excel des groupes de places avec l'ensemble des informations.
 - Modification et correction des droits d'accès ou d'édition des services et groupe de places.

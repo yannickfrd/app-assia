@@ -51,9 +51,6 @@
 								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suivis</a>
 							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuSupports">
 								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("dashboard_service") }}">Synthèse des suivis en cours</a>
-								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
 							</div>
 						</li>
@@ -80,6 +77,26 @@
 							</div>
 
 						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuGestion"
+								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion
+							</a>
+							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuGestion">
+								<a class="dropdown-item" href="{{ path("dashboard_service") }}">Synthèse des suivis en cours</a>
+								<a class="dropdown-item" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="{{ path("accommodations") }}">Liste des groupes de places</a>
+								<a class="dropdown-item" href="{{ path("organizations") }}">Liste des organismes prescripteurs</a>
+								{% if is_granted("ROLE_SUPER_ADMIN") %}
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="{{ path("export") }}">Export de données</a>
+								{% endif %}
+								{% if app.user.id == 1 %}
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="{{ path("import") }}">Import de données</a>
+								{% endif %}
+							</div>
+						</li>
 						{% if is_granted("ROLE_ADMIN") %}
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuAdmin"
@@ -98,20 +115,7 @@
 								<a class="dropdown-item" href="{{ path("admin_users") }}">Liste des utilisateurs</a>
 								{% endif %}
 								<a class="dropdown-item" href="{{ path("admin_devices") }}">Liste des dispositifs</a>
-								<a class="dropdown-item" href="{{ path("admin_accommodations") }}">Liste des groupes de places</a>
-								<a class="dropdown-item" href="{{ path("admin_organizations") }}">Liste des organismes prescripteurs</a>
-								{% if app.user.id == 1 %}
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("import") }}">Import</a>
-								{% endif %}
 							</div>
-						</li>
-						{% endif %}
-						{% if is_granted("ROLE_SUPER_ADMIN") %}
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path("export") }}">Export</a>
 						</li>
 						{% endif %}
 					</ul>

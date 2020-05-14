@@ -164,7 +164,7 @@ class OccupancyRate
      */
     public function getOccupancyRateByAccommodation(\DateTime $start, \DateTime $end, Service $service = null): array
     {
-        $accommodations = $this->repoAccommodation->findAccommodationsFromService($service);
+        $accommodations = $this->repoAccommodation->findAccommodationsForOccupancy($this->currentUser, $service);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end, $service);
         $interval = date_diff($start, $end);
 

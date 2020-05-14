@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <p><a href="{{ path('occupancy_devices') }}" class="text-{{ theme_color }}"><!--
                 --><span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès<!--
-                -->{% endif %} au tableau des dispositifs.</a>
+                -->{% endif %} aux taux d'ocupation par dispositif.</a>
             </p>
             {% set interval = date(start).diff(date(end)) %}
             <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
@@ -42,10 +42,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {% set example = "" %}
                         {% for serviceId, service in datas.services %}
+                            {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100)|round(1, "common") %}
+                            {% if loop.first %}
+                            {% set example %}
+                                {% spaceless %}
+                                    Le service {{ service.name }} dispose de {{ service.nbAccommodations }} groupes de places
+                                    (soit {{ service.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} jours), 
+                                    sa capacité d'accueil maximale représente {{ service.capacityDays|number_format(0, ",", " ") }} 
+                                    nuitées (soit une moyenne de {{ service.averageCapacity|round(1, "common") }} places par jour).
+                                    Sur ces places, {{ service.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
+                                    soit une occupation moyenne de {{ service.averageOccupancy|round(1, "common") }} personnes par jour. 
+                                    Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
+                                {% endspaceless %}
+                            {% endset %}
+                        {% endif %}
                             <tr>
                                 <td scope="row" class="align-middle text-center">
-                                    <a href="{{ path('occupancy_accommodations', {'id': serviceId, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
+                                    <a href="{{ path('occupancy_service_accommodations', {'id': serviceId, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
                                         class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                         title="Voir le détail des groupes de places du service"><span class="fas fa-eye fa-sm"></span>
                                     </a>
@@ -57,7 +72,6 @@
                                 <td class="align-middle text-right">{{ service.occupancyDays|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ service.averageCapacity|round(1, "common") }}</td>
                                 <td class="align-middle text-right">{{ service.averageOccupancy|round(1, "common") }}</td>
-                                {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100)|round(1, "common") %}
                                 <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
                                 <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                                 </td>
@@ -81,6 +95,11 @@
                     </tfooter>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="justify small text-secondary"><span class="font-weight-bold">Note de lecture : </span>{{ example }}</p>
         </div>
     </div>
 </div>

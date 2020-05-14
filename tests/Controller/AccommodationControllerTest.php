@@ -41,7 +41,7 @@ class AccommodationControllerTest extends WebTestCase
     {
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin_accommodations'));
+        $this->client->request('GET', $this->generateUri('accommodations'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupes de places');
@@ -52,7 +52,7 @@ class AccommodationControllerTest extends WebTestCase
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_accommodations'));
+        $crawler = $this->client->request('GET', $this->generateUri('accommodations'));
 
         $form = $crawler->selectButton('search')->form([
             'name' => 'Logement 666',
@@ -72,7 +72,7 @@ class AccommodationControllerTest extends WebTestCase
     {
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $crawler = $this->client->request('GET', $this->generateUri('admin_accommodations'));
+        $crawler = $this->client->request('GET', $this->generateUri('accommodations'));
 
         $form = $crawler->selectButton('export')->form([]);
 
@@ -85,7 +85,7 @@ class AccommodationControllerTest extends WebTestCase
     {
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $crawler = $this->client->request('GET', $this->generateUri('admin_accommodations'));
+        $crawler = $this->client->request('GET', $this->generateUri('accommodations'));
 
         $form = $crawler->selectButton('export')->form([
             'name' => 'Logement inconnu',

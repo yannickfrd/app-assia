@@ -15,6 +15,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <p><a href="{{ path('occupancy_services') }}" class="text-{{ theme_color }}"><!--
+            --><span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
+            </p>
             {% set interval = date(start).diff(date(end)) %}
             <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
             --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>

@@ -37,7 +37,7 @@ class OrganizationControllerTest extends WebTestCase
 
     public function testListOrganizationsIsUp()
     {
-        $this->client->request('GET', $this->generateUri('admin_organizations'));
+        $this->client->request('GET', $this->generateUri('organizations'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Organismes prescripteurs');

@@ -81,14 +81,40 @@ class AccommodationRepository extends ServiceEntityRepository
      */
     public function findAccommodationsFromService(Service $service)
     {
-        return $this->createQueryBuilder('a')
-            ->select('a')
+        return $this->createQueryBuilder('a')->select('a')
             ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id,name}')
 
             ->where('a.service = :service')
             ->setParameter('service', $service)
 
             ->orderBy('a.name', 'ASC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
+     * Donne toutes les groupes de places pour les taux d'occupation.
+     *
+     * @return mixed
+     */
+    public function findAccommodationsForOccupancy($currentUser, Service $service = null)
+    {
+        $query = $this->createQueryBuilder('a')->select('a')
+            ->innerJoin('a.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id, name}');
+
+        if ($service) {
+            $query->where('a.service = :service')
+                ->setParameter('service', $service);
+        } elseif (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('a.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
+
+        return $query
+            ->addOrderBy('a.service', 'ASC')
+            ->addOrderBy('a.name', 'ASC')
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();

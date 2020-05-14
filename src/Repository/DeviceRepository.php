@@ -67,13 +67,13 @@ class DeviceRepository extends ServiceEntityRepository
     public function findDevicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end)
     {
         $query = $this->createQueryBuilder('d')->select('d')
-            ->leftJoin('d.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces}')
+            ->leftJoin('d.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces, service}')
 
             ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
             ->andWhere('a.startDate < :end')->setParameter('end', $end);
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('d.id IN (:services)')
+            $query = $query->andWhere('a.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
