@@ -39,7 +39,6 @@
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom du logement/ hébergement", "a.name") }}</th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Adresse", "a.address") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,29 +80,26 @@
                             {{ supportPerson.person.birthdate|date("d/m/Y") }}<br />
                             {% endfor %}
                         </td>
-                        <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
-                            {% set nbSupportPeople = support.supportPeople|length %}
-                            {% if nbSupportPeople > 1 %} | {{ nbSupportPeople }} pers.{% endif %}
+                        <td class="align-middle">{% set nbSupportPeople = support.supportPeople|length %}
+                            {{ support.groupPeople.familyTypologyToString }}<!--
+                            -->{{ nbSupportPeople > 1 ? ", " ~ nbSupportPeople ~ " pers." }}
                             {% if nbSupportPeople != support.groupPeople.nbPeople %}
                             <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                             {% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>
-                        <td class="align-middle">{% if support.startDate %}{{ support.startDate|date("d/m/Y") }}{% endif %}</td>
-                        <td class="align-middle">{% if support.endDate %}{{ support.endDate|date("d/m/Y") }}{% endif %}</td>
-                        <td class="align-middle">{% if support.referent %}{{ support.referent.fullname }}{% endif %}</td>
+                        <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
                         <td class="align-middle">
-                            {{ support.service.name }}<br>{% if support.device %}({{ support.device.name }}){% endif %}
+                            {{ support.service ? support.service.name }}<br>{{ support.device ? "(" ~ support.device.name ~ ")" }}
                         </td>
                         <td class="align-middle">
                             {% for accommodationGroup in support.accommodationGroups %}
                             <a href="{{ path('accommodation_edit', {'id':accommodationGroup.accommodation.id}) }}"
-                                class="text-{{ theme_color }}" title="Voir la fiche du groupe de places" data-placement="bottom"> {{ accommodationGroup.accommodation.name }}</a><br />
-                            {% endfor %}
-                        </td>
-                        <td class="align-middle">
-                            {% for accommodationGroup in support.accommodationGroups %}
-                            {{ accommodationGroup.accommodation.address }} - {{ accommodationGroup.accommodation.city }}<br />
+                                class="text-{{ theme_color }}" title="Voir la fiche du groupe de places" data-placement="bottom">
+                                {{ accommodationGroup.accommodation.name }} ({{ accommodationGroup.accommodation.address }} - {{ accommodationGroup.accommodation.city }})
+                            </a><br />
                             {% endfor %}
                         </td>
                     </tr>

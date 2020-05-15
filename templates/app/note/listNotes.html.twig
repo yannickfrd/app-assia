@@ -59,14 +59,14 @@
                         <td class="align-middle">
                             {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
                             {{ supportPerson.person.fullname }}
-                            {% endfor %}                     
+                            {% endfor %}
                         </td>
                         <td class="align-middle">{{ note.typeToString }}</td>
                         <td class="align-middle">{{ note.statusToString }}</td>
                         <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>
-                        <td class="align-middle">{{ note.createdBy.fullname }}</td>
+                        <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
                         <td class="align-middle">{{ note.updatedAt|date("d/m/Y") }}</td>
-                        <td class="align-middle">{% if note.updatedBy %}{{ note.updatedBy.fullname }}{% endif %}</td>
+                        <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

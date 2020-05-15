@@ -75,6 +75,7 @@ class SupportPersonExport
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
+            'Âge' => $person->getAge(),
             'Typologie familiale' => $groupPeople->getFamilyTypologyToString(),
             'Nb de personnes' => $groupPeople->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),

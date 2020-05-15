@@ -15,14 +15,13 @@
     
     <section>
 
-    <h1 class="h2 mb-3">{% if edit_mode %}{{ service.name }}{% else %}Nouveau service{% endif %}</h1>
+    <h1 class="h2 mb-3">{{ edit_mode ? service.name : "Nouveau service" }}</h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{service.createdAt|date("d/m/Y à H:i") }}
-            {% if service.createdBy %} par {{ service.createdBy.fullname }}{% endif %}
-            {% if service.updatedAt %}(modifié le
-            {{ service.updatedAt|date("d/m/Y à H:i") }}{% if service.updatedBy %} par
-            {{ service.updatedBy.fullname }}{% endif %}){% endif %}
+            {{ service.createdBy ? " par " ~ service.createdBy.fullname }}
+            {% if service.updatedAt %}(modifié le {{ service.updatedAt|date("d/m/Y à H:i") }}
+            {{ service.updatedBy ? " par " ~ service.updatedBy.fullname }}{% endif %})
         </p>
     </div>
     {% else %}

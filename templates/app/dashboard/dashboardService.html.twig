@@ -10,9 +10,8 @@
 
     <h1 class="h2 mb-3">Synthèse des suivis en cours</h1>
     <p>Nombre de suivis en cours par référent en fonction du dispositif d'accompagnement.</p>
-    {% include "model/msgFlash.html.twig" %}
 
-      <hr>
+    <hr>
 
     <div class="row">
         <div class="col-md-12">
@@ -24,13 +23,13 @@
                             <th class="align-middle th-w-150">Travailleur/euse social·e</th>
                             <th class="align-middle th-w-100 text-right">Total suivis en cours</th>
                             {% for device in devices %}
-                                <th class="align-middle  th-w-80 text-right">{{ device.name }}</th>
+                                <th class="align-middle th-w-80 text-right">{{ device.name }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
                         {% for dataUser in dataUsers %}
-                            {% if dataUser.nbSupports > 0 %}  
+                            {% if dataUser.nbSupports > 0 %}
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('supports', {'status':[2], 'service':{'referents':[dataUser.user.id]} }) }}" 
@@ -48,8 +47,8 @@
                                     {% for device in dataUser.devices %}
                                         <td class="align-middle text-right">
                                             {% if device.nbSupports > 0 %}{{ device.nbSupports }}{% endif %}
-                                            {% if device.nbSupports !=  device.sumCoeff  %}
-                                                <span class="text-secondary"> ({{  device.sumCoeff }})</span>
+                                            {% if device.nbSupports != device.sumCoeff %}
+                                                <span class="text-secondary"> ({{ device.sumCoeff }})</span>
                                             {% endif %}
                                         </td>
                                     {% endfor %}
@@ -61,36 +60,39 @@
                         <tr class="font-weight-bold">
                             <td scope="row" colspan="2" class="align-middle text-right">Total</td>
                             <td class="align-middle text-right">{{ nbSupports }}
-                                {% if nbSupports !=  sumCoeffSupports %}
-                                    <span class="text-secondary"> ({{  sumCoeffSupports }})</span>
+                                {% if nbSupports != sumCoeffSupports %}
+                                    <span class="text-secondary"> ({{ sumCoeffSupports }})</span>
                                 {% endif %}
                                 {% for device in devices %}
                                     <td class="align-middle text-right">{{ device.nbSupports }}
-                                    {% if device.nbSupports !=  device.sumCoeff %}
-                                        <span class="text-secondary"> ({{  device.sumCoeff }})</span>
+                                    {% if device.nbSupports != device.sumCoeff %}
+                                        <span class="text-secondary"> ({{ device.sumCoeff }})</span>
                                     {% endif %}
                                     </td>
                                 {% endfor %}
                         </tr>
+                        {% if dataUsers|length > 0 %} 
                         <tr class="font-weight-bold">
                             <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
                             <td class="align-middle text-right">{{ (nbSupports / dataUsers|length)|round(1, "common") }}
-                                {% if nbSupports !=  sumCoeffSupports %}
+                                {% if nbSupports != sumCoeffSupports %}
                                     <span class="text-secondary"> ({{ (sumCoeffSupports / dataUsers|length)|round(1, "common") }})</span>
                                 {% endif %}
                             </td>
                         </tr>
+                        {% endif %}
                     </tfooter>
-
                 </table>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <p class="small text-secondary"><span class="font-weight-bold">Note de lecture : </span><!--
-            -->le nombre entre parenthèse correspond à la valeur attribuée à la somme des suivis après application du coefficient. <!--
-            --><br/>Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
+            {% spaceless %}
+                <p class="small text-secondary"><span class="font-weight-bold">Note de lecture : </span>
+                le nombre entre parenthèse correspond à la valeur attribuée à la somme des suivis après application du coefficient.
+                <br/>Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
+            {% endspaceless %}
         </div>
     </div>
 </div>
@@ -98,5 +100,4 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("home") }}
 {% endblock javascripts %}

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Device;
+use App\Entity\Service;
 use Doctrine\ORM\Query;
 use App\Entity\Accommodation;
 use App\Security\CurrentUserService;
@@ -64,7 +65,7 @@ class DeviceRepository extends ServiceEntityRepository
         return $query->orderBy('d.name', 'ASC');
     }
 
-    public function findDevicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end)
+    public function findDevicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null)
     {
         $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces, service}')
@@ -75,6 +76,10 @@ class DeviceRepository extends ServiceEntityRepository
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('a.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
+        }
+        if ($service) {
+            $query = $query->andWhere('a.service = :service')
+                ->setParameter('service', $service);
         }
 
         return $query

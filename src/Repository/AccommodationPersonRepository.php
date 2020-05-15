@@ -53,7 +53,8 @@ class AccommodationPersonRepository extends ServiceEntityRepository
         if ($service) {
             $query = $query->andWhere('a.service = :service')
                 ->setParameter('service', $service);
-        } elseif (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        }
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }

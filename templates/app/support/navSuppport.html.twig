@@ -15,7 +15,7 @@
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Evaluation sociale">
 				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
 			</a>
-			{% if support.service.accommodation %}
+			{% if support.service and support.service.accommodation %}
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Modalités d'hébergement">
 				<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 			</a>

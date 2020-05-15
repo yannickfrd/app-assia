@@ -21,9 +21,9 @@
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{referent.createdAt|date("d/m/Y à H:i") }}
-            {% if referent.createdBy %}par {{ referent.createdBy.fullname }}{% endif %}
+            {{ referent.createdBy ? " par " ~ referent.createdBy.fullname }}
             (modifié le {{ referent.updatedAt|date("d/m/Y à H:i") }}
-            {% if referent.updatedBy %}par {{ referent.updatedBy.fullname }}{% endif %})
+            {{ referent.updatedBy ? " par " ~ referent.updatedBy.fullname }})
         </p>
     </div>
     {% else %}

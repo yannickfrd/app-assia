@@ -88,7 +88,6 @@ class ServiceRepository extends ServiceEntityRepository
             $query = $query->andWhere('sd.device = :device')
                 ->setParameter('device', $device);
         }
-
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());

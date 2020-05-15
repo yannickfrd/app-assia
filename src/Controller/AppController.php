@@ -135,17 +135,18 @@ class AppController extends AbstractController
      */
     public function showServiceDashboard(Indicators $indicators): Response
     {
-        $cache = new FilesystemAdapter();
+        // $cache = new FilesystemAdapter();
 
-        $cacheStatsService = $cache->getItem('stats.service'.$this->getUser()->getId());
+        // $cacheStatsService = $cache->getItem('stats.service'.$this->getUser()->getId());
 
-        if (!$cacheStatsService->isHit()) {
-            $cacheStatsService->set($indicators->getSupportsbyDevice());
-            $cacheStatsService->expiresAfter(2 * 60);
-            $cache->save($cacheStatsService);
-        }
+        // if (!$cacheStatsService->isHit()) {
+        //     $cacheStatsService->set($indicators->getSupportsbyDevice());
+        //     $cacheStatsService->expiresAfter(2 * 60);
+        //     $cache->save($cacheStatsService);
+        // }
 
-        $statsService = $cacheStatsService->get();
+        // $statsService = $cacheStatsService->get();
+        $statsService = $indicators->getSupportsbyDevice();
 
         return $this->render('app/dashboard/dashboardService.html.twig', [
             'devices' => $statsService['devices'],
@@ -159,8 +160,9 @@ class AppController extends AbstractController
      * Taux d'occupation des dispositifs.
      *
      * @Route("/occupancy/devices", name="occupancy_devices", methods="GET|POST")
+     * @Route("/occupancy/service/{id}/devices", name="occupancy_service_devices", methods="GET|POST")
      */
-    public function showOccupancyByDevice(Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    public function showOccupancyByDevice(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
@@ -173,10 +175,11 @@ class AppController extends AbstractController
         $end = $search->getEnd() ?? $today;
 
         return $this->render('app/dashboard/occupancyByDevice.html.twig', [
+            'service' => $service ?? null,
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
-            'datas' => $occupancyRate->getOccupancyRateByDevice($start, $end),
+            'datas' => $occupancyRate->getOccupancyRateByDevice($start, $end, $service),
         ]);
     }
 
@@ -218,7 +221,7 @@ class AppController extends AbstractController
         $today = new \DateTime('midnight');
         $search = new OccupancySearch();
 
-        if ($request->query->get('start') and $request->query->get('end')) {
+        if ($request->query->get('start') && $request->query->get('end')) {
             $search->setStart(new \DateTime($request->query->get('start')))
                 ->setEnd(new \DateTime($request->query->get('end')));
         } else {

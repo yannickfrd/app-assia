@@ -42,10 +42,10 @@ class OccupancyRate
     /**
      * Donne tous les dispositifs avec leur taux d'occupation.
      */
-    public function getOccupancyRateByDevice(\DateTime $start, \DateTime $end): array
+    public function getOccupancyRateByDevice(\DateTime $start, \DateTime $end, Service $service = null): array
     {
-        $devices = $this->repoDevice->findDevicesWithAccommodation($this->currentUser, $start, $end);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end);
+        $devices = $this->repoDevice->findDevicesWithAccommodation($this->currentUser, $start, $end, $service);
+        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end, $service);
         $interval = date_diff($start, $end);
 
         foreach ($devices as $device) {

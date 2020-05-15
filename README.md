@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.9.0 - 13/05/2020
+1.9.1 - 15/05/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,11 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.9.1 - 15/05/2020
+- Tableau des suivis : suppression de la colonne "Adresse du logement ou de l'hébergement"
+- Export des suivis : ajout de l'âge
+
 
 ## Version 1.9.0 - 13/05/2020
 - Création du module des taux d'occupation par dispositif, service ou groupe de places

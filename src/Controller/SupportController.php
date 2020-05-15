@@ -158,8 +158,6 @@ class SupportController extends AbstractController
         // }
         // $supportGroup = $cacheSupport->get();
 
-        // $this->checkSupportGroup($supportGroup);
-
         $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -170,6 +168,8 @@ class SupportController extends AbstractController
             $cache->save($cacheEvaluation);
         }
         $evaluation = $cacheEvaluation->get();
+
+        $this->checkSupportGroup($supportGroup);
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
@@ -246,8 +246,8 @@ class SupportController extends AbstractController
         $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
         if ($nbSupportPeople != $nbPeople) {
             $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
-                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes). 
-                Cliquez sur le bouton [Modifier] pour ajouter les personnes au suivi.');
+                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).<br/> 
+                Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
         }
 
         // Vérifie qu'il y a un hébergement créé
@@ -263,8 +263,8 @@ class SupportController extends AbstractController
             }
             if ($supportGroup->getService()->getAccommodation() && $nbSupportPeople != $nbAccommodationPeople) {
                 $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
-                    ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.') .
-                    Allez dans l\'onglet [Hébergement] ci-dessous pour ajouter les personnes à l\'hébergement.');
+                    ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
+                    Allez dans l\'onglet <b>Hébergement<b/> pour ajouter les personnes à l\'hébergement.');
             }
         }
     }

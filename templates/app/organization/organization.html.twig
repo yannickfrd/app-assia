@@ -15,9 +15,9 @@
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{organization.createdAt|date("d/m/Y à H:i") }}
-            {% if organization.createdBy %}par {{ organization.createdBy.fullname }}{% endif %}
+            {{ organization.createdBy ? " par " ~ organization.createdBy.fullname }}
             (modifié le {{ organization.updatedAt|date("d/m/Y à H:i") }}
-            {% if organization.updatedBy %}par {{ organization.updatedBy.fullname }}{% endif %})
+            {{ organization.createdBy ? " par " ~ organization.updatedBy.fullname }})
         </p>
     </div>
     {% else %}

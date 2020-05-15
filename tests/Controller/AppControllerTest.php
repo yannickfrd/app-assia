@@ -23,13 +23,13 @@ class AppControllerTest extends WebTestCase
         $this->dataFixtures = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
-
-        $this->client = static::createClient();
-        $this->client->followRedirects(true);
     }
 
     public function testHomepageIsUp()
     {
+        $this->client = static::createClient();
+        $this->client->followRedirects(true);
+
         $this->client->request('GET', '/');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -38,6 +38,9 @@ class AppControllerTest extends WebTestCase
 
     public function testAccessHomePage()
     {
+        $this->client = static::createClient();
+        $this->client->followRedirects(true);
+
         $this->client->request('POST', $this->generateUri('security_login'), [
             '_username' => 'r.madelaine',
             '_password' => 'Test123*',
@@ -45,6 +48,49 @@ class AppControllerTest extends WebTestCase
         ]);
 
         $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testPageServiceDashboardIsUp()
+    {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('dashboard_service'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Synthèse des suivis en cours');
+    }
+
+    public function testPageOccupancyByDeviceIsUp()
+    {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('occupancy_devices'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Taux d\'occupation Dispositifs');
+    }
+
+    public function testPageOccupancyByServiceIsUp()
+    {
+        $this->dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+        ]);
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('occupancy_services'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Taux d\'occupation Services');
+    }
+
+    public function testPageOccupancyByAccommodationsIsUp()
+    {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('occupancy_accommodations'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Taux d\'occupation Groupes de places');
     }
 
     protected function tearDown(): void

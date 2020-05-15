@@ -55,7 +55,7 @@
                     <tr>
                         <th scope="row">
                             {% if is_granted("ROLE_ADMIN") %}
-                            <a href="{{ path('admin_organization_edit', {'id':organization.id}) }}"
+                            <a href="{{ path('admin_organization_edit', {'id': organization.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                 title="Voir la fiche du organisme">
                                 <span class="fas fa-eye"></span>
@@ -67,9 +67,9 @@
                         <td>{{ organization.name }}</td>
                         <td>{{ organization.comment }}</td>
                         <td>{{ organization.createdAt|date("d/m/Y") }}</td>
-                        <td>{% if organization.createdBy %}{{ organization.createdBy.fullname }}{% endif %}</td>
+                        <td>{{ organization.createdBy ? organization.createdBy.fullname }}</td>
                         <td>{{ organization.updatedAt|date("d/m/Y") }}</td>
-                        <td>{% if organization.updatedBy %}{{ organization.updatedBy.fullname }}{% endif %}</td>
+                        <td>{{ organization.updatedBy ? organization.updatedBy.fullname }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

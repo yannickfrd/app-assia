@@ -7,8 +7,8 @@
 
 <div class="container">
     {% include "model/msgFlash.html.twig" %}
-    <h1 class="h2 mb-3">Taux d'occupation<!--
-    -->{% if service %} <span class="fas fa-angle-right fa-sm"></span> {{ service.name }}{% endif %}</h1>
+    <h1 class="h2 mb-3">Taux d'occupation <span class="fas fa-angle-right fa-sm"></span><!--
+    -->{{ service ? service.name : " Groupes de places" }}</h1>
 </div>
 
 {% include "app/dashboard/searchOccupancy.html.twig" %}
@@ -75,9 +75,9 @@
                             <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
                             <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
                             <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
-                            {% set ocupancyRate = ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") %}
+                            {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") : null %}
                             <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
-                            <span class="font-weight-bold font-italic">{{  ocupancyRate }} %</span>
+                            <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                             </td>
                         </tr>
                     </tfooter>

@@ -62,9 +62,9 @@
                         <td>{{ device.coefficient }}</td>
                         <td>{{ device.comment }}</td>
                         <td>{{ device.createdAt|date("d/m/Y H:i") }}</td>
-                        <td>{% if device.createdBy %}{{ device.createdBy.fullname }}{% endif %}</td>
+                        <td>{{ device.createdBy ? device.createdBy.fullname }}</td>
                         <td>{{ device.updatedAt|date("d/m/Y H:i") }}</td>
-                        <td>{% if device.updatedBy %}{{ device.updatedBy.fullname }}{% endif %}</td>
+                        <td>{{ device.updatedBy ? device.updatedBy.fullname }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

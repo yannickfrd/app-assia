@@ -228,19 +228,9 @@ class Person
     {
         if ($this->birthdate) {
             return $this->birthdate->diff(new \DateTime())->y;
-        } else {
-            return null;
-        }
-    }
-
-    public function setAge(?\DateTimeInterface $birthdate): self
-    {
-        if ($birthdate) {
-            $now = new \DateTime();
-            $this->age = $birthdate->diff($now)->y;
         }
 
-        return $this;
+        return null;
     }
 
     public function getGender(): ?int
