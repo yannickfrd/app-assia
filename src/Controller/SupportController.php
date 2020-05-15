@@ -264,7 +264,7 @@ class SupportController extends AbstractController
             if ($supportGroup->getService()->getAccommodation() && $nbSupportPeople != $nbAccommodationPeople) {
                 $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
                     ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
-                    Allez dans l\'onglet <b>Hébergement<b/> pour ajouter les personnes à l\'hébergement.');
+                    Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
             }
         }
     }

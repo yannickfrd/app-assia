@@ -55,14 +55,21 @@ class SupportControllerTest extends PantherTestCase
 
         $link = $crawler->filter('table tbody tr a.btn')->eq(0)->link();
 
-        dump('Test : go to a support page');
+        dump('Test : go to a support view page');
 
         $crawler = $this->client->click($link);
         sleep(1);
 
         $this->assertSelectorTextContains('h1', 'Suivi social');
 
+        dump('Test : go to a support edit page');
+
+        $link = $crawler->filter('a#support_edit')->link();
+        $crawler = $this->client->click($link);
+
         dump('Test : success to edit a support');
+
+        $this->assertSelectorTextContains('h1', 'Suivi | Édition du suivi');
 
         $form = $crawler->selectButton('send')->form([]);
 

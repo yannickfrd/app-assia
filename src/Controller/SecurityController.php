@@ -319,10 +319,11 @@ class SecurityController extends AbstractController
         if ($user) {
             $user->setFailureLoginCount($user->getFailureLoginCount() + 1);
 
-            if ($user->getFailureLoginCount() >= 5) {
-                $this->addFlash('danger', "Ce compte est bloqué suite à de nombreux échecs de connexion. Veuillez-vous rapprocher d'un administrateur.");
-            }
             $this->manager->flush();
+            if ($user->getFailureLoginCount() >= 5) {
+                $this->addFlash('danger', "Ce compte est bloqué suite à de nombreux échecs de connexion.<br/> 
+                Veuillez-vous rapprocher d'un administrateur.");
+            }
         }
 
         $this->addFlash('danger', 'Identifiant ou mot de passe incorrect.');
