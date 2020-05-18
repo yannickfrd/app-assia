@@ -80,6 +80,12 @@ class SupportGroupService
             ->setEndStatus($supportGroup->getEndStatus())
             ->setEndStatusComment($supportGroup->getEndStatusComment());
 
+        $birthdate = $rolePerson->getPerson()->getBirthdate();
+
+        if ($supportPerson->getStartDate() < $birthdate) {
+            $supportPerson->setStartDate($birthdate);
+        }
+
         $this->manager->persist($supportPerson);
 
         return $supportPerson;
@@ -103,6 +109,12 @@ class SupportGroupService
                 $supportPerson->setEndStatus($supportGroup->getEndStatus());
                 $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
             }
+            $birthdate = $supportPerson->getPerson()->getBirthdate();
+
+            if ($supportPerson->getStartDate() < $birthdate) {
+                $supportPerson->setStartDate($birthdate);
+                $this->container->get('session')->getFlashBag()->add('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');
+            }
         }
 
         if (4 == $supportGroup->getStatus() && $supportGroup->getEndAccommodation()) {
@@ -113,6 +125,13 @@ class SupportGroupService
                     foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
                         $accommodationPerson->getEndDate() == null ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
                         $accommodationPerson->getEndReason() == null ? $accommodationPerson->setEndReason(1) : null;
+
+                        $birthdate = $accommodationPerson->getPerson()->getBirthdate();
+
+                        if ($supportPerson->getStartDate() < $birthdate) {
+                            $supportPerson->setStartDate($birthdate);
+                            $this->container->get('session')->getFlashBag()->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
+                        }
                     }
                 }
             }

@@ -99,7 +99,7 @@ class AccommodationGroupController extends AbstractController
      */
     public function editAccommodationGroup(int $id, Request $request, SupportGroupRepository $repoSupport): Response
     {
-        $accommodationGroup = $this->repo->findOneById($id);
+        $accommodationGroup = $this->repo->findAccommodationGroupById($id);
         $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
@@ -108,7 +108,7 @@ class AccommodationGroupController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateAccommodationGroup($accommodationGroup);
+            $this->updateAccommodationGroup($accommodationGroup);
         }
 
         return $this->render('app/accommodation/accommodationGroup.html.twig', [
@@ -126,11 +126,11 @@ class AccommodationGroupController extends AbstractController
      */
     public function addPeopleInAccommodation(int $id): Response
     {
-        $accommodationGroup = $this->repo->findOneById($id);
+        $accommodationGroup = $this->repo->findAccommodationGroupById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $accommodationGroup->getSupportGroup());
 
-        $this->createpPeopleAccommodation($accommodationGroup);
+        $this->createAccommodationPeople($accommodationGroup);
 
         $this->addFlash('success', 'Les personnes sont ajoutées à la prise en charge.');
 
@@ -186,7 +186,7 @@ class AccommodationGroupController extends AbstractController
 
         $this->manager->persist($accommodationGroup);
 
-        $this->createpPeopleAccommodation($accommodationGroup);
+        $this->createAccommodationPeople($accommodationGroup);
 
         $this->manager->flush();
 
@@ -200,9 +200,14 @@ class AccommodationGroupController extends AbstractController
     /**
      * Met à jour la prise en charge du groupe.
      */
-    protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup): Response
+    protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup)
     {
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
+            $birthdate = $accommodationPerson->getPerson()->getBirthdate();
+            if ($accommodationPerson->getStartDate() < $birthdate) {
+                $accommodationPerson->setStartDate($birthdate);
+                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
+            }
             if (null == $accommodationPerson->getEndDate()) {
                 $accommodationPerson->setEndDate($accommodationGroup->getEndDate());
             }
@@ -214,16 +219,12 @@ class AccommodationGroupController extends AbstractController
         $this->manager->flush();
 
         $this->addFlash('success', "L'hébergement est mis à jour.");
-
-        return $this->redirectToRoute('support_accommodation_edit', [
-            'id' => $accommodationGroup->getId(),
-        ]);
     }
 
     /**
      * Crée les prises en charge individuelles.
      */
-    protected function createpPeopleAccommodation(AccommodationGroup $accommodationGroup): void
+    protected function createAccommodationPeople(AccommodationGroup $accommodationGroup): void
     {
         $people = [];
 
@@ -231,13 +232,19 @@ class AccommodationGroupController extends AbstractController
             $people[] = $accommodationPerson->getPerson()->getId();
         }
 
-        foreach ($accommodationGroup->getSupportGroup()->getGroupPeople()->getRolePeople() as $rolePerson) {
+        foreach ($accommodationGroup->getGroupPeople()->getRolePeople() as $rolePerson) {
             if (!in_array($rolePerson->getPerson()->getId(), $people)) {
                 $accommodationPerson = (new AccommodationPerson())
                     ->setAccommodationGroup($accommodationGroup)
                     ->setPerson($rolePerson->getPerson())
                     ->setStartDate($accommodationGroup->getStartDate())
                     ->setEndDate($accommodationGroup->getEndDate());
+
+                $birthdate = $rolePerson->getPerson()->getBirthdate();
+
+                if ($accommodationPerson->getStartDate() < $birthdate) {
+                    $accommodationPerson->setStartDate($birthdate);
+                }
 
                 $this->manager->persist($accommodationPerson);
             }

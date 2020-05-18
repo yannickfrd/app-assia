@@ -27,19 +27,19 @@ class AccommodationGroupRepository extends ServiceEntityRepository
      *
      * @param int $id // AccommodationGroup
      */
-    public function findOneById(int $id): ?AccommodationGroup
+    public function findAccommodationGroupById(int $id): ?AccommodationGroup
     {
         return $this->createQueryBuilder('gpa')
             ->select('gpa')
             ->leftJoin('gpa.createdBy', 'user')->addselect('PARTIAL user.{id, firstname, lastname}')
             ->leftJoin('gpa.accommodation', 'a')->addselect('PARTIAL a.{id, name}')
             ->leftJoin('gpa.accommodationPeople', 'pa')->addselect('pa')
-            ->leftJoin('pa.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('pa.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate}')
             ->leftJoin('gpa.supportGroup', 'sg')->addselect('PARTIAL sg.{id, startDate, endDate}')
-            ->leftJoin('sg.groupPeople', 'gp')->addselect('PARTIAL gp.{id, familyTypology, nbPeople}')
+            ->leftJoin('gpa.groupPeople', 'gp')->addselect('PARTIAL gp.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.service', 'sv')->addselect('PARTIAL sv.{id, name, accommodation}')
             ->leftJoin('gp.rolePeople', 'rp')->addselect('PARTIAL rp.{id, role, head}')
-            ->leftJoin('rp.person', 'p1')->addselect('PARTIAL p1.{id, firstname, lastname}')
+            ->leftJoin('rp.person', 'p1')->addselect('PARTIAL p1.{id, firstname, lastname, birthdate}')
 
             ->andWhere('gpa.id = :id')
             ->setParameter('id', $id)

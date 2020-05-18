@@ -90,7 +90,7 @@
 
 	{% if support.id %}
 
-    {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %}
+    {# {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
 
 	<div class="form-group row">
 		<div class="col-md-12">
@@ -167,7 +167,7 @@
 
 	</section>
 	
-	{% endcache %}
+	{# {% endcache %} #}
 
 	{% endif %}
 
