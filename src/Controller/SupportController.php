@@ -122,22 +122,20 @@ class SupportController extends AbstractController
             return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
-                ->handleRequest($request);
+        $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
+            ->handleRequest($request);
 
-            if ($formCoeff->isSubmitted() && $formCoeff->isValid()) {
-                $this->manager->flush();
+        if ($this->isGranted('ROLE_ADMIN') && $formCoeff->isSubmitted() && $formCoeff->isValid()) {
+            $this->manager->flush();
 
-                $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
+            $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
 
-                return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
-            }
+            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
         return $this->render('app/support/supportGroupEdit.html.twig', [
             'form' => $form->createView(),
-            'formCoeff' => isset($formCoeff) ? $formCoeff->createView() : null,
+            'formCoeff' => $formCoeff->createView(),
         ]);
     }
 
