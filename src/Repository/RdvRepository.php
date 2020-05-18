@@ -179,16 +179,13 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findAllRdvsFromUser(User $user, int $maxResults = 1000)
     {
-        return $this->createQueryBuilder('rdv')
-            ->addselect('PARTIAL rdv.{id, title, start, end, location}')
-
+        return $this->createQueryBuilder('rdv')->addselect('rdv')
             ->leftJoin('rdv.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
             ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('rdv.createdBy = :createdBy')
             ->setParameter('createdBy', $user)
-            ->andWhere('sp.head = TRUE')
 
             ->orderBy('rdv.start', 'DESC')
 

@@ -62,7 +62,7 @@ class AppController extends AbstractController
         return $this->dashboardSocialWorker($cache);
     }
 
-    protected function dashboardSocialWorker($cache)
+    protected function dashboardSocialWorker(FilesystemAdapter $cache)
     {
         $userSupports = $cache->getItem('stats.user'.$this->getUser()->getId().'_supports');
 

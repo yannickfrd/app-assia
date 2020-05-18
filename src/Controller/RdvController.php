@@ -91,7 +91,7 @@ class RdvController extends AbstractController
      *
      * @Route("/calendar/{year}/{month}", name="calendar_show", methods="GET", requirements={
      * "year" : "\d{4}",
-     * "month" : "[1-9]|[01-9]|1[0-2]",
+     * "month" : "0?[1-9]|1[0-2]",
      * })
      * @Route("/calendar", name="calendar", methods="GET")
      */

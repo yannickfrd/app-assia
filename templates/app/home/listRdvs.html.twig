@@ -22,17 +22,22 @@
                 {% for rdv in rdvs %}
                  <tr id="rdv-{{ rdv.id }}">
                     <td scope="row" class="align-middle">
-                        <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                        <a href="{{ path('calendar_show', {'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" 
+                            class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
                     </td>
-                    <td class="align-middle">{{ rdv.title }}</td>
+                    <td class="align-middle justify"><span class="font-weight-bold">
+                        {{ rdv.title }}{% if rdv.title and rdv.content %} : {% endif %}</span>
+                        <span class="">{{ rdv.content|slice(0,190) |striptags('<b>')|raw }}</span> 
+                        {% if rdv.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
+                    </td>
                     <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
                     <td class="align-middle">
                         {% if rdv.supportGroup %}
-                        {% for supportPerson in rdv.supportGroup.supportPeople|filter(a => a.head == true) %}
-                        {{ supportPerson.person.fullname }}<br>
-                        {% endfor %}
+                            {% for supportPerson in rdv.supportGroup.supportPeople|filter(a => a.head == true) %}
+                                {{ supportPerson.person.fullname }}<br>
+                            {% endfor %}
                         {% endif %}
                     </td>
                     <td class="align-middle">{{ rdv.location }}</td>

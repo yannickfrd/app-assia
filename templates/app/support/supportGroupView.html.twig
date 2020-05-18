@@ -231,7 +231,7 @@
 						</div>
 						{% if evalSocial.commentEvalSocialPerson %}
 						<div class="row mb-2">
-							<div class="col-md-12">{{ evalSocial.commentEvalSocialPerson }}</div>
+							<div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson }}</div>
 						</div>
 						{% endif %}
 					</div>
@@ -246,7 +246,7 @@
 					{{ utils.view(evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" : "" ), "Animal", "evaluation") }}
 				</div>
 				<div class="row mb-2">
-					<div class="col-md-12">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
+					<div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
 				</div>
 			{% endif %}
 
@@ -276,7 +276,7 @@
 								~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
 						</div>
 						<div class="row my-2">
-							<div class="col-md-12">{{ evalFamily.commentEvalFamilyPerson }}</div>
+							<div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson }}</div>
 						</div>
 					</div>
 				{% endif %}
@@ -325,7 +325,7 @@
 						~ evalFamily.nbPeopleReunification ~ " personne(s))" : "") : "", "Faml reunification", "evaluation") }}
 				</div>
 				<div class="row my-3">
-					<div class="col-md-12">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup }}</div>
+					<div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup }}</div>
 				</div>
 			{% endif %}
 
@@ -362,7 +362,7 @@
 						{{ utils.view(evalAdm.workRightToString, "Work right", "evaluation") }}
 						</div>
 						<div class="row my-2">
-							<div class="col-md-12">{{ evalAdm.commentEvalAdmPerson }}</div>
+							<div class="col-md-12 justify">{{ evalAdm.commentEvalAdmPerson }}</div>
 						</div>
 					</div>
 				{% endif %}
@@ -433,7 +433,7 @@
 								~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
 						</div>
 						<div class="row my-2">
-							<div class="col-md-12">{{ evalProf.commentEvalProf }}</div>
+							<div class="col-md-12 justify">{{ evalProf.commentEvalProf }}</div>
 						</div>
 					</div>
 				{% endif %}
@@ -616,7 +616,7 @@
 						{% endif %}
 						{% if evalBudget.commentEvalBudget %}
 						<div class="row my-3">
-							<div class="col-md-12">{{ evalBudget.commentEvalBudget }}</div>
+							<div class="col-md-12 justify">{{ evalBudget.commentEvalBudget }}</div>
 						</div>
 						{% endif %}
 					</div>
@@ -722,7 +722,7 @@
 					</div>
 				</div>
 				<div class="row my-3">
-					{{ utils.view(evalHousing.commentEvalHousing, "Comment") }}
+					<div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>
 				</div>
 					
 			</section>

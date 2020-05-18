@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.9.1 - 15/05/2020
+1.9.2 - 18/05/2020
 
 # Développeur
 Romain MADELAINE
@@ -19,6 +19,7 @@ https://demo.esperer95.app
 ## Version 1.9.2 - 18/05/2020
 - Correction erreur 500 lors de l'édition du suivi (profil Travailleur social).
 - Ajout contrôle de la date de début de suivi et de début d'hébergement par rapport à la date de naissance (la date de début ne peut pas être antérieure à la date de naissance de la personne).
+- Modification de l'espace personne pour les profils administrateurs
 
 ## Version 1.9.1 - 15/05/2020
 - Tableau des suivis : suppression de la colonne "Adresse du logement ou de l'hébergement"

@@ -12,7 +12,7 @@
              <thead>
                  <tr>
                      <th scope="col" class="align-middle th-w-20"></th>
-                     <th scope="col" class="align-middle th-w-150">Titre</th>
+                     <th scope="col" class="align-middle th-w-150">Note</th>
                      <th scope="col" class="align-middle th-w-100">Suivi concerné</th>
                      <th scope="col" class="align-middle th-w-100">Statut</th>
                      <th scope="col" class="align-middle th-date">Date de création</th>
@@ -28,7 +28,11 @@
                              title="Voir la note sociale"><span class="fas fa-eye"></span>
                          </a>
                      </td>
-                     <td class="align-middle">{{ note.title }}</td>
+                    <td class="align-middle justify"><span class="font-weight-bold">
+                        {{ note.title }}{% if note.title %} : {% endif %}</span>
+                        <span class="">{{ note.content|slice(0,190) |striptags('<b>')|raw }}</span> 
+                        {% if note.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
+                    </td>
                      <td class="align-middle">
                         {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
                         {{ supportPerson.person.fullname }}
