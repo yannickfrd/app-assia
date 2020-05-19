@@ -195,7 +195,7 @@
 				{% if evalSocial %}
 					<div class="my-3">
 						<div class="row mb-2">
-							<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+							<div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
 						</div>
 						<div class="row mb-2">
 							{{ utils.view(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
@@ -267,7 +267,7 @@
 				{% if evalFamily and evalPerson.supportPerson.role != 3 %}
 					<div class="my-3">
 						<div class="row mb-2">
-							<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+							<div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
 						</div>
 						<div class="row mb-2">
 							{{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
@@ -348,7 +348,7 @@
 				{% if evalAdm and evalPerson.supportPerson.role != 3 %}
 					<div class="my-3">
 						<div class="row mb-2">
-							<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+							<div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
 						</div>
 						<div class="row">
 						{{ utils.view(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
@@ -413,7 +413,7 @@
 				{% if evalProf %}
 					<div class="my-3">
 						<div class="row mb-2">
-							<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+							<div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
 						</div>
 						<div class="row mb-2">
 							{{ utils.view(evalProf.schoolLevelToString, "School level", "evaluation") }}
@@ -500,7 +500,7 @@
 				{% if evalBudget %}	
 					<div class="my-3">
 						<div class="row mb-2">
-							<div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+							<div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
 						</div>
 						<div class="row mb-2">
 								{{ evalBudget.resources == 1 and evalBudget.resourcesAmt > 0 ? '' : utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
