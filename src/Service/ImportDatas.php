@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use DateTime;
-use DateTimeZone;
+use App\Entity\Note;
 use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Person;
@@ -12,20 +12,23 @@ use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\Accommodation;
+use App\Entity\EvalAdmPerson;
 use App\Entity\InitEvalGroup;
+use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
 use App\Entity\EvalProfPerson;
 use App\Entity\InitEvalPerson;
 use App\Entity\EvalBudgetGroup;
+use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalSocialGroup;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationPerson;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
-use App\Entity\EvalAdmPerson;
-use App\Entity\EvalFamilyPerson;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,6 +59,71 @@ class ImportDatas
         'Non' => 2,
         'En cours' => 3,
         'NR' => 99,
+    ];
+
+    public const YES_NO_BOOLEAN = [
+        'Non' => 0,
+        'Oui' => 1,
+    ];
+
+    public const RESULT_PRE_ADMISSION = [
+        'En cours' => 1,
+        'Admission' => 2,
+        'Refus structure' => 3,
+        'Refus ménage' => 4,
+        'Refus autre' => 5,
+        'Autre' => 97,
+        'NR' => 99,
+    ];
+
+    public const REASON_REQUEST = [
+        'Absence de ressource' => 1,
+        'Départ du département initial' => 2,
+        'Dort dans la rue' => 3,
+        'Exil économique' => 4,
+        'Exil familial' => 5,
+        'Exil politique' => 6,
+        'Exil soins' => 7,
+        'Exil autre motif' => 8,
+        'Expulsion locative' => 9,
+        'Fin de prise en charge ASE' => 10,
+        'Fin d\'hébergement chez des tiers' => 11,
+        'Fin d\'hospitalisation' => 12,
+        'Fin prise en charge Conseil Départemental' => 13,
+        'Grande exclusion' => 14,
+        'Inadaptation du logement' => 15,
+        'Logement insalubre' => 16,
+        'Logement repris par le propriétaire' => 17,
+        'Rapprochement du lieu de travail' => 18,
+        'Regroupement familial' => 19,
+        'Risque d\'expulsion locative' => 20,
+        'Séparation ou rupture des liens familiaux' => 21,
+        'Sortie de détention' => 22,
+        'Sortie de logement accompagné' => 23,
+        'Sortie d\'hébergement' => 24,
+        'Sortie dispositif asile' => 25,
+        'Traite humaine' => 26,
+        'Violences familiales-conjugales' => 27,
+        'Autre' => 97,
+        'NR' => 99,
+    ];
+
+    public const CARE_SUPPORT = [
+        'Non' => 2,
+        'Infirmier à domicile' => 1,
+        'PCH' => 1,
+        'SAMSAH' => 1,
+        'SAVS' => 1,
+        'Autre' => 1,
+        'Non renseignée' => 99,
+    ];
+    public const CARE_SUPPORT_TYPE = [
+        'Infirmier à domicile' => 1,
+        'PCH' => 2,
+        'SAMSAH' => 3,
+        'SAVS' => 4,
+        'Autre' => 97,
+        'Non renseignée' => 99,
     ];
 
     public const HOUSING_STATUS = [
@@ -151,8 +219,18 @@ class ImportDatas
         'NR' => 99,
     ];
 
+    public const CHILDCARE_SCHOOL = [
+        'Assistante maternelle' => 4,
+        'Crèche' => 1,
+        'Ecole' => 2,
+        'Parent' => 3,
+        'Nourrice' => 5,
+        'Autre' => 97,
+        'NR' => 99,
+    ];
+
     public const PROF_STATUS = [
-        'Sans emploi' => null,
+        'Sans emploi' => 97,
         'CDD temps complet' => 8,
         'CDD temps partiel' => 8,
         'CDI temps complet' => 8,
@@ -185,10 +263,10 @@ class ImportDatas
 
     public const RIGHT_SOCIAL_SECURITY = [
         'Sans' => 2,
-        'PUMA (ex-CMU)' => 1,
-        'CSC (ex-CMU-C)' => 1,
+        'CMU' => 1,
+        'CMU-C' => 1,
         'AME' => 1,
-        'Régime général' => 1,
+        'Régime Général' => 1,
         'ACS' => 1,
         'En cours' => 3,
         'Autre' => 1,
@@ -197,10 +275,10 @@ class ImportDatas
 
     public const SOCIAL_SECURITY = [
         'Sans' => null, // x
-        'PUMA (ex-CMU)' => 3,
-        'CSC (ex-CMU-C)' => 4,
+        'CMU' => 3,
+        'CMU-C' => 4,
         'AME' => 5,
-        'Régime général' => 1,
+        'Régime Général' => 1,
         'ACS' => 6,
         'En cours' => null, // x
         'Autre' => 97,
@@ -230,35 +308,38 @@ class ImportDatas
     ];
 
     public const END_STATUS = [
-        'A la rue - abri de fortune' => 001,
+        'Retour à la rue, squat' => 001, // A la rue - abri de fortune
         'Accès à la propriété' => 303,
+        'ALTHO' => 208,
         'CADA' => 400,
-        'Colocation' => 304,
+        'Logement partagé / Colocation' => 304, // Colocation
         'Décès' => 900,
         'Départ volontaire de la personne' => 700,
-        'Détention' => 500,
+        'Incarcération' => 500, // Détention
         'Dispositif hivernal' => 105,
-        'Dispositif de soin ou médical (LAM, autre)' => 602,
+        'Sortie vers le soin' => 602, // Dispositif de soin ou médical (LAM, autre)
         'DLSAP' => 502,
         'Exclusion de la structure' => 701,
+        'Fin du contrat de séjour' => 702,
         'Foyer maternel' => 106,
-        'Hébergé chez des tiers' => 010,
+        'Hébergement chez des tiers' => 010, // Hébergé chez des tiers
         'Hébergé chez famille' => 011,
         'Hôtel 115' => 100,
-        'Hôtel (hors 115)' => 101,
-        'Hébergement d’urgence' => 102,
-        'Hébergement de stabilisation' => 103,
-        'Hébergement d’insertion' => 104,
+        'Hôtel au mois' => 101, // Hôtel (hors 115)
+        'CHU' => 102, // Hébergement d’urgence
+        'Centre de stabilisation' => 103, // Hébergement de stabilisation
+        'CHRS' => 104, // Hébergement d’insertion
         'Hôpital' => 600,
         'HUDA' => 401,
         'LHSS' => 601,
-        'Logement adapté - ALT' => 200,
-        'Logement adapté - FJT' => 201,
+        'ALT' => 200,
+        'FJT' => 201, // Logement adapté - FJT
         'Logement adapté - FTM' => 202,
         'Logement adapté - Maison relais' => 203,
-        'Logement adapté - Résidence sociale' => 204,
         'Logement adapté - RHVS' => 205,
-        'Logement adapté - Solibail/IML' => 206,
+        'Résidence sociale' => 204, // Logement adapté - Résidence sociale
+        'Logement adapté - RHVS' => 205,
+        'Solibail' => 206, // Logement adapté - Solibail/IML
         'Logement foyer' => 207,
         'Logement privé' => 300,
         'Logement social' => 301,
@@ -306,7 +387,7 @@ class ImportDatas
                 $row = [];
                 for ($col = 0; $col < $num; ++$col) {
                     $cel = iconv('CP1252', 'UTF-8', $data[$col]);
-                    $date = DateTime::createFromFormat('d/m/Y', $cel, new DateTimeZone(('UTC')));
+                    $date = DateTime::createFromFormat('d/m/Y', $cel, new \DateTimeZone(('UTC')));
                     if ($date) {
                         $cel = $date->format('Y-m-d');
                     }
@@ -453,15 +534,40 @@ class ImportDatas
                     ->setStatus($this->getStatus($row))
                     ->setStartDate($this->getStartDate($row))
                     ->setEndDate($this->getEndDate($row))
+                    ->setEndStatus($this->findInArray($row['Type sortie'], self::END_STATUS) ?? null)
+                    ->setEndStatusComment($row['Commentaire sur la sortie'])
                     ->setGroupPeople($groupPeople)
                     ->setService($service)
                     ->setDevice($device)
                     ->setCreatedBy($this->getUser())
-                    ->setUpdatedBy($this->getUser());
+                    ->setUpdatedBy($this->getUser())
+                    ->setComment($row['Référent social'] ? 'Référent social : '.$row['Référent social'] : null);
 
         $this->manager->persist($supportGroup);
 
+        if ($row['Service prescripteur'] || $row['Date entretien pré-admission']) {
+            $this->createOriginRequest($row, $supportGroup);
+        }
+
+        if ($row['Accompagnement social mis en place']) {
+            $this->createNote($supportGroup, 'Accompagnement social mis en place', $row['Accompagnement social mis en place']);
+        }
+
         return $supportGroup;
+    }
+
+    protected function createOriginRequest(array $row, SupportGroup $supportGroup): OriginRequest
+    {
+        $originRequest = (new OriginRequest())
+        ->setOrganizationComment($row['Service prescripteur'])
+        ->setPreAdmissionDate($row['Date entretien pré-admission'] ? new \Datetime($row['Date entretien pré-admission']) : null)
+        ->setResulPreAdmission($this->findInArray($row['Résultat entretien pré-admission'], self::RESULT_PRE_ADMISSION) ?? null)
+        ->setComment($row['Commentaire pré-admission'])
+        ->setSupportGroup($supportGroup);
+
+        $this->manager->persist($originRequest);
+
+        return $originRequest;
     }
 
     protected function createAccommodationGroup(GroupPeople $groupPeople, SupportGroup $supportGroup, Accommodation $accommodation): AccommodationGroup
@@ -494,6 +600,8 @@ class ImportDatas
 
         $this->manager->persist($evaluationGroup);
 
+        $this->createEvalSocialGroup($row, $evaluationGroup);
+        $this->createEvalFamilyGroup($row, $evaluationGroup);
         $this->createEvalBudgetGroup($row, $evaluationGroup);
         $this->createEvalHousingGroup($row, $evaluationGroup);
 
@@ -503,15 +611,63 @@ class ImportDatas
     protected function createInitEvalGroup(array $row, SupportGroup $supportGroup): InitEvalGroup
     {
         $initEvalGroup = (new InitEvalGroup())
-            ->setSupportGroup($supportGroup)
-            ->setHousingStatus($this->findInArray($row['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS) ?? null)
-            ->setSiaoRequest($this->findInArray($row['Demande SIAO active'], self::YES_NO) ?? null)
-            ->setSocialHousingRequest($this->findInArray($row['Demande logement social (entrée)'], self::YES_NO) ?? null)
-            ->setResourcesGroupAmt((float) $row['Total ressources ménage (entrée)']);
+        ->setHousingStatus($this->findInArray($row['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS) ?? null)
+        ->setSiaoRequest($this->findInArray($row['Demande SIAO active'], self::YES_NO) ?? null)
+        ->setSocialHousingRequest($this->findInArray($row['Demande logement social (entrée)'], self::YES_NO) ?? null)
+        ->setResourcesGroupAmt((float) $row['Total ressources ménage (entrée)'])
+        ->setSupportGroup($supportGroup);
 
         $this->manager->persist($initEvalGroup);
 
         return $initEvalGroup;
+    }
+
+    protected function createEvalSocialGroup(array $row, EvaluationGroup $evaluationGroup): EvalSocialGroup
+    {
+        $evalSocialGroup = (new EvalSocialGroup())
+            ->setReasonRequest($this->findInArray($row['Raison principale de la demande'], self::REASON_REQUEST) ?? null)
+            ->setWanderingTime($this->getWanderingTime((float) $row['Durée d\'errance']))
+            ->setCommentEvalSocialGroup($row['Commentaire situation résidentielle'])
+            ->setEvaluationGroup($evaluationGroup);
+
+        $this->manager->persist($evalSocialGroup);
+
+        return $evalSocialGroup;
+    }
+
+    protected function getWanderingTime($time)
+    {
+        if ($time <= 0.25) {
+            return 1;
+        } elseif ($time <= 1) {
+            return 2;
+        } elseif ($time <= 6) {
+            return 3;
+        } elseif ($time <= 12) {
+            return 4;
+        } elseif ($time <= 24) {
+            return 5;
+        } elseif ($time <= (5 * 12)) {
+            return 6;
+        } elseif ($time <= (10 * 12)) {
+            return 7;
+        } elseif ($time > (10 * 12)) {
+            return 8;
+        }
+
+        return 99;
+    }
+
+    protected function createEvalFamilyGroup(array $row, EvaluationGroup $evaluationGroup): EvalFamilyGroup
+    {
+        $evalFamilyGroup = (new EvalFamilyGroup())
+        ->setChildrenBehind((int) $row['Enfants au pays'])
+        // ->setCommentEvalFamilyGroup($row['Commentairesituation familiale'])
+        ->setEvaluationGroup($evaluationGroup);
+
+        $this->manager->persist($evalFamilyGroup);
+
+        return $evalFamilyGroup;
     }
 
     protected function createEvalBudgetGroup(array $row, EvaluationGroup $evaluationGroup): EvalBudgetGroup
@@ -529,10 +685,14 @@ class ImportDatas
     protected function createEvalHousingGroup(array $row, EvaluationGroup $evaluationGroup): EvalHousingGroup
     {
         $evalHousingGroup = (new EvalHousingGroup())
-            ->setEvaluationGroup($evaluationGroup)
-            ->setHousingStatus($this->findInArray($row['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS) ?? null)
-            ->setSiaoRequest($this->findInArray($row['Demande SIAO active'], self::YES_NO) ?? null)
-            ->setSocialHousingRequest($this->findInArray($row['Demande de logement social active'], self::YES_NO) ?? null);
+        ->setHousingStatus($this->findInArray($row['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS) ?? null)
+        ->setSiaoRequest($this->findInArray($row['Demande SIAO active'], self::YES_NO) ?? null)
+        ->setSiaoRequestDate($row['Date demande initiale SIAO'] ? new \Datetime($row['Date demande initiale SIAO']) : null)
+        ->setSiaoUpdatedRequestDate($row['Date dernière actualisation SIAO'] ? new \Datetime($row['Date dernière actualisation SIAO']) : null)
+        ->setSocialHousingRequest($this->findInArray($row['Demande de logement social active'], self::YES_NO) ?? null)
+        ->setSocialHousingRequestDate($row['Date demande de logement social'] ? new \Datetime($row['Date demande de logement social']) : null)
+        ->setCommentEvalHousing($row['Modalité de sortie vers le logement'] ? 'Modalité de sortie vers le logement : '.$row['Modalité de sortie vers le logement'] : null)
+        ->setEvaluationGroup($evaluationGroup);
 
         $this->manager->persist($evalHousingGroup);
 
@@ -544,7 +704,7 @@ class ImportDatas
         $person = (new Person())
                     ->setLastname($row['Nom ménage'])
                     ->setFirstname($row['Prénom'])
-                    ->setBirthdate(new Datetime($row['Date naissance']))
+                    ->setBirthdate(new \Datetime($row['Date naissance']))
                     ->setGender($this->gender)
                     ->setCreatedBy($this->getUser())
                     ->setUpdatedBy($this->getUser());
@@ -629,8 +789,9 @@ class ImportDatas
 
         $this->createEvalSocialPerson($row, $evaluationPerson);
         $this->createEvalAdmPerson($row, $evaluationPerson);
-        $this->createEvalProfPerson($row, $evaluationPerson);
         $this->createEvalBudgetPerson($row, $evaluationPerson);
+        $this->createEvalFamilyPerson($row, $evaluationPerson);
+        $this->createEvalProfPerson($row, $evaluationPerson);
 
         return $evaluationPerson;
     }
@@ -646,14 +807,15 @@ class ImportDatas
             ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
             ->setProfStatus($this->findInArray($row['Emploi (entrée)'], self::PROF_STATUS) ?? null)
             ->setContractType($this->findInArray($row['Emploi (entrée)'], self::CONTRACT_TYPE) ?? null)
-            ->setResources($row['Ressources (entrée)'] == 'Oui' ? true : null)
+            ->setResources($this->findInArray($row['Ressources (entrée)'], self::YES_NO) ?? null)
             ->setResourcesAmt((float) $row['Montant ressources (entrée)'])
-            ->setUnemplBenefit($row['ARE (entrée)'] == 'Oui' ? true : null)
-            ->setMinimumIncome($row['RSA (entrée)'] == 'Oui' ? true : null)
-            ->setFamilyAllowance($row['AF (entrée)'] == 'Oui' ? true : null)
-            ->setSalary($row['Salaire (entrée)'] == 'Oui' ? true : null)
-            ->setRessourceOther($row['Autres ressources (entrée)'] ? true : null)
-            ->setRessourceOtherPrecision($row['Autres ressources (entrée)']);
+            ->setUnemplBenefit($row['ARE (entrée)'] == 'Oui' ? 1 : null)
+            ->setMinimumIncome($row['RSA (entrée)'] == 'Oui' ? 1 : null)
+            ->setFamilyAllowance($row['AF (entrée)'] == 'Oui' ? 1 : null)
+            ->setSalary($row['Salaire (entrée)'] == 'Oui' ? 1 : null)
+            ->setRessourceOther($row['Autres ressources (entrée)'] ? 1 : null)
+            ->setRessourceOtherPrecision($row['Autres ressources (entrée)'])
+            ->setComment($row['Commentaire situation à l\'entrée']);
 
         $this->manager->persist($initEvalPerson);
 
@@ -663,12 +825,18 @@ class ImportDatas
     protected function createEvalSocialPerson(array $row, EvaluationPerson $evaluationPerson): EvalSocialPerson
     {
         $evalSocialPerson = (new EvalSocialPerson())
-            ->setEvaluationPerson($evaluationPerson)
-            ->setRightSocialSecurity($this->findInArray($row['Couverture maladie (entrée)'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-            ->setSocialSecurity($this->findInArray($row['Couverture maladie (entrée)'], self::SOCIAL_SECURITY) ?? null)
-            ->setFamilyBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
-            ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
-            ->setChildWelfareBackground($this->findInArray($row['Parcours institutionnel enfance'], self::YES_NO) ?? null);
+        ->setRightSocialSecurity($this->findInArray($row['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+        ->setSocialSecurity($this->findInArray($row['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
+        ->setFamilyBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
+        ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
+        ->setChildWelfareBackground($this->findInArray($row['Parcours institutionnel enfance'], self::YES_NO) ?? null)
+        ->setHealthProblem($row['Problématique santé mentale'] == 1 || $row['Problématique santé - Addiction'] == 1 ? 1 : null)
+        ->setMentalHealthProblem($this->findInArray($row['Problématique santé mentale'], self::YES_NO_BOOLEAN) ?? null)
+        ->setAddictionProblem($this->findInArray($row['Problématique santé - Addiction'], self::YES_NO_BOOLEAN) ?? null)
+        ->setCareSupport($this->findInArray($row['Service soin ou acc. à domicile'], self::CARE_SUPPORT) ?? null)
+        ->setCareSupportType($this->findInArray($row['Service soin ou acc. à domicile'], self::CARE_SUPPORT_TYPE) ?? null)
+        ->setCommentEvalSocialPerson($row['Spécificités autres'])
+        ->setEvaluationPerson($evaluationPerson);
 
         $this->manager->persist($evalSocialPerson);
 
@@ -679,6 +847,8 @@ class ImportDatas
     {
         $evalFamilyPerson = (new EvalFamilyPerson())
             ->setEvaluationPerson($evaluationPerson)
+            ->setUnbornChild($this->findInArray($row['Grossesse'], self::YES_NO) ?? null)
+            ->setChildcareSchool($this->findInArray($row['Mode garde'], self::CHILDCARE_SCHOOL) ?? null)
             ->setProtectiveMeasure($this->findInArray($row['Mesure de protection'], self::PROTECTIVE_MEASURE) ?? null)
             ->setProtectiveMeasureType($this->findInArray($row['Mesure de protection'], self::PROTECTIVE_MEASURE_TYPE) ?? null);
 
@@ -693,10 +863,10 @@ class ImportDatas
             ->setEvaluationPerson($evaluationPerson)
             ->setNationality($this->findInArray($row['Nationalité'], self::NATIONALITY) ?? null)
             ->setCountry($row['Pays d\'origine'])
-            ->setPaper($this->findInArray($row['Situation administrative (entrée)'], self::PAPER) ?? null)
-            ->setPaperType($this->findInArray($row['Situation administrative (entrée)'], self::PAPER_TYPE) ?? null)
+            ->setPaper($this->findInArray($row['Situation administrative'], self::PAPER) ?? null)
+            ->setPaperType($this->findInArray($row['Situation administrative'], self::PAPER_TYPE) ?? null)
             ->setAsylumBackground($this->findInArray($row['Parcours asile'], self::YES_NO) ?? null)
-            ->setCommentEvalAdmPerson($row['Situation administrative (entrée)']);
+            ->setCommentEvalAdmPerson($row['Situation administrative']);
 
         $this->manager->persist($evalAdmPerson);
 
@@ -707,8 +877,8 @@ class ImportDatas
     {
         $evalProfPerson = (new EvalProfPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setProfStatus($this->findInArray($row['Emploi (entrée)'], self::PROF_STATUS) ?? null)
-            ->setContractType($this->findInArray($row['Emploi (entrée)'], self::CONTRACT_TYPE) ?? null);
+            ->setProfStatus($this->findInArray($row['Emploi'], self::PROF_STATUS) ?? null)
+            ->setContractType($this->findInArray($row['Emploi'], self::CONTRACT_TYPE) ?? null);
 
         $this->manager->persist($evalProfPerson);
 
@@ -719,13 +889,13 @@ class ImportDatas
     {
         $evalBudgetPerson = (new EvalBudgetPerson())
             ->setEvaluationPerson($evaluationPerson)
-            ->setResources($row['Ressources'] == 'Oui' ? true : null)
+            ->setResources($this->findInArray($row['Ressources'], self::YES_NO) ?? null)
             ->setResourcesAmt((float) $row['Montant ressources'])
-            ->setUnemplBenefit($row['ARE'] == 'Oui' ? true : null)
-            ->setMinimumIncome($row['RSA'] == 'Oui' ? true : null)
-            ->setFamilyAllowance($row['AF'] == 'Oui' ? true : null)
-            ->setSalary($row['Salaire'] == 'Oui' ? true : null)
-            ->setRessourceOther($row['Autres ressources'] ? true : null)
+            ->setUnemplBenefit($row['ARE'] == 'Oui' ? 1 : null)
+            ->setMinimumIncome($row['RSA'] == 'Oui' ? 1 : null)
+            ->setFamilyAllowance($row['AF'] == 'Oui' ? 1 : null)
+            ->setSalary($row['Salaire'] == 'Oui' ? 1 : null)
+            ->setRessourceOther($row['Autres ressources'] ? 1 : null)
             ->setRessourceOtherPrecision($row['Autres ressources']);
 
         $this->manager->persist($evalBudgetPerson);
@@ -790,16 +960,30 @@ class ImportDatas
 
     protected function getStartDate(array $row): ?DateTime
     {
-        return $row['Date entrée'] ? new Datetime($row['Date entrée']) : null;
+        return $row['Date entrée'] ? new \Datetime($row['Date entrée']) : null;
     }
 
     protected function getEndDate(array $row): ?DateTime
     {
-        return $row['Date sortie'] ? new Datetime($row['Date sortie']) : null;
+        return $row['Date sortie'] ? new \Datetime($row['Date sortie']) : null;
     }
 
     protected function getUser(): User
     {
         return $this->security->getUser();
+    }
+
+    protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
+    {
+        $note = (new Note())
+        ->setTitle($title)
+        ->setContent($content)
+        ->setSupportGroup($supportGroup)
+        ->setCreatedBy($this->getUser())
+        ->setUpdatedBy($this->getUser());
+
+        $this->manager->persist($note);
+
+        return $note;
     }
 }

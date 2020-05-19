@@ -73,6 +73,11 @@ class InitEvalPerson
      */
     private $supportPerson;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -258,6 +263,18 @@ class InitEvalPerson
     public function setSupportPerson(?SupportPerson $supportPerson): self
     {
         $this->supportPerson = $supportPerson;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

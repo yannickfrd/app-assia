@@ -23,7 +23,7 @@ class EvalSocialPerson
     ];
 
     public const CARE_SUPPORT = [
-        1 => 'Infirmier à domicile',
+        1 => 'Infirmière/er à domicile',
         2 => 'PCH',
         3 => 'SAMSAH',
         4 => 'SAVS',

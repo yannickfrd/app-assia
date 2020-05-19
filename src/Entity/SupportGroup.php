@@ -33,6 +33,7 @@ class SupportGroup
     public const END_STATUS = [
         001 => 'A la rue - abri de fortune',
         303 => 'Accès à la propriété',
+        208 => 'ALTHO',
         400 => 'CADA',
         304 => 'Colocation',
         900 => 'Décès',
@@ -42,6 +43,7 @@ class SupportGroup
         602 => 'Dispositif de soin ou médical (LAM, autre)',
         502 => 'DLSAP',
         701 => 'Exclusion de la structure',
+        702 => 'Fin du contrat de séjour',
         106 => 'Foyer maternel',
         010 => 'Hébergé chez des tiers',
         011 => 'Hébergé chez famille',
