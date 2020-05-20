@@ -1,3 +1,3 @@
-import ListDocuments from "./listDocuments";
+import SupportDocuments from "./supportDocuments";
 
-new ListDocuments();
+new SupportDocuments();

@@ -64,6 +64,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.rdvs', 'rdvs')->addSelect('PARTIAL rdvs.{id}')
             ->leftJoin('sg.notes', 'notes')->addSelect('PARTIAL notes.{id}')
             ->leftJoin('sg.documents', 'docs')->addSelect('PARTIAL docs.{id}')
+            ->leftJoin('sg.contributions', 'c')->addSelect('PARTIAL c.{id}')
 
             ->andWhere('sg.id = :id')
             ->setParameter('id', $id)

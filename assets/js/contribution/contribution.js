@@ -1,10 +1,10 @@
 import AjaxRequest from "../utils/ajaxRequest";
-import SupportNotes from "./supportNotes";
+import SupportContributions from "./supportContributions";
 import CheckChangeModal from "../utils/checkChangeModal";
 
 let ajaxRequest = new AjaxRequest();
 
 document.addEventListener("DOMContentLoaded", e => {
-    new SupportNotes(ajaxRequest);
+    new SupportContributions(ajaxRequest);
     // new CheckChangeModal("note"); // form name
 });

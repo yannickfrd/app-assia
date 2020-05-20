@@ -3,7 +3,7 @@ import Loader from "../utils/loader";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import language from "@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js";
 
-export default class ListNotes {
+export default class SupportNotes {
 
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;

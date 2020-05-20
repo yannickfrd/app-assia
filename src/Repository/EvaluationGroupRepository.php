@@ -26,8 +26,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
      */
     public function findEvaluationById(int $supportGroupId): ?EvaluationGroup
     {
-        return $this->createQueryBuilder('eg')
-            ->select('eg')
+        return $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
             ->join('sg.groupPeople', 'gp')->addselect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
@@ -61,12 +60,29 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne les ressources.
+     */
+    public function findEvaluationResourceById(int $supportGroupId): ?EvaluationGroup
+    {
+        return $this->createQueryBuilder('eg')->select('eg')
+            ->join('eg.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
+            ->leftJoin('eg.evaluationPeople', 'ep')->addselect('ep')
+            // ->leftJoin('eg.evalBudgetGroup', 'ebg')->addselect('PARTIAL ebg.{resourcesGroupAmt, budgetBalanceAmt}')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addselect('PARTIAL ebp.{id, resourcesAmt, salaryAmt}')
+
+            ->andWhere('eg.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
+    /**
      * Donne toute l'évaluation sociale du groupe.
      */
     public function findLastEvaluationFromSupport(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        return $this->createQueryBuilder('eg')
-            ->select('eg')
+        return $this->createQueryBuilder('eg')->select('eg')
 
             ->andWhere('eg.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup)

@@ -1,7 +1,7 @@
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 
-export default class ListDocuments {
+export default class SupportDocuments {
 
     constructor() {
         this.modalDocumentElt = document.getElementById("modal-document");

@@ -1,0 +1,120 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form_search "bootstrap_4_layout.html.twig" %}
+
+{% block title %}Redevances | {{ title_website }}{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+	{% set title = "Redevances" %}
+	{% include "app/support/navSuppport.html.twig" %}
+
+	<div class="row">
+		<div class="d-flex col-md-6 mb-1 align-items-center">
+			<button id="js-new-contribution" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
+				data-toggle="modal" data-target="#modal-contribution" data-placement="bottom" title="Créer une nouvelle redevance">
+				<span class="fas fa-plus-square mr-2"></span>Nouvelle redevance</button>
+			<div class="d-inline align-middle">Total :
+				<span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,'', ' ')}}</span>
+				redevance{% if contributions.getTotalItemCount > 1 %}s{% endif %}.
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="navigation">{{ knp_pagination_render(contributions) }}</div>
+		</div>
+	</div>
+
+	<div class="row my-2">
+		<div class="col-md-12">
+			<div class="accordion" id="accordionSearch">
+				<div id="form-search">
+					<div role="button" class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" 
+						data-toggle="collapse" data-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
+						<h2 class="h5">Recherche<span class="float-right"><span class="fa fa-chevron-down"></span></span></h2>
+					</div>
+					<div id="collapseSearch" class="collapse show float-right" aria-labelledby="headingSearch" data-parent="#accordionSearch">
+						{{ form_start(form_search) }}
+						<div class="form-inline justify-content-md-center align-items-end">
+							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.date.start) }}</div>
+							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.date.end) }}</div>
+							<div class="form-group col-auto my-1 px-1">
+								<div class="form-group">
+									<button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Rechercher">
+										<span class="fas fa-search"></span><span class="sr-only">Rechercher</span>
+									</button>
+									<button type="reset" class="btn btn-secondary ml-2 shadow" data-placement="bottom" title="Effacer">
+										<span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						{{ form_end(form_search, {"render_rest": false}) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div class="row mb-4">
+        <div class="table-responsive">
+            <table id="table-contributions" class="table table-striped table-bordered table-hover text-dark">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.contribDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant de la redevance", "c.contribAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paymentAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû", "c.stillDue") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de règlement", "c.paymentDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Moyen de paiment", "c.paymentType") }}</th>
+                        <th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contribution in contributions %}
+                    <tr id="contribution-{{ contribution.id }}" class="js-contribution">
+                        <td scope="row" class="text-center">
+						    <button class="btn btn-{{ theme_color }} btn-sm shadow js-get" data-url="{{ path('contribution_get', {'id': contribution.id}) }}" 
+								data-placement="bottom" title="Voir la redevance" data-toggle="modal" 
+								data-target="#modal-contribution"><span class="fas fa-eye"></span>
+                            </button>
+						</td>
+                        <td class="align-middle">{{ contribution.contribDate|date("Y-m") }}</td>
+                        <td class="align-middle text-right">{{ contribution.contribAmt|number_format(2, ",", " ") }} €</td>
+                        <td class="align-middle text-right">{{ contribution.paymentAmt|number_format(2, ",", " ") }} €</td>
+                        <td class="align-middle text-right">{{ contribution.stillDue|number_format(2, ",", " ") }} €</td>
+                        <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
+                        <td class="align-middle">{{ contribution.comment }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+				<tfooter>
+				     <tr class="font-weight-bold">
+                        <td scope="row"></td>
+                        <td class="align-middle"> Total </td>
+						{% set amt = 0 %}
+                        <td class="align-middle text-right">{{ amt|number_format(2, ",", " ") }} €</td>
+                        <td class="align-middle text-right">{{ amt|number_format(2, ",", " ") }} €</td>
+                        <td class="align-middle text-right">{{ amt|number_format(2, ",", " ") }} €</td>
+                    </tr>
+				</tfooter>
+            </table>
+        </div>
+    	<div class="navigation">{{ knp_pagination_render(contributions) }}</div>
+    </div>
+
+</div>
+
+{% include "app/contribution/modalContribution.html.twig" %}
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{{ encore_entry_script_tags("contribution") }}
+{% endblock javascripts %}

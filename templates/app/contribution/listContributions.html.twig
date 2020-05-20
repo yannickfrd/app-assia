@@ -1,0 +1,86 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Redevances | {{ title_website }}{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+<section class="mt-0">
+
+    <div class="container">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-4">Redevances</h1>
+    </div>
+
+    {% include "app/contribution/searchContributions.html.twig" %}
+
+    <div class="container-fluid mt-4">
+
+        <div class="row align-items-baseline">
+            <div class="col-md-4 count align-middle mb-2">
+                <span class="align-middle">Résultat : {{ contributions.getTotalItemCount|number_format(0,'', ' ')  }}<!--
+                --> contribution{% if contributions.getTotalItemCount > 1 %}s{% endif %}.</span>
+            </div>
+            <div class="col-md-8">
+                <div class="navigation">{{ knp_pagination_render(contributions) }}</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="table-contributions" class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(contributions, "Contribution", "c.contribDate") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Nom du suivi", "p.lastname") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "n.type") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Statut", "n.status") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de création", "n.createdAt") }}</th>
+                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Créé par", "u.lastname") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de modification", "n.updatedAt") }}</th>
+                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Modifié par", "u2.lastname") }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contribution in contributions %}
+                    <tr id="contribution-{{ contribution.id }}">
+                        <th scope="row" class="align-middle">
+                            <a href="{{ path('support_contributions', {'id':contribution.supportGroup.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir la contribution sociale"><span class="fas fa-eye"></span>
+                            </a>
+                        </th>
+                        <td class="align-middle justify"><span class="font-weight-bold">
+                            {{ contribution.title }}{% if contribution.title %} : {% endif %}</span>
+                            <span class="">{{ contribution.content|slice(0,200) |striptags('<b>')|raw }}</span> 
+                            {% if contribution.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
+                        </td>
+                        <td class="align-middle">
+                            {% for supportPerson in contribution.supportGroup.supportPeople|filter(a => a.head == true) %}
+                            {{ supportPerson.person.fullname }}
+                            {% endfor %}
+                        </td>
+                        <td class="align-middle">{{ contribution.typeToString }}</td>
+                        <td class="align-middle">{{ contribution.statusToString }}</td>
+                        <td class="align-middle">{{ contribution.createdAt|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ contribution.createdBy ? contribution.createdBy.fullname }}</td>
+                        <td class="align-middle">{{ contribution.updatedAt|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ contribution.updatedBy ? contribution.updatedBy.fullname }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="navigation">{{ knp_pagination_render(contributions) }}</div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

@@ -50,6 +50,11 @@
 			href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" 
 			title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
 		</div>
+		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+			<a id='support-contributions' class="btn btn-{{ theme_color }} btn-block shadow" 
+			href="{{ path('support_contributions', {'id':support.id}) }}" data-placement="bottom" 
+			title="Redevances et participations financières">Redevances<span class="badge badge-light ml-2">{{ support.contributions|length }}</span></a>
+		</div>
 		{% endif %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 

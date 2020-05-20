@@ -231,6 +231,11 @@ class SupportGroup
      */
     private $originRequest;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Contribution::class, mappedBy="supportGroup", orphanRemoval=true)
+     */
+    private $contributions;
+
     public function __construct()
     {
         $this->supportPeople = new ArrayCollection();
@@ -239,6 +244,7 @@ class SupportGroup
         $this->documents = new ArrayCollection();
         $this->accommodationGroups = new ArrayCollection();
         $this->evaluationsGroup = new ArrayCollection();
+        $this->contributions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -657,5 +663,36 @@ class SupportGroup
         }
 
         return true;
+    }
+
+    /**
+     * @return Collection|Contribution[]
+     */
+    public function getContributions(): Collection
+    {
+        return $this->contributions;
+    }
+
+    public function addContribution(Contribution $contribution): self
+    {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+            $contribution->setSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContribution(Contribution $contribution): self
+    {
+        if ($this->contributions->contains($contribution)) {
+            $this->contributions->removeElement($contribution);
+            // set the owning side to null (unless already changed)
+            if ($contribution->getSupportGroup() === $this) {
+                $contribution->setSupportGroup(null);
+            }
+        }
+
+        return $this;
     }
 }

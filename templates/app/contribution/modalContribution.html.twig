@@ -1,0 +1,59 @@
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+    <div id="modal-contribution" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalContributionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Redevance</h2>
+            </div>
+
+            {{ form_start(form) }}
+
+            <div class="modal-body pb-0">
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            {{ form_label(form.contribDate) }}
+                            <div class="col-4">{{ form_widget(form.contribDate.year) }}</div>
+                            <div class="col-4">{{ form_widget(form.contribDate.month) }}</div>
+                            <div class="d-none">{{ form_widget(form.contribDate.day) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">{{ form_row(form.type) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">{{ form_row(form.salaryAmt) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.resourcesAmt) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.contribAmt) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.credential) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">{{ form_row(form.paymentDate) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.paymentType) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.paymentAmt) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.stillDue) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12">{{ form_widget(form.comment) }}</div>
+                </div>
+                {{ form_row(form._token) }}
+            </div>
+
+            <div class="modal-footer d-flex justify-content-between">
+              <div class="float-left">
+                    <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
+                        title="Supprimer la redevance"><span class="fas fa-trash-alt"></span><span
+                        class="sr-only">Supprimer</span></button>
+                </div>
+                <div class="float-right">
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
+
+            {{ form_end(form, {"render_rest": false}) }}
+
+        </div>
+    </div>
+</div>
