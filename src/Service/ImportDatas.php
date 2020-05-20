@@ -552,6 +552,17 @@ class ImportDatas
         if ($row['Accompagnement social mis en place']) {
             $this->createNote($supportGroup, 'Accompagnement social mis en place', $row['Accompagnement social mis en place']);
         }
+        if ($row['Orientation vers l\'emploi'] || $row['Orientation vers les soins/santé'] || $row['Orientation vers autre association']) {
+            $this->createNote($supportGroup,
+            'Orientation vers partenaires',
+            ($row['Orientation vers l\'emploi'] ? '<p>Orientation vers l\'emploi : '.$row['Orientation vers l\'emploi'].'. &nbsp;</p>' : null).
+            ($row['Orientation vers les soins/santé'] ? '<p>Orientation vers les soins/santé : '.$row['Orientation vers les soins/santé'].'. &nbsp;</p>' : null).
+            ($row['Orientation vers autre association'] ? '<p>Orientation vers autre association : '.$row['Orientation vers autre association'].'. &nbsp;</p>' : null)
+        );
+            if ($row['Commentaire situation']) {
+                $this->createNote($supportGroup, 'Situation : ', $row['Commentaire situation']);
+            }
+        }
 
         return $supportGroup;
     }
@@ -866,7 +877,7 @@ class ImportDatas
             ->setPaper($this->findInArray($row['Situation administrative'], self::PAPER) ?? null)
             ->setPaperType($this->findInArray($row['Situation administrative'], self::PAPER_TYPE) ?? null)
             ->setAsylumBackground($this->findInArray($row['Parcours asile'], self::YES_NO) ?? null)
-            ->setCommentEvalAdmPerson($row['Situation administrative']);
+            ->setCommentEvalAdmPerson($this->findInArray($row['Situation administrative'], self::PAPER_TYPE) == 97 ? $row['Situation administrative'] : null);
 
         $this->manager->persist($evalAdmPerson);
 
