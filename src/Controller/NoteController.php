@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\CacheTrait;
 use App\Entity\Note;
+use Twig\Environment;
 use App\Form\Note\NoteType;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
 use App\Form\Note\NoteSearchType;
 use App\Repository\NoteRepository;
+use App\Controller\Traits\CacheTrait;
 use App\Form\Model\SupportNoteSearch;
 use App\Form\Note\SupportNoteSearchType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -150,6 +152,35 @@ class NoteController extends AbstractController
             'alert' => 'warning',
             'msg' => 'La note sociale est supprimée.',
         ], 200);
+    }
+
+    /**
+     * Générer une note à partir de la dernière évaluation sociale du suivi.
+     *
+     * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
+     */
+    public function generateNoteEvaluation(int $id, EvaluationGroupRepository $repo, Environment $renderer): Response
+    {
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $evaluation = $repo->findEvaluationById($id);
+
+        $note = (new Note())
+            ->setTitle('Rapport social '.$evaluation->getUpdatedAt()->format('d/m/Y'))
+            ->setContent($renderer->render('app/evaluation/evaluationView.html.twig', [
+                'support' => $supportGroup,
+                'evaluation' => $evaluation,
+            ]))
+            ->setType(2)
+            ->setSupportGroup($supportGroup)
+            ->setCreatedBy($this->getUser());
+
+        $this->manager->persist($note);
+        $this->manager->flush();
+
+        return $this->redirectToRoute('support_notes', ['id' => $supportGroup->getId()]);
     }
 
     /**

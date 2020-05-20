@@ -35,7 +35,7 @@ window.onload = e => {
         let target = this.getAttribute("href");
         $("html, body").stop().animate({
             scrollTop: $(target).height()
-        }, 1000);
+        }, 500);
     });
 
     // Recherche instannée d'une personne via Ajax
