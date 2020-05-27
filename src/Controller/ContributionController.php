@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Contribution\ContributionSearchType;
 use App\Form\Contribution\SupportContributionSearchType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -60,7 +59,7 @@ class ContributionController extends AbstractController
 
         return $this->render('app/contribution/listContributions.html.twig', [
             'form' => $form->createView(),
-            'contributions' => $pagination->paginate($this->repo->findAllContributionsQuery($search), $request, 10) ?? null,
+            'contributions' => $pagination->paginate($this->repo->findAllContributionsQuery($search), $request, 20) ?? null,
         ]);
     }
 
@@ -71,7 +70,7 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportContributions(int $id, SupportContributionSearch $search = null, Request $request, EvaluationGroupRepository $repoEvaluation, Pagination $pagination): Response
+    public function listSupportContributions(int $id, SupportContributionSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
@@ -82,23 +81,8 @@ class ContributionController extends AbstractController
         $formSearch = $this->createForm(SupportContributionSearchType::class, $search);
         $formSearch->handleRequest($request);
 
-        $contribution = new Contribution();
-        $evaluation = $repoEvaluation->findEvaluationResourceById($id);
-
-        if ($evaluation) {
-            $salaryAmt = 0;
-            $resourcesAmt = 0;
-            foreach ($evaluation->getEvaluationPeople() as $evaluationPerson) {
-                $salaryAmt += $evaluationPerson->getEvalBudgetPerson()->getSalaryAmt();
-                $resourcesAmt += $evaluationPerson->getEvalBudgetPerson()->getResourcesAmt();
-            }
-            $contribAmt = ($resourcesAmt * 20) / 100;
-
-            $contribution->setContribDate((new \DateTime())->modify('-1 month')->modify('first day of this month'))
-                ->setSalaryAmt($salaryAmt)
-                ->setResourcesAmt($resourcesAmt)
-                ->setContribAmt($contribAmt);
-        }
+        $contribution = (new Contribution())
+            ->setContribDate((new \DateTime())->modify('-1 month')->modify('first day of this month'));
 
         $form = $this->createForm(ContributionType::class, $contribution);
 
@@ -111,25 +95,65 @@ class ContributionController extends AbstractController
     }
 
     /**
+     * Donne les ressources.
+     *
+     * @Route("support/{id}/resources", name="support_resources", methods="GET")
+     *
+     * @param int $id // SupportGroup
+     */
+    public function getResources(int $id, EvaluationGroupRepository $repoEvaluation)
+    {
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+
+        $evaluation = $repoEvaluation->findEvaluationResourceById($id);
+
+        $salaryAmt = 0;
+        $resourcesAmt = 0;
+        if ($evaluation) {
+            foreach ($evaluation->getEvaluationPeople() as $evaluationPerson) {
+                if ($evaluationPerson->getEvalBudgetPerson()) {
+                    $salaryAmt += $evaluationPerson->getEvalBudgetPerson()->getSalaryAmt();
+                    $resourcesAmt += $evaluationPerson->getEvalBudgetPerson()->getResourcesAmt();
+                }
+            }
+
+            $contributionRate = $supportGroup->getService()->getContributionRate();
+            $contribAmt = round($resourcesAmt * $contributionRate);
+        }
+
+        return $this->json([
+            'code' => 200,
+            'action' => 'getResources',
+            'data' => [
+                'salaryAmt' => $salaryAmt,
+                'resourcesAmt' => $resourcesAmt,
+                'contribAmt' => $contribAmt ?? null,
+            ],
+        ], 200);
+    }
+
+    /**
      * Nouvelle participation financière.
      *
      * @Route("support/{id}/contribution/new", name="contribution_new", methods="POST")
      *
      * @param int $id // SupportGroup
      */
-    public function newContribution(int $id, Contribution $contribution = null, Request $request, Normalisation $normalisation): Response
+    public function newContribution(int $id, Contribution $contribution = null, Request $request, NormalizerInterface $normalizer, Normalisation $normalisation): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $contribution = new Contribution();
+        $contribution = (new Contribution())
+            ->setSupportGroup($supportGroup);
 
         $form = ($this->createForm(ContributionType::class, $contribution))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createContribution($supportGroup, $contribution);
+            return $this->createContribution($supportGroup, $contribution, $normalizer);
         }
 
         return $this->getErrorMessage($form, $normalisation);
@@ -148,7 +172,7 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'show',
             'data' => [
-                'contribution' => $normalizer->normalize($contribution, null, ['groups' => 'export']),
+                'contribution' => $normalizer->normalize($contribution, null, ['groups' => 'get']),
             ],
         ], 200);
     }
@@ -158,15 +182,15 @@ class ContributionController extends AbstractController
      *
      * @Route("contribution/{id}/edit", name="contribution_edit", methods="POST")
      */
-    public function editContribution(Contribution $contribution, Request $request): Response
+    public function editContribution(Contribution $contribution, Request $request, NormalizerInterface $normalizer): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $contribution);
+        $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
 
         $form = ($this->createForm(ContributionType::class, $contribution))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateContribution($contribution, 'update');
+            return $this->updateContribution($contribution, $normalizer);
         }
 
         return $this->getErrorMessage($form);
@@ -176,10 +200,11 @@ class ContributionController extends AbstractController
      * Supprime la participation financière.
      *
      * @Route("contribution/{id}/delete", name="contribution_delete", methods="GET")
-     * @IsGranted("DELETE", subject="contribution")
      */
     public function deleteContribution(Contribution $contribution): Response
     {
+        $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
+
         $this->manager->remove($contribution);
         $this->manager->flush();
 
@@ -187,17 +212,15 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'La contribution est supprimée.',
+            'msg' => 'La redevance est supprimée.',
         ], 200);
     }
 
     /**
      * Crée la contribution une fois le formulaire soumis et validé.
      */
-    protected function createContribution(SupportGroup $supportGroup, Contribution $contribution): Response
+    protected function createContribution(SupportGroup $supportGroup, Contribution $contribution, NormalizerInterface $normalizer): Response
     {
-        $contribution->setSupportGroup($supportGroup);
-
         $supportGroup->setUpdatedAt(new \DateTime());
 
         $this->manager->persist($contribution);
@@ -209,9 +232,9 @@ class ContributionController extends AbstractController
             'alert' => 'success',
             'msg' => 'La redevance est enregistrée.',
             'data' => [
-                'contributionId' => $contribution->getId(),
-                'type' => $contribution->getTypeToString(),
-                'editInfo' => '| Créé le '.$contribution->getCreatedAt()->format('d/m/Y à H:i').' par '.$contribution->getCreatedBy()->getFullname(),
+                'contribution' => $normalizer->normalize($contribution, null, [
+                    'groups' => ['get', 'export'],
+                ]),
             ],
         ], 200);
     }
@@ -219,19 +242,21 @@ class ContributionController extends AbstractController
     /**
      * Met à jour la contribution une fois le formulaire soumis et validé.
      */
-    protected function updateContribution(Contribution $contribution, $typeSave): Response
+    protected function updateContribution(Contribution $contribution, NormalizerInterface $normalizer): Response
     {
+        $contribution->getSupportGroup()->setUpdatedAt(new \DateTime());
+
         $this->manager->flush();
 
         return $this->json([
             'code' => 200,
-            'action' => $typeSave,
+            'action' => 'update',
             'alert' => 'success',
-            'msg' => 'La contribution est modifiée.',
+            'msg' => 'La redevance est modifiée.',
             'data' => [
-                'contributionId' => $contribution->getId(),
-                'type' => $contribution->getTypeToString(),
-                'editInfo' => '(modifié le '.$contribution->getUpdatedAt()->format('d/m/Y à H:i').' par '.$contribution->getUpdatedBy()->getFullname().')',
+                'contribution' => $normalizer->normalize($contribution, null, [
+                    'groups' => ['get', 'export'],
+                ]),
             ],
         ], 200);
     }

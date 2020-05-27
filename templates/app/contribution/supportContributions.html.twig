@@ -4,8 +4,6 @@
 
 {% block title %}Redevances | {{ title_website }}{% endblock %}
 
-{% block stylesheets %}{% endblock %}
-
 {% block body %}
 
 <div class="container">
@@ -16,7 +14,11 @@
 	<div class="row">
 		<div class="d-flex col-md-6 mb-1 align-items-center">
 			<button id="js-new-contribution" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-				data-toggle="modal" data-target="#modal-contribution" data-placement="bottom" title="Créer une nouvelle redevance">
+				data-url="{{ path('support_resources', {'id': support.id}) }}"
+				data-contribution-rate="{{ support.service.contributionRate }}"
+				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}"
+				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}"
+				data-placement="bottom" title="Créer une nouvelle redevance">
 				<span class="fas fa-plus-square mr-2"></span>Nouvelle redevance</button>
 			<div class="d-inline align-middle">Total :
 				<span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,'', ' ')}}</span>
@@ -39,6 +41,7 @@
 					<div id="collapseSearch" class="collapse show float-right" aria-labelledby="headingSearch" data-parent="#accordionSearch">
 						{{ form_start(form_search) }}
 						<div class="form-inline justify-content-md-center align-items-end">
+							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
 							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.date.start) }}</div>
 							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.date.end) }}</div>
 							<div class="form-group col-auto my-1 px-1">
@@ -65,42 +68,57 @@
                 <thead>
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.contribDate") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant de la redevance", "c.contribAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.contribDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.contribAmt") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paymentAmt") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû", "c.stillDue") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû", "c.stillDueAmt") }}</th>
                         <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de règlement", "c.paymentDate") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Moyen de paiment", "c.paymentType") }}</th>
-                        <th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mode de réglement", "c.paymentType") }}</th>
+                        {# <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Caution - Date de restitution", "c.returnDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Caution - Montant restitué", "c.returnAmt") }}</th> #}
+                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
+                        <th scope="col" class="align-middle th-w-20"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="container-contributions">
                     {% for contribution in contributions %}
-                    <tr id="contribution-{{ contribution.id }}" class="js-contribution">
-                        <td scope="row" class="text-center">
-						    <button class="btn btn-{{ theme_color }} btn-sm shadow js-get" data-url="{{ path('contribution_get', {'id': contribution.id}) }}" 
-								data-placement="bottom" title="Voir la redevance" data-toggle="modal" 
-								data-target="#modal-contribution"><span class="fas fa-eye"></span>
-                            </button>
-						</td>
-                        <td class="align-middle">{{ contribution.contribDate|date("Y-m") }}</td>
-                        <td class="align-middle text-right">{{ contribution.contribAmt|number_format(2, ",", " ") }} €</td>
-                        <td class="align-middle text-right">{{ contribution.paymentAmt|number_format(2, ",", " ") }} €</td>
-                        <td class="align-middle text-right">{{ contribution.stillDue|number_format(2, ",", " ") }} €</td>
-                        <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
-                        <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
-                        <td class="align-middle">{{ contribution.comment }}</td>
-                    </tr>
+						<tr class="js-contribution">
+							<td scope="row" class="text-center">
+								<button class="btn btn-{{ theme_color }} btn-sm shadow js-get" data-id="{{ contribution.id }}"
+									data-url="{{ path('contribution_get', {'id': contribution.id}) }}" 
+									data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
+								</button>
+							</td>
+							<td class="align-middle js-contribDate">{{ contribution.contribDate|date("Y-m") }}</td>
+							<td class="align-middle js-type">{{ contribution.typeToString }}</td>
+							<td class="align-middle text-right js-contribAmt">{{ contribution.contribAmt|number_format(0, ",", " ") }} €</td>
+							<td class="align-middle text-right js-paymentAmt">{{ contribution.paymentAmt|number_format(0, ",", " ") }} €</td>
+							<td class="align-middle text-right js-stillDueAmt">{{ contribution.stillDueAmt|number_format(0, ",", " ") }} €</td>
+							<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
+							<td class="align-middle js-paymentType">{{ contribution.paymentTypeToString }}</td>
+							{# <td class="align-middle text-center js-returnDate">{{ contribution.returnDate ? contribution.returnDate|date("d/m/Y") }}</td>
+							<td class="align-middle text-right js-returnAmt">{{ contribution.returnAmt ? contribution.returnAmt|number_format(0, ",", " ") ~ " €" }}</td> #}
+							<td class="align-middle js-comment">{{ contribution.comment|slice(0,70) }}
+								{% if contribution.comment|length > 70 %}<span class="font-italic"> [...]</span>{% endif %}
+							</td>
+							<td class="align-middle text-center">
+								<button class="js-delete btn btn-danger btn-sm shadow my-1" 
+									data-url="{{ path('contribution_delete', {'id':contribution.id}) }}" 
+									data-placement="bottom" title="Supprimer la redevance" 
+									data-toggle="modal" data-target="#modal-block">
+									<span class="fas fa-trash-alt"></span>
+								</button>
+							</td>                    
+						</tr>
                     {% endfor %}
                 </tbody>
 				<tfooter>
 				     <tr class="font-weight-bold">
-                        <td scope="row"></td>
-                        <td class="align-middle"> Total </td>
-						{% set amt = 0 %}
-                        <td class="align-middle text-right">{{ amt|number_format(2, ",", " ") }} €</td>
-                        <td class="align-middle text-right">{{ amt|number_format(2, ",", " ") }} €</td>
-                        <td class="align-middle text-right">{{ amt|number_format(2, ",", " ") }} €</td>
+                        <td scope="row" colspan="3" class="align-middle text-center">Total </td>
+                        <td id="js-sumContribAmt" class="align-middle text-right"></td>
+                        <td id="js-sumPaymentAmt" class="align-middle text-right"></td>
+                        <td id="js-sumStillDueAmt" class="align-middle text-right"></td>
                     </tr>
 				</tfooter>
             </table>
@@ -111,6 +129,7 @@
 </div>
 
 {% include "app/contribution/modalContribution.html.twig" %}
+{% include "app/contribution/modalDeleteContribution.html.twig" %}
 
 {% endblock %}
 

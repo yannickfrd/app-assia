@@ -56,11 +56,11 @@ class ContributionRepository extends ServiceEntityRepository
         }
 
         if ($search->getStart()) {
-            $query->andWhere('c.createdAt >= :start')
+            $query->andWhere('c.contribDate >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.createdAt <= :end')
+            $query->andWhere('c.contribDate <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
@@ -107,6 +107,15 @@ class ContributionRepository extends ServiceEntityRepository
         if ($search->getType()) {
             $query->andWhere('c.type = :type')
                 ->setParameter('type', $search->getType());
+        }
+
+        if ($search->getStart()) {
+            $query->andWhere('c.contribDate >= :start')
+                ->setParameter('start', $search->getStart());
+        }
+        if ($search->getEnd()) {
+            $query->andWhere('c.contribDate <= :end')
+                ->setParameter('end', $search->getEnd());
         }
 
         $query = $query->orderBy('c.contribDate', 'DESC');

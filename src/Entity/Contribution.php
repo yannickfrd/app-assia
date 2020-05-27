@@ -6,9 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ContributionRepository;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ContributionRepository::class)
+ * @UniqueEntity(
+ *     fields={"contribDate", "type", "supportGroup"},
+ *     message="Une redevance existe déjà pour ce mois."
+ * )
  */
 class Contribution
 {
@@ -16,8 +21,8 @@ class Contribution
 
     public const CONTRIBUTION_TYPE = [
         1 => 'Redevance/ Participation',
-        2 => 'Caution/ Dépôt de garantie',
-        97 => 'Autre',
+        2 => 'Caution',
+        // 97 => 'Autre',
     ];
 
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
@@ -33,7 +38,7 @@ class Contribution
 
     /**
      * @ORM\Column(type="date")
-     * @Groups("export")
+     * @Groups("get")
      */
     private $contribDate;
 
@@ -41,46 +46,43 @@ class Contribution
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("get")
      */
     private $id;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"get", "export"})
      */
     private $salaryAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     */
-    private $otherAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"get", "export"})
      */
     private $resourcesAmt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
+     * @Groups({"get", "export"})
      */
     private $credential;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"get", "export"})
      */
     private $contribAmt;
 
     /**
-     * @ORM\Column(type="date")
-     * @Groups("export")
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups({"get", "export"})
      */
     private $paymentDate;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("get")
      */
     private $paymentType;
 
@@ -91,35 +93,41 @@ class Contribution
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups({"get", "export"})
      */
     private $paymentAmt = 0;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
+     * @Groups("get")
      */
-    private $stillDue = 0;
+    private $stillDueAmt = 0;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("export")
+     * @Groups("get")
      */
     private $comment;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups("get")
      */
     private $type = self::DEFAULT_CONTRIBUTION_TYPE;
 
     /**
      * @Groups("export")
      */
-    private $typeTostring;
+    private $typeToString;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get", "export"})
+     */
+    private $returnAmt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
+     * @Groups({"get", "export"})
      */
     private $returnDate;
 
@@ -139,7 +147,7 @@ class Contribution
         return $this->contribDate;
     }
 
-    public function setContribDate(\DateTimeInterface $contribDate): self
+    public function setContribDate(?\DateTimeInterface $contribDate): self
     {
         $this->contribDate = $contribDate;
 
@@ -154,18 +162,6 @@ class Contribution
     public function setSalaryAmt(?float $salaryAmt): self
     {
         $this->salaryAmt = $salaryAmt;
-
-        return $this;
-    }
-
-    public function getOtherAmt(): ?float
-    {
-        return $this->otherAmt;
-    }
-
-    public function setOtherAmt(?float $otherAmt): self
-    {
-        $this->otherAmt = $otherAmt;
 
         return $this;
     }
@@ -211,7 +207,7 @@ class Contribution
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(\DateTimeInterface $paymentDate): self
+    public function setPaymentDate(?\DateTimeInterface $paymentDate): self
     {
         $this->paymentDate = $paymentDate;
 
@@ -247,14 +243,14 @@ class Contribution
         return $this;
     }
 
-    public function getStillDue(): ?float
+    public function getStillDueAmt(): ?float
     {
-        return $this->stillDue;
+        return $this->getContribAmt() - $this->getPaymentAmt();
     }
 
-    public function setStillDue(?float $stillDue): self
+    public function setStillDueAmt(?float $stillDueAmt): self
     {
-        $this->stillDue = $stillDue;
+        $this->stillDueAmt = $stillDueAmt;
 
         return $this;
     }
@@ -284,6 +280,18 @@ class Contribution
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getReturnAmt(): ?float
+    {
+        return $this->returnAmt;
+    }
+
+    public function setReturnAmt(?float $returnAmt): self
+    {
+        $this->returnAmt = $returnAmt;
 
         return $this;
     }

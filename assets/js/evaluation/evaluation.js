@@ -413,7 +413,7 @@ export default class evaluation {
             }
         });
 
-        let sumAmts = array.reduce((a, b) => a + b, 0);
+        let sumAmts = array.Type((a, b) => a + b, 0);
 
         if (!isNaN(sumAmts)) {
             return sumAmts;
@@ -444,7 +444,7 @@ export default class evaluation {
             }
         });
 
-        this.groupAmtElt(type).textContent = array.reduce((a, b) => a + b, 0);
+        this.groupAmtElt(type).textContent = array.Type((a, b) => a + b, 0);
 
         this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent);
     }

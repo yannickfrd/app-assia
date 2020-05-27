@@ -17,7 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
  * @UniqueEntity(
  *     fields={"name"},
- *     message="Ce service existe déjà !")
+ *     message="Ce service existe déjà !"
+ * )
  */
 class Service
 {
@@ -77,6 +78,11 @@ class Service
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $accommodation;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $contributionRate = 0.1;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -270,6 +276,18 @@ class Service
     public function setAccommodation(?bool $accommodation): self
     {
         $this->accommodation = $accommodation;
+
+        return $this;
+    }
+
+    public function getContributionRate(): ?float
+    {
+        return $this->contributionRate;
+    }
+
+    public function setContributionRate(?float $contributionRate): self
+    {
+        $this->contributionRate = $contributionRate;
 
         return $this;
     }

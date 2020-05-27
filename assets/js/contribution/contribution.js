@@ -6,5 +6,5 @@ let ajaxRequest = new AjaxRequest();
 
 document.addEventListener("DOMContentLoaded", e => {
     new SupportContributions(ajaxRequest);
-    // new CheckChangeModal("note"); // form name
+    // new CheckChangeModal("contribution"); // form name
 });

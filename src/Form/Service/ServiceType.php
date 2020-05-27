@@ -85,6 +85,7 @@ class ServiceType extends AbstractType
                 'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
+            ->add('contributionRate')
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,

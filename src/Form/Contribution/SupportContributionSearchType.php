@@ -22,9 +22,6 @@ class SupportContributionSearchType extends AbstractType
                     'class' => 'sr-only',
                 ],
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
-                'attr' => [
-                    'class' => 'w-max-150',
-                ],
                 'placeholder' => '-- Type --',
                 'required' => false,
             ])

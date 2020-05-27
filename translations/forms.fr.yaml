@@ -87,20 +87,22 @@ Siret id: Numéro SIRET
 Finess id: Numéro FINESS
 Opening date: Date d'ouverture
 Closing date: Date de fermeture
+Contribution rate: Taux de participation financière
 
 Accommodation type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou collectif
 
-Contrib amt: Montant participation
+Contrib amt: Montant dû
 Contrib date: Mois concerné
 Credential: Justificatif de ressources
-Other amt: Montant des autres ressources
 Payment amt: Montant réglé
 Payment date: Date de règlement
 Payment type: Mode de règlement
 Resources amt: Montant total des ressources
+Return amt: Montant restitué
 Return date: Date de restitution
 Salary amt: Montant du salaire
-Still due: Restant dû
+Still due amt: Restant dû
 Type: Type de participation
+Write a comment: Ecrire un commentaire

@@ -17,16 +17,13 @@ class ContributionType extends AbstractType
     {
         $builder
             ->add('contribDate', DateType::class, [
-                // 'widget' => 'single_text',
-                'required' => false,
+                'required' => true,
+            ])
+            ->add('type', ChoiceType::class, [
+                'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
+                'placeholder' => '-- Select --',
             ])
             ->add('salaryAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
-                'required' => false,
-            ])
-            ->add('otherAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],
@@ -47,7 +44,6 @@ class ContributionType extends AbstractType
             ])
             ->add('paymentDate', DateType::class, [
                 'widget' => 'single_text',
-                // 'required' => false,
             ])
             ->add('paymentType', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::PAYMENT_TYPE),
@@ -57,21 +53,22 @@ class ContributionType extends AbstractType
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],
-                'required' => false,
             ])
-            ->add('stillDue', MoneyType::class, [
+            ->add('stillDueAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money text-right',
+                    'class' => 'text-right',
+                    'readonly' => true,
                 ],
                 'required' => false,
             ])
             ->add('returnDate', DateType::class, [
                 'widget' => 'single_text',
-                // 'required' => false,
             ])
-            ->add('type', ChoiceType::class, [
-                'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
-                'placeholder' => '-- Select --',
+            ->add('returnAmt', MoneyType::class, [
+                'attr' => [
+                    'class' => 'js-money text-right',
+                ],
+                'required' => false,
             ])
             ->add('comment', null, [
                 'attr' => [
@@ -85,6 +82,7 @@ class ContributionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Contribution::class,
+            'allow_extra_fields' => true,
             'translation_domain' => 'forms',
         ]);
     }

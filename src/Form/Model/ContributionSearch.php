@@ -17,6 +17,11 @@ class ContributionSearch
      */
     private $fullname;
 
+    /**
+     * @var int|null
+     */
+    private $type;
+
     public function getFullname(): ?string
     {
         return $this->fullname;
@@ -25,6 +30,18 @@ class ContributionSearch
     public function setFullname(string $fullname): self
     {
         $this->fullname = $fullname;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

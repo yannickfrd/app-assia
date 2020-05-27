@@ -90,7 +90,7 @@ export default class ValidationSupport {
             return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut pas être antérieure au début du suivi.");
         }
         if (intervalWithNow < 0) {
-            return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut être postérieur à la date du jour.");
+            return this.validationInput.invalid(this.endDateInputElt, "La fin du suivi ne peut être postérieure à la date du jour.");
         }
         if (!this.endDateInputElt.value && this.getOption(this.statusSelectElt) === 4) { // statut égal à Terminé
             return this.validationInput.invalid(this.endDateInputElt, "La date de fin ne peut pas être vide si le suivi est terminé.");
