@@ -22,6 +22,11 @@ class ContributionSearch
      */
     private $type;
 
+    /**
+     * @var bool
+     */
+    private $export;
+
     public function getFullname(): ?string
     {
         return $this->fullname;
@@ -42,6 +47,18 @@ class ContributionSearch
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getExport(): ?bool
+    {
+        return $this->export;
+    }
+
+    public function setExport(bool $export): self
+    {
+        $this->export = $export;
 
         return $this;
     }

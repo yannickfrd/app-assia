@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use Doctrine\ORM\Query;
 use App\Entity\Contribution;
 use App\Security\CurrentUserService;
@@ -29,17 +28,54 @@ class ContributionRepository extends ServiceEntityRepository
     }
 
     /**
-     * Return all contributions of group support.
+     * Donne toutes les participations financières à afficher.
      */
     public function findAllContributionsQuery(ContributionSearch $search): Query
     {
-        $query = $this->createQueryBuilder('c')->select('c')
-            ->leftJoin('c.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('c.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}')
-            ->leftJoin('c.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+        $query = $this->getContributionsQuery();
 
+        if ($search) {
+            $query = $this->filter($query, $search);
+        }
+
+        return  $query->orderBy('c.contribDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Donne toutes les participations financières à exporter.
+     */
+    public function findContributionsToExport(ContributionSearch $search): ?array
+    {
+        $query = $this->getContributionsQuery()
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}');
+
+        $query = $this->filter($query, $search);
+
+        return  $query->orderBy('c.contribDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
+     * Donne la requête.
+     */
+    protected function getContributionsQuery()
+    {
+        return $this->createQueryBuilder('c')->select('c')
+        ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
+        ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+        ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
+        ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
+        ->leftJoin('c.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+        ->leftJoin('c.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}');
+    }
+
+    /**
+     * Filtre la recherche.
+     */
+    protected function filter($query, ContributionSearch $search)
+    {
         if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
@@ -91,8 +127,7 @@ class ContributionRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        return  $query->orderBy('c.contribDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $query;
     }
 
     /**
@@ -104,11 +139,14 @@ class ContributionRepository extends ServiceEntityRepository
             ->andWhere('c.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
+        if ($search->getContributionId()) {
+            $query->andWhere('c.id = :id')
+                ->setParameter('id', $search->getContributionId());
+        }
         if ($search->getType()) {
             $query->andWhere('c.type = :type')
                 ->setParameter('type', $search->getType());
         }
-
         if ($search->getStart()) {
             $query->andWhere('c.contribDate >= :start')
                 ->setParameter('start', $search->getStart());
@@ -124,32 +162,7 @@ class ContributionRepository extends ServiceEntityRepository
     }
 
     /**
-     *  Donne toutes les contributions créées par l'utilisateur.
-     *
-     * @return mixed
-     */
-    public function findAllContributionsFromUser(User $user, int $maxResults = 1000)
-    {
-        return $this->createQueryBuilder('c')->addselect('c}')
-
-            ->leftJoin('c.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
-
-            ->andWhere('c.createdBy = :user')
-            ->setParameter('user', $user)
-            ->andWhere('sp.head = TRUE')
-
-            ->orderBy('c.contribDate', 'DESC')
-
-            ->setMaxResults($maxResults)
-
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
-    }
-
-    /**
-     * Compte le nombre de contributions.
+     * Compte le nombre de participations.
      *
      * @return mixed
      */
@@ -163,22 +176,28 @@ class ContributionRepository extends ServiceEntityRepository
                     $query = $query->andWhere('c.createdBy = :user')
                         ->setParameter('user', $value);
                 }
-                if ('status' == $key) {
-                    $query = $query->andWhere('sg.status = :status')
-                        ->setParameter('status', $value);
-                }
                 if ('service' == $key) {
                     $query = $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
-                }
-                if ('device' == $key) {
-                    $query = $query->andWhere('sg.device = :device')
-                        ->setParameter('device', $value);
                 }
             }
         }
 
         return $query->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Donne la somme des restants dûs de participations.
+     *
+     * @return mixed
+     */
+    public function sumStillDueAmt($supportId)
+    {
+        return $this->createQueryBuilder('c')->select('SUM(c.stillDueAmt)')
+            ->andWhere('c.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportId)
+            ->getQuery()
             ->getSingleScalarResult();
     }
 }

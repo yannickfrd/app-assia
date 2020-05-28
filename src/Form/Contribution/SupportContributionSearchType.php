@@ -17,6 +17,7 @@ class SupportContributionSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('contributionId')
             ->add('type', ChoiceType::class, [
                 'label_attr' => [
                     'class' => 'sr-only',
@@ -34,6 +35,7 @@ class SupportContributionSearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SupportContributionSearch::class,
+            'method' => 'get',
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,
             'csrf_protection' => false,
@@ -42,6 +44,6 @@ class SupportContributionSearchType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'search';
+        return '';
     }
 }

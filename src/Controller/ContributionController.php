@@ -6,6 +6,7 @@ use App\Service\Pagination;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
 use App\Service\Normalisation;
+use App\Export\ContributionExport;
 use App\Controller\Traits\CacheTrait;
 use App\Form\Model\ContributionSearch;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,8 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Contribution\ContributionSearchType;
 use App\Form\Contribution\SupportContributionSearchType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ContributionController extends AbstractController
 {
@@ -45,7 +47,7 @@ class ContributionController extends AbstractController
      *
      * @Route("contributions", name="contributions", methods="GET|POST")
      */
-    public function listContributions(ContributionSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listContributions(ContributionSearch $search = null, Request $request, Pagination $pagination, UrlGeneratorInterface $router): Response
     {
         $search = new ContributionSearch();
         if ($this->getUser()->getStatus() == 1) {
@@ -56,6 +58,10 @@ class ContributionController extends AbstractController
 
         $form = ($this->createForm(ContributionSearchType::class, $search))
             ->handleRequest($request);
+
+        if ($search->getExport()) {
+            return $this->exportData($search, $router);
+        }
 
         return $this->render('app/contribution/listContributions.html.twig', [
             'form' => $form->createView(),
@@ -78,8 +84,8 @@ class ContributionController extends AbstractController
 
         $search = new SupportContributionSearch();
 
-        $formSearch = $this->createForm(SupportContributionSearchType::class, $search);
-        $formSearch->handleRequest($request);
+        $formSearch = ($this->createForm(SupportContributionSearchType::class, $search))
+            ->handleRequest($request);
 
         $contribution = (new Contribution())
             ->setContribDate((new \DateTime())->modify('-1 month')->modify('first day of this month'));
@@ -90,7 +96,9 @@ class ContributionController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 10) ?? null,
+            'nbTotalContributions' => $this->repo->count(['supportGroup' => $supportGroup]),
+            'sumStillDueAmt' => $this->repo->sumStillDueAmt($supportGroup->getId()),
+            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 20) ?? null,
         ]);
     }
 
@@ -217,6 +225,22 @@ class ContributionController extends AbstractController
     }
 
     /**
+     * Exporte les données.
+     */
+    protected function exportData(ContributionSearch $search, UrlGeneratorInterface $router)
+    {
+        $supports = $this->repo->findContributionsToExport($search);
+
+        if (!$supports) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
+
+            return $this->redirectToRoute('supports');
+        }
+
+        return (new ContributionExport($router))->exportData($supports);
+    }
+
+    /**
      * Crée la contribution une fois le formulaire soumis et validé.
      */
     protected function createContribution(SupportGroup $supportGroup, Contribution $contribution, NormalizerInterface $normalizer): Response
@@ -244,6 +268,7 @@ class ContributionController extends AbstractController
      */
     protected function updateContribution(Contribution $contribution, NormalizerInterface $normalizer): Response
     {
+        $contribution->setStillDueAmt();
         $contribution->getSupportGroup()->setUpdatedAt(new \DateTime());
 
         $this->manager->flush();

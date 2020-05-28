@@ -98,13 +98,14 @@ class Contribution
     private $paymentAmt = 0;
 
     /**
-     * @Groups("get")
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get", "export"})
      */
     private $stillDueAmt = 0;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "export"})
      */
     private $comment;
 
@@ -248,9 +249,9 @@ class Contribution
         return $this->getContribAmt() - $this->getPaymentAmt();
     }
 
-    public function setStillDueAmt(?float $stillDueAmt): self
+    public function setStillDueAmt(?float $stillDueAmt = null): self
     {
-        $this->stillDueAmt = $stillDueAmt;
+        $this->stillDueAmt = $this->getStillDueAmt();
 
         return $this;
     }

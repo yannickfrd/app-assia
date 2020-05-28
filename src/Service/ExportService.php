@@ -35,7 +35,7 @@ class ExportService
     private $contentType;
     private $now;
 
-    public function __construct($name, $format, $arrayData, $columnsWidth)
+    public function __construct(string $name, string  $format, array $arrayData, int $columnsWidth = null)
     {
         $this->name = $name;
         $this->format = $format;
@@ -69,12 +69,14 @@ class ExportService
     {
         $this->formatColumnsWidth();
         $this->formatDateColumns();
+        $this->formatMoneyColumns();
+        // $this->formatUrlColumns();
         $this->formatSheet();
         $this->formatPrint();
     }
 
     // Export the file
-    public function exportFile($asynch = false)
+    public function exportFile(bool $asynch = false)
     {
         $this->getFormat($this->format);
 
@@ -94,6 +96,19 @@ class ExportService
         }
 
         return $this->getResponse($filename);
+    }
+
+    // Insert a row with subtotal
+    public function addTotalRow()
+    {
+        $this->sheet->insertNewRowBefore(1, 1);
+        $this->sheet->getCell('A1')->setValue('Total :');
+        $this->sheet->getCell('B1')->setValue('=SUBTOTAL(3,A3:A'.($this->nbRows + 1).')');
+        foreach ($this->getColumnsWithType('€') as $col) {
+            $this->sheet->getCell($col.'1')->setValue('=SUBTOTAL(9,'.$col.'3:'.$col.($this->nbRows + 1).')');
+            $this->sheet->getStyle($col.'1')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
+        }
+        $this->sheet->getStyle('A1:'.$this->highestColumn.'1')->getFont()->setBold(true);
     }
 
     protected function getPath(string $path, string $filename)
@@ -158,33 +173,57 @@ class ExportService
     protected function formatDateColumns()
     {
         // Format les colonnes de date
-        foreach ($this->getDateColumns() as  $value) {
+        foreach ($this->getColumnsWithType('Date') as  $col) {
             for ($i = 2; $i <= $this->nbRows; ++$i) {
-                $this->sheet->getStyle($value.$i)
+                $this->sheet->getStyle($col.$i)
                     ->getNumberFormat()
                     ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
             }
         }
     }
 
-    // Return the columns with date
-    protected function getDateColumns()
+    // Format the money columns
+    protected function formatMoneyColumns()
+    {
+        // Format les colonnes de date
+        foreach ($this->getColumnsWithType('€') as  $col) {
+            for ($i = 2; $i <= $this->nbRows; ++$i) {
+                $this->sheet->getStyle($col.$i)
+                    ->getNumberFormat()
+                    ->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
+            }
+        }
+    }
+
+    protected function formatUrlColumns()
+    {
+        // Format les colonnes avec une URL
+        foreach ($this->getColumnsWithType('Url') as  $col) {
+            for ($i = 2; $i <= $this->nbRows; ++$i) {
+                $this->sheet->getCell($col.$i)->getHyperlink()->setUrl($this->sheet->getCell($col.$i)->getValue());
+                $this->sheet->setCellValue($col.$i, 'Lien Url');
+            }
+        }
+    }
+
+    // Return the columns with a special type (Date, Url, money...)
+    protected function getColumnsWithType($word)
     {
         $alphas = range('A', 'Z');
-        $columnsWithDate = [];
+        $columns = [];
         foreach ($this->arrayData[0] as $key => $value) {
-            if (stristr($value, 'Date')) {
+            if (stristr($value, $word)) {
                 if ($key < 26) {
-                    $columnsWithDate[] = $alphas[$key];
+                    $columns[] = $alphas[$key];
                 } else {
                     $xAlphas = floor($key / 26);
                     $diff = $key - ($xAlphas * 26);
-                    $columnsWithDate[] = $alphas[$xAlphas - 1].$alphas[$diff];
+                    $columns[] = $alphas[$xAlphas - 1].$alphas[$diff];
                 }
             }
         }
 
-        return $columnsWithDate;
+        return $columns;
     }
 
     // Format the sheet to print
@@ -237,21 +276,21 @@ class ExportService
     protected function getFormat($format)
     {
         switch ($format) {
-            case 'ods':
-                $this->contentType = 'application/vnd.oasis.opendocument.spreadsheet';
-                $this->writer = new Ods($this->spreadsheet);
-                break;
             case 'xlsx':
                 $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $this->writer = new Xlsx($this->spreadsheet);
+            break;
+            case 'ods':
+                $this->contentType = 'application/vnd.oasis.opendocument.spreadsheet';
+                $this->writer = new Ods($this->spreadsheet);
                 break;
             case 'csv':
                 $this->contentType = 'text/csv';
                 $this->writer = new Csv($this->spreadsheet);
                 break;
             default:
-                $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-                $this->writer = new Xlsx($this->spreadsheet);
+                $this->contentType = 'text/csv';
+                $this->writer = new Csv($this->spreadsheet);
         }
     }
 
@@ -276,7 +315,7 @@ class ExportService
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => '595959',
+                    'argb' => '404040',
                 ],
             ],
         ];

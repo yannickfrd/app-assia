@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.11.1 - 27/05/2020
+1.11.2 - 28/05/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,8 +16,8 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.11.1 - 27/05/2020
-- Créé module participation financière
+## Version 1.11.2 - 28/05/2020
+- Modification module participation financière
 
 ## Version 1.11.0 - 20/05/2020
 - Créé module participation financière

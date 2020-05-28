@@ -40,7 +40,8 @@ class ContributionSearchType extends AbstractType
             ])
             ->add('service', ServiceSearchType::class, [
                 'data_class' => ContributionSearch::class,
-            ]);
+            ])
+            ->add('export');
     }
 
     public function configureOptions(OptionsResolver $resolver)

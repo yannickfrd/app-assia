@@ -1,0 +1,23 @@
+{% extends "model/supportSearch.html.twig" %}
+
+{% block search_form %}
+
+    {% if notes.getTotalItemCount %}
+        <div class="form-group col-auto my-1 px-1">
+            <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+                {{ knp_pagination_sortable(notes, "Titre", "n.title") }}
+            </span>
+            <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+                {{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}
+            </span>
+            <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+                {{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.content) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
+
+{% endblock %}

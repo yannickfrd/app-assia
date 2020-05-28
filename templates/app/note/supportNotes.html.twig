@@ -28,49 +28,7 @@ Notes sociales | {{ title_website }}
 		</div>
 	</div>
 
-	<div class="row my-2">
-		<div class="col-md-12">
-			<div class="accordion" id="accordionSearch">
-				<div id="form-search">
-					<div role="button" class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" data-toggle="collapse" data-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
-						<h2 class="h5">Recherche<span class="float-right"><span class="fa fa-chevron-down"></span></span></h2>
-					</div>
-					<div id="collapseSearch" class="collapse show float-right" aria-labelledby="headingSearch" data-parent="#accordionSearch">
-						{{ form_start(form_search) }}
-						<div class="form-inline justify-content-md-center align-items-end">
-							{% if notes.getTotalItemCount %}
-							<div class="form-group col-auto my-1 px-1">
-								<span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
-									{{ knp_pagination_sortable(notes, "Titre", "n.title") }}
-								</span>
-								<span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
-									{{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}
-								</span>
-								<span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
-									{{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
-								</span>
-							</div>
-							{% endif %}
-							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.content) }}</div>
-							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
-							<div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
-							<div class="form-group col-auto my-1 px-1">
-								<div class="form-group">
-									<button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Rechercher">
-										<span class="fas fa-search"></span><span class="sr-only">Rechercher</span>
-									</button>
-									<button type="reset" class="btn btn-secondary ml-2 shadow" data-placement="bottom" title="Effacer">
-										<span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
-									</button>
-								</div>
-							</div>
-						</div>
-						{{ form_end(form_search, {"render_rest": false}) }}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	{% include "app/note/searchSupportNotes.html.twig" %}
 
 	<div id="container-notes" class="row" data-support="{{ support.id }}">
 		{% for note in notes %}

@@ -15,7 +15,7 @@ export default class ParametersUrl {
         return this.vars;
     }
 
-    getOne(param) {
+    get(param) {
         return this.vars[param] ? this.vars[param] : null;
     }
 }

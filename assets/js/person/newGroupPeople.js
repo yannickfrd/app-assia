@@ -59,19 +59,19 @@ export default class NewGroupPeople {
             }
         });
 
-        let firstname = this.parametersUrl.getOne("firstname");
+        let firstname = this.parametersUrl.get("firstname");
         if (firstname) {
             this.firstnameInputElt.value = decodeURI(firstname);
         }
-        let lastname = this.parametersUrl.getOne("lastname");
+        let lastname = this.parametersUrl.get("lastname");
         if (lastname) {
             this.lastnameInputElt.value = decodeURI(lastname);
         }
-        let birthdate = this.parametersUrl.getOne("birthdate");
+        let birthdate = this.parametersUrl.get("birthdate");
         if (birthdate) {
             this.birthdateInputElt.value = birthdate;
         }
-        let gender = this.parametersUrl.getOne("gender");
+        let gender = this.parametersUrl.get("gender");
         if (gender) {
             this.setOption(this.genderInputElt, parseInt(gender));
         }

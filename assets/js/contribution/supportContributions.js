@@ -1,6 +1,7 @@
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 import ValidationInput from "../utils/validationInput";
+import ParametersUrl from "../utils/parametersUrl";
 
 export default class SupportContributions {
 
@@ -40,6 +41,7 @@ export default class SupportContributions {
 
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.countContributionsElt = document.getElementById("count-contributions");
+        this.nbTtotalContributionsElt = document.getElementById("nb-total-contributions");
         this.supportId = document.getElementById("support").getAttribute("data-support");
 
         this.loader = new Loader("#modal-contribution");
@@ -47,6 +49,7 @@ export default class SupportContributions {
         this.now = new Date();
         this.error = false;
         this.validationInput = new ValidationInput();
+        this.parametersUrl = new ParametersUrl();
 
         this.init();
     }
@@ -63,7 +66,7 @@ export default class SupportContributions {
             btnGetElt.addEventListener("click", e => {
                 if (this.loader.isInLoading() === false) {
                     this.trElt = trElt;
-                    this.getContribution(btnGetElt);
+                    this.getContribution(Number(btnGetElt.getAttribute("data-id")));
                 }
             });
             let btnDeleteElt = trElt.querySelector("button.js-delete");
@@ -122,6 +125,12 @@ export default class SupportContributions {
         });
 
         this.calculateSumAmts();
+
+        let contributionId = Number(this.parametersUrl.get("contributionId"));
+        this.trElt = document.getElementById("contribution-" + contributionId);
+        if (this.trElt) {
+            this.getContribution(contributionId);
+        }
     }
 
     // Vérifie le type de partipation (redevance ou caution)
@@ -246,26 +255,23 @@ export default class SupportContributions {
     }
 
     // Requête pour obtenir le RDV sélectionné dans le formulaire modal
-    getContribution(btnElt) {
+    getContribution(id) {
         this.loader.on();
 
-        this.contributionId = Number(btnElt.getAttribute("data-id"));
-        this.modalContributionElt.querySelector("form").action = "/contribution/" + this.contributionId + "/edit";
+        this.modalContributionElt.querySelector("form").action = "/contribution/" + id + "/edit";
 
         this.btnDeleteElt.classList.replace("d-none", "d-block");
-        this.btnDeleteElt.href = "/contribution/" + this.contributionId + "/delete";
-
+        this.btnDeleteElt.href = "/contribution/" + id + "/delete";
         this.btnSaveElt.textContent = "Mettre à jour";
 
         this.reinitForm();
 
-        this.ajaxRequest.init("GET", btnElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
+        this.ajaxRequest.init("GET", "/contribution/" + id + "/get", this.responseAjax.bind(this), true);
     }
 
     // Réinitialise le formulaire
     reinitForm() {
         this.selectOption(this.paymentTypeSelect, null);
-
         this.paymentTypeSelect.classList.remove("is-valid");
         this.formContributionElt.querySelectorAll("input").forEach(inputElt => {
             if (inputElt.type != "hidden") {
@@ -349,7 +355,7 @@ export default class SupportContributions {
                     break;
                 case "delete":
                     this.trElt.remove();
-                    this.countContributionsElt.textContent = parseInt(this.countContributionsElt.textContent) - 1;
+                    this.updateCounts(-1);
                     this.loader.off(true);
                     new MessageFlash(data.alert, data.msg);
                     break;
@@ -402,7 +408,7 @@ export default class SupportContributions {
 
         let containerContributionsElt = document.getElementById("container-contributions");
         containerContributionsElt.insertBefore(contributionElt, containerContributionsElt.firstChild);
-        this.countContributionsElt.textContent = parseInt(this.countContributionsElt.textContent) + 1;
+        this.updateCounts(1);
 
         this.calculateSumAmts();
 
@@ -410,7 +416,7 @@ export default class SupportContributions {
         btnGetElt.addEventListener("click", e => {
             if (this.loader.isInLoading() === false) {
                 this.trElt = contributionElt;
-                this.getContribution(btnGetElt);
+                this.getContribution(Number(btnGetElt.getAttribute("data-id")));
             }
         });
 
@@ -430,7 +436,7 @@ export default class SupportContributions {
         this.trElt.querySelector("td.js-stillDueAmt").textContent = contribution.stillDueAmt ? contribution.stillDueAmt + " €" : "";
         this.trElt.querySelector("td.js-paymentDate").textContent = contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : "";
         this.trElt.querySelector("td.js-paymentType").textContent = contribution.paymentTypeToString;
-        this.trElt.querySelector("td.js-comment").textContent = contribution.comment.length > 70 ? contribution.comment.slice(0, 70) + "..." : contribution.comment;
+        this.trElt.querySelector("td.js-comment").textContent = contribution.comment && contribution.comment.length > 70 ? contribution.comment.slice(0, 65) + "..." : contribution.comment;
         this.calculateSumAmts();
     }
 
@@ -438,7 +444,7 @@ export default class SupportContributions {
     getPrototypeContribution(contribution) {
         return `
             <td scope="row" class="text-center">
-                <button class="btn btn-dark btn-sm shadow js-get" data-id="${contribution.id}" 
+                <button class="btn btn-${this.themeColor} btn-sm shadow js-get" data-id="${contribution.id}" 
                     data-url="/contribution/${contribution.id}/get" 
                     data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
                 </button>
@@ -450,13 +456,18 @@ export default class SupportContributions {
             <td class="align-middle text-right js-stillDueAmt">${contribution.stillDueAmt ? contribution.stillDueAmt + " €" : ""}</td>
             <td class="align-middle js-paymentDate">${contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : ""}</td>
             <td class="align-middle js-paymentType">${contribution.paymentType ? contribution.paymentTypeToString : ""}</td>
-            <td class="align-middle js-comment">${contribution.comment.length > 70 ? contribution.comment.slice(0, 70) + "..." : contribution.comment}</td>
+            <td class="align-middle js-comment">${contribution.comment ? contribution.comment.slice(0, 65) : "" }</td>
             <td class="align-middle text-center">
                 <button data-url="/contribution/${contribution.id}/delete" 
                     class="js-delete btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer la redevance" data-toggle="modal" data-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>`
+    }
+
+    updateCounts(value) {
+        this.countContributionsElt.textContent = parseInt(this.countContributionsElt.textContent) + value;
+        this.nbTtotalContributionsElt.textContent = parseInt(this.nbTtotalContributionsElt.textContent) + value;
     }
 
     // Vérifie si le montant saisie est valide

@@ -21,27 +21,27 @@
              </thead>
              <tbody>
                  {% for note in notes %}
-                 <tr id="note-{{ note.id }}">
-                     <td scope="row" class="align-middle">
-                         <a href="{{ path('support_notes', {'id':note.supportGroup.id}) }}"
-                             class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                             title="Voir la note sociale"><span class="fas fa-eye"></span>
-                         </a>
-                     </td>
-                    <td class="align-middle justify"><span class="font-weight-bold">
-                        {{ note.title }}{% if note.title %} : {% endif %}</span>
-                        <span class="">{{ note.content|slice(0,190) |striptags('<b>')|raw }}</span> 
-                        {% if note.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
-                    </td>
-                     <td class="align-middle">
-                        {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
-                        {{ supportPerson.person.fullname }}
-                        {% endfor %}                     
-                    </td>
-                     <td class="align-middle">{{ note.statusToString }}</td>
-                     <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>
-                     <td class="align-middle">{{ note.updatedAt|date("d/m/Y") }}</td>
-                 </tr>
+                    <tr id="note-{{ note.id }}">
+                        <td scope="row" class="align-middle">
+                            <a href="{{ path('support_notes', {'id':note.supportGroup.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                title="Voir la note sociale"><span class="fas fa-eye"></span>
+                            </a>
+                        </td>
+                        <td class="align-middle justify"><span class="font-weight-bold">
+                            {{ note.title }}{% if note.title %} : {% endif %}</span>
+                            <span class="">{{ note.content|slice(0,190) |striptags('<b>')|raw }}</span> 
+                            {% if note.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
+                        </td>
+                        <td class="align-middle">
+                            {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
+                                {{ supportPerson.person.fullname }}
+                            {% endfor %}                     
+                        </td>
+                        <td class="align-middle">{{ note.statusToString }}</td>
+                        <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ note.updatedAt|date("d/m/Y") }}</td>
+                    </tr>
                  {% endfor %}
              </tbody>
          </table>

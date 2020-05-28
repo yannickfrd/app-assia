@@ -51,8 +51,10 @@ class Indicators
                         ++$devicesUser[$deviceId]['nbSupports'];
                         $devicesUser[$deviceId]['sumCoeff'] += $support->getCoefficient();
                     }
-                    ++$devices[$deviceId]['nbSupports'];
-                    $devices[$deviceId]['sumCoeff'] += $support->getCoefficient();
+                    if (array_key_exists($deviceId, $devices)) {
+                        ++$devices[$deviceId]['nbSupports'];
+                        $devices[$deviceId]['sumCoeff'] += $support->getCoefficient();
+                    }
                     $sumCoeffSupports += $support->getCoefficient();
                 }
             }
