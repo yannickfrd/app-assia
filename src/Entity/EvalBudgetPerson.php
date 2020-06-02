@@ -33,17 +33,17 @@ class EvalBudgetPerson
     ];
 
     public const CHARGES_TYPE = [
-        'rent' => 'Loyer',
-        'electricityGas' => 'Electricité / Gaz',
-        'water' => 'Eau',
         'insurance' => 'Assurance(s)',
-        'mutual' => 'Mutuelle(s)',
-        'taxes' => 'Impôts',
-        'transport' => 'Loyer',
-        'rent' => 'Transport',
+        'consumerCredit' => 'Crédit(s) à la consommation',
+        'water' => 'Eau',
+        'electricityGas' => 'Electricité / Gaz',
         'childcare' => 'Garde d\'enfant(s)',
+        'taxes' => 'Impôts',
+        'rent' => 'Loyer',
+        'mutual' => 'Mutuelle(s)',
         'alimony' => 'Pension alimentaire',
         'phone' => 'Téléphone',
+        'transport' => 'Transport',
         'chargeOther' => 'Autre charge',
     ];
 
@@ -147,6 +147,10 @@ class EvalBudgetPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $phone;
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $consumerCredit;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -207,6 +211,11 @@ class EvalBudgetPerson
      * @ORM\Column(type="float", nullable=true)
      */
     private $phoneAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $consumerCreditAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -565,6 +574,23 @@ class EvalBudgetPerson
         return $this;
     }
 
+    public function getConsumerCredit(): ?int
+    {
+        return $this->consumerCredit;
+    }
+
+    public function getConsumerCreditToString(): ?string
+    {
+        return $this->consumerCredit ? Choices::YES_NO_BOOLEAN[$this->consumerCredit] : null;
+    }
+
+    public function setConsumerCredit(?int $consumerCredit): self
+    {
+        $this->consumerCredit = $consumerCredit;
+
+        return $this;
+    }
+
     public function getChargeOther(): ?int
     {
         return $this->chargeOther;
@@ -710,6 +736,18 @@ class EvalBudgetPerson
     public function setPhoneAmt(?float $phoneAmt): self
     {
         $this->phoneAmt = $phoneAmt;
+
+        return $this;
+    }
+
+    public function getConsumerCreditAmt(): ?float
+    {
+        return $this->consumerCreditAmt;
+    }
+
+    public function setConsumerCreditAmt(?float $consumerCreditAmt): self
+    {
+        $this->consumerCreditAmt = $consumerCreditAmt;
 
         return $this;
     }

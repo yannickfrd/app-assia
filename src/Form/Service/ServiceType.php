@@ -35,7 +35,6 @@ class ServiceType extends AbstractType
             ->add('phone1', null, [
                 'attr' => [
                     'class' => 'js-phone',
-                    'placeholder' => 'Phone',
                 ],
             ])
             ->add('email', null, [
@@ -59,10 +58,12 @@ class ServiceType extends AbstractType
             ->add('siretId')
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
+                'label' => 'Opening date',
                 'required' => false,
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
+                'label' => 'Closing date',
                 'required' => false,
             ])
             ->add('supportAccess', ChoiceType::class, [
@@ -70,22 +71,50 @@ class ServiceType extends AbstractType
                 'placeholder' => '-- Select --',
                 'required' => false,
             ])
-            ->add('preAdmission', CheckBoxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
+            ->add('preAdmission', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => '-- Select --',
                 'required' => false,
             ])
-            ->add('accommodation', CheckBoxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
+            ->add('accommodation', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => '-- Select --',
                 'required' => false,
             ])
-            ->add('justice', CheckBoxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
+            ->add('justice', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'label' => 'Justice activity',
+                'placeholder' => '-- Select --',
                 'required' => false,
             ])
-            ->add('contributionRate')
+            // ->add('preAdmission', CheckBoxType::class, [
+            //     'label_attr' => ['class' => 'custom-control-label'],
+            //     'attr' => ['class' => 'custom-control-input checkbox'],
+            //     'required' => false,
+            // ])
+            // ->add('accommodation', CheckBoxType::class, [
+            //     'label_attr' => ['class' => 'custom-control-label'],
+            //     'attr' => ['class' => 'custom-control-input checkbox'],
+            //     'required' => false,
+            // ])
+            // ->add('justice', CheckBoxType::class, [
+            //     'label_attr' => ['class' => 'custom-control-label'],
+            //     'attr' => ['class' => 'custom-control-input checkbox'],
+            //     'required' => false,
+            // ])
+            ->add('contribution', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => '-- Select --',
+                'required' => false,
+            ])
+            ->add('contributionType', ChoiceType::class, [
+                'choices' => Choices::getChoices(Service::CONTRIBUTION_TYPE),
+                'placeholder' => '-- Select --',
+                'required' => false,
+            ])
+            ->add('contributionRate', null, [
+                'help' => 'Rate beetween 0 and 1.',
+            ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,

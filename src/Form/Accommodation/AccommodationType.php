@@ -18,6 +18,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 class AccommodationType extends AbstractType
 {
@@ -48,9 +49,11 @@ class AccommodationType extends AbstractType
         ->add('nbPlaces')
         ->add('startDate', DateType::class, [
             'widget' => 'single_text',
+            'label' => 'Opening date',
         ])
         ->add('endDate', DateType::class, [
             'widget' => 'single_text',
+            'label' => 'Closing date',
             'required' => false,
         ])
         ->add('accommodationType', ChoiceType::class, [
@@ -70,14 +73,19 @@ class AccommodationType extends AbstractType
             'placeholder' => '-- Select --',
             'required' => false,
         ])
+        ->add('contributionAmt', MoneyType::class, [
+            'attr' => [
+                'class' => 'js-money text-right',
+            ],
+        ])
+        ->add('location', LocationType::class, [
+            'data_class' => Accommodation::class,
+        ])
         ->add('comment', null, [
             'attr' => [
                 'rows' => 5,
                 'placeholder' => 'Description...',
             ],
-        ])
-        ->add('location', LocationType::class, [
-            'data_class' => Accommodation::class,
         ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

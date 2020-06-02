@@ -87,11 +87,16 @@ Siret id: Numéro SIRET
 Finess id: Numéro FINESS
 Opening date: Date d'ouverture
 Closing date: Date de fermeture
+Contribution: Participation financière / Redevance
+Contribution type: Type de participation financière
 Contribution rate: Taux de participation financière
+Rate beetween 0 and 1.: Nombre entre 0 et 1.
+Justice activity: Activité Justice
 
 Accommodation type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou collectif
+Contribution amt: Montant de la redevance
 
 Contrib amt: Montant dû
 Contrib date: Mois concerné

@@ -34,6 +34,13 @@ class Service
         4 => "Tou·te·s les salarié·e·s de l'association",
     ];
 
+    public const CONTRIBUTION_TYPE = [
+        1 => 'Taux de participation sur les ressources',
+        2 => 'Redevance/loyer fixe',
+        3 => 'Mixte',
+        99 => 'Non renseigné',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -70,14 +77,24 @@ class Service
     private $supportAccess;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $preAdmission;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $accommodation;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $contribution;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $contributionType;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -85,7 +102,7 @@ class Service
     private $contributionRate = 0.1;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $justice;
 
@@ -256,26 +273,55 @@ class Service
         return $this->supportAccess ? self::SUPPORT_ACCESS[$this->supportAccess] : null;
     }
 
-    public function getPreAdmission(): ?bool
+    public function getPreAdmission(): ?int
     {
         return $this->preAdmission;
     }
 
-    public function setPreAdmission(?bool $preAdmission): self
+    public function setPreAdmission(?int $preAdmission): self
     {
         $this->preAdmission = $preAdmission;
 
         return $this;
     }
 
-    public function getAccommodation(): ?bool
+    public function getAccommodation(): ?int
     {
         return $this->accommodation;
     }
 
-    public function setAccommodation(?bool $accommodation): self
+    public function setAccommodation(?int $accommodation): self
     {
         $this->accommodation = $accommodation;
+
+        return $this;
+    }
+
+    public function getContribution(): ?int
+    {
+        return $this->contribution;
+    }
+
+    public function setContribution(?int $contribution): self
+    {
+        $this->contribution = $contribution;
+
+        return $this;
+    }
+
+    public function getContributionType(): ?int
+    {
+        return $this->contributionType;
+    }
+
+    public function getContributionTypeToString(): ?string
+    {
+        return $this->contributionType ? self::CONTRIBUTION_TYPE[$this->contributionType] : null;
+    }
+
+    public function setContributionType(?int $contributionType): self
+    {
+        $this->contributionType = $contributionType;
 
         return $this;
     }
@@ -292,12 +338,12 @@ class Service
         return $this;
     }
 
-    public function getJustice(): ?bool
+    public function getJustice(): ?int
     {
         return $this->justice;
     }
 
-    public function setJustice(?bool $justice): self
+    public function setJustice(?int $justice): self
     {
         $this->justice = $justice;
 

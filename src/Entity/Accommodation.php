@@ -118,14 +118,14 @@ class Accommodation
     private $device;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $contributionAmt;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="accommodation", orphanRemoval=true)
      */
     private $accommodationGroups;
-
-    // /**
-    //  * @ORM\OneToMany(targetEntity="App\Entity\AccommodationPerson", mappedBy="accommodation")
-    //  */
-    // private $accommodationPeople;
 
     public function __construct()
     {
@@ -282,6 +282,18 @@ class Accommodation
     public function setDevice(?Device $device): self
     {
         $this->device = $device;
+
+        return $this;
+    }
+
+    public function getContributionAmt(): ?float
+    {
+        return $this->contributionAmt;
+    }
+
+    public function setContributionAmt(?float $contributionAmt): self
+    {
+        $this->contributionAmt = $contributionAmt;
 
         return $this;
     }

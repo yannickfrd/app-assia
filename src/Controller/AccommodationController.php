@@ -101,8 +101,6 @@ class AccommodationController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
-
-            return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
         }
 
         return $this->render('app/accommodation/accommodation.html.twig', [
