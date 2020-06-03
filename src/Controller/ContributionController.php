@@ -117,6 +117,8 @@ class ContributionController extends AbstractController
 
         $evaluation = $repoEvaluation->findEvaluationResourceById($id);
 
+        $accommodation = $repoAccommodation->findCurrentAccommodationOfSupport($supportGroup);
+
         $salaryAmt = 0;
         $resourcesAmt = 0;
 
@@ -132,12 +134,6 @@ class ContributionController extends AbstractController
             $contribAmt = round($resourcesAmt * $contributionRate);
         }
 
-        $accommodation = $repoAccommodation->findCurrentAccommodationOfSupport($supportGroup);
-
-        if ($accommodation && $accommodation->getContributionAmt()) {
-            $contribAmt = $accommodation->getContributionAmt();
-        }
-
         return $this->json([
             'code' => 200,
             'action' => 'getResources',
@@ -145,6 +141,7 @@ class ContributionController extends AbstractController
                 'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
                 'contribAmt' => $contribAmt ?? null,
+                'rentAmt' => $accommodation ? $accommodation->getContributionAmt() : null,
             ],
         ], 200);
     }

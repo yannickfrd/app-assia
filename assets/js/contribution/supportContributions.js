@@ -17,6 +17,7 @@ export default class SupportContributions {
         this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
         this.credentialInput = document.getElementById("contribution_credential");
         this.contribAmtInput = document.getElementById("contribution_contribAmt");
+        this.calculationMethodElt = document.getElementById("calculationMethod");
         this.paymentDateInput = document.getElementById("contribution_paymentDate");
         this.paymentTypeSelect = document.getElementById("contribution_paymentType");
         this.paymentAmtInput = document.getElementById("contribution_paymentAmt");
@@ -27,7 +28,7 @@ export default class SupportContributions {
 
         this.btnNewElt = document.getElementById("js-new-contribution");
         this.contributionRate = parseFloat(this.btnNewElt.getAttribute("data-contribution-rate"));
-        this.fixedContributionAmt = parseFloat(this.btnNewElt.getAttribute("data-fixed-contribution-amt"));
+        this.rentAmt = 0;
         this.supportStartDate = new Date(this.btnNewElt.getAttribute("data-support-start-date"));
         this.supportEndDate = new Date(this.btnNewElt.getAttribute("data-support-end-date"));
         this.trElt = null;
@@ -126,7 +127,6 @@ export default class SupportContributions {
         });
 
         this.calculateSumAmts();
-        this.calculateContrib();
 
         let contributionId = Number(this.parametersUrl.get("contributionId"));
         this.trElt = document.getElementById("contribution-" + contributionId);
@@ -182,16 +182,22 @@ export default class SupportContributions {
         if (rateDays > 1 || rateDays < 0) {
             rateDays = 0;
         }
+
         return rateDays;
     }
 
     // Calcule le montant de la participation
     calculateContrib() {
-        if (this.fixedContributionAmt > 0) {
-            this.contribAmtInput.value = this.fixedContributionAmt;
-            console.log(this.contribAmtInput.value);
+        let rateDays = this.getRateDays();
+        if (this.rentAmt > 0) {
+            this.contribAmtInput.value = Math.round(this.rentAmt * rateDays);
+            this.calculationMethodElt.textContent = "Mode de calcul : Montant du loyer (" + this.rentAmt + "€)" +
+                (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + "%)" : "");
         } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
-            this.contribAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * this.getRateDays());
+            this.contribAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays);
+            this.calculationMethodElt.textContent = "Mode de calcul : Montant des ressources (" + this.resourcesAmtInput.value +
+                "€) x Taux de participation (" + (this.contributionRate * 100) + "%)" + (rateDays < 1 ? " x Prorata présence sur le mois (" +
+                    (Math.round(rateDays * 10000) / 100) + "%)" : "");
         }
     }
 
@@ -381,7 +387,9 @@ export default class SupportContributions {
         this.salaryAmtInput.value = data.salaryAmt;
         this.resourcesAmtInput.value = data.resourcesAmt;
         this.contribAmtInput.value = data.contribAmt;
+        this.rentAmt = data.rentAmt;
         this.checkType();
+        this.calculateContrib();
     }
 
     // Donne la redevance sélectionnée dans le formulaire modal

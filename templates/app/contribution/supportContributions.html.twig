@@ -16,6 +16,7 @@
 			<button id="js-new-contribution" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
 				data-url="{{ path('support_resources', {'id': support.id}) }}" 
 				data-contribution-rate="{{ support.service.contributionRate }}" 
+				data-contribution-rate="{{ support.service.contributionRate }}" 
 				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}" 
 				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}" 
 				data-placement="bottom" title="Créer une nouvelle redevance">
