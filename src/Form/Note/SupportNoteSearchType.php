@@ -15,6 +15,7 @@ class SupportNoteSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('noteId')
             ->add('content', null, [
                 'label_attr' => [
                     'class' => 'sr-only',
@@ -60,6 +61,6 @@ class SupportNoteSearchType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'search';
+        return '';
     }
 }

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.11.3 - 02/06/2020
+1.11.4 - 03/06/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,18 +16,19 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.11.3 - 02/06/2020
+## Version 1.11.4 - 02/06/2020
 - Modification module participation financière
+- Export des partipations financières au format Excel avec sous-totaux
 - Dans l'évaluation sociale, ajout de "Crédit(s) à la consommation" dans le type des charges
 - Fiche service : ajout des champs "Participation financière / Redevance", "Type de participation financière" et "Taux de participation financière"
 - Fiche groupe de places : ajout du champ "Montant de la redevance" 
+- Mise en place des tests pour ContributionController
 
 ## Version 1.11.0 - 20/05/2020
 - Créé module participation financière
 
 ## Version 1.10.0 - 20/05/2020
 - Possibilité de générer une note sociale automatiquement à partir de l'évaluation sociale renseignée
-
 
 ## Version 1.9.3 - 19/05/2020
 - Correction erreur lors de la modification du suivi (Call to a member function getBirthdate() on null).

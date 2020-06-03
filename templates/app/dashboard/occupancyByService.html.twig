@@ -7,7 +7,7 @@
 
 <div class="container">
     {% include "model/msgFlash.html.twig" %}
-    <h1 class="h2 mb-3">Taux d'occupation <span class="fas fa-angle-right fa-sm"></span> Services</h1>
+    <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span>Services</h1>
 </div>
 
 {% include "app/dashboard/searchOccupancy.html.twig" %}
@@ -47,7 +47,7 @@
                             {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100)|round(1, "common") %}
                             {% if loop.first %}
                             {% set example %}
-                                {% spaceless %}
+                                {% apply spaceless %}
                                     Le service {{ service.name }} dispose de {{ service.nbAccommodations }} groupes de places
                                     (soit {{ service.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} jours), 
                                     sa capacité d'accueil maximale représente {{ service.capacityDays|number_format(0, ",", " ") }} 
@@ -55,7 +55,7 @@
                                     Sur ces places, {{ service.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
                                     soit une occupation moyenne de {{ service.averageOccupancy|round(1, "common") }} personnes par jour. 
                                     Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
-                                {% endspaceless %}
+                                {% endapply %}
                             {% endset %}
                         {% endif %}
                             <tr>

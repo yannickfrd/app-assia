@@ -20,7 +20,8 @@ Notes sociales | {{ title_website }}
 				<span class="fas fa-plus-square mr-2"></span>Nouvelle note</button>
 			<div class="d-inline align-middle">Total :
 				<span id="count-notes">{{ notes.getTotalItemCount|number_format(0,'', ' ')}}</span>
-				note{% if notes.getTotalItemCount > 1 %}s{% endif %}.
+				note{% if notes.getTotalItemCount > 1 %}s{% endif %}<!--
+			-->{% if nbTotalNotes %} sur <span id="nb-total-notes">{{ nbTotalNotes }}</span>{% endif %}.
 			</div>
 		</div>
 		<div class="col-md-6">

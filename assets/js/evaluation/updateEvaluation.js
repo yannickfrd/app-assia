@@ -16,11 +16,13 @@ export default class UpdateEvaluation {
     init() {
         this.btnSubmitElts.forEach(btnSubmitElt => {
             btnSubmitElt.addEventListener("click", e => {
-                this.loader.on();
                 if (this.editMode === "true") {
                     e.preventDefault();
-                    let formToString = new URLSearchParams(new FormData(this.formElt)).toString();
-                    this.ajaxRequest.init("POST", btnSubmitElt.getAttribute("data-url"), this.response.bind(this), true, formToString);
+                    if (this.loader.isInLoading() === false) {
+                        this.loader.on();
+                        let formToString = new URLSearchParams(new FormData(this.formElt)).toString();
+                        this.ajaxRequest.init("POST", btnSubmitElt.getAttribute("data-url"), this.response.bind(this), true, formToString);
+                    }
                 }
             });
         })

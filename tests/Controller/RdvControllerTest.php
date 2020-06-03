@@ -47,7 +47,7 @@ class RdvControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
     }
 
-    public function testSearchRvsIsSuccessful()
+    public function testSearchRdvsIsSuccessful()
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('rdvs'));

@@ -42,7 +42,7 @@ export default class SupportContributions {
 
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.countContributionsElt = document.getElementById("count-contributions");
-        this.nbTtotalContributionsElt = document.getElementById("nb-total-contributions");
+        this.nbTotalContributionsElt = document.getElementById("nb-total-contributions");
         this.supportId = document.getElementById("support").getAttribute("data-support");
 
         this.loader = new Loader("#modal-contribution");
@@ -472,7 +472,9 @@ export default class SupportContributions {
 
     updateCounts(value) {
         this.countContributionsElt.textContent = parseInt(this.countContributionsElt.textContent) + value;
-        this.nbTtotalContributionsElt.textContent = parseInt(this.nbTtotalContributionsElt.textContent) + value;
+        if (this.nbTotalContributionsElt) {
+            this.nbTotalContributionsElt.textContent = parseInt(this.nbTotalContributionsElt.textContent) + value;
+        }
     }
 
     // Vérifie si le montant saisie est valide

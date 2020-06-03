@@ -1,0 +1,96 @@
+App\Entity\Contribution:
+  contribution1:
+    contribDate: <date_create("2020-04-01")>
+    type: 1
+    salaryAmt: 0
+    resourcesAmt: 666
+    contribAmt: 66.6
+    paymentAmt: $contribAmt
+    paymentDate: <date_create("2020-05-02")>
+    paymentType: 1
+    createdAt: <date_create("2020-05-02")>
+    updatedAt: $createdAt
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
+    supportGroup: "@supportGroup"
+    
+  contribution{2..5}:
+    contribDate: <dateTimeBetween("-2 years", "now")>
+    type: <numberBetween(1, 2)>
+    salaryAmt: <numberBetween(0, 1500)>
+    resourcesAmt: <numberBetween($salaryAmt, 1500)>
+    contribAmt: <numberBetween(0, 200)>
+    paymentAmt: $contribAmt
+    paymentDate: <dateTimeBetween($contribDate, "+1 month")>
+    paymentType: <numberBetween(1, 4)>
+    createdAt: <dateTimeBetween($paymentDate, "+1 month")>
+    updatedAt: $createdAt
+    createdBy: "@user*"
+    updatedBy: "@user*"
+    supportGroup: "@supportGroup*"
+
+
+App\Entity\User:
+  userSuperAdmin:
+    firstname: Romain
+    lastname: Madelaine
+    username: r.madelaine
+    email: romain.madelaine@esperer-95.org
+    status: 1
+    roles: ["ROLE_SUPER_ADMIN"]
+    plainPassword: Test123*
+
+
+App\Entity\Person:
+  person: 
+    firstname: John
+    lastname: Doe
+    gender: 2
+    birthdate: <date_create("1980-01-01")>
+
+
+App\Entity\GroupPeople:
+  groupPeople:
+    familyTypology: 2
+    nbPeople: 1
+
+
+App\Entity\SupportGroup:
+  supportGroup:
+    startDate: <date_create("2019-04-03")>
+    status: 2
+    referent: "@userSuperAdmin"
+    groupPeople: "@groupPeople"
+    service: "@service"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
+
+
+App\Entity\SupportPerson:
+  supportPerson:
+    startDate: "@supportGroup->startDate"
+    endDate: "@supportGroup->endDate"
+    status: "@supportGroup->status"
+    createdAt: "@supportGroup->createdAt"
+    updatedAt: "@supportGroup->updatedAt"
+    supportGroup: "@supportGroup"
+    person: "@person"
+    head: 1
+    role: 5
+
+
+App\Entity\Service:
+  service:
+    name: AVDL
+    pole: "@pole"
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+
+App\Entity\Pole:
+  pole:
+    name: Habitat
+    createdAt: <date_create()>
+    updatedAt: <date_create()>

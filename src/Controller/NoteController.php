@@ -87,6 +87,7 @@ class NoteController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
+            'nbTotalNotes' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
             'notes' => $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10) ?? null,
         ]);
     }
@@ -180,7 +181,10 @@ class NoteController extends AbstractController
         $this->manager->persist($note);
         $this->manager->flush();
 
-        return $this->redirectToRoute('support_notes', ['id' => $supportGroup->getId()]);
+        return $this->redirectToRoute('support_notes', [
+            'id' => $supportGroup->getId(),
+            'noteId' => $note->getId(),
+        ]);
     }
 
     /**

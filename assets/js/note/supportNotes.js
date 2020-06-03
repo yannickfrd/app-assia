@@ -1,6 +1,7 @@
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
+import ParametersUrl from "../utils/parametersUrl";
 import language from "@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js";
 
 export default class SupportNotes {
@@ -19,13 +20,17 @@ export default class SupportNotes {
         this.btnDeleteElt = this.modalNoteElt.querySelector("#modal-btn-delete");
 
         this.loader = new Loader("#modal-note");
+        this.modalElt = $("#modal-note");
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.autoSaveElt = document.getElementById("js-auto-save");
         this.countNotesElt = document.getElementById("count-notes");
+        this.nbTotalNotesElt = document.getElementById("nb-total-notes");
         this.supportId = document.getElementById("container-notes").getAttribute("data-support");
         this.autoSave = false;
         this.count = 0;
         this.editor;
+        this.parametersUrl = new ParametersUrl();
+
         this.init();
     }
 
@@ -40,8 +45,10 @@ export default class SupportNotes {
 
         this.btnSaveElt.addEventListener("click", e => {
             e.preventDefault();
-            this.clearTimer();
-            this.saveNote();
+            if (this.loader.isInLoading() === false) {
+                this.clearTimer();
+                this.saveNote();
+            }
         });
 
         this.btnCancelElt.addEventListener("click", e => {
@@ -51,9 +58,19 @@ export default class SupportNotes {
 
         this.btnDeleteElt.addEventListener("click", e => {
             e.preventDefault();
-            this.clearTimer();
-            this.deleteNote();
+            if (this.loader.isInLoading() === false) {
+                this.clearTimer();
+                this.deleteNote();
+            }
         });
+
+        let noteElt = document.getElementById("note-" + Number(this.parametersUrl.get("noteId")));
+        if (noteElt) {
+            this.modalElt.modal("show");
+            setTimeout(e => {
+                this.getNote(noteElt);
+            }, 200);
+        }
     }
 
     // Initialise CKEditor
@@ -204,7 +221,7 @@ export default class SupportNotes {
                     break;
                 case "delete":
                     document.getElementById("note-" + this.cardId).remove();
-                    this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) - 1;
+                    this.updateCounts(-1);
                     break;
             }
 
@@ -241,7 +258,7 @@ export default class SupportNotes {
 
         let containerNotesElt = document.getElementById("container-notes");
         containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild);
-        this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) + 1;
+        this.updateCounts(1);
 
         this.getNote(noteElt);
         noteElt.addEventListener("click", this.getNote.bind(this, noteElt));
@@ -262,5 +279,12 @@ export default class SupportNotes {
         noteStatusElt.setAttribute("data-value", this.getOption(this.modalNoteElt.querySelector("#note_status")));
 
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
+    }
+
+    updateCounts(value) {
+        this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) + value;
+        if (this.nbTotalNotesElt) {
+            this.nbTotalNotesElt.textContent = parseInt(this.nbTotalNotesElt.textContent) + value;
+        }
     }
 }

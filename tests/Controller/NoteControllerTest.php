@@ -81,9 +81,9 @@ class NoteControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('search')->form([
-            'search[content]' => 'Note 666',
-            'search[type]' => 1,
-            'search[status]' => 1,
+            'content' => 'Note 666',
+            'type' => 1,
+            'status' => 1,
         ]);
 
         $this->client->submit($form);

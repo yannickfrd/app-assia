@@ -80,7 +80,7 @@ class SupportControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Suivi | Nouveau suivi');
+        $this->assertSelectorTextContains('h1', 'Nouveau suivi');
     }
 
     public function testCreateNewSupportGroupIsSuccessful()
@@ -121,7 +121,7 @@ class SupportControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Suivi | Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition du suivi');
     }
 
     public function testEditSupportGroupIsSuccessful()

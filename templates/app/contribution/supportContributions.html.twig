@@ -22,8 +22,8 @@
 				<span class="fas fa-plus-square mr-2"></span>Nouvelle redevance</button>
 			<div class="d-inline align-middle">Total : <!--
 			--><span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,'', ' ')}}</span><!--
-			--> redevance{% if contributions.getTotalItemCount > 1 %}s{% endif %} sur<!--
-			-->	<span id="nb-total-contributions">{{ nbTotalContributions }}</span>.
+			--> redevance{% if contributions.getTotalItemCount > 1 %}s{% endif %}<!--
+			-->{% if nbTotalContributions %} sur <span id="nb-total-contributions">{{ nbTotalContributions }}</span>{% endif %}.
 				{% if sumStillDueAmt > 0 %}
 					<span class="badge badge-warning">{{ sumStillDueAmt|number_format(0,'', ' ') }} € restant dûs</span>
 				{% endif %}

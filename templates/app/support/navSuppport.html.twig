@@ -6,7 +6,7 @@
 	{% endif %}
 
 	<div class="d-md-flex justify-content-md-between mb-2">
-		<h1 class="h2">Suivi | {{ title }}</h1>
+		<h1 class="h2">Suivi<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
 		{% if support.id %}
 		<div id="support" data-support="{{ support.id }}">
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_view', {'id':support.id}) }}" data-placement="bottom" title="Page d'accueil du suivi">

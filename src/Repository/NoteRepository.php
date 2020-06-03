@@ -109,9 +109,16 @@ class NoteRepository extends ServiceEntityRepository
     public function findAllNotesFromSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
         $query = $this->createQueryBuilder('n')
+            ->leftJoin('n.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('n.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}')
+
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
+        if ($search->getNoteId()) {
+            $query->andWhere('n.id = :id')
+                ->setParameter('id', $search->getNoteId());
+        }
         if ($search->getContent()) {
             $query->andWhere('n.title LIKE :content OR n.content LIKE :content')
                 ->setParameter('content', '%'.$search->getContent().'%');
@@ -126,7 +133,7 @@ class NoteRepository extends ServiceEntityRepository
         }
         $query = $query->orderBy('n.createdAt', 'DESC');
 
-        return $query->getQuery();
+        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**

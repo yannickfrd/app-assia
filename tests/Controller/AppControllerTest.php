@@ -67,7 +67,7 @@ class AppControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('occupancy_devices'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Taux d\'occupation Dispositifs');
+        $this->assertSelectorTextContains('h1', 'Dispositifs');
     }
 
     public function testPageOccupancyByServiceIsUp()
@@ -80,7 +80,7 @@ class AppControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('occupancy_services'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Taux d\'occupation Services');
+        $this->assertSelectorTextContains('h1', 'Services');
     }
 
     public function testPageOccupancyByAccommodationsIsUp()
@@ -90,7 +90,7 @@ class AppControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('occupancy_accommodations'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Taux d\'occupation Groupes de places');
+        $this->assertSelectorTextContains('h1', 'Groupes de places');
     }
 
     protected function tearDown(): void

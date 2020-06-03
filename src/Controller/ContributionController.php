@@ -97,7 +97,7 @@ class ContributionController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalContributions' => $this->repo->count(['supportGroup' => $supportGroup]),
+            'nbTotalContributions' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
             'sumStillDueAmt' => $this->repo->sumStillDueAmt($supportGroup->getId()),
             'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 20) ?? null,
         ]);

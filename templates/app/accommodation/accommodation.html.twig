@@ -11,7 +11,7 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{{ accommodation.service.name }} : {% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %}</h1>
+    <h1 class="h2 mb-3">{{ accommodation.service.name }}<span class="fas fa-angle-right fa-xs mx-1"></span>{% if edit_mode %}{{ accommodation.name }}{% else %}Nouveau groupe de places{% endif %}</h1>
     {% if edit_mode %}
         <div class="small text-secondary">
             <p> Créé le {{accommodation.createdAt|date("d/m/Y à H:i") }}

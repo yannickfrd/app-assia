@@ -67,6 +67,11 @@ class Indicators
                 ];
             }
         }
+        foreach ($devices as $deviceKey => $device) {
+            if ($device['nbSupports'] == 0) {
+                unset($devices[$deviceKey]);
+            }
+        }
 
         return [
             'nbSupports' => count($supports),

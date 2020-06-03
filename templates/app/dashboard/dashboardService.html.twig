@@ -41,16 +41,18 @@
                                     <td class="align-middle">{{ dataUser.user.fullname }}</td>
                                     <td class="align-middle text-right">{{ dataUser.nbSupports }}
                                     {% if dataUser.nbSupports != dataUser.sumCoeff %}
-                                            <span class="text-secondary"> ({{ dataUser.sumCoeff }})</span>
+                                        <span class="text-secondary"> ({{ dataUser.sumCoeff }})</span>
                                     {% endif %}
                                     </td>
-                                    {% for device in dataUser.devices %}
-                                        <td class="align-middle text-right">
-                                            {% if device.nbSupports > 0 %}{{ device.nbSupports }}{% endif %}
-                                            {% if device.nbSupports != device.sumCoeff %}
-                                                <span class="text-secondary"> ({{ device.sumCoeff }})</span>
-                                            {% endif %}
-                                        </td>
+                                    {% for deviceKey, device in dataUser.devices %}
+                                        {% if deviceKey in devices|keys %}
+                                            <td class="align-middle text-right">
+                                                {% if device.nbSupports > 0 %}{{ device.nbSupports }}{% endif %}
+                                                {% if device.nbSupports != device.sumCoeff %}
+                                                    <span class="text-secondary"> ({{ device.sumCoeff }})</span>
+                                                {% endif %}
+                                            </td>
+                                        {% endif %}
                                     {% endfor %}
                                 </tr>
                             {% endif %}
@@ -88,11 +90,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            {% spaceless %}
+            {% apply spaceless %}
                 <p class="small text-secondary justify"><span class="font-weight-bold">Note de lecture : </span>
                 le nombre entre parenthèses correspond à la valeur attribuée à la somme des suivis après application du coefficient.
                 Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
-            {% endspaceless %}
+            {% endapply %}
         </div>
     </div>
 </div>

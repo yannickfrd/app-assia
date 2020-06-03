@@ -15,6 +15,11 @@ class SupportContributionSearch
      */
     private $contributionId;
 
+    /**
+     * @var int|null
+     */
+    private $type;
+
     public function getContributionId(): ?int
     {
         return $this->contributionId;
@@ -26,11 +31,6 @@ class SupportContributionSearch
 
         return $this;
     }
-
-    /**
-     * @var int|null
-     */
-    private $type;
 
     public function getType(): ?int
     {

@@ -69,7 +69,7 @@ class SupportControllerTest extends PantherTestCase
 
         dump('Test : success to edit a support');
 
-        $this->assertSelectorTextContains('h1', 'Suivi | Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Suivi Édition du suivi');
 
         $form = $crawler->selectButton('send')->form([]);
 
