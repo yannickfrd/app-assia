@@ -58,6 +58,12 @@ class EvalBudgetGroup
     private $budgetBalanceAmt;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $contributionAmt;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalBudget;
@@ -153,6 +159,18 @@ class EvalBudgetGroup
     public function setBudgetBalanceAmt(?float $budgetBalanceAmt): self
     {
         $this->budgetBalanceAmt = $budgetBalanceAmt;
+
+        return $this;
+    }
+
+    public function getContributionAmt(): ?float
+    {
+        return $this->contributionAmt;
+    }
+
+    public function setContributionAmt(?float $contributionAmt): self
+    {
+        $this->contributionAmt = $contributionAmt;
 
         return $this;
     }

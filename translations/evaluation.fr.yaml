@@ -36,6 +36,7 @@ Charges: Charges
 Childcare amt: Montant garde enfant(s) (€)
 Childcare: Garde d'enfant(s)
 Comment eval budget: Commentaire relatif à la situation budgétaire
+Contribution amt: Montant de la redevance   
 Debt amt: Montant total des dettes (€)
 Debt bank old amt: Montant découverts bancaires (€)
 Debt bank overdrafts: Découverts bancaires
@@ -164,6 +165,7 @@ Working hours: Horaires de travail
 Write a comment about the professional situation: Ecrire un commentaire relatif à la situation professionnelle
 
 # Housing
+Housing status before the start of support.: Situation résidentielle avant le début du suivi.
 Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
 Collective agreement housing date: Date de labellisation Accord Collectif
@@ -246,7 +248,7 @@ Reduced mobility: Personne à mobilité réduite
 Right social benefit: Droit aux prestations sociales et familiales
 Right social security: Droits ouverts Sécurité sociale
 Social security: Sécurité sociale
-Social security office: Caisse de Sécurité sociale
+Social security office: Caisse/ Numéro de Sécurité sociale
 Social: Social
 Violence victim: Personne victime de violence
 Wandering time: Durée d'errance

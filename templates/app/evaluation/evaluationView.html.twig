@@ -5,7 +5,7 @@
 <div class="row mb-2">
     {{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
         ~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
-    {{ utils.view(evalHousing.domiciliationAddress ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+    {{ utils.view(evalHousing.domiciliation == 1 ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
         ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
 </div>
 {% endif %}

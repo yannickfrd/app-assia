@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Accommodation;
 use App\Entity\Service;
+use App\Entity\SupportGroup;
 use App\Form\Model\AccommodationSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -119,6 +120,21 @@ class AccommodationRepository extends ServiceEntityRepository
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    /**
+     * Donne le groupe de places actuel du suivi.
+     */
+    public function findCurrentAccommodationOfSupport(SupportGroup $supportGroup): ?Accommodation
+    {
+        return $this->createQueryBuilder('a')->select('PARTIAL a.{id, contributionAmt}')
+            ->leftJoin('a.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, supportGroup}')
+            ->andWhere('ag.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup)
+            ->orderBy('ag.startDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
     }
 
     protected function getAccommodations()

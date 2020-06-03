@@ -13,21 +13,25 @@ class EvalBudgetGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('incomeN1Amt', MoneyType::class, [
-                'attr' => ['class' => 'text-right'],
-                'required' => false,
-            ])
-            ->add('incomeN2Amt', MoneyType::class, [
-                'attr' => ['class' => 'text-right'],
-                'required' => false,
-            ])
-            ->add('commentEvalBudget', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'rows' => 5,
-                    'placeholder' => 'Write a comment about the budget situation',
-                ],
-            ]);
+        ->add('contributionAmt', MoneyType::class, [
+            'attr' => ['class' => 'text-right'],
+            'required' => false,
+        ]);
+        // ->add('incomeN1Amt', MoneyType::class, [
+            //     'attr' => ['class' => 'text-right'],
+            //     'required' => false,
+            // ])
+            // ->add('incomeN2Amt', MoneyType::class, [
+            //     'attr' => ['class' => 'text-right'],
+            //     'required' => false,
+            // ])
+            // ->add('commentEvalBudget', null, [
+            //     'label_attr' => ['class' => 'sr-only'],
+            //     'attr' => [
+            //         'rows' => 5,
+            //         'placeholder' => 'Write a comment about the budget situation',
+            //     ],
+            // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

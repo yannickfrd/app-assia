@@ -41,7 +41,7 @@ class AccommodationGroupController extends AbstractController
 
         $accommodationGroups = $this->repo->findBy(
             ['supportGroup' => $supportGroup],
-            ['startDate' => 'DESC']
+            ['startDate' => 'DESC'],
         );
 
         return $this->render('app/accommodation/listAccommodationsGroup.html.twig', [

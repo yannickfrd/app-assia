@@ -27,6 +27,7 @@ export default class SupportContributions {
 
         this.btnNewElt = document.getElementById("js-new-contribution");
         this.contributionRate = parseFloat(this.btnNewElt.getAttribute("data-contribution-rate"));
+        this.fixedContributionAmt = parseFloat(this.btnNewElt.getAttribute("data-fixed-contribution-amt"));
         this.supportStartDate = new Date(this.btnNewElt.getAttribute("data-support-start-date"));
         this.supportEndDate = new Date(this.btnNewElt.getAttribute("data-support-end-date"));
         this.trElt = null;
@@ -125,6 +126,7 @@ export default class SupportContributions {
         });
 
         this.calculateSumAmts();
+        this.calculateContrib();
 
         let contributionId = Number(this.parametersUrl.get("contributionId"));
         this.trElt = document.getElementById("contribution-" + contributionId);
@@ -185,7 +187,10 @@ export default class SupportContributions {
 
     // Calcule le montant de la participation
     calculateContrib() {
-        if (!isNaN(this.resourcesAmtInput.value)) {
+        if (this.fixedContributionAmt > 0) {
+            this.contribAmtInput.value = this.fixedContributionAmt;
+            console.log(this.contribAmtInput.value);
+        } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
             this.contribAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * this.getRateDays());
         }
     }

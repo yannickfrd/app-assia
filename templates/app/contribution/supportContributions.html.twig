@@ -14,10 +14,10 @@
 	<div class="row">
 		<div class="d-flex col-md-6 mb-1 align-items-center">
 			<button id="js-new-contribution" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-				data-url="{{ path('support_resources', {'id': support.id}) }}"
-				data-contribution-rate="{{ support.service.contributionRate }}"
-				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}"
-				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}"
+				data-url="{{ path('support_resources', {'id': support.id}) }}" 
+				data-contribution-rate="{{ support.service.contributionRate }}" 
+				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}" 
+				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}" 
 				data-placement="bottom" title="Créer une nouvelle redevance">
 				<span class="fas fa-plus-square mr-2"></span>Nouvelle redevance</button>
 			<div class="d-inline align-middle">Total : <!--

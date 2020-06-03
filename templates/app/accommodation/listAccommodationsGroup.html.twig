@@ -40,7 +40,8 @@
 										title="Voir le détail de l'hébergement"><span class="fas fa-eye"></span>
 									</a>
 								</th>
-								<td>{{ accommodationGroup.accommodation.name }}</td>
+								<td><a href="{{ path('accommodation_edit', {'id': accommodationGroup.accommodation.id}) }}"
+									class="text-{{ theme_color }}">{{ accommodationGroup.accommodation.name }}</a></td>
 								<td>{{ accommodationGroup.accommodation.device.name }}</td>
 								<td>{{ accommodationGroup.startDate|date("d/m/Y") }}</td>
 								<td>{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate|date("d/m/Y") }}{% endif %}</td>

@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Contribution\ContributionSearchType;
 use App\Form\Contribution\SupportContributionSearchType;
+use App\Repository\AccommodationRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -109,7 +110,7 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function getResources(int $id, EvaluationGroupRepository $repoEvaluation)
+    public function getResources(int $id, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -118,6 +119,7 @@ class ContributionController extends AbstractController
 
         $salaryAmt = 0;
         $resourcesAmt = 0;
+
         if ($evaluation) {
             foreach ($evaluation->getEvaluationPeople() as $evaluationPerson) {
                 if ($evaluationPerson->getEvalBudgetPerson()) {
@@ -128,6 +130,12 @@ class ContributionController extends AbstractController
 
             $contributionRate = $supportGroup->getService()->getContributionRate();
             $contribAmt = round($resourcesAmt * $contributionRate);
+        }
+
+        $accommodation = $repoAccommodation->findCurrentAccommodationOfSupport($supportGroup);
+
+        if ($accommodation && $accommodation->getContributionAmt()) {
+            $contribAmt = $accommodation->getContributionAmt();
         }
 
         return $this->json([

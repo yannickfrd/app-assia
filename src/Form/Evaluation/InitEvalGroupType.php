@@ -23,6 +23,7 @@ class InitEvalGroupType extends AbstractType
                 ],
                 'placeholder' => '-- Select --',
                 'required' => false,
+                'help' => 'Housing status before the start of support.',
             ])
             ->add('siaoRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
