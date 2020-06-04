@@ -3,7 +3,7 @@
 namespace App\Export;
 
 use App\Entity\Accommodation;
-use App\Service\ExportService;
+use App\Service\ExportExcel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class AccommodationExport
@@ -31,7 +31,7 @@ class AccommodationExport
             ++$i;
         }
 
-        return (new ExportService('export_places', 'xlsx', $arrayData, null))->exportFile();
+        return (new ExportExcel('export_places', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**

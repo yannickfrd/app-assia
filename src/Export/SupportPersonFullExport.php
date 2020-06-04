@@ -7,7 +7,7 @@ use App\Entity\InitEvalGroup;
 use App\Entity\SupportPerson;
 use App\Entity\EvalProfPerson;
 use App\Entity\InitEvalPerson;
-use App\Service\ExportService;
+use App\Service\ExportExcel;
 use App\Service\Normalisation;
 use App\Entity\EvalBudgetGroup;
 use App\Entity\EvalFamilyGroup;
@@ -76,7 +76,7 @@ class SupportPersonFullExport
             $arrayData[] = $this->getDatas($supportPerson);
         }
 
-        return (new ExportService('export_suivis', 'xlsx', $arrayData, 15))->exportFile(true);
+        return (new ExportExcel('export_suivis', 'xlsx', $arrayData, 15))->exportFile(true);
     }
 
     /**

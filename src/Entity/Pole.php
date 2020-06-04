@@ -73,6 +73,11 @@ class Pole
     private $color;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $logoPath;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $chief;
@@ -119,6 +124,18 @@ class Pole
     public function setColor(?string $color): self
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getLogoPath(): ?string
+    {
+        return $this->logoPath;
+    }
+
+    public function setLogoPath(?string $logoPath): self
+    {
+        $this->logoPath = $logoPath;
 
         return $this;
     }

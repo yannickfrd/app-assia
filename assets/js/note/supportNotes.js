@@ -17,6 +17,7 @@ export default class SupportNotes {
         this.editorElt = this.modalNoteElt.querySelector("#editor");
         this.btnSaveElt = this.modalNoteElt.querySelector("#js-btn-save");
         this.btnCancelElt = this.modalNoteElt.querySelector("#js-btn-cancel");
+        this.btnExportElt = this.modalNoteElt.querySelector("#js-btn-export");
         this.btnDeleteElt = this.modalNoteElt.querySelector("#modal-btn-delete");
 
         this.loader = new Loader("#modal-note");
@@ -99,6 +100,7 @@ export default class SupportNotes {
         this.modalNoteElt.querySelector("#note_title").value = "";
         this.editor.setData("");
         this.btnDeleteElt.classList.replace("d-block", "d-none");
+        this.btnExportElt.classList.replace("d-block", "d-none");
         this.editorElt.addEventListener("keydown", this.countKeyDown.bind(this));
         this.timerAutoSave();
     }
@@ -124,6 +126,9 @@ export default class SupportNotes {
 
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         this.btnDeleteElt.href = "/note/" + this.cardId + "/delete";
+
+        this.btnExportElt.classList.replace("d-none", "d-block");
+        this.btnExportElt.href = "/note/" + this.cardId + "/export";
 
         this.editorElt.addEventListener("keydown", this.countKeyDown.bind(this));
 

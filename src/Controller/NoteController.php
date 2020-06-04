@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\ExportWord;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -160,7 +161,7 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, EvaluationGroupRepository $repo, Environment $renderer): Response
+    public function generateNoteEvaluation(int $id, EvaluationGroupRepository $repo, Environment $renderer, ExportWord $exportWord): Response
     {
         $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
@@ -170,13 +171,15 @@ class NoteController extends AbstractController
 
         $note = (new Note())
             ->setTitle('Rapport social '.$evaluation->getUpdatedAt()->format('d/m/Y'))
-            ->setContent($renderer->render('app/evaluation/evaluationView.html.twig', [
+            ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
                 'support' => $supportGroup,
                 'evaluation' => $evaluation,
             ]))
             ->setType(2)
             ->setSupportGroup($supportGroup)
             ->setCreatedBy($this->getUser());
+
+        // return $exportWord->export($note->getContent(), $note->getTitle());
 
         $this->manager->persist($note);
         $this->manager->flush();
@@ -185,6 +188,14 @@ class NoteController extends AbstractController
             'id' => $supportGroup->getId(),
             'noteId' => $note->getId(),
         ]);
+    }
+
+    /**
+     * @Route("note/{id}/export", name="note_export", methods="GET")
+     */
+    public function exportNote(Note $note, ExportWord $exportWord): Response
+    {
+        return $exportWord->export($note->getContent(), $note->getTitle(), $note->getSupportGroup()->getService()->getPole()->getLogoPath());
     }
 
     /**

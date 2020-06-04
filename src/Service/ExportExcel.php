@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ExportService
+class ExportExcel
 {
     private $name;
     private $format;

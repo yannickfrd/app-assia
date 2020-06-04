@@ -24,9 +24,16 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="d-flex float-left">
-                    <button id="modal-btn-delete" class="mr-3 btn btn-danger d-none" 
-                        data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span></button>
-                    <div id="js-auto-save" class="text-secondary py-1 d-none"><span class="fas fa-sync-alt mr-2"></span>Sauv. auto.</div>
+                    <button id="modal-btn-delete" class="btn btn-danger d-none mr-3" 
+                        data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span>
+                    </button>
+                    <a href="#" id="js-btn-export" class="btn btn-{{ theme_color }} d-none mr-2" title="Exporter la note sur Word">
+                        <span class="fas fa-file-word fa-lg"></span>
+                    </a>
+                    <div id="js-auto-save" class="text-secondary d-none py-1">
+                        <span class="fas fa-sync-alt mr-2"></span>
+                        <span class="d-none d-sm-inline">Sauv. auto.</span>
+                    </div>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Annuler</button>

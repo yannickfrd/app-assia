@@ -5,7 +5,7 @@ namespace App\Export;
 use App\Entity\Accommodation;
 use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
-use App\Service\ExportService;
+use App\Service\ExportExcel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
@@ -33,7 +33,7 @@ class SupportPersonExport
             ++$i;
         }
 
-        return (new ExportService('export_suivis', 'xlsx', $arrayData, null))->exportFile();
+        return (new ExportExcel('export_suivis', 'xlsx', $arrayData, null))->exportFile();
     }
 
     /**

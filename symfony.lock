@@ -222,6 +222,9 @@
     "paragonie/sodium_compat": {
         "version": "v1.12.2"
     },
+    "pclzip/pclzip": {
+        "version": "2.8.2"
+    },
     "php": {
         "version": "7.3"
     },
@@ -243,8 +246,14 @@
     "phpmailer/phpmailer": {
         "version": "v6.1.4"
     },
+    "phpoffice/common": {
+        "version": "0.2.9"
+    },
     "phpoffice/phpspreadsheet": {
         "version": "1.10.1"
+    },
+    "phpoffice/phpword": {
+        "version": "0.17.0"
     },
     "phpstan/phpstan": {
         "version": "0.12.18"
@@ -712,6 +721,9 @@
     },
     "zendframework/zend-code": {
         "version": "3.3.2"
+    },
+    "zendframework/zend-escaper": {
+        "version": "2.6.1"
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"

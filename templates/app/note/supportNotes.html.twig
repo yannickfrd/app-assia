@@ -33,30 +33,32 @@ Notes sociales | {{ title_website }}
 
 	<div id="container-notes" class="row" data-support="{{ support.id }}">
 		{% for note in notes %}
-		<div id="note-{{ note.id }}" class="col-sm-12 col-lg-6 mb-4 js-note">
-			<div class="card h-100 shadow cursor-pointer" data-toggle="modal" data-target="#modal-note" data-placement="bottom" title="Voir la note">
-				<div class="card-header">
-					<h3 class="card-title h5 text-{{ theme_color }}">{{ note.title }}</h3>
-					<span class="js-note-type" data-value={{ note.type }}>
-						{{ note.typeToString }}
-					</span>
-					<span class="js-note-status" data-value={{ note.status }}>
-						({{ note.statusToString }})</span>
-					<span class="small text-secondary js-note-created">| Créé le {{note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
-					</span>
-					<span class="small text-secondary js-note-updated">
-						{% if note.updatedAt != note.createdAt %} (modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }}){% endif %}
-					</span>
-				</div>
-				<div class="card-body note-content">
-					<div class="card-text">{{ note.content|raw }}</div><span class="note-fadeout"></span>
+			<div id="note-{{ note.id }}" class="col-sm-12 col-lg-6 mb-4 js-note">
+				<div class="card h-100 shadow">
+					<div class="card-header">
+						<h3 class="card-title h5 text-{{ theme_color }}  cursor-pointer" data-toggle="modal" 
+							data-target="#modal-note" data-placement="bottom" title="Voir la note">{{ note.title }}</h3>
+						<span class="js-note-type" data-value={{ note.type }}>
+							{{ note.typeToString }}
+						</span>
+						<span class="js-note-status" data-value={{ note.status }}>
+							({{ note.statusToString }})</span>
+						<span class="small text-secondary js-note-created">| Créé le {{note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
+						</span>
+						<span class="small text-secondary js-note-updated">
+							{% if note.updatedAt != note.createdAt %} (modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }}){% endif %}
+						</span>
+					</div>
+					<div class="card-body note-content cursor-pointer" data-toggle="modal" data-target="#modal-note"
+						data-placement="bottom" title="Voir la note">
+						<div class="card-text">{{ note.content|raw }}</div><span class="note-fadeout"></span>
+					</div>
 				</div>
 			</div>
-		</div>
 		{% else %}
-		<div class="col-md-12">
-			<p>Aucune note.</p>
-		</div>
+			<div class="col-md-12">
+				<p>Aucune note.</p>
+			</div>
 		{% endfor %}
 	</div>
 	

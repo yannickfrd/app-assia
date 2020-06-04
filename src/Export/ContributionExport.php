@@ -3,7 +3,7 @@
 namespace App\Export;
 
 use App\Entity\Contribution;
-use App\Service\ExportService;
+use App\Service\ExportExcel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -27,7 +27,7 @@ class ContributionExport
             $arrayData[] = $this->getDatas($contribution);
         }
 
-        $export = new ExportService('export_participations', 'xlsx', $arrayData, 16);
+        $export = new ExportExcel('export_participations', 'xlsx', $arrayData, 16);
         $export->addTotalRow();
 
         return $export->exportFile();
