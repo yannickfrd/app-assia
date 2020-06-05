@@ -23,6 +23,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Contribution\ContributionSearchType;
 use App\Form\Contribution\SupportContributionSearchType;
 use App\Repository\AccommodationRepository;
+use App\Service\Indicators\ContributionIndicators;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -89,7 +90,7 @@ class ContributionController extends AbstractController
             ->handleRequest($request);
 
         $contribution = (new Contribution())
-            ->setContribDate((new \DateTime())->modify('-1 month')->modify('first day of this month'));
+            ->setMonth((new \DateTime())->modify('-1 month')->modify('first day of this month'));
 
         $form = $this->createForm(ContributionType::class, $contribution);
 
@@ -131,7 +132,7 @@ class ContributionController extends AbstractController
             }
 
             $contributionRate = $supportGroup->getService()->getContributionRate();
-            $contribAmt = round($resourcesAmt * $contributionRate);
+            $dueAmt = round($resourcesAmt * $contributionRate);
         }
 
         return $this->json([
@@ -140,7 +141,7 @@ class ContributionController extends AbstractController
             'data' => [
                 'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
-                'contribAmt' => $contribAmt ?? null,
+                'dueAmt' => $dueAmt ?? null,
                 'rentAmt' => $accommodation ? $accommodation->getContributionAmt() : null,
             ],
         ], 200);
@@ -227,6 +228,40 @@ class ContributionController extends AbstractController
             'alert' => 'warning',
             'msg' => 'La redevance est supprimée.',
         ], 200);
+    }
+
+    /**
+     * Affiche les indicateurs mensuels des participations financières.
+     *
+     * @Route("contribution/indicators/monthly", name="contribution_indicators_monthly", methods="GET|POST")
+     */
+    public function showMonthlyContributionIndicators(ContributionSearch $search = null, Request $request, ContributionIndicators $indicators): Response
+    {
+        $today = new \DateTime('midnight');
+        $search = (new ContributionSearch())
+        ->setType(1)
+        ->setStart(new \DateTime($today->format('Y').'-01-01'));
+
+        if ($this->getUser()->getStatus() == 1) {
+            $usersCollection = new ArrayCollection();
+            $usersCollection->add($this->getUser());
+            $search->setReferents($usersCollection);
+        }
+
+        $form = ($this->createForm(ContributionSearchType::class, $search))
+        ->handleRequest($request);
+
+        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
+        $end = $search->getEnd() ?? $today;
+
+        $contributions = $this->repo->findAllContributionsForIndicators($search);
+
+        $datas = $indicators->getMonthlyIndicators($contributions, $start, $end);
+
+        return $this->render('app/contribution/monthlyContributionIndicators.html.twig', [
+            'form' => $form->createView(),
+            'datas' => $datas,
+        ]);
     }
 
     /**

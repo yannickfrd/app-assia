@@ -10,17 +10,17 @@ export default class SupportContributions {
         this.modalContributionElt = document.getElementById("modal-contribution");
         this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
         this.titleElt = this.modalContributionElt.querySelector("h2");
-        this.dateYearSelect = document.getElementById("contribution_contribDate_year");
-        this.dateMonthSelect = document.getElementById("contribution_contribDate_month");
+        this.dateYearSelect = document.getElementById("contribution_month_year");
+        this.dateMonthSelect = document.getElementById("contribution_month_month");
         this.typeSelect = document.getElementById("contribution_type");
         this.salaryAmtInput = document.getElementById("contribution_salaryAmt");
         this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
         this.credentialInput = document.getElementById("contribution_credential");
-        this.contribAmtInput = document.getElementById("contribution_contribAmt");
+        this.dueAmtInput = document.getElementById("contribution_dueAmt");
         this.calculationMethodElt = document.getElementById("calculationMethod");
         this.paymentDateInput = document.getElementById("contribution_paymentDate");
         this.paymentTypeSelect = document.getElementById("contribution_paymentType");
-        this.paymentAmtInput = document.getElementById("contribution_paymentAmt");
+        this.paidAmtInput = document.getElementById("contribution_paidAmt");
         this.stillDueAmtInput = document.getElementById("contribution_stillDueAmt");
         this.returnDateInput = document.getElementById("contribution_returnDate");
         this.returnAmtInput = document.getElementById("contribution_returnAmt");
@@ -35,8 +35,8 @@ export default class SupportContributions {
         this.btnSaveElt = document.getElementById("js-btn-save");
         this.btnDeleteElt = document.getElementById("modal-btn-delete");
 
-        this.sumContribAmtElt = document.getElementById("js-sumContribAmt");
-        this.sumPaymentAmtElt = document.getElementById("js-sumPaymentAmt");
+        this.sumDueAmtElt = document.getElementById("js-sumDueAmt");
+        this.sumPaidAmtElt = document.getElementById("js-sumPaidAmt");
         this.sumStillDueAmtElt = document.getElementById("js-sumStillDueAmt");
 
         this.modalConfirmElt = document.getElementById("modal-confirm");
@@ -114,16 +114,16 @@ export default class SupportContributions {
             this.checkMoney(this.resourcesAmtInput);
             this.calculateContrib();
         });
-        this.contribAmtInput.addEventListener("input", e => {
-            this.checkMoney(this.contribAmtInput);
+        this.dueAmtInput.addEventListener("input", e => {
+            this.checkMoney(this.dueAmtInput);
             this.calculateStillDue();
         });
-        this.paymentAmtInput.addEventListener("input", e => {
-            this.checkMoney(this.paymentAmtInput);
+        this.paidAmtInput.addEventListener("input", e => {
+            this.checkMoney(this.paidAmtInput);
             this.calculateStillDue();
         });
         this.paymentDateInput.addEventListener("focusout", e => {
-            this.checkPaymentAmt();
+            this.checkPaidAmt();
         });
 
         this.calculateSumAmts();
@@ -159,20 +159,20 @@ export default class SupportContributions {
 
     // Calcul la somme de tous les montants pour le footer du tableau
     calculateSumAmts() {
-        this.sumContribAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-contribAmt")).toLocaleString() + " €";
-        this.sumPaymentAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-paymentAmt")).toLocaleString() + " €";
+        this.sumDueAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-dueAmt")).toLocaleString() + " €";
+        this.sumPaidAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-paidAmt")).toLocaleString() + " €";
         this.sumStillDueAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-stillDueAmt")).toLocaleString() + " €";
     }
 
     // Donne le ratio de jours de présence dans le mois
     getRateDays() {
-        let contribDate = new Date(this.getOption(this.dateYearSelect) + "-" + this.getOption(this.dateMonthSelect) + "-01");
-        let nextMonth = (new Date(contribDate)).setMonth(contribDate.getMonth() + 1);
-        let nbDaysInMonth = Math.round((nextMonth - contribDate) / (1000 * 60 * 60 * 24));
+        let month = new Date(this.getOption(this.dateYearSelect) + "-" + this.getOption(this.dateMonthSelect) + "-01");
+        let nextMonth = (new Date(month)).setMonth(month.getMonth() + 1);
+        let nbDaysInMonth = Math.round((nextMonth - month) / (1000 * 60 * 60 * 24));
         let rateDays = 1;
 
-        if (this.supportStartDate > contribDate) {
-            rateDays = 1 - ((this.supportStartDate - contribDate) / (1000 * 60 * 60 * 24) / nbDaysInMonth);
+        if (this.supportStartDate > month) {
+            rateDays = 1 - ((this.supportStartDate - month) / (1000 * 60 * 60 * 24) / nbDaysInMonth);
         }
 
         if (this.supportEndDate < nextMonth) {
@@ -190,11 +190,11 @@ export default class SupportContributions {
     calculateContrib() {
         let rateDays = this.getRateDays();
         if (this.rentAmt > 0) {
-            this.contribAmtInput.value = Math.round(this.rentAmt * rateDays);
+            this.dueAmtInput.value = Math.round(this.rentAmt * rateDays);
             this.calculationMethodElt.textContent = "Mode de calcul : Montant du loyer (" + this.rentAmt + "€)" +
                 (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + "%)" : "");
         } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
-            this.contribAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays);
+            this.dueAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays);
             this.calculationMethodElt.textContent = "Mode de calcul : Montant des ressources (" + this.resourcesAmtInput.value +
                 "€) x Taux de participation (" + (this.contributionRate * 100) + "%)" + (rateDays < 1 ? " x Prorata présence sur le mois (" +
                     (Math.round(rateDays * 10000) / 100) + "%)" : "");
@@ -203,8 +203,8 @@ export default class SupportContributions {
 
     // Calcule le restant dû
     calculateStillDue() {
-        if (!isNaN(this.contribAmtInput.value) && !isNaN(this.paymentAmtInput.value)) {
-            this.stillDueAmtInput.value = this.contribAmtInput.value - this.paymentAmtInput.value;
+        if (!isNaN(this.dueAmtInput.value) && !isNaN(this.paidAmtInput.value)) {
+            this.stillDueAmtInput.value = this.dueAmtInput.value - this.paidAmtInput.value;
         }
     }
 
@@ -220,7 +220,7 @@ export default class SupportContributions {
             this.error = true;
             return this.validationInput.invalid(this.paymentDateInput, "La date ne peut être postérieure à la date du jour.");
         }
-        if (!this.paymentDateInput.value && this.paymentAmtInput.value) {
+        if (!this.paymentDateInput.value && this.paidAmtInput.value) {
             this.error = true;
             return this.validationInput.invalid(this.paymentDateInput, "La date ne peut pas être vide.");
         }
@@ -229,7 +229,7 @@ export default class SupportContributions {
 
     // Vérifie le type de paiement saisie
     checkPaymentType() {
-        if ((!this.getOption(this.paymentTypeSelect) && this.paymentDateInput.value) || (!this.getOption(this.paymentTypeSelect) && this.paymentAmtInput.value)) {
+        if ((!this.getOption(this.paymentTypeSelect) && this.paymentDateInput.value) || (!this.getOption(this.paymentTypeSelect) && this.paidAmtInput.value)) {
             this.error = true;
             return this.validationInput.invalid(this.paymentTypeSelect, "Ne peut pas être vide.");
         }
@@ -238,16 +238,16 @@ export default class SupportContributions {
     }
 
     // Vérifie le montant du paiement saisi
-    checkPaymentAmt() {
-        if (this.paymentDateInput.value && !this.paymentAmtInput.value) {
+    checkPaidAmt() {
+        if (this.paymentDateInput.value && !this.paidAmtInput.value) {
             this.error = true;
-            return this.validationInput.invalid(this.paymentAmtInput, "Le montant ne pas être vide.");
+            return this.validationInput.invalid(this.paidAmtInput, "Le montant ne pas être vide.");
         }
-        if (isNaN(this.paymentAmtInput.value)) {
+        if (isNaN(this.paidAmtInput.value)) {
             this.error = true;
-            return this.validationInput.invalid(this.paymentAmtInput, "Le montant n'est pas valide.");
+            return this.validationInput.invalid(this.paidAmtInput, "Le montant n'est pas valide.");
         }
-        return this.validationInput.valid(this.paymentAmtInput);
+        return this.validationInput.valid(this.paidAmtInput);
     }
 
     // Affiche un formulaire modal vierge
@@ -321,7 +321,7 @@ export default class SupportContributions {
         this.error = false;
         this.checkPaymentDate();
         this.checkPaymentType();
-        this.checkPaymentAmt();
+        this.checkPaidAmt();
 
         if (this.error === false) {
             let formData = new FormData(this.formContributionElt);
@@ -386,7 +386,7 @@ export default class SupportContributions {
         this.modalElt.modal("show");
         this.salaryAmtInput.value = data.salaryAmt;
         this.resourcesAmtInput.value = data.resourcesAmt;
-        this.contribAmtInput.value = data.contribAmt;
+        this.dueAmtInput.value = data.dueAmt;
         this.rentAmt = data.rentAmt;
         this.checkType();
         this.calculateContrib();
@@ -395,16 +395,16 @@ export default class SupportContributions {
     // Donne la redevance sélectionnée dans le formulaire modal
     showContribution(contribution) {
         this.modalElt.modal("show");
-        this.dateYearSelect.value = contribution.contribDate.substring(0, 4);
-        this.dateMonthSelect.value = contribution.contribDate.substring(6, 7);
+        this.dateYearSelect.value = contribution.month.substring(0, 4);
+        this.dateMonthSelect.value = contribution.month.substring(6, 7);
         this.selectOption(this.typeSelect, contribution.type);
         this.salaryAmtInput.value = contribution.salaryAmt;
         this.resourcesAmtInput.value = contribution.resourcesAmt;
         this.credentialInput.value = contribution.credential;
-        this.contribAmtInput.value = contribution.contribAmt;
+        this.dueAmtInput.value = contribution.dueAmt;
         this.paymentDateInput.value = contribution.paymentDate ? contribution.paymentDate.substring(0, 10) : null;
         this.selectOption(this.paymentTypeSelect, contribution.paymentType);
-        this.paymentAmtInput.value = contribution.paymentAmt;
+        this.paidAmtInput.value = contribution.paidAmt;
         this.stillDueAmtInput.value = contribution.stillDueAmt;
         this.returnDateInput.value = contribution.returnDate ? contribution.returnDate.substring(0, 10) : null;
         this.returnAmtInput.value = contribution.returnAmt;
@@ -442,10 +442,10 @@ export default class SupportContributions {
 
     // Met à jour la ligne du tableau correspondant au contribution
     updateContribution(contribution) {
-        this.trElt.querySelector("td.js-contribDate").textContent = contribution.contribDate.substring(0, 7);
+        this.trElt.querySelector("td.js-month").textContent = contribution.month.substring(0, 7);
         this.trElt.querySelector("td.js-type").textContent = contribution.typeToString;
-        this.trElt.querySelector("td.js-contribAmt").textContent = contribution.contribAmt ? contribution.contribAmt + " €" : "";
-        this.trElt.querySelector("td.js-paymentAmt").textContent = contribution.paymentAmt ? contribution.paymentAmt + " €" : "";
+        this.trElt.querySelector("td.js-dueAmt").textContent = contribution.dueAmt ? contribution.dueAmt + " €" : "";
+        this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt + " €" : "";
         this.trElt.querySelector("td.js-stillDueAmt").textContent = contribution.stillDueAmt ? contribution.stillDueAmt + " €" : "";
         this.trElt.querySelector("td.js-paymentDate").textContent = contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : "";
         this.trElt.querySelector("td.js-paymentType").textContent = contribution.paymentTypeToString;
@@ -462,10 +462,10 @@ export default class SupportContributions {
                     data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
                 </button>
             </td>
-            <td class="align-middle js-contribDate">${contribution.contribDate.substring(0, 7)}</td>
+            <td class="align-middle js-month">${contribution.month.substring(0, 7)}</td>
             <td class="align-middle js-type">${contribution.typeToString}</td>
-            <td class="align-middle text-right js-contribAmt">${contribution.contribAmt ? contribution.contribAmt + " €" : ""}</td>
-            <td class="align-middle text-right js-paymentAmt">${contribution.paymentAmt ? contribution.paymentAmt + " €" : ""}</td>
+            <td class="align-middle text-right js-dueAmt">${contribution.dueAmt ? contribution.dueAmt + " €" : ""}</td>
+            <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt + " €" : ""}</td>
             <td class="align-middle text-right js-stillDueAmt">${contribution.stillDueAmt ? contribution.stillDueAmt + " €" : ""}</td>
             <td class="align-middle js-paymentDate">${contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : ""}</td>
             <td class="align-middle js-paymentType">${contribution.paymentType ? contribution.paymentTypeToString : ""}</td>

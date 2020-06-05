@@ -21,7 +21,7 @@ class FileUploader
     public function upload(UploadedFile $file, $path = null)
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $originalFilename = str_replace(' ', '-', $originalFilename);
+        $originalFilename = str_replace([' ', '/'], '-', $originalFilename);
         $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $originalFilename);
         $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
         $extensionFile = $file->guessExtension();

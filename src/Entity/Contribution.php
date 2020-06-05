@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=ContributionRepository::class)
  * @UniqueEntity(
- *     fields={"contribDate", "type", "supportGroup"},
+ *     fields={"month", "type", "supportGroup"},
  *     message="Une redevance existe déjà pour ce mois."
  * )
  */
@@ -40,7 +40,7 @@ class Contribution
      * @ORM\Column(type="date")
      * @Groups("get")
      */
-    private $contribDate;
+    private $month;
 
     /**
      * @ORM\Id()
@@ -72,7 +72,7 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $contribAmt;
+    private $dueAmt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -95,7 +95,7 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $paymentAmt = 0;
+    private $paidAmt = 0;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -143,14 +143,14 @@ class Contribution
         return $this->id;
     }
 
-    public function getContribDate(): ?\DateTimeInterface
+    public function getMonth(): ?\DateTimeInterface
     {
-        return $this->contribDate;
+        return $this->month;
     }
 
-    public function setContribDate(?\DateTimeInterface $contribDate): self
+    public function setMonth(?\DateTimeInterface $month): self
     {
-        $this->contribDate = $contribDate;
+        $this->month = $month;
 
         return $this;
     }
@@ -191,14 +191,14 @@ class Contribution
         return $this;
     }
 
-    public function getContribAmt(): ?float
+    public function getDueAmt(): ?float
     {
-        return $this->contribAmt;
+        return $this->dueAmt;
     }
 
-    public function setContribAmt(?float $contribAmt): self
+    public function setDueAmt(?float $dueAmt): self
     {
-        $this->contribAmt = $contribAmt;
+        $this->dueAmt = $dueAmt;
 
         return $this;
     }
@@ -232,21 +232,21 @@ class Contribution
         return $this;
     }
 
-    public function getPaymentAmt(): ?float
+    public function getPaidAmt(): ?float
     {
-        return $this->paymentAmt;
+        return $this->paidAmt;
     }
 
-    public function setPaymentAmt(?float $paymentAmt): self
+    public function setPaidAmt(?float $paidAmt): self
     {
-        $this->paymentAmt = $paymentAmt;
+        $this->paidAmt = $paidAmt;
 
         return $this;
     }
 
     public function getStillDueAmt(): ?float
     {
-        return $this->getContribAmt() - $this->getPaymentAmt();
+        return $this->getDueAmt() - $this->getPaidAmt();
     }
 
     public function setStillDueAmt(?float $stillDueAmt = null): self

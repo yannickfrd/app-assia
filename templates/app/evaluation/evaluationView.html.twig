@@ -1,626 +1,630 @@
 {% import "macros/view.html.twig" as utils %}
 
-{% set nbSupportPeople = support.supportPeople|length %}
+{% apply spaceless %}
 
-{% set evalHousing = evaluation.evalHousingGroup %}
-{% if evalHousing %}
-    <div class="row mb-2">
-        {{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
-            ~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
-        {{ utils.view(evalHousing.domiciliation == 1 ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
-            ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
-    </div>
-{% endif %}
+    {% set nbSupportPeople = support.supportPeople|length %}
 
-<div class="row mb-2">
-    {{ utils.view(support.groupPeople.familyTypologyToString~ (nbSupportPeople > 1 ? 
-        ", " ~ nbSupportPeople ~ " personnes"), "Family typology") }}
-</div>
-
-<div class="row mb-2">
-    <div class="col-md-10">
-        <div class="table-responsive">
-            <table class="table table-sm table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Nom et prénom</th>
-                        <th>Date de naissance</th>
-                        <th class="d-none d-sm-table-cell">Âge</th>
-                        <th>Sexe</th>
-                        <th>Rôle</th>
-                        <th>Téléphone</th>
-                        <th class="d-none d-sm-table-cell">Adresse email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for supportPerson in support.supportPeople %}
-                    <tr>
-                        <td scope="row">{{ supportPerson.person.fullname }}</td>
-                        <td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
-                        <td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
-                            -->{{ supportPerson.person.age > 1 ? "s" }}</td>
-                        <td>{{ supportPerson.person.genderToString }}</td>
-                        <td>{{ supportPerson.roleToString }}</td>
-                        <td>{{ supportPerson.person.phone1 }}</td>
-                        <td class="d-none d-sm-table-cell">{{ supportPerson.person.email }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<hr>
-
-<section>
-    <div class="d-flex mb-3">
-        <h2 class="h4">Social</h2>
-        {% if theme_color is defined %}
-            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-            </span>
-        {% endif %}
-    </div>
-    {% for evalPerson in evaluation.evaluationPeople %}
-        {% set evalSocial = evalPerson.evalSocialPerson %}
-        {% if evalSocial %}
-            <div class="my-3">
-                {% if nbSupportPeople > 1 %}
-                    <div class="row mb-2">
-                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                    </div>
-                {% endif %}
-                <div class="row mb-2">
-                    {{ utils.view(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
-                        ~ evalSocial.socialSecurityToString : evalSocial.rightSocialSecurityToString, "Right social security", "evaluation") }}
-                    {{ utils.view(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
-                    {{ utils.view(evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
-                </div>
-                {% if evalSocial.familyBreakdown or evalSocial.friendshipBreakdown %}
-                    <div class="row mb-2">
-                        {{ utils.view(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
-                        {{ utils.view(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
-                    </div>
-                {% endif %}
-                {% if evalSocial.healthProblem %}
-                    <div class="row mb-2">
-                        {{ utils.view(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
-                        <div class="col-md-6">
-                            <ul class="mb-0">
-                                {% for key, value in evalSocial.healthProblemsType %}
-                                    {% if attribute(evalSocial, key) %}
-                                        <li>{{ value }}</li>
-                                    {% endif %}
-                                {% endfor %}									 
-                            </ul>
-                        </div>
-                    </div>
-                {% endif %}
-                <div class="row mb-2">
-                    {{ utils.view(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
-                        ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
-                    {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == 1 ? 
-                        " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
-                </div>
-                {% if evalSocial.commentEvalSocialPerson %}
-                    <div class="row mb-2">
-                        <div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson }}</div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% endfor %}
-
-    {% if evaluation.evalSocialGroup %}
-        {% set evalSocial = evaluation.evalSocialGroup %}
+    {% set evalHousing = evaluation.evalHousingGroup %}
+    {% if evalHousing %}
         <div class="row mb-2">
-            {{ utils.view(evalSocial.reasonRequestToString, "Reason request", "evaluation") }}
-            {{ utils.view(evalSocial.wanderingTimeToString, "Wandering time", "evaluation") }}
-            {{ utils.view(evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" : "" ), "Animal", "evaluation") }}
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
+            {{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
+                ~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
+            {{ utils.view(evalHousing.domiciliation == 1 ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+                ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
         </div>
     {% endif %}
 
-
-</section>
-
-<hr>
-
-<section>
-    <div class="d-flex mb-3">
-        <h2 class="h4">Famille</h2>
-        {% if theme_color is defined %}
-            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-            </span>
-        {% endif %}
+    <div class="row mb-2">
+        {{ utils.view(support.groupPeople.familyTypologyToString~ (nbSupportPeople > 1 ? 
+            ", " ~ nbSupportPeople ~ " personnes"), "Family typology") }}
     </div>
-    {% for evalPerson in evaluation.evaluationPeople %}
-        {% set evalFamily = evalPerson.evalFamilyPerson %}
-        {% if evalFamily and evalPerson.supportPerson.role != 3 %}
-            <div class="my-3">
-                {% if nbSupportPeople > 1 %}
-                    <div class="row mb-2">
-                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                    </div>
-                {% endif %}
-                <div class="row mb-2">
-                    {{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
-                    {{ utils.view(evalFamily.protectiveMeasure == 1 and evalFamily.protectiveMeasureType ? 
-                        evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
-                    {{ utils.view(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
-                        ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
-                </div>
-                <div class="row my-2">
-                    <div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson }}</div>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
 
-    {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
-    <div class="row mt-4">
-        <div class="col-md-12">
+    <div class="row mb-2">
+        <div class="col-md-10">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Enfant(s)</th>
-                            <th>Garde ou scolarité</th>
-                            <th>Lieu de garde/scolarité</th>
-                            <th>Hébergement</th>
-                            <th>À charge</th>
+                            <th scope="col">Nom et prénom</th>
+                            <th>Date de naissance</th>
+                            <th class="d-none d-sm-table-cell">Âge</th>
+                            <th>Sexe</th>
+                            <th>Rôle</th>
+                            <th>Téléphone</th>
+                            <th class="d-none d-sm-table-cell">Adresse email</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for evalPerson in evaluation.evaluationPeople %}
-                            {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-                            {% if evalFamilyPerson and evalPerson.supportPerson.role == 3 %}
-                                <tr>
-                                    <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-                                    <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
-                                    <td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
-                                    <td>{{ evalFamilyPerson.childToHostToString }}</td>
-                                    <td>{{ evalFamilyPerson.childDependanceToString }}</td>
-                                </tr>
-                            {% endif %}
+                        {% for supportPerson in support.supportPeople %}
+                        <tr>
+                            <td scope="row">{{ supportPerson.person.fullname }}</td>
+                            <td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
+                            <td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
+                                -->{{ supportPerson.person.age > 1 ? "s" }}</td>
+                            <td>{{ supportPerson.person.genderToString }}</td>
+                            <td>{{ supportPerson.roleToString }}</td>
+                            <td>{{ supportPerson.person.phone1 }}</td>
+                            <td class="d-none d-sm-table-cell">{{ supportPerson.person.email }}</td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    {% endif %}
-
-    {% set evalFamily = evaluation.evalFamilyGroup %}
-    {% if evalFamily %}
-        <div class="row mb-2">
-            {{ utils.view(evalFamily.cafId, "Caf id", "evaluation") }}
-            {{ utils.view(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
-            {{ utils.view(evalFamily.famlReunification ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
-                ~ evalFamily.nbPeopleReunification ~ " personne(s))" : "") : "", "Faml reunification", "evaluation") }}
-        </div>
-        <div class="row my-3">
-            <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup }}</div>
-        </div>
-    {% endif %}
-
-
-</section>
-
-<hr>
-
-<section>
-    <div class="d-flex mb-3">
-        <h2 class="h4">Identité - Papier</h2>
-        {% if theme_color is defined %}
-            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-            </span>
-        {% endif %}
-    </div>
-
-    {% for evalPerson in evaluation.evaluationPeople %}
-        {% set evalAdm = evalPerson.evalAdmPerson %}
-        {% if evalAdm and evalPerson.supportPerson.role != 3 %}
-            <div class="my-3">
-                {% if nbSupportPeople > 1 %}
-                    <div class="row mb-2">
-                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                    </div>
-                {% endif %}
-                <div class="row">
-                    {{ utils.view(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
-                        ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
-                    {{ utils.view(evalAdm.paper == 1 and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
-                    {{ utils.view(evalAdm.asylumBackground == 1 and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
-                        evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
-                    {{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
-                        ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation") }}
-                    {{ utils.view(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
-                    {{ utils.view(evalAdm.workRightToString, "Work right", "evaluation") }}
-                </div>
-                <div class="row my-2">
-                    <div class="col-md-12 justify">{{ evalAdm.commentEvalAdmPerson }}</div>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
-
-    {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
-    <div class="row my-3">
-        <div class="col-md-6 table-responsive">
-            <table class="table table-sm table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Enfants</th>
-                        <th>Nationalité</th>
-                        <th>Papier</th>
-                    </tr>
-                </thead>
-                <tbody>
-                        {% for evalPerson in evaluation.evaluationPeople %}
-                            {% set evalAdm = evalPerson.evalAdmPerson %}
-                            {% if evalAdm and evalPerson.supportPerson.role == 3 %}
-                                <tr>
-                                    <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-                                    <td>{{ evalAdm.nationalityToString }}</td>
-                                    <td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
-                                </tr>
-                            {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endif %}
-    
-</section>
-
-<hr>
-
-<section>
-    <div class="d-flex mb-3">
-        <h2 class="h4">Emploi</h2>
-        {% if theme_color is defined %}
-            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-            </span>
-        {% endif %}
-    </div>
-
-    {% for evalPerson in evaluation.evaluationPeople %}
-        {% set evalProf = evalPerson.evalProfPerson %}
-        {% if evalProf %}
-            <div class="my-3">
-                {% if nbSupportPeople > 1 %}
-                    <div class="row mb-2">
-                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                    </div>
-                {% endif %}
-                <div class="row mb-2">
-                    {{ utils.view(evalProf.schoolLevelToString, "School level", "evaluation") }}
-                    {{ utils.view(evalProf.profExperienceToString, "Prof experience", "evaluation") }}
-                    {{ utils.view(evalProf.profStatus ? evalProf.profStatusToString ~ (evalProf.contractType ? " (" 
-                        ~ evalProf.contractTypeToString ~ ")" : "") : "", "Prof status", "evaluation") }}
-                    {{ utils.view(evalProf.jobCenterId, "Job center id", "evaluation") }}
-                    {{ utils.view(evalProf.jobType, "Job type", "evaluation") }}
-                    {{ utils.view(evalProf.contractEndDate ? evalProf.contractEndDate|date("d/m/Y"), "Contract end date", "evaluation") }}
-                    {{ utils.view(evalProf.workingHours ? evalProf.workingHours ~ (evalProf.nbWorkingHours ? " (nb d'heures : " 
-                        ~ evalProf.nbWorkingHours ~ ")" : "") : "", "Working hours", "evaluation") }}
-                    {{ utils.view(evalProf.employerName ? evalProf.employerName ~ (evalProf.workPlace ? " | " 
-                        ~ evalProf.workPlace : "") : "", "Employer name", "evaluation") }}
-                    {{ utils.view(evalProf.transportMeansType ? evalProf.transportMeansTypeToString ~ (evalProf.transportMeans ? " (" 
-                        ~ evalProf.transportMeans ~ ")" : ""): "", "Transport means type", "evaluation") }}
-                    {{ utils.view(evalProf.rqth ? evalProf.rqthToString ~ (evalProf.endRqthDate ? " (fin de validité : " 
-                        ~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
-                </div>
-                <div class="row my-2">
-                    <div class="col-md-12 justify">{{ evalProf.commentEvalProf }}</div>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
-</section>
-
-{% set evalBudgetGroup = evaluation.evalBudgetGroup %}
-{% if evalBudgetGroup %}
-
-<hr>
-
-<section>
-    <div class="d-flex mb-3">
-        <h2 class="h4">Budget</h2>
-        {% if theme_color is defined %}
-            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-            </span>
-        {% endif %}
-    </div>
-    <div class="row mb-1">
-        <div class="col-md-6">
-            <table class="table table-sm table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th class="text-right">Montant</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td scope="row">Ressources</td>
-                        <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") }} €</td>
-                    </tr>
-                    {% if evalBudgetGroup.chargesGroupAmt %}
-                    <tr>
-                        <td scope="row">Charges</td>
-                        <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") }} €</td>
-                    </tr>
-                    {% endif %}
-                    {% if evalBudgetGroup.debtsGroupAmt %}
-                    <tr>
-                        <td scope="row">Remboursement mensuel des dettes</td>
-                        <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") }} €</td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-                <tfooter>
-                    <tr class="font-weight-bold">
-                        <td scope="row">Reste à vivre</td>
-                        <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") }} €</td>
-                    </tr>
-                    {% if evalBudgetGroup.debtsGroupAmt %}
-                    <tr>
-                        <td scope="row">Montant total des dettes</td>
-                        <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
-                    </tr>
-                    {% endif %}
-                </tfooter>
-            </table>
-        </div>
-    </div>
-
-    {% for evalPerson in evaluation.evaluationPeople %}
-        {% set evalBudget = evalPerson.evalBudgetPerson %}
-        {% if evalBudget %}	
-            <div class="my-3">
-                {% if nbSupportPeople > 1 %}
-                    <div class="row mb-2">
-                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                    </div>
-                {% endif %}
-                <div class="row mb-2">
-                        {{ evalBudget.resources == 1 and evalBudget.resourcesAmt > 0 ? '' : 
-                            utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
-                        {{ evalBudget.charges == 1 and evalBudget.chargesAmt > 0 ? '' : 
-                            utils.view(evalBudget.chargesToString, "Charges", "evaluation") }}
-                </div>
-                <div class="row">
-                    {% if evalBudget.resources == 1 %}
-                        <div class="col-md-6">
-                            <table class="table table-sm table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Ressources</th>
-                                        <th class="text-right">Montant</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for key, value in evalBudget.resourcesType %}
-                                        {% if attribute(evalBudget, key) %}
-                                        <tr>
-                                            <td scope="row">{% if not loop.last %}{{ value }}{% else %}
-                                                {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
-                                                    "Autre(s) ressource(s)" }}{% endif %}</td>
-                                                {% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
-                                            <td class="text-right">{{ amt > 0 ? amt ~ ' €' }}</td>
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                                <tfooter>
-                                    <tr class="font-weight-bold">
-                                        <td scope="row">Total des ressources</td>
-                                        <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
-                                    </tr>
-                                    {% if evalBudget.incomeN1Amt %}
-                                    <tr>
-                                        <td scope="row">Impôts sur le revenu n-1</td>
-                                        <td class="text-right">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €</td>
-                                    </tr>							
-                                    {% endif %}
-                                    {% if evalBudget.incomeN2Amt %}
-                                    <tr>
-                                        <td scope="row">Impôts sur le revenu n-2</td>
-                                        <td class="text-right">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
-                                    </tr>
-                                    {% endif %}
-                                </tfooter>
-                            </table>
-                        </div>
-                    {% endif %}
-
-                    {% if evalBudget.charges == 1 %}
-                        <div class="col-md-6">
-                            <table class="table table-sm table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Charges</th>
-                                        <td class="text-right font-weight-bold">Montant</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for key, value in evalBudget.chargesType %}
-                                        {% if attribute(evalBudget, key) %}
-                                        <tr>
-                                            <td scope="row">{% if not loop.last %}{{ value }}{% else %}
-                                                {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
-                                                    "Autre(s) charge(s)" }}{% endif %}</td>
-                                            <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") }} €</td>
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                                <tfooter>
-                                    <tr class="font-weight-bold">
-                                        <td scope="row">Total des charges</td>
-                                        <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
-                                    </tr>
-                                </tfooter>
-                            </table>
-                        </div>
-                    {% endif %}
-
-                </div>
-                {% if evalBudget.chargeComment %}
-                <div class="row">
-                    {{ utils.view(evalBudget.chargeComment, "Charge comment", "evaluation") }}
-                </div>
-                {% endif %}
-                <div class="row mb-2">
-                    {{ utils.view(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
-                </div>
-                {% if evalBudget.debts %}
-                <div class="row mb-2">
-                    {{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
-                    {% if evalBudget.debts == 1 %}
-                    <div class="col-md-6">
-                        <div class="py-2 text-secondary">Type de dettes :</div>
-                        <ul class="mb-0">
-                            {% for key, value in evalBudget.debtsType %}
-                                {% if attribute(evalBudget, key) %}
-                                    <li>{{ value }}</li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="row mb-2">
-                    {{ utils.view(evalBudget.debtComment, "Debt comment", "evaluation") }}
-                    {{ utils.view(evalBudget.overIndebtRecord ? evalBudget.overIndebtRecordToString ~ (evalBudget.overIndebtRecordDate ? 
-                        " (date de dépôt : " ~ evalBudget.overIndebtRecordDate|date("d/m/Y") ~ ")" : "") : "", "Over indebt record", "evaluation") }}
-                    {{ utils.view(evalBudget.settlementPlanToString, "Settlement plan", "evaluation") }}
-                    {{ utils.view(evalBudget.moratoriumToString, "Moratorium", "evaluation") }}
-                    {{ utils.view(evalBudget.endRightsDate ? evalBudget.endRightsDate|date("d/m/Y") : "", "End rights date", "evaluation") }}
-                </div>
-                {% endif %}
-                {% if evalBudget.commentEvalBudget %}
-                <div class="row my-3">
-                    <div class="col-md-12 justify">{{ evalBudget.commentEvalBudget }}</div>
-                </div>
-                {% endif %}
-            </div>
-
-        {% endif %}
-
-    {% endfor %}
-</section>
-
-{% endif %}
-
-{% set evalHousing = evaluation.evalHousingGroup %}
-{% if evalHousing %}
 
     <hr>
 
-    <section class="mb-5">
+    <section>
         <div class="d-flex mb-3">
-            <h2 class="h4">Logement - Hébergement</h2>
+            <h2 class="h4">Social</h2>
             {% if theme_color is defined %}
                 <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
                     class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
                 </span>
-        {% endif %}
+            {% endif %}
         </div>
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
-        </div>
-        {% if evalHousing.siaoRequest %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
-            {{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
-                ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
-                ~ ")" : "") : "", "Siao request date", "evaluation") }}
-        </div>
-        {% endif %}
-        {% if evalHousing.socialHousingRequest %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.socialHousingRequestToString ~ (evalHousing.socialHousingRequestId ? " (NUR : " 
-                ~ evalHousing.socialHousingRequestId ~ ")" : ""), "Social housing request", "evaluation") }}
-            {{ utils.view(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate|date("d/m/Y") 
-                ~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate|date("d/m/Y") 
-                ~ ")" : "") : "", "Date demande de logement social", "evaluation") }}
-            {{ utils.view(evalHousing.housingWishes, "Housing wishes", "evaluation") }}
-            {{ utils.view(evalHousing.citiesWishes, "Cities wishes", "evaluation") }}
-            {{ utils.view(evalHousing.specificities, "Specificities", "evaluation") }}
-        </div>
-        {% endif %}
-        {% if evalHousing.syplo %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.syploToString ~ (evalHousing.syploDate ? " (" 
-                ~ evalHousing.syploDate|date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
-            {{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
-        </div>
-        {% endif %}
-        {% if evalHousing.daloCommission %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho ? 
-                " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
-                ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
-            {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
-            {{ utils.view(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
-            {{ utils.view(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
-                " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
-        </div>
-        {% endif %}
-        {% if evalHousing.collectiveAgreementHousing %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
-                " (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
-        </div>
-        {% endif %}
-        {% if evalHousing.hsgActionEligibility %}					
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
-            {{ utils.view(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
-                " (le " ~ evalHousing.hsgActionDate|date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
-            {{ utils.view(evalHousing.hsgActionRecordId, "Hsg action record id", "evaluation") }}
-            {{ utils.view(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
-        </div>
-        {% endif %}
-        {% if evalHousing.expulsionInProgress %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
-            {{ utils.view(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
-                " (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
-            {{ utils.view(evalHousing.expulsionComment) }}
-        </div>
-        {% endif %}
-        {% if evalHousing.housingExperience %}
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
-            {{ utils.view(evalHousing.housingExpeComment) }}
-        </div>
-        {% endif %}
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <ul class="mb-0">
-                    {% for key, value in evalHousing.housingHelps %}
-                        {% if attribute(evalHousing, key) %}
-                            <li>{{ value }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
+        {% for evalPerson in evaluation.evaluationPeople %}
+            {% set evalSocial = evalPerson.evalSocialPerson %}
+            {% if evalSocial %}
+                <div class="my-3">
+                    {% if nbSupportPeople > 1 %}
+                        <div class="row mb-2">
+                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ utils.view(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
+                            ~ evalSocial.socialSecurityToString : evalSocial.rightSocialSecurityToString, "Right social security", "evaluation") }}
+                        {{ utils.view(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
+                        {{ utils.view(evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
+                    </div>
+                    {% if evalSocial.familyBreakdown or evalSocial.friendshipBreakdown %}
+                        <div class="row mb-2">
+                            {{ utils.view(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
+                            {{ utils.view(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
+                        </div>
+                    {% endif %}
+                    {% if evalSocial.healthProblem %}
+                        <div class="row mb-2">
+                            {{ utils.view(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
+                            <div class="col-md-6">
+                                <ul class="mb-0">
+                                    {% for key, value in evalSocial.healthProblemsType %}
+                                        {% if attribute(evalSocial, key) %}
+                                            <li>{{ value }}</li>
+                                        {% endif %}
+                                    {% endfor %}									 
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ utils.view(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
+                            ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
+                        {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == 1 ? 
+                            " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
+                    </div>
+                    {% if evalSocial.commentEvalSocialPerson %}
+                        <div class="row mb-2">
+                            <div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if evaluation.evalSocialGroup %}
+            {% set evalSocial = evaluation.evalSocialGroup %}
+            <div class="row mb-2">
+                {{ utils.view(evalSocial.reasonRequestToString, "Reason request", "evaluation") }}
+                {{ utils.view(evalSocial.wanderingTimeToString, "Wandering time", "evaluation") }}
+                {{ utils.view(evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" : "" ), "Animal", "evaluation") }}
             </div>
-        </div>
-        <div class="row my-3">
-            <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>
-        </div>
-            
+            <div class="row mb-2">
+                <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
+            </div>
+        {% endif %}
+
+
     </section>
 
-{% endif %}
+    <hr>
+
+    <section>
+        <div class="d-flex mb-3">
+            <h2 class="h4">Famille</h2>
+            {% if theme_color is defined %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
+            {% endif %}
+        </div>
+        {% for evalPerson in evaluation.evaluationPeople %}
+            {% set evalFamily = evalPerson.evalFamilyPerson %}
+            {% if evalFamily and evalPerson.supportPerson.role != 3 %}
+                <div class="my-3">
+                    {% if nbSupportPeople > 1 %}
+                        <div class="row mb-2">
+                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
+                        {{ utils.view(evalFamily.protectiveMeasure == 1 and evalFamily.protectiveMeasureType ? 
+                            evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
+                        {{ utils.view(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
+                            ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson }}</div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Enfant(s)</th>
+                                <th>Garde ou scolarité</th>
+                                <th>Lieu de garde/scolarité</th>
+                                <th>Hébergement</th>
+                                <th>À charge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evalPerson in evaluation.evaluationPeople %}
+                                {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
+                                {% if evalFamilyPerson and evalPerson.supportPerson.role == 3 %}
+                                    <tr>
+                                        <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                                        <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
+                                        <td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
+                                        <td>{{ evalFamilyPerson.childToHostToString }}</td>
+                                        <td>{{ evalFamilyPerson.childDependanceToString }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% set evalFamily = evaluation.evalFamilyGroup %}
+        {% if evalFamily %}
+            <div class="row mb-2">
+                {{ utils.view(evalFamily.cafId, "Caf id", "evaluation") }}
+                {{ utils.view(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
+                {{ utils.view(evalFamily.famlReunification ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
+                    ~ evalFamily.nbPeopleReunification ~ " personne(s))" : "") : "", "Faml reunification", "evaluation") }}
+            </div>
+            <div class="row my-3">
+                <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup }}</div>
+            </div>
+        {% endif %}
+
+
+    </section>
+
+    <hr>
+
+    <section>
+        <div class="d-flex mb-3">
+            <h2 class="h4">Identité - Papier</h2>
+            {% if theme_color is defined %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
+            {% endif %}
+        </div>
+
+        {% for evalPerson in evaluation.evaluationPeople %}
+            {% set evalAdm = evalPerson.evalAdmPerson %}
+            {% if evalAdm and evalPerson.supportPerson.role != 3 %}
+                <div class="my-3">
+                    {% if nbSupportPeople > 1 %}
+                        <div class="row mb-2">
+                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        {{ utils.view(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
+                            ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
+                        {{ utils.view(evalAdm.paper == 1 and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
+                        {{ utils.view(evalAdm.asylumBackground == 1 and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
+                            evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
+                        {{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
+                            ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation") }}
+                        {{ utils.view(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
+                        {{ utils.view(evalAdm.workRightToString, "Work right", "evaluation") }}
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-md-12 justify">{{ evalAdm.commentEvalAdmPerson }}</div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
+        <div class="row my-3">
+            <div class="col-md-6 table-responsive">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Enfants</th>
+                            <th>Nationalité</th>
+                            <th>Papier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for evalPerson in evaluation.evaluationPeople %}
+                                {% set evalAdm = evalPerson.evalAdmPerson %}
+                                {% if evalAdm and evalPerson.supportPerson.role == 3 %}
+                                    <tr>
+                                        <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                                        <td>{{ evalAdm.nationalityToString }}</td>
+                                        <td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+                                    </tr>
+                                {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+        
+    </section>
+
+    <hr>
+
+    <section>
+        <div class="d-flex mb-3">
+            <h2 class="h4">Emploi</h2>
+            {% if theme_color is defined %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
+            {% endif %}
+        </div>
+
+        {% for evalPerson in evaluation.evaluationPeople %}
+            {% set evalProf = evalPerson.evalProfPerson %}
+            {% if evalProf %}
+                <div class="my-3">
+                    {% if nbSupportPeople > 1 %}
+                        <div class="row mb-2">
+                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ utils.view(evalProf.schoolLevelToString, "School level", "evaluation") }}
+                        {{ utils.view(evalProf.profExperienceToString, "Prof experience", "evaluation") }}
+                        {{ utils.view(evalProf.profStatus ? evalProf.profStatusToString ~ (evalProf.contractType ? " (" 
+                            ~ evalProf.contractTypeToString ~ ")" : "") : "", "Prof status", "evaluation") }}
+                        {{ utils.view(evalProf.jobCenterId, "Job center id", "evaluation") }}
+                        {{ utils.view(evalProf.jobType, "Job type", "evaluation") }}
+                        {{ utils.view(evalProf.contractEndDate ? evalProf.contractEndDate|date("d/m/Y"), "Contract end date", "evaluation") }}
+                        {{ utils.view(evalProf.workingHours ? evalProf.workingHours ~ (evalProf.nbWorkingHours ? " (nb d'heures : " 
+                            ~ evalProf.nbWorkingHours ~ ")" : "") : "", "Working hours", "evaluation") }}
+                        {{ utils.view(evalProf.employerName ? evalProf.employerName ~ (evalProf.workPlace ? " | " 
+                            ~ evalProf.workPlace : "") : "", "Employer name", "evaluation") }}
+                        {{ utils.view(evalProf.transportMeansType ? evalProf.transportMeansTypeToString ~ (evalProf.transportMeans ? " (" 
+                            ~ evalProf.transportMeans ~ ")" : ""): "", "Transport means type", "evaluation") }}
+                        {{ utils.view(evalProf.rqth ? evalProf.rqthToString ~ (evalProf.endRqthDate ? " (fin de validité : " 
+                            ~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-md-12 justify">{{ evalProf.commentEvalProf }}</div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    {% set evalBudgetGroup = evaluation.evalBudgetGroup %}
+    {% if evalBudgetGroup %}
+
+    <hr>
+
+    <section>
+        <div class="d-flex mb-3">
+            <h2 class="h4">Budget</h2>
+            {% if theme_color is defined %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
+            {% endif %}
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-6">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th class="text-right">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row">Ressources</td>
+                            <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") }} €</td>
+                        </tr>
+                        {% if evalBudgetGroup.chargesGroupAmt %}
+                        <tr>
+                            <td scope="row">Charges</td>
+                            <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") }} €</td>
+                        </tr>
+                        {% endif %}
+                        {% if evalBudgetGroup.debtsGroupAmt %}
+                        <tr>
+                            <td scope="row">Remboursement mensuel des dettes</td>
+                            <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") }} €</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                    <tfooter>
+                        <tr class="font-weight-bold">
+                            <td scope="row">Reste à vivre</td>
+                            <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") }} €</td>
+                        </tr>
+                        {% if evalBudgetGroup.debtsGroupAmt %}
+                        <tr>
+                            <td scope="row">Montant total des dettes</td>
+                            <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
+                        </tr>
+                        {% endif %}
+                    </tfooter>
+                </table>
+            </div>
+        </div>
+
+        {% for evalPerson in evaluation.evaluationPeople %}
+            {% set evalBudget = evalPerson.evalBudgetPerson %}
+            {% if evalBudget %}	
+                <div class="my-3">
+                    {% if nbSupportPeople > 1 %}
+                        <div class="row mb-2">
+                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                            {{ evalBudget.resources == 1 and evalBudget.resourcesAmt > 0 ? '' : 
+                                utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
+                            {{ evalBudget.charges == 1 and evalBudget.chargesAmt > 0 ? '' : 
+                                utils.view(evalBudget.chargesToString, "Charges", "evaluation") }}
+                    </div>
+                    <div class="row">
+                        {% if evalBudget.resources == 1 %}
+                            <div class="col-md-6">
+                                <table class="table table-sm table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Ressources</th>
+                                            <th class="text-right">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for key, value in evalBudget.resourcesType %}
+                                            {% if attribute(evalBudget, key) %}
+                                            <tr>
+                                                <td scope="row">{% if not loop.last %}{{ value }}{% else %}
+                                                    {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
+                                                        "Autre(s) ressource(s)" }}{% endif %}</td>
+                                                    {% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
+                                                <td class="text-right">{{ amt > 0 ? amt ~ ' €' }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfooter>
+                                        <tr class="font-weight-bold">
+                                            <td scope="row">Total des ressources</td>
+                                            <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+                                        </tr>
+                                        {% if evalBudget.incomeN1Amt %}
+                                        <tr>
+                                            <td scope="row">Impôts sur le revenu n-1</td>
+                                            <td class="text-right">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €</td>
+                                        </tr>							
+                                        {% endif %}
+                                        {% if evalBudget.incomeN2Amt %}
+                                        <tr>
+                                            <td scope="row">Impôts sur le revenu n-2</td>
+                                            <td class="text-right">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
+                                        </tr>
+                                        {% endif %}
+                                    </tfooter>
+                                </table>
+                            </div>
+                        {% endif %}
+
+                        {% if evalBudget.charges == 1 %}
+                            <div class="col-md-6">
+                                <table class="table table-sm table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Charges</th>
+                                            <td class="text-right font-weight-bold">Montant</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for key, value in evalBudget.chargesType %}
+                                            {% if attribute(evalBudget, key) %}
+                                            <tr>
+                                                <td scope="row">{% if not loop.last %}{{ value }}{% else %}
+                                                    {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
+                                                        "Autre(s) charge(s)" }}{% endif %}</td>
+                                                <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") }} €</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfooter>
+                                        <tr class="font-weight-bold">
+                                            <td scope="row">Total des charges</td>
+                                            <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+                                        </tr>
+                                    </tfooter>
+                                </table>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    {% if evalBudget.chargeComment %}
+                    <div class="row">
+                        {{ utils.view(evalBudget.chargeComment, "Charge comment", "evaluation") }}
+                    </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ utils.view(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
+                    </div>
+                    {% if evalBudget.debts %}
+                    <div class="row mb-2">
+                        {{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
+                        {% if evalBudget.debts == 1 %}
+                        <div class="col-md-6">
+                            <div class="py-2 text-secondary">Type de dettes :</div>
+                            <ul class="mb-0">
+                                {% for key, value in evalBudget.debtsType %}
+                                    {% if attribute(evalBudget, key) %}
+                                        <li>{{ value }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row mb-2">
+                        {{ utils.view(evalBudget.debtComment, "Debt comment", "evaluation") }}
+                        {{ utils.view(evalBudget.overIndebtRecord ? evalBudget.overIndebtRecordToString ~ (evalBudget.overIndebtRecordDate ? 
+                            " (date de dépôt : " ~ evalBudget.overIndebtRecordDate|date("d/m/Y") ~ ")" : "") : "", "Over indebt record", "evaluation") }}
+                        {{ utils.view(evalBudget.settlementPlanToString, "Settlement plan", "evaluation") }}
+                        {{ utils.view(evalBudget.moratoriumToString, "Moratorium", "evaluation") }}
+                        {{ utils.view(evalBudget.endRightsDate ? evalBudget.endRightsDate|date("d/m/Y") : "", "End rights date", "evaluation") }}
+                    </div>
+                    {% endif %}
+                    {% if evalBudget.commentEvalBudget %}
+                    <div class="row my-3">
+                        <div class="col-md-12 justify">{{ evalBudget.commentEvalBudget }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+    </section>
+
+    {% endif %}
+
+    {% set evalHousing = evaluation.evalHousingGroup %}
+    {% if evalHousing %}
+
+        <hr>
+
+        <section class="mb-5">
+            <div class="d-flex mb-3">
+                <h2 class="h4">Logement - Hébergement</h2>
+                {% if theme_color is defined %}
+                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                    </span>
+            {% endif %}
+            </div>
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
+            </div>
+            {% if evalHousing.siaoRequest %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
+                {{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
+                    ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
+                    ~ ")" : "") : "", "Siao request date", "evaluation") }}
+            </div>
+            {% endif %}
+            {% if evalHousing.socialHousingRequest %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.socialHousingRequestToString ~ (evalHousing.socialHousingRequestId ? " (NUR : " 
+                    ~ evalHousing.socialHousingRequestId ~ ")" : ""), "Social housing request", "evaluation") }}
+                {{ utils.view(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate|date("d/m/Y") 
+                    ~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate|date("d/m/Y") 
+                    ~ ")" : "") : "", "Date demande de logement social", "evaluation") }}
+                {{ utils.view(evalHousing.housingWishes, "Housing wishes", "evaluation") }}
+                {{ utils.view(evalHousing.citiesWishes, "Cities wishes", "evaluation") }}
+                {{ utils.view(evalHousing.specificities, "Specificities", "evaluation") }}
+            </div>
+            {% endif %}
+            {% if evalHousing.syplo %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.syploToString ~ (evalHousing.syploDate ? " (" 
+                    ~ evalHousing.syploDate|date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
+                {{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
+            </div>
+            {% endif %}
+            {% if evalHousing.daloCommission %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho ? 
+                    " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
+                    ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
+                {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
+                {{ utils.view(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
+                {{ utils.view(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
+                    " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
+            </div>
+            {% endif %}
+            {% if evalHousing.collectiveAgreementHousing %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
+                    " (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
+            </div>
+            {% endif %}
+            {% if evalHousing.hsgActionEligibility %}					
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
+                {{ utils.view(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
+                    " (le " ~ evalHousing.hsgActionDate|date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
+                {{ utils.view(evalHousing.hsgActionRecordId, "Hsg action record id", "evaluation") }}
+                {{ utils.view(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
+            </div>
+            {% endif %}
+            {% if evalHousing.expulsionInProgress %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
+                {{ utils.view(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
+                    " (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
+                {{ utils.view(evalHousing.expulsionComment) }}
+            </div>
+            {% endif %}
+            {% if evalHousing.housingExperience %}
+            <div class="row mb-3">
+                {{ utils.view(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
+                {{ utils.view(evalHousing.housingExpeComment) }}
+            </div>
+            {% endif %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <ul class="mb-0">
+                        {% for key, value in evalHousing.housingHelps %}
+                            {% if attribute(evalHousing, key) %}
+                                <li>{{ value }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>
+            </div>
+                
+        </section>
+
+    {% endif %}
+
+{% endapply %}

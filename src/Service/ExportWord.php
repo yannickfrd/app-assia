@@ -129,7 +129,7 @@ class ExportWord
     // Save the document
     public function save(string $title, $download = true)
     {
-        $title = str_replace(' ', '-', $title ? $title : 'document');
+        $title = str_replace([' ', '/'], '-', $title ? $title : 'document');
         $title = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $title);
 
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');

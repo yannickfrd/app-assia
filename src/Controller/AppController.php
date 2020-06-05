@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Service\Indicators;
-use App\Service\OccupancyRate;
+use App\Service\Indicators\SupportsByUserIndicators;
+use App\Service\Indicators\OccupancyIndicators;
 use App\Form\OccupancySearchType;
 use App\Repository\RdvRepository;
 use App\Repository\NoteRepository;
@@ -133,7 +133,7 @@ class AppController extends AbstractController
      *
      * @Route("/dashboard/service", name="dashboard_service", methods="GET")
      */
-    public function showServiceDashboard(Indicators $indicators): Response
+    public function showServiceDashboard(SupportsByUserIndicators $indicators): Response
     {
         // $cache = new FilesystemAdapter();
 
@@ -162,7 +162,7 @@ class AppController extends AbstractController
      * @Route("/occupancy/devices", name="occupancy_devices", methods="GET|POST")
      * @Route("/occupancy/service/{id}/devices", name="occupancy_service_devices", methods="GET|POST")
      */
-    public function showOccupancyByDevice(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    public function showOccupancyByDevice(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
@@ -179,7 +179,7 @@ class AppController extends AbstractController
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
-            'datas' => $occupancyRate->getOccupancyRateByDevice($start, $end, $service),
+            'datas' => $occupancyIndicators->getOccupancyRateByDevice($start, $end, $service),
         ]);
     }
 
@@ -189,7 +189,7 @@ class AppController extends AbstractController
      * @Route("/occupancy/services", name="occupancy_services", methods="GET|POST")
      * @Route("/occupancy/device/{id}/services", name="occupancy_device_services", methods="GET|POST")
      */
-    public function showOccupancyByService(Device $device = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    public function showOccupancyByService(Device $device = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
@@ -206,7 +206,7 @@ class AppController extends AbstractController
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
-            'datas' => $occupancyRate->getOccupancyRateByService($start, $end, $device),
+            'datas' => $occupancyIndicators->getOccupancyRateByService($start, $end, $device),
         ]);
     }
 
@@ -216,7 +216,7 @@ class AppController extends AbstractController
      * @Route("/occupancy/service/{id}/accommodations", name="occupancy_service_accommodations", methods="GET|POST")
      * @Route("/occupancy/accommodations", name="occupancy_accommodations", methods="GET|POST")
      */
-    public function showOccupancyByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyRate $occupancyRate): Response
+    public function showOccupancyByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = new OccupancySearch();
@@ -239,7 +239,7 @@ class AppController extends AbstractController
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
-            'datas' => $occupancyRate->getOccupancyRateByAccommodation($start, $end, $service),
+            'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($start, $end, $service),
         ]);
     }
 }

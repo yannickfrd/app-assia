@@ -16,7 +16,7 @@ class ContributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('contribDate', DateType::class, [
+            ->add('month', DateType::class, [
                 'required' => true,
             ])
             ->add('type', ChoiceType::class, [
@@ -36,7 +36,7 @@ class ContributionType extends AbstractType
                 'required' => false,
             ])
             ->add('credential')
-            ->add('contribAmt', MoneyType::class, [
+            ->add('dueAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],
@@ -49,7 +49,7 @@ class ContributionType extends AbstractType
                 'choices' => Choices::getchoices(Contribution::PAYMENT_TYPE),
                 'placeholder' => '-- Select --',
             ])
-            ->add('paymentAmt', MoneyType::class, [
+            ->add('paidAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],

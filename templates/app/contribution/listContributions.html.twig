@@ -32,10 +32,10 @@
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Suivi", "p.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Service", "s.name") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.contribDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.month") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.contribAmt") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paymentAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.dueAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû", "c.stillDueAmt") }}</th>
                         <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de règlement", "c.paymentDate") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mode de réglement", "c.paymentType") }}</th>
@@ -57,10 +57,10 @@
                                 {% endfor %}                     
                             </td>
                             <td class="align-middle">{{ contribution.supportGroup.service.name }}</td>
-                            <td class="align-middle">{{ contribution.contribDate|date("Y-m") }}</td>
+                            <td class="align-middle">{{ contribution.month|date("Y-m") }}</td>
                             <td class="align-middle">{{ contribution.typeToString }}</td>
-                            <td class="align-middle text-right">{{ contribution.contribAmt|number_format(0, ",", " ") }} €</td>
-                            <td class="align-middle text-right">{{ contribution.paymentAmt|number_format(0, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ contribution.dueAmt|number_format(0, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ contribution.paidAmt|number_format(0, ",", " ") }} €</td>
                             <td class="align-middle text-right">{{ contribution.stillDueAmt|number_format(0, ",", " ") }} €</td>
                             <td class="align-middle text-center">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ contribution.paymentTypeToString }}</td>

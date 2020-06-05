@@ -1,0 +1,76 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Indicateurs Redevances | {{ title_website }}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    {% include "model/msgFlash.html.twig" %}
+    <h1 class="h2 mb-3">Indicateurs<span class="fas fa-angle-right fa-xs mx-1"></span>Redevances</h1>
+</div>
+
+{% include "app/contribution/searchContribution.html.twig" %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
+                    <thead>
+                        <tr>
+                            <th scope="row" class="align-middle th-w-20"></th>
+                            <th class="align-middle th-w-100">Mois</th>
+                            <th class="align-middle th-w-100 text-right">Nombre de redevances</th>
+                            <th class="align-middle th-w-100 text-right">Montant total des redevances</th>
+                            <th class="align-middle th-w-100 text-right">Moyenne montant des redevances</th>
+                            <th class="align-middle th-w-100 text-right">Montant total réglé</th>
+                            <th class="align-middle th-w-100 text-right">Moyenne montant réglé</th>
+                            <th class="align-middle th-w-100 text-right">Montant restant dus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set query = app.request.query.get('service') %}
+                        {% for month in datas.months %}
+                            <tr>
+                                {% set lastdayMonth = month.date|date_modify("+1 month")|date_modify("-1 day") %}
+                                <td scope="row" class="align-middle text-center">
+                                    <a href="{{ path('contributions', {'type': form.vars.value.type, 
+                                        'service': query ? {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
+                                        'date': {'start': month.date|date('Y-m-d'), 'end': lastdayMonth|date('Y-m-d')} }) }}" 
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                        title="Voir le détail des groupes de places du service"><span class="fas fa-eye fa-sm"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle">{{ month.monthToString }}</td>
+                                <td class="align-middle text-right">{{ month.nbContributions|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ month.sumDueAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ month.averageContributionAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ month.sumPaidAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ month.averagePaidAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ month.sumStillDueAmt|number_format(2, ",", " ") }} €</td>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfooter>
+                        <tr class="font-weight-bold">
+                            <td class="align-middle text-center" colspan="2">Total</td>
+                            <td class="align-middle text-right">{{ datas.nbContributions|number_format(0, ",", " ") }}</td>
+                            <td class="align-middle text-right">{{ datas.sumDueAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ datas.averageContributionAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ datas.sumPaidAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ datas.averagePaidAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ datas.sumStillDueAmt|number_format(2, ",", " ") }} €</td>
+                        </tr>
+                    </tfooter>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

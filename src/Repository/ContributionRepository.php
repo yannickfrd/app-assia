@@ -38,7 +38,7 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return  $query->orderBy('c.contribDate', 'DESC')
+        return  $query->orderBy('c.month', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -52,8 +52,22 @@ class ContributionRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('c.contribDate', 'DESC')
+        return  $query->orderBy('c.month', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    public function findAllContributionsForIndicators(ContributionSearch $search = null): ?array
+    {
+        $query = $this->createQueryBuilder('c')->select('c')
+            ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}');
+
+        if ($search) {
+            $query = $this->filter($query, $search);
+        }
+
+        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -92,11 +106,11 @@ class ContributionRepository extends ServiceEntityRepository
         }
 
         if ($search->getStart()) {
-            $query->andWhere('c.contribDate >= :start')
+            $query->andWhere('c.month >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.contribDate <= :end')
+            $query->andWhere('c.month <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
@@ -148,15 +162,15 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('type', $search->getType());
         }
         if ($search->getStart()) {
-            $query->andWhere('c.contribDate >= :start')
+            $query->andWhere('c.month >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.contribDate <= :end')
+            $query->andWhere('c.month <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $query->orderBy('c.contribDate', 'DESC');
+        $query = $query->orderBy('c.month', 'DESC');
 
         return $query->getQuery();
     }
@@ -188,7 +202,7 @@ class ContributionRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne la somme des restants dûs de participations.
+     * Donne la somme des restants dus de participations.
      *
      * @return mixed
      */

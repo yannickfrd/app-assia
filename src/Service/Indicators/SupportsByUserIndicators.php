@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Indicators;
 
 use App\Repository\DeviceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
 use App\Security\CurrentUserService;
 
-class Indicators
+class SupportsByUserIndicators
 {
     protected $currentUser;
     protected $repoDevice;

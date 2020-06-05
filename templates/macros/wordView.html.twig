@@ -1,6 +1,6 @@
 {#  #}
-{% macro view(value, key = null, trans = "forms") %}{% spaceless %}
+{% macro view(value, key = null, trans = "forms") %}{% apply spaceless %}
     {% if value != "" and value != "Non renseigné" %}
         <p>{% if key is not null %}<i class="text-secondary">{{ key|trans({}, trans) }} : </i>{% endif %}{{ value }}</p>
     {% endif %}
-{% endspaceless %}{% endmacro %}
+{% endapply %}{% endmacro %}

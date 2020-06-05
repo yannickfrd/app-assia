@@ -2,9 +2,9 @@
 
 {% set nbSupportPeople = support.supportPeople|length %}
 
-{% spaceless %}
+{% apply spaceless %}
 
-    <table>
+    <table class="table-bordered mb-2">
         <thead>
             <tr>
                 <th>Nom et prénom</th>
@@ -107,7 +107,7 @@
     {% endfor %}
 
     {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
-        <table>
+        <table class="table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Enfant(s)</th>
@@ -167,7 +167,7 @@
     {% endfor %}
 
     {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %}
-        <table>
+        <table class="table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Enfants</th>
@@ -225,7 +225,7 @@
     <br/>
 
     <h3 class="h4"><b>BUDGET</b></h3>
-    <table>
+    <table class="table-bordered">
         <thead>
             <tr>
                 <th scope="col"></th>
@@ -275,7 +275,7 @@
             {{ evalBudget.charges == 1 and evalBudget.chargesAmt > 0 ? '' : 
                 utils.view(evalBudget.chargesToString, "Charges", "evaluation") }}
             {% if evalBudget.resources == 1 %}
-                <table>
+                <table class="table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">Ressources</th>
@@ -317,7 +317,7 @@
             {% endif %}
 
                 {% if evalBudget.charges == 1 %}
-                    <table>
+                    <table class="table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">Charges</th>
@@ -446,4 +446,4 @@
                 
     {% endif %}
 
-{% endspaceless %}
+{% endapply %}

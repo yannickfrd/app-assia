@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Indicators;
 
 use App\Entity\Device;
 use App\Entity\Service;
@@ -10,7 +10,7 @@ use App\Repository\ServiceRepository;
 use App\Repository\AccommodationRepository;
 use App\Repository\AccommodationPersonRepository;
 
-class OccupancyRate
+class OccupancyIndicators
 {
     protected $currentUser;
     protected $repoAccommodation;

@@ -6,7 +6,7 @@
 
 {% block body %}
 
-<div class="container">
+<div class="container{{ devices|length > 8 ? '-fluid mt-4' }}">
 
     <h1 class="h2 mb-3">Synthèse des suivis en cours</h1>
     <p>Nombre de suivis en cours par référent en fonction du dispositif d'accompagnement.</p>
@@ -15,7 +15,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="table-responsive-sm">
+            <div class="table-responsive">
                 <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
                     <thead>
                         <tr>
