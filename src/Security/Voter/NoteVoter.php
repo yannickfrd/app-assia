@@ -2,7 +2,6 @@
 
 namespace App\Security\Voter;
 
-use App\Security\Voter\UserIsAdminTrait;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -14,6 +13,9 @@ class NoteVoter extends Voter
     private $security;
     protected $currentUser;
     protected $currentUserId;
+    /**
+     * @var Note
+     */
     protected $note;
 
     public function __construct(Security $security)
@@ -75,11 +77,11 @@ class NoteVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->currentUserId == $this->note->getCreatedBy()->getId()) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->note->getCreatedBy()))) {
             return true;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->note->getCreatedBy()))) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId() || $this->currentUserId == $this->note->getSupportGroup()->getReferent()->getId()) {
             return true;
         }
 
