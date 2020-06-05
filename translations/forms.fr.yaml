@@ -98,10 +98,10 @@ Configuration: Configuration
 Individual collective: Individuel ou collectif
 Contribution amt: Montant de la redevance
 
-Contrib amt: Montant dû
-Contrib date: Mois concerné
+Due amt: Montant dû
+Month: Mois concerné
 Credential: Justificatif de ressources
-Payment amt: Montant réglé
+Paid amt: Montant réglé
 Payment date: Date de règlement
 Payment type: Mode de règlement
 Resources amt: Montant total des ressources

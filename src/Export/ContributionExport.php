@@ -11,7 +11,7 @@ class ContributionExport
 {
     protected $router;
 
-    public function __construct(UrlGeneratorInterface $router)
+    public function __construct(UrlGeneratorInterface $router = null)
     {
         $this->router = $router;
     }
@@ -71,10 +71,10 @@ class ContributionExport
             'Créé par' => $contribution->getCreatedBy()->getFullname(),
             'Date de modification' => $this->formatDate($contribution->getUpdatedAt()),
             'Modifié par' => $contribution->getUpdatedBy()->getFullname(),
-            'Url' => $this->router->generate('support_contributions', [
+            'Url' => $this->router ? $this->router->generate('support_contributions', [
                 'id' => $supportGroup->getId(),
                 'contributionId' => $contribution->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            ], UrlGeneratorInterface::ABSOLUTE_URL) : null,
         ];
     }
 

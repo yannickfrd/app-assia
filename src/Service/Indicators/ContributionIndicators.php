@@ -21,9 +21,9 @@ class ContributionIndicators
         $months[] = $start;
         $date = clone $start;
         $end = new \DateTime($end->format('Y-m').'-01');
-        $nbMonths = ($start->diff($end)->y * 12) + $start->diff($end)->m;
+        $nbMonths = ($start->diff($end)->y * 12) + $start->diff($end)->m + round(($start->diff($end)->d / (365 / 12)));
 
-        for ($i = 1; $i < $nbMonths; ++$i) {
+        for ($i = 0; $i < $nbMonths; ++$i) {
             $date = (new \DateTime($date->format('Y-m-d')))->modify('+1 month');
             $months[] = $date;
         }

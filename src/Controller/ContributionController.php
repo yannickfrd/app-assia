@@ -239,8 +239,9 @@ class ContributionController extends AbstractController
     {
         $today = new \DateTime('midnight');
         $search = (new ContributionSearch())
-        ->setType(1)
-        ->setStart(new \DateTime($today->format('Y').'-01-01'));
+            ->setType(1)
+            ->setStart(new \DateTime($today->format('Y').'-01-01'))
+            ->setEnd($today);
 
         if ($this->getUser()->getStatus() == 1) {
             $usersCollection = new ArrayCollection();
@@ -249,14 +250,17 @@ class ContributionController extends AbstractController
         }
 
         $form = ($this->createForm(ContributionSearchType::class, $search))
-        ->handleRequest($request);
+            ->handleRequest($request);
 
-        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
-        $end = $search->getEnd() ?? $today;
+        if ($search->getExport()) {
+            return $this->exportData($search);
+        }
 
-        $contributions = $this->repo->findAllContributionsForIndicators($search);
-
-        $datas = $indicators->getMonthlyIndicators($contributions, $start, $end);
+        $datas = $indicators->getMonthlyIndicators(
+            $this->repo->findAllContributionsForIndicators($search), 
+            $search->getStart(), 
+            $search->getEnd()
+        );
 
         return $this->render('app/contribution/monthlyContributionIndicators.html.twig', [
             'form' => $form->createView(),
@@ -267,7 +271,7 @@ class ContributionController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(ContributionSearch $search, UrlGeneratorInterface $router)
+    protected function exportData(ContributionSearch $search, UrlGeneratorInterface $router = null)
     {
         $supports = $this->repo->findContributionsToExport($search);
 
