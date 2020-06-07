@@ -36,7 +36,7 @@ class PersonControllerTest extends PantherTestCase
     {
         $this->createPantherLogin();
 
-        dump('Test : go to people search page');
+        $this->debug('go to people search page');
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generatePantherUri('people'));
@@ -53,14 +53,14 @@ class PersonControllerTest extends PantherTestCase
 
         $link = $crawler->selectLink('DOE')->link();
 
-        dump('Test : go to person page');
+        $this->debug('go to person page');
 
         /** @var Crawler */
         $crawler = $this->client->click($link);
 
         $this->client->waitFor('#updatePerson');
 
-        dump('Test : update information from the person');
+        $this->debug('update information from the person');
 
         $form = $crawler->selectButton('updatePerson')->form([]);
 
@@ -72,7 +72,7 @@ class PersonControllerTest extends PantherTestCase
         // testPantherEditPersonWithAjax
         $crawler->selectButton('btn-close-msg')->click();
 
-        dump('Test : create a new group for the person');
+        $this->debug('create a new group for the person');
 
         // testPantherSuccessToAddNewGroupToPerson
         $this->client->waitFor('#btn-new-group');

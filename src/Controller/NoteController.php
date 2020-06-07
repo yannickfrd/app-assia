@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Note;
 use Twig\Environment;
+use App\Service\ExportPDF;
 use App\Form\Note\NoteType;
+use App\Service\ExportWord;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
@@ -17,7 +19,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Repository\EvaluationGroupRepository;
-use App\Service\ExportWord;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -193,8 +194,10 @@ class NoteController extends AbstractController
     /**
      * @Route("note/{id}/export", name="note_export", methods="GET")
      */
-    public function exportNote(Note $note, ExportWord $exportWord): Response
+    public function exportNote(Note $note, ExportWord $exportWord, ExportPDF $exportPDF): Response
     {
+        // return $exportPDF->init();
+
         return $exportWord->export($note->getContent(), $note->getTitle(), $note->getSupportGroup()->getService()->getPole()->getLogoPath());
     }
 

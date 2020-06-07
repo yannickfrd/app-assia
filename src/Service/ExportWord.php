@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
@@ -85,6 +86,7 @@ class ExportWord
     protected function addContent($section, string $content)
     {
         $htmlContent = str_replace('  ', '', $content);
+        $htmlContent = str_replace('<br>', '<br/>', $content);
         Html::addHtml($section, $htmlContent, false, false);
     }
 
@@ -131,6 +133,9 @@ class ExportWord
     {
         $title = str_replace([' ', '/'], '-', $title ? $title : 'document');
         $title = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $title);
+
+        // Settings::setPdfRendererPath('..\vendor\dompdf\dompdf');
+        // Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
 
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
         $path = '/public/uploads/exports/';

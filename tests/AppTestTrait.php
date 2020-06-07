@@ -45,7 +45,7 @@ trait AppTestTrait
 
         $crawler = $this->client->request('GET', '/');
 
-        dump('Test : try to login');
+        $this->debug('try to login');
 
         $form = $crawler->selectButton('send')->form([
             '_username' => 'r.madelaine',
@@ -69,5 +69,11 @@ trait AppTestTrait
     protected function generatePantherUri(string $route, array $parameters = []): string
     {
         return self::$container->get('router')->generate($route, $parameters);
+    }
+
+    public function debug(string $message)
+    {
+        // $message = "test : \e[20mXXXX \e[36mCyan \e[35mViolet \e[33mYellow \e[34mBlue \e[32mGreen \e[31mRed \e[37mWhite \e[0m \n";
+        file_put_contents('php://stdout', "\e[34mtest : \e[36m".$message."\e[0m \n");
     }
 }

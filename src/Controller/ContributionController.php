@@ -257,9 +257,9 @@ class ContributionController extends AbstractController
         }
 
         $datas = $indicators->getMonthlyIndicators(
-            $this->repo->findAllContributionsForIndicators($search), 
-            $search->getStart(), 
-            $search->getEnd()
+            $this->repo->findAllContributionsForIndicators($search),
+            $search->getStart() ?? new \DateTime('2019-01-01'),
+            $search->getEnd(),
         );
 
         return $this->render('app/contribution/monthlyContributionIndicators.html.twig', [

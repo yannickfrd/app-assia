@@ -35,12 +35,12 @@ class SupportControllerTest extends PantherTestCase
 
         // Test de la page du suivi social
 
-        dump('Test : go to supports search page');
+        $this->debug('go to supports search page');
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generatePantherUri('supports'));
 
-        dump('Test : search a support');
+        $this->debug('search a support');
 
         $form = $crawler->selectButton('search')->form([
             'fullname' => 'Doe',
@@ -51,25 +51,25 @@ class SupportControllerTest extends PantherTestCase
         // $this->client->waitFor('table');
         sleep(1);
 
-        dump('Test : select a support');
+        $this->debug('select a support');
 
         $link = $crawler->filter('table tbody tr a.btn')->eq(0)->link();
 
-        dump('Test : go to a support view page');
+        $this->debug('go to a support view page');
 
         $crawler = $this->client->click($link);
         sleep(1);
 
         $this->assertSelectorTextContains('h1', 'Suivi social');
 
-        dump('Test : go to a support edit page');
+        $this->debug('go to a support edit page');
 
         $link = $crawler->filter('a#support_edit')->link();
         $crawler = $this->client->click($link);
 
-        dump('Test : success to edit a support');
+        $this->debug('success to edit a support');
 
-        $this->assertSelectorTextContains('h1', 'Suivi Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition du suivi');
 
         $form = $crawler->selectButton('send')->form([]);
 
@@ -87,7 +87,7 @@ class SupportControllerTest extends PantherTestCase
         // Test de la page d'évaluation sociale
         // $link = $crawler->selectLink('support-evaluation')->click();
 
-        dump('Test : go to the evaluation page');
+        $this->debug('go to the evaluation page');
 
         $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
@@ -99,7 +99,7 @@ class SupportControllerTest extends PantherTestCase
         $this->client->waitFor('#accordion-parent-init_eval');
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
 
-        dump('Test : success to edit the evaluation');
+        $this->debug('success to edit the evaluation');
 
         $form = $crawler->selectButton('send')->form([]);
 
@@ -122,7 +122,7 @@ class SupportControllerTest extends PantherTestCase
         $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
 
-        dump('Test : go to the note page');
+        $this->debug('go to the note page');
 
         $link = $crawler->filter('a[title="Notes sociales"]')->link();
 
@@ -132,12 +132,12 @@ class SupportControllerTest extends PantherTestCase
         $this->client->waitFor('#container-notes');
         $this->assertSelectorTextContains('h1', 'Notes sociales');
 
-        dump('Test : select a new note');
+        $this->debug('select a new note');
 
         $form = $crawler->selectButton('js-new-note')->click();
         sleep(1); //pop-up effect
 
-        dump('Test : fail to create a new note');
+        $this->debug('fail to create a new note');
 
         $form = $crawler->selectButton('js-btn-save')->form([
             'note[title]' => $faker->sentence(mt_rand(5, 10), true),
@@ -153,7 +153,7 @@ class SupportControllerTest extends PantherTestCase
         $crawler->selectButton('btn-close-msg')->click();
         sleep(1);
 
-        dump('Test : success to create a new note');
+        $this->debug('success to create a new note');
 
         $form = $crawler->selectButton('js-btn-save')->form([
             'note[title]' => $faker->sentence(mt_rand(5, 10), true),
@@ -169,13 +169,13 @@ class SupportControllerTest extends PantherTestCase
         $crawler->selectButton('btn-close-msg')->click();
         sleep(2);
 
-        dump('Test : get an old note');
+        $this->debug('get an old note');
 
         // $this->client->waitFor('#container-notes div.js-note');
         $link = $crawler->filter('#container-notes div.js-note')->eq(1)->click();
         sleep(1); //pop-up effect
 
-        dump('Test : edit an old note');
+        $this->debug('edit an old note');
 
         $this->client->waitFor('#js-btn-save');
         $form = $crawler->selectButton('js-btn-save')->form([
@@ -197,7 +197,7 @@ class SupportControllerTest extends PantherTestCase
         //
         // Test de la page des rendez-vous
 
-        dump('Test : go to calendar page');
+        $this->debug('go to calendar page');
 
         $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
@@ -211,12 +211,12 @@ class SupportControllerTest extends PantherTestCase
         // $this->client->waitFor('#js-new-rdv');
         sleep(1);
 
-        dump('Test : select a new rdv');
+        $this->debug('select a new rdv');
 
         $crawler->selectButton('js-new-rdv')->click();
         sleep(1); //pop-up effect
 
-        dump('Test : success to create a new rdv');
+        $this->debug('success to create a new rdv');
 
         $form = $crawler->selectButton('js-btn-save')->form([
             'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
@@ -235,12 +235,12 @@ class SupportControllerTest extends PantherTestCase
         $crawler->selectButton('btn-close-msg')->click();
         sleep(1); //pop-up effect
 
-        dump('Test : get an old rdv');
+        $this->debug('get an old rdv');
 
         $link = $crawler->filter('a.calendar-event')->eq(0)->click();
         sleep(1); //pop-up effect
 
-        dump('Test : success to edit an old rdv');
+        $this->debug('success to edit an old rdv');
 
         $form = $crawler->selectButton('js-btn-save')->form([
             'rdv[title]' => $faker->sentence(mt_rand(5, 10), true),
@@ -262,7 +262,7 @@ class SupportControllerTest extends PantherTestCase
         //
         // Test de la page des documents
 
-        dump('Test : go to documents page');
+        $this->debug('go to documents page');
 
         $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
@@ -275,12 +275,12 @@ class SupportControllerTest extends PantherTestCase
         $this->assertSelectorTextContains('h1', 'Documents');
         sleep(1); // $this->client->waitFor('#js-new-rdv');
 
-        dump('Test : select a new document');
+        $this->debug('select a new document');
 
         $crawler->selectButton('js-new-document')->click();
         sleep(1); //pop-up effect
 
-        dump('Test : success to create a new document');
+        $this->debug('success to create a new document');
 
         $form = $crawler->selectButton('js-btn-save')->form([
             'document[type]' => mt_rand(1, 9),
@@ -300,14 +300,14 @@ class SupportControllerTest extends PantherTestCase
         $crawler->selectButton('btn-close-msg')->click();
         sleep(1); //pop-up effect
 
-        dump('Test : get a document');
+        $this->debug('get a document');
 
         $this->client->waitFor('td.js-document-name');
 
         $crawler->filter('td.js-document-name')->eq(0)->click();
         sleep(1); //pop-up effect
 
-        dump('Test : edit an old document');
+        $this->debug('edit an old document');
 
         $form = $crawler->selectButton('js-btn-save')->form([
             'document[name]' => $faker->sentence(mt_rand(5, 10), true),
