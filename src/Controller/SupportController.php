@@ -17,6 +17,7 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Support\SupportCoefficientType;
 use App\Form\Support\SupportGroupSearchType;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\Indicators\SocialIndicators;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -228,6 +229,27 @@ class SupportController extends AbstractController
         }
 
         return $this->getErrorMessage();
+    }
+
+    /**
+     * @Route("/indicators/social", name="indicators_social", methods="GET|POST")
+     */
+    public function stats(Request $request, SupportGroupSearch $search = null, SocialIndicators $socialIndicators): Response
+    {
+        $search = new SupportGroupSearch();
+
+        $form = ($this->createForm(SupportGroupSearchType::class, $search))
+            ->handleRequest($request);
+
+        $supports = $this->repoSupportPerson->findSupportsToExport();
+
+        $datas = $socialIndicators->getResults($supports);
+
+        return $this->render('app/evaluation/socialIndicators.html.twig', [
+            'supportGroupSearch' => $search,
+            'form' => $form->createView(),
+            'datas' => $datas,
+        ]);
     }
 
     /**
