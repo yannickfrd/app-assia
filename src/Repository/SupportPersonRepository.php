@@ -47,7 +47,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('sp')
             ->select('sp')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate}')
+            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
             ->leftJoin('p.accommodationPeople', 'ap')->addselect('ap')
             ->leftJoin('ap.accommodationGroup', 'ag')->addselect('ag')
             ->leftJoin('ag.accommodation', 'a')->addselect('a')
