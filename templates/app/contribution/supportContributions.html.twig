@@ -16,17 +16,16 @@
 			<button id="js-new-contribution" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
 				data-url="{{ path('support_resources', {'id': support.id}) }}" 
 				data-contribution-rate="{{ support.service.contributionRate }}" 
-				data-contribution-rate="{{ support.service.contributionRate }}" 
 				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}" 
 				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}" 
 				data-placement="bottom" title="Créer une nouvelle redevance">
 				<span class="fas fa-plus-square mr-2"></span>Nouvelle redevance</button>
 			<div class="d-inline align-middle">Total : <!--
-			--><span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,'', ' ')}}</span><!--
+			--><span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,',', ' ')}}</span><!--
 			--> redevance{% if contributions.getTotalItemCount > 1 %}s{% endif %}<!--
 			-->{% if nbTotalContributions %} sur <span id="nb-total-contributions">{{ nbTotalContributions }}</span>{% endif %}.
 				{% if sumStillDueAmt > 0 %}
-					<span class="badge badge-warning">{{ sumStillDueAmt|number_format(0,'', ' ') }} € restant dus</span>
+					<span class="badge badge-warning">{{ sumStillDueAmt|number_format(2,',', ' ') }} € restant dus</span>
 				{% endif %}
 			</div>
 		</div>
@@ -67,13 +66,13 @@
 								</td>
 								<td class="align-middle js-month">{{ contribution.month|date("Y-m") }}</td>
 								<td class="align-middle js-type">{{ contribution.typeToString }}</td>
-								<td class="align-middle text-right js-dueAmt">{{ contribution.dueAmt|number_format(0, ",", " ") }} €</td>
-								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt|number_format(0, ",", " ") }} €</td>
-								<td class="align-middle text-right js-stillDueAmt">{{ contribution.stillDueAmt|number_format(0, ",", " ") }} €</td>
+								<td class="align-middle text-right js-dueAmt">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
+								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
+								<td class="align-middle text-right js-stillDueAmt">{{ contribution.stillDueAmt|number_format(2, ",", " ") }} €</td>
 								<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
 								<td class="align-middle js-paymentType">{{ contribution.paymentTypeToString }}</td>
 								{# <td class="align-middle text-center js-returnDate">{{ contribution.returnDate ? contribution.returnDate|date("d/m/Y") }}</td>
-								<td class="align-middle text-right js-returnAmt">{{ contribution.returnAmt ? contribution.returnAmt|number_format(0, ",", " ") ~ " €" }}</td> #}
+								<td class="align-middle text-right js-returnAmt">{{ contribution.returnAmt ? contribution.returnAmt|number_format(2, ",", " ") ~ " €" }}</td> #}
 								<td class="align-middle js-comment">{{ contribution.comment|slice(0,65) }}{% if contribution.comment|length > 70 %}...{% endif %}</td>
 								<td class="align-middle text-center">
 									<button class="js-delete btn btn-danger btn-sm shadow my-1" 

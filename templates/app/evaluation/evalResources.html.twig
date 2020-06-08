@@ -37,7 +37,7 @@
                             <td class="align-middle">{% if not loop.last %}{{ ressValue }}<!--
                                 -->{% else %}{{ form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}{% endif %}</td>
                             <td class="align-middle">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey ~ "Amt")) }}</td>
-                            <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                         </tr>
                         {% endfor %}
                     </tbody>

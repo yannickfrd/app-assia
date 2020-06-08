@@ -79,7 +79,11 @@
 	</div>
 
 	<div class="row">
-		{{ utils.view(support.service.name ~ (support.device ? " (" ~ support.device.name ~ ")"), "Service (dispositif)") }}
+		<div class="col-md-6 mb-1 py-2">
+			<span class="py-2 text-secondary">Service (dispositif) : </span>
+			<a href="{{ path('service_edit', {'id': support.service.id }) }}" class="text-{{ theme_color }}">
+				{{ support.service.name ~ (support.device ? " (" ~ support.device.name ~ ")") }}</a>
+		</div>
 		{{ utils.view(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
 		{% set originRequest = support.originRequest %}
 		{% if originRequest %}

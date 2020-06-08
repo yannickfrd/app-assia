@@ -29,6 +29,7 @@ export default class SupportContributions {
         this.btnNewElt = document.getElementById("js-new-contribution");
         this.contributionRate = parseFloat(this.btnNewElt.getAttribute("data-contribution-rate"));
         this.rentAmt = 0;
+        this.contributionAmt = null;
         this.supportStartDate = new Date(this.btnNewElt.getAttribute("data-support-start-date"));
         this.supportEndDate = new Date(this.btnNewElt.getAttribute("data-support-end-date"));
         this.trElt = null;
@@ -189,22 +190,25 @@ export default class SupportContributions {
     // Calcule le montant de la participation
     calculateContrib() {
         let rateDays = this.getRateDays();
-        if (this.rentAmt > 0) {
-            this.dueAmtInput.value = Math.round(this.rentAmt * rateDays);
-            this.calculationMethodElt.textContent = "Mode de calcul : Montant du loyer (" + this.rentAmt + "€)" +
-                (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + "%)" : "");
+        if (this.contributionAmt > 0) {
+            this.dueAmtInput.value = this.contributionAmt;
+            this.calculationMethodElt.textContent = "Mode de calcul : Montant fixé dans l'évalution sociale (" + this.contributionAmt + " €).";
+        } else if (this.rentAmt > 0) {
+            this.dueAmtInput.value = Math.round(this.rentAmt * rateDays * 100) / 100;
+            this.calculationMethodElt.textContent = "Mode de calcul : Montant du loyer (" + this.rentAmt + " €)" +
+                (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + " %)." : ".");
         } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
-            this.dueAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays);
+            this.dueAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays * 100) / 100;
             this.calculationMethodElt.textContent = "Mode de calcul : Montant des ressources (" + this.resourcesAmtInput.value +
-                "€) x Taux de participation (" + (this.contributionRate * 100) + "%)" + (rateDays < 1 ? " x Prorata présence sur le mois (" +
-                    (Math.round(rateDays * 10000) / 100) + "%)" : "");
+                " €) x Taux de participation (" + (this.contributionRate * 100) + " %)" + (rateDays < 1 ? " x Prorata présence sur le mois (" +
+                    (Math.round(rateDays * 10000) / 100) + " %)." : ".");
         }
     }
 
     // Calcule le restant dû
     calculateStillDue() {
         if (!isNaN(this.dueAmtInput.value) && !isNaN(this.paidAmtInput.value)) {
-            this.stillDueAmtInput.value = this.dueAmtInput.value - this.paidAmtInput.value;
+            this.stillDueAmtInput.value = Math.round((this.dueAmtInput.value - this.paidAmtInput.value) * 100) / 100;
         }
     }
 
@@ -386,6 +390,7 @@ export default class SupportContributions {
         this.modalElt.modal("show");
         this.salaryAmtInput.value = data.salaryAmt;
         this.resourcesAmtInput.value = data.resourcesAmt;
+        this.contributionAmt = data.contributionAmt;
         this.dueAmtInput.value = data.dueAmt;
         this.rentAmt = data.rentAmt;
         this.checkType();
@@ -405,7 +410,7 @@ export default class SupportContributions {
         this.paymentDateInput.value = contribution.paymentDate ? contribution.paymentDate.substring(0, 10) : null;
         this.selectOption(this.paymentTypeSelect, contribution.paymentType);
         this.paidAmtInput.value = contribution.paidAmt;
-        this.stillDueAmtInput.value = contribution.stillDueAmt;
+        this.stillDueAmtInput.value = Math.round(contribution.stillDueAmt * 100) / 100;
         this.returnDateInput.value = contribution.returnDate ? contribution.returnDate.substring(0, 10) : null;
         this.returnAmtInput.value = contribution.returnAmt;
         this.commentInput.value = contribution.comment;
@@ -446,7 +451,7 @@ export default class SupportContributions {
         this.trElt.querySelector("td.js-type").textContent = contribution.typeToString;
         this.trElt.querySelector("td.js-dueAmt").textContent = contribution.dueAmt ? contribution.dueAmt + " €" : "";
         this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt + " €" : "";
-        this.trElt.querySelector("td.js-stillDueAmt").textContent = contribution.stillDueAmt ? contribution.stillDueAmt + " €" : "";
+        this.trElt.querySelector("td.js-stillDueAmt").textContent = contribution.stillDueAmt ? Math.round(contribution.stillDueAmt * 100) / 100 + " €" : "";
         this.trElt.querySelector("td.js-paymentDate").textContent = contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : "";
         this.trElt.querySelector("td.js-paymentType").textContent = contribution.paymentTypeToString;
         this.trElt.querySelector("td.js-comment").textContent = contribution.comment && contribution.comment.length > 70 ? contribution.comment.slice(0, 65) + "..." : contribution.comment;
@@ -466,7 +471,7 @@ export default class SupportContributions {
             <td class="align-middle js-type">${contribution.typeToString}</td>
             <td class="align-middle text-right js-dueAmt">${contribution.dueAmt ? contribution.dueAmt + " €" : ""}</td>
             <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt + " €" : ""}</td>
-            <td class="align-middle text-right js-stillDueAmt">${contribution.stillDueAmt ? contribution.stillDueAmt + " €" : ""}</td>
+            <td class="align-middle text-right js-stillDueAmt">${contribution.stillDueAmt ? Math.round(contribution.stillDueAmt * 100) / 100 + " €" : ""}</td>
             <td class="align-middle js-paymentDate">${contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : ""}</td>
             <td class="align-middle js-paymentType">${contribution.paymentType ? contribution.paymentTypeToString : ""}</td>
             <td class="align-middle js-comment">${contribution.comment ? contribution.comment.slice(0, 65) : "" }</td>
@@ -509,7 +514,7 @@ export default class SupportContributions {
         let array = [];
         elts.forEach(elt => {
             if (elt.textContent) {
-                array.push(parseFloat(elt.textContent));
+                array.push(parseFloat(elt.textContent.replace(",", ".")));
             }
         });
 

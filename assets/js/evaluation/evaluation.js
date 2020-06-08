@@ -23,6 +23,10 @@ export default class evaluation {
         this.evalBudgetRepaymentAmtElts = this.evalBudgetElt.querySelectorAll(".js-repaymentAmt");
         this.evalBudgetBudgetBalancAmtElts = this.evalBudgetElt.querySelectorAll(".js-budgetBalanceAmt");
 
+        this.contributionAmtInput = document.getElementById("evaluation_evalBudgetGroup_contributionAmt");
+        this.updateContributionBtnElt = document.getElementById("update_contribution");
+        this.calculationMethodElt = document.getElementById("calculationMethod");
+
         this.resourcesAmtElts = document.querySelectorAll("input[data-id='resourcesAmt']");
 
         this.now = new Date();
@@ -67,6 +71,15 @@ export default class evaluation {
         });
         this.dateElts.forEach(dateElt => {
             dateElt.addEventListener("focusout", this.checkDate.bind(this, dateElt));
+        });
+
+        this.updateContributionBtnElt.addEventListener("click", e => {
+            e.preventDefault();
+            this.updateContribution();
+        });
+        this.contributionAmtInput.addEventListener("input", e => {
+            e.preventDefault();
+            this.calculationMethodElt.textContent = "";
         });
     }
 
@@ -502,5 +515,19 @@ export default class evaluation {
             return this.validationInput.invalid(dateElt, "Date invalide.");
         }
         return this.validationInput.valid(dateElt);
+    }
+
+    updateContribution() {
+        let contributionType = parseFloat(this.updateContributionBtnElt.getAttribute("data-contribution-type"));
+        let resourcesGroupAmt = parseFloat(this.resourcesGroupAmtElt.textContent.replace(" ", ""));
+        let contributionRate = this.updateContributionBtnElt.getAttribute("data-contribution-rate");
+
+        if ([1, 3].indexOf(contributionType) != -1 && !isNaN(resourcesGroupAmt) && !isNaN(contributionRate)) {
+            this.contributionAmtInput.value = Math.round(resourcesGroupAmt * contributionRate * 100) / 100;
+            this.calculationMethodElt.innerHTML = "Mode de calcul : Montant des ressources (" + resourcesGroupAmt +
+                "&nbsp;€) x Taux de participation (" + (contributionRate * 100) + "&nbsp;%).";
+        } else {
+            this.calculationMethodElt.innerHTML = "Type de redevance non défini dans le service.";
+        }
     }
 }

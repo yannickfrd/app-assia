@@ -67,7 +67,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
             ->leftJoin('eg.evaluationPeople', 'ep')->addselect('ep')
-            // ->leftJoin('eg.evalBudgetGroup', 'ebg')->addselect('PARTIAL ebg.{resourcesGroupAmt, budgetBalanceAmt}')
+            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addselect('PARTIAL ebg.{id, contributionAmt}')
             ->leftJoin('ep.evalBudgetPerson', 'ebp')->addselect('PARTIAL ebp.{id, resourcesAmt, salaryAmt}')
 
             ->andWhere('eg.supportGroup = :supportGroup')

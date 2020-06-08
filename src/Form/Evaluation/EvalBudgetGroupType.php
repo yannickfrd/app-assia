@@ -14,7 +14,7 @@ class EvalBudgetGroupType extends AbstractType
     {
         $builder
         ->add('contributionAmt', MoneyType::class, [
-            'attr' => ['class' => 'text-right'],
+            'attr' => ['class' => 'js-money text-right'],
             'required' => false,
         ]);
         // ->add('incomeN1Amt', MoneyType::class, [

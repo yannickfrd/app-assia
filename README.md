@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.12.2 - 05/06/2020
+1.12.3 - 08/06/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,9 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.12.1 - 05/06/2020
+## Version 1.12.3 - 08/06/2020
 - Créé tableau d'indicateurs des redevances
 - Modifié les droits d'édition pour les notes
+- Ajout champ "Montant de la redevance" dans la partie budgétaire de l'évaluations sociale avec calcul automatique
 
 ## Version 1.12.0 - 04/06/2020
 - Créé fonctionnalité d'export des notes sur Word

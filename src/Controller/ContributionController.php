@@ -132,7 +132,7 @@ class ContributionController extends AbstractController
             }
 
             $contributionRate = $supportGroup->getService()->getContributionRate();
-            $dueAmt = round($resourcesAmt * $contributionRate);
+            $dueAmt = round($resourcesAmt * $contributionRate * 100) / 100;
         }
 
         return $this->json([
@@ -142,6 +142,7 @@ class ContributionController extends AbstractController
                 'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
                 'dueAmt' => $dueAmt ?? null,
+                'contributionAmt' => $evaluation ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,
                 'rentAmt' => $accommodation ? $accommodation->getContributionAmt() : null,
             ],
         ], 200);
