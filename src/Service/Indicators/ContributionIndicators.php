@@ -15,7 +15,7 @@ class ContributionIndicators
     {
     }
 
-    public function getMonthlyIndicators(array $contributions, \DateTime $start, \DateTime $end)
+    public function getIndicators(array $contributions, \DateTime $start, \DateTime $end)
     {
         $months = [];
         $months[] = $start;

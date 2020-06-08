@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use Doctrine\ORM\Query;
 use App\Entity\SupportPerson;
-use App\Form\Model\ExportSearch;
 use App\Security\CurrentUserService;
 use App\Form\Model\SupportGroupSearch;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +29,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places pour l'export.
      */
-    public function findSupportsToExport(SupportGroupSearch $search = null)
+    public function findSupportsToExport(?SupportGroupSearch $search = null)
     {
         $query = $this->getSupportsQuery();
 
@@ -140,7 +139,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
         }
 
-        if (count($search->getReferents())) {
+        if ($search->getReferents() && $search->getReferents()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getReferents() as $referent) {
@@ -149,7 +148,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if (count($search->getServices())) {
+        if ($search->getServices() && $search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getServices() as $service) {
@@ -157,11 +156,19 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
             $query->andWhere($orX);
         }
+        if ($search->getDevices() && $search->getDevices()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getDevices() as $device) {
+                $orX->add($expr->eq('sg.device', $device));
+            }
+            $query->andWhere($orX);
+        }
 
         return $query;
     }
 
-    public function findSupportsFullToExport(ExportSearch $search = null)
+    public function findSupportsFullToExport($search = null)
     {
         $query = $this->getSupportsQuery();
 
@@ -201,7 +208,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    protected function filtersExport($query, ExportSearch $search)
+    protected function filtersExport($query, $search)
     {
         if ($search->getStatus()) {
             $expr = $query->expr();
@@ -247,7 +254,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
         }
 
-        if ($search->getReferents() && count($search->getReferents())) {
+        if ($search->getReferents() && $search->getReferents()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getReferents() as $referent) {
@@ -256,7 +263,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if ($search->getServices() && count($search->getServices())) {
+        if ($search->getServices() && $search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getServices() as $service) {
@@ -265,7 +272,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if ($search->getDevices() && count($search->getDevices())) {
+        if ($search->getDevices() && $search->getDevices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getDevices() as $device) {

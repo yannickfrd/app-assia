@@ -84,19 +84,19 @@
 							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuGestion">
 								<a class="dropdown-item" href="{{ path("dashboard_service") }}">Synthèse des suivis en cours</a>
 								<a class="dropdown-item" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
-								<a class="dropdown-item" href="{{ path("contributions") }}">Redevances et participations financières</a>
-								<a class="dropdown-item" href="{{ path("contribution_indicators_monthly") }}">Indicateurs participations financières</a>
-								<a class="dropdown-item" href="{{ path("indicators_social") }}">Indicateurs sociaux</a>
+								<a class="dropdown-item" href="{{ path("contributions") }}">Redevances/participations financières</a>
+								<a class="dropdown-item" href="{{ path("contribution_indicators") }}">Indicateurs redevances</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{ path("accommodations") }}">Groupes de places</a>
 								<a class="dropdown-item" href="{{ path("organizations") }}">Organismes prescripteurs</a>
 								{% if is_granted("ROLE_ADMIN") %}
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("export") }}">Export de données</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="{{ path("export") }}">Export de données</a>
 								{% endif %}
 								{% if app.user.id == 1 %}
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("import") }}">Import de données</a>
+									<a class="dropdown-item" href="{{ path("indicators_social") }}">Indicateurs sociaux</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="{{ path("import") }}">Import de données</a>
 								{% endif %}
 							</div>
 						</li>

@@ -15,6 +15,14 @@
 
     <div class="container-fluid mt-4">
 
+    <div class="row">
+        <div class="col-md-12">
+            <p><a href="{{ path('contribution_indicators') }}" class="text-{{ theme_color }}">
+                <span class="fas fa-chart-bar mr-2"></span>Indicateurs statistiques.</a>
+            </p>
+        </div>
+    </div>
+
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle mb-2">
                 <span class="align-middle">Résultat : {{ contributions.getTotalItemCount|number_format(0,'', ' ')  }}<!--

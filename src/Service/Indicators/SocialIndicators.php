@@ -31,6 +31,7 @@ class SocialIndicators
         $this->genderDatas = $this->initVar(Person::GENDER);
         $this->roleDatas = $this->initVar(RolePerson::ROLE);
         $this->profStatusDatas = $this->initVar(EvalProfPerson::PROF_STATUS);
+        $this->contractTypeDatas = $this->initVar(EvalProfPerson::CONTRACT_TYPE);
 
         foreach ($supportPeople as $supportPerson) {
             /** @var SupportPerson */
@@ -53,18 +54,22 @@ class SocialIndicators
             );
 
             $evaluations = $supportPerson->getEvaluationsPerson();
+            /** @var EvaluationPerson */
             $evaluationPerson = $evaluations ? $evaluations[($evaluations->count()) - 1] : new EvaluationPerson();
 
-            /** @var EvaluationPerson */
-            $evaluationPerson = $evaluationPerson;
+            $evalProfPerson = $evaluationPerson && $evaluationPerson->getEvalProfPerson() ? $evaluationPerson->getEvalProfPerson() : null;
 
-            if ($evaluationPerson->getEvalProfPerson()) {
-                $this->profStatusDatas = $this->updateVar(
-                    $supportPerson,
-                    $evaluationPerson->getEvalProfPerson()->getProfStatus(),
-                    $this->profStatusDatas,
-                );
-            }
+            $this->profStatusDatas = $this->updateVar(
+                $supportPerson,
+                $evalProfPerson ? $evalProfPerson->getProfStatus() : null,
+                $this->profStatusDatas,
+            );
+
+            $this->contractTypeDatas = $this->updateVar(
+                $supportPerson,
+                $evalProfPerson ? $evalProfPerson->getContractType() : null,
+                $this->contractTypeDatas,
+            );
 
             if ($supportPerson->getHead()) {
                 ++$this->nbGroups;
@@ -73,7 +78,8 @@ class SocialIndicators
         $datas['Typologie familiale'] = $this->typologyDatas;
         $datas['Sexe'] = $this->genderDatas;
         $datas['Rôle'] = $this->roleDatas;
-        $datas['Statut professionnel'] = $this->roleDatas;
+        $datas['Statut professionnel'] = $this->profStatusDatas;
+        $datas['Type de contrat de travail'] = $this->profStatusDatas;
 
         $datas['nbGroups'] = $this->nbGroups;
         $datas['nbPeople'] = count($supportPeople);
@@ -96,10 +102,15 @@ class SocialIndicators
         return $array;
     }
 
-    protected function updateVar(SupportPerson $supportPerson, int $var, array $varDatas)
+    protected function updateVar(SupportPerson $supportPerson, ?int $var = null, array $varDatas)
     {
-        $varDatas[$var]['nbPeople'] = $varDatas[$var]['nbPeople'] + 1;
-        $supportPerson->getHead() ? $varDatas[$var]['nbGroups'] = $varDatas[$var]['nbGroups'] + 1 : null;
+        if ($var == null) {
+            $varDatas[99]['nbPeople'] = $varDatas[99]['nbPeople'] + 1;
+            $supportPerson->getHead() ? $varDatas[99]['nbGroups'] = $varDatas[99]['nbGroups'] + 1 : null;
+        } else {
+            $varDatas[$var]['nbPeople'] = $varDatas[$var]['nbPeople'] + 1;
+            $supportPerson->getHead() ? $varDatas[$var]['nbGroups'] = $varDatas[$var]['nbGroups'] + 1 : null;
+        }
 
         return $varDatas;
     }

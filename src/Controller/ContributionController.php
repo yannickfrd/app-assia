@@ -234,9 +234,9 @@ class ContributionController extends AbstractController
     /**
      * Affiche les indicateurs mensuels des participations financières.
      *
-     * @Route("contribution/indicators/monthly", name="contribution_indicators_monthly", methods="GET|POST")
+     * @Route("contribution/indicators", name="contribution_indicators", methods="GET|POST")
      */
-    public function showMonthlyContributionIndicators(ContributionSearch $search = null, Request $request, ContributionIndicators $indicators): Response
+    public function showContributionIndicators(ContributionSearch $search = null, Request $request, ContributionIndicators $indicators): Response
     {
         $today = new \DateTime('midnight');
         $search = (new ContributionSearch())
@@ -257,13 +257,13 @@ class ContributionController extends AbstractController
             return $this->exportData($search);
         }
 
-        $datas = $indicators->getMonthlyIndicators(
+        $datas = $indicators->getIndicators(
             $this->repo->findAllContributionsForIndicators($search),
             $search->getStart() ?? new \DateTime('2019-01-01'),
             $search->getEnd(),
         );
 
-        return $this->render('app/contribution/monthlyContributionIndicators.html.twig', [
+        return $this->render('app/contribution/contributionIndicators.html.twig', [
             'form' => $form->createView(),
             'datas' => $datas,
         ]);

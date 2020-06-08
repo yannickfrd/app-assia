@@ -234,14 +234,14 @@ class SupportController extends AbstractController
     /**
      * @Route("/indicators/social", name="indicators_social", methods="GET|POST")
      */
-    public function stats(Request $request, SupportGroupSearch $search = null, SocialIndicators $socialIndicators): Response
+    public function showSocialIndicators(Request $request, SupportGroupSearch $search = null, SocialIndicators $socialIndicators): Response
     {
         $search = new SupportGroupSearch();
 
         $form = ($this->createForm(SupportGroupSearchType::class, $search))
             ->handleRequest($request);
 
-        $supports = $this->repoSupportPerson->findSupportsToExport();
+        $supports = $this->repoSupportPerson->findSupportsFullToExport($search);
 
         $datas = $socialIndicators->getResults($supports);
 
