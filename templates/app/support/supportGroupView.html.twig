@@ -47,33 +47,33 @@
 		{% if support.service.accommodation %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-accommodations' class="btn btn-{{ theme_color }} btn-block shadow" 
-			href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" 
+			href="{{ path('support_accommodations', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
 			title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
 		</div>
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-contributions' class="btn btn-{{ theme_color }} btn-block shadow" 
-			href="{{ path('support_contributions', {'id':support.id}) }}" data-placement="bottom" 
-			title="Redevances et participations financières">Redevances<span class="badge badge-light ml-2">{{ support.contributions|length }}</span></a>
+			href="{{ path('support_contributions', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+			title="Paiements (redevances, PF, caution...)">Paiements<span class="badge badge-light ml-2">{{ support.contributions|length }}</span></a>
 		</div>
 		{% endif %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
-			href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" 
+			href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
 			title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ support.evaluationsGroup|length }}</span></a>
 		</div>
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-calendar' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_calendar_show', {'id':support.id}) }}" data-placement="bottom" 
+				href="{{ path('support_calendar_show', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
 				title="Rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ support.rdvs|length }}</span></a>
 		</div>
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-notes' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_notes', {'id':support.id}) }}" data-placement="bottom" 
-				title="Notes sociales et rapport">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
+				href="{{ path('support_notes', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+				title="Notes sociales et rapports">Notes<span class="badge badge-light ml-2">{{ support.notes|length }}</span></a>
 		</div>
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-documents' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_documents', {'supportId':support.id}) }}"data-placement="bottom" 
+				href="{{ path('support_documents', {'supportId':support.id}) }}"data-toggle="tooltip" data-placement="bottom" 
 				title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ support.documents|length }}</span></a>
 		</div>
 	</div>
@@ -122,7 +122,7 @@
 			{% if is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
 				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
-					title="Supprimer le suivi social" data-placement="bottom"
+					title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom"
 					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}">
 					<span class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
 			</div>

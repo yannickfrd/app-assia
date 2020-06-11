@@ -9,15 +9,14 @@ export default class SupportContributions {
         this.ajaxRequest = ajaxRequest;
         this.modalContributionElt = document.getElementById("modal-contribution");
         this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
-        this.titleElt = this.modalContributionElt.querySelector("h2");
         this.dateYearSelect = document.getElementById("contribution_month_year");
         this.dateMonthSelect = document.getElementById("contribution_month_month");
         this.typeSelect = document.getElementById("contribution_type");
         this.salaryAmtInput = document.getElementById("contribution_salaryAmt");
         this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
-        this.credentialInput = document.getElementById("contribution_credential");
+        this.housingAssistanceInput = document.getElementById("contribution_housingAssitanceAmt");
         this.dueAmtInput = document.getElementById("contribution_dueAmt");
-        this.calculationMethodElt = document.getElementById("calculationMethod");
+        this.calculationMethodElt = document.getElementById("contribution_dueAmt_help");
         this.paymentDateInput = document.getElementById("contribution_paymentDate");
         this.paymentTypeSelect = document.getElementById("contribution_paymentType");
         this.paidAmtInput = document.getElementById("contribution_paidAmt");
@@ -26,10 +25,15 @@ export default class SupportContributions {
         this.returnAmtInput = document.getElementById("contribution_returnAmt");
         this.commentInput = document.getElementById("contribution_comment");
 
+        this.resourcesChecked = false;
+        this.salaryAmt = null;
+        this.resourcesAmt = null;
+        this.contributionAmt = null;
+        this.dueAmt = null;
+        this.rentAmt = 0;
+
         this.btnNewElt = document.getElementById("js-new-contribution");
         this.contributionRate = parseFloat(this.btnNewElt.getAttribute("data-contribution-rate"));
-        this.rentAmt = 0;
-        this.contributionAmt = null;
         this.supportStartDate = new Date(this.btnNewElt.getAttribute("data-support-start-date"));
         this.supportEndDate = new Date(this.btnNewElt.getAttribute("data-support-end-date"));
         this.trElt = null;
@@ -115,6 +119,10 @@ export default class SupportContributions {
             this.checkMoney(this.resourcesAmtInput);
             this.calculateContrib();
         });
+        this.housingAssistanceInput.addEventListener("input", e => {
+            this.checkMoney(this.housingAssistanceInput);
+            this.calculateContrib();
+        });
         this.dueAmtInput.addEventListener("input", e => {
             this.checkMoney(this.dueAmtInput);
             this.calculateStillDue();
@@ -139,13 +147,11 @@ export default class SupportContributions {
     // Vérifie le type de partipation (redevance ou caution)
     checkType() {
         let option = this.getOption(this.typeSelect);
-
         let otherOption = 1;
         if (option === "1") {
             otherOption = 2;
-            this.titleElt.textContent = "Redevance";
         } else {
-            this.titleElt.textContent = "Caution";
+            this.calculationMethodElt.textContent = "";
         }
 
         this.formContributionElt.querySelectorAll(".js-type-" + option).forEach(elt => {
@@ -155,6 +161,28 @@ export default class SupportContributions {
         this.formContributionElt.querySelectorAll(".js-type-" + otherOption).forEach(elt => {
             elt.classList.add("d-none");
         });
+
+        if (option != "1") {
+            this.salaryAmtInput.value = "";
+            this.resourcesAmtInput.value = "";
+            this.housingAssistanceInput.value = "";
+        }
+
+        if (option === "2") {
+            this.formContributionElt.querySelector(".js-caution").classList.remove("d-none");
+        } else {
+            this.formContributionElt.querySelector(".js-caution").classList.add("d-none");
+            this.returnDateInput.value = "";
+            this.returnAmtInput.value = "";
+        }
+
+        if (option === "4") {
+            this.formContributionElt.querySelector(".js-dueAmt").classList.replace("d-block", "d-none");
+            this.dueAmtInput.value = "";
+        } else {
+            this.formContributionElt.querySelector(".js-dueAmt").classList.replace("d-none", "d-block");
+        }
+
 
     }
 
@@ -191,12 +219,14 @@ export default class SupportContributions {
     calculateContrib() {
         let rateDays = this.getRateDays();
         if (this.contributionAmt > 0) {
-            this.dueAmtInput.value = this.contributionAmt;
-            this.calculationMethodElt.textContent = "Mode de calcul : Montant fixé dans l'évalution sociale (" + this.contributionAmt + " €).";
+            this.dueAmtInput.value = this.contributionAmt - this.housingAssistanceInput.value;
+            this.calculationMethodElt.textContent = "Mode de calcul : Montant fixé dans l'évalution sociale (" + this.contributionAmt + " €)" +
+                (this.housingAssistanceInput.value > 0 ? " - Montant APL (" + this.housingAssistanceInput.value + " €)" : "") + ".";
         } else if (this.rentAmt > 0) {
-            this.dueAmtInput.value = Math.round(this.rentAmt * rateDays * 100) / 100;
+            this.dueAmtInput.value = (Math.round((this.rentAmt * rateDays) * 100) / 100) - this.housingAssistanceInput.value;
             this.calculationMethodElt.textContent = "Mode de calcul : Montant du loyer (" + this.rentAmt + " €)" +
-                (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + " %)." : ".");
+                (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + " %)" : "") +
+                (this.housingAssistanceInput.value > 0 ? " - Montant APL (" + this.housingAssistanceInput.value + " €)." : ".");
         } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
             this.dueAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays * 100) / 100;
             this.calculationMethodElt.textContent = "Mode de calcul : Montant des ressources (" + this.resourcesAmtInput.value +
@@ -266,7 +296,11 @@ export default class SupportContributions {
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnSaveElt.textContent = "Enregistrer";
 
-        this.ajaxRequest.init("GET", this.btnNewElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
+        if (this.resourcesChecked === false) {
+            this.ajaxRequest.init("GET", this.btnNewElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
+        } else {
+            this.getResources();
+        }
     }
 
     // Requête pour obtenir le RDV sélectionné dans le formulaire modal
@@ -352,20 +386,16 @@ export default class SupportContributions {
             switch (data.action) {
                 case "getResources":
                     this.getResources(data.data);
-                    this.loader.off(false);
                     break;
                 case "show":
                     this.showContribution(data.data.contribution);
-                    this.loader.off(false);
                     break;
                 case "create":
                     this.createContribution(data.data.contribution);
-                    this.loader.off(true);
                     new MessageFlash(data.alert, data.msg);
                     break;
                 case "update":
                     this.updateContribution(data.data.contribution);
-                    this.loader.off(true);
                     new MessageFlash(data.alert, data.msg);
                     break;
                 case "delete":
@@ -375,26 +405,37 @@ export default class SupportContributions {
                     new MessageFlash(data.alert, data.msg);
                     break;
                 default:
-                    this.loader.off(true);
+                    this.loader.off(false);
                     new MessageFlash(data.alert, data.msg);
                     break;
             }
         }
         this.loading = false;
         this.calculateSumAmts();
-
     }
 
     // Donne le montant des ressources du ménage
     getResources(data) {
         this.modalElt.modal("show");
-        this.salaryAmtInput.value = data.salaryAmt;
-        this.resourcesAmtInput.value = data.resourcesAmt;
-        this.contributionAmt = data.contributionAmt;
-        this.dueAmtInput.value = data.dueAmt;
-        this.rentAmt = data.rentAmt;
+
+        if (this.resourcesChecked === false) {
+            this.salaryAmt = data.salaryAmt;
+            this.resourcesAmt = data.resourcesAmt;
+            this.contributionAmt = data.contributionAmt;
+            this.dueAmt = data.dueAmt;
+            this.rentAmt = data.rentAmt;
+            this.resourcesChecked = true;
+        }
+
+        this.salaryAmtInput.value = this.salaryAmt;
+        this.resourcesAmtInput.value = this.resourcesAmt;
+        this.contributionAmt = this.contributionAmt;
+        this.dueAmtInput.value = this.dueAmt;
+        this.rentAmt = this.rentAmt;
+
         this.checkType();
         this.calculateContrib();
+        this.loader.off(false);
     }
 
     // Donne la redevance sélectionnée dans le formulaire modal
@@ -405,7 +446,6 @@ export default class SupportContributions {
         this.selectOption(this.typeSelect, contribution.type);
         this.salaryAmtInput.value = contribution.salaryAmt;
         this.resourcesAmtInput.value = contribution.resourcesAmt;
-        this.credentialInput.value = contribution.credential;
         this.dueAmtInput.value = contribution.dueAmt;
         this.paymentDateInput.value = contribution.paymentDate ? contribution.paymentDate.substring(0, 10) : null;
         this.selectOption(this.paymentTypeSelect, contribution.paymentType);
@@ -415,6 +455,7 @@ export default class SupportContributions {
         this.returnAmtInput.value = contribution.returnAmt;
         this.commentInput.value = contribution.comment;
         this.checkType();
+        this.loader.off(false);
     }
 
     // Crée la ligne de la nouvelle redevance dans le tableau
@@ -443,11 +484,12 @@ export default class SupportContributions {
             this.trElt = contributionElt;
             this.modalConfirmElt.setAttribute("data-url", btnDeleteElt.getAttribute("data-url"));
         });
+        this.loader.off(true);
     }
 
     // Met à jour la ligne du tableau correspondant au contribution
     updateContribution(contribution) {
-        this.trElt.querySelector("td.js-month").textContent = contribution.month.substring(0, 7);
+        this.trElt.querySelector("td.js-month").textContent = new Date(contribution.paymentDate).toLocaleDateString("fr").substring(3, 10);
         this.trElt.querySelector("td.js-type").textContent = contribution.typeToString;
         this.trElt.querySelector("td.js-dueAmt").textContent = contribution.dueAmt ? contribution.dueAmt + " €" : "";
         this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt + " €" : "";
@@ -456,6 +498,7 @@ export default class SupportContributions {
         this.trElt.querySelector("td.js-paymentType").textContent = contribution.paymentTypeToString;
         this.trElt.querySelector("td.js-comment").textContent = contribution.comment && contribution.comment.length > 70 ? contribution.comment.slice(0, 65) + "..." : contribution.comment;
         this.calculateSumAmts();
+        this.loader.off(true);
     }
 
     // Crée la ligne de la contribution
@@ -467,7 +510,7 @@ export default class SupportContributions {
                     data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
                 </button>
             </td>
-            <td class="align-middle js-month">${contribution.month.substring(0, 7)}</td>
+            <td class="align-middle js-month">${new Date(contribution.paymentDate).toLocaleDateString("fr").substring(3, 10)}</td>
             <td class="align-middle js-type">${contribution.typeToString}</td>
             <td class="align-middle text-right js-dueAmt">${contribution.dueAmt ? contribution.dueAmt + " €" : ""}</td>
             <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt + " €" : ""}</td>

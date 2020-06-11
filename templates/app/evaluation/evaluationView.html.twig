@@ -369,7 +369,7 @@
                         </tr>
                         {% endif %}
                     </tbody>
-                    <tfooter>
+                    <tfoot>
                         <tr class="font-weight-bold">
                             <td scope="row">Reste à vivre</td>
                             <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") }} €</td>
@@ -380,7 +380,7 @@
                             <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
                         </tr>
                         {% endif %}
-                    </tfooter>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -423,7 +423,7 @@
                                             {% endif %}
                                         {% endfor %}
                                     </tbody>
-                                    <tfooter>
+                                    <tfoot>
                                         <tr class="font-weight-bold">
                                             <td scope="row">Total des ressources</td>
                                             <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
@@ -440,7 +440,7 @@
                                             <td class="text-right">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
                                         </tr>
                                         {% endif %}
-                                    </tfooter>
+                                    </tfoot>
                                 </table>
                             </div>
                         {% endif %}
@@ -466,12 +466,12 @@
                                             {% endif %}
                                         {% endfor %}
                                     </tbody>
-                                    <tfooter>
+                                    <tfoot>
                                         <tr class="font-weight-bold">
                                             <td scope="row">Total des charges</td>
                                             <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
                                         </tr>
-                                    </tfooter>
+                                    </tfoot>
                                 </table>
                             </div>
                         {% endif %}

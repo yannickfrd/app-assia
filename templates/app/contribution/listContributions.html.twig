@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Redevances | {{ title_website }}{% endblock %}
+{% block title %}Paiements | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -8,25 +8,27 @@
 
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-4">Redevances</h1>
+        <div class="d-flex mb-3 align-items-center">
+            <h1 class="h2 mr-1">Paiements</h1>
+            <span class="text-secondary">(redevances, PF, caution...)</span>
+        </div>
     </div>
 
     {% include "app/contribution/searchContribution.html.twig" %}
 
     <div class="container-fluid mt-4">
 
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-md-12">
-            <p><a href="{{ path('contribution_indicators') }}" class="text-{{ theme_color }}">
+            <a href="{{ path('contribution_indicators') }}" class="text-{{ theme_color }} float-right">
                 <span class="fas fa-chart-bar mr-2"></span>Indicateurs statistiques.</a>
-            </p>
         </div>
     </div>
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ contributions.getTotalItemCount|number_format(0,'', ' ')  }}<!--
-                --> contribution{% if contributions.getTotalItemCount > 1 %}s{% endif %}.</span>
+                <span class="align-middle">Résultat : {{ contributions.getTotalItemCount|number_format(0,',', ' ')  }}<!--
+                --> entrée{% if contributions.getTotalItemCount > 1 %}s{% endif %}.</span>
             </div>
             <div class="col-md-8">
                 <div class="navigation">{{ knp_pagination_render(contributions) }}</div>
@@ -40,7 +42,7 @@
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Suivi", "p.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Service", "s.name") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.month") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.month") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.dueAmt") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
@@ -51,12 +53,14 @@
                     </tr>
                 </thead>
                 <tbody id="container-contributions">
+                    {% set dueAmt = 0 %}
+                    {% set paidAmt = 0 %}
                     {% for contribution in contributions %}
                         <tr>
                             <td scope="row" class="align-middle text-center">
                                 <a class="btn btn-{{ theme_color }} btn-sm shadow"
                                     href="{{ path('support_contributions', {'id': contribution.supportGroup.id, 'contributionId': contribution.id}) }}" 
-                                    data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
+                                    data-toggle="tooltip" data-placement="bottom" title="Voir {{ contribution.typeToString }}"><span class="fas fa-eye"></span>
                                 </a>
                             </td>
                             <td class="align-middle">
@@ -65,17 +69,27 @@
                                 {% endfor %}                     
                             </td>
                             <td class="align-middle">{{ contribution.supportGroup.service.name }}</td>
-                            <td class="align-middle">{{ contribution.month|date("Y-m") }}</td>
+                            <td class="align-middle">{{ contribution.month|date("m/Y") }}</td>
                             <td class="align-middle">{{ contribution.typeToString }}</td>
-                            <td class="align-middle text-right">{{ contribution.dueAmt|number_format(0, ",", " ") }} €</td>
-                            <td class="align-middle text-right">{{ contribution.paidAmt|number_format(0, ",", " ") }} €</td>
-                            <td class="align-middle text-right">{{ contribution.stillDueAmt|number_format(0, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ contribution.stillDueAmt|number_format(2, ",", " ") }} €</td>
                             <td class="align-middle text-center">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
                             <td class="align-middle">{{ contribution.comment|slice(0,65) }}{% if contribution.comment|length > 70 %}...{% endif %}</td>                  
                         </tr>
+                        {% set dueAmt = dueAmt + contribution.dueAmt %}
+                        {% set paidAmt = paidAmt + contribution.paidAmt %}
                     {% endfor %}
                 </tbody>
+                <tfoot>
+                    <tr class="font-weight-bold">
+                        <td scope="row" colspan="5" class="align-middle text-center">Sous-total</td>
+                        <td id="js-sumDueAmt" class="align-middle text-right">{{ dueAmt|number_format(2, ",", " ") }} €</td>
+                        <td id="js-sumPaidAmt" class="align-middle text-right">{{ paidAmt|number_format(2, ",", " ") }} €</td>
+                        <td id="js-sumStillDueAmt" class="align-middle text-right">{{ (dueAmt - paidAmt)|number_format(2, ",", " ") }} €</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         

@@ -47,8 +47,8 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="th-w-20 align-middle"></th>
-                                <th scope="col" class="th-w-20" data-placement="bottom"
-                                    title="Demandeur/euse principal·e">DP</th>
+                                <th scope="col" class="th-w-20" data-toggle="tooltip" 
+                                    data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
                                 <th scope="col" class="th-w-150 align-middle">Nom</th>
                                 <th scope="col" class="th-w-150 align-middle">Prénom</th>
                                 <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
@@ -64,7 +64,7 @@
                             <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                 <th scope="row" class="align-middle">
                                     <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-                                        class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
+                                        class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
                                         title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                     </a>
                                 </th>
@@ -83,7 +83,7 @@
                                 <td class="px-1 align-middle">
                                     <button class="js-remove btn btn-danger shadow"
                                         data-url="{{ path('role_person_remove', {'id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        data-toggle="modal" data-target="#modal-block" data-placement="bottom"
+                                        data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom"
                                         title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
                                     </button>
                                 </td>
@@ -121,7 +121,7 @@
                 {% if is_granted("ROLE_ADMIN") %}
                 <div class="float-left d-flex">
                     <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('group_people_delete', {'id':group_people.id}) }}"
-                        title="Supprimer le suivi social" data-placement="bottom"
+                        data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
                         onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
                         class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
                 </div>

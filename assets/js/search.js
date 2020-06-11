@@ -20,6 +20,7 @@ for (let i in select2Array) {
 new Search("form-search");
 
 let headingSearchElt = document.getElementById("headingSearch");
+
 if (headingSearchElt) {
     let spanFaElt = headingSearchElt.querySelector("span.fa");
     headingSearchElt.addEventListener("click", function () {

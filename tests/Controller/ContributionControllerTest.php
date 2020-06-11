@@ -44,7 +44,7 @@ class ContributionControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('contributions'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Redevances');
+        $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
     public function testSearchContributionsIsSuccessful()
@@ -60,7 +60,7 @@ class ContributionControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Redevances');
+        $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
     public function testExportContributions()
@@ -82,7 +82,7 @@ class ContributionControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Redevances');
+        $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
     public function testGetResources()

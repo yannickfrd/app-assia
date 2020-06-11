@@ -23,7 +23,7 @@
                  <tr id="rdv-{{ rdv.id }}">
                     <td scope="row" class="align-middle">
                         <a href="{{ path('calendar_show', {'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" 
-                            class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                         </a>
                     </td>

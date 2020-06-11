@@ -1,12 +1,15 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Indicateurs Redevances | {{ title_website }}{% endblock %}
+{% block title %}Indicateurs paiements | {{ title_website }}{% endblock %}
 
 {% block body %}
 
 <div class="container">
     {% include "model/msgFlash.html.twig" %}
-    <h1 class="h2 mb-3">Indicateurs<span class="fas fa-angle-right fa-xs mx-1"></span>Redevances</h1>
+    <div class="d-flex mb-3 align-items-center">
+        <h1 class="h2 mr-1">Indicateurs<span class="fas fa-angle-right fa-xs mx-1"></span>Paiements</h1>
+        <span class="text-secondary">(redevances, PF, caution...)</span>
+    </div>
 </div>
 
 {% include "app/contribution/searchContribution.html.twig" %}
@@ -19,26 +22,27 @@
                     <thead>
                         <tr>
                             <th scope="row" class="align-middle th-w-20"></th>
-                            <th class="align-middle th-w-100">Mois</th>
-                            <th class="align-middle th-w-100 text-right">Nombre de redevances</th>
-                            <th class="align-middle th-w-100 text-right">Montant total des redevances</th>
-                            <th class="align-middle th-w-100 text-right">Moyenne montant des redevances</th>
-                            <th class="align-middle th-w-100 text-right">Montant total réglé</th>
-                            <th class="align-middle th-w-100 text-right">Moyenne montant réglé</th>
-                            <th class="align-middle th-w-100 text-right">Montant restant dus</th>
+                            <th class="align-middle">Mois</th>
+                            <th class="align-middle text-right">Nombre</th>
+                            <th class="align-middle text-right">Montant total dû</th>
+                            <th class="align-middle text-right">Moyenne montant dû</th>
+                            <th class="align-middle text-right">Montant total réglé</th>
+                            <th class="align-middle text-right">Moyenne montant réglé</th>
+                            <th class="align-middle text-right">Montant restant dus</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% set query = app.request.query.get('service') %}
                         {% for month in datas.months %}
                             <tr>
-                                {% set lastdayMonth = month.date|date_modify("+1 month")|date_modify("-1 day") %}
+                                {% set endMonth = month.date|date_modify("+1 month")|date_modify("-1 day") %}
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('contributions', {'type': form.vars.value.type, 
-                                        'service': query ? {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
-                                        'date': {'start': month.date|date('Y-m-d'), 'end': lastdayMonth|date('Y-m-d')} }) }}" 
+                                        'service': {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
+                                         'date': {'start': {'day': month.date|date('j'), 'month': month.date|date('n'), 'year': month.date|date('Y')}, 
+                                        'end': {'day': endMonth.date|date('j'), 'month': endMonth.date|date('n'), 'year': endMonth.date|date('Y')} } }) }}" 
                                         class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
-                                        title="Voir le détail des groupes de places du service"><span class="fas fa-eye fa-sm"></span>
+                                        title="Voir le détail des paiements du mois"><span class="fas fa-eye fa-sm"></span>
                                     </a>
                                 </td>
                                 <td class="align-middle">{{ month.monthToString }}</td>

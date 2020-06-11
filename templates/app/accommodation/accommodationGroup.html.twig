@@ -30,7 +30,7 @@
 			{% if edit_mode == true %}
 			<div class="float-left d-flex">
 				<a href="{{ path('support_group_people_accommodation_delete', {'id':form.vars.value.id}) }}" 
-					class="mr-3 btn btn-danger d-block" title="Supprimer la prise en charge" data-placement="bottom"
+					class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
 					onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
 					<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
 			</div>
@@ -72,7 +72,7 @@
 								<td class="px-1">{{ form_widget(form_person_accommodation.commentEndReason) }}</td>
 								<td class="align-middle text-center">
 									<a href="{{ path('support_person_accommodation_delete', {'id':form_person_accommodation.vars.value.id}) }}" 
-										class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Retirer la personne de la prise en charge" 
+										class="btn btn-danger btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne de la prise en charge" 
 										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne de la prise en charge ?')){return true;}else{return false;}">
 										<span class="fas fa-trash-alt"><span class="sr-only">Supprimer</span></span>
 									</a>

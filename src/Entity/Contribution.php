@@ -11,8 +11,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=ContributionRepository::class)
  * @UniqueEntity(
- *     fields={"month", "type", "supportGroup"},
- *     message="Une redevance existe déjà pour ce mois."
+ *     fields={"month", "type", "dueAmt", "supportGroup"},
+ *     errorPath="dueAmt",
+ *     message="Une redevance identique existe déjà pour ce mois."
  * )
  */
 class Contribution
@@ -20,9 +21,11 @@ class Contribution
     use CreatedUpdatedEntityTrait;
 
     public const CONTRIBUTION_TYPE = [
-        1 => 'Redevance/ Participation',
+        1 => 'Redevance',
         2 => 'Caution',
-        // 97 => 'Autre',
+        3 => 'Prêt',
+        4 => 'Remboursement de dette',
+        97 => 'Autre',
     ];
 
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
@@ -32,8 +35,6 @@ class Contribution
         2 => 'Virement mensuel',
         3 => 'Chèque',
         4 => 'Espèce',
-        97 => 'Autre',
-        99 => 'Non renseigné',
     ];
 
     /**
@@ -61,6 +62,11 @@ class Contribution
      * @Groups({"get", "export"})
      */
     private $resourcesAmt;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get", "export"})
+     */
+    private $housingAssitanceAmt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -175,6 +181,18 @@ class Contribution
     public function setResourcesAmt(?float $resourcesAmt): self
     {
         $this->resourcesAmt = $resourcesAmt;
+
+        return $this;
+    }
+
+    public function getHousingAssitanceAmt(): ?float
+    {
+        return $this->housingAssitanceAmt;
+    }
+
+    public function setHousingAssitanceAmt(?float $housingAssitanceAmt): self
+    {
+        $this->housingAssitanceAmt = $housingAssitanceAmt;
 
         return $this;
     }

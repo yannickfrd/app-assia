@@ -9,7 +9,7 @@
 <section class="mt-0 mb-4">
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-4">Administration des utilisateurs</h1>
+        <h1 class="h2 mb-3">Administration des utilisateurs</h1>
     </div>
 
     {% include "app/user/searchUsers.html.twig" %}
@@ -61,7 +61,7 @@
                         <th scope="row">
                             {% if is_granted("EDIT", user) %}
                             <a href="{{ path('security_user', {'id':user.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
                                 title="Voir la fiche"><span class="fas fa-eye"></span>
                             </a>
                             {% else %}

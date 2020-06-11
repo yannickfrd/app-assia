@@ -76,10 +76,10 @@
                 <div class="float-left d-flex">
                     {% if form.vars.value.isDisabled %} 
                     <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('security_user_enable', {'id':form.vars.value.id}) }}"
-                        title="Désactiver l'utilisateur" data-placement="bottom"><span class="fas fa-user-plus mr-2"></span>Ré-activer</a>
+                        title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"><span class="fas fa-user-plus mr-2"></span>Ré-activer</a>
                     {% else %}
                     <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
-                        title="Désactiver l'utilisateur" data-placement="bottom"
+                        title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"
                         onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"><span
                             class="fas fa-user-slash mr-2"></span>Désactiver</a>
                     {% endif %}

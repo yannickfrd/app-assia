@@ -8,7 +8,7 @@
 
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-4">Suivis</h1>
+        <h1 class="h2 mb-3">Suivis</h1>
     </div>
 
     {% include "app/support/searchSupports.html.twig" %}
@@ -55,7 +55,7 @@
                         <th scope="row" class="align-middle">
                             {% if is_granted("VIEW", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                 title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                             </a>
                             {% else %}
@@ -64,7 +64,7 @@
                             {% endif %}
                             {# {% if is_granted("EDIT", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-placement="bottom"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                 title="Modifier la fiche du suivi"><span class="fas fa-edit"></span>
                             </a>
                             {% endif %} #}
@@ -72,7 +72,7 @@
                         <td class="align-middle">
                             {% for supportPerson in supportPeople %}
                             <a href="{{ path('group_person_show', {'id':support.groupPeople.id, 'person_id':supportPerson.person.id, 'slug':supportPerson.person.slug}) }}"
-                                class="text-{{ theme_color }}" title="Voir la fiche de la personne" data-placement="bottom">{{ supportPerson.person.fullname }}</a><br />
+                                class="text-{{ theme_color }}" title="Voir la fiche de la personne" data-toggle="tooltip" data-placement="bottom">{{ supportPerson.person.fullname }}</a><br />
                         {% endfor %}
                         </td>
                         <td class="align-middle">
@@ -97,7 +97,7 @@
                         <td class="align-middle">
                             {% for accommodationGroup in support.accommodationGroups %}
                             <a href="{{ path('accommodation_edit', {'id':accommodationGroup.accommodation.id}) }}"
-                                class="text-{{ theme_color }}" title="Voir la fiche du groupe de places" data-placement="bottom">
+                                class="text-{{ theme_color }}" title="Voir la fiche du groupe de places" data-toggle="tooltip" data-placement="bottom">
                                 {{ accommodationGroup.accommodation.name }} ({{ accommodationGroup.accommodation.address }} - {{ accommodationGroup.accommodation.city }})
                             </a><br />
                             {% endfor %}

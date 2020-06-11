@@ -235,7 +235,7 @@ class ExportExcel
         $this->sheet->getPageMargins()->setLeft(0.2);
         $this->sheet->getPageMargins()->setBottom(0.4);
         $this->sheet->getPageMargins()->setHeader(0.1);
-        $this->sheet->getPageMargins()->setFooter(0.1);
+        $this->sheet->getPageMargins()->setfooter(0.1);
 
         // Header and footer for print
         $this->sheet->getHeaderFooter()->setOddHeader('&C&B'.$this->name);

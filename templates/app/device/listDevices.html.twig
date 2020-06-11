@@ -7,7 +7,7 @@
 <section class="mt-0 mb-4">
     <div class="container">
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-4">Dispositifs</h1>
+        <h1 class="h2 mb-3">Dispositifs</h1>
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
@@ -53,8 +53,8 @@
                     <tr>
                         <th scope="row">
                             <a href="{{ path('admin_device_edit', {'id':device.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir la fiche du dispositif">
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
+                                data-placement="bottom" title="Voir la fiche du dispositif">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>

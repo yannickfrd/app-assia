@@ -16,17 +16,19 @@
                     {% block search_form %}{% endblock %}
                     <div class="form-group col-auto my-1 px-1">
                         <div class="form-group">
-                            <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow"
-                                data-placement="bottom" title="Rechercher"><span class="fas fa-search"></span><span
-                                    class="sr-only">Rechercher</span></button>
-                            <button type="reset" class="btn btn-secondary ml-2 shadow" data-placement="bottom"
-                                title="Effacer les filtres"><span class="fas fa-eraser"></span><span
-                                    class="sr-only">Effacer</span></button>
-                            {% if form.export is defined %}
-                            <button id="js-btn-export" name="export" value="true" class="btn btn-success ml-2 shadow"
-                                data-placement="bottom" title="Exporter les données au format Excel"><span
-                                    class="fas fa-file-excel"></span><span class="sr-only">Exporter</span></button>
-                            {% endif %}
+                            {% block search_form_buttons %}
+                                <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip"
+                                    data-placement="bottom" title="Rechercher"><span class="fas fa-search"></span><span
+                                        class="sr-only">Rechercher</span></button>
+                                <button type="reset" class="btn btn-secondary ml-2 shadow" data-placement="bottom" data-toggle="tooltip"
+                                    title="Effacer les filtres"><span class="fas fa-eraser"></span><span
+                                        class="sr-only">Effacer</span></button>
+                                {% if form.export is defined %}
+                                <button id="js-btn-export" name="export" value="true" class="btn btn-success ml-2 shadow" data-toggle="tooltip"
+                                    data-placement="bottom" title="Exporter les données au format Excel"><span
+                                        class="fas fa-file-excel"></span><span class="sr-only">Exporter</span></button>
+                                {% endif %}
+                            {% endblock %}
                         </div>
                     </div>
                 </div>

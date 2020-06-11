@@ -53,6 +53,7 @@ class EvalSocialGroup
         7 => '5 ans - 10 ans',
         8 => 'Plus de 10 ans',
         97 => 'Autre',
+        98 => 'Non concerné',
         99 => 'Non renseigné',
     ];
 

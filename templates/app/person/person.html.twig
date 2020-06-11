@@ -88,7 +88,7 @@
                 {% if edit_mode and is_granted("ROLE_ADMIN") %}
                 <div class="float-left d-flex">
                     <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id':person.id}) }}"
-                        title="Supprimer le suivi social" data-placement="bottom"
+                        data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
                         onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette personne ?')){return true;}else{return false;}"><span
                         class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
                 </div>
@@ -127,8 +127,8 @@
                 <thead class="">
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-80 d-none d-sm-table-cell" data-placement="bottom"
-                            title="N° d'identification du groupe">ID groupe</th>
+                        <th scope="col" class="align-middle th-w-80 d-none d-sm-table-cell" data-toggle="tooltip" 
+                            data-placement="bottom" title="N° d'identification du groupe">ID groupe</th>
                         <th scope="col" class="align-middle th-w-140">Typologie familiale</th>
                         <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Nb de
                             personnes</th>
@@ -146,13 +146,13 @@
                     <tr>
                         <th scope="row">
                             <a href="{{ path('group_people_show', {'id':role.groupPeople.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir la fiche du groupe">
+                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+                                data-placement="bottom" title="Voir la fiche du groupe">
                                 <span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td data-placement="bottom" title="N° d'identification du groupe"
-                            class="d-none d-sm-table-cell">
+                        <td class="d-none d-sm-table-cell" data-toggle="tooltip" 
+                            data-placement="bottom" title="N° d'identification du groupe">
                             {{ role.groupPeople.id }}</td>
                         <td class="d-table-row d-sm-table-cell">
                             {{ role.groupPeople.familyTypologyToString }}

@@ -6,7 +6,7 @@ use App\Service\Pagination;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
 use App\Service\Normalisation;
-use App\Export\ContributionExport;
+use App\Export\ContributionFullExport;
 use App\Controller\Traits\CacheTrait;
 use App\Form\Model\ContributionSearch;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +14,7 @@ use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
 use App\Form\Contribution\ContributionType;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Export\ContributionLightExport;
 use App\Form\Model\SupportContributionSearch;
 use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +63,10 @@ class ContributionController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search, $router);
+            return $this->exportFullData($search, $router);
+        }
+        if ($request->query->get('export2')) {
+            return $this->exportLightData($search, $router);
         }
 
         return $this->render('app/contribution/listContributions.html.twig', [
@@ -78,7 +82,7 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportContributions(int $id, SupportContributionSearch $search = null, Request $request, Pagination $pagination): Response
+    public function showSupportContributions(int $id, SupportContributionSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
@@ -142,7 +146,7 @@ class ContributionController extends AbstractController
                 'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
                 'dueAmt' => $dueAmt ?? null,
-                'contributionAmt' => $evaluation ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,
+                'contributionAmt' => $evaluation && $evaluation->getEvalBudgetGroup() ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,
                 'rentAmt' => $accommodation ? $accommodation->getContributionAmt() : null,
             ],
         ], 200);
@@ -238,23 +242,13 @@ class ContributionController extends AbstractController
      */
     public function showContributionIndicators(ContributionSearch $search = null, Request $request, ContributionIndicators $indicators): Response
     {
-        $today = new \DateTime('midnight');
-        $search = (new ContributionSearch())
-            ->setType(1)
-            ->setStart(new \DateTime($today->format('Y').'-01-01'))
-            ->setEnd($today);
-
-        if ($this->getUser()->getStatus() == 1) {
-            $usersCollection = new ArrayCollection();
-            $usersCollection->add($this->getUser());
-            $search->setReferents($usersCollection);
-        }
+        $search = $this->getContributionSearch();
 
         $form = ($this->createForm(ContributionSearchType::class, $search))
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search);
+            return $this->exportFullData($search);
         }
 
         $datas = $indicators->getIndicators(
@@ -272,7 +266,7 @@ class ContributionController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(ContributionSearch $search, UrlGeneratorInterface $router = null)
+    protected function exportFullData(ContributionSearch $search, UrlGeneratorInterface $router = null)
     {
         $supports = $this->repo->findContributionsToExport($search);
 
@@ -282,7 +276,23 @@ class ContributionController extends AbstractController
             return $this->redirectToRoute('supports');
         }
 
-        return (new ContributionExport($router))->exportData($supports);
+        return (new ContributionFullExport($router))->exportData($supports);
+    }
+
+    /**
+     * Exporte les données.
+     */
+    protected function exportLightData(ContributionSearch $search, UrlGeneratorInterface $router = null)
+    {
+        $supports = $this->repo->findContributionsToExport($search);
+
+        if (!$supports) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
+
+            return $this->redirectToRoute('supports');
+        }
+
+        return (new ContributionLightExport($router))->exportData($supports);
     }
 
     /**
@@ -329,5 +339,22 @@ class ContributionController extends AbstractController
                 ]),
             ],
         ], 200);
+    }
+
+    protected function getContributionSearch()
+    {
+        $today = new \DateTime('midnight');
+        $search = (new ContributionSearch())
+            ->setType(1)
+            ->setStart(new \DateTime($today->format('Y').'-01-01'))
+            ->setEnd($today);
+
+        if ($this->getUser()->getStatus() == 1) {
+            $usersCollection = new ArrayCollection();
+            $usersCollection->add($this->getUser());
+            $search->setReferents($usersCollection);
+        }
+
+        return $search;
     }
 }

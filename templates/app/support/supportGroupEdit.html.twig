@@ -113,7 +113,7 @@
 							<tr>
 								<th scope="col" class="align-middle th-w-20"></th>
 								<th scope="col" class="align-middle th-w-150">Nom et prénom</th>
-								<th scope="col" class="align-middle th-w-20" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
+								<th scope="col" class="align-middle th-w-20" data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
 								<th scope="col" class="align-middle th-w-150">Rôle</th>
 								<th scope="col" class="align-middle th-date">Date de début</th>
 								<th scope="col" class="align-middle th-date">Date de fin</th>
@@ -130,7 +130,7 @@
 									<th scope="row" class="px-1 align-middle">
 										<button class="js-remove btn btn-danger btn-sm shadow" data-url="{{ path('remove_support_pers', 
 											{'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
-											data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Retirer la personne du suivi">
+											data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne du suivi">
 											<span class="fas fa-user-times"></span>
 										</button>
 									</th>
@@ -197,7 +197,7 @@
 			{% if support.id and is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
 				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
-					title="Supprimer le suivi social" data-placement="bottom"
+					title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom"
 					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). 
 					Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
 					class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>

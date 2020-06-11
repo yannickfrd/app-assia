@@ -35,24 +35,33 @@ class ContributionType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('credential')
-            ->add('dueAmt', MoneyType::class, [
+            ->add('housingAssitanceAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],
                 'required' => false,
             ])
+            ->add('dueAmt', MoneyType::class, [
+                'attr' => [
+                    'class' => 'js-money text-right',
+                ],
+                'required' => false,
+                'help' => 'Mode de calcul : ',
+            ])
             ->add('paymentDate', DateType::class, [
                 'widget' => 'single_text',
+                'required' => false,
             ])
             ->add('paymentType', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::PAYMENT_TYPE),
                 'placeholder' => '-- Select --',
+                'required' => false,
             ])
             ->add('paidAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],
+                'required' => false,
             ])
             ->add('stillDueAmt', MoneyType::class, [
                 'attr' => [
@@ -63,6 +72,7 @@ class ContributionType extends AbstractType
             ])
             ->add('returnDate', DateType::class, [
                 'widget' => 'single_text',
+                'required' => false,
             ])
             ->add('returnAmt', MoneyType::class, [
                 'attr' => [

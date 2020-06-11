@@ -7,7 +7,7 @@ use App\Service\ExportExcel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ContributionExport
+class ContributionFullExport
 {
     protected $router;
 
@@ -27,7 +27,7 @@ class ContributionExport
             $arrayData[] = $this->getDatas($contribution);
         }
 
-        $export = new ExportExcel('export_participations', 'xlsx', $arrayData, 16);
+        $export = new ExportExcel('export_paiements', 'xlsx', $arrayData, 16);
         $export->addTotalRow();
 
         return $export->exportFile();
@@ -56,7 +56,7 @@ class ContributionExport
             'Service' => $contribution->getSupportGroup()->getService()->getName(),
             'Pôle' => $contribution->getSupportGroup()->getService()->getPole()->getName(),
             'Type' => $contribution->getTypeToString(),
-            'Mois concerné (Date)' => $this->formatDate($contribution->getMonth()),
+            'Mois (Date)' => $this->formatDate($contribution->getMonth()),
             'PF - Montant salaire (€)' => $contribution->getSalaryAmt(),
             'PF - Montant ressources (€)' => $contribution->getResourcesAmt(),
             'Montant dû (€)' => $contribution->getDueAmt(),

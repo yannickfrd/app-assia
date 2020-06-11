@@ -99,8 +99,11 @@ Individual collective: Individuel ou collectif
 Contribution amt: Montant de la redevance
 
 Due amt: Montant dû
-Month: Mois concerné
+Month: Mois
+Year: Année
+Day: Jour
 Credential: Justificatif de ressources
+Housing assitance amt: Montant APL
 Paid amt: Montant réglé
 Payment date: Date de règlement
 Payment type: Mode de règlement
@@ -109,5 +112,5 @@ Return amt: Montant restitué
 Return date: Date de restitution
 Salary amt: Montant du salaire
 Still due amt: Restant dû
-Type: Type de participation
+Type: Type
 Write a comment: Ecrire un commentaire

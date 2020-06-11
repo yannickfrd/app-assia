@@ -9,27 +9,34 @@
 		<h1 class="h2">Suivi<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
 		{% if support.id %}
 		<div id="support" data-support="{{ support.id }}">
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_view', {'id':support.id}) }}" data-placement="bottom" title="Page d'accueil du suivi">
+			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_view', {'id':support.id}) }}" 
+				data-toggle="tooltip" data-placement="bottom" title="Page d'accueil du suivi">
 				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
 			</a>
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_show', {'id':support.id}) }}" data-placement="bottom" title="Evaluation sociale">
-				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
-			</a>
 			{% if support.service and support.service.accommodation %}
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" data-placement="bottom" title="Modalités d'hébergement">
+			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" 
+				data-toggle="tooltip" data-placement="bottom" title="Modalités d'hébergement">
 				<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 			</a>
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_contributions', {'id':support.id}) }}" data-placement="bottom" title="Redevances et participations financières">
-				<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Redevances</span>
+			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_contributions', {'id':support.id}) }}" 
+				data-toggle="tooltip" data-placement="bottom" title="Paiements (redevances, PF, caution...)">
+				<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Paiements</span>
 			</a>
 			{% endif %}
-			<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Rendez-vous">
+			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_show', {'id':support.id}) }}" 
+				data-toggle="tooltip" data-placement="bottom" title="Evaluation sociale">
+				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
+			</a>
+			<a href="{{ path('support_calendar_show', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
+				data-toggle="tooltip" data-placement="bottom" title="Rendez-vous">
 				<span class="far fa-calendar-alt"></span><span class="sr-only">Agenda</span>
 			</a>
-			<a href="{{ path('support_notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Notes sociales">
+			<a href="{{ path('support_notes', {'id':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
+				data-toggle="tooltip" data-placement="bottom" title="Notes sociales">
 				<span class="fas fa-edit"></span><span class="sr-only">Notes</span>
 			</a>
-			<a href="{{ path('support_documents', {'supportId':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" data-placement="bottom" title="Documents administratifs">
+			<a href="{{ path('support_documents', {'supportId':support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
+				data-toggle="tooltip" data-placement="bottom" title="Documents administratifs">
 				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
 		</div>

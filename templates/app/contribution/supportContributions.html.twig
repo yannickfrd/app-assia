@@ -2,13 +2,13 @@
 
 {% form_theme form_search "bootstrap_4_layout.html.twig" %}
 
-{% block title %}Redevances | {{ title_website }}{% endblock %}
+{% block title %}Paiements | {{ title_website }}{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-	{% set title = "Redevances" %}
+	{% set title = "Paiements" %}
 	{% include "app/support/navSuppport.html.twig" %}
 
 	<div class="row">
@@ -18,12 +18,11 @@
 				data-contribution-rate="{{ support.service.contributionRate }}" 
 				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}" 
 				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}" 
-				data-placement="bottom" title="Créer une nouvelle redevance">
-				<span class="fas fa-plus-square mr-2"></span>Nouvelle redevance</button>
+				data-toggle="tooltip"  data-placement="bottom" title="Créer une nouvelle redevance, PF ou caution">
+				<span class="fas fa-plus-square mr-2"></span>Nouveau</button>
 			<div class="d-inline align-middle">Total : <!--
 			--><span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,',', ' ')}}</span><!--
-			--> redevance{% if contributions.getTotalItemCount > 1 %}s{% endif %}<!--
-			-->{% if nbTotalContributions %} sur <span id="nb-total-contributions">{{ nbTotalContributions }}</span>{% endif %}.
+			-->{% if nbTotalContributions %} sur <span id="nb-total-contributions">{{ nbTotalContributions }}</span>{% endif %}
 				{% if sumStillDueAmt > 0 %}
 					<span class="badge badge-warning">{{ sumStillDueAmt|number_format(2,',', ' ') }} € restant dus</span>
 				{% endif %}
@@ -43,7 +42,7 @@
 					<thead>
 						<tr>
 							<th scope="col" class="align-middle th-w-20"></th>
-							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois concerné", "c.month") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.month") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.dueAmt") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
@@ -61,10 +60,10 @@
 							<tr id="contribution-{{ contribution.id }}" class="js-contribution">
 								<td scope="row" class="align-middle text-center">
 									<button class="btn btn-{{ theme_color }} btn-sm shadow js-get" data-id="{{ contribution.id }}"
-										data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
+										data-toggle="tooltip" data-placement="bottom" title="Voir {{ contribution.typeToString }}"><span class="fas fa-eye"></span>
 									</button>
 								</td>
-								<td class="align-middle js-month">{{ contribution.month|date("Y-m") }}</td>
+								<td class="align-middle js-month">{{ contribution.month|date("m/Y") }}</td>
 								<td class="align-middle js-type">{{ contribution.typeToString }}</td>
 								<td class="align-middle text-right js-dueAmt">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
 								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
@@ -77,7 +76,7 @@
 								<td class="align-middle text-center">
 									<button class="js-delete btn btn-danger btn-sm shadow my-1" 
 										data-url="{{ path('contribution_delete', {'id':contribution.id}) }}" 
-										data-placement="bottom" title="Supprimer la redevance" 
+										data-toggle="tooltip" data-placement="bottom" title="Supprimer" 
 										data-toggle="modal" data-target="#modal-block">
 										<span class="fas fa-trash-alt"></span>
 									</button>
@@ -85,14 +84,14 @@
 							</tr>
 						{% endfor %}
 					</tbody>
-					<tfooter>
+					<tfoot>
 						<tr class="font-weight-bold">
-							<td scope="row" colspan="3" class="align-middle text-center">Total </td>
+							<td scope="row" colspan="3" class="align-middle text-center">Sous-total</td>
 							<td id="js-sumDueAmt" class="align-middle text-right"></td>
 							<td id="js-sumPaidAmt" class="align-middle text-right"></td>
 							<td id="js-sumStillDueAmt" class="align-middle text-right"></td>
 						</tr>
-					</tfooter>
+					</tfoot>
 				</table>
 			</div>
 			<div class="navigation">{{ knp_pagination_render(contributions) }}</div>

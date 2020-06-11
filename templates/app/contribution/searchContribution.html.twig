@@ -4,14 +4,25 @@
 
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.fullname) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.type) }}</div>
-<div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
-    title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_row(form.date.start) }}
+<div class="form-group col-auto my-1 px-1 d-inline-flex"><span class="my-2 px-1">Entre</span>
+    <span class="d-none">{{ form_widget(form.date.start.day) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Mois de début">{{ form_widget(form.date.start.month) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Année de début">{{ form_widget(form.date.start.year) }}</span>
 </div>
-<div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
-    title="Date de fin"><span class="my-2 pr-1">et</span>{{ form_row(form.date.end) }}
+<div class="form-group col-auto my-1 px-1 d-inline-flex"><span class="my-2 pr-1">et</span>
+    <span class="d-none">{{ form_widget(form.date.end.day) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Mois de fin">{{ form_widget(form.date.end.month) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Année de fin">{{ form_widget(form.date.end.year) }}</span>
 </div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.referents) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.services) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.devices) }}</div>
 
+{% endblock %}
+
+{% block search_form_buttons %}
+    {{ parent() }}
+    <button id="js-btn-export-2" name="export2" value="true" class="btn btn-{{ theme_color }} ml-2 shadow" data-toggle="tooltip"
+        data-placement="bottom" title="Exporter les données au format Excel pour la comptabilité"><span
+            class="fas fa-file-excel mr-2"></span>Export compta.</button>
 {% endblock %}

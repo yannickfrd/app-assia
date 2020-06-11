@@ -8,6 +8,15 @@ export default class Search {
         this.selectElts = this.formSearch.getElementsByTagName("select");
         this.resultsElt = document.getElementById("results");
         this.btnClearElt = this.formSearch.querySelector("button[type='reset']");
+        this.firstInput = this.formSearch.querySelector("input");
+
+        this.startDay = document.getElementById("date_start_day")
+        this.startMonth = document.getElementById("date_start_month")
+        this.startYear = document.getElementById("date_start_year")
+        this.endDay = document.getElementById("date_end_day")
+        this.endMonth = document.getElementById("date_end_month")
+        this.endYear = document.getElementById("date_end_year")
+
         this.init();
     }
 
@@ -16,6 +25,7 @@ export default class Search {
             e.preventDefault();
             this.clearSearch();
         });
+        this.checkDates();
     }
 
     // Efface les données du formulaire de recherche au clic
@@ -28,8 +38,9 @@ export default class Search {
             checkboxElt.value = "0";
         });
         this.selectElts.forEach(selectElt => {
-            selectElt.querySelectorAll("option").forEach(option => {
-                option.selected = "";
+            selectElt.querySelectorAll("option").forEach(optionElt => {
+                optionElt.removeAttribute("selected");
+                optionElt.selected = "";
             });
         });
 
@@ -47,6 +58,38 @@ export default class Search {
             this.resultsElt.textContent = "";
         }
 
-        this.formSearch.querySelector("input").focus();
+        if (this.firstInput) {
+            this.firstInput.focus();
+        }
+    }
+
+    checkDates() {
+        if (this.startMonth || this.endMonth) {
+            this.startMonth.addEventListener("change", e => {
+                this.updateSelect(this.startDay, "1");
+            });
+            this.startYear.addEventListener("change", e => {
+                this.updateSelect(this.startDay, "1");
+            });
+        }
+        if (this.endMonth || this.endYear) {
+            this.endMonth.addEventListener("change", e => {
+                this.updateSelect(this.endDay, "1");
+            });
+            this.endYear.addEventListener("change", e => {
+                this.updateSelect(this.endDay, "1");
+            });
+        }
+    }
+
+    updateSelect(selectElt, value) {
+        selectElt.querySelectorAll("option").forEach(optionElt => {
+            if (optionElt.value === value) {
+                optionElt.setAttribute("selected", "selected")
+            } else {
+                optionElt.removeAttribute("selected");
+                optionElt.selected = "";
+            }
+        });
     }
 }
