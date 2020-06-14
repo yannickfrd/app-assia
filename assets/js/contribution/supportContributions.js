@@ -176,6 +176,12 @@ export default class SupportContributions {
             this.returnAmtInput.value = "";
         }
 
+        if (option === "3") {
+            this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
+        } else {
+            this.formContributionElt.querySelector(".js-payment").classList.remove("d-none");
+        }
+
         if (option === "4") {
             this.formContributionElt.querySelector(".js-dueAmt").classList.replace("d-block", "d-none");
             this.dueAmtInput.value = "";

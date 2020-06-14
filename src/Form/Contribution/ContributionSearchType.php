@@ -21,7 +21,7 @@ class ContributionSearchType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Suivi concerné',
-                    'class' => 'w-max-170',
+                    'class' => 'w-max-180',
                 ],
             ])
             ->add('type', ChoiceType::class, [
@@ -30,7 +30,7 @@ class ContributionSearchType extends AbstractType
                 ],
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'attr' => [
-                    'class' => 'w-max-160',
+                    'class' => 'w-max-180',
                 ],
                 'placeholder' => '-- Type --',
                 'required' => false,

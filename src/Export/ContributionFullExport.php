@@ -53,6 +53,7 @@ class ContributionFullExport
             'Nom' => $person ? $person->getLastname() : null,
             'Prénom' => $person ? $person->getFirstname() : null,
             'Date de naissance' => $person ? $this->formatDate($person->getBirthdate()) : null,
+            'Date d\'arrivée' => $supportGroup->getStartDate() ? $this->formatDate($supportGroup->getStartDate()) : null,
             'Service' => $contribution->getSupportGroup()->getService()->getName(),
             'Pôle' => $contribution->getSupportGroup()->getService()->getPole()->getName(),
             'Type' => $contribution->getTypeToString(),

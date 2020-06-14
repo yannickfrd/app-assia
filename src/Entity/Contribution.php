@@ -24,7 +24,8 @@ class Contribution
         1 => 'Redevance',
         2 => 'Caution',
         3 => 'Prêt',
-        4 => 'Remboursement de dette',
+        4 => 'Remboursement dette',
+        5 => 'Restitution Caution',
         97 => 'Autre',
     ];
 

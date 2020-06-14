@@ -77,7 +77,7 @@ class ContributionRepository extends ServiceEntityRepository
     protected function getContributionsQuery()
     {
         return $this->createQueryBuilder('c')->select('c')
-        ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
+        ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate}')
         ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
         ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
         ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')

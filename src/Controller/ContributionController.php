@@ -98,12 +98,14 @@ class ContributionController extends AbstractController
 
         $form = $this->createForm(ContributionType::class, $contribution);
 
+        $sumStillDueAmt = $this->repo->sumStillDueAmt($supportGroup->getId());
+
         return $this->render('app/contribution/supportContributions.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
-            'sumStillDueAmt' => $this->repo->sumStillDueAmt($supportGroup->getId()),
+            'sumStillDueAmt' => $sumStillDueAmt,
             'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 20) ?? null,
         ]);
     }
