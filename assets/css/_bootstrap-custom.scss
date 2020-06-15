@@ -57,6 +57,10 @@ $font-size-base: .95rem;
 @import "../../node_modules/bootstrap/scss/close";
 // @import "../../node_modules/bootstrap/scss/toasts";
 @import "../../node_modules/bootstrap/scss/modal";
+
+$tooltip-font-size: .8rem;
+$tooltip-opacity: .8;
+
 @import "../../node_modules/bootstrap/scss/tooltip";
 @import "../../node_modules/bootstrap/scss/popover";
 // @import "../../node_modules/bootstrap/scss/carousel";
