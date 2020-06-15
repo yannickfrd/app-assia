@@ -4,7 +4,7 @@ import SelectRadioJS from "../utils/selectRadio";
 import UpdateSupportPeople from "./updateSupportPeople";
 import CheckChange from "../utils/checkChange";
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("support")) {
         new SelectRadioJS("table-support-people");
         new UpdateSupportPeople(new AjaxRequest());

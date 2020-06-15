@@ -7,7 +7,7 @@ import "../utils/maskZipcode";
 
 let ajaxRequest = new AjaxRequest();
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     new Evaluation();
     new UpdateEvaluation(ajaxRequest);
     new CheckChange("evaluation"); // form name

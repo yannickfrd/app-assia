@@ -62,7 +62,7 @@ export default class SupportContributions {
     }
 
     init() {
-        this.btnNewElt.addEventListener("click", e => {
+        this.btnNewElt.addEventListener("click", () => {
             if (this.loader.isInLoading() === false) {
                 this.newContribution();
             }
@@ -70,14 +70,14 @@ export default class SupportContributions {
 
         document.querySelectorAll(".js-contribution").forEach(trElt => {
             let btnGetElt = trElt.querySelector("button.js-get");
-            btnGetElt.addEventListener("click", e => {
+            btnGetElt.addEventListener("click", () => {
                 if (this.loader.isInLoading() === false) {
                     this.trElt = trElt;
                     this.getContribution(Number(btnGetElt.getAttribute("data-id")));
                 }
             });
             let btnDeleteElt = trElt.querySelector("button.js-delete");
-            btnDeleteElt.addEventListener("click", e => {
+            btnDeleteElt.addEventListener("click", () => {
                 this.trElt = trElt;
                 this.modalConfirmElt.setAttribute("data-url", btnDeleteElt.getAttribute("data-url"));
             });
@@ -104,34 +104,34 @@ export default class SupportContributions {
             this.ajaxRequest.init("GET", this.modalConfirmElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
         });
 
-        this.dateMonthSelect.addEventListener("input", e => {
+        this.dateMonthSelect.addEventListener("input", () => {
             this.calculateContrib();
         });
-        this.dateYearSelect.addEventListener("input", e => {
+        this.dateYearSelect.addEventListener("input", () => {
             this.calculateContrib();
         });
 
-        this.typeSelect.addEventListener("input", e => {
+        this.typeSelect.addEventListener("input", () => {
             this.checkType();
         });
 
-        this.resourcesAmtInput.addEventListener("input", e => {
+        this.resourcesAmtInput.addEventListener("input", () => {
             this.checkMoney(this.resourcesAmtInput);
             this.calculateContrib();
         });
-        this.housingAssistanceInput.addEventListener("input", e => {
+        this.housingAssistanceInput.addEventListener("input", () => {
             this.checkMoney(this.housingAssistanceInput);
             this.calculateContrib();
         });
-        this.dueAmtInput.addEventListener("input", e => {
+        this.dueAmtInput.addEventListener("input", () => {
             this.checkMoney(this.dueAmtInput);
             this.calculateStillDue();
         });
-        this.paidAmtInput.addEventListener("input", e => {
+        this.paidAmtInput.addEventListener("input", () => {
             this.checkMoney(this.paidAmtInput);
             this.calculateStillDue();
         });
-        this.paymentDateInput.addEventListener("focusout", e => {
+        this.paymentDateInput.addEventListener("focusout", () => {
             this.checkPaidAmt();
         });
 
@@ -478,7 +478,7 @@ export default class SupportContributions {
         this.calculateSumAmts();
 
         let btnGetElt = contributionElt.querySelector("button.js-get");
-        btnGetElt.addEventListener("click", e => {
+        btnGetElt.addEventListener("click", () => {
             if (this.loader.isInLoading() === false) {
                 this.trElt = contributionElt;
                 this.getContribution(Number(btnGetElt.getAttribute("data-id")));
@@ -486,7 +486,7 @@ export default class SupportContributions {
         });
 
         let btnDeleteElt = contributionElt.querySelector("button.js-delete");
-        btnDeleteElt.addEventListener("click", e => {
+        btnDeleteElt.addEventListener("click", () => {
             this.trElt = contributionElt;
             this.modalConfirmElt.setAttribute("data-url", btnDeleteElt.getAttribute("data-url"));
         });

@@ -40,7 +40,7 @@ export default class Calendar {
 
         this.dayElts.forEach(dayElt => {
             this.hideRdvElts(dayElt);
-            dayElt.addEventListener("click", e => {
+            dayElt.addEventListener("click", () => {
                 this.resetData();
                 this.dateInput.value = dayElt.id;
                 this.modalRdvElt.querySelector("#rdv_start").value = dayElt.id + "T00:00";
@@ -49,7 +49,7 @@ export default class Calendar {
         });
 
         this.rdvElts.forEach(rdvElt => {
-            rdvElt.addEventListener("click", e => {
+            rdvElt.addEventListener("click", () => {
                 this.resetData();
                 this.requestGetRdv(rdvElt);
             });

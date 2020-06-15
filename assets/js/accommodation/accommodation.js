@@ -3,7 +3,7 @@ import CheckChange from "../utils/checkChange";
 import "../utils/maskZipcode";
 
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     new DeleteAccommodation();
     new CheckChange("accommodation"); // form name
 });

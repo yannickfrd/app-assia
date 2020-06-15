@@ -5,7 +5,7 @@ import UpdateService from "./updateService";
 import "../utils/maskPhone";
 import "../utils/maskZipcode";
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     new DeleteTr("function-table");
     new CheckChange("service"); // form name
     new AddCollectionWidget();

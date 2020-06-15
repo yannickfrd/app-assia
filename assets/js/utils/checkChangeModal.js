@@ -57,7 +57,7 @@ export default class CheckChange {
     }
 
     test() {
-        this.modalNoteElt.querySelector(".modal-content").addEventListener("click", e => {
+        this.modalNoteElt.querySelector(".modal-content").addEventListener("click", () => {
             this.change = false;
             return false;
         });

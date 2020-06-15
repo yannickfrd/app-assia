@@ -65,18 +65,18 @@ export default class Search {
 
     checkDates() {
         if (this.startMonth || this.endMonth) {
-            this.startMonth.addEventListener("change", e => {
+            this.startMonth.addEventListener("change", () => {
                 this.updateSelect(this.startDay, "1");
             });
-            this.startYear.addEventListener("change", e => {
+            this.startYear.addEventListener("change", () => {
                 this.updateSelect(this.startDay, "1");
             });
         }
         if (this.endMonth || this.endYear) {
-            this.endMonth.addEventListener("change", e => {
+            this.endMonth.addEventListener("change", () => {
                 this.updateSelect(this.endDay, "1");
             });
-            this.endYear.addEventListener("change", e => {
+            this.endYear.addEventListener("change", () => {
                 this.updateSelect(this.endDay, "1");
             });
         }

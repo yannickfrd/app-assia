@@ -27,7 +27,7 @@ export default class MessageFlash {
         this.msgFlashContentElt.classList.replace("d-none", "d-block");
         this.msgFlashContentElt.insertBefore(this.msg, this.msgFlashContentElt.firstChild);
 
-        this.msg.querySelector("button.close").addEventListener("click", e => {
+        this.msg.querySelector("button.close").addEventListener("click", () => {
             if (this.msgFlashContentElt.querySelectorAll("button.close").length === 1) {
                 this.msg.remove();
                 this.msgFlashContentElt.classList.replace("d-block", "d-none");

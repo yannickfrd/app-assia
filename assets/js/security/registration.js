@@ -5,7 +5,7 @@ import CheckChange from "../utils/checkChange";
 import AddCollectionWidget from "../utils/addCollectionWidget";
 import "../utils/maskPhone";
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     new SeePassword();
     new DeleteTr("function-table");
     new Username("user");

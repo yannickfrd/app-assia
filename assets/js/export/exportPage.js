@@ -3,6 +3,6 @@ import ExportData from "./exportData";
 
 let ajaxRequest = new AjaxRequest();
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     new ExportData(ajaxRequest);
 });

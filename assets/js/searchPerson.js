@@ -19,7 +19,7 @@ export default class SearchPerson {
         }
 
         this.searchElt.addEventListener("keyup", this.timer.bind(this));
-        this.searchElt.addEventListener("click", e => {
+        this.searchElt.addEventListener("click", () => {
             this.resultsSearchElt.classList.replace("fade-out", "fade-in");
             setTimeout(this.hideListResults.bind(this), 100);
         });
@@ -63,7 +63,7 @@ export default class SearchPerson {
             aElt.href = "/person/" + person.id;
             aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 font-size-10";
             this.resultsSearchElt.appendChild(aElt);
-            aElt.addEventListener("click", e => {
+            aElt.addEventListener("click", () => {
                 aElt.classList.add("active");
             });
         });

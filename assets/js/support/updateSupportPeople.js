@@ -24,7 +24,7 @@ export default class UpdateSupportPeople {
                 });
             });
         });
-        this.addPeopleBtElt.addEventListener("click", e => {
+        this.addPeopleBtElt.addEventListener("click", () => {
             this.loader.on();
         });
     }

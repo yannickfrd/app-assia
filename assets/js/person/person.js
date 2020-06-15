@@ -9,7 +9,7 @@ import "../utils/maskPhone";
 let ajaxRequest = new AjaxRequest();
 let parametersUrl = new ParametersUrl();
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     let editMode = document.getElementById("person").dataset.editMode;
     if (editMode === "true") {
         new UpdatePerson(ajaxRequest);

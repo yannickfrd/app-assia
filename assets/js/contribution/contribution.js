@@ -4,7 +4,7 @@ import CheckChangeModal from "../utils/checkChangeModal";
 
 let ajaxRequest = new AjaxRequest();
 
-document.addEventListener("DOMContentLoaded", e => {
+document.addEventListener("DOMContentLoaded", () => {
     new SupportContributions(ajaxRequest);
     // new CheckChangeModal("contribution"); // form name
 });

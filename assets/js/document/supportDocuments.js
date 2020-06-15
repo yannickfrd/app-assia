@@ -33,7 +33,7 @@ export default class SupportDocuments {
         document.querySelectorAll(".js-document").forEach(documentElt => {
             documentElt.addEventListener("click", this.getDocument.bind(this, documentElt));
             let btnElt = documentElt.querySelector("button.js-delete");
-            btnElt.addEventListener("click", e => {
+            btnElt.addEventListener("click", () => {
                 this.modalConfirmElt.setAttribute("data-url", btnElt.getAttribute("data-url"));
             });
         });
@@ -241,7 +241,7 @@ export default class SupportDocuments {
         this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + 1;
         documentElt.addEventListener("click", this.getDocument.bind(this, documentElt));
         let btnElt = documentElt.querySelector("button.js-delete");
-        btnElt.addEventListener("click", e => {
+        btnElt.addEventListener("click", () => {
             this.modalConfirmElt.setAttribute("data-url", btnElt.getAttribute("data-url"));
         });
     }
