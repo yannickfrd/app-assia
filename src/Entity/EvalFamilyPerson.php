@@ -94,6 +94,11 @@ class EvalFamilyPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $noConciliationOrder;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $unbornChild;
 
     /**
@@ -169,6 +174,26 @@ class EvalFamilyPerson
     public function setMaritalStatus(?int $maritalStatus): self
     {
         $this->maritalStatus = $maritalStatus;
+
+        return $this;
+    }
+
+    public function getNoConciliationOrder(): ?int
+    {
+        return $this->noConciliationOrder;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getNoConciliationOrderToString(): ?string
+    {
+        return $this->noConciliationOrder ? Choices::YES_NO[$this->noConciliationOrder] : null;
+    }
+
+    public function setNoConciliationOrder(?int $noConciliationOrder): self
+    {
+        $this->noConciliationOrder = $noConciliationOrder;
 
         return $this;
     }

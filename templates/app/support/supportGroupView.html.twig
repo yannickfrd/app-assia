@@ -98,6 +98,9 @@
 		{{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
 			~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
 	</div>
+	<div class="row">
+		{{ utils.view(support.theoreticalEndDate ? support.theoreticalEndDate|date("d/m/Y") : "", "Theoretical end date") }}
+	</div>
 	{% for accommodationGroup in support.accommodationGroups %}
 		{% if loop.last %}
 			<div class="row">

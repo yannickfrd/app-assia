@@ -20,6 +20,11 @@ class EvalFamilyPersonType extends AbstractType
                 'placeholder' => '-- Select --',
                 'required' => false,
             ])
+            ->add('noConciliationOrder', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => '-- Select --',
+                'required' => false,
+            ])
             ->add('unbornChild', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => '-- Select --',

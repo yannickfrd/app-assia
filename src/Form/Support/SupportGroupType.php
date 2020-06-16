@@ -77,6 +77,10 @@ class SupportGroupType extends AbstractType
                 'placeholder' => '-- Select --',
                 'required' => false,
             ])
+            ->add('theoreticalEndDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,

@@ -151,6 +151,7 @@
                     {% endif %}
                     <div class="row mb-2">
                         {{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
+                        {{ utils.view(evalFamily.noConciliationOrderToString, "No conciliation order", "evaluation") }}
                         {{ utils.view(evalFamily.protectiveMeasure == 1 and evalFamily.protectiveMeasureType ? 
                             evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
                         {{ utils.view(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 

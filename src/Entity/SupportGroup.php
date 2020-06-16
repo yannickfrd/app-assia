@@ -91,6 +91,12 @@ class SupportGroup
      * @ORM\Column(type="date", nullable=true)
      * @Groups("export")
      */
+    private $theoreticalEndDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
+     */
     private $endDate;
 
     /** @var bool */
@@ -267,6 +273,20 @@ class SupportGroup
     public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
+    }
+
+    public function getTheoreticalEndDate(): ?\DateTimeInterface
+    {
+        return $this->theoreticalEndDate;
+    }
+
+    public function setTheoreticalEndDate(?\DateTimeInterface $theoreticalEndDate): self
+    {
+        if ($theoreticalEndDate) {
+            $this->theoreticalEndDate = $theoreticalEndDate;
+        }
+
+        return $this;
     }
 
     public function setEndDate(?\DateTimeInterface $endDate): self

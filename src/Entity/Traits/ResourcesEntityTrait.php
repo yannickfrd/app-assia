@@ -20,7 +20,7 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    public $disAdultAllowance;
+    private $disAdultAllowance;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -86,6 +86,21 @@ trait ResourcesEntityTrait
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $salary;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paje;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $asf;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $disabilityPension;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -181,6 +196,24 @@ trait ResourcesEntityTrait
      * @Groups("export")
      */
     private $salaryAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $pajeAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $asfAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $disabilityPensionAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -376,6 +409,66 @@ trait ResourcesEntityTrait
     public function setPaidTraining(?int $paidTraining): self
     {
         $this->paidTraining = $paidTraining;
+
+        return $this;
+    }
+
+    public function getPaje(): ?int
+    {
+        return $this->paje;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getPajeToString(): ?string
+    {
+        return $this->paje ? Choices::YES_NO_BOOLEAN[$this->paje] : null;
+    }
+
+    public function setPaje(?int $paje): self
+    {
+        $this->paje = $paje;
+
+        return $this;
+    }
+
+    public function getAsf(): ?int
+    {
+        return $this->asf;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getAsfToString(): ?string
+    {
+        return $this->asf ? Choices::YES_NO_BOOLEAN[$this->asf] : null;
+    }
+
+    public function setAsf(?int $asf): self
+    {
+        $this->asf = $asf;
+
+        return $this;
+    }
+
+    public function getDisabilityPension(): ?int
+    {
+        return $this->disabilityPension;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getDisabilityPensionToString(): ?string
+    {
+        return $this->disabilityPension ? Choices::YES_NO_BOOLEAN[$this->disabilityPension] : null;
+    }
+
+    public function setDisabilityPension(?int $disabilityPension): self
+    {
+        $this->disabilityPension = $disabilityPension;
 
         return $this;
     }
@@ -696,6 +789,42 @@ trait ResourcesEntityTrait
     public function setSalaryAmt(?float $salaryAmt): self
     {
         $this->salaryAmt = $salaryAmt;
+
+        return $this;
+    }
+
+    public function getPajeAmt(): ?float
+    {
+        return $this->pajeAmt;
+    }
+
+    public function setPajeAmt(?float $pajeAmt): self
+    {
+        $this->pajeAmt = $pajeAmt;
+
+        return $this;
+    }
+
+    public function getAsfAmt(): ?float
+    {
+        return $this->asfAmt;
+    }
+
+    public function setAsfAmt(?float $asfAmt): self
+    {
+        $this->asfAmt = $asfAmt;
+
+        return $this;
+    }
+
+    public function getDisabilityPensionAmt(): ?float
+    {
+        return $this->disabilityPensionAmt;
+    }
+
+    public function setDisabilityPensionAmt(?float $disabilityPensionAmt): self
+    {
+        $this->disabilityPensionAmt = $disabilityPensionAmt;
 
         return $this;
     }

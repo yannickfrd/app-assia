@@ -107,12 +107,11 @@
                         <thead>
                             <tr>
                                 <th scope="row" class="align-middle th-w-20"></th>
-                                <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(exports, "Nom de l'export", "e.title") }}</th>
-                                <th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(exports, "Description", "e.comment") }}</th>
-                                <th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(exports, "Nb de résultats", "e.nbResults") }}</th>
-                                <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(exports, "Taille", "e.size") }}</th>
+                                <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(exports, "Nom de l'export", "e.title") }}</th>
+                                <th scope="col" class="align-middle">{{ knp_pagination_sortable(exports, "Description", "e.comment") }}</th>
+                                <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Nb de résultats", "e.nbResults") }}</th>
+                                <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Taille", "e.size") }}</th>
                                 <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(exports, "Créé le", "e.createdAt") }}</th>
-                                <th scope="col" class="align-middle th-w-100">Créé par</th>
                                 <th scope="col" class="align-middle th-w-20"></th>
                             </tr>
                         </thead>
@@ -130,7 +129,6 @@
                                     <td class="js-export-nbResults text-right">{{ export.nbResults|number_format(0, ",", " ") }}</td>
                                     <td class="js-export-size text-right">{{ (export.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
                                     <td class="js-export-createdAt">{{ export.createdAt|date("d/m/Y H:i") }}</td>
-                                    <td class="js-export-createdBy">{{ export.createdBy.fullname }}</td>
                                     <td class="align-middle text-center">
                                         <a href="{{ path('export_delete', {'id':export.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
                                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cet export ?')){return true;}else{return false;}">

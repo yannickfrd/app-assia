@@ -168,6 +168,7 @@ export default class evaluation {
     evalFamily(prefix) {
         document.getElementById("accordion-eval_family").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
+            new DisplayInputs(prefix, i + "_evalFamilyPerson_maritalStatus", "select", [6]);
             new DisplayInputs(prefix, i + "_evalFamilyPerson_unbornChild", "select", [1]);
             new DisplayInputs(prefix, i + "_evalFamilyPerson_protectiveMeasure", "select", [1, 3]);
 

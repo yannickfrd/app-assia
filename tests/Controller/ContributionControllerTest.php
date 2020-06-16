@@ -53,9 +53,13 @@ class ContributionControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->generateUri('contributions'));
 
         $form = $crawler->selectButton('search')->form([
-            'date[start]' => '2020-04-01',
-            'date[end]' => '2020-04-01',
-        ]);
+            'date[start][year]' => '2020',
+            'date[start][month]' => '04',
+            'date[start][day]' => '01',
+            'date[end][year]' => '2020',
+            'date[end][month]' => '04',
+            'date[end][day]' => '30',
+            ]);
 
         $this->client->submit($form);
 

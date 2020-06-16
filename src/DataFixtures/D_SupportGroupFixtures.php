@@ -85,7 +85,6 @@ class D_SupportGroupFixtures extends Fixture
             ->setEndDate($this->endDate ?? null)
             ->setStatus($this->status)
             ->setReferent($this->user)
-            ->setComment(join($this->faker->paragraphs(3)))
             ->setCreatedAt($this->startDate)
             ->setUpdatedAt($this->groupPeople->getUpdatedAt())
             ->setCreatedBy($this->user)

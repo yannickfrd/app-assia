@@ -82,7 +82,7 @@ class SupportGroupService
 
         $birthdate = $rolePerson->getPerson()->getBirthdate();
 
-        if ($supportPerson->getStartDate() < $birthdate) {
+        if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
             $supportPerson->setStartDate($birthdate);
         }
 
@@ -111,7 +111,7 @@ class SupportGroupService
             }
             $birthdate = $supportPerson->getPerson()->getBirthdate();
 
-            if ($supportPerson->getStartDate() < $birthdate) {
+            if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
                 $supportPerson->setStartDate($birthdate);
                 $this->container->get('session')->getFlashBag()->add('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');
             }
@@ -128,7 +128,7 @@ class SupportGroupService
 
                         $birthdate = $accommodationPerson->getPerson()->getBirthdate();
 
-                        if ($supportPerson->getStartDate() < $birthdate) {
+                        if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
                             $supportPerson->setStartDate($birthdate);
                             $this->container->get('session')->getFlashBag()->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
                         }

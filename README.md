@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.12.3 - 08/06/2020
+1.12.4 - 16/06/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,11 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.12.4 - 16/06/2020
+- Suivi social : ajout du champ "Date théorique de fin du suivi"
+- Evaluation sociale : ajout des champs "Ordonnance de non conciliation", "PAJE", "ASF", "Pension d'invalidité"
+- Correction bug mise à jour de la date de début de suivi de la personne
 
 ## Version 1.12.3 - 08/06/2020
 - Créé tableau d'indicateurs des redevances

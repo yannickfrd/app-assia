@@ -22,6 +22,8 @@ Activity bonus amt: Montant Prime d'activité (€)
 Activity bonus: Prime d'activité
 Alimony amt: Montant Pension alimentaire (€)
 Alimony: Pension alimentaire
+Asf amt: Montant ASF
+Asf: ASF
 Asylum allowance amt: Montant ADA (€)
 Asylum allowance: ADA
 Budget balance amt: Reste à vivre (€)
@@ -63,6 +65,8 @@ Dis adult allowance amt: Montant AAH (€)
 Dis adult allowance: AAH
 Dis child allowance amt: Montant AAEH (€)
 Dis child allowance: AEEH
+Disability pension amt: Montant Pension d'invalidité
+Disability pension: Pension d'invalidité
 Electricity gas amt: Montant électricité / Gaz (€)
 Electricity gas: Electricité / Gaz
 End rights date: Date de fin de droits
@@ -89,6 +93,8 @@ Over indebt record date: Date de dépôt du dossier
 Over indebt record: Dossier de surendettement
 Paid training amt: Montant formation rémunérée (€)
 Paid training: Formation rémunérée
+Paje amt: Montant PAJE
+Paje: PAJE
 Pension benefit amt: Montant retraire (€)
 Pension benefit: Retraite
 Phone amt: Montant téléphone (€)
@@ -136,6 +142,7 @@ Faml reunification: Regroupement familial
 Marital status: Situation matrimoniale
 Nb dependent children : Nombre d'enfants à charge
 Nb people reunification: Nombre de pers. concernées par le regroupement
+No conciliation order: Ordonnance de non conciliation
 Pregnancy type: Type de grossesse
 Protective measure type: Type de mesure de protection
 Protective measure: Mesure de protection
