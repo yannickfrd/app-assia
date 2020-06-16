@@ -20,6 +20,7 @@ https://demo.esperer95.app
 - Suivi social : ajout du champ "Date théorique de fin du suivi"
 - Evaluation sociale : ajout des champs "Ordonnance de non conciliation", "PAJE", "ASF", "Pension d'invalidité"
 - Correction bug mise à jour de la date de début de suivi de la personne
+- Modification des droits utilisateurs pour les notes, les documents et les RDV : droit d'éditer et de supprimer si l'utilisateur est le réferent du suivi
 
 ## Version 1.12.3 - 08/06/2020
 - Créé tableau d'indicateurs des redevances

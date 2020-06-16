@@ -56,7 +56,10 @@ class NoteVoter extends Voter
 
     protected function canView()
     {
-        if ($this->currentUserId == $this->note->getCreatedBy()->getId()) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId()
+            || $this->security->isGranted('ROLE_SUPER_ADMIN')
+            || $this->currentUserId == $this->note->getSupportGroup()->getReferent()->getId()
+        ) {
             return true;
         }
 
@@ -68,20 +71,17 @@ class NoteVoter extends Voter
                 }
             }
         }
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-            return true;
-        }
 
         return false;
     }
 
     protected function canEdit()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->note->getCreatedBy()))) {
-            return true;
-        }
-
-        if ($this->currentUserId == $this->note->getCreatedBy()->getId() || $this->currentUserId == $this->note->getSupportGroup()->getReferent()->getId()) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId()
+            || $this->security->isGranted('ROLE_SUPER_ADMIN')
+            || $this->userIsAdmin($this->note->getCreatedBy())
+            || $this->currentUserId == $this->note->getSupportGroup()->getReferent()->getId()
+        ) {
             return true;
         }
 
@@ -90,11 +90,11 @@ class NoteVoter extends Voter
 
     protected function canDelete()
     {
-        if ($this->currentUserId == $this->note->getCreatedBy()->getId()) {
-            return true;
-        }
-
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->note->getCreatedBy()))) {
+        if ($this->currentUserId == $this->note->getCreatedBy()->getId()
+            || $this->security->isGranted('ROLE_SUPER_ADMIN')
+            || $this->userIsAdmin($this->note->getCreatedBy())
+            || $this->currentUserId == $this->note->getSupportGroup()->getReferent()->getId()
+        ) {
             return true;
         }
 
