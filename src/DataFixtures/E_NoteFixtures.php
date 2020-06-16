@@ -23,11 +23,11 @@ class E_NoteFixtures extends Fixture
 
         foreach ($supports as $support) {
             for ($i = 0; $i < mt_rand(1, 3); ++$i) {
-                $note = new Note();
-
+                
                 $content = '<p>'.join($this->faker->paragraphs(mt_rand(10, 15)), '</p><p>').'</p>';
-
-                $note->setTitle($this->faker->sentence($nbWords = mt_rand(5, 10), $variableNbWords = true))
+                
+                $note = (new Note())
+                    ->setTitle($this->faker->sentence($nbWords = mt_rand(5, 10), $variableNbWords = true))
                     ->setContent($content)
                     ->setSupportGroup($support)
                     ->setCreatedAt(new \DateTime())

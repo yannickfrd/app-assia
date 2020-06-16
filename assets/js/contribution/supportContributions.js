@@ -162,13 +162,18 @@ export default class SupportContributions {
             elt.classList.add("d-none");
         });
 
-        if (option != "1") {
+        // Redevance et PF
+        if (option === "1") {
+            // this.formContributionElt.querySelector(".js-date").classList.replace("d-none", "d-block");
+        } else {
             this.salaryAmtInput.value = "";
             this.resourcesAmtInput.value = "";
             this.housingAssistanceInput.value = "";
+            // this.formContributionElt.querySelector(".js-date").classList.replace("d-block", "d-none");
         }
 
-        if (option === "2") {
+        // Caution ou restitution caution
+        if (option === "2" || option === "5") {
             this.formContributionElt.querySelector(".js-caution").classList.remove("d-none");
         } else {
             this.formContributionElt.querySelector(".js-caution").classList.add("d-none");
@@ -176,20 +181,20 @@ export default class SupportContributions {
             this.returnAmtInput.value = "";
         }
 
-        if (option === "3") {
+        // Prêt ou restitution caution
+        if (option === "3" || option === "5") {
             this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
         } else {
             this.formContributionElt.querySelector(".js-payment").classList.remove("d-none");
         }
 
-        if (option === "4") {
+        // Remboursement dette ou restitution caution
+        if (option === "4" || option === "5") {
             this.formContributionElt.querySelector(".js-dueAmt").classList.replace("d-block", "d-none");
             this.dueAmtInput.value = "";
         } else {
             this.formContributionElt.querySelector(".js-dueAmt").classList.replace("d-none", "d-block");
         }
-
-
     }
 
     // Calcul la somme de tous les montants pour le footer du tableau
@@ -495,11 +500,11 @@ export default class SupportContributions {
 
     // Met à jour la ligne du tableau correspondant au contribution
     updateContribution(contribution) {
-        this.trElt.querySelector("td.js-month").textContent = new Date(contribution.paymentDate).toLocaleDateString("fr").substring(3, 10);
+        this.trElt.querySelector("td.js-month").textContent = new Date(contribution.month).toLocaleDateString("fr").substring(3, 10);
         this.trElt.querySelector("td.js-type").textContent = contribution.typeToString;
-        this.trElt.querySelector("td.js-dueAmt").textContent = contribution.dueAmt ? contribution.dueAmt + " €" : "";
-        this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt + " €" : "";
-        this.trElt.querySelector("td.js-stillDueAmt").textContent = contribution.stillDueAmt ? Math.round(contribution.stillDueAmt * 100) / 100 + " €" : "";
+        this.trElt.querySelector("td.js-dueAmt").textContent = contribution.dueAmt ? contribution.dueAmt.toFixed(2) + " €" : "";
+        this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt.toFixed(2) + " €" : "";
+        this.trElt.querySelector("td.js-stillDueAmt").textContent = contribution.stillDueAmt ? (Math.round(contribution.stillDueAmt * 100) / 100).toFixed(2) + " €" : "";
         this.trElt.querySelector("td.js-paymentDate").textContent = contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : "";
         this.trElt.querySelector("td.js-paymentType").textContent = contribution.paymentTypeToString;
         this.trElt.querySelector("td.js-comment").textContent = contribution.comment && contribution.comment.length > 70 ? contribution.comment.slice(0, 65) + "..." : contribution.comment;
@@ -512,15 +517,15 @@ export default class SupportContributions {
         return `
             <td scope="row" class="text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow js-get" data-id="${contribution.id}" 
-                    data-url="/contribution/${contribution.id}/get" 
+                    data-url="/contribution/${contribution.id}/get" data-toggle="tooltip" 
                     data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
                 </button>
             </td>
-            <td class="align-middle js-month">${new Date(contribution.paymentDate).toLocaleDateString("fr").substring(3, 10)}</td>
+            <td class="align-middle js-month">${new Date(contribution.month).toLocaleDateString("fr").substring(3, 10)}</td>
             <td class="align-middle js-type">${contribution.typeToString}</td>
-            <td class="align-middle text-right js-dueAmt">${contribution.dueAmt ? contribution.dueAmt + " €" : ""}</td>
-            <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt + " €" : ""}</td>
-            <td class="align-middle text-right js-stillDueAmt">${contribution.stillDueAmt ? Math.round(contribution.stillDueAmt * 100) / 100 + " €" : ""}</td>
+            <td class="align-middle text-right js-dueAmt">${contribution.dueAmt ? contribution.dueAmt.toFixed(2) + " €" : ""}</td>
+            <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt.toFixed(2) + " €" : ""}</td>
+            <td class="align-middle text-right js-stillDueAmt">${contribution.stillDueAmt ? (Math.round(contribution.stillDueAmt * 100) / 100).toFixed(2) + " €" : ""}</td>
             <td class="align-middle js-paymentDate">${contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : ""}</td>
             <td class="align-middle js-paymentType">${contribution.paymentType ? contribution.paymentTypeToString : ""}</td>
             <td class="align-middle js-comment">${contribution.comment ? contribution.comment.slice(0, 65) : "" }</td>

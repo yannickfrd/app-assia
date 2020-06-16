@@ -58,7 +58,7 @@ Documents | {{ title_website }}
 						<td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 						<td class="align-middle text-center">
 							<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
-								data-toggle="tooltip" data-placement="bottom" title="Supprimer le document" data-toggle="modal" data-target="#modal-block">
+								data-placement="bottom" title="Supprimer le document" data-toggle="modal" data-target="#modal-block">
 								<span class="fas fa-trash-alt"></span>
 							</button>
 						</td>

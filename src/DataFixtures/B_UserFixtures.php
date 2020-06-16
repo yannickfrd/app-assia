@@ -86,6 +86,7 @@ class B_UserFixtures extends Fixture
     protected function createSuperAdmin($serviceUser = null)
     {
         $user = new User();
+        $now = new \DateTime();
 
         $user->setUsername('r.madelaine')
             ->setFirstName('Romain')
@@ -96,9 +97,9 @@ class B_UserFixtures extends Fixture
             ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
             ->setEmail('romain.madelaine@esperer-95.org')
             ->setLoginCount(1)
-            ->setLastLogin(new \DateTime())
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime());
+            ->setLastLogin($now)
+            ->setCreatedAt($now)
+            ->setUpdatedAt($now);
 
         $this->manager->persist($user);
     }

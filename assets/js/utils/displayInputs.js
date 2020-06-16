@@ -10,7 +10,6 @@ export default class DisplayInputs {
     }
 
     init() {
-        console.log(this.inputElt);
         if (this.inputElt) {
             this.select();
             this.inputElt.addEventListener("change", this.select.bind(this)) // au changement sur mobile

@@ -60,7 +60,9 @@ class ContributionRepository extends ServiceEntityRepository
     public function findAllContributionsForIndicators(ContributionSearch $search = null): ?array
     {
         $query = $this->createQueryBuilder('c')->select('c')
-            ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
+            ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, device}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}');
 
         if ($search) {

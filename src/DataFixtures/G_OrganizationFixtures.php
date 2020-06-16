@@ -36,11 +36,10 @@ class G_OrganizationFixtures extends Fixture
         $user = $this->repoUser->findOneBy(['username' => 'r.madelaine']);
 
         foreach (self::ORGANIZATION as $value) {
-            $organization = new Organization();
-
             $now = new \Datetime();
 
-            $organization->setName($value)
+            $organization = (new Organization())
+                ->setName($value)
                 ->setCreatedAt($now)
                 ->setCreatedBy($user)
                 ->setUpdatedAt($now)

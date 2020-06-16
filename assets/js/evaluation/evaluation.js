@@ -73,14 +73,18 @@ export default class evaluation {
             dateElt.addEventListener("focusout", this.checkDate.bind(this, dateElt));
         });
 
-        this.updateContributionBtnElt.addEventListener("click", e => {
-            e.preventDefault();
-            this.updateContribution();
-        });
-        this.contributionAmtInput.addEventListener("input", e => {
-            e.preventDefault();
-            this.calculationMethodElt.textContent = "";
-        });
+        if (this.updateContributionBtnElt) {
+            this.updateContributionBtnElt.addEventListener("click", e => {
+                e.preventDefault();
+                this.updateContribution();
+            });
+        }
+        if (this.contributionAmtInput) {
+            this.contributionAmtInput.addEventListener("input", e => {
+                e.preventDefault();
+                this.calculationMethodElt.textContent = "";
+            });
+        }
     }
 
 

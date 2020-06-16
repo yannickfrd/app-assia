@@ -24,8 +24,7 @@ class AppFixtures extends Fixture
 
     public static function getStartDate($date)
     {
-        $now = new \DateTime();
-        $interval = $now->diff($date);
+        $interval = (new \DateTime())->diff($date);
         $days = $interval->days;
 
         return '-'.$days.' days';

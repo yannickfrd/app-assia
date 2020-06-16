@@ -50,7 +50,7 @@ class D_SupportGroupFixtures extends Fixture
             for ($i = 1; $i <= 1; ++$i) {
                 $this->addSupportGroup($i);
 
-                foreach ($this->groupPeople->getRolePerson() as $rolePerson) {
+                foreach ($this->groupPeople->getRolePeople() as $rolePerson) {
                     $this->addSupportPerson($rolePerson->getPerson());
                 }
             }
@@ -104,9 +104,8 @@ class D_SupportGroupFixtures extends Fixture
             $rolePerson = $role;
         }
 
-        $supportPerson = new SupportPerson();
-
-        $supportPerson->setStartDate($this->startDate)
+        $supportPerson = (new SupportPerson())
+            ->setStartDate($this->startDate)
             ->setEndDate($this->endDate ?? null)
             ->setStatus($this->status)
             ->setHead($rolePerson->getHead())

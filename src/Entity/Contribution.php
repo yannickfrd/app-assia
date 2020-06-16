@@ -102,13 +102,13 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $paidAmt = 0;
+    private $paidAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $stillDueAmt = 0;
+    private $stillDueAmt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
