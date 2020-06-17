@@ -132,14 +132,7 @@ export default class ValidationSupport {
     // Donne la date actuelle
     getDateNow() {
         let month = this.now.getMonth() + 1;
-        if (this.now.getMonth() < 10) {
-            month = "0" + month;
-        }
-        let day = this.now.getDate();
-        if (this.now.getDate() < 10) {
-            day = "0" + day;
-        }
-        return this.now.getFullYear() + "-" + month + "-" + day;
+        return this.now.getFullYear() + "-" + month.toString().padStart(2, "0") + "-" + this.now.getDate().toString().padStart(2, "0");
     }
 
     // Renvoie le nombre de champs invalides

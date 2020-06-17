@@ -34,6 +34,7 @@
         "open": "^7.0.4",
         "popover": "^2.4.1",
         "popper.js": "^1.16.1",
+        "rxmask": "^1.4.13",
         "select2": "^4.0.13",
         "select2-bootstrap4-theme": "^1.0.0",
         "select2-theme-bootstrap4": "^0.2.0-beta.6",

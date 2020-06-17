@@ -42,13 +42,8 @@ export default class AutoLogout {
     getFullTime() {
         let minutes = Math.round((this.time / 60) - 0.5);
         let seconds = this.time - (minutes * 60);
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        };
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        };
-        return minutes + "mn " + seconds + "s";
+
+        return minutes.toString().padStart(2, "0") + "mn " + seconds.toString().padStart(2, "0") + "s";
     }
 
     // Remet à zéro le timer

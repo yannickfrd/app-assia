@@ -127,7 +127,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('hsgActionDept', null, [
                 'attr' => [
-                    'class' => 'js-zip-code',
+                    'class' => 'js-zipcode',
                 ],
                 'help' => 'Department or zip code',
             ])
@@ -175,7 +175,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('domiciliationCity')
             ->add('domiciliationDept', null, [
                 'attr' => [
-                    'class' => 'js-zip-code',
+                    'class' => 'js-zipcode',
                 ],
                 'help' => 'Department or zip code',
             ])
@@ -192,7 +192,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('housingCity')
             ->add('housingDept', null, [
                 'attr' => [
-                    'class' => 'js-zip-code',
+                    'class' => 'js-zipcode',
                 ],
                 'help' => 'Department or zip code',
             ])

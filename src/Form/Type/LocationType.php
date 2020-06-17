@@ -15,7 +15,7 @@ class LocationType extends AbstractType
             ->add('city')
             ->add('zipcode', null, [
                 'attr' => [
-                    'class' => 'js-zip-code',
+                    'class' => 'js-zipcode',
                 ],
             ]);
         // ->add('country', TextType::class);

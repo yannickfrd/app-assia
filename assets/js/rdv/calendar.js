@@ -111,10 +111,8 @@ export default class Calendar {
     checkStart() {
         if (isNaN(this.startInput.value)) {
             let endHour = parseInt(this.startInput.value.substr(0, 2)) + 1;
-            if (endHour < 10) {
-                endHour = "0" + endHour;
-            }
-            this.endInput.value = endHour + ":" + this.startInput.value.substr(3, 2);
+
+            this.endInput.value = endHour.toString().padStart(2, "0") + ":" + this.startInput.value.substr(3, 2);
             this.updateDatetimes();
         }
     }
