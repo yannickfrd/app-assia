@@ -17,6 +17,11 @@ class RdvSearch
      */
     private $fullname;
 
+    /**
+     * @var bool
+     */
+    private $export;
+
     public function getFullname(): ?string
     {
         return $this->fullname;
@@ -25,6 +30,18 @@ class RdvSearch
     public function setFullname(string $fullname): self
     {
         $this->fullname = $fullname;
+
+        return $this;
+    }
+
+    public function getExport(): ?bool
+    {
+        return $this->export;
+    }
+
+    public function setExport(bool $export): self
+    {
+        $this->export = $export;
 
         return $this;
     }

@@ -19,7 +19,7 @@ class ExportWord
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
     }
 
-    public function export(string $content, string $title = null, string $logoPath = null)
+    public function export(string $content, ?string $title = 'document', string $logoPath = null)
     {
         $section = $this->addSection();
 
@@ -75,7 +75,7 @@ class ExportWord
     }
 
     // Add title
-    protected function addTitle($section, string $title)
+    protected function addTitle($section, ?string $title)
     {
         $section->addText($title, $this->getDefaultFontStyleTitle(), $this->getDefaultParagraphStyleTitle());
         // $section->addTitle($title);
@@ -129,7 +129,7 @@ class ExportWord
     }
 
     // Save the document
-    public function save(string $title, $download = true)
+    public function save(?string $title, $download = true)
     {
         $title = str_replace([' ', '/'], '-', $title ? $title : 'document');
         $title = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $title);

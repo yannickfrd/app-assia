@@ -33,7 +33,8 @@ class RdvSearchType extends AbstractType
             ])
             ->add('service', ServiceSearchType::class, [
                 'data_class' => RdvSearch::class,
-            ]);
+            ])
+            ->add('export');
     }
 
     public function configureOptions(OptionsResolver $resolver)

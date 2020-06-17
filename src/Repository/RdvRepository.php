@@ -34,12 +34,42 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findAllRdvsQuery(RdvSearch $search): Query
     {
-        $query = $this->createQueryBuilder('r')->select('r')
+        $query = $this->getRdvsQuery();
+
+        $query = $this->filter($query, $search);
+
+        return  $query->orderBy('r.start', 'ASC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Donne tous les RDVs à exporter.
+     */
+    public function findRdvsToExport(RdvSearch $search): ?array
+    {
+        $query = $this->getRdvsQuery()
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, pole}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+            ->leftJoin('r.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}');
+
+        $query = $this->filter($query, $search);
+
+        return  $query->orderBy('r.createdBy', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    protected function getRdvsQuery()
+    {
+        return $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+    }
 
+    protected function filter($query, RdvSearch $search)
+    {
         if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
@@ -91,8 +121,7 @@ class RdvRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        return  $query->orderBy('r.start', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $query;
     }
 
     /**

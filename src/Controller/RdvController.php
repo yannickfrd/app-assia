@@ -16,6 +16,7 @@ use App\Form\Rdv\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Export\RdvExport;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -53,6 +54,10 @@ class RdvController extends AbstractController
 
         $form = ($this->createForm(RdvSearchType::class, $search))
             ->handleRequest($request);
+
+        if ($search->getExport()) {
+            return $this->exportData($search);
+        }
 
         return $this->render('app/rdv/listRdvs.html.twig', [
             'rdvSearch' => $search,
@@ -308,6 +313,22 @@ class RdvController extends AbstractController
                 'start' => $rdv->getStart()->format('H:i'),
             ],
         ], 200);
+    }
+
+    /**
+     * Exporte les données.
+     */
+    protected function exportData(RdvSearch $search)
+    {
+        $supports = $this->repo->findRdvsToExport($search);
+
+        if (!$supports) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
+
+            return $this->redirectToRoute('supports');
+        }
+
+        return (new RdvExport())->exportData($supports);
     }
 
     /**

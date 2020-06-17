@@ -50,7 +50,7 @@ class ContributionLightExport
         return [
             'N° contribution' => $contribution->getId(),
             'Nom' => $person ? $person->getFullname() : null,
-            'Service' => $contribution->getSupportGroup()->getService()->getName(),
+            'Service' => $supportGroup->getService()->getName(),
             'Type' => $contribution->getTypeToString(),
             'Mois (Date)' => $this->formatDate($contribution->getMonth()),
             'Montant dû (€)' => $contribution->getDueAmt(),
