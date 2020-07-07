@@ -162,7 +162,7 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, EvaluationGroupRepository $repo, Environment $renderer, ExportWord $exportWord): Response
+    public function generateNoteEvaluation(int $id, EvaluationGroupRepository $repo, Environment $renderer): Response
     {
         $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
@@ -179,8 +179,6 @@ class NoteController extends AbstractController
             ->setType(2)
             ->setSupportGroup($supportGroup)
             ->setCreatedBy($this->getUser());
-
-        // return $exportWord->export($note->getContent(), $note->getTitle());
 
         $this->manager->persist($note);
         $this->manager->flush();

@@ -48,9 +48,13 @@ class ExportWord
     protected function addHeader($section, $logoPath = null)
     {
         $header = $section->addHeader('first');
-        $header->addImage($logoPath ?? 'images/logo_esperer95.jpg', [
-            'height' => 60,
-        ]);
+        $defaultLogo = 'images/logo_esperer95.jpg';
+
+        if (file_exists($defaultLogo)) {
+            $header->addImage($logoPath ?? $defaultLogo, [
+                'height' => 60,
+            ]);
+        }
     }
 
     // Add footer
@@ -138,9 +142,9 @@ class ExportWord
         // Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
 
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
-        $path = '/public/uploads/exports/';
+        $path = 'uploads/exports/'.(new \DateTime())->format('Y/m/d/');
 
-        $objWriter->save($path.$title.'.docx', true);
+        // $objWriter->save($path.$title.'.docx');
 
         if (true === $download) {
             return $this->download($objWriter, $title);

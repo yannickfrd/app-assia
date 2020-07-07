@@ -125,6 +125,15 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('delete', $data['action']);
     }
 
+    public function testExportNote()
+    {
+        $this->client->request('GET', $this->generateUri('note_export', [
+            'id' => $this->note->getId(),
+        ]));
+       
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
