@@ -49,25 +49,6 @@ class PersonSearchType extends AbstractType
                 ],
                 'required' => false,
             ])
-            // ->add("age", null, [
-            //     "attr" => [
-            //         "placeholder" => "Age",
-            //         "class" => "w-max-100",
-            //         "autocomplete" => "off"
-            //     ]
-            // ])
-            ->add('gender', ChoiceType::class, [
-                'placeholder' => '-- Gender --',
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'required' => false,
-                'choices' => Choices::getChoices(Person::GENDER),
-                'attr' => [
-                    'class' => 'w-max-120',
-                    'autocomplete' => 'off',
-                ],
-            ])
             ->add('phone', null, [
                 'label_attr' => [
                     'class' => 'sr-only',

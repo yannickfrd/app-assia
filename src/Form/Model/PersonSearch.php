@@ -25,11 +25,6 @@ class PersonSearch
     private $birthdate;
 
     /**
-     * @var int|null
-     */
-    private $gender;
-
-    /**
      * @var string|null
      * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
@@ -89,39 +84,6 @@ class PersonSearch
     public function setBirthdate(?\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
-
-        return $this;
-    }
-
-    public function getAge(): ?int
-    {
-        if ($this->birthdate) {
-            $now = new \DateTime();
-
-            return $this->birthdate->diff($now)->y;
-        } else {
-            return null;
-        }
-    }
-
-    public function setAge(int $age): self
-    {
-        $now = new \DateTime();
-        $interval = $now->diff($this->birthdate);
-        $days = $interval->days;
-        $age = floor($days / 365.25);
-
-        return $this;
-    }
-
-    public function getGender(): ?int
-    {
-        return $this->gender;
-    }
-
-    public function setGender(?int $gender): self
-    {
-        $this->gender = $gender;
 
         return $this;
     }

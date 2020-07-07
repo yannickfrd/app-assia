@@ -70,10 +70,6 @@ class PersonRepository extends ServiceEntityRepository
             $query->andWhere('p.birthdate = :birthdate')
                 ->setParameter('birthdate', $personSearch->getBirthdate());
         }
-        if ($personSearch->getGender()) {
-            $query->andWhere('p.gender = :gender')
-                ->setParameter('gender', $personSearch->getGender());
-        }
         if ($personSearch->getPhone()) {
             $query->andWhere('p.phone1 = :phone OR p.phone2 = :phone')
                 ->setParameter('phone', $personSearch->getPhone());
