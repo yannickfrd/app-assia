@@ -76,7 +76,7 @@
                             {% endfor %}
                         </td>
                         <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
-                        <td class="align0-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
                         <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
                         <td class="align-middle">
                             {{ support.service ? support.service.name }}<br/>{{ support.device ? "(" ~ support.device.name ~ ")" }}

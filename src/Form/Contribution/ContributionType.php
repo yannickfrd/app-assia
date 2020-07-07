@@ -19,6 +19,9 @@ class ContributionType extends AbstractType
             ->add('date', DateType::class, [
                 'required' => true,
                 'years' => range((int) date('Y') - 10, (int) date('Y')),
+                // 'placeholder' => [
+                //     'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                // ],
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
