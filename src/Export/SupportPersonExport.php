@@ -81,6 +81,7 @@ class SupportPersonExport
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHead() ? 'Oui' : 'Non',
             'Statut suivi (personne)' => $supportPerson->getStatusToString(),
+            'Coefficient' => $supportGroup->getCoefficient(),
             'Date début suivi (personne)' => $this->formatDate($supportPerson->getStartDate()),
             'Date fin théorique suivi' => $this->formatDate($supportGroup->getTheoreticalEndDate()),
             'Date fin suivi (personne)' => $this->formatDate($supportPerson->getEndDate()),

@@ -24,18 +24,17 @@ class E_ContributionFixtures extends Fixture
 
         foreach ($supports as $support) {
             for ($i = 0; $i < mt_rand(6, 10); ++$i) {
-                
                 $createdAt = AppFixtures::getDateTimeBeetwen('-12 months', 'now');
-                
+
                 $date = new DateTime($createdAt->format('Y-m').'-01');
-                
+
                 $salaryAmt = mt_rand(0, 2) > 0 ? mt_rand(0, 1500) : 0;
                 $resourcesAmt = $salaryAmt + mt_rand(0, 500);
                 $paidAmt = $resourcesAmt * 0.1;
-                
+
                 $contribution = (new Contribution())
                     ->setType(1)
-                    ->setMonth($date)
+                    ->setDate($date)
                     ->setSalaryAmt($salaryAmt)
                     ->setResourcesAmt($resourcesAmt)
                     ->setDueAmt($resourcesAmt * 0.1)

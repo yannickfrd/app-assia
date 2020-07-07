@@ -57,7 +57,7 @@ class ContributionFullExport
             'Service' => $supportGroup->getService()->getName(),
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Type' => $contribution->getTypeToString(),
-            'Mois (Date)' => $this->formatDate($contribution->getMonth()),
+            'Mois (Date)' => $this->formatDate($contribution->getDate()),
             'PF - Montant salaire (€)' => $contribution->getSalaryAmt(),
             'PF - Montant ressources (€)' => $contribution->getResourcesAmt(),
             'Montant dû (€)' => $contribution->getDueAmt(),

@@ -19,6 +19,7 @@ https://demo.esperer95.app
 ## Version 1.12.6 - 07/07/2020
 - Correction bug lors de la suppression du nom d'usage d'une personne
 - Affichage du nom d'usage des personnes dans la liste des suivis et des personnes
+- Ajout de l'affichage du coefficient dans la liste des suivis
 
 ## Version 1.12.5 - 17/06/2020
 - Ajout export des RDV sur Excel
@@ -39,7 +40,7 @@ https://demo.esperer95.app
 
 ## Version 1.11.4 - 02/06/2020
 - Modification module participation financière
-- Export des partipations financières au format Excel avec sous-totaux
+- Export des participations financières au format Excel avec sous-totaux
 - Dans l'évaluation sociale, ajout de "Crédit(s) à la consommation" dans le type des charges
 - Fiche service : ajout des champs "Participation financière / Redevance", "Type de participation financière" et "Taux de participation financière"
 - Fiche groupe de places : ajout du champ "Montant de la redevance" 

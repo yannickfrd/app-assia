@@ -52,7 +52,7 @@ class ContributionLightExport
             'Nom' => $person ? $person->getFullname() : null,
             'Service' => $supportGroup->getService()->getName(),
             'Type' => $contribution->getTypeToString(),
-            'Mois (Date)' => $this->formatDate($contribution->getMonth()),
+            'Mois (Date)' => $this->formatDate($contribution->getDate()),
             'Montant dû (€)' => $contribution->getDueAmt(),
             'Montant réglé (€)' => $contribution->getPaidAmt(),
             'Restant dû (€)' => $contribution->getStillDueAmt(),

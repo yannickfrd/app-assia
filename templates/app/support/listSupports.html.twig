@@ -78,7 +78,7 @@
                         </td>
                         <td class="align-middle">
                             {% for supportPerson in supportPeople %}
-                            {{ supportPerson.person.birthdate|date("d/m/Y") }}<br />
+                            {{ supportPerson.person.birthdate|date("d/m/Y") }}<br/>
                             {% endfor %}
                         </td>
                         <td class="align-middle">{% set nbSupportPeople = support.supportPeople|length %}
@@ -88,7 +88,9 @@
                             <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                             {% endif %}
                         </td>
-                        <td class="align-middle">{{ support.statusToString }}</td>
+                        <td class="align-middle">{{ support.statusToString }}<br/>
+                            <span class="text-secondary">{{ support.coefficient ? "(coeff. " ~ support.coefficient ~ ")" }}</span>
+                        </td>
                         <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
                         <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
                         <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
