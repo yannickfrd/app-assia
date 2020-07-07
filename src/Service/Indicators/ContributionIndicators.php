@@ -19,13 +19,13 @@ class ContributionIndicators
     {
         $months = [];
         $months[] = $start;
-        $date = clone $start;
+        $month = clone $start;
         $end = new \DateTime($end->format('Y-m').'-01');
         $nbMonths = ($start->diff($end)->y * 12) + $start->diff($end)->m + round(($start->diff($end)->d / (365 / 12)));
 
         for ($i = 0; $i < $nbMonths; ++$i) {
-            $date = (new \DateTime($date->format('Y-m-d')))->modify('+1 month');
-            $months[] = $date;
+            $month = (new \DateTime($month->format('Y-m-d')))->modify('+1 month');
+            $months[] = $month;
         }
 
         $datasMonths = [];
@@ -36,7 +36,7 @@ class ContributionIndicators
             $sumPaidAmt = 0;
             $sumStillDueAmt = 0;
             foreach ($contributions as $contribution) {
-                if ($this->withinMonth($contribution->getMonth(), $month)) {
+                if ($this->withinMonth($contribution->getDate(), $month)) {
                     ++$nbContributions;
                     $sumDueAmt += $contribution->getDueAmt();
                     $sumPaidAmt += $contribution->getPaidAmt();

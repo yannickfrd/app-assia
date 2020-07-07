@@ -82,7 +82,7 @@ class Pole
      */
     private $chief;
 
-    public function __construct()
+    public function construct()
     {
         $this->services = new ArrayCollection();
     }

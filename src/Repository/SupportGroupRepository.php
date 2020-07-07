@@ -8,6 +8,7 @@ use App\Entity\SupportGroup;
 use Doctrine\ORM\QueryBuilder;
 use App\Security\CurrentUserService;
 use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\SupportsInMonthSearch;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -256,6 +257,57 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    /**
+     * Trouve tous les suivis entre 2 dates.
+     *
+     * @return mixed
+     */
+    public function findSupportsBetween(\Datetime $start, \Datetime $end, SupportsInMonthSearch $search = null)
+    {
+        $query = $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+
+            ->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
+            ->setParameter('start', $start)
+            ->andWhere('sg.startDate <= :end')
+            ->setParameter('end', $end);
+
+        if ($search->getReferents() && $search->getReferents()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getServices() && $search->getServices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getServices() as $service) {
+                $orX->add($expr->eq('sg.service', $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getDevices() && $search->getDevices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getDevices() as $device) {
+                $orX->add($expr->eq('sg.device', $device));
+            }
+            $query->andWhere($orX);
+        }
+
+        return $query->orderBy('sg.startDate', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     public function findSupportsForDashboard()

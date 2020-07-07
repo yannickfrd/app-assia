@@ -42,7 +42,7 @@
 					<thead>
 						<tr>
 							<th scope="col" class="align-middle th-w-20"></th>
-							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.month") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.date") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.dueAmt") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
@@ -63,7 +63,7 @@
 										data-toggle="tooltip" data-placement="bottom" title="Voir {{ contribution.typeToString }}"><span class="fas fa-eye"></span>
 									</button>
 								</td>
-								<td class="align-middle js-month">{{ contribution.month|date("m/Y") }}</td>
+								<td class="align-middle js-date">{{ contribution.date|date("m/Y") }}</td>
 								<td class="align-middle js-type">{{ contribution.typeToString }}</td>
 								<td class="align-middle text-right js-dueAmt">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
 								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>

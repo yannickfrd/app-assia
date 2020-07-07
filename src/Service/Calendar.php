@@ -118,9 +118,17 @@ class Calendar
     /**
      * Donne le premier jour du mois.
      */
-    public function getFirstDay(): \DateTime
+    public function getFirstDayOfTheMonth(): \DateTime
     {
         return new \Datetime($this->year.'-'.$this->month.'-01');
+    }
+
+    /**
+     * Donne le dernier jour du mois.
+     */
+    public function getLastDayOfTheMonth(): \DateTime
+    {
+        return (clone $this->getFirstDayOfTheMonth())->modify('last day of this month');
     }
 
     /**
@@ -128,11 +136,11 @@ class Calendar
      */
     public function getFirstMonday(): \DateTime
     {
-        if ('1' == $this->getFirstDay()->format('N')) {
-            return $this->getFirstDay();
+        if ('1' == $this->getFirstDayOfTheMonth()->format('N')) {
+            return $this->getFirstDayOfTheMonth();
         }
 
-        return $this->getFirstDay()->modify('last monday');
+        return $this->getFirstDayOfTheMonth()->modify('last monday');
     }
 
     /**
@@ -143,12 +151,12 @@ class Calendar
         return (clone $this->getFirstMonday())->modify('+'.(($this->getWeeks() * 7) - 1).' days');
     }
 
-    /** Détermine le nombre de semaines dans le mois
-     *
+    /**
+     * Détermine le nombre de semaines dans le mois.
      */
     public function setWeeks()
     {
-        $startMonth = $this->getFirstDay();
+        $startMonth = $this->getFirstDayOfTheMonth();
         $endMonth = (clone $startMonth)->modify('+1 month -1 day');
         $weeks = intval($endMonth->format('W')) - intval($startMonth->format('W')) + 1;
         if (1 == intval($endMonth->format('W'))) {
@@ -173,14 +181,12 @@ class Calendar
      */
     public function withinMonth(\datetime $date): bool
     {
-        return $this->getFirstDay()->format('m') === $date->format('m');
+        return $this->getFirstDayOfTheMonth()->format('m') === $date->format('m');
     }
 
     public function IsToday(\datetime $date): bool
     {
-        $today = new \dateTime();
-
-        return $date->format('Y-m-d') === $today->format('Y-m-d');
+        return $date->format('Y-m-d') === (new \dateTime())->format('Y-m-d');
     }
 
     /**
@@ -188,7 +194,7 @@ class Calendar
      */
     public function getOtherMonth(\datetime $date): string
     {
-        if ($this->getFirstDay()->format('m') != $date->format('m')) {
+        if ($this->getFirstDayOfTheMonth()->format('m') != $date->format('m')) {
             return self::MONTHS_MIN[intval($date->format('m'))];
         }
 
@@ -202,6 +208,7 @@ class Calendar
     {
         $month = $this->month - 1;
         $year = $this->year;
+        
         if ($month < 1) {
             --$year;
             $month = 12;

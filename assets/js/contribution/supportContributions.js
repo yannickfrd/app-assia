@@ -9,8 +9,8 @@ export default class SupportContributions {
         this.ajaxRequest = ajaxRequest;
         this.modalContributionElt = document.getElementById("modal-contribution");
         this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
-        this.dateYearSelect = document.getElementById("contribution_month_year");
-        this.dateMonthSelect = document.getElementById("contribution_month_month");
+        this.dateYearSelect = document.getElementById("contribution_date_year");
+        this.dateMonthSelect = document.getElementById("contribution_date_month");
         this.typeSelect = document.getElementById("contribution_type");
         this.salaryAmtInput = document.getElementById("contribution_salaryAmt");
         this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
@@ -164,6 +164,10 @@ export default class SupportContributions {
 
         // Redevance et PF
         if (option === "1") {
+            // let today = new Date();
+            // this.selectOption(this.dateYearSelect, today.getFullYear());
+            // this.selectOption(this.dateMonthSelect, today.getMonth());
+            // this.selectOption(this.typeSelect, 1);
             // this.formContributionElt.querySelector(".js-date").classList.replace("d-none", "d-block");
         } else {
             this.salaryAmtInput.value = "";
@@ -206,13 +210,13 @@ export default class SupportContributions {
 
     // Donne le ratio de jours de présence dans le mois
     getRateDays() {
-        let month = new Date(this.getOption(this.dateYearSelect) + "-" + this.getOption(this.dateMonthSelect) + "-01");
-        let nextMonth = (new Date(month)).setMonth(month.getMonth() + 1);
-        let nbDaysInMonth = Math.round((nextMonth - month) / (1000 * 60 * 60 * 24));
+        let date = new Date(this.getOption(this.dateYearSelect) + "-" + this.getOption(this.dateMonthSelect) + "-01");
+        let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1);
+        let nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24));
         let rateDays = 1;
 
-        if (this.supportStartDate > month) {
-            rateDays = 1 - ((this.supportStartDate - month) / (1000 * 60 * 60 * 24) / nbDaysInMonth);
+        if (this.supportStartDate > date) {
+            rateDays = 1 - ((this.supportStartDate - date) / (1000 * 60 * 60 * 24) / nbDaysInMonth);
         }
 
         if (this.supportEndDate < nextMonth) {
@@ -298,10 +302,6 @@ export default class SupportContributions {
     // Affiche un formulaire modal vierge
     newContribution() {
         this.loader.on();
-        let today = new Date();
-        this.selectOption(this.dateYearSelect, today.getFullYear());
-        this.selectOption(this.dateMonthSelect, today.getMonth());
-        this.selectOption(this.typeSelect, 1);
         this.reinitForm();
         this.modalContributionElt.querySelector("form").action = "/support/" + this.supportId + "/contribution/new";
         this.btnDeleteElt.classList.replace("d-block", "d-none");
@@ -452,8 +452,8 @@ export default class SupportContributions {
     // Donne la redevance sélectionnée dans le formulaire modal
     showContribution(contribution) {
         this.modalElt.modal("show");
-        this.dateYearSelect.value = contribution.month.substring(0, 4);
-        this.dateMonthSelect.value = contribution.month.substring(6, 7);
+        this.dateYearSelect.value = contribution.date.substring(0, 4);
+        this.dateMonthSelect.value = contribution.date.substring(6, 7);
         this.selectOption(this.typeSelect, contribution.type);
         this.salaryAmtInput.value = contribution.salaryAmt;
         this.resourcesAmtInput.value = contribution.resourcesAmt;
@@ -500,7 +500,7 @@ export default class SupportContributions {
 
     // Met à jour la ligne du tableau correspondant au contribution
     updateContribution(contribution) {
-        this.trElt.querySelector("td.js-month").textContent = new Date(contribution.month).toLocaleDateString("fr").substring(3, 10);
+        this.trElt.querySelector("td.js-date").textContent = new Date(contribution.date).toLocaleDateString("fr").substring(3, 10);
         this.trElt.querySelector("td.js-type").textContent = contribution.typeToString;
         this.trElt.querySelector("td.js-dueAmt").textContent = contribution.dueAmt ? contribution.dueAmt.toFixed(2) + " €" : "";
         this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt.toFixed(2) + " €" : "";
@@ -521,7 +521,7 @@ export default class SupportContributions {
                     data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
                 </button>
             </td>
-            <td class="align-middle js-month">${new Date(contribution.month).toLocaleDateString("fr").substring(3, 10)}</td>
+            <td class="align-middle js-date">${new Date(contribution.date).toLocaleDateString("fr").substring(3, 10)}</td>
             <td class="align-middle js-type">${contribution.typeToString}</td>
             <td class="align-middle text-right js-dueAmt">${contribution.dueAmt ? contribution.dueAmt.toFixed(2) + " €" : ""}</td>
             <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt.toFixed(2) + " €" : ""}</td>

@@ -11,7 +11,7 @@ class DateListSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $years = $this->getYears();
+        $years = range((int) date('Y') - 10, (int) date('Y'));
 
         $builder
             ->add('start', DateType::class, [
@@ -42,16 +42,5 @@ class DateListSearchType extends AbstractType
     public function getBlockPrefix()
     {
         return '';
-    }
-
-    protected function getYears()
-    {
-        $years = [];
-        $now = new \DateTime();
-        for ($i = 0; $i < 10; ++$i) {
-            $years[] = $now->format('Y') - ($i);
-        }
-
-        return $years;
     }
 }

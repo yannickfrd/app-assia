@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Grammar;
+use App\Service\Calendar;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
@@ -10,17 +11,21 @@ use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Model\SupportsInMonthSearch;
 use App\Repository\GroupPeopleRepository;
+use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Support\SupportCoefficientType;
 use App\Form\Support\SupportGroupSearchType;
-use App\Repository\EvaluationGroupRepository;
 use App\Service\Indicators\SocialIndicators;
+use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\Support\SupportsInMonthSearchType;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -249,6 +254,48 @@ class SupportController extends AbstractController
             'supportGroupSearch' => $search,
             'form' => $form->createView(),
             'datas' => $datas,
+        ]);
+    }
+
+    /**
+     * Affiche les suivis dans le mois.
+     *
+     * @Route("/supports/this_month", name="supports_current_month", methods="GET|POST")
+     * @Route("/supports/{year}/{month}", name="supports_in_month", methods="GET|POST", requirements={
+     * "year" : "\d{4}",
+     * "month" : "0?[1-9]|1[0-2]",
+     * })
+     */
+    public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, SupportsInMonthSearch $search = null, ContributionRepository $repoContribution, Pagination $pagination): Response
+    {
+        $search = new SupportsInMonthSearch();
+        if ($this->getUser()->getStatus() == 1) {
+            $usersCollection = new ArrayCollection();
+            $usersCollection->add($this->getUser());
+            $search->setReferents($usersCollection);
+        }
+        
+        $form = ($this->createForm(SupportsInMonthSearchType::class, $search))
+            ->handleRequest($request);
+
+        // if ($month == null) {
+        //     $month = (new \DateTime())->modify('-1 month')->format('n');
+        // }
+
+        $calendar = new Calendar($year, $month);
+
+        $supports = $pagination->paginate($this->repoSupportGroup->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search), $request);
+
+        $supportsId = [];
+        foreach ($supports->getItems() as $support) {
+            $supportsId[] = $support->getId();
+        }
+
+        return $this->render('app/support/supportsInMonth.html.twig', [
+            'calendar' => $calendar,
+            'form' => $form->createView(),
+            'supports' => $supports,
+            'contributions' => $repoContribution->findContributionsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $supportsId),
         ]);
     }
 

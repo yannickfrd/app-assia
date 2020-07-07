@@ -1,4 +1,4 @@
-// Classe pour les différentes modules de recherche
+// Classe pour les différents modules de recherche
 export default class Search {
 
     constructor(formId) {
@@ -10,9 +10,14 @@ export default class Search {
         this.btnClearElt = this.formSearch.querySelector("button[type='reset']");
         this.firstInput = this.formSearch.querySelector("input");
 
+        this.dateDay = document.getElementById("date_day")
+        this.dateMonth = document.getElementById("date_month")
+        this.dateYear = document.getElementById("date_year")
+
         this.startDay = document.getElementById("date_start_day")
         this.startMonth = document.getElementById("date_start_month")
         this.startYear = document.getElementById("date_start_year")
+
         this.endDay = document.getElementById("date_end_day")
         this.endMonth = document.getElementById("date_end_month")
         this.endYear = document.getElementById("date_end_year")
@@ -64,22 +69,24 @@ export default class Search {
     }
 
     checkDates() {
-        if (this.startMonth || this.endMonth) {
-            this.startMonth.addEventListener("change", () => {
-                this.updateSelect(this.startDay, "1");
-            });
-            this.startYear.addEventListener("change", () => {
-                this.updateSelect(this.startDay, "1");
-            });
+        if (this.dateYear) {
+            this.changeDate(this.dateYear, this.dateMonth, this.dateDay);
         }
-        if (this.endMonth || this.endYear) {
-            this.endMonth.addEventListener("change", () => {
-                this.updateSelect(this.endDay, "1");
-            });
-            this.endYear.addEventListener("change", () => {
-                this.updateSelect(this.endDay, "1");
-            });
+        if (this.startYear) {
+            this.changeDate(this.startYear, this.startMonth, this.startDay);
         }
+        if (this.endYear) {
+            this.changeDate(this.endYear, this.endMonth, this.endDay);
+        }
+    }
+
+    changeDate(yearElt, monthElt, dayElt) {
+        monthElt.addEventListener("change", () => {
+            this.updateSelect(dayElt, "1");
+        });
+        yearElt.addEventListener("change", () => {
+            this.updateSelect(dayElt, "1");
+        });
     }
 
     updateSelect(selectElt, value) {

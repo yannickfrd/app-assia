@@ -27,6 +27,7 @@ export default class maskInput {
         document.querySelectorAll(this.type).forEach(inputElt => {
             const parser = new rxmask(this.options, inputElt);
             inputElt.oninput = () => parser.onInput();
+            inputElt.setAttribute("placeholder", this.options.mask);
         })
     }
 

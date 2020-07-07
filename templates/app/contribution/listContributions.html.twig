@@ -42,7 +42,7 @@
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Suivi", "p.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Service", "s.name") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.month") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.date") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.dueAmt") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
@@ -69,7 +69,7 @@
                                 {% endfor %}                     
                             </td>
                             <td class="align-middle">{{ contribution.supportGroup.service.name }}</td>
-                            <td class="align-middle">{{ contribution.month|date("m/Y") }}</td>
+                            <td class="align-middle">{{ contribution.date|date("m/Y") }}</td>
                             <td class="align-middle">{{ contribution.typeToString }}</td>
                             <td class="align-middle text-right">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
                             <td class="align-middle text-right">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>

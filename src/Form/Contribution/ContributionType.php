@@ -16,8 +16,9 @@ class ContributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('month', DateType::class, [
+            ->add('date', DateType::class, [
                 'required' => true,
+                'years' => range((int) date('Y') - 10, (int) date('Y')),
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),

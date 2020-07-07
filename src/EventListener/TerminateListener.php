@@ -53,12 +53,12 @@ class TerminateListener
             case 'export':
                 $this->export($request);
                 break;
-            case 'support_evaluation_show':
-                $this->editEvaluation($request);
-                break;
-            case 'support_evaluation_edit':
-                $this->editEvaluation($request);
-                break;
+            // case 'support_evaluation_show':
+            //     $this->editEvaluation($request);
+            //     break;
+            // case 'support_evaluation_edit':
+            //     $this->editEvaluation($request);
+            //     break;
             default:
                 return;
                 break;

@@ -38,8 +38,31 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return  $query->orderBy('c.month', 'DESC')
+        return  $query->orderBy('c.date', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Trouve tous les RDV entre 2 dates.
+     *
+     * @return mixed
+     */
+    public function findContributionsBetween(\Datetime $start, \Datetime $end, array $supportsId)
+    {
+        $query = $this->createQueryBuilder('c')->select('c')
+            ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+
+            ->andWhere('c.supportGroup IN (:supportsId)')
+            ->setParameter('supportsId', $supportsId)
+
+            ->andWhere('c.date >= :start')
+            ->setParameter('start', $start)
+            ->andWhere('c.date <= :end')
+            ->setParameter('end', $end);
+
+        return $query->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 
     /**
@@ -52,7 +75,7 @@ class ContributionRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('c.month', 'DESC')
+        return  $query->orderBy('c.date', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -108,11 +131,11 @@ class ContributionRepository extends ServiceEntityRepository
         }
 
         if ($search->getStart()) {
-            $query->andWhere('c.month >= :start')
+            $query->andWhere('c.date >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.month <= :end')
+            $query->andWhere('c.date <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
@@ -164,15 +187,15 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('type', $search->getType());
         }
         if ($search->getStart()) {
-            $query->andWhere('c.month >= :start')
+            $query->andWhere('c.date >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.month <= :end')
+            $query->andWhere('c.date <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $query->orderBy('c.month', 'DESC');
+        $query = $query->orderBy('c.date', 'DESC');
 
         return $query->getQuery();
     }

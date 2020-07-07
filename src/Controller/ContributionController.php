@@ -93,10 +93,10 @@ class ContributionController extends AbstractController
         $formSearch = ($this->createForm(SupportContributionSearchType::class, $search))
             ->handleRequest($request);
 
-        $contribution = (new Contribution())
-            ->setMonth((new \DateTime())->modify('-1 month')->modify('first day of this month'));
+        // $contribution = (new Contribution())
+        //     ->setDate((new \DateTime())->modify('-1 month')->modify('first day of this month'));
 
-        $form = $this->createForm(ContributionType::class, $contribution);
+        $form = $this->createForm(ContributionType::class, new Contribution());
 
         return $this->render('app/contribution/supportContributions.html.twig', [
             'support' => $supportGroup,

@@ -1,0 +1,14 @@
+{% extends "model/search.html.twig" %}
+
+{% block search_form %}
+
+    {# <div class="form-group col-auto my-1 px-1 d-inline-flex">
+        <span class="d-nonex">{{ form_widget(form.date.day) }}</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="Mois de début">{{ form_widget(form.date.month) }}</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="Année de début">{{ form_widget(form.date.year) }}</span>
+    </div> #}
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.referents) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.services) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.devices) }}</div>
+
+{% endblock %}

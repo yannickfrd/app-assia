@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=ContributionRepository::class)
  * @UniqueEntity(
- *     fields={"month", "type", "dueAmt", "supportGroup"},
+ *     fields={"date", "type", "dueAmt", "supportGroup"},
  *     errorPath="dueAmt",
  *     message="Une redevance identique existe déjà pour ce mois."
  * )
@@ -39,10 +39,10 @@ class Contribution
     ];
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @Groups("get")
      */
-    private $month;
+    private $date;
 
     /**
      * @ORM\Id()
@@ -150,14 +150,14 @@ class Contribution
         return $this->id;
     }
 
-    public function getMonth(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->month;
+        return $this->date;
     }
 
-    public function setMonth(?\DateTimeInterface $month): self
+    public function setDate(?\DateTimeInterface $date): self
     {
-        $this->month = $month;
+        $this->date = $date;
 
         return $this;
     }

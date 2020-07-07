@@ -2,6 +2,9 @@ import Search from "./utils/search";
 import "./utils/maskPhone";
 import "select2";
 
+// import MaskInput from "./utils/maskInput";
+// new MaskInput(".js-phone");
+
 let select2Array = {
     "typology": "Typologie familiale",
     "status": "Statut",
