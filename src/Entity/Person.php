@@ -202,9 +202,9 @@ class Person
         return $this->usename;
     }
 
-    public function setUsename(string $usename): self
+    public function setUsename(?string $usename): self
     {
-        $this->usename = $usename;
+        $this->usename = ucfirst($usename);
 
         return $this;
     }

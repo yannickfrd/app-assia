@@ -14,7 +14,13 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %}</h1>
+    <h1 class="h2 mb-3">
+        {% if edit_mode %}
+            {{ person.fullname }}{{ person.usename ? " (" ~ person.usename ~ ")" }}
+        {% else %}
+            Création d'une personne
+        {% endif %}
+    </h1>
     {% if edit_mode %}
     <div class="small text-secondary">
         <p> Créé le {{person.createdAt|date("d/m/Y à H:i") }}
@@ -30,12 +36,12 @@
     {% if group_people is defined %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                    href="{{ path('group_people_show', {'id': group_people.id}) }}"><span
-                        class="fas fa-users mr-2"></span>Fiche groupe</a> <span
-                    class="small text-secondary">{{ group_people.familyTypologyToString }}
-                    {% if group_people.nbPeople > 1 %}({{ group_people.nbPeople }} personnes){% endif %}
-                </span></li>
+            <li class="breadcrumb-item">
+                <a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
+                    <span class="fas fa-users mr-2"></span>Fiche groupe
+                    <span class="small text-secondary">{{ group_people.familyTypologyToString }}</span>
+                </a>
+            </li>
             <li class="breadcrumb-item active" aria-current="page">Fiche individuelle</li>
         </ol>
     </nav>

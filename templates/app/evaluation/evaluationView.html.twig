@@ -37,7 +37,10 @@
                     <tbody>
                         {% for supportPerson in support.supportPeople %}
                         <tr>
-                            <td scope="row">{{ supportPerson.person.fullname }}</td>
+                            <td scope="row">
+                                {{ supportPerson.person.fullname }}
+                                {{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}
+                            </td>
                             <td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
                             <td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
                                 -->{{ supportPerson.person.age > 1 ? "s" }}</td>

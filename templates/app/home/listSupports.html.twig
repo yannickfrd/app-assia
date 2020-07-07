@@ -41,7 +41,7 @@
                     </td>
                     <td class="align-middle">
                         {% for supportPerson in support.supportPeople|filter(a => a.role != 3) %}
-                        {{ supportPerson.person.fullname }}<br />
+                            {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br />
                         {% endfor %}
                     <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
                         {% set nbSupportPeople = support.supportPeople|length %}

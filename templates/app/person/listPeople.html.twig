@@ -93,7 +93,10 @@
                         </th>
                         <td>
                             <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
-                                class="text-{{ theme_color }} text-uppercase font-weight-bold">{{ person.lastname }}</a>
+                                class="text-{{ theme_color }} text-uppercase font-weight-bold">
+                                {{ person.lastname }}
+                                {{ person.usename ? " (" ~ person.usename ~ ")" }}
+                            </a>
                         </td>
                         <td class="text-capitalize">{{ person.firstname }}</td>
                         <td>{% if person.birthdate %} {{person.birthdate|date("d/m/Y") }}<br />
