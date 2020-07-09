@@ -48,6 +48,26 @@ class SupportController extends AbstractController
     }
 
     /**
+     * Mettre à jour le nb de personnes. (TEMPORAIRE, A SUPPRIMER).
+     *
+     * @Route("/updateNbPeopleBySupport", name="updateNbPeopleBySupport", methods="GET")
+     */
+    public function updateNbPeopleBySupport(): Response
+    {
+        $supports = $this->repoSupportGroup->findAll();
+
+        foreach ($supports as $support) {
+            $support->setNbPeople($support->getSupportPeople()->count());
+        }
+
+        $this->manager->flush();
+
+        $this->addFlash('success', 'Nombre de personnes par suivi mis à jour');
+
+        return $this->redirectToRoute('home');
+    }
+
+    /**
      * Liste des suivis sociaux.
      *
      * @Route("/supports", name="supports", methods="GET|POST")
@@ -224,6 +244,9 @@ class SupportController extends AbstractController
         // Vérifie si le token est valide avant de retirer la personne du suivi social
         if ($this->isCsrfTokenValid('remove'.$supportPerson->getId(), $request->get('_token'))) {
             $supportGroup->removeSupportPerson($supportPerson);
+
+            $supportGroup->setNbPeople($supportGroup->getNbPeople() - 1);
+
             $this->manager->flush();
 
             return $this->json([
@@ -274,7 +297,7 @@ class SupportController extends AbstractController
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
         }
-        
+
         $form = ($this->createForm(SupportsInMonthSearchType::class, $search))
             ->handleRequest($request);
 

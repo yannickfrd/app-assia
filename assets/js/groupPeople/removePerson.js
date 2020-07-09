@@ -7,7 +7,7 @@ export default class RemovePerson {
     constructor(ajaxRequest) {
         this.ajaxRequest = ajaxRequest;
         this.trElts = document.querySelectorAll(".js-tr-person");
-        this.inputNbPeople = document.getElementById("group_people_nbPeople");
+        this.inputNbPeople = document.getElementById("group_nbPeople");
         this.modalConfirmElt = document.getElementById("modal-confirm");
         this.trElt = null;
         this.loader = new Loader();

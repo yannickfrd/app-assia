@@ -122,11 +122,11 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id,name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id,name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('p')
             ->leftJoin('sg.groupPeople', 'g')->addSelect('g')
-            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id,fullname}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, fullname}')
             ->andWhere('sp.head = TRUE');
 
         $query = $this->filter($query, $search);
@@ -148,7 +148,7 @@ class SupportGroupRepository extends ServiceEntityRepository
                 ->setParameter('services', $this->currentUser->getServices());
         }
         if ($search->getFullname()) {
-            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+            $query->andWhere("CONCAT(p.lastname, ' ', p.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
 

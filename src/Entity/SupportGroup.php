@@ -158,6 +158,11 @@ class SupportGroup
     private $agreement;
 
     /**
+     * @ORM\Column(type="smallint")
+     */
+    private $nbPeople;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups("view")
      */
@@ -405,6 +410,18 @@ class SupportGroup
     public function setEndStatusComment(?string $endStatusComment): self
     {
         $this->endStatusComment = $endStatusComment;
+
+        return $this;
+    }
+
+    public function getNbPeople(): ?int
+    {
+        return $this->nbPeople;
+    }
+
+    public function setNbPeople(?int $nbPeople): self
+    {
+        $this->nbPeople = $nbPeople;
 
         return $this;
     }

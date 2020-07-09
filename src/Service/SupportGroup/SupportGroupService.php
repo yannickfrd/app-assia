@@ -88,6 +88,8 @@ class SupportGroupService
 
         $this->manager->persist($supportPerson);
 
+        $supportGroup->setNbPeople($supportGroup->getNbPeople() + 1);
+
         return $supportPerson;
     }
 
@@ -162,6 +164,7 @@ class SupportGroupService
                 $addPeople = true;
             }
         }
+
         $this->manager->flush();
 
         return $addPeople;

@@ -41,16 +41,14 @@
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom du logement/ hébergement", "a.name") }}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody>            
                     {% for support in supports %}
                     {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
-
-                    {% if support.supportPeople|filter(a => a.role != 3)|length %}
-                    {% set supportPeople = support.supportPeople|filter(a => a.role != 3) %}
-                    {% else %} 
-                    {% set supportPeople = support.supportPeople %}
-                    {% endif %}
-
+                        {% if support.supportPeople|filter(a => a.role != 3)|length %}
+                            {% set supportPeople = support.supportPeople|filter(a => a.role != 3) %}
+                        {% else %} 
+                            {% set supportPeople = support.supportPeople %}
+                        {% endif %}
                     <tr>
                         <th scope="row" class="align-middle">
                             {% if is_granted("VIEW", support) %}
@@ -78,14 +76,15 @@
                         </td>
                         <td class="align-middle">
                             {% for supportPerson in supportPeople %}
-                            {{ supportPerson.person.birthdate|date("d/m/Y") }}<br/>
+                                {{ supportPerson.person.birthdate|date("d/m/Y") }}<br/>
                             {% endfor %}
                         </td>
-                        <td class="align-middle">{% set nbSupportPeople = support.supportPeople|length %}
+                        <td class="align-middle">
                             {{ support.groupPeople.familyTypologyToString }}<!--
-                            -->{{ nbSupportPeople > 1 ? ", " ~ nbSupportPeople ~ " pers." }}
-                            {% if nbSupportPeople != support.groupPeople.nbPeople %}
-                            <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
+                            -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
+                            {% if support.nbPeople != support.groupPeople.nbPeople %}
+                                <span class="fas fa-exclamation-triangle text-warning" 
+                                    title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                             {% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}<br/>
