@@ -33,7 +33,7 @@ class AccommodationGroupType extends AbstractType
             ->add('endReason', ChoiceType::class, [
                 'choices' => Choices::getChoices(AccommodationGroup::END_REASON),
                 'required' => false,
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('commentEndReason')
             ->add('accommodationPeople', CollectionType::class, [
@@ -58,7 +58,7 @@ class AccommodationGroupType extends AbstractType
                 'query_builder' => function (AccommodationRepository $repo) use ($service) {
                     return $repo->getAccommodationsQueryList($service);
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ]);
         });
     }

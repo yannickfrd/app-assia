@@ -29,7 +29,7 @@ class ServiceUserType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'attr' => [
                     'class' => 'col-auto my-1',
                 ],

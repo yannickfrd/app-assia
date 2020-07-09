@@ -17,7 +17,7 @@ class PersonNewGroupType extends AbstractType
         $builder
             ->add('role', ChoiceType::class, [
                 'choices' => Choices::getChoices(RolePerson::ROLE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('groupPeople', GroupPeopleType2::class);
     }

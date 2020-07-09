@@ -25,7 +25,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'paperType',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('rightSocialSecurity', ChoiceType::class, [
@@ -34,7 +34,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'rightSocialSecurity',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialSecurity', ChoiceType::class, [
@@ -43,7 +43,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'socialSecurity',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('familyBreakdown', ChoiceType::class, [
@@ -52,7 +52,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'familyBreakdown',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('friendshipBreakdown', ChoiceType::class, [
@@ -61,7 +61,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'friendshipBreakdown',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('profStatus', ChoiceType::class, [
@@ -70,7 +70,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'profStatus',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('contractType', ChoiceType::class, [
@@ -79,7 +79,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'contractType',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
 
@@ -91,7 +91,7 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'debts',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('debtsAmt', MoneyType::class, [

@@ -25,7 +25,7 @@ class ContributionType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('salaryAmt', MoneyType::class, [
                 'attr' => [
@@ -58,7 +58,7 @@ class ContributionType extends AbstractType
             ])
             ->add('paymentType', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::PAYMENT_TYPE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('paidAmt', MoneyType::class, [

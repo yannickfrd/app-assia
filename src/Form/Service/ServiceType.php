@@ -24,13 +24,13 @@ class ServiceType extends AbstractType
         $builder
             ->add('name', null, [
                 'attr' => [
-                    'placeholder' => 'Service name',
+                    'placeholder' => 'service.name',
                 ],
             ])
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('phone1', null, [
                 'attr' => [
@@ -51,7 +51,7 @@ class ServiceType extends AbstractType
                         ->andWhere('u.status = 2 OR u.status = 3  OR u.status = 4')
                         ->orderBy('u.lastname', 'ASC');
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('finessId')
@@ -68,23 +68,23 @@ class ServiceType extends AbstractType
             ])
             ->add('supportAccess', ChoiceType::class, [
                 'choices' => Choices::getChoices(Service::SUPPORT_ACCESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('preAdmission', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('accommodation', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('justice', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'label' => 'Justice activity',
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             // ->add('preAdmission', CheckBoxType::class, [
@@ -92,24 +92,14 @@ class ServiceType extends AbstractType
             //     'attr' => ['class' => 'custom-control-input checkbox'],
             //     'required' => false,
             // ])
-            // ->add('accommodation', CheckBoxType::class, [
-            //     'label_attr' => ['class' => 'custom-control-label'],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            //     'required' => false,
-            // ])
-            // ->add('justice', CheckBoxType::class, [
-            //     'label_attr' => ['class' => 'custom-control-label'],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            //     'required' => false,
-            // ])
             ->add('contribution', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('contributionType', ChoiceType::class, [
                 'choices' => Choices::getChoices(Service::CONTRIBUTION_TYPE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('contributionRate', null, [
@@ -118,7 +108,7 @@ class ServiceType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Write a comment about the service',
+                    'placeholder' => 'service.comment.placeholder',
                 ],
             ])
             ->add('serviceDevices', CollectionType::class, [

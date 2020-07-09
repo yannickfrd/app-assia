@@ -17,12 +17,12 @@ class EvalProfPersonType extends AbstractType
         $builder
             ->add('schoolLevel', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::SCHOOL_LEVEL),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('profExperience', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_EXPERIENCE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('profStatus', ChoiceType::class, [
@@ -31,7 +31,7 @@ class EvalProfPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'profStatus',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('jobCenterId')
@@ -41,7 +41,7 @@ class EvalProfPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'contractType',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('jobType')
@@ -59,13 +59,13 @@ class EvalProfPersonType extends AbstractType
             ->add('employerName')
             ->add('transportMeansType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::TRANSFORT_MEANS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('transportMeans')
             ->add('rqth', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('endRqthDate', DateType::class, [

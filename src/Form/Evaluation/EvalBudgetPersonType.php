@@ -30,7 +30,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add('resourcesComment')
             ->add('charges', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('chargesAmt', MoneyType::class, [
@@ -56,7 +56,7 @@ class EvalBudgetPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'debts',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('debtsAmt', MoneyType::class, [
@@ -80,7 +80,7 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('overIndebtRecord', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('overIndebtRecordDate', DateType::class, [
@@ -89,12 +89,12 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('settlementPlan', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalBudgetPerson::SETTLEMENT_PLAN),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('moratorium', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('endRightsDate', DateType::class, [

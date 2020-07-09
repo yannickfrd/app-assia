@@ -17,17 +17,17 @@ class EvalFamilyPersonType extends AbstractType
         $builder
             ->add('maritalStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::MARITAL_STATUS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('noConciliationOrder', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('unbornChild', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('expDateChildbirth', DateType::class, [
@@ -36,33 +36,33 @@ class EvalFamilyPersonType extends AbstractType
             ])
             ->add('pregnancyType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::PREGNANCY_TYPE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('protectiveMeasure', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('protectiveMeasureType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::PROTECTIVE_MEASURE_TYPE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('childcareSchool', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILDCARE_SCHOOL),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('childcareSchoolLocation')
             ->add('childToHost', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_TO_HOST),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('childDependance', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_DEPENDANCE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('commentEvalFamilyPerson', null, [

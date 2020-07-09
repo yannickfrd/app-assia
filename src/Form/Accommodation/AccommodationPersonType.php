@@ -33,7 +33,7 @@ class AccommodationPersonType extends AbstractType
                 'choices' => Choices::getChoices(AccommodationGroup::END_REASON),
                 'attr' => ['class' => 'w-min-200'],
                 'required' => false,
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('commentEndReason', null, [
                 'attr' => [

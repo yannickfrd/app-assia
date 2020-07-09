@@ -17,7 +17,7 @@ class PersonRolePersonType extends AbstractType
             ->add('person', PersonType::class)
             ->add('role', ChoiceType::class, [
                 'choices' => Choices::getChoices(RolePerson::ROLE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ]);
     }
 

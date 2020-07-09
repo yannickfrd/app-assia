@@ -33,7 +33,7 @@ class SupportPersonType extends AbstractType
             ->add('role', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(RolePerson::ROLE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('startDate', DateType::class, [
@@ -58,7 +58,7 @@ class SupportPersonType extends AbstractType
                 'attr' => [
                     'class' => 'w-min-150',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('endStatus', ChoiceType::class, [
@@ -67,7 +67,7 @@ class SupportPersonType extends AbstractType
                 'attr' => [
                     'class' => 'w-min-180',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('endStatusComment', null, [

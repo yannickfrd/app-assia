@@ -17,12 +17,12 @@ class EvalFamilyGroupType extends AbstractType
             ->add('nbDependentChildren')
             ->add('childrenBehind', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('famlReunification', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyGroup::FAML_REUNIFICATION),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('nbPeopleReunification')

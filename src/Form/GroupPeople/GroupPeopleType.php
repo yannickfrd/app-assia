@@ -18,7 +18,7 @@ class GroupPeopleType extends AbstractType
         $builder
             ->add('familyTypology', ChoiceType::class, [
                 'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('nbPeople')
             ->add('rolePeople', CollectionType::class, [

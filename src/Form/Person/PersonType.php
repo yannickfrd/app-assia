@@ -45,7 +45,7 @@ class PersonType extends AbstractType
                     'class' => 'col-md-12',
                 ],
                 'choices' => Choices::getchoices(Person::GENDER),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('phone1', null, [

@@ -44,7 +44,7 @@ class AccommodationType extends AbstractType
             'query_builder' => function (ServiceRepository $repo) {
                 return $repo->getServicesFromUserQueryList($this->currentUser);
             },
-            'placeholder' => '-- Select --',
+            'placeholder' => 'placeholder.select',
         ])
         ->add('nbPlaces')
         ->add('startDate', DateType::class, [
@@ -58,19 +58,19 @@ class AccommodationType extends AbstractType
         ])
         ->add('accommodationType', ChoiceType::class, [
             'choices' => Choices::getChoices(Accommodation::ACCOMMODATION_TYPE),
-            'placeholder' => '-- Select --',
+            'placeholder' => 'placeholder.select',
             'help' => 'Chambre, T1, T2, T3...',
             'required' => false,
         ])
         ->add('configuration', ChoiceType::class, [
             'choices' => Choices::getChoices(Accommodation::CONFIGURATION),
-            'placeholder' => '-- Select --',
+            'placeholder' => 'placeholder.select',
             'help' => 'Diffus ou regroupé',
             'required' => false,
         ])
         ->add('individualCollective', ChoiceType::class, [
             'choices' => Choices::getChoices(Accommodation::INDIVIDUAL_COLLECTIVE),
-            'placeholder' => '-- Select --',
+            'placeholder' => 'placeholder.select',
             'required' => false,
         ])
         ->add('contributionAmt', MoneyType::class, [
@@ -97,7 +97,7 @@ class AccommodationType extends AbstractType
                 'query_builder' => function (DeviceRepository $repo) use ($accommodation) {
                     return $repo->getDevicesFromServiceQueryList($accommodation);
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ]);
         });
     }

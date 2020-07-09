@@ -3,9 +3,11 @@
 namespace App\Form\Device;
 
 use App\Entity\Device;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DeviceType extends AbstractType
 {
@@ -14,12 +16,18 @@ class DeviceType extends AbstractType
         $builder
             ->add('name')
             ->add('coefficient', null, [
-                'help' => 'Coefficient entre 0 et 10. Les décimales sont prises en compte.',
+                'help' => 'device.coefficient.help',
+            ])
+            ->add('accommodation', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+                'help' => 'device.accommodation.help',
             ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Description...',
+                    'placeholder' => 'device.comment.placeholder',
                 ],
             ]);
     }

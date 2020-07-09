@@ -44,6 +44,11 @@ class Device
     private $coefficient;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $accommodation;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -100,6 +105,18 @@ class Device
     public function setCoefficient(?float $coefficient): self
     {
         $this->coefficient = $coefficient;
+
+        return $this;
+    }
+
+    public function getAccommodation(): ?int
+    {
+        return $this->accommodation;
+    }
+
+    public function setAccommodation(?int $accommodation): self
+    {
+        $this->accommodation = $accommodation;
 
         return $this;
     }

@@ -21,7 +21,7 @@ class EvalHousingGroupType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'housingStatus',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('siaoRequest', ChoiceType::class, [
@@ -30,7 +30,7 @@ class EvalHousingGroupType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'siaoRequest',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('siaoRequestDate', DateType::class, [
@@ -47,7 +47,7 @@ class EvalHousingGroupType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'socialHousingRequest',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialHousingRequestId')
@@ -66,7 +66,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('specificities')
             ->add('syplo', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('syploId')
@@ -76,7 +76,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('daloCommission', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('daloId')
@@ -86,7 +86,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('daloRequalifiedDaho', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('daloDecisionDate', DateType::class, [
@@ -95,7 +95,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('daloTribunalAction', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('daloTribunalActionDate', DateType::class, [
@@ -104,7 +104,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('collectiveAgreementHousing', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('collectiveAgreementHousingDate', DateType::class, [
@@ -113,12 +113,12 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('hsgActionEligibility', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('hsgActionRecord', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('hsgActionDate', DateType::class, [
@@ -134,12 +134,12 @@ class EvalHousingGroupType extends AbstractType
             ->add('hsgActionRecordId')
             ->add('expulsionInProgress', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('publicForce', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('publicForceDate', DateType::class, [
@@ -149,7 +149,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('expulsionComment')
             ->add('housingExperience', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('housingExpeComment')
@@ -160,7 +160,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('hepsPrecision')
             ->add('domiciliation', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('startDomiciliationDate', DateType::class, [
@@ -181,7 +181,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('housingAccessType', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('housingArrivalDate', DateType::class, [

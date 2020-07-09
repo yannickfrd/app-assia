@@ -21,7 +21,7 @@ class InitEvalGroupType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'housingStatus',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
                 'help' => 'Housing status before the start of support.',
             ])
@@ -31,7 +31,7 @@ class InitEvalGroupType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'siaoRequest',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialHousingRequest', ChoiceType::class, [
@@ -40,7 +40,7 @@ class InitEvalGroupType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'socialHousingRequest',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ]);
     }

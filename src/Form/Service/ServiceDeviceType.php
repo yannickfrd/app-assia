@@ -25,7 +25,7 @@ class ServiceDeviceType extends AbstractType
             ->add('device', EntityType::class, [
                 'class' => Device::class,
                 'choice_label' => 'name',
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'attr' => [
                     'class' => 'col-auto my-1',
                 ],

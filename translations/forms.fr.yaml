@@ -9,6 +9,10 @@ ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe
 Contact other person: Contact autre personne
 Device: Dispositif
+device:
+  coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
+  accommodation.help: Ce dispositif a t-il une activité d'hébergement ?
+  comment.placeholder: Description...
 Email: Adresse email
 Email1: Adresse email 1
 Email2: Adresse email 2
@@ -42,7 +46,6 @@ Referent2: Référent suppléant
 Role: Rôle dans le groupe
 Search: Recherche...
 Select: Sélectionner
-Service name: Nom du service
 Start: Début
 Start date: Date de début
 Status: Statut
@@ -61,7 +64,7 @@ Zipcode: Code postal
 -- Family Typology --: -- Typologie familiale --
 -- Pole --: -- Pôle --
 -- Gender --: -- Sexe --
--- Select --: -- Sélectionner --
+placeholder.select: -- Sélectionner --
 
 End reason: Motif de fin
 Comment end reason: Commentaire
@@ -93,13 +96,16 @@ Contribution type: Type de participation financière
 Contribution rate: Taux de participation financière
 Rate beetween 0 and 1.: Nombre entre 0 et 1.
 Justice activity: Activité Justice
+service:
+  comment.placeholder: Write a comment about the service
+  name: Nom du service
 
 Accommodation type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou collectif
 Contribution amt: Montant de la redevance
 
-Due amt: Montant dû
+Due amt: Montant à régler
 Month: Mois
 Year: Année
 Day: Jour

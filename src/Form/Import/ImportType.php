@@ -22,7 +22,7 @@ class ImportType extends AbstractType
                     return $repo->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
                     ->orderBy('s.name', 'ASC');
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => true,
             ]);
     }

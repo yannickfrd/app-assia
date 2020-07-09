@@ -27,7 +27,7 @@ class OriginRequestType extends AbstractType
                         ->select('o')
                         ->orderBy('o.name', 'ASC');
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('organizationComment')
@@ -41,7 +41,7 @@ class OriginRequestType extends AbstractType
             ])
             ->add('resulPreAdmission', ChoiceType::class, [
                 'choices' => Choices::getChoices(OriginRequest::RESULT_PRE_ADMISSION),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('decisionDate', DateType::class, [

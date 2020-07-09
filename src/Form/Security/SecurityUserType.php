@@ -60,7 +60,7 @@ class SecurityUserType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getChoices(User::STATUS),
                 'label' => 'Fonction',
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('roles', ChoiceType::class, [
@@ -68,7 +68,7 @@ class SecurityUserType extends AbstractType
                 'label' => 'Rôle',
                 'multiple' => true,
                 'attr' => ['class' => 'h-max-76'],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('password', PasswordType::class, [
                 'attr' => [

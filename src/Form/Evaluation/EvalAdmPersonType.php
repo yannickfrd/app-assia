@@ -17,13 +17,13 @@ class EvalAdmPersonType extends AbstractType
         $builder
             ->add('nationality', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::NATIONALITY),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('country')
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'help' => "Carte d'identité, passport, titre de séjour, récépissé...",
                 'required' => false,
             ])
@@ -33,17 +33,17 @@ class EvalAdmPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'paperType',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('asylumBackground', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('asylumStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::RIGHT_TO_RESIDE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('endValidPermitDate', DateType::class, [
@@ -57,7 +57,7 @@ class EvalAdmPersonType extends AbstractType
             ->add('nbRenewals')
             ->add('workRight', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('commentEvalAdmPerson', null, [

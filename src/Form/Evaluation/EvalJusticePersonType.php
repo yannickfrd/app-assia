@@ -17,12 +17,12 @@ class EvalJusticePersonType extends AbstractType
         $builder
             ->add('justiceStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalJusticePerson::JUSTICE_STATUS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('justiceAct', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalJusticePerson::JUSTICE_ACT),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('commentEvalJustice', TextareaType::class, [

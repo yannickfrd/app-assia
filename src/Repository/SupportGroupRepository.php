@@ -52,7 +52,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query = $this->getsupportQuery();
 
         return $query
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')

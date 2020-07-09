@@ -29,7 +29,7 @@ class RdvType extends AbstractType
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getchoices(Rdv::STATUS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('location', null, [

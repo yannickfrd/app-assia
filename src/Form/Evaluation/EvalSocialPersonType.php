@@ -21,7 +21,7 @@ class EvalSocialPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'rightSocialSecurity',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialSecurity', ChoiceType::class, [
@@ -30,7 +30,7 @@ class EvalSocialPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'socialSecurity',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialSecurityOffice')
@@ -40,7 +40,7 @@ class EvalSocialPersonType extends AbstractType
             ])
             ->add('childWelfareBackground', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
                 'help' => "Aide sociale à l'enfance, PJJ…",
             ])
@@ -50,7 +50,7 @@ class EvalSocialPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'familyBreakdown',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('friendshipBreakdown', ChoiceType::class, [
@@ -59,12 +59,12 @@ class EvalSocialPersonType extends AbstractType
                     'class' => 'js-initEval',
                     'data-id' => 'friendshipBreakdown',
                 ],
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('healthProblem', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('physicalHealthProblem')
@@ -72,24 +72,24 @@ class EvalSocialPersonType extends AbstractType
             ->add('addictionProblem')
             ->add('careSupport', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('careSupportType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::CARE_SUPPORT),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('wheelchair')
             ->add('reducedMobility')
             ->add('violenceVictim', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('domViolenceVictim', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('commentEvalSocialPerson', null, [

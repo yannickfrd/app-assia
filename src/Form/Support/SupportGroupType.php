@@ -41,7 +41,7 @@ class SupportGroupType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('device', EntityType::class, [
                 'class' => Device::class,
@@ -49,11 +49,11 @@ class SupportGroupType extends AbstractType
                 'query_builder' => function (DeviceRepository $repo) {
                     return $repo->getDevicesFromUserQueryList($this->currentUser);
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('originRequest', OriginRequestType::class)
             ->add('startDate', DateType::class, [
@@ -66,7 +66,7 @@ class SupportGroupType extends AbstractType
                 'query_builder' => function (UserRepository $repo) use ($supportGroup) {
                     return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent());
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('referent2', EntityType::class, [
                 'class' => User::class,
@@ -74,7 +74,7 @@ class SupportGroupType extends AbstractType
                 'query_builder' => function (UserRepository $repo) use ($supportGroup) {
                     return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent2());
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('theoreticalEndDate', DateType::class, [
@@ -87,7 +87,7 @@ class SupportGroupType extends AbstractType
             ])
             ->add('endStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(SupportGroup::END_STATUS),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('endAccommodation', CheckboxType::class, [

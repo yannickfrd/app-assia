@@ -23,7 +23,7 @@ class ReferentType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Referent::TYPE),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('socialWorker', null, [
                 'attr' => [

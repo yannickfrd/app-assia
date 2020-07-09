@@ -16,17 +16,17 @@ class EvalSocialGroupType extends AbstractType
         $builder
             ->add('reasonRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialGroup::REASON_REQUEST),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('wanderingTime', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialGroup::WANDERING_TIME),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('animal', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('animalType')

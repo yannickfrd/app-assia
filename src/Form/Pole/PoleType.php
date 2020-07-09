@@ -34,13 +34,13 @@ class PoleType extends AbstractType
                         ->andWhere('u.disabledAt IS NULL')
                         ->orderBy('u.lastname', 'ASC');
                 },
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('comment')
             ->add('color', ChoiceType::class, [
                 'choices' => Choices::getChoices(Pole::COLOR),
-                'placeholder' => '-- Select --',
+                'placeholder' => 'placeholder.select',
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Pole::class,

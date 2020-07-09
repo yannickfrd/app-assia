@@ -22,7 +22,7 @@ class ResourcesType extends AbstractType
                 'class' => 'js-initEval',
                 'data-id' => 'resources',
             ],
-            'placeholder' => '-- Select --',
+            'placeholder' => 'placeholder.select',
             'required' => false,
         ])
         ->add('resourcesAmt', MoneyType::class, [

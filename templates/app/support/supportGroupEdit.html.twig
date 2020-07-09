@@ -73,7 +73,7 @@
 	<div class="row">
 		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
 		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatusComment) }}</div>
-		{% if support.id and support.service.accommodation %}
+		{% if support.id and support.device.accommodation %}
 		<div class="col-md-6 js-status d-block">
 			<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
 			{{ form_row(form.endAccommodation) }}

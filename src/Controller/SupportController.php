@@ -341,7 +341,7 @@ class SupportController extends AbstractController
         }
 
         // Vérifie qu'il y a un hébergement créé
-        if ($supportGroup->getService()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
+        if (1 == $supportGroup->getDevice()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
             $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
         } else {
             // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
@@ -351,7 +351,7 @@ class SupportController extends AbstractController
                     $nbAccommodationPeople += $accommodationGroup->getAccommodationPeople()->count();
                 }
             }
-            if (!$supportGroup->getEndDate() && $supportGroup->getService()->getAccommodation() && $nbSupportPeople != $nbAccommodationPeople) {
+            if (!$supportGroup->getEndDate() && 1 == $supportGroup->getDevice()->getAccommodation() && $nbSupportPeople != $nbAccommodationPeople) {
                 $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
                     ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
                     Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
