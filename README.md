@@ -18,7 +18,9 @@ https://demo.esperer95.app
 
 ## Version 1.13.0 - 10/07/2020
 - Nouvelle fonctionnalité : possibilité d'ajouter le nombre théorique de suivis du travailleur social par dispositif. 
+- Amélioration générale du module de participation financière du suivi.
 - Amélioration de l'affichage des collections d'items (sous forme de tableau).
+
 
 ## Version 1.12.7 - 09/07/2020
 - Correction du bug du nombre de personnes affiché dans la liste des suivis lorsque l'on procédait à une recherche par nom ou prénom.

@@ -48,7 +48,7 @@
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}</th>
                         {# {% if contributions|length > 0 %} #}
-                        <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant dû</th>
+                        <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant à réger</th>
                         <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant réglé</th>
                         <th scope="col" class="align-middle th-w-100">Redevance -<br/>Date de règlement</th>
                         <th scope="col" class="align-middle th-w-100">Redevance -<br/>Mode de règlement</th>
@@ -84,7 +84,7 @@
                         {# {% if contributions|length > 0 %} #}
                         {% for contribution in contributions|filter(a => a.supportGroup == support and a.type == 1 ) %}
                             {% if loop.first %}                            
-                                <td class="align-middle text-right">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ contribution.toPayAmt|number_format(2, ",", " ") }} €</td>
                                 <td class="align-middle text-right">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
                                 <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
                                 <td class="align-middle">{{ contribution.paymentTypeToString }}</td>

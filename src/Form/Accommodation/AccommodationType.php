@@ -73,7 +73,7 @@ class AccommodationType extends AbstractType
             'placeholder' => 'placeholder.select',
             'required' => false,
         ])
-        ->add('contributionAmt', MoneyType::class, [
+        ->add('rentAmt', MoneyType::class, [
             'attr' => [
                 'class' => 'js-money text-right',
             ],

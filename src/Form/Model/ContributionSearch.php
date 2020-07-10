@@ -18,7 +18,7 @@ class ContributionSearch
     private $fullname;
 
     /**
-     * @var int|null
+     * @var array
      */
     private $type;
 
@@ -39,12 +39,12 @@ class ContributionSearch
         return $this;
     }
 
-    public function getType(): ?int
+    public function getType(): ?array
     {
         return $this->type;
     }
 
-    public function setType(?int $type): self
+    public function setType(?array $type): self
     {
         $this->type = $type;
 

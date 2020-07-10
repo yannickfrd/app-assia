@@ -22,11 +22,14 @@ class SupportContributionSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
+                'multiple' => true,
+                'attr' => [
+                    'class' => 'multi-select js-contribution-type',
+                ],
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
-                'placeholder' => '-- Type --',
                 'required' => false,
             ])
-            ->add('date', DateListSearchType::class, [
+            ->add('periodContribution', DateListSearchType::class, [
                 'data_class' => ContributionSearch::class,
             ]);
     }

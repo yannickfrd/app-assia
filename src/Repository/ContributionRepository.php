@@ -38,7 +38,7 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return  $query->orderBy('c.date', 'DESC')
+        return  $query->orderBy('c.periodContribution', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -55,9 +55,9 @@ class ContributionRepository extends ServiceEntityRepository
             ->andWhere('c.supportGroup IN (:supportsId)')
             ->setParameter('supportsId', $supportsId)
 
-            ->andWhere('c.date >= :start')
+            ->andWhere('c.periodContribution >= :start')
             ->setParameter('start', $start)
-            ->andWhere('c.date <= :end')
+            ->andWhere('c.periodContribution <= :end')
             ->setParameter('end', $end);
 
         return $query->getQuery()
@@ -75,7 +75,7 @@ class ContributionRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('c.date', 'DESC')
+        return  $query->orderBy('c.periodContribution', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -121,7 +121,7 @@ class ContributionRepository extends ServiceEntityRepository
         }
 
         if ($search->getType()) {
-            $query->andWhere('c.type = :type')
+            $query->andWhere('c.type IN (:type)')
                 ->setParameter('type', $search->getType());
         }
 
@@ -131,11 +131,11 @@ class ContributionRepository extends ServiceEntityRepository
         }
 
         if ($search->getStart()) {
-            $query->andWhere('c.date >= :start')
+            $query->andWhere('c.periodContribution >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.date <= :end')
+            $query->andWhere('c.periodContribution <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
@@ -183,19 +183,19 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('id', $search->getContributionId());
         }
         if ($search->getType()) {
-            $query->andWhere('c.type = :type')
+            $query->andWhere('c.type IN (:type)')
                 ->setParameter('type', $search->getType());
         }
         if ($search->getStart()) {
-            $query->andWhere('c.date >= :start')
+            $query->andWhere('c.periodContribution >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.date <= :end')
+            $query->andWhere('c.periodContribution <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $query->orderBy('c.date', 'DESC');
+        $query = $query->orderBy('c.periodContribution', 'DESC');
 
         return $query->getQuery();
     }
@@ -231,9 +231,9 @@ class ContributionRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function sumStillDueAmt($supportId)
+    public function sumStillToPayAmt($supportId)
     {
-        return $this->createQueryBuilder('c')->select('SUM(c.stillDueAmt)')
+        return $this->createQueryBuilder('c')->select('SUM(c.stillToPayAmt)')
             ->andWhere('c.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportId)
             ->getQuery()

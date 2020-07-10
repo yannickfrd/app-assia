@@ -2,14 +2,14 @@
 
 {% block search_form %}    
     <div class="form-group col-auto my-1 px-1"><span class="mx-1">Début</span>
-        <span class="d-none">{{ form_widget(form_search.date.start.day) }}</span>
-        <span data-toggle="tooltip" data-placement="bottom" title="Mois de début">{{ form_widget(form_search.date.start.month) }}</span>
-        <span data-toggle="tooltip" data-placement="bottom" title="Année de début">{{ form_widget(form_search.date.start.year) }}</span>
+        <span class="d-none">{{ form_widget(form_search.periodContribution.start.day) }}</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="Mois de début">{{ form_widget(form_search.periodContribution.start.month) }}</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="Année de début">{{ form_widget(form_search.periodContribution.start.year) }}</span>
     </div>
     <div class="form-group col-auto my-1 px-1"><span class="mx-1">Fin</span>
-        <span class="d-none">{{ form_widget(form_search.date.end.day) }}</span>
-        <span data-toggle="tooltip" data-placement="bottom" title="Mois de fin">{{ form_widget(form_search.date.end.month) }}</span>
-        <span data-toggle="tooltip" data-placement="bottom" title="Année de fin">{{ form_widget(form_search.date.end.year) }}</span>
+        <span class="d-none">{{ form_widget(form_search.periodContribution.end.day) }}</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="Mois de fin">{{ form_widget(form_search.periodContribution.end.month) }}</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="Année de fin">{{ form_widget(form_search.periodContribution.end.year) }}</span>
     </div>
     <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
 

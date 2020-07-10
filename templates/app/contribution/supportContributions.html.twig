@@ -23,8 +23,8 @@
 			<div class="d-inline align-middle">Total : <!--
 			--><span id="count-contributions">{{ contributions.getTotalItemCount|number_format(0,',', ' ')}}</span><!--
 			-->{% if nbTotalContributions %} sur <span id="nb-total-contributions">{{ nbTotalContributions }}</span>{% endif %}
-				{% if sumStillDueAmt > 0 %}
-					<span class="badge badge-warning">{{ sumStillDueAmt|number_format(2,',', ' ') }} € restant dus</span>
+				{% if sumStillToPayAmt > 0 %}
+					<span class="badge badge-warning">{{ sumStillToPayAmt|number_format(2,',', ' ') }} € restant dus</span>
 				{% endif %}
 			</div>
 		</div>
@@ -42,37 +42,39 @@
 					<thead>
 						<tr>
 							<th scope="col" class="align-middle th-w-20"></th>
-							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.date") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
-							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant dû", "c.dueAmt") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Redevance - Période", "c.periodContribution") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant à régler", "c.toPayAmt") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
-							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû", "c.stillDueAmt") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de règlement", "c.paymentDate") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mode de réglement", "c.paymentType") }}</th>
 							{# <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Caution - Date de restitution", "c.returnDate") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Caution - Montant restitué", "c.returnAmt") }}</th> #}
 							<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Date de création", "c.createdAt") }}</th>
 							<th scope="col" class="align-middle th-w-20"></th>
 						</tr>
 					</thead>
 					<tbody id="container-contributions">
 						{% for contribution in contributions %}
-							<tr id="contribution-{{ contribution.id }}" class="js-contribution">
+							<tr id="contribution-{{ contribution.id }}" class="contribution">
 								<td scope="row" class="align-middle text-center">
 									<button class="btn btn-{{ theme_color }} btn-sm shadow js-get" data-id="{{ contribution.id }}"
 										data-toggle="tooltip" data-placement="bottom" title="Voir {{ contribution.typeToString }}"><span class="fas fa-eye"></span>
 									</button>
 								</td>
-								<td class="align-middle js-date">{{ contribution.date|date("m/Y") }}</td>
 								<td class="align-middle js-type">{{ contribution.typeToString }}</td>
-								<td class="align-middle text-right js-dueAmt">{{ contribution.dueAmt|number_format(2, ",", " ") }} €</td>
+								<td class="align-middle js-date">{{ contribution.periodContribution ? contribution.periodContribution|date("m/Y") }}</td>
+								<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt|number_format(2, ",", " ") }} €</td>
 								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
-								<td class="align-middle text-right js-stillDueAmt">{{ contribution.stillDueAmt|number_format(2, ",", " ") }} €</td>
+								<td class="align-middle text-right js-stillToPayAmt">{{ contribution.stillToPayAmt|number_format(2, ",", " ") }} €</td>
 								<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
 								<td class="align-middle js-paymentType">{{ contribution.paymentTypeToString }}</td>
 								{# <td class="align-middle text-center js-returnDate">{{ contribution.returnDate ? contribution.returnDate|date("d/m/Y") }}</td>
 								<td class="align-middle text-right js-returnAmt">{{ contribution.returnAmt ? contribution.returnAmt|number_format(2, ",", " ") ~ " €" }}</td> #}
 								<td class="align-middle js-comment">{{ contribution.comment|slice(0,65) }}{% if contribution.comment|length > 70 %}...{% endif %}</td>
+								<td class="align-middle js-type">{{ contribution.createdAt|date("d/m/Y") }}</td>
 								<td class="align-middle text-center">
 									<button class="js-delete btn btn-danger btn-sm shadow my-1" 
 										data-url="{{ path('contribution_delete', {'id':contribution.id}) }}" 
@@ -86,9 +88,9 @@
 					<tfoot>
 						<tr class="font-weight-bold">
 							<td scope="row" colspan="3" class="align-middle text-center">Sous-total</td>
-							<td id="js-sumDueAmt" class="align-middle text-right"></td>
+							<td id="js-sumToPayAmt" class="align-middle text-right"></td>
 							<td id="js-sumPaidAmt" class="align-middle text-right"></td>
-							<td id="js-sumStillDueAmt" class="align-middle text-right"></td>
+							<td id="js-sumStillToPayAmt" class="align-middle text-right"></td>
 						</tr>
 					</tfoot>
 				</table>

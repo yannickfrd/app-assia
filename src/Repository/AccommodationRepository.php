@@ -127,7 +127,7 @@ class AccommodationRepository extends ServiceEntityRepository
      */
     public function findCurrentAccommodationOfSupport(SupportGroup $supportGroup): ?Accommodation
     {
-        return $this->createQueryBuilder('a')->select('PARTIAL a.{id, contributionAmt}')
+        return $this->createQueryBuilder('a')->select('PARTIAL a.{id, rentAmt}')
             ->leftJoin('a.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, supportGroup}')
             ->andWhere('ag.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup)

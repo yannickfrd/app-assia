@@ -57,7 +57,6 @@ class PersonControllerTest extends WebTestCase
             'lastname' => 'DOE',
             'birthdate' => '1980-01-01',
             'phone' => '01 00 00 00 00',
-            'gender' => 2,
         ]);
 
         $this->client->submit($form);

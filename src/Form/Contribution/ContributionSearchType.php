@@ -28,14 +28,14 @@ class ContributionSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
-                'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
+                'multiple' => true,
                 'attr' => [
-                    'class' => 'w-max-180',
+                    'class' => 'multi-select js-contribution-type',
                 ],
-                'placeholder' => '-- Type --',
+                'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'required' => false,
             ])
-            ->add('date', DateListSearchType::class, [
+            ->add('periodContribution', DateListSearchType::class, [
                 'data_class' => ContributionSearch::class,
             ])
             ->add('service', ServiceSearchType::class, [

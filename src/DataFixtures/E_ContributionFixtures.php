@@ -34,10 +34,10 @@ class E_ContributionFixtures extends Fixture
 
                 $contribution = (new Contribution())
                     ->setType(1)
-                    ->setDate($date)
+                    ->setPeriodContribution($date)
                     ->setSalaryAmt($salaryAmt)
                     ->setResourcesAmt($resourcesAmt)
-                    ->setDueAmt($resourcesAmt * 0.1)
+                    ->setToPayAmt($resourcesAmt * 0.1)
                     ->setPaidAmt($paidAmt)
                     ->setPaymentDate($createdAt)
                     ->setPaymentType(mt_rand(1, 4))

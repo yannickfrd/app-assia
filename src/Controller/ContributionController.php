@@ -94,7 +94,7 @@ class ContributionController extends AbstractController
             ->handleRequest($request);
 
         $contribution = (new Contribution())
-            ->setDate((new \DateTime())->modify('-1 month')->modify('first day of this month'));
+            ->setPeriodContribution((new \DateTime())->modify('-1 month')->modify('first day of this month'));
 
         $form = $this->createForm(ContributionType::class, $contribution);
 
@@ -103,7 +103,7 @@ class ContributionController extends AbstractController
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
-            'sumStillDueAmt' => $this->repo->sumStillDueAmt($supportGroup->getId()),
+            'sumStillToPayAmt' => $this->repo->sumStillToPayAmt($supportGroup->getId()),
             'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 20) ?? null,
         ]);
     }
@@ -136,7 +136,7 @@ class ContributionController extends AbstractController
             }
 
             $contributionRate = $supportGroup->getService()->getContributionRate();
-            $dueAmt = round($resourcesAmt * $contributionRate * 100) / 100;
+            $toPayAmt = round($resourcesAmt * $contributionRate * 100) / 100;
         }
 
         return $this->json([
@@ -145,9 +145,9 @@ class ContributionController extends AbstractController
             'data' => [
                 'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
-                'dueAmt' => $dueAmt ?? null,
+                'toPayAmt' => $toPayAmt ?? null,
                 'contributionAmt' => $evaluation && $evaluation->getEvalBudgetGroup() ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,
-                'rentAmt' => $accommodation ? $accommodation->getContributionAmt() : null,
+                'rentAmt' => $accommodation ? $accommodation->getRentAmt() : null,
             ],
         ], 200);
     }
@@ -187,11 +187,16 @@ class ContributionController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
 
+        // $form = $this->createForm(ContributionType::class, $contribution);
+
         return $this->json([
             'code' => 200,
             'action' => 'show',
             'data' => [
-                'contribution' => $normalizer->normalize($contribution, null, ['groups' => 'get']),
+                // 'contribution' => $this->render('app/contribution/modalContribution.html.twig', [
+                //     'form' => $form->createView(),
+                // ]),
+                'contribution' => $normalizer->normalize($contribution, null, ['groups' => ['get', 'view']]),
             ],
         ], 200);
     }
@@ -302,7 +307,7 @@ class ContributionController extends AbstractController
     {
         $supportGroup->setUpdatedAt(new \DateTime());
 
-        $contribution->setStillDueAmt($contribution->getDueAmt() - $contribution->getPaidAmt());
+        $contribution->setStillToPayAmt($contribution->getToPayAmt() - $contribution->getPaidAmt());
 
         $this->manager->persist($contribution);
         $this->manager->flush();
@@ -325,7 +330,7 @@ class ContributionController extends AbstractController
      */
     protected function updateContribution(Contribution $contribution, NormalizerInterface $normalizer): Response
     {
-        $contribution->setStillDueAmt();
+        $contribution->setStillToPayAmt();
         $contribution->getSupportGroup()->setUpdatedAt(new \DateTime());
 
         $this->manager->flush();
@@ -347,7 +352,7 @@ class ContributionController extends AbstractController
     {
         $today = new \DateTime('midnight');
         $search = (new ContributionSearch())
-            ->setType(1)
+            ->setType([1])
             ->setStart(new \DateTime($today->format('Y').'-01-01'))
             ->setEnd($today);
 

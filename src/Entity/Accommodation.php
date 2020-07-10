@@ -120,7 +120,7 @@ class Accommodation
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $contributionAmt;
+    private $rentAmt;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="accommodation", orphanRemoval=true)
@@ -286,14 +286,14 @@ class Accommodation
         return $this;
     }
 
-    public function getContributionAmt(): ?float
+    public function getRentAmt(): ?float
     {
-        return $this->contributionAmt;
+        return $this->rentAmt;
     }
 
-    public function setContributionAmt(?float $contributionAmt): self
+    public function setRentAmt(?float $rentAmt): self
     {
-        $this->contributionAmt = $contributionAmt;
+        $this->rentAmt = $rentAmt;
 
         return $this;
     }

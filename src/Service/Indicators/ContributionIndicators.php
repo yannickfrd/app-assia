@@ -7,9 +7,9 @@ use App\Service\Calendar;
 class ContributionIndicators
 {
     protected $nbContributions = 0;
-    protected $sumDueAmt = 0;
+    protected $sumToPayAmt = 0;
     protected $sumPaidAmt = 0;
-    protected $sumStillDueAmt = 0;
+    protected $sumStillToPayAmt = 0;
 
     public function __construct()
     {
@@ -32,15 +32,15 @@ class ContributionIndicators
 
         foreach ($months as $month) {
             $nbContributions = 0;
-            $sumDueAmt = 0;
+            $sumToPayAmt = 0;
             $sumPaidAmt = 0;
-            $sumStillDueAmt = 0;
+            $sumStillToPayAmt = 0;
             foreach ($contributions as $contribution) {
                 if ($this->withinMonth($contribution->getDate(), $month)) {
                     ++$nbContributions;
-                    $sumDueAmt += $contribution->getDueAmt();
+                    $sumToPayAmt += $contribution->getToPayAmt();
                     $sumPaidAmt += $contribution->getPaidAmt();
-                    $sumStillDueAmt += $contribution->getStillDueAmt();
+                    $sumStillToPayAmt += $contribution->getStillToPayAmt();
                 }
             }
 
@@ -48,27 +48,27 @@ class ContributionIndicators
                 'date' => $month,
                 'monthToString' => Calendar::MONTHS[(int) $month->format('m')].' '.$month->format('Y'),
                 'nbContributions' => $nbContributions,
-                'sumDueAmt' => $sumDueAmt,
-                'averageContributionAmt' => $nbContributions ? round(($sumDueAmt / $nbContributions) * 100) / 100 : '',
+                'sumToPayAmt' => $sumToPayAmt,
+                'averageContributionAmt' => $nbContributions ? round(($sumToPayAmt / $nbContributions) * 100) / 100 : '',
                 'sumPaidAmt' => $sumPaidAmt,
                 'averagePaidAmt' => $nbContributions ? round(($sumPaidAmt / $nbContributions) * 100) / 100 : '',
-                'sumStillDueAmt' => $sumStillDueAmt,
+                'sumStillToPayAmt' => $sumStillToPayAmt,
             ];
 
             $this->nbContributions += $nbContributions;
-            $this->sumDueAmt += $sumDueAmt;
+            $this->sumToPayAmt += $sumToPayAmt;
             $this->sumPaidAmt += $sumPaidAmt;
-            $this->sumStillDueAmt += $sumStillDueAmt;
+            $this->sumStillToPayAmt += $sumStillToPayAmt;
         }
 
         return [
             'months' => $datasMonths,
             'nbContributions' => $this->nbContributions,
-            'sumDueAmt' => $this->sumDueAmt,
-            'averageContributionAmt' => $this->nbContributions ? round(($this->sumDueAmt / $this->nbContributions) * 100) / 100 : '',
+            'sumToPayAmt' => $this->sumToPayAmt,
+            'averageContributionAmt' => $this->nbContributions ? round(($this->sumToPayAmt / $this->nbContributions) * 100) / 100 : '',
             'sumPaidAmt' => $this->sumPaidAmt,
             'averagePaidAmt' => $this->nbContributions ? round(($this->sumPaidAmt / $this->nbContributions) * 100) / 100 : '',
-            'sumStillDueAmt' => $this->sumStillDueAmt,
+            'sumStillToPayAmt' => $this->sumStillToPayAmt,
         ];
     }
 

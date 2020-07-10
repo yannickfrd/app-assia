@@ -25,7 +25,7 @@
                             <th class="align-middle">Mois</th>
                             <th class="align-middle text-right">Nombre</th>
                             <th class="align-middle text-right">Montant total dû</th>
-                            <th class="align-middle text-right">Moyenne montant dû</th>
+                            <th class="align-middle text-right">Moyenne Montant à réger</th>
                             <th class="align-middle text-right">Montant total réglé</th>
                             <th class="align-middle text-right">Moyenne montant réglé</th>
                             <th class="align-middle text-right">Montant restant dus</th>
@@ -47,11 +47,11 @@
                                 </td>
                                 <td class="align-middle">{{ month.monthToString }}</td>
                                 <td class="align-middle text-right">{{ month.nbContributions|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ month.sumDueAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ month.sumToPayAmt|number_format(2, ",", " ") }} €</td>
                                 <td class="align-middle text-right">{{ month.averageContributionAmt|number_format(2, ",", " ") }} €</td>
                                 <td class="align-middle text-right">{{ month.sumPaidAmt|number_format(2, ",", " ") }} €</td>
                                 <td class="align-middle text-right">{{ month.averagePaidAmt|number_format(2, ",", " ") }} €</td>
-                                <td class="align-middle text-right">{{ month.sumStillDueAmt|number_format(2, ",", " ") }} €</td>
+                                <td class="align-middle text-right">{{ month.sumStillToPayAmt|number_format(2, ",", " ") }} €</td>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -60,11 +60,11 @@
                         <tr class="font-weight-bold">
                             <td class="align-middle text-center" colspan="2">Total</td>
                             <td class="align-middle text-right">{{ datas.nbContributions|number_format(0, ",", " ") }}</td>
-                            <td class="align-middle text-right">{{ datas.sumDueAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ datas.sumToPayAmt|number_format(2, ",", " ") }} €</td>
                             <td class="align-middle text-right">{{ datas.averageContributionAmt|number_format(2, ",", " ") }} €</td>
                             <td class="align-middle text-right">{{ datas.sumPaidAmt|number_format(2, ",", " ") }} €</td>
                             <td class="align-middle text-right">{{ datas.averagePaidAmt|number_format(2, ",", " ") }} €</td>
-                            <td class="align-middle text-right">{{ datas.sumStillDueAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle text-right">{{ datas.sumStillToPayAmt|number_format(2, ",", " ") }} €</td>
                         </tr>
                     </tfooter>
                 </table>

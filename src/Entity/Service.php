@@ -36,9 +36,8 @@ class Service
 
     public const CONTRIBUTION_TYPE = [
         1 => 'Taux de participation sur les ressources',
-        2 => 'Redevance/loyer fixe',
+        2 => 'Loyer/redevance fixe',
         3 => 'Mixte',
-        99 => 'Non renseigné',
     ];
 
     /**

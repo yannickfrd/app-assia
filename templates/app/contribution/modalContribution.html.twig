@@ -1,42 +1,69 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-    <div id="modal-contribution" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalContributionLabel" aria-hidden="true">
+{% set contribution = form.vars.value %}
+
+<div id="modal-contribution" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalContributionLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="mb-0">Paiement</h2>
+                {% if contribution.id %}
+
+                    {% set theme_color = "dark" %}
+                    {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %}
+                    
+                    <div class="small text-secondary">
+                        <p class="mb-0 ml-3 text-right">Créé le {{contribution.createdAt|date("d/m/Y à H:i") }}{% if contribution.createdBy %} par {{ contribution.createdBy.fullname}}{% endif %}<br/>
+                            <span id="js-updatedSupport">(modifié le {{ contribution.updatedAt|date("d/m/Y à H:i") }} par {{ contribution.updatedBy.fullname }})</span>
+                        </p>
+                    </div>
+                {% endif %}
             </div>
+
             {{ form_start(form) }}
 
-            <div class="modal-body pb-0">
+            <div class="modal-body form-group pb-0">
                 <div class="row">
                     <div class="col-lg-6">{{ form_row(form.type) }}</div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 js-contribution d-none">
                         <div class="form-group row">
-                            {{ form_label(form.date) }}
-                            <div class="col-4">{{ form_widget(form.date.month) }}</div>
-                            <div class="col-4">{{ form_widget(form.date.year) }}</div>
-                            <div class="d-none">{{ form_widget(form.date.day) }}</div>
+                            {{ form_label(form.periodContribution) }}
+                            <div class="col-4">{{ form_widget(form.periodContribution.month) }}</div>
+                            <div class="col-4">{{ form_widget(form.periodContribution.year) }}</div>
+                            <div class="d-none">{{ form_widget(form.periodContribution.day) }}</div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-lg-6 js-type-1">{{ form_row(form.salaryAmt) }}</div>
-                    <div class="col-lg-6 js-type-1">{{ form_row(form.resourcesAmt) }}</div>
-                    <div class="col-lg-6 js-type-1">{{ form_row(form.housingAssitanceAmt) }}</div>
-                    <div class="col-lg-6 js-dueAmt d-block">{{ form_row(form.dueAmt) }}</div>
+                <hr class="mt-0">
+                <div class="js-contribution d-none">
+                    <div class="row">
+                        <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
+                        <div class="col-lg-4">{{ form_row(form.salaryAmt) }}</div>
+                    </div>
+                    <div class="row js-rent d-none">
+                        <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
+                        <div class="col-lg-4">{{ form_row(form.housingAssitanceAmt) }}</div>
+                    </div>
                 </div>
-                <div class="form-group row js-payment">
-                    <div class="col-lg-6">{{ form_row(form.paymentDate) }}</div>
-                    <div class="col-lg-6">{{ form_row(form.paymentType) }}</div>
-                    <div class="col-lg-6">{{ form_row(form.paidAmt) }}</div>
-                    <div class="col-lg-6">{{ form_row(form.stillDueAmt) }}</div>
+                <div class="row js-toPayAmt d-none">
+                    <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
+                    <div class="col-lg-8">
+                        <span id="calculationMethod" class="small text-secondary"></span>
+                    </div>
                 </div>
-                <div class="form-group row js-caution d-none">
-                    <div class="col-lg-6">{{ form_row(form.returnDate) }}</div>
-                    <div class="col-lg-6">{{ form_row(form.returnAmt) }}</div>
+                <div class="row js-payment d-none">
+                    <div class="col-lg-4">{{ form_row(form.paidAmt) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.paymentDate) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.paymentType) }}</div>
                 </div>
-                <div class="form-group row">
+                <div class="row js-payment d-none">
+                    <div class="col-lg-4">{{ form_row(form.stillToPayAmt) }}</div>
+                </div>
+                <div class="row js-caution d-none">
+                    <div class="col-lg-4">{{ form_row(form.returnAmt) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.returnDate) }}</div>
+                </div>
+                <div class="row js-comment d-none">
                     <div class="col-lg-12">{{ form_widget(form.comment) }}</div>
                 </div>
             </div>

@@ -16,12 +16,12 @@ class ContributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date', DateType::class, [
+            ->add('periodContribution', DateType::class, [
                 'required' => true,
                 'years' => range((int) date('Y') - 10, (int) date('Y')),
-                // 'placeholder' => [
-                //     'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
-                // ],
+                'placeholder' => [
+                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                ],
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
@@ -45,12 +45,17 @@ class ContributionType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('dueAmt', MoneyType::class, [
+            ->add('rentAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],
                 'required' => false,
-                'help' => 'Mode de calcul : ',
+            ])
+            ->add('toPayAmt', MoneyType::class, [
+                'attr' => [
+                    'class' => 'js-money text-right',
+                ],
+                'required' => false,
             ])
             ->add('paymentDate', DateType::class, [
                 'widget' => 'single_text',
@@ -67,7 +72,7 @@ class ContributionType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('stillDueAmt', MoneyType::class, [
+            ->add('stillToPayAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'text-right',
                     'readonly' => true,
@@ -87,7 +92,7 @@ class ContributionType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 2,
-                    'placeholder' => 'Write a comment',
+                    'placeholder' => 'placeholder.comment',
                 ],
             ]);
     }

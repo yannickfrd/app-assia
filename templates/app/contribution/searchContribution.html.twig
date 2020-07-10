@@ -5,14 +5,14 @@
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.fullname) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.type) }}</div>
 <div class="form-group col-auto my-1 px-1 d-inline-flex"><span class="my-2 px-1">Entre</span>
-    <span class="d-none">{{ form_widget(form.date.start.day) }}</span>
-    <span data-toggle="tooltip" data-placement="bottom" title="Mois de début">{{ form_widget(form.date.start.month) }}</span>
-    <span data-toggle="tooltip" data-placement="bottom" title="Année de début">{{ form_widget(form.date.start.year) }}</span>
+    <span class="d-none">{{ form_widget(form.periodContribution.start.day) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Mois de début">{{ form_widget(form.periodContribution.start.month) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Année de début">{{ form_widget(form.periodContribution.start.year) }}</span>
 </div>
 <div class="form-group col-auto my-1 px-1 d-inline-flex"><span class="my-2 pr-1">et</span>
-    <span class="d-none">{{ form_widget(form.date.end.day) }}</span>
-    <span data-toggle="tooltip" data-placement="bottom" title="Mois de fin">{{ form_widget(form.date.end.month) }}</span>
-    <span data-toggle="tooltip" data-placement="bottom" title="Année de fin">{{ form_widget(form.date.end.year) }}</span>
+    <span class="d-none">{{ form_widget(form.periodContribution.end.day) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Mois de fin">{{ form_widget(form.periodContribution.end.month) }}</span>
+    <span data-toggle="tooltip" data-placement="bottom" title="Année de fin">{{ form_widget(form.periodContribution.end.year) }}</span>
 </div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.referents) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.service.services) }}</div>

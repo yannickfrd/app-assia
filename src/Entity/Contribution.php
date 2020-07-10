@@ -6,34 +6,28 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ContributionRepository;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ContributionRepository::class)
- * @UniqueEntity(
- *     fields={"date", "type", "dueAmt", "supportGroup"},
- *     errorPath="dueAmt",
- *     message="Une redevance identique existe déjà pour ce mois."
- * )
  */
 class Contribution
 {
     use CreatedUpdatedEntityTrait;
 
     public const CONTRIBUTION_TYPE = [
-        1 => 'Redevance',
+        1 => 'Redevance/Loyer',
         2 => 'Caution',
-        3 => 'Prêt',
-        4 => 'Remboursement dette',
-        5 => 'Restitution Caution',
-        97 => 'Autre',
+        3 => 'Prêt/Avance financière',
+        11 => 'Remboursemt dette | Redevance',
+        12 => 'Remboursemt dette | Caution',
+        13 => 'Remboursemt dette | Prêt',
+        22 => 'Restitution Caution',
     ];
 
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
 
     public const PAYMENT_TYPE = [
-        1 => 'Virement automatique',
-        2 => 'Virement mensuel',
+        1 => 'Virement bancaire',
         3 => 'Chèque',
         4 => 'Espèce',
     ];
@@ -42,7 +36,7 @@ class Contribution
      * @ORM\Column(type="date", nullable=true)
      * @Groups("get")
      */
-    private $date;
+    private $periodContribution;
 
     /**
      * @ORM\Id()
@@ -79,7 +73,13 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $dueAmt;
+    private $rentAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get", "export"})
+     */
+    private $toPayAmt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -108,7 +108,7 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $stillDueAmt;
+    private $stillToPayAmt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -150,14 +150,14 @@ class Contribution
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getPeriodContribution(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->periodContribution;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setPeriodContribution(?\DateTimeInterface $periodContribution): self
     {
-        $this->date = $date;
+        $this->periodContribution = $periodContribution;
 
         return $this;
     }
@@ -210,14 +210,26 @@ class Contribution
         return $this;
     }
 
-    public function getDueAmt(): ?float
+    public function getToPayAmt(): ?float
     {
-        return $this->dueAmt;
+        return $this->toPayAmt;
     }
 
-    public function setDueAmt(?float $dueAmt): self
+    public function setToPayAmt(?float $toPayAmt): self
     {
-        $this->dueAmt = $dueAmt;
+        $this->toPayAmt = $toPayAmt;
+
+        return $this;
+    }
+
+    public function getRentAmt(): ?float
+    {
+        return $this->rentAmt;
+    }
+
+    public function setRentAmt(?float $rentAmt): self
+    {
+        $this->rentAmt = $rentAmt;
 
         return $this;
     }
@@ -263,14 +275,14 @@ class Contribution
         return $this;
     }
 
-    public function getStillDueAmt(): ?float
+    public function getStillToPayAmt(): ?float
     {
-        return $this->getDueAmt() - $this->getPaidAmt();
+        return $this->getToPayAmt() - $this->getPaidAmt();
     }
 
-    public function setStillDueAmt(?float $stillDueAmt = null): self
+    public function setStillToPayAmt(?float $stillToPayAmt = null): self
     {
-        $this->stillDueAmt = $this->getStillDueAmt();
+        $this->stillToPayAmt = $this->getStillToPayAmt();
 
         return $this;
     }

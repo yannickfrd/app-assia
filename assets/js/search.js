@@ -11,6 +11,7 @@ let select2Array = {
     "referent": "Référent",
     "service": "Service",
     "device": "Dispositif",
+    "contribution-type": "Type",
 }
 
 for (let i in select2Array) {
