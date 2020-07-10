@@ -40,6 +40,7 @@ class SupportsByUserIndicators
 
         foreach ($users as $user) {
             $nbUserSupports = 0;
+            $nbTheoreticalSupports = 0;
             $sumUserCoeff = 0;
             $devicesUser = $initDevicesUser;
             foreach ($supports as $support) {
@@ -58,10 +59,20 @@ class SupportsByUserIndicators
                     $sumCoeffSupports += $support->getCoefficient();
                 }
             }
+            // Récupère le nombre de suivis théoriques de l'utilisateur
+            foreach ($user->getUserDevices() as $userDevice) {
+                $deviceId = $userDevice->getDevice()->getId();
+                if (array_key_exists($deviceId, $devices)) {
+                    $devicesUser[$deviceId]['nbTheoreticalSupports'] = $userDevice->getNbSupports();
+                    $nbTheoreticalSupports += $userDevice->getNbSupports();
+                }
+            }
+
             if ($nbUserSupports > 0) {
                 $dataUsers[$user->getId()] = [
                     'user' => $user,
                     'nbSupports' => $nbUserSupports,
+                    'nbTheoreticalSupports' => $nbTheoreticalSupports,
                     'sumCoeff' => $sumUserCoeff,
                     'devices' => $devicesUser,
                 ];
@@ -89,6 +100,7 @@ class SupportsByUserIndicators
             $initDevicesUser[$device->getId()] = [
                 'name' => $device->getName(),
                 'nbSupports' => 0,
+                'nbTheoreticalSupports' => 0,
                 'sumCoeff' => 0,
             ];
         }

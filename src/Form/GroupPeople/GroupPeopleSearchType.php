@@ -59,7 +59,7 @@ class GroupPeopleSearchType extends AbstractType
                 ],
             ])
             ->add('familyTypology', ChoiceType::class, [
-                'placeholder' => '-- Family Typology --',
+                'placeholder' => 'placeholder.familtyTypology',
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],

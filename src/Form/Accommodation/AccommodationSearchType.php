@@ -58,7 +58,7 @@ class AccommodationSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
-                'placeholder' => '-- Pole --',
+                'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [

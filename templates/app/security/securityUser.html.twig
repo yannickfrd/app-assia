@@ -7,11 +7,13 @@
 {% block body %}
 
 <div class="container">
+
+    {{ form_start(form)}}
+    
     <section>
         {% include "model/msgFlash.html.twig" %}
         <h1 class="h2 mb-3">Compte utilisateur : {{ form.vars.value.fullname }}</h1>
         <hr>
-        {{ form_start(form)}}
         <div class="row">
             <div class="col-md-6">{{ form_row(form.firstname) }}</div>
             <div class="col-md-6">{{ form_row(form.lastname) }}</div>
@@ -28,72 +30,109 @@
                 </div>
             </div>
         </div>
+    </section>
 
-        <hr>
-
+    <hr>
+    
+    <section id="user-services">
         <h2 class="h4 mb-4">Services rattachés</h2>
-
         <div class="row">
             <div class="col-md-6">
-                <div id="serviceUser-fields-list" data-prototype="{{ form_widget(form.serviceUser.vars.prototype)|e }}"
-                    data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
-                    data-widget-counter="{{ form.serviceUser|length }}">
-                    {% if form.serviceUser|length > 0 %}
-                    <div class="table-responsive table-sm">
-                        <table id="function-table" class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="align-middle th-w-150">Service</th>
-                                    <th scope="col" class="align-middle th-w-120">Pôle</th>
-                                    <th scope="col" class="align-middle th-w-20"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for role in form.serviceUser %}
-                                <tr id="{{ role.vars.id }}">
-                                    <td>{{ form_widget(role.service) }}</td>
-                                    <td class="align-middle">{{ role.vars.value.service.pole.name }}</td>
+                <div class="table-responsive table-sm">
+                    <table id="function-table" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-150">Service</th>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceUser-fields-list" 
+                            data-prototype="<td class='align-middle'>{{ form_widget(form.serviceUser.vars.prototype.service)|e }}"
+                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceUser|length }}">
+                            {% for role in form.serviceUser %}
+                            <tr id="{{ role.vars.id }}">
+                                <td>{{ form_widget(role.service) }}</td>
+                                <td class="align-middle">
+                                    <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+            data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+            service</button>
+
+    </section>
+
+    <hr>
+    
+    <section id="supports-by-device">
+        <h2 class="h4 mb-4">Nombre théorique de suivis par dispositif</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="table-responsive table-sm">
+                    <table id="function-table" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-150">Dispositif</th>
+                                <th scope="col" class="align-middle th-w-120">Nombre de suivis</th>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                            </tr>
+                        </thead>
+
+                        {% set prototype %}
+                            {% apply spaceless %}
+                                <td class="align-middle">{{ form_widget(form.userDevices.vars.prototype.device) }}</td>
+                                <td class="align-middle">{{ form_widget(form.userDevices.vars.prototype.nbSupports) }}</td>
+                            {% endapply %}
+                        {% endset %}
+
+                        <tbody  id="userDevices-fields-list" data-prototype="{{ prototype|e }}"
+                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.userDevices|length }}">
+                            {% for userDevice in form.userDevices %}
+                                <tr id="{{ userDevice.vars.id }}">
+                                    <td class="align-middle">{{ form_widget(userDevice.device) }}</td>
+                                    <td class="align-middle">{{ form_widget(userDevice.nbSupports) }}</td>
                                     <td class="align-middle">
                                         <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
                                     </td>
                                 </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <div class="my-2">
-            <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
-                service</button>
-        </div>
-
-        <div class="form-group row mt-5">
-            <div class="col-md-12">
-                <div class="float-left d-flex">
-                    {% if form.vars.value.isDisabled %} 
-                    <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('security_user_enable', {'id':form.vars.value.id}) }}"
-                        title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"><span class="fas fa-user-plus mr-2"></span>Ré-activer</a>
-                    {% else %}
-                    <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
-                        title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"
-                        onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"><span
-                            class="fas fa-user-slash mr-2"></span>Désactiver</a>
-                    {% endif %}
-                </div>
-                <div class="mb-4 float-right">
-                    <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }}">Enregistrer</button>
-                </div>
-            </div>
-        </div>
-
-        {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
-
+        <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+            data-list-selector="#userDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
     </section>
+
+    <div class="form-group row mt-5">
+        <div class="col-md-12">
+            <div class="float-left d-flex">
+                {% if form.vars.value.isDisabled %} 
+                <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('security_user_enable', {'id':form.vars.value.id}) }}"
+                    title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"><span class="fas fa-user-plus mr-2"></span>Ré-activer</a>
+                {% else %}
+                <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
+                    title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"
+                    onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"><span
+                        class="fas fa-user-slash mr-2"></span>Désactiver</a>
+                {% endif %}
+            </div>
+            <div class="mb-4 float-right">
+                <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }}">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {"render_rest": false}) }}
+
 </div>
 
 {% endblock %}

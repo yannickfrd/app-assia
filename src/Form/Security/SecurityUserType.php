@@ -3,15 +3,16 @@
 namespace App\Form\Security;
 
 use App\Entity\User;
-use App\Form\Service\ServiceUserType;
 use App\Form\Utils\Choices;
+use App\Form\User\UserDeviceType;
 use App\Security\CurrentUserService;
+use App\Form\Service\ServiceUserType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SecurityUserType extends AbstractType
 {
@@ -86,6 +87,20 @@ class SecurityUserType extends AbstractType
             ])
             ->add('serviceUser', CollectionType::class, [
                 'entry_type' => ServiceUserType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'prototype' => true,
+                'by_reference' => false,
+                'label_attr' => [
+                    'class' => 'sr-only',
+                ],
+                'entry_options' => [
+                    'attr' => ['class' => 'form-inline'],
+                ],
+            ])
+            ->add('userDevices', CollectionType::class, [
+                'entry_type' => UserDeviceType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,

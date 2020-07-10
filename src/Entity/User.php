@@ -186,6 +186,11 @@ class User implements UserInterface
      */
     private $documents;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserDevice::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     */
+    private $userDevices;
+
     public function __construct()
     {
         $this->supports = new ArrayCollection();
@@ -196,6 +201,7 @@ class User implements UserInterface
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->userDevices = new ArrayCollection();
     }
 
     public function __toString()
@@ -638,6 +644,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($document->getCreatedBy() === $this) {
                 $document->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserDevice[]
+     */
+    public function getUserDevices(): Collection
+    {
+        return $this->userDevices;
+    }
+
+    public function addUserDevice(UserDevice $userDevice): self
+    {
+        if (!$this->userDevices->contains($userDevice)) {
+            $this->userDevices[] = $userDevice;
+            $userDevice->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDevice(UserDevice $userDevice): self
+    {
+        if ($this->userDevices->contains($userDevice)) {
+            $this->userDevices->removeElement($userDevice);
+            // set the owning side to null (unless already changed)
+            if ($userDevice->getUser() === $this) {
+                $userDevice->setUser(null);
             }
         }
 

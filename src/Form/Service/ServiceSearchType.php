@@ -50,7 +50,7 @@ class ServiceSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
-                'placeholder' => '-- Pole --',
+                'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])
             ->add('export');

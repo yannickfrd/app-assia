@@ -68,11 +68,17 @@ class Device
      */
     private $supportGroup;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserDevice::class, mappedBy="device", orphanRemoval=true)
+     */
+    private $userDevices;
+
     public function __construct()
     {
         $this->serviceDevices = new ArrayCollection();
         $this->accommodations = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
+        $this->userDevices = new ArrayCollection();
     }
 
     public function __toString()
@@ -220,6 +226,37 @@ class Device
             // set the owning side to null (unless already changed)
             if ($supportGroup->getDevice() === $this) {
                 $supportGroup->setDevice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserDevice[]
+     */
+    public function getUserDevices(): Collection
+    {
+        return $this->userDevices;
+    }
+
+    public function addUserDevice(UserDevice $userDevice): self
+    {
+        if (!$this->userDevices->contains($userDevice)) {
+            $this->userDevices[] = $userDevice;
+            $userDevice->setDevice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDevice(UserDevice $userDevice): self
+    {
+        if ($this->userDevices->contains($userDevice)) {
+            $this->userDevices->removeElement($userDevice);
+            // set the owning side to null (unless already changed)
+            if ($userDevice->getDevice() === $this) {
+                $userDevice->setDevice(null);
             }
         }
 

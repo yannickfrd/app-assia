@@ -98,32 +98,27 @@
         <h2 class="h4 mb-4">Dispositif(s) rattaché(s)</h2>
         <div class="row">
             <div class="col-md-6">
-                <div id="serviceDevices-fields-list"
-                    data-prototype="{{ form_widget(form.serviceDevices.vars.prototype)|e }}"
-                    data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
-                    data-widget-counter="{{ form.serviceDevices|length }}">
-                    {% if form.serviceDevices|length > 0 %}
-                    <div class="table-responsive table-sm">
-                        <table id="function-table" class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="align-middle th-w-150">Dispositif</th>
-                                    <th scope="col" class="align-middle th-w-20"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for serviceDevice in form.serviceDevices %}
-                                <tr id="{{ serviceDevice.vars.id }}">
-                                    <td>{{ form_widget(serviceDevice.device) }}</td>
-                                    <td class="align-middle">
-                                        <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% endif %}
+                <div class="table-responsive table-sm">
+                    <table id="function-table" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-150">Dispositif</th>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceDevices-fields-list"
+                            data-prototype="<td class='align-middle'>{{ form_widget(form.serviceDevices.vars.prototype.device)|e }}</td>"
+                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceDevices|length }}">
+                            {% for serviceDevice in form.serviceDevices %}
+                            <tr id="{{ serviceDevice.vars.id }}">
+                                <td>{{ form_widget(serviceDevice.device) }}</td>
+                                <td class="align-middle">
+                                    <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

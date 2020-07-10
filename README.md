@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.12.7 - 09/07/2020
+1.13.0 - 10/07/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,9 +16,14 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.13.0 - 10/07/2020
+- Nouvelle fonctionnalité : possibilité d'ajouter le nombre théorique de suivis du travailleur social par dispositif. 
+- Amélioration de l'affichage des collections d'items (sous forme de tableau).
+
 ## Version 1.12.7 - 09/07/2020
 - Correction du bug du nombre de personnes affiché dans la liste des suivis lorsque l'on procédait à une recherche par nom ou prénom.
 - Correction du bug lors du retrait d'une personne d'un groupe.
+- Information sur l'activité d'hébergement rattachée au dispositif et non plus seulement au service. 
 
 ## Version 1.12.6 - 07/07/2020
 - Correction bug lors de la suppression du nom d'usage d'une personne.

@@ -21,10 +21,13 @@
                         <tr>
                             <th scope="row" class="align-middle th-w-20"></th>
                             <th class="align-middle th-w-150">Travailleur/euse social·e</th>
-                            <th class="align-middle th-w-100 text-right">Total suivis en cours</th>
+                            <th class="align-middle th-w-100 text-right">Total</th>
                             {% for device in devices %}
                                 <th class="align-middle th-w-80 text-right">{{ device.name }}</th>
                             {% endfor %}
+                            {% if is_granted("ROLE_ADMIN") %}
+                                <th scope="row" class="align-middle th-w-20"></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -39,21 +42,36 @@
                                         </a>
                                     </td>
                                     <td class="align-middle">{{ dataUser.user.fullname }}</td>
-                                    <td class="align-middle text-right">{{ dataUser.nbSupports }}
-                                    {% if dataUser.nbSupports != dataUser.sumCoeff %}
-                                        <span class="text-secondary"> ({{ dataUser.sumCoeff }})</span>
-                                    {% endif %}
+                                    <td class="align-middle text-right">{{ dataUser.nbSupports }}{% apply spaceless %}
+                                        {% if dataUser.nbTheoreticalSupports > 0 %}
+                                            <span class="text-secondary small"> /{{ dataUser.nbTheoreticalSupports }}</span>
+                                        {% endif %}
+                                        {% if dataUser.nbSupports != dataUser.sumCoeff %}
+                                            <br /><span class="text-{{ theme_color }}"> ({{ dataUser.sumCoeff }})</span>
+                                        {% endif %}
+                                        {% endapply %}
                                     </td>
                                     {% for deviceKey, device in dataUser.devices %}
                                         {% if deviceKey in devices|keys %}
-                                            <td class="align-middle text-right">
+                                            <td class="align-middle text-right">{% apply spaceless %}
                                                 {% if device.nbSupports > 0 %}{{ device.nbSupports }}{% endif %}
-                                                {% if device.nbSupports != device.sumCoeff %}
-                                                    <span class="text-secondary"> ({{ device.sumCoeff }})</span>
+                                                {% if device.nbTheoreticalSupports > 0 %}
+                                                    <span class="text-secondary small"> /{{ device.nbTheoreticalSupports }}</span>
                                                 {% endif %}
+                                                {% if device.nbSupports != device.sumCoeff %}
+                                                    <br /><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
+                                                {% endif %}
+                                                {% endapply %}
                                             </td>
                                         {% endif %}
                                     {% endfor %}
+                                    {% if is_granted("ROLE_ADMIN") %}
+                                        <td scope="row" class="align-middle text-center">
+                                            <a href="{{ path('security_user', {'id':dataUser.user.id}) }}#supports-by-device" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                                data-toggle="tooltip" data-placement="bottom" title="Modifier la répartition des suivis théoriques par dispositif"><span class="fas fa-edit"></span>
+                                            </a>
+                                        </td>
+                                    {% endif %}
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -63,12 +81,12 @@
                             <td scope="row" colspan="2" class="align-middle text-right">Total</td>
                             <td class="align-middle text-right">{{ nbSupports }}
                                 {% if nbSupports != sumCoeffSupports %}
-                                    <span class="text-secondary"> ({{ sumCoeffSupports }})</span>
+                                    <br /><span class="text-{{ theme_color }}"> ({{ sumCoeffSupports }})</span>
                                 {% endif %}
                                 {% for device in devices %}
                                     <td class="align-middle text-right">{{ device.nbSupports }}
                                     {% if device.nbSupports != device.sumCoeff %}
-                                        <span class="text-secondary"> ({{ device.sumCoeff }})</span>
+                                        <br /><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
                                     {% endif %}
                                     </td>
                                 {% endfor %}
@@ -78,7 +96,7 @@
                             <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
                             <td class="align-middle text-right">{{ (nbSupports / dataUsers|length)|round(1, "common") }}
                                 {% if nbSupports != sumCoeffSupports %}
-                                    <span class="text-secondary"> ({{ (sumCoeffSupports / dataUsers|length)|round(1, "common") }})</span>
+                                    <br /><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / dataUsers|length)|round(1, "common") }})</span>
                                 {% endif %}
                             </td>
                         </tr>

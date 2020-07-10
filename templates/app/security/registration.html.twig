@@ -55,37 +55,34 @@
         <hr>
 
         <h2 class="h4 mb-4">Services rattachés</h2>
-        <div id="serviceUser-fields-list" data-prototype="{{ form_widget(form.serviceUser.vars.prototype)|e }}"
-            data-widget-tags="{{ '<div class="form-inline"></div>'|e }}"
-            data-widget-counter="{{ form.serviceUser|length }}">
-            {% if form.serviceUser|length > 0 %}
-            <div class="table-responsive table-sm">
-                <table id="function-table" class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="align-middle th-w-150">Service</th>
-                            <th scope="col" class="align-middle th-w-120">Pôle</th>
-                            <th scope="col" class="align-middle th-w-20"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for role in form.serviceUser %}
-                        <tr id="{{ role.vars.id }}">
-                            <td>{{ form_widget(role.service) }}</td>
-                            <td class="align-middle">{{ role.vars.value.service.pole.name }}</td>
-                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="table-responsive table-sm">
+                    <table id="function-table" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-150">Service</th>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceUser-fields-list" 
+                            data-prototype="<td class='align-middle'>{{ form_widget(form.serviceUser.vars.prototype.service)|e }}</td>"
+                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceUser|length }}">
+                            {% for role in form.serviceUser %}
+                            <tr id="{{ role.vars.id }}">
+                                <td>{{ form_widget(role.service) }}</td>
+                                <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            {% endif %}
         </div>
-        <div class="my-2">
-            <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
-                service</button>
-        </div>
+        <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+            data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+            service</button>
+        
         <div class="row">
             <div class="col-md-12">
                 <div class="float-right mb-2">

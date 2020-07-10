@@ -61,10 +61,14 @@ Write a comment about the person: Ecrire un commentaire sur la personne
 comment.placeholder: Ecrire un commentaire sur le suivi social
 Write a comment about the service: Ecrire un commentaire sur le service
 Zipcode: Code postal
--- Family Typology --: -- Typologie familiale --
--- Pole --: -- Pôle --
--- Gender --: -- Sexe --
-placeholder.select: -- Sélectionner --
+placeholder:
+  device:  -- Dispositif --
+  familtyTypology: -- Typologie familiale --
+  gender: -- Sexe --
+  nbSupports: Nb de suivis
+  pole: -- Pôle --
+  select: -- Sélectionner --
+  service: -- Service --
 
 End reason: Motif de fin
 Comment end reason: Commentaire

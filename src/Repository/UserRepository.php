@@ -151,9 +151,22 @@ class UserRepository extends ServiceEntityRepository
 
     public function findAllUsersFromServices(CurrentUserService $currentUser)
     {
-        return ($this->getAllUsersFromServicesQueryList($currentUser))
-        ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-        ->getResult();
+        $query = $this->createQueryBuilder('u')
+            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+            ->leftJoin('u.userDevices', 'ud')->addSelect('ud')
+            ->leftJoin('ud.device', 'd')->addSelect('PARTIAL d.{id, name}')
+
+            ->where('u.disabledAt IS NULL');
+
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->leftJoin('u.serviceUser', 'r')
+                ->andWhere('r.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
+
+        return $query->orderBy('u.lastname', 'ASC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 
     /**

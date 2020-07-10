@@ -32,7 +32,7 @@ class SupportGroupSearchType extends AbstractType
                 'attr' => [
                     'class' => 'multi-select js-typology',
                 ],
-                'placeholder' => '-- Family Typology --',
+                'placeholder' => 'placeholder.familtyTypology',
                 'required' => false,
             ])
             // ->add("nbPeople", null, [
