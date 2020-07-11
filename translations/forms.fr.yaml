@@ -69,7 +69,7 @@ placeholder:
   pole: -- Pôle --
   select: -- Sélectionner --
   service: -- Service --
-
+  location.search: Chercher une adresse...
 End reason: Motif de fin
 Comment end reason: Commentaire
 Accommodation: Hébergement

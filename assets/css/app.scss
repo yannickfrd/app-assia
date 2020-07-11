@@ -266,6 +266,10 @@ th.required:after {
     z-index: 9999;
 }
 
+.z-index-1000 {
+    z-index: 1000;
+}
+
 .msg-content {
     backdrop-filter: blur(4px);
     animation: opacity-on 10s linear forwards;

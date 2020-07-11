@@ -59,21 +59,21 @@ export default class SearchPerson {
     addItem(dataJSON) {
         dataJSON.results.forEach(person => {
             let aElt = document.createElement("a");
-            aElt.innerHTML = "<span class='text-capitalize'>" + person.fullname + "</span> ";
+            aElt.innerHTML = "<span class='text-capitalize text-secondary small'>" + person.fullname + "</span>";
             aElt.href = "/person/" + person.id;
-            aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 font-size-10";
+            aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1";
             this.resultsSearchElt.appendChild(aElt);
             aElt.addEventListener("click", () => {
-                aElt.classList.add("active");
+                this.loader.on();
             });
         });
     }
 
-    // Affiche 'Aucun résultat'
+    // Affiche 'Aucun résultat.'
     noResult() {
         let spanElt = document.createElement("p");
         spanElt.textContent = "Aucun résultat.";
-        spanElt.className = "list-group-item list-group-item-light pl-3 py-2";
+        spanElt.className = "list-group-item pl-3 py-2";
         this.resultsSearchElt.appendChild(spanElt);
     }
 
