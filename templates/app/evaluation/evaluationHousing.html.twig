@@ -9,11 +9,11 @@
 <div class="js-evalGroup" data-support-id="g-{{form.vars.value.supportGroup.id}}">
     <div class="form-group row">
         <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
-        {# <div class="col-md-6 js-housingAccessType d-block">{{ form_row(form.evalHousingGroup.housingAccessType) }}</div> #}
         <div class="col-md-6 js-housingStatus d-block">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingAddress) }}</div>
+        {# <div class="col-md-6 js-housingAccessType d-block">{{ form_row(form.evalHousingGroup.housingAccessType) }}</div> #}
+        {# <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingAddress) }}</div>
         <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingCity) }}</div>
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingDept) }}</div>
+        <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingDept) }}</div> #}
     </div>
     <div class="js-housingStatus d-block">
         <div class="form-group row">
@@ -121,13 +121,20 @@
         </div>
     </div>
 
-    <div class="form-group row">
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
-        <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
-        <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>
-        <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationAddress) }}</div>
-        <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationCity) }}</div>
-        <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationDept) }}</div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
+            <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>
+        </div>
+        <div class="row" id="domiciliation_location">
+            <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationSearch) }}</div>
+            <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationAddress) }}</div>
+            <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationCity) }}</div>
+            <div class="col-md-6 js-domiciliation d-block">{{ form_row(form.evalHousingGroup.domiciliationDept) }}</div>
+        </div>
     </div>
     <div class="form-group row">
         <div class="col-md-12">

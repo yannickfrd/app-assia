@@ -50,7 +50,8 @@ class SupportController extends AbstractController
     /**
      * Mettre à jour le nb de personnes. (TEMPORAIRE, A SUPPRIMER).
      *
-     * @Route("/updateNbPeopleBySupport", name="updateNbPeopleBySupport", methods="GET")
+     * @Route("admin/updateNbPeopleBySupport", name="updateNbPeopleBySupport", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function updateNbPeopleBySupport(): Response
     {
@@ -62,7 +63,7 @@ class SupportController extends AbstractController
 
         $this->manager->flush();
 
-        $this->addFlash('success', 'Nombre de personnes par suivi mis à jour');
+        $this->addFlash('success', 'Nombre de personnes par suivi mis à jour.');
 
         return $this->redirectToRoute('home');
     }

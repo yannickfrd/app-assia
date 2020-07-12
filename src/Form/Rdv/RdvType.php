@@ -18,7 +18,7 @@ class RdvType extends AbstractType
             ->add('title', null, [
                 'attr' => [
                     'class' => 'font-weight-bold',
-                    'placeholder' => 'Ajouter un titre',
+                    'placeholder' => 'rdv.placeholder.title',
                 ],
             ])
             ->add('start', DateTimeType::class, [
@@ -34,14 +34,16 @@ class RdvType extends AbstractType
             ])
             ->add('location', null, [
                 'attr' => [
-                    'placeholder' => 'Ajouter un lieu',
+                    'class' => 'js-search',
+                    'placeholder' => 'rdv.placeholder.location',
+                    'autocomplete' => 'off',
                 ],
             ])
             ->add('content', null, [
                 'attr' => [
                     // "class" => "d-none",
                     'rows' => 5,
-                    'placeholder' => 'Ajouter une note',
+                    'placeholder' => 'rdv.placeholder.content',
                 ],
             ]);
     }

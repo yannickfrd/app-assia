@@ -140,4 +140,58 @@ class AccommodationController extends AbstractController
 
         return (new AccommodationExport())->exportData($accommodations);
     }
+
+    /**
+     * Met à jour les adresses des groupes de places.
+     *
+     * @Route("admin/accommodations/update_location", name="admin_accommodations_update_location", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function updateLocation(): Response
+    {
+        $accommodations = $this->repo->findAll();
+
+        foreach ($accommodations as $accommodation) {
+            if ($accommodation->getLocationId() == null) {
+                $valueSearch = $accommodation->getAddress().'+'.$accommodation->getCity();
+                $valueSearch = $this->cleanString($valueSearch);
+                $geo = '&lat=49.04&lon=2.04';
+                $url = 'https://api-adresse.data.gouv.fr/search/?q='.$valueSearch.$geo.'&limit=1';
+                $raw = file_get_contents($url);
+                $json = json_decode($raw);
+
+                if (count($json->features)) {
+                    $feature = $json->features[0];
+                    $accommodation
+                ->setCity($feature->properties->city)
+                ->setAddress($feature->properties->name)
+                ->setZipcode($feature->properties->postcode)
+                ->setLocationId($feature->properties->id)
+                ->setLon($feature->geometry->coordinates[0])
+                ->setLat($feature->geometry->coordinates[1]);
+                }
+            }
+        }
+
+        $this->manager->flush();
+
+        $this->addFlash('success', 'Les adresses des groupes de places ont été mis à jour.');
+
+        return $this->redirectToRoute('accommodations');
+    }
+
+    public function cleanString($string)
+    {
+        $string = strtr($string, [
+            'à' => 'a',
+            'ç' => 'c',
+            'è' => 'e',
+            'é' => 'e',
+            'ê' => 'e',
+        ]);
+        $string = strtolower($string);
+        $string = str_replace(' ', '+', $string);
+
+        return $string;
+    }
 }

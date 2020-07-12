@@ -7,10 +7,13 @@ use App\Entity\Device;
 use App\Entity\Service;
 use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
+use App\Entity\Accommodation;
+use App\Form\Type\LocationType;
 use App\Repository\UserRepository;
 use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
+use App\Form\Support\SupportPersonType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\OriginRequest\OriginRequestType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -119,6 +122,9 @@ class SupportGroupType extends AbstractType
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'required' => false,
+            ])
+            ->add('location', LocationType::class, [
+                'data_class' => Accommodation::class,
             ])
             ->add('comment', null, [
                 'attr' => [

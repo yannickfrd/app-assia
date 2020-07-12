@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.14.0 - 11/07/2020
+1.14.1 - 12/07/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,10 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.14.1 - 12/07/2020
+- Ajout echerche automatique des adresses pour suivi social, RDV et domiciliation
+- Ajout informations de géolocations (latitude et longitude)
 
 ## Version 1.14.0 - 11/07/2020
 - Nouvelle fonctionnalité : recherche automatique des adresses avec autocomplétion (service, groupe de place).

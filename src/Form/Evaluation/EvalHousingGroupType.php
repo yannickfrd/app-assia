@@ -171,13 +171,32 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('domiciliationAddress')
-            ->add('domiciliationCity')
+            ->add('domiciliationSearch', null, [
+                'label' => ' ',
+                'attr' => [
+                    'class' => 'js-search',
+                    'placeholder' => 'location.search.placeholder',
+                    'autocomplete' => 'off',
+                ],
+                'mapped' => false,
+            ])
+            ->add('domiciliationAddress', null, [
+                'attr' => [
+                    'class' => 'js-address',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('domiciliationCity', null, [
+                'attr' => [
+                    'class' => 'js-city',
+                    'readonly' => true,
+                ],
+            ])
             ->add('domiciliationDept', null, [
                 'attr' => [
                     'class' => 'js-zipcode',
+                    'readonly' => true,
                 ],
-                'help' => 'Department or zip code',
             ])
             ->add('housingAccessType', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),

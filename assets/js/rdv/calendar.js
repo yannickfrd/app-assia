@@ -1,11 +1,12 @@
+import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 import DateFormat from "../utils/dateFormat";
 
 export default class Calendar {
 
-    constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest;
+    constructor() {
+        this.ajaxRequest = new AjaxRequest();
 
         this.newRdvBtn = document.getElementById("js-new-rdv");
         this.dayElts = document.querySelectorAll(".calendar-day-block");
@@ -206,9 +207,7 @@ export default class Calendar {
         this.endInput.value = data.end.substr(11, 5);
 
         this.rdvLocationInput.value = data.location;
-        // this.modalRdvElt.querySelector("#rdv_status").value = data.status;
         this.modalRdvElt.querySelector("#rdv_content").value = data.content;
-
 
         this.rdvCreatedByElt.textContent = data.createdBy;
         this.supportFullNameElt.textContent = data.supportFullname;

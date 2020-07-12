@@ -69,7 +69,6 @@ placeholder:
   pole: -- Pôle --
   select: -- Sélectionner --
   service: -- Service --
-  location.search: Chercher une adresse...
 End reason: Motif de fin
 Comment end reason: Commentaire
 Accommodation: Hébergement
@@ -127,3 +126,11 @@ Still to pay amt: Restant dû
 To pay amt: Montant à régler
 Type: Type
 Write a comment: Ecrire un commentaire
+
+rdv:
+  placeholder: 
+    location: Ajouter un lieu
+    content: Ajouter une note
+    title: Ajouter un titre
+
+location.search.placeholder: Chercher une adresse ou une ville...

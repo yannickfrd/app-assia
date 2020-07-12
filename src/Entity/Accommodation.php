@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\GeoLocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -25,6 +26,7 @@ class Accommodation
 {
     use CreatedUpdatedEntityTrait;
     use LocationEntityTrait;
+    use GeoLocationEntityTrait;
     use SoftDeleteableEntity;
 
     public const ACCOMMODATION_TYPE = [

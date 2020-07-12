@@ -15,7 +15,7 @@ class LocationType extends AbstractType
                 'label' => ' ',
                 'attr' => [
                     'class' => 'js-search',
-                    'placeholder' => 'placeholder.location.search',
+                    'placeholder' => 'location.search.placeholder',
                     'autocomplete' => 'off',
                 ],
                 'mapped' => false,

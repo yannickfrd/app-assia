@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -20,6 +22,8 @@ class SupportGroup
 {
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
+    use LocationEntityTrait;
+    use GeoLocationEntityTrait;
 
     public const STATUS = [
         2 => 'En cours',

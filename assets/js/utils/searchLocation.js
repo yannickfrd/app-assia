@@ -4,25 +4,27 @@ import Loader from "./loader";
 export default class SearchLocation {
 
     constructor(containerId, lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
-        this.ajaxRequest = new AjaxRequest();
         this.containerElt = document.getElementById(containerId);
-        this.searchElt = this.containerElt.querySelector(".js-search");
-        this.addressElt = this.containerElt.querySelector(".js-address");
-        this.cityElt = this.containerElt.querySelector(".js-city");
-        this.zipcodeElt = this.containerElt.querySelector(".js-zipcode");
-        this.locationIdElt = this.containerElt.querySelector(".js-locationId");
-        this.latElt = this.containerElt.querySelector(".js-lat");
-        this.lonElt = this.containerElt.querySelector(".js-lon");
-        this.resultsSearchElt = this.createResultsListElt();
-        this.lengthSearch = lengthSearch; // Nombre de caractères minimum pour lancer la recherche
-        this.time = time; // Durée en millisecondes
-        this.limit = limit; // Nombre d'éléments retournés
-        this.lat = lat; // Latitude
-        this.lon = lon; // Longitude
-        this.features = null;
-        this.countdownID = null;
-        this.loader = new Loader();
-        this.init();
+        if (this.containerElt) {
+            this.ajaxRequest = new AjaxRequest();
+            this.searchElt = this.containerElt.querySelector(".js-search");
+            this.addressElt = this.containerElt.querySelector(".js-address");
+            this.cityElt = this.containerElt.querySelector(".js-city");
+            this.zipcodeElt = this.containerElt.querySelector(".js-zipcode");
+            this.locationIdElt = this.containerElt.querySelector(".js-locationId");
+            this.latElt = this.containerElt.querySelector(".js-lat");
+            this.lonElt = this.containerElt.querySelector(".js-lon");
+            this.resultsSearchElt = this.createResultsListElt();
+            this.lengthSearch = lengthSearch; // Nombre de caractères minimum pour lancer la recherche
+            this.time = time; // Durée en millisecondes
+            this.limit = limit; // Nombre d'éléments retournés
+            this.lat = lat; // Latitude
+            this.lon = lon; // Longitude
+            this.features = null;
+            this.countdownID = null;
+            this.loader = new Loader();
+            this.init();
+        }
     }
 
     init() {
@@ -37,8 +39,13 @@ export default class SearchLocation {
     createResultsListElt() {
         let resultsListElt = document.createElement("div");
         resultsListElt.id = "results_list_location";
-        resultsListElt.className = "w-100 list-group pr-sm-2 d-block fade-in position-absolute z-index-1000";
-        this.searchElt.parentNode.appendChild(resultsListElt);
+        resultsListElt.className = "w-100 list-group d-block fade-in position-absolute z-index-1000";
+        if (this.addressElt) {
+            this.searchElt.parentNode.appendChild(resultsListElt);
+        } else {
+            this.searchElt.parentNode.parentNode.appendChild(resultsListElt);
+        }
+
         return resultsListElt;
     }
 
@@ -89,6 +96,10 @@ export default class SearchLocation {
             aElt.innerHTML = "<span class='text-secondary small'>" + label + "</span>";
             aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 cursor-pointer";
             aElt.setAttribute("data-feature", i);
+
+            let styleSeachElt = window.getComputedStyle(this.searchElt);
+            this.resultsSearchElt.style.maxWidth = styleSeachElt.width;
+
             this.resultsSearchElt.appendChild(aElt);
             aElt.addEventListener("click", () => {
                 this.updateLocation(aElt.getAttribute("data-feature"));
@@ -101,9 +112,11 @@ export default class SearchLocation {
     updateLocation(i) {
         let feature = this.features[i];
         this.searchElt.value = feature.properties.label;
-        this.addressElt.value = feature.properties.name;
-        this.cityElt.value = feature.properties.city;
-        this.zipcodeElt.value = feature.properties.postcode;
+        if (this.addressElt) {
+            this.addressElt.value = feature.properties.name;
+            this.cityElt.value = feature.properties.city;
+            this.zipcodeElt.value = feature.properties.postcode;
+        }
         if (this.locationIdElt) {
             this.locationIdElt.value = feature.properties.id;
             this.lonElt.value = feature.geometry.coordinates[0];
