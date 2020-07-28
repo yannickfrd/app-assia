@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Service\Indicators\SupportsByUserIndicators;
-use App\Service\Indicators\OccupancyIndicators;
 use App\Form\OccupancySearchType;
 use App\Repository\RdvRepository;
 use App\Repository\NoteRepository;
@@ -17,7 +15,9 @@ use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\Indicators\OccupancyIndicators;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Indicators\SupportsByUserIndicators;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

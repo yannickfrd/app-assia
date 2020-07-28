@@ -29,7 +29,7 @@ class DatabaseBackupController extends AbstractController
         $this->manager = $manager;
         $this->repo = $repo;
     }
-
+    
     /**
      * Sauvegardes de la base de données.
      *
@@ -58,7 +58,7 @@ class DatabaseBackupController extends AbstractController
     public function createBackup(DumpDatabase $dumpDatabase): Response
     {
         $backupDatas = $dumpDatabase->dump();
-
+        
         $databaseBackup = (new DatabaseBackup())
             ->setSize($backupDatas['size'])
             ->setZipSize($backupDatas['zipSize'])
@@ -66,6 +66,8 @@ class DatabaseBackupController extends AbstractController
 
         $this->manager->persist($databaseBackup);
         $this->manager->flush();
+
+        $this->addFlash('success', 'La sauvegarde de la base de données est créé.');
 
         return $this->redirectToRoute('database_backups');
     }

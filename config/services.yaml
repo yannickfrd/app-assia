@@ -75,10 +75,10 @@ services:
 
     App\Service\DumpDatabase:
         arguments:
-            $databaseName: '%env(MYSQL_DATABASE_NAME)%'
-            $userName: '%env(MYSQL_USERNAME)%'
-            $password: '%env(MYSQL_PASSWORD)%'
-            $host: '%env(MYSQL_HOST)%'
+            $databaseName: '%env(DB_DATABASE_NAME)%'
+            $userName: '%env(DB_USERNAME)%'
+            $password: '%env(DB_PASSWORD)%'
+            $host: '%env(DB_HOST)%'
             $pathMySqlDump: '%env(PATH_MYSQLDUMP)%'
 
     App\Service\FileUploader:
