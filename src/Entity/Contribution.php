@@ -28,6 +28,7 @@ class Contribution
 
     public const PAYMENT_TYPE = [
         1 => 'Virement bancaire',
+        2 => 'Virement bancaire',
         3 => 'Chèque',
         4 => 'Espèce',
     ];

@@ -21,15 +21,18 @@ class DumpDatabase
         $this->pathMySqlDump = $pathMySqlDump;
     }
 
-    public function dump()
+    public function dump(string $path = null)
     {
-        $path = 'public/uploads/backups/'.date('Y/m/d/');
+        if (null == $path) {
+            $path = \dirname(__DIR__).'/../public/backups/'.date('Y/m/d/');
+        }
+
         $fileName = date('Y_m_d_H_i_').'database-backup.sql';
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-        // mysqldump --host=db***.hosting-data.io --user=dbu*** --password=*** dbs*** | zip > public/databaseBackup.sql.zip
+
         $cmd = "mysqldump -h{$this->host} -u{$this->userName} -p{$this->password} {$this->databaseName} > {$path}{$fileName}";
 
         if ($this->host == 'localhost') {

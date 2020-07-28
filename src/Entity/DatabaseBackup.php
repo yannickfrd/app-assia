@@ -3,15 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DatabaseBackupRepository")
  */
 class DatabaseBackup
 {
-    use CreatedUpdatedEntityTrait;
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -33,6 +31,19 @@ class DatabaseBackup
      * @ORM\Column(type="float", nullable=true)
      */
     private $zipSize;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $createdBy;
 
     public function getId(): ?int
     {
@@ -71,6 +82,30 @@ class DatabaseBackup
     public function setZipSize(?float $zipSize): self
     {
         $this->zipSize = $zipSize;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

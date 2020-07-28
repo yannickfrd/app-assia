@@ -29,7 +29,7 @@ class DatabaseBackupController extends AbstractController
         $this->manager = $manager;
         $this->repo = $repo;
     }
-    
+
     /**
      * Sauvegardes de la base de données.
      *
@@ -43,7 +43,7 @@ class DatabaseBackupController extends AbstractController
         $form = ($this->createForm(BackupSearchType::class, $search))
             ->handleRequest($request);
 
-        return $this->render('app/backUpDatabase/backUpDatabase.html.twig', [
+        return $this->render('app/backupDatabase/backupDatabase.html.twig', [
             'form' => $form->createView(),
             'backups' => $pagination->paginate($this->repo->findBackupsQuery(), $request, 10) ?? null,
         ]);
@@ -58,7 +58,7 @@ class DatabaseBackupController extends AbstractController
     public function createBackup(DumpDatabase $dumpDatabase): Response
     {
         $backupDatas = $dumpDatabase->dump();
-        
+
         $databaseBackup = (new DatabaseBackup())
             ->setSize($backupDatas['size'])
             ->setZipSize($backupDatas['zipSize'])
@@ -67,7 +67,7 @@ class DatabaseBackupController extends AbstractController
         $this->manager->persist($databaseBackup);
         $this->manager->flush();
 
-        $this->addFlash('success', 'La sauvegarde de la base de données est créé.');
+        $this->addFlash('success', 'La sauvegarde de la base de données est créée.');
 
         return $this->redirectToRoute('database_backups');
     }
@@ -80,7 +80,7 @@ class DatabaseBackupController extends AbstractController
      */
     public function getExport(DatabaseBackup $databaseBackup, Download $download): Response
     {
-        $path = 'backups/'.$databaseBackup->getCreatedAt()->format('Y/m/');
+        $path = $this->getPathDatabaseBackup($databaseBackup);
 
         if (file_exists($path.$databaseBackup->getFileName())) {
             return $download->send($path.$databaseBackup->getFileName());
@@ -99,7 +99,7 @@ class DatabaseBackupController extends AbstractController
      */
     public function deleteDatabase(DatabaseBackup $databaseBackup): Response
     {
-        $path = 'backups/'.$databaseBackup->getCreatedAt()->format('Y/m/');
+        $path = $this->getPathDatabaseBackup($databaseBackup);
 
         if (file_exists($path.$databaseBackup->getFileName())) {
             unlink($path.$databaseBackup->getFileName());
@@ -111,5 +111,10 @@ class DatabaseBackupController extends AbstractController
         $this->addFlash('warning', 'La sauvegarde de la base de données est supprimée.');
 
         return $this->redirectToRoute('database_backups');
+    }
+
+    protected function getPathDatabaseBackup(DatabaseBackup $databaseBackup)
+    {
+        return 'backups/'.$databaseBackup->getCreatedAt()->format('Y/m/d/');
     }
 }

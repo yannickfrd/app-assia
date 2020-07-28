@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{# {% form_theme form "form/bootstrap_4_horizontal.html.twig" %} #}
-
 {% block title %}Sauvegarde et export base de données | {{ title_website }}{% endblock %}
 
 {% block body %}
@@ -56,11 +54,11 @@
                                             data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
                                         </a>
                                     </th>
-                                    <td class="align-middle js-backup-title">Sauvegarde du {{ backup.createdAt|date("d/m/Y") }}</td>
+                                    <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date("d/m/Y") }}</td>
                                     <td class="align-middle js-backup-size text-right">{{ (backup.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
                                     <td class="align-middle js-backup-size text-right">{{ (backup.zipSize / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
                                     <td class="align-middle js-backup-createdAt">{{ backup.createdAt|date("d/m/Y H:i") }}</td>
-                                    <td class="align-middle js-backup-createdAt">{{ backup.createdBy.fullname }}</td>
+                                    <td class="align-middle js-backup-createdAt">{{ backup.createdBy ? backup.createdBy.fullname : 'Système' }}</td>
                                     <td class="align-middle text-center">
                                         <a href="{{ path('database_backup_delete', {'id':backup.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
                                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette sauvegarde ?')){return true;}else{return false;}">
@@ -83,6 +81,5 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("search") }}
-{# {{ encore_entry_script_tags("databaseBackup") }} #}
+{# {{ encore_entry_script_tags("search") }} #}
 {% endblock javascripts %}
