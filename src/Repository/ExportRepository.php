@@ -26,7 +26,7 @@ class ExportRepository extends ServiceEntityRepository
     }
 
     /**
-     * Return all notes of group support.
+     * Return all exports.
      */
     public function findExportsQuery(): Query
     {

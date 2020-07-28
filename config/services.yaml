@@ -73,11 +73,18 @@ services:
             $password: '%env(MAILER_PASSWORD)%'
             $port: '%env(MAILER_PORT)%'
 
+    App\Service\DumpDatabase:
+        arguments:
+            $databaseName: '%env(MYSQL_DATABASE_NAME)%'
+            $userName: '%env(MYSQL_USERNAME)%'
+            $password: '%env(MYSQL_PASSWORD)%'
+            $host: '%env(MYSQL_HOST)%'
+            $pathMySqlDump: '%env(PATH_MYSQLDUMP)%'
+
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%documents_directory%'
             $tinifyKey: '%env(TINIFY_KEY)%'
-
 
     App\Service\OptimizeImage:
         arguments:

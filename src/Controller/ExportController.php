@@ -151,7 +151,7 @@ class ExportController extends AbstractController
         $this->manager->remove($export);
         $this->manager->flush();
 
-        $this->addFlash('danger', 'Le fichier d\'export est supprimé.');
+        $this->addFlash('warning', 'Le fichier d\'export est supprimé.');
 
         return $this->redirectToRoute('export');
     }
