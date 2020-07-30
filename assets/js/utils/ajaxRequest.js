@@ -42,7 +42,7 @@ export default class AjaxRequest {
         if (this.xhr.status === 403) {
             return new MessageFlash("danger", "Vous n'avez pas les droits pour effectuer cette action.");
         }
-        return new MessageFlash("danger", "Une erreur s'est produite : " + this.xhr.statusText);
+        return new MessageFlash("danger", "Une erreur s'est produite. " + this.xhr.statusText);
     }
 
     error(url) {

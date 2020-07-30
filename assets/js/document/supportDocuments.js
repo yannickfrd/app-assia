@@ -203,7 +203,7 @@ export default class SupportDocuments {
                 if (errorMessage === "Forbidden") {
                     return new MessageFlash("danger", "Vous n'avez pas les droits pour effectuer cette action.");
                 }
-                return new MessageFlash("danger", "Une erreur s'est produite : " + errorMessage);
+                return new MessageFlash("danger", "Une erreur s'est produite. " + errorMessage + " (" + textStatus + ")");
             }.bind(this)
         });
     }
@@ -261,11 +261,11 @@ export default class SupportDocuments {
         return `<th scope="row" class="align-middle text-center">
                     <a href="/document/${data.documentId}/read" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
                 </th>
-                    <td class="js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
-                    <td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.type}</td>
-                    <td class="js-document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
-                    <td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
-                    <td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
+                    <td class="align-middle js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
+                    <td class="align-middle js -document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.type}</td>
+                    <td class="align-middle js -document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
+                    <td class="align-middle js -document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
+                    <td class="align-middle js -document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>
                     <td class="align-middle text-center">
                         <button data-url="/document/${data.documentId}/delete" class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le document" data-toggle="modal" data-target="#modal-document"><span class="fas fa-trash-alt"></span></button>
                 </td>`

@@ -76,7 +76,7 @@
 		{% if support.id and support.device.accommodation %}
 			<div class="col-md-6 js-status d-block">
 				<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-				{{ form_row(form.endAccommodation) }}
+					{{ form_row(form.endAccommodation) }}
 				</div>
 			</div>
 		{% endif %}
@@ -85,15 +85,13 @@
 		<div class="col-md-6">{{ form_row(form.referent) }}</div>
 		<div class="col-md-6">{{ form_row(form.referent2) }}</div>
 	</div>
-	{% if support.device.accommodation != 1 %}
-		<div class="form-group row" id="support_location">
-			<div class="col-md-6">{{ form_row(form.location.search) }}</div>
-			<div class="col-md-6">{{ form_row(form.location.address) }}</div>
-			<div class="col-md-6">{{ form_row(form.location.city) }}</div>
-			<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-			<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
-		</div>
-	{% endif %}
+	<div class="form-group row" id="support_location">
+		<div class="col-md-6">{{ form_row(form.location.search) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.address) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.city) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
+	</div>
 	{% if support.id %}
 
     {# {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}

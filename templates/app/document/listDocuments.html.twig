@@ -51,11 +51,11 @@ Documents | {{ title_website }}
 								data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
 							</a>
 						</th>
-						<td class="js-document-name" data-toggle="modal" data-target="#modal-document">{{ document.name }}</td>
-						<td class="js-document-type" data-toggle="modal" data-target="#modal-document" data-value="{{ document.type }}">{{ document.typeToString }}</td>
-						<td class="js-document-content" data-toggle="modal" data-target="#modal-document">{{ document.content }}</td>
-						<td class="js-document-size text-right" data-toggle="modal" data-target="#modal-document">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
-						<td class="js-document-createdAt" data-toggle="modal" data-target="#modal-document">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+						<td class="align-middle js-document-name" data-toggle="modal" data-target="#modal-document">{{ document.name }}</td>
+						<td class="align-middle js-document-type" data-toggle="modal" data-target="#modal-document" data-value="{{ document.type }}">{{ document.typeToString }}</td>
+						<td class="align-middle js-document-content" data-toggle="modal" data-target="#modal-document">{{ document.content }}</td>
+						<td class="align-middle js-document-size text-right" data-toggle="modal" data-target="#modal-document">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
+						<td class="align-middle js-document-createdAt" data-toggle="modal" data-target="#modal-document">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 						<td class="align-middle text-center">
 							<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
 								data-placement="bottom" title="Supprimer le document" data-toggle="modal" data-target="#modal-block">
