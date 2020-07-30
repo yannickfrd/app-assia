@@ -18,7 +18,7 @@ class ReferentType extends AbstractType
             ->add('name', null, [
                 'label' => 'Service name',
                 'attr' => [
-                    'placeholder' => 'Service name',
+                    'placeholder' => 'service.name',
                 ],
             ])
             ->add('type', ChoiceType::class, [
@@ -27,12 +27,12 @@ class ReferentType extends AbstractType
             ])
             ->add('socialWorker', null, [
                 'attr' => [
-                    'placeholder' => 'Social worker name',
+                    'placeholder' => 'referent.socialWorker.placeholder',
                 ],
             ])
             ->add('socialWorker2', null, [
                 'attr' => [
-                    'placeholder' => 'Social worker name 2',
+                    'placeholder' => 'referent.socialWorker2.placeholder',
                 ],
             ])
             ->add('email', null, [
@@ -63,7 +63,7 @@ class ReferentType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 4,
-                    'placeholder' => 'Write a comment about the referent service social',
+                    'placeholder' => 'referent.comment.plaholder',
                 ],
             ]);
     }

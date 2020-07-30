@@ -7,6 +7,7 @@ use App\Service\Calendar;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use App\Entity\EvaluationGroup;
 use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
@@ -45,27 +46,6 @@ class SupportController extends AbstractController
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoSupportPerson = $repoSupportPerson;
-    }
-
-    /**
-     * Mettre à jour le nb de personnes. (TEMPORAIRE, A SUPPRIMER).
-     *
-     * @Route("admin/updateNbPeopleBySupport", name="updateNbPeopleBySupport", methods="GET")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function updateNbPeopleBySupport(): Response
-    {
-        $supports = $this->repoSupportGroup->findAll();
-
-        foreach ($supports as $support) {
-            $support->setNbPeople($support->getSupportPeople()->count());
-        }
-
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Nombre de personnes par suivi mis à jour.');
-
-        return $this->redirectToRoute('home');
     }
 
     /**

@@ -20,6 +20,9 @@ class LocationType extends AbstractType
                 ],
                 'mapped' => false,
             ])
+            ->add('commentLocation', null, [
+                'help' => 'commentLocation.help',
+            ])
             ->add('address', null, [
                 'attr' => [
                     'class' => 'js-address',

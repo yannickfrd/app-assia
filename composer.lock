@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b46d285bd4747cd32ddc78874ed18cf5",
+    "content-hash": "7672efe594fba4799c94fa8987221a54",
     "packages": [
         {
             "name": "antishov/doctrine-extensions-bundle",
@@ -3727,62 +3727,6 @@
                 "controllers"
             ],
             "time": "2020-05-06T12:12:33+00:00"
-        },
-        {
-            "name": "spatie/db-dumper",
-            "version": "2.16.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/db-dumper.git",
-                "reference": "56448e8f41d4e8e83babf701d5708b1e597e8ec6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/56448e8f41d4e8e83babf701d5708b1e597e8ec6",
-                "reference": "56448e8f41d4e8e83babf701d5708b1e597e8ec6",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2",
-                "symfony/process": "^4.2|^5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.0|^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\DbDumper\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Dump databases",
-            "homepage": "https://github.com/spatie/db-dumper",
-            "keywords": [
-                "database",
-                "db-dumper",
-                "dump",
-                "mysqldump",
-                "spatie"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.patreon.com/spatie",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2020-05-06T14:32:38+00:00"
         },
         {
             "name": "symfony/apache-pack",

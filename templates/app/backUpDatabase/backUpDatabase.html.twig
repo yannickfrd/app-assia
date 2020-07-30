@@ -58,7 +58,7 @@
                                     <td class="align-middle js-backup-size text-right">{{ (backup.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
                                     <td class="align-middle js-backup-size text-right">{{ (backup.zipSize / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
                                     <td class="align-middle js-backup-createdAt">{{ backup.createdAt|date("d/m/Y H:i") }}</td>
-                                    <td class="align-middle js-backup-createdAt">{{ backup.createdBy ? backup.createdBy.fullname : 'Système' }}</td>
+                                    <td class="align-middle js-backup-createdAt">{{ backup.createdBy ? backup.createdBy.fullname : '[Système]' }}</td>
                                     <td class="align-middle text-center">
                                         <a href="{{ path('database_backup_delete', {'id':backup.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
                                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette sauvegarde ?')){return true;}else{return false;}">

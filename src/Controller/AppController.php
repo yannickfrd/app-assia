@@ -11,8 +11,10 @@ use App\Repository\UserRepository;
 use App\Form\Model\OccupancySearch;
 use App\Repository\PersonRepository;
 use App\Repository\DocumentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
+use App\Repository\AccommodationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Indicators\OccupancyIndicators;
@@ -32,7 +34,14 @@ class AppController extends AbstractController
     protected $repoRdv;
     protected $repoDocument;
 
-    public function __construct(PersonRepository $repoPerson, GroupPeopleRepository $repoGroupPeople, UserRepository $repoUser, SupportGroupRepository $repoSupport, NoteRepository $repoNote, RdvRepository $repoRdv, DocumentRepository $repoDocument)
+    public function __construct(
+        PersonRepository $repoPerson,
+        GroupPeopleRepository $repoGroupPeople,
+        UserRepository $repoUser,
+        SupportGroupRepository $repoSupport,
+        NoteRepository $repoNote,
+        RdvRepository $repoRdv,
+        DocumentRepository $repoDocument)
     {
         $this->repoUser = $repoUser;
         $this->repoPerson = $repoPerson;
@@ -241,5 +250,62 @@ class AppController extends AbstractController
             'form' => $form->createView(),
             'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($start, $end, $service),
         ]);
+    }
+
+    /**
+     * Met à jour les adresses des groupes de places (TEMPORAIRE, A SUPPRIMER).
+     *
+     * @Route("admin/accommodations/update_location", name="admin_accommodations_update_location", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function updateLocation(AccommodationRepository $repo, EntityManagerInterface $manager): Response
+    {
+        $count = 0;
+        $accommodations = $repo->findAll();
+
+        foreach ($accommodations as $accommodation) {
+            if (null == $accommodation->getLocationId() && $accommodation->getCity() != 'goussainville') {
+                $valueSearch = $accommodation->getAddress().'+'.$accommodation->getCity();
+                $valueSearch = $this->cleanString($valueSearch);
+                $geo = '&lat=49.04&lon=2.04';
+                $url = 'https://api-adresse.data.gouv.fr/search/?q='.$valueSearch.$geo.'&limit=1';
+                $raw = file_get_contents($url);
+                $json = json_decode($raw);
+
+                if (count($json->features)) {
+                    $feature = $json->features[0];
+                    // if ($feature->properties->score > 0.4) {
+                    $accommodation
+                        ->setCity($feature->properties->city)
+                        ->setAddress($feature->properties->name)
+                        ->setZipcode($feature->properties->postcode)
+                        ->setLocationId($feature->properties->id)
+                        ->setLon($feature->geometry->coordinates[0])
+                        ->setLat($feature->geometry->coordinates[1]);
+                    // }
+                }
+                ++$count;
+                $manager->flush();
+            }
+        }
+
+        $this->addFlash('success', 'Les adresses des groupes de places ont été mis à jour.<br/>'.$count.' / '.count($accommodations));
+
+        return $this->redirectToRoute('accommodations');
+    }
+
+    public function cleanString(string $string)
+    {
+        $string = strtr($string, [
+            'à' => 'a',
+            'ç' => 'c',
+            'è' => 'e',
+            'é' => 'e',
+            'ê' => 'e',
+        ]);
+        $string = strtolower($string);
+        $string = str_replace(' ', '+', $string);
+
+        return $string;
     }
 }

@@ -324,9 +324,6 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
-    "spatie/db-dumper": {
-        "version": "2.16.1"
-    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {

@@ -22,7 +22,7 @@
 	{% set group_people = support.groupPeople %}
 	<div class="small text-secondary">
 		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? " par " ~ support.createdBy.fullname }}
-			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }} par {{ support.updatedBy.fullname }})</span>
+			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }}{{ support.updatedBy ? " par " ~ support.updatedBy.fullname }})</span>
 		</p>
 	</div>
 
@@ -44,7 +44,7 @@
 	<hr>
 
 	<div class="d-flex row justify-content-center my-4">
-		{% if support.device.accommodation %}
+		{% if support.device and support.device.accommodation %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-accommodations' class="btn btn-{{ theme_color }} btn-block shadow" 
 			href="{{ path('support_accommodations', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
@@ -102,18 +102,17 @@
 	<div class="row">
 		{{ utils.view(support.theoreticalEndDate ? support.theoreticalEndDate|date("d/m/Y") : "", "Theoretical end date") }}
 	</div>
-	{% for accommodationGroup in support.accommodationGroups %}
-		{% if loop.last %}
-			<div class="row">
-				{{ utils.view(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
-					~ (accommodationGroup.endDate ? " - " ~ accommodationGroup.endDate|date("d/m/Y") : "") : "", "Date d'hébergement") }}
-				{{ utils.view(accommodationGroup.accommodation ? accommodationGroup.accommodation.name ~ " (" 
-					~ accommodationGroup.accommodation.address ~ ", " ~ accommodationGroup.accommodation.zipcode ~ " " 
-					~ accommodationGroup.accommodation.city ~  ")" : "", "Hébergement") }}
-				{{ utils.view(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
-			</div>
-		{% endif %}	
-	{% endfor %}
+	<div class="row">
+		{% for accommodationGroup in support.accommodationGroups %}
+			{% if loop.last %}
+					{{ utils.view(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
+						~ (accommodationGroup.endDate ? " - " ~ accommodationGroup.endDate|date("d/m/Y") : "") : "", "Date d'hébergement") }}
+					{# {{ utils.view(accommodationGroup.accommodation ? accommodationGroup.accommodation.name : "", "Nom du groupe de places") }} #}
+					{{ utils.view(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
+			{% endif %}	
+		{% endfor %}
+		{{ utils.view(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Address") }}
+	</div>
 	<div class="row">
 		{{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
 	</div>

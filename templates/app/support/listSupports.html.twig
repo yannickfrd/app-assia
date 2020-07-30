@@ -38,7 +38,7 @@
                         <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin de suivi", "sg.endDate") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}</th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom du logement/ hébergement", "a.name") }}</th>
+                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Commune", "sg.city") }}</th>
                     </tr>
                 </thead>
                 <tbody>            
@@ -96,14 +96,13 @@
                         <td class="align-middle">
                             {{ support.service ? support.service.name }}<br>{{ support.device ? "(" ~ support.device.name ~ ")" }}
                         </td>
-                        <td class="align-middle">
-                            {% for accommodationGroup in support.accommodationGroups %}
+                        <td class="align-middle">{{ support.city }}</td>
+                            {# {% for accommodationGroup in support.accommodationGroups %}
                             <a href="{{ path('accommodation_edit', {'id':accommodationGroup.accommodation.id}) }}"
                                 class="text-{{ theme_color }}" title="Voir la fiche du groupe de places" data-toggle="tooltip" data-placement="bottom">
-                                {{ accommodationGroup.accommodation.name }} ({{ accommodationGroup.accommodation.address }} - {{ accommodationGroup.accommodation.city }})
+                                {{ accommodationGroup.accommodation.address }} - {{ accommodationGroup.accommodation.city }}
                             </a><br />
-                            {% endfor %}
-                        </td>
+                            {% endfor %} #}
                     </tr>
                     {# {% endcache %} #}
                     {% endfor %}

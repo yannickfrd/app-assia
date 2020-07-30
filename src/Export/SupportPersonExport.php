@@ -50,9 +50,6 @@ class SupportPersonExport
         $endAccommodations = [];
         $endReasonAccommodations = [];
         $nameAccommodations = [];
-        $addressAccommodations = [];
-        $cityAccommodations = [];
-        $zipcodeAccommodations = [];
 
         $accommodationPeople = $person->getAccommodationPeople();
         foreach ($accommodationPeople as $accommodationPerson) {
@@ -62,9 +59,6 @@ class SupportPersonExport
             /** @var Accommodation */
             $accommodation = $accommodationPerson->getAccommodationGroup()->getAccommodation();
             $nameAccommodations[] = $accommodation->getName().' ';
-            $addressAccommodations[] = $accommodation->getAddress();
-            $cityAccommodations[] = $accommodation->getCity();
-            $zipcodeAccommodations[] = $accommodation->getZipcode();
         }
 
         $datas = [
@@ -96,9 +90,9 @@ class SupportPersonExport
             'Date fin hébergement' => join(', ', $endAccommodations),
             'Motif fin hébergement' => join(', ', $endReasonAccommodations),
             'Nom du logement/ hébergement' => join(', ', $nameAccommodations),
-            'Adresse' => join(', ', $addressAccommodations),
-            'Ville' => join(', ', $cityAccommodations),
-            'Département' => join(', ', $zipcodeAccommodations),
+            'Adresse' => $supportGroup->getAddress(),
+            'Ville' => $supportGroup->getCity(),
+            'Code postal' => $supportGroup->getZipcode(),
             'Statut suivi (groupe)' => $supportGroup->getStatusToString(),
             'Date début suivi (groupe)' => $this->formatDate($supportGroup->getStartDate()),
             'Date fin théorique suivi (groupe)' => $this->formatDate($supportGroup->getTheoreticalEndDate()),

@@ -19,20 +19,20 @@ class DocumentType extends AbstractType
             ->add('name', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'placeholder' => 'File name',
+                    'placeholder' => 'document.name.placeholder',
                 ],
             ])
             ->add('content', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
-                    'placeholder' => 'Add a comment',
+                    'placeholder' => 'document.content.placeholder',
                 ],
             ])
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getchoices(Document::TYPE),
-                'placeholder' => '-- Type --',
+                'placeholder' => 'document.type.placeholder',
             ])
             ->add('file', FileType::class, [
                 'mapped' => false,
@@ -51,13 +51,13 @@ class DocumentType extends AbstractType
                             'application/vnd.ms-excel',
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         ],
-                        'mimeTypesMessage' => 'Thank to upload a valid file (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip)',
+                        'mimeTypesMessage' => 'document.file.mimeMessage',
                     ]),
                 ],
                 'attr' => [
                     'class' => 'cursor-pointer',
                 ],
-                'help' => '5Mo maximum. Formats acceptés : doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip.',
+                'help' => 'document.file.help',
             ]);
     }
 

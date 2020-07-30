@@ -4,16 +4,6 @@
 
     {% set nbSupportPeople = support.supportPeople|length %}
 
-    {% set evalHousing = evaluation.evalHousingGroup %}
-    {% if evalHousing %}
-        <div class="row mb-2">
-            {{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
-                ~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
-            {{ utils.view(evalHousing.domiciliation == 1 ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
-                ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
-        </div>
-    {% endif %}
-
     <div class="row mb-2">
         {{ utils.view(support.groupPeople.familyTypologyToString~ (nbSupportPeople > 1 ? 
             ", " ~ nbSupportPeople ~ " personnes"), "Family typology") }}
@@ -574,7 +564,7 @@
             {% endif %}
             {% if evalHousing.daloCommission %}
             <div class="row mb-3">
-                {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho ? 
+                {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == 1 ? 
                     " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
                     ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
                 {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
@@ -622,6 +612,10 @@
                         {% endfor %}
                     </ul>
                 </div>
+            </div>
+            <div class="row mb-3">
+            {{ utils.view(evalHousing.domiciliation == 1 ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+                ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
             </div>
             <div class="row my-3">
                 <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>

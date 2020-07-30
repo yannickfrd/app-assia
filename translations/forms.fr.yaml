@@ -1,8 +1,10 @@
-Address: Adresse
+Address: Adresse (auto.)
 Birthdate: Date de naissance
-City: Ville
+City: Ville (auto.)
 Coefficient: Coefficient du suivi
 Color: Couleur 
+Comment location: Complément adresse
+commentLocation.help: Batiment, étage, N° de porte...
 Confirm password: Confirmation du mot de passe
 ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe
@@ -45,6 +47,7 @@ Referent2: Référent suppléant
 Role: Rôle dans le groupe
 Search: Recherche...
 Select: Sélectionner
+Service name: Nom du service
 Start: Début
 Start date: Date de début
 Status: Statut
@@ -59,7 +62,7 @@ Write a comment about the group: Ecrire un commentaire sur le groupe
 Write a comment about the person: Ecrire un commentaire sur la personne
 comment.placeholder: Ecrire un commentaire sur le suivi social
 Write a comment about the service: Ecrire un commentaire sur le service
-Zipcode: Code postal
+Zipcode: Code postal (auto.)
 placeholder:
   comment: Ecrire un commentaire...
   device:  -- Dispositif --
@@ -76,18 +79,23 @@ Places number: Nb de places
 Disabled: Désactivé
 Enabled: Actif
 
-File: Fichier
-File name: Nom du fichier
-Add a comment: Ajouter une description
-Thank to upload a valid file (doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip): Merci de télécharger un fichier au format valide (doc, docx, jpg, pdf, png, rar, xls, xlsx, zip)
+document:
+  name.placeholder: Nom du fichier
+  content.placeholder: Ajouter une description
+  type.placeholder: -- Type --
+  file:
+    mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, pdf, png, rar, xls, xlsx, zip)
+    help: "5Mo maximum. Formats acceptés : doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip."
 
 Agreement: Consentement de la personne
 
 Social worker: Travailleur social
-Social worker name: Nom du travailleur social
 Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
-Write a comment about the referent service social: Ecrire un commentaire sur le service social référent
+referent:
+  socialWorker.placeholder: Nom du travailleur social
+  socialWorker2.placeholder: Travailleur social suppléant
+  comment.plaholder: Ecrire un commentaire sur le service social référent...
 
 Chief: Responsable
 Siret id: Numéro SIRET
@@ -100,7 +108,7 @@ Contribution rate: Taux de participation financière
 Rate beetween 0 and 1.: Nombre entre 0 et 1.
 Justice activity: Activité Justice
 service:
-  comment.placeholder: Write a comment about the service
+  comment.placeholder: Ecrire une information complémentaire...
   name: Nom du service
 
 Accommodation type: Type de logement ou d'hébergement
@@ -133,4 +141,4 @@ rdv:
     content: Ajouter une note
     title: Ajouter un titre
 
-location.search.placeholder: Chercher une adresse ou une ville...
+location.search.placeholder: Saisir une adresse ou une ville...

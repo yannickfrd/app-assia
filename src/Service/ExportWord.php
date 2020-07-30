@@ -142,7 +142,7 @@ class ExportWord
         // Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
 
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
-        $path = 'uploads/exports/'.(new \DateTime())->format('Y/m/d/');
+        $path = \dirname(__DIR__).'/../public/uploads/exports/'.(new \DateTime())->format('Y/m/d/');
 
         // $objWriter->save($path.$title.'.docx');
 

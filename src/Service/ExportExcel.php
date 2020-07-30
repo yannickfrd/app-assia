@@ -80,7 +80,7 @@ class ExportExcel
     {
         $this->getFormat($this->format);
 
-        $path = 'uploads/exports/'.$this->now->format('Y/m/d/');
+        $path = \dirname(__DIR__).'/../public/uploads/exports/'.$this->now->format('Y/m/d/');
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);

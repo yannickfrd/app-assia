@@ -19,7 +19,6 @@
         "phpoffice/phpspreadsheet": "^1.10",
         "phpoffice/phpword": "^0.17.0",
         "sensio/framework-extra-bundle": "^5.1",
-        "spatie/db-dumper": "^2.16",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "5.0.*",
         "symfony/cache": "5.0.*",

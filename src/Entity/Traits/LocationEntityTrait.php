@@ -19,10 +19,10 @@ trait LocationEntityTrait
      */
     private $zipcode;
 
-    // /**
-    //  * @ORM\Column(type="string", length=50, nullable=true)
-    //  */
-    // private $country;
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $commentLocation;
 
     public function getAddress(): ?string
     {
@@ -56,6 +56,18 @@ trait LocationEntityTrait
     public function setZipcode(?string $zipcode): self
     {
         $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    public function getCommentLocation(): ?string
+    {
+        return $this->commentLocation;
+    }
+
+    public function setCommentLocation(?string $commentLocation): self
+    {
+        $this->commentLocation = $commentLocation;
 
         return $this;
     }
