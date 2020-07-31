@@ -3,7 +3,7 @@ import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 
 // Retire une personne du suivi du social du groupe
-export default class UpdateSupportPeople {
+export default class RemoveSupportPerson {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest();
@@ -42,12 +42,10 @@ export default class UpdateSupportPeople {
     // Récupère les données envoyés par le serveur
     response(data) {
         let dataJSON = JSON.parse(data);
-        if (dataJSON.code === 200) {
+        if (dataJSON.action === "delete") {
             this.deleteTr(this.trElt);
-            new MessageFlash("warning", dataJSON.msg);
-        } else {
-            new MessageFlash("danger", dataJSON.msg);
         }
+        new MessageFlash(dataJSON.alert, dataJSON.msg);
         this.loader.off();
     }
 

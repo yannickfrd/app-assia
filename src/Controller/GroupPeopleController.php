@@ -7,13 +7,11 @@ use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Service\Pagination;
-use App\Entity\SupportGroup;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\RolePersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\GroupPeople\GroupPeopleType;
-use App\Form\Support\NewSupportGroupType;
 use App\Repository\GroupPeopleRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -193,12 +191,12 @@ class GroupPeopleController extends AbstractController
         $groupPeople = $rolePerson->getGroupPeople();
         $nbPeople = $groupPeople->getRolePeople()->count(); // // Compte le nombre de personnes dans le groupe
 
-        // Vérifie que le groupe est composé de plus d'1 personne
+        // Vérifie si la personne est le demandeur principal
         if ($rolePerson->getHead()) {
             return $this->json([
                 'code' => 200,
                 'alert' => 'danger',
-                'msg' => 'Le/la demandeur/euse principal·e ne peut pas être retiré·e du groupe.',
+                'msg' => 'Le demandeur principal ne peut pas être retiré du groupe.',
                 'data' => null,
             ], 200);
         }

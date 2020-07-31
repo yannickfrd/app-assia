@@ -213,8 +213,9 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/delete", name="support_delete", methods="GET")
      * @IsGranted("DELETE", subject="supportGroup")
      */
-    public function deleteSupport(SupportGroup $supportGroup): Response
+    public function deleteSupportGroup(SupportGroup $supportGroup): Response
     {
+        $this->manager->getFilters()->disable('softdeleteable');
         $this->manager->remove($supportGroup);
         $this->manager->flush();
 
@@ -249,6 +250,17 @@ class SupportController extends AbstractController
     {
         // Vérifie si le token est valide avant de retirer la personne du suivi social
         if ($this->isCsrfTokenValid('remove'.$supportPerson->getId(), $request->get('_token'))) {
+            // Vérifie si la personne est le demandeur principal
+            if ($supportPerson->getHead()) {
+                return $this->json([
+                    'code' => 200,
+                    'action' => 'nothing',
+                    'alert' => 'danger',
+                    'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
+                    'data' => null,
+                ], 200);
+            }
+
             $supportGroup->removeSupportPerson($supportPerson);
 
             $supportGroup->setNbPeople($supportGroup->getNbPeople() - 1);
@@ -257,6 +269,8 @@ class SupportController extends AbstractController
 
             return $this->json([
                 'code' => 200,
+                'action' => 'delete',
+                'alert' => 'warning',
                 'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
                 'data' => null,
             ], 200);
