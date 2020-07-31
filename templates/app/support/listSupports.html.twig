@@ -56,9 +56,6 @@
                                 class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                 title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                             </a>
-                            {% else %}
-                            <span class="btn btn-{{ theme_color }} btn-sm shadow my-1 cursor-default">
-                                <span class="fas fa-ban"></span></span>
                             {% endif %}
                             {# {% if is_granted("EDIT", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_view', {'id':support.id}) }} {% endif %}"

@@ -53,12 +53,10 @@
                     {#{% cache "user" ~ app.user.id ~ user.id user.updatedAt.timestamp %}#}
                     <tr>
                         <th scope="row">
-                            {% if is_granted("EDIT", user) %}
+                            {% if is_granted("ROLE_ADMIN") %}
                             <a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
                                 data-toggle="tooltip" data-placement="bottom" title="Voir la fiche"><span class="fas fa-eye"></span>
                             </a>
-                            {% else %}
-                            <span class="btn btn-{{ theme_color }} btn-sm shadow cursor-default"><span class="fas fa-ban"></span></span>
                             {% endif %}
                         </th>
                         <td class="text-uppercase">{{ user.lastname }}</td>

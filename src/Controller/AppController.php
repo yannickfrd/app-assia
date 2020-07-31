@@ -84,7 +84,6 @@ class AppController extends AbstractController
 
     /**
      * @Route("/managing", name="managing", methods="GET")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function managing(): Response
     {
