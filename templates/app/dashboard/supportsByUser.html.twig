@@ -6,13 +6,24 @@
 
 {% block body %}
 
-<div class="container{{ devices|length > 8 ? '-fluid mt-4' }}">
+{% if datas %} 
+    {% set devices = datas.devices %}
+    {% set dataUsers = datas.dataUsers %}
+    {% set nbSupports = datas.nbSupports %}
+    {% set sumCoeffSupports = datas.sumCoeffSupports %}
+{% endif %}
+
+<div class="container{{ datas and devices|length > 8 ? '-fluid mt-4' }}">
 
     <h1 class="h2 mb-3">Synthèse des suivis en cours</h1>
     <p>Nombre de suivis en cours par référent en fonction du dispositif d'accompagnement.</p>
 
-    <hr>
+</div>
 
+    {% include "app/dashboard/searchSupportsByUser.html.twig" %}
+
+    <div class="container{{ datas and devices|length > 8 ? '-fluid mt-4' }}">
+{% if datas %}
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
@@ -115,9 +126,13 @@
             {% endapply %}
         </div>
     </div>
+{% else %}
+    <p>Veuillez effectuer une recherche pour afficher les résultats.</p>
+{% endif %}
 </div>
 
 {% endblock %}
 
 {% block javascripts %}
+{{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

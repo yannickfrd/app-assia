@@ -10,7 +10,9 @@ use App\Repository\NoteRepository;
 use App\Repository\UserRepository;
 use App\Form\Model\OccupancySearch;
 use App\Repository\PersonRepository;
+use App\Form\SupportsByUserSearchType;
 use App\Repository\DocumentRepository;
+use App\Form\Model\SupportsByUserSearch;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
@@ -140,9 +142,9 @@ class AppController extends AbstractController
     /**
      * Tableau de bord du/des services.
      *
-     * @Route("/dashboard/service", name="dashboard_service", methods="GET")
+     * @Route("/dashboard/supports_by_user", name="supports_by_user", methods="GET")
      */
-    public function showServiceDashboard(SupportsByUserIndicators $indicators): Response
+    public function showSupportsByUser(SupportsByUserIndicators $indicators, SupportsByUserSearch $search, Request $request): Response
     {
         // $cache = new FilesystemAdapter();
 
@@ -155,13 +157,17 @@ class AppController extends AbstractController
         // }
 
         // $statsService = $cacheStatsService->get();
-        $statsService = $indicators->getSupportsbyDevice();
 
-        return $this->render('app/dashboard/dashboardService.html.twig', [
-            'devices' => $statsService['devices'],
-            'dataUsers' => $statsService['dataUsers'],
-            'nbSupports' => $statsService['nbSupports'],
-            'sumCoeffSupports' => $statsService['sumCoeffSupports'],
+        $form = ($this->createForm(SupportsByUserSearchType::class, $search))
+        ->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $datas = $indicators->getSupportsbyDevice($search);
+        }
+
+        return $this->render('app/dashboard/supportsByUser.html.twig', [
+            'form' => $form->createView(),
+            'datas' => $datas ?? null,
         ]);
     }
 

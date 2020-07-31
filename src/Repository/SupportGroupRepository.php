@@ -314,8 +314,8 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id}');
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
 
         if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->where('s.id IN (:services)')

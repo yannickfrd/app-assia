@@ -2,6 +2,7 @@
 
 namespace App\Service\Indicators;
 
+use App\Form\Model\SupportsByUserSearch;
 use App\Repository\DeviceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
@@ -26,9 +27,9 @@ class SupportsByUserIndicators
         $this->repoSupport = $repoSupport;
     }
 
-    public function getSupportsbyDevice()
+    public function getSupportsbyDevice(SupportsByUserSearch $search)
     {
-        $devices = $this->repoDevice->findDevicesForDashboard($this->currentUser);
+        $devices = $this->repoDevice->findDevicesForDashboard($this->currentUser, $search);
         $users = $this->repoUser->findAllUsersFromServices($this->currentUser);
         $supports = $this->repoSupport->findSupportsForDashboard();
 

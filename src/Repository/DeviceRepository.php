@@ -6,6 +6,7 @@ use App\Entity\Device;
 use App\Entity\Service;
 use Doctrine\ORM\Query;
 use App\Entity\Accommodation;
+use App\Form\Model\SupportsByUserSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -88,9 +89,37 @@ class DeviceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findDevicesForDashboard(CurrentUserService $currentUser)
+    public function findDevicesForDashboard(CurrentUserService $currentUser, SupportsByUserSearch $search)
     {
-        return ($this->getDevicesFromUserQueryList($currentUser))
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
+            ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
+            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}');
+
+        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->where('sd.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
+
+        if ($search->getServices() && $search->getServices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getServices() as $service) {
+                $orX->add($expr->eq('sd.service', $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getDevices() && $search->getDevices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getDevices() as $device) {
+                $orX->add($expr->eq('sd.device', $device));
+            }
+            $query->andWhere($orX);
+        }
+
+        return $query
+            ->orderBy('d.name', 'ASC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }

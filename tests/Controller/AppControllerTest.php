@@ -54,7 +54,7 @@ class AppControllerTest extends WebTestCase
     {
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
-        $this->client->request('GET', $this->generateUri('dashboard_service'));
+        $this->client->request('GET', $this->generateUri('supports_by_user'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Synthèse des suivis en cours');

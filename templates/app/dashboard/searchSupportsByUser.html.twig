@@ -1,0 +1,9 @@
+{% extends "model/search.html.twig" %}
+
+{% block search_form %}
+
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.service.services) }}</div>
+<div class="form-group col-auto my-1 px-1">{{ form_row(form.service.devices) }}</div>
+{{ form_row(form.send) }}
+
+{% endblock %}
