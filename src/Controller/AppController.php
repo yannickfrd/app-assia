@@ -73,6 +73,24 @@ class AppController extends AbstractController
         return $this->dashboardSocialWorker($cache);
     }
 
+    /**
+     * @Route("/admin", name="admin", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function admin(): Response
+    {
+        return $this->render('app/admin/admin.html.twig');
+    }
+
+    /**
+     * @Route("/managing", name="managing", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function managing(): Response
+    {
+        return $this->render('app/managing/managing.html.twig');
+    }
+
     protected function dashboardSocialWorker(FilesystemAdapter $cache)
     {
         $userSupports = $cache->getItem('stats.user'.$this->getUser()->getId().'_supports');

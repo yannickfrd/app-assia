@@ -20,6 +20,7 @@ https://demo.esperer95.app
 - Ajout de l'adresse dans le suivi après l'ajout de la prise en charge hébergement.
 - Nouveau suivi : fenêtre pop-up afin de spécifier le service et le dispositif concerné.
 - Synthèse des suivis en cours : possibilité de filtrer les résultats par service et dispositif.
+- Création d'une page "Gestion" et d'une page "Administration".
 
 ## Version 1.15.1 - 29/07/2020
 - Créer commandes via console pour automatiser des mises à jour de données. 

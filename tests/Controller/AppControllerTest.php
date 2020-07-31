@@ -93,6 +93,26 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Groupes de places');
     }
 
+    public function testPageAdminIsUp()
+    {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('admin'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Administration');
+    }
+
+    public function testPageManagingIsUp()
+    {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('managing'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Gestion');
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();

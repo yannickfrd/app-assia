@@ -76,54 +76,12 @@
 							</div>
 
 						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuGestion"
-								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion
-							</a>
-							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuGestion">
-								<a class="dropdown-item" href="{{ path("supports_by_user") }}">Synthèse des suivis en cours</a>
-								<a class="dropdown-item" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("supports_current_month") }}">Suivis par mois</a>
-								<a class="dropdown-item" href="{{ path("contributions") }}">Paiements (redevances, PF)</a>
-								<a class="dropdown-item" href="{{ path("contribution_indicators") }}">Indicateurs paiements</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ path("accommodations") }}">Groupes de places</a>
-								<a class="dropdown-item" href="{{ path("organizations") }}">Organismes prescripteurs</a>
-								{% if is_granted("ROLE_ADMIN") %}
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="{{ path("export") }}">Export de données</a>
-								{% endif %}
-								{% if app.user.id == 1 %}
-									<a class="dropdown-item" href="{{ path("indicators_social") }}">Indicateurs sociaux</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="{{ path("import") }}">Import de données</a>
-								{% endif %}
-							</div>
+						<li class="nav-item">
+							<a class="nav-link text-light" href="{{ path("managing") }}">Gestion</a>
 						</li>
 						{% if is_granted("ROLE_ADMIN") %}
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuAdmin"
-								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin
-							</a>
-							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuAdmin">
-								<a class="dropdown-item" href="{{ path("security_registration") }}">Créer un utilisateur</a>
-								{% if is_granted("ROLE_SUPER_ADMIN") %}
-								<a class="dropdown-item" href="{{ path("service_new") }}">Créer un nouveau service</a>
-								<a class="dropdown-item" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
-								<a class="dropdown-item" href="{{ path("admin_device_new") }}">Ajouter un dispositif</a>
-								{% endif %}
-								<a class="dropdown-item" href="{{ path("admin_organization_new") }}">Ajouter un organisme prescripteur</a>
-								<div class="dropdown-divider"></div>
-								{% if is_granted("ROLE_SUPER_ADMIN") %}
-								<a class="dropdown-item" href="{{ path("admin_users") }}">Utilisateurs</a>
-								{% endif %}
-								<a class="dropdown-item" href="{{ path("admin_devices") }}">Dispositifs</a>
-								{% if app.user.id == 1 %}
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="{{ path("database_backups") }}">Sauv. et export base de données</a>
-								{% endif %}
-							</div>
+						<li class="nav-item">
+							<a class="nav-link text-light" href="{{ path("admin") }}">Admin</a>
 						</li>
 						{% endif %}
 					</ul>

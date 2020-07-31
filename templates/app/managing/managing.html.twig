@@ -1,0 +1,60 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Gestion | {{ title_website }}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1 class="h2 mb-3">Gestion</h1>
+
+    {% include "model/msgFlash.html.twig" %}
+
+    <hr>
+
+    <div class="my-4">
+
+        <h2 class="h5">Suivis</h2>
+        <ul>
+            <li class="mb-2 text-{{ theme_color }}">
+                <a class="text-dark" href="{{ path("supports_by_user") }}">Synthèse des suivis en cours</a>
+            </li>
+            <li class="mb-2  text-{{ theme_color }}">
+                <a class="text-dark" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
+            </li>
+        </ul>
+
+        <hr class="my-3">
+
+        <h2 class="h5">Paiements</h2>
+        <ul>
+            <li class="mb-2 text-{{ theme_color }}">
+                <a class="text-dark" href="{{ path("supports_current_month") }}">Récapitulatif menseuel des redevances</a>
+            </li>
+            <li class="mb-2 text-{{ theme_color }}">
+                <a class="text-dark" href="{{ path("contributions") }}">Paiements (redevances, PF)</a>
+            </li class="mb-2">
+            <li class="mb-2 text-{{ theme_color }}">
+                 <a class="text-dark" href="{{ path("contribution_indicators") }}">Indicateurs paiements</a>
+        </ul>
+
+        <hr class="my-3">
+
+        <h2 class="h5">Listes</h2>
+        <ul>
+            <li class="mb-2 text-{{ theme_color }}">
+                <a class="text-dark" href="{{ path("accommodations") }}">Liste des groupes de places</a>
+            </li> 
+            <li class="mb-2 text-{{ theme_color }}">
+                <a class="text-dark" href="{{ path("organizations") }}">Liste des organismes prescripteurs</a>
+            </li>
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}
