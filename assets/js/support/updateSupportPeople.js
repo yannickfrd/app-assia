@@ -1,11 +1,12 @@
+import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 
 // Retire une personne du suivi du social du groupe
 export default class UpdateSupportPeople {
 
-    constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest;
+    constructor() {
+        this.ajaxRequest = new AjaxRequest();
         this.trElts = document.querySelectorAll(".js-tr-support_pers");
         this.modalConfirmElt = document.getElementById("modal-confirm");
         this.addPeopleBtElt = document.getElementById("add-people");
@@ -19,7 +20,7 @@ export default class UpdateSupportPeople {
             let btnElt = trElt.querySelector("button.js-remove");
             btnElt.addEventListener("click", e => {
                 e.preventDefault();
-                this.modalConfirmElt.addEventListener("click", this.validate.bind(this, btnElt, trElt), {
+                this.modalConfirmElt.addEventListener("click", this.sendRequest.bind(this, btnElt, trElt), {
                     once: true
                 });
             });
@@ -30,7 +31,7 @@ export default class UpdateSupportPeople {
     }
 
     // Envoie la requête Ajax après confirmation de l'action
-    validate(btnElt, trElt) {
+    sendRequest(btnElt, trElt) {
         this.loader.on();
         this.trElt = trElt;
         this.ajaxRequest.init("GET", btnElt.getAttribute("data-url"), this.response.bind(this), true), {

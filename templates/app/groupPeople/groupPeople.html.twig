@@ -83,7 +83,7 @@
                                 <td class="px-1 align-middle">
                                     <button class="js-remove btn btn-danger shadow"
                                         data-url="{{ path('role_person_remove', {'id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom"
+                                        data-toggle="modal" data-target="#modal-remove-person" data-toggle="tooltip" data-placement="bottom"
                                         title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
                                     </button>
                                 </td>
@@ -147,6 +147,8 @@
 </div>
 
 {% include "app/groupPeople/removePerson.html.twig" %}
+
+{% include "app/support/modalNewSupport.html.twig" %}
 
 {% endblock %}
 

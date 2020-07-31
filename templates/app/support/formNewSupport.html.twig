@@ -1,0 +1,26 @@
+{% set theme_color = app.request.hasPreviousSession and app.session.get("themeColor") ? app.session.get("themeColor") : "dark" %}
+
+{% form_theme form_new_support "form/bootstrap_4_horizontal.html.twig" %}
+
+{{ form_start(form_new_support) }}
+
+<div class="modal-body">
+    {{ form_row(form_new_support.service) }}
+    {{ form_row(form_new_support.device) }}
+    {{ form_row(form_new_support.status) }}
+    {{ form_row(form_new_support.referent) }}
+</div>
+
+<div class="modal-footer d-flex justify-content-between">
+    {% block modal_footer %}
+    <div class="float-left">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    </div>
+    <div class="float-right">
+        <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau suivi</button>
+    </div>
+    {% endblock %}
+</div>
+
+{{ form_row(form_new_support._token) }}
+{{ form_end(form_new_support, {"render_rest": false}) }}

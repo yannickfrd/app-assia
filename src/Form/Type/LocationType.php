@@ -10,14 +10,17 @@ class LocationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $data = $options['data'];
+
         $builder
             ->add('search', null, [
-                'label' => ' ',
+                'label' => $data['seachLabel'] ?? 'Adresse',
                 'attr' => [
                     'class' => 'js-search',
                     'placeholder' => 'location.search.placeholder',
                     'autocomplete' => 'off',
                 ],
+                'help' => $data['seachHelp'] ?? null,
                 'mapped' => false,
             ])
             ->add('commentLocation', null, [

@@ -54,7 +54,7 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function getDevicesFromUserQueryList(CurrentUserService $currentUser)
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, accommodation}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {

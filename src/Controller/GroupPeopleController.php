@@ -7,11 +7,13 @@ use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Service\Pagination;
+use App\Entity\SupportGroup;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\RolePersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\GroupPeople\GroupPeopleType;
+use App\Form\Support\NewSupportGroupType;
 use App\Repository\GroupPeopleRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +60,7 @@ class GroupPeopleController extends AbstractController
      *
      * @Route("/group/{id}", name="group_people_show", methods="GET|POST")
      */
-    public function editGroupPeople($id, Request $request): Response
+    public function showGroupPeople($id, Request $request): Response
     {
         $groupPeople = $this->repo->findGroupPeopleById($id);
 

@@ -4,7 +4,6 @@
 {% if person.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-{% if edit_mode %}{% form_theme form_new_group "form/bootstrap_4_horizontal.html.twig" %}{% endif %}
 
 {% block title %}{% if edit_mode %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} | {{ title_website }}{% endblock %}
 
@@ -85,7 +84,7 @@
             <div class="col-md-6">{{ form_row(form_person.email) }}</div>
             <div class="col-md-6">{{ form_row(form_person.contactOtherPerson) }}</div>
         </div>
-        <div class="form-group row">{{ form_label(form_person.comment) }}
+        <div class="form-group row"><span class="sr-only">{{ form_label(form_person.comment) }}</span>
             <div class="col-md-12">{{ form_widget(form_person.comment) }}</div>
         </div>
 
@@ -176,7 +175,7 @@
         </div>
         {% endif %}
         
-        <button id="btn-new-group" class="m-2 btn btn-{{ theme_color }} btn-sm" data-toggle="modal" data-target="#modal-block"><span
+        <button id="btn-new-group" class="m-2 btn btn-{{ theme_color }} btn-sm" data-toggle="modal" data-target="#modal-new-group"><span
             class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</button>
 
     </section>
@@ -185,8 +184,12 @@
 
 </div>
 
+{% if group_people is defined %}
+{% include "app/support/modalNewSupport.html.twig" %}
+{% endif %}
+
 {% if edit_mode == true %}
-{% include "app/person/newGroupPeople.html.twig" %}
+{% include "app/person/modalNewGroup.html.twig" %}
 {% endif %}
 
 {% endblock %}

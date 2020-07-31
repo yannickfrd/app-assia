@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Service\Grammar;
 use App\Service\Calendar;
+use App\Entity\GroupPeople;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Entity\EvaluationGroup;
 use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\SupportsInMonthSearch;
+use App\Form\Support\NewSupportGroupType;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
@@ -79,13 +80,12 @@ class SupportController extends AbstractController
     public function newSupportGroup(int $id, GroupPeopleRepository $repo, Request $request, SupportGroupService $supportGroupService): Response
     {
         $groupPeople = $repo->findGroupPeopleById($id);
-
         $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser());
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
             if ($supportGroupService->create($groupPeople, $supportGroup)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
@@ -103,6 +103,31 @@ class SupportController extends AbstractController
             'group_people' => $groupPeople,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Donne le formulaire pour créer un nouveau suivi social au gorupe (via AJAX).
+     *
+     * @Route("/group/{id}/new_support", name="group_people_new_support", methods="GET")
+     */
+    public function newSupportGroupAjax(GroupPeople $groupPeople)
+    {
+        $supportGroup = (new SupportGroup())
+            ->setStatus(2)
+            ->setReferent($this->getUser());
+
+        $forwNewSupport = $this->createForm(NewSupportGroupType::class, $supportGroup, [
+            'action' => $this->generateUrl('support_new', ['id' => $groupPeople->getId()]),
+        ]);
+
+        return $this->json([
+            'code' => 200,
+            'data' => [
+                'form' => $this->render('app/support/formNewSupport.html.twig', [
+                    'form_new_support' => $forwNewSupport->createView(),
+                ]),
+            ],
+        ], 200);
     }
 
     /**

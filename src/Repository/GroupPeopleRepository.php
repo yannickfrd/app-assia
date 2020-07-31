@@ -33,7 +33,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
             ->leftJoin('r.person', 'p')->addselect('p')
             ->leftJoin('g.supports', 'sg')->addselect('sg')
             ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
-            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone1}')
+            ->leftJoin('sg.service', 's')->addselect('s')
             ->leftJoin('sg.device', 'd')->addselect('d')
             ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
             ->leftJoin('g.referents', 'referents')->addselect('referents')

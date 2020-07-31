@@ -63,7 +63,7 @@ class AccommodationRepository extends ServiceEntityRepository
     public function getAccommodationsQueryList(Service $service): QueryBuilder
     {
         $query = $this->createQueryBuilder('a')
-            ->select('PARTIAL a.{id, name, service}')
+            ->select('PARTIAL a.{id, name, service, address, city, zipcode, commentLocation, locationId, lat, lon}')
 
             ->where('a.service = :service')
             ->setParameter('service', $service)

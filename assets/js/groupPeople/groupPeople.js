@@ -1,12 +1,11 @@
-import AjaxRequest from "../utils/ajaxRequest";
 import SelectRadioJS from "../utils/selectRadio";
 import RemovePerson from "./removePerson";
+import NewSupport from "./newSupport";
 import CheckChange from "../utils/checkChange";
-
-let ajaxRequest = new AjaxRequest();
 
 document.addEventListener("DOMContentLoaded", () => {
     new SelectRadioJS("table-people");
-    new RemovePerson(ajaxRequest);
+    new RemovePerson();
+    new NewSupport();
     new CheckChange("group"); // form name
 });

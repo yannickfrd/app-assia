@@ -13,7 +13,6 @@ use App\Repository\UserRepository;
 use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
-use App\Form\Support\SupportPersonType;
 use Symfony\Component\Form\AbstractType;
 use App\Form\OriginRequest\OriginRequestType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,6 +35,10 @@ class SupportGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $supportGroup = $options['data'];
+
+        $referentQueryBuilder = function (UserRepository $repo) use ($supportGroup) {
+            return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent());
+        };
 
         $builder
             ->add('service', EntityType::class, [
@@ -66,17 +69,13 @@ class SupportGroupType extends AbstractType
             ->add('referent', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
-                'query_builder' => function (UserRepository $repo) use ($supportGroup) {
-                    return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent());
-                },
+                'query_builder' => $referentQueryBuilder,
                 'placeholder' => 'placeholder.select',
             ])
             ->add('referent2', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
-                'query_builder' => function (UserRepository $repo) use ($supportGroup) {
-                    return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent2());
-                },
+                'query_builder' => $referentQueryBuilder,
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -125,6 +124,10 @@ class SupportGroupType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Accommodation::class,
+                'data' => [
+                    'seachLabel' => 'Adresse du suivi',
+                    'seachHelp' => 'Adresse du logement, hébergement, domiciliation...',
+                ],
             ])
             ->add('comment', null, [
                 'attr' => [

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.15.1 - 29/07/2020
+1.15.2 - 31/07/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,10 +16,14 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.15.2 - 31/07/2020
+- Ajout de l'adresse dans le suivi après l'ajout de la prise en charge hébergement.
+- Nouveau suivi : fenêtre pop-up afin de spécifier le service et le dispositif concerné.
+
 ## Version 1.15.1 - 29/07/2020
-- Créer commandes via console pour automatiser des mises à jour de données
-- Correction du bug dans l'évaluation sociale "requalifié DAHO"
-- Ajout champ "Complément adresse" pour toutes les adresses
+- Créer commandes via console pour automatiser des mises à jour de données. 
+- Correction du bug dans l'évaluation sociale "requalifié DAHO".
+- Ajout champ "Complément adresse" pour toutes les adresse.
 
 ## Version 1.15.0 - 28/07/2020
 - Nouvelle fonctionnalité : possibilité de sauvegarder et d'exporter la base de données depuis l'application.

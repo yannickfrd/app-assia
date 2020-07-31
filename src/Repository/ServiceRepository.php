@@ -64,7 +64,7 @@ class ServiceRepository extends ServiceEntityRepository
      */
     public function getServicesFromUserQueryList(CurrentUserService $currentUser): QueryBuilder
     {
-        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}');
+        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission}');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')

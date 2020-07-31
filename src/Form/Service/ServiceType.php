@@ -127,6 +127,7 @@ class ServiceType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Service::class,
+                'data' => ['seachLabel' => 'Adresse du service'],
             ]);
     }
 

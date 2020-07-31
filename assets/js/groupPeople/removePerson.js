@@ -1,11 +1,12 @@
+import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 
 // Requête Ajax pour retirer une personne d'un groupe
 export default class RemovePerson {
 
-    constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest;
+    constructor() {
+        this.ajaxRequest = new AjaxRequest();;
         this.trElts = document.querySelectorAll(".js-tr-person");
         this.inputNbPeople = document.getElementById("group_nbPeople");
         this.modalConfirmElt = document.getElementById("modal-confirm");

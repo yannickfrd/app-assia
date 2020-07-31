@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\SupportGroup;
+use App\Entity\Accommodation;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
-use App\Entity\SupportGroup;
-use App\Form\Accommodation\AccommodationGroupType;
-use App\Repository\AccommodationGroupRepository;
-use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\AccommodationGroupRepository;
+use App\Form\Accommodation\AccommodationGroupType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Controller des hébergements des groupes de personnes.
@@ -182,11 +183,15 @@ class AccommodationGroupController extends AbstractController
      */
     protected function createAccommodationGroup(AccommodationGroup $accommodationGroup): Response
     {
-        $accommodationGroup->setGroupPeople($accommodationGroup->getSupportGroup()->getGroupPeople());
+        $supportGroup = $accommodationGroup->getSupportGroup();
+
+        $accommodationGroup->setGroupPeople($supportGroup->getGroupPeople());
 
         $this->manager->persist($accommodationGroup);
 
         $this->createAccommodationPeople($accommodationGroup);
+
+        $this->updateLocationSupportGroup($supportGroup, $accommodationGroup->getAccommodation());
 
         $this->manager->flush();
 
@@ -195,6 +200,21 @@ class AccommodationGroupController extends AbstractController
         return $this->redirectToRoute('support_accommodations', [
             'id' => $accommodationGroup->getSupportGroup()->getId(),
         ]);
+    }
+
+    /**
+     * Met à jour l'adresse du suivi via l'adresse du groupe de places.
+     */
+    protected function updateLocationSupportGroup(SupportGroup $supportGroup, Accommodation $accommodation)
+    {
+        $supportGroup
+            ->setAddress($accommodation->getAddress())
+            ->setCity($accommodation->getCity())
+            ->setZipcode($accommodation->getZipcode())
+            ->setCommentLocation($accommodation->getCommentLocation())
+            ->setLocationId($accommodation->getLocationId())
+            ->setLat($accommodation->getLat())
+            ->setLon($accommodation->getLon());
     }
 
     /**

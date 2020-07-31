@@ -1,12 +1,13 @@
 import ValidationPerson from "./validationPerson";
+import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 
 // Requête Ajax pour mettre à jour les informations individuelles
 export default class UpdatePerson {
 
-    constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest;
+    constructor() {
+        this.ajaxRequest = new AjaxRequest();
         this.personElt = document.querySelector('form[name=person]');
         this.updatePersonBtn = document.getElementById("updatePerson");
         this.url = this.updatePersonBtn.getAttribute("data-url");
