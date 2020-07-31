@@ -289,7 +289,7 @@ class EvalFamilyPerson
      */
     public function getChildToHostToString(): ?string
     {
-        return $this->childcareSchool ? self::CHILD_TO_HOST[$this->childcareSchool] : null;
+        return $this->childToHost ? self::CHILD_TO_HOST[$this->childToHost] : null;
     }
 
     public function setChildToHost(?int $childToHost): self

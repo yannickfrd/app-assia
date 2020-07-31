@@ -24,6 +24,7 @@ https://demo.esperer95.app
 - Correction droit d'accès page user.
 - Ajout vérification lors de la suppression d'une personne d'un suivi : le demandeur principal ne peut pas être retiré du suivi.
 - Correction bug lors de la suppression d'un suivi (si une personne a déjà était précédemment retirée du suivi).
+- Correction du bug d'affichage dans l'évaluation sociale "Type d'hébergement de l'enfant".
 
 ## Version 1.15.1 - 29/07/2020
 - Créer commandes via console pour automatiser des mises à jour de données. 
