@@ -54,7 +54,7 @@ class PersonRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')
             ->select('p');
         if ($search) {
-            $query->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search")
+            $query->Where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
                 ->setParameter('search', '%'.$search.'%');
         }
         if ($personSearch->getFirstname()) {
@@ -92,16 +92,26 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
-     *  Trouve toutes les personnes.
+     *  Recherche une personne par son nom, prénom ou date de naissance.
      *
      * @return mixed
      */
     public function findPeopleByResearch(string $search = null)
     {
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->Where("CONCAT(p.lastname,' ' ,p.firstname) LIKE :search OR CONCAT(p.firstname,' ' ,p.lastname) LIKE :search")
-            ->setParameter('search', '%'.$search.'%')
+        $query = $this->createQueryBuilder('p')
+            ->select('p');
+
+        $date = \DateTime::createFromFormat('d/m/Y', $search) ?? false;
+
+        if ($date) {
+            $query->where('p.birthdate = :birthdate')
+                ->setParameter('birthdate', $date->format('Y-m-d'));
+        } else {
+            $query->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search OR CONCAT(p.firstname,' ' , p.lastname) LIKE :search")
+                ->setParameter('search', '%'.$search.'%');
+        }
+
+        return $query
             ->orderBy('p.lastname, p.firstname', 'ASC')
             ->setMaxResults(10)
             ->getQuery()

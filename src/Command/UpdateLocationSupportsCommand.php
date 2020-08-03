@@ -58,7 +58,7 @@ class UpdateLocationSupportsCommand extends Command
                     ->setLocationId($accommodation->getLocationId());
                 } else {
                     /** @var EvaluationGroup */
-                    $evaluation = $support->getEvaluationsGroup()[0];
+                    $evaluation = $support->getEvaluationsGroup()->last();
 
                     if ($evaluation && $evaluation->getEvalHousingGroup()) {
                         $evalHousingGroup = $evaluation->getEvalHousingGroup();

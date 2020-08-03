@@ -50,7 +50,7 @@
                             {% set supportPeople = support.supportPeople %}
                         {% endif %}
                     <tr>
-                        <th scope="row" class="align-middle">
+                        <td scope="row" class="align-middle">
                             {% if is_granted("VIEW", support) %}
                             <a href="{% if support.groupPeople %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
@@ -63,7 +63,7 @@
                                 title="Modifier la fiche du suivi"><span class="fas fa-edit"></span>
                             </a>
                             {% endif %} #}
-                        </th>
+                        </td>
                         <td class="align-middle">
                             {% for supportPerson in supportPeople %}
                             <a href="{{ path('group_person_show', {'id':support.groupPeople.id, 'person_id':supportPerson.person.id, 'slug':supportPerson.person.slug}) }}"
@@ -88,10 +88,15 @@
                             <span class="text-secondary">{{ support.coefficient ? "(coeff. " ~ support.coefficient ~ ")" }}</span>
                         </td>
                         <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
-                        <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}
+                            {% if support.endDate == null and support.theoreticalEndDate %}
+                                <span class="text-secondary">{{ support.theoreticalEndDate|date("d/m/Y") }}<br/>(Fin théorique)</span>
+                            {% endif %}
+                            </td>
                         <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
                         <td class="align-middle">
-                            {{ support.service ? support.service.name }}<br>{{ support.device ? "(" ~ support.device.name ~ ")" }}
+                            {{ support.service ? support.service.name }}<br/>
+                            <span class="text-secondary">{{ support.device ? "(" ~ support.device.name ~ ")" }}</span>
                         </td>
                         <td class="align-middle">{{ support.city }}</td>
                             {# {% for accommodationGroup in support.accommodationGroups %}

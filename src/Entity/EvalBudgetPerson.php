@@ -851,7 +851,7 @@ class EvalBudgetPerson
         return $this->debtMortgage ? Choices::YES_NO_BOOLEAN[$this->debtMortgage] : null;
     }
 
-    public function setDebtMortgage(int $debtMortgage): self
+    public function setDebtMortgage(?int $debtMortgage): self
     {
         $this->debtMortgage = $debtMortgage;
 

@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvaluationGroupRepository")
@@ -22,7 +22,7 @@ class EvaluationGroup
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $date;
 
@@ -43,12 +43,12 @@ class EvaluationGroup
     private $supportGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationPerson", mappedBy="evaluationGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\EvaluationPerson", mappedBy="evaluationGroup", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $evaluationPeople;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\EvalSocialGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\EvalSocialGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"})
      */
     private $evalSocialGroup;
 
@@ -77,6 +77,36 @@ class EvaluationGroup
         $this->evaluationPeople = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $now = new \DateTime();
+        $this->setCreatedAt($now);
+        $this->setUpdatedAt($now);
+
+        $newEvaluationPeople = new ArrayCollection();
+
+        foreach ($this->evaluationPeople as $evaluationPerson) {
+            $newEvaluationPerson = clone $evaluationPerson;
+            $newEvaluationPerson->setEvaluationGroup($this);
+            $newEvaluationPeople->add($newEvaluationPerson);
+        }
+        $this->evaluationPeople = $newEvaluationPeople;
+
+        if ($this->evalBudgetGroup) {
+            $this->setEvalBudgetGroup(clone $this->evalBudgetGroup);
+        }
+        if ($this->evalFamilyGroup) {
+            $this->setEvalFamilyGroup(clone $this->evalFamilyGroup);
+        }
+        if ($this->evalHousingGroup) {
+            $this->setEvalHousingGroup(clone $this->evalHousingGroup);
+        }
+        if ($this->evalSocialGroup) {
+            $this->setEvalSocialGroup(clone $this->evalSocialGroup);
+        }
+        $this->setInitEvalGroup(new InitEvalGroup());
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,7 +117,7 @@ class EvaluationGroup
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
 

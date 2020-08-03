@@ -4,6 +4,7 @@ namespace App\Form\Support;
 
 use App\Security\CurrentUserService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class NewSupportGroupType extends AbstractType
@@ -29,7 +30,9 @@ class NewSupportGroupType extends AbstractType
             ->remove('agreement')
             ->remove('supportPeople')
             ->remove('location')
-            ->remove('comment');
+            ->remove('comment')
+            ->add('referent', HiddenType::class)
+            ->add('status', HiddenType::class);
     }
 
     public function getParent()

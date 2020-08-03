@@ -11,6 +11,7 @@
                     <th scope="col" class="align-middle th-w-150">Travailleur/se social·e</th>
                     <th scope="col" class="align-middle th-w-150">Service (Dispositif)</th>
                     <th scope="col" class="align-middle th-w-100">Pôle</th>
+                    <th scope="col" class="align-middle th-w-20"></th>
                 </tr>
             </thead>
 
@@ -37,7 +38,7 @@
                 {% endset %}
 
                 <tr>
-                    <th scope="row">
+                    <td scope="row" class="align-middle">
                         {% if is_granted("VIEW", support) %}
                         <a href="{{ path('support_view', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
@@ -54,7 +55,7 @@
                             title="Modifier le suivi social"><span class="fas fa-edit"></span>
                         </a>
                         {% endif %} #}
-                    </th>
+                    </td>
                     <td class="align-middle">{{ support.statusToString }}</td>
                     <td class="align-middle">{% if support.startDate %}{{ support.startDate|date("d/m/Y") }}{% endif %}</td>
                     <td class="align-middle">{% if support.endDate %}{{ support.endDate|date("d/m/Y") }}{% endif %}</td>
@@ -74,6 +75,15 @@
                         {% endif %}
                     </td>
                     <td class="align-middle">{% if support.service %}{{ support.service.pole.name }}{% endif %}</td>
+                    <td class="align-middle">
+                        {% if is_granted("EDIT", support) %}
+                        <a href="{{ path('support_clone', {'id':support.id}) }}"
+                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                            onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir dupliquer ce suivi ?')){return true;}else{return false;}"
+                            title="Dupliquer le suivi social (évaluation sociale et documents)"><span class="fas fa-clone"></span>
+                        </a>
+                        {% endif %}
+                    </td>
                 </tr>
                 {# {% endcache %} #}
                 {% endfor %}

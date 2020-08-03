@@ -45,7 +45,7 @@
                         {% endfor %}
                     <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
                         {% set nbSupportPeople = support.supportPeople|length %}
-                        {% if nbSupportPeople > 1 %} | {{ nbSupportPeople }} pers.{% endif %}
+                        {{ nbSupportPeople > 1 ? "|" ~ nbSupportPeople ~ "pers." }}
                         {% if nbSupportPeople != support.groupPeople.nbPeople %}
                         <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                         {% endif %}
@@ -54,8 +54,9 @@
                         {{ support.service.name }}<br />{% if support.device %}({{ support.device.name }}){% endif %}                    
                     </td>
                     <td class="align-middle">{{ support.statusToString }}</td>
-                    <td class="align-middle">{% if support.startDate %}{{ support.startDate|date("d/m/Y") }}{% endif %}
-                    <td class="align-middle">{% if support.endDate %}{{ support.endDate|date("d/m/Y") }}{% endif %}
+                    <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}
+                    <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}
+                        {% if support.endDate == null and support.theoreticalEndDate %}{{ support.theoreticalEndDate|date("d/m/Y") }}<br/>(Fin théorique){% endif %}
                     </td>
                 </tr>
                 {# {% endcache %} #}

@@ -66,6 +66,30 @@ class EvaluationPerson
      */
     private $initEvalPerson;
 
+    public function __clone()
+    {
+        if ($this->evalAdmPerson) {
+            $this->setEvalAdmPerson(clone $this->evalAdmPerson);
+        }
+        if ($this->evalBudgetPerson) {
+            $this->setEvalBudgetPerson(clone $this->evalBudgetPerson);
+        }
+        if ($this->evalFamilyPerson) {
+            $this->setEvalFamilyPerson(clone $this->evalFamilyPerson);
+        }
+        if ($this->evalJusticePerson) {
+            $this->setEvalJusticePerson(clone $this->evalJusticePerson);
+        }
+        if ($this->evalProfPerson) {
+            $this->setEvalProfPerson(clone $this->evalProfPerson);
+        }
+        if ($this->evalSocialPerson) {
+            $this->setEvalSocialPerson(clone $this->evalSocialPerson);
+        }
+
+        $this->setInitEvalPerson(new InitEvalPerson());
+    }
+
     public function getId(): ?int
     {
         return $this->id;
