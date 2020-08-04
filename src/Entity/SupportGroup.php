@@ -31,7 +31,7 @@ class SupportGroup
         4 => 'Terminé',
         1 => 'Orientation/pré-admission en cours',
         5 => 'Orientation/pré-admission non aboutie',
-        6 => 'Autre',
+        97 => 'Autre',
     ];
 
     public const END_STATUS = [
@@ -250,6 +250,11 @@ class SupportGroup
      * @ORM\OneToMany(targetEntity=Contribution::class, mappedBy="supportGroup", orphanRemoval=true)
      */
     private $contributions;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Avdl::class, mappedBy="supportGroup", cascade={"persist", "remove"})
+     */
+    private $avdl;
 
     public function __construct()
     {
@@ -771,6 +776,23 @@ class SupportGroup
             if ($contribution->getSupportGroup() === $this) {
                 $contribution->setSupportGroup(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getAvdl(): ?Avdl
+    {
+        return $this->avdl;
+    }
+
+    public function setAvdl(Avdl $avdl): self
+    {
+        $this->avdl = $avdl;
+
+        // set the owning side of the relation if necessary
+        if ($avdl->getSupportGroup() !== $this) {
+            $avdl->setSupportGroup($this);
         }
 
         return $this;

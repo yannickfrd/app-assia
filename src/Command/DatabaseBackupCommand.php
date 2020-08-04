@@ -24,7 +24,7 @@ class DatabaseBackupCommand extends Command
     {
         // $this->setName('app:database:backup');
         $this->setAliases(['app:db:b']);
-        $this->setDescription('Créer une sauvegarde de la base de données.');
+        $this->setDescription('Create a backup of database.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -33,8 +33,8 @@ class DatabaseBackupCommand extends Command
 
         $this->dumpDatabase->dump($path);
 
-        $message = '[OK] Backup de la base de données réussi !';
-        $output->writeln("\e[32m".$message."\e[0m \n");
+        $message = '[OK] Backup of database is successfull !';
+        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;
     }

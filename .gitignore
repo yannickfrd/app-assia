@@ -5,7 +5,7 @@
 # /.env.*.local
 /php.ini.lnk
 /public/bundles/
-/uploads/
+/backups/
 /var/
 /vendor/
 /web/

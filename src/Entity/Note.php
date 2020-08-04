@@ -16,7 +16,7 @@ class Note
     public const TYPE = [
         1 => 'Note',
         2 => 'Rapport social',
-        3 => 'Autre',
+        97 => 'Autre',
     ];
 
     public const TYPE_DEFAULT = 1;

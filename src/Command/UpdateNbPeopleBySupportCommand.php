@@ -29,7 +29,7 @@ class UpdateNbPeopleBySupportCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $message = $this->updateNbPeopleBySupport();
-        $output->writeln("\e[32m".$message."\e[0m \n");
+        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;
     }
@@ -51,6 +51,6 @@ class UpdateNbPeopleBySupportCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] Le nombre de personnes par suivi est mis à jour ! \n ".$count.' / '.count($supports);
+        return "[OK] The number of people by support is update !\n  ".$count.' / '.count($supports);
     }
 }

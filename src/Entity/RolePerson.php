@@ -29,7 +29,7 @@ class RolePerson
         4 => 'Parent isolé',
         5 => 'Personne isolée',
         6 => 'Autre membre de la famille',
-        7 => 'Autre',
+        97 => 'Autre',
     ];
 
     /**

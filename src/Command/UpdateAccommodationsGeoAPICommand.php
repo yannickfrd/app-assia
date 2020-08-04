@@ -29,7 +29,7 @@ class UpdateAccommodationsGeoAPICommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $message = $this->updateLocationAccommodations();
-        $output->writeln("\e[32m".$message."\e[0m \n");
+        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;
     }
@@ -67,7 +67,7 @@ class UpdateAccommodationsGeoAPICommand extends Command
             }
         }
 
-        return "[OK] Les adresses des groupes de places ont été mis à jour ! \n ".$count.' / '.count($accommodations);
+        return "[OK] The address of accommodations are update ! \n ".$count.' / '.count($accommodations);
     }
 
     protected function cleanString(string $string)

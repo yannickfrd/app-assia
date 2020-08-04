@@ -29,7 +29,7 @@ class UpdateLocationSupportsCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $message = $this->updateLocationSupports();
-        $output->writeln("\e[32m".$message."\e[0m \n");
+        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;
     }
@@ -74,6 +74,6 @@ class UpdateLocationSupportsCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] L'adresse des suivis est mis à jour ! \n ".$count.' / '.count($supports);
+        return "[OK] The address of supports are update ! \n ".$count.' / '.count($supports);
     }
 }
