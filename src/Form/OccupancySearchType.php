@@ -29,9 +29,6 @@ class OccupancySearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
-            // ->add('service', ServiceSearchType::class, [
-            //     'data_class' => RdvSearch::class,
-            // ])
             ->add('export');
     }
 

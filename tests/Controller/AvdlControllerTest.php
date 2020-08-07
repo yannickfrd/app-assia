@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Tests\AppTestTrait;
+use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -30,6 +31,14 @@ class AvdlControllerTest extends WebTestCase
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
+    }
+
+    public function testViewListAvdlSupportsIsUp()
+    {
+        $this->client->request('GET', $this->generateUri('avdl_supports'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Suivis AVDL');
     }
 
     protected function tearDown(): void

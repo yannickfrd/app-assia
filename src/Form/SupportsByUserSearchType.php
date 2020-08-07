@@ -16,8 +16,10 @@ class SupportsByUserSearchType extends AbstractType
         $builder
             ->add('service', ServiceSearchType::class, [
                 'data_class' => SupportsByUserSearch::class,
-                'attr' => ['service', 'device'],
-            ])
+                'attr' => [
+                    'options' => ['services', 'devices'],
+                    ],         
+                ])
             ->add('send', HiddenType::class);
     }
 

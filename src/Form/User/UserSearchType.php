@@ -3,17 +3,17 @@
 namespace App\Form\User;
 
 use App\Entity\Pole;
-use App\Entity\Service;
-use App\Entity\ServiceUser;
 use App\Entity\User;
-use App\Form\Model\UserSearch;
+use App\Entity\ServiceUser;
 use App\Form\Utils\Choices;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\Model\UserSearch;
+use App\Form\Type\ServiceSearchType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class UserSearchType extends AbstractType
 {
@@ -67,19 +67,10 @@ class UserSearchType extends AbstractType
                     'autocomplete' => 'off',
                 ],
             ])
-            ->add('service', EntityType::class, [
-                'class' => Service::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                // "checkboxes", true,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'placeholder' => '-- Service --',
+            ->add('service', ServiceSearchType::class, [
                 'attr' => [
-                    'class' => 'multi-select js-service',
+                    'options' => ['services'],
                 ],
-                'required' => false,
             ])
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,

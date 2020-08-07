@@ -97,10 +97,10 @@ class UserRepository extends ServiceEntityRepository
         if (!$search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NULL');
         }
-        if ($search->getService()->count()) {
+        if ($search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($search->getService() as $service) {
+            foreach ($search->getServices() as $service) {
                 $orX->add($expr->eq('s.id', $service));
             }
             $query->andWhere($orX);
@@ -162,11 +162,18 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser): QueryBuilder
+    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+            ->leftJoin('u.serviceUser', 'su')
+            
             ->where('u.disabledAt IS NULL');
+
+        if ($serviceId) {
+            $query = $query->andWhere('su.service = :service')
+                    ->setParameter('service', $serviceId);
+        }
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->leftJoin('u.serviceUser', 'r')

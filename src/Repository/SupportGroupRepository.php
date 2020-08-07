@@ -7,6 +7,7 @@ use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use Doctrine\ORM\QueryBuilder;
 use App\Security\CurrentUserService;
+use App\Form\Model\AvdlSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use Doctrine\Persistence\ManagerRegistry;
@@ -138,6 +139,33 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne tous les suivis sociaux.
+     */
+    public function findAllAvdlSupportsQuery(AvdlSupportSearch $search, int $serviceId): Query
+    {
+        $query = $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+
+            ->where('sg.service = :service')
+            ->setParameter('service', $serviceId);
+
+        $query = $this->filter($query, $search);
+
+        return $query->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
      * Donne les suivis.
      *
      * @return mixed
@@ -166,10 +194,10 @@ class SupportGroupRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    protected function filter(QueryBuilder $query, SupportGroupSearch $search)
+    protected function filter(QueryBuilder $query, $search)
     {
         if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
-            $query->where('s.id IN (:services)')
+            $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
         if ($search->getFullname()) {

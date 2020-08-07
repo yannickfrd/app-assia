@@ -46,7 +46,7 @@ class UserSearch
     /**
      * @var ArrayCollection
      */
-    private $service;
+    private $services;
 
     /**
      * @var Pole|null
@@ -65,7 +65,7 @@ class UserSearch
 
     public function __construct()
     {
-        $this->service = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function getFirstname(): ?string
@@ -152,14 +152,14 @@ class UserSearch
         return $this;
     }
 
-    public function getService(): ?ArrayCollection
+    public function getServices(): ?ArrayCollection
     {
-        return $this->service;
+        return $this->services;
     }
 
-    public function setService(?ArrayCollection $service): self
+    public function setServices(?ArrayCollection $services): self
     {
-        $this->service = $service;
+        $this->services = $services;
 
         return $this;
     }

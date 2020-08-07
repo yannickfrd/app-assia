@@ -53,19 +53,19 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesFromUserQueryList(CurrentUserService $currentUser, Service $service = null)
+    public function getDevicesFromUserQueryList(CurrentUserService $currentUser, $serviceId = null)
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, accommodation}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->where('sd.service IN (:services)')
+            $query = $query->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        if ($service) {
-            $query = $query->where('sd.service = :service')
-                ->setParameter('service', $service);
+        if ($serviceId) {
+            $query = $query->andWhere('sd.service = :service')
+                ->setParameter('service', $serviceId);
         }
 
         return $query->orderBy('d.name', 'ASC');

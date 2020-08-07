@@ -206,7 +206,7 @@ class Avdl
         return $this->propoHousing;
     }
 
-    public function getPropoHousingToString(): string
+    public function getPropoHousingToString(): ?string
     {
         return $this->getPropoHousing() ? Choices::YES_NO[$this->getPropoHousing()] : null;
     }
@@ -223,7 +223,7 @@ class Avdl
         return $this->diagType;
     }
 
-    public function getDiagTypeToString(): string
+    public function getDiagTypeToString(): ?string
     {
         return $this->getDiagType() ? self::DIAG_TYPE[$this->getDiagType()] : null;
     }
@@ -264,7 +264,7 @@ class Avdl
         return $this->recommendationSupport;
     }
 
-    public function getRecommendationSupportToString(): string
+    public function getRecommendationSupportToString(): ?string
     {
         return $this->getRecommendationSupport() ? self::RECOMMENDATION_SUPPORT[$this->getRecommendationSupport()] : null;
     }
@@ -317,7 +317,7 @@ class Avdl
         return $this->supportType;
     }
 
-    public function getSupportTypeToString(): string
+    public function getSupportTypeToString(): ?string
     {
         return $this->getSupportType() ? self::SUPPORT_TYPE[$this->getSupportType()] : null;
     }
@@ -334,7 +334,7 @@ class Avdl
         return $this->readyToHousing;
     }
 
-    public function getReadyToHousingToString(): string
+    public function getReadyToHousingToString(): ?string
     {
         return $this->getReadyToHousing() ? Choices::YES_NO[$this->getReadyToHousing()] : null;
     }
@@ -363,7 +363,7 @@ class Avdl
         return $this->endSupportReason;
     }
 
-    public function getEndSupportReasonToString(): string
+    public function getEndSupportReasonToString(): ?string
     {
         return $this->getEndSupportReason() ? self::END_SUPPORT_REASON[$this->getEndSupportReason()] : null;
     }
@@ -380,7 +380,7 @@ class Avdl
         return $this->AccessHousingType;
     }
 
-    public function getAccessHousingTypeToString(): string
+    public function getAccessHousingTypeToString(): ?string
     {
         return $this->getAccessHousingType() ? self::ACCESS_HOUSING_TYPE[$this->getAccessHousingType()] : null;
     }
@@ -409,7 +409,7 @@ class Avdl
         return $this->propoOrigin;
     }
 
-    public function getPropoOriginToString(): string
+    public function getPropoOriginToString(): ?string
     {
         return $this->getPropoOrigin() ? self::PROPO_ORIGIN[$this->getPropoOrigin()] : null;
     }
@@ -426,7 +426,7 @@ class Avdl
         return $this->propoResult;
     }
 
-    public function getPropoResultToString(): string
+    public function getPropoResultToString(): ?string
     {
         return $this->getPropoResult() ? self::PROPO_RESULT[$this->getPropoResult()] : null;
     }
