@@ -1,4 +1,4 @@
-// Retirer une ligne d'un tableau
+// Permet de retirer une ligne d'un tableau
 export default class DeleteTr {
 
     constructor(tableId) {

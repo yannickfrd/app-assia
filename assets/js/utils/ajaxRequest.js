@@ -1,6 +1,7 @@
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 
+// Requête AJAX
 export default class AjaxRequest {
 
     constructor() {
@@ -28,7 +29,7 @@ export default class AjaxRequest {
         this.xhr.send(this.data);
     }
 
-    // Retourne le résultat de la rêquête
+    // Retourne le résultat de la requête
     load(callback, url) {
         if (this.xhr.status >= 200 && this.xhr.status < 400) {
             return callback(this.xhr.responseText); // Appelle la fonction callback en lui passant la réponse de la requête

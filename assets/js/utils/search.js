@@ -1,4 +1,4 @@
-// Classe pour les différents modules de recherche
+// Classe pour les différents pages de recherche
 export default class Search {
 
     constructor(formId) {

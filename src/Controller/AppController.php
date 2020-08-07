@@ -61,6 +61,7 @@ class AppController extends AbstractController
      */
     public function home(): Response
     {
+
         $cache = new FilesystemAdapter();
 
         if (1 == $this->getUser()->getStatus()) {

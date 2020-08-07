@@ -1,5 +1,7 @@
+import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
+import Select from "../utils/select";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import ParametersUrl from "../utils/parametersUrl";
 import language from "@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js";
@@ -7,7 +9,11 @@ import language from "@ckeditor/ckeditor5-build-decoupled-document/build/transla
 export default class SupportNotes {
 
     constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest;
+        this.ajaxRequest = new AjaxRequest();
+        this.loader = new Loader("#modal-note");
+        this.select = new Select();
+        this.parametersUrl = new ParametersUrl();
+
         this.newNoteBtn = document.getElementById("js-new-note");
         this.noteElts = document.querySelectorAll(".js-note");
 
@@ -20,7 +26,6 @@ export default class SupportNotes {
         this.btnExportElt = this.modalNoteElt.querySelector("#js-btn-export");
         this.btnDeleteElt = this.modalNoteElt.querySelector("#modal-btn-delete");
 
-        this.loader = new Loader("#modal-note");
         this.modalElt = $("#modal-note");
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.autoSaveElt = document.getElementById("js-auto-save");
@@ -30,7 +35,6 @@ export default class SupportNotes {
         this.autoSave = false;
         this.count = 0;
         this.editor;
-        this.parametersUrl = new ParametersUrl();
 
         this.init();
     }
@@ -98,6 +102,8 @@ export default class SupportNotes {
     newNote() {
         this.modalNoteElt.querySelector("form").action = "/support/" + this.supportId + "/note/new";
         this.modalNoteElt.querySelector("#note_title").value = "";
+        this.select.setOption(this.modalNoteElt.querySelector("#note_type"), 1);
+        this.select.setOption(this.modalNoteElt.querySelector("#note_status"), 1);
         this.editor.setData("");
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnExportElt.classList.replace("d-block", "d-none");
@@ -117,10 +123,10 @@ export default class SupportNotes {
         this.modalNoteElt.querySelector("#note_title").value = this.titleNoteElt.textContent;
 
         let typeValue = noteElt.querySelector(".js-note-type").getAttribute("data-value");
-        this.selectOption(this.modalNoteElt.querySelector("#note_type"), typeValue);
+        this.select.setOption(this.modalNoteElt.querySelector("#note_type"), typeValue);
 
         let statusValue = noteElt.querySelector(".js-note-status").getAttribute("data-value");
-        this.selectOption(this.modalNoteElt.querySelector("#note_status"), statusValue);
+        this.select.setOption(this.modalNoteElt.querySelector("#note_status"), statusValue);
 
         this.editor.setData(this.contentNoteElt.innerHTML);
 
@@ -160,28 +166,6 @@ export default class SupportNotes {
         this.autoSave = false;
         this.count = 0;
         clearInterval(this.countdownID);
-    }
-
-    // Sélectionne une des options dans une liste select
-    selectOption(selectElt, value) {
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.value === value) {
-                option.selected = true;
-            } else {
-                option.selected = false;
-            }
-        });
-    }
-
-    // Retourne l'option sélectionnée
-    getOption(selectElt) {
-        let optionValue;
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.selected === true) {
-                optionValue = option.value;
-            }
-        });
-        return optionValue;
     }
 
     // Envoie la requête ajax pour sauvegarder la note
@@ -277,11 +261,11 @@ export default class SupportNotes {
         let noteTypeElt = this.noteElt.querySelector(".js-note-type");
         noteTypeElt.textContent = data.type;
 
-        noteTypeElt.setAttribute("data-value", this.getOption(this.modalNoteElt.querySelector("#note_type")));
+        noteTypeElt.setAttribute("data-value", this.select.getOption(this.modalNoteElt.querySelector("#note_type")));
 
         let noteStatusElt = this.noteElt.querySelector(".js-note-status");
         noteStatusElt.textContent = "(" + data.status + ")";
-        noteStatusElt.setAttribute("data-value", this.getOption(this.modalNoteElt.querySelector("#note_status")));
+        noteStatusElt.setAttribute("data-value", this.select.getOption(this.modalNoteElt.querySelector("#note_status")));
 
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
     }

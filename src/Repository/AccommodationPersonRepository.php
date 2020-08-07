@@ -28,10 +28,10 @@ class AccommodationPersonRepository extends ServiceEntityRepository
     public function findAccommodationPersonById(int $id): ?AccommodationPerson
     {
         return $this->createQueryBuilder('ap')->select('ap')
-            ->leftJoin('ap.createdBy', 'user')->addselect('user')
-            ->leftJoin('ap.person', 'p')->addselect('p')
-            ->leftJoin('ap.accommodationGroup', 'ag')->addselect('ag')
-            ->leftJoin('ag.supportGroup', 'sg')->addselect('sg')
+            ->leftJoin('ap.createdBy', 'user')->addSelect('user')
+            ->leftJoin('ap.person', 'p')->addSelect('p')
+            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
+            ->leftJoin('ag.supportGroup', 'sg')->addSelect('sg')
 
             ->andWhere('ap.id = :id')
             ->setParameter('id', $id)
@@ -43,9 +43,9 @@ class AccommodationPersonRepository extends ServiceEntityRepository
     public function findAccommodationPeople(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null)
     {
         $query = $this->createQueryBuilder('ap')->select('ap')
-            ->leftJoin('ap.accommodationGroup', 'ag')->addselect('PARTIAL ag.{id, accommodation}')
-            ->leftJoin('ag.accommodation', 'a')->addselect('a')
-            ->leftJoin('a.service', 's')->addselect('PARTIAL s.{id}')
+            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('a')
+            ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id}')
 
             ->andWhere('ap.endDate > :start OR ap.endDate IS NULL')->setParameter('start', $start)
             ->andWhere('ap.startDate < :end')->setParameter('end', $end);

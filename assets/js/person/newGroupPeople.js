@@ -35,7 +35,6 @@ export default class NewGroupPeople {
             this.typoInputElt.addEventListener("input", this.editTypo.bind(this));
             this.nbPeopleInputElt.addEventListener("input", this.editNbPeople.bind(this));
         }
-        // this.emailInputElt.addEventListener("focusout", this.checkEmail.bind(this));
         // this.phone1InputElt.addEventListener("input", this.phone.bind(this));
 
 

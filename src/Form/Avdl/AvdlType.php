@@ -5,7 +5,6 @@ namespace App\Form\Avdl;
 use App\Entity\Avdl;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use App\Form\Support\SupportGroupAvdlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -107,8 +106,7 @@ class AvdlType extends AbstractType
                     'placeholder' => 'avdl.endSupportComment.placeholder',
                 ],
                 'required' => false,
-            ])
-            ->add('supportGroup', SupportGroupAvdlType::class);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

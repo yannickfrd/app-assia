@@ -27,26 +27,26 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     public function findEvaluationById(int $supportGroupId): ?EvaluationGroup
     {
         return $this->createQueryBuilder('eg')->select('eg')
-            ->join('eg.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->join('sg.groupPeople', 'gp')->addselect('PARTIAL gp.{id, familyTypology, nbPeople}')
+            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->join('sg.groupPeople', 'gp')->addSelect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
-            ->leftJoin('eg.evaluationPeople', 'ep')->addselect('ep')
-            ->join('ep.supportPerson', 'sp')->addselect('PARTIAL sp.{id, person, head, role}')
-            ->join('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
+            ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role}')
+            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
-            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addselect('initEvalGroup')
-            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addselect('evalSocialGroup')
-            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addselect('evalBudgetGroup')
-            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addselect('evalFamilyGroup')
-            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addselect('evalHousingGroup')
+            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
+            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
+            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
+            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
+            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
 
-            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addselect('initEvalPerson')
-            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addselect('evalAdmPerson')
-            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addselect('evalBudgetPerson')
-            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addselect('evalFamilyPerson')
-            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addselect('evalJusticePerson')
-            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addselect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addselect('evalSocialPerson')
+            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
+            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
+            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
+            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
+            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
+            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
 
             ->andWhere('eg.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId)
@@ -65,10 +65,10 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     public function findEvaluationResourceById(int $supportGroupId): ?EvaluationGroup
     {
         return $this->createQueryBuilder('eg')->select('eg')
-            ->join('eg.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->leftJoin('eg.evaluationPeople', 'ep')->addselect('ep')
-            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addselect('PARTIAL ebg.{id, contributionAmt}')
-            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addselect('PARTIAL ebp.{id, resourcesAmt, salaryAmt}')
+            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
+            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('PARTIAL ebg.{id, contributionAmt}')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('PARTIAL ebp.{id, resourcesAmt, salaryAmt}')
 
             ->andWhere('eg.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId)

@@ -1,3 +1,4 @@
+// Test du datepicker
 ! function (a) {
     a.fn.datepicker.dates.fr = {
         days: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],

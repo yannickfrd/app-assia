@@ -24,7 +24,6 @@ class DocumentRepository extends ServiceEntityRepository
 
     /**
      * Return all documents of group support.
-     *
      */
     public function findAllDocumentsQuery(int $supportGroupId, DocumentSearch $search): Query
     {
@@ -50,7 +49,7 @@ class DocumentRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('d')->select('COUNT(d.id)');
 
         if ($criteria) {
-            // $query = $query->leftJoin("d.supportGroup", "sg")->addselect("PARTIAL sg.{id, referent, status, service, device}");
+            // $query = $query->leftJoin("d.supportGroup", "sg")->addSelect("PARTIAL sg.{id, referent, status, service, device}");
 
             foreach ($criteria as $key => $value) {
                 if ('user' == $key) {

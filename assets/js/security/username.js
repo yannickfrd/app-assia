@@ -71,7 +71,7 @@ export default class Username {
     }
 
     checkEmail() {
-        if (this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}") || this.emailInputElt.value === "") {
+        if (this.emailInputElt.value === "" || this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}")) {
             return this.validationInput.valid(this.emailInputElt);
         }
         return this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");

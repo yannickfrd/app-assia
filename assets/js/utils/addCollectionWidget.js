@@ -1,4 +1,4 @@
-// Classe d'ajout d'éléments dans une collection
+// Permet d'ajouter des éléments dans une collection
 export default class AddCollectionWidget {
 
     constructor() {

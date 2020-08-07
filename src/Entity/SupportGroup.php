@@ -344,9 +344,9 @@ class SupportGroup
 
     public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        if ($endDate) {
-            $this->endDate = $endDate;
-        }
+        // if ($endDate) {
+        $this->endDate = $endDate;
+        // }
 
         return $this;
     }

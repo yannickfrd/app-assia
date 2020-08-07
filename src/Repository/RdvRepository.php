@@ -50,7 +50,7 @@ class RdvRepository extends ServiceEntityRepository
         $query = $this->getRdvsQuery()
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, pole}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
-            ->leftJoin('r.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}');
+            ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');
 
         $query = $this->filter($query, $search);
 
@@ -62,7 +62,7 @@ class RdvRepository extends ServiceEntityRepository
     protected function getRdvsQuery()
     {
         return $this->createQueryBuilder('r')->select('r')
-            ->leftJoin('r.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
@@ -131,7 +131,7 @@ class RdvRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('r')
             ->select('r')
-            ->leftJoin('r.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
 
             ->andWhere('sg.id = :supportGroup')
@@ -163,8 +163,8 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null)
     {
         $query = $this->createQueryBuilder('r')->select('r')
-            ->leftJoin('r.createdBy', 'u')->addselect('u')
-            ->leftJoin('r.supportGroup', 's')->addselect('s')
+            ->leftJoin('r.createdBy', 'u')->addSelect('u')
+            ->leftJoin('r.supportGroup', 's')->addSelect('s')
 
             ->where('r.start >= :start')->setParameter('start', $start)
             ->andWhere('r.start <= :end')->setParameter('end', $end);
@@ -208,10 +208,10 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findAllRdvsFromUser(User $user, int $maxResults = 1000)
     {
-        return $this->createQueryBuilder('rdv')->addselect('rdv')
-            ->leftJoin('rdv.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
+        return $this->createQueryBuilder('rdv')->addSelect('rdv')
+            ->leftJoin('rdv.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('rdv.createdBy = :createdBy')
             ->setParameter('createdBy', $user)
@@ -231,7 +231,7 @@ class RdvRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('rdv')->select('COUNT(rdv.id)');
 
         if ($criteria) {
-            // $query = $query->leftJoin("rdv.supportGroup", "sg")->addselect("PARTIAL sg.{id, referent, status, service, device}");
+            // $query = $query->leftJoin("rdv.supportGroup", "sg")->addSelect("PARTIAL sg.{id, referent, status, service, device}");
 
             foreach ($criteria as $key => $value) {
                 if ('user' == $key) {

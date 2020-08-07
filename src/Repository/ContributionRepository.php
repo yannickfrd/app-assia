@@ -106,8 +106,8 @@ class ContributionRepository extends ServiceEntityRepository
         ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
         ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
         ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
-        ->leftJoin('c.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
-        ->leftJoin('c.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}');
+        ->leftJoin('c.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+        ->leftJoin('c.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');
     }
 
     /**

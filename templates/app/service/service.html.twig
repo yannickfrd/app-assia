@@ -137,6 +137,54 @@
         </div>
         
     </section>
+
+    {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
+    <hr>
+    <section>
+
+        <h2 class="h4 mb-4">Services prescripteurs(s) rattachés</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="table-responsive table-sm">
+                    <table id="function-table" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-150">Dispositif</th>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="organizations-fields-list"
+                            data-prototype="<td class='align-middle'>{{ form_widget(form.organizations.vars.prototype.organization)|e }}</td>"
+                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.organizations|length }}">
+                            {% for organization in form.organizations %}
+                                <tr id="{{ organization.vars.id }}">
+                                    <td>{{ form_widget(organization.name) }}</td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="my-2">
+            <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                data-list-selector="#organizations-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-right mb-2">
+                    <button type="submit" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    {% endif %}
+
     {% endif %}
 
     {{ form_row(form._token) }}

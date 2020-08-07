@@ -25,8 +25,6 @@ class ServiceSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $data = isset($options['data']) ? $options['data'] : null;
-
         $builder
             ->add('referents', EntityType::class, [
                 'class' => User::class,

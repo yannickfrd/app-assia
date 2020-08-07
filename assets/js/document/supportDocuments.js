@@ -1,5 +1,6 @@
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
+import Select from "../utils/select";
 
 export default class SupportDocuments {
 
@@ -21,6 +22,7 @@ export default class SupportDocuments {
         this.supportId = document.getElementById("container-documents").getAttribute("data-support");
 
         this.loader = new Loader("#modal-document");
+        this.select = new Select();
 
         this.init();
     }
@@ -62,7 +64,7 @@ export default class SupportDocuments {
     newDocument() {
         this.modalDocumentElt.querySelector("form").action = "/support/" + this.supportId + "/document/new";
         this.documentNameInput.value = "";
-        this.selectOption(this.documentTypeInput, null)
+        this.select.setOption(this.documentTypeInput, null)
         this.documentContentInput.value = "";
         this.modalDocumentElt.querySelector(".js-document-block-file").classList.remove("d-none");
         this.documentFileInput.value = null;
@@ -85,7 +87,7 @@ export default class SupportDocuments {
         this.documentNameInput.value = this.nameDocumentElt.textContent;
 
         let typeValue = documentElt.querySelector(".js-document-type").getAttribute("data-value");
-        this.selectOption(this.documentTypeInput, typeValue);
+        this.select.setOption(this.documentTypeInput, typeValue);
 
         this.contentDocumentElt = documentElt.querySelector(".js-document-content");
         this.documentContentInput.value = this.contentDocumentElt.textContent;
@@ -97,28 +99,6 @@ export default class SupportDocuments {
 
         this.btnSaveElt.setAttribute("data-action", "edit");
         this.btnSaveElt.textContent = "Mettre à jour";
-    }
-
-    // Sélectionne une des options dans une liste select
-    selectOption(selectElt, value) {
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.value === value) {
-                option.selected = true;
-            } else {
-                option.selected = false;
-            }
-        });
-    }
-
-    // Retourne l'option sélectionnée
-    getOption(selectElt) {
-        let optionValue;
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.selected === true) {
-                optionValue = option.value;
-            }
-        });
-        return optionValue;
     }
 
     // Vérifie le fichier choisi
@@ -163,7 +143,7 @@ export default class SupportDocuments {
             new MessageFlash("danger", "Le nom du document est vide.");
         }
 
-        if (!this.getOption((this.documentTypeInput))) {
+        if (!this.select.getOption((this.documentTypeInput))) {
             error = true;
             new MessageFlash("danger", "Le type de document n'est pas renseigné.");
         }
@@ -251,7 +231,7 @@ export default class SupportDocuments {
         this.nameDocumentElt.textContent = this.documentNameInput.value;
         let documentTypeInput = this.documentElt.querySelector(".js-document-type");
         documentTypeInput.textContent = data.type;
-        documentTypeInput.setAttribute("data-value", this.getOption(this.documentTypeInput));
+        documentTypeInput.setAttribute("data-value", this.select.getOption(this.documentTypeInput));
         this.documentElt.querySelector(".js-document-content").textContent = this.documentContentInput.value;
     }
 
@@ -262,7 +242,7 @@ export default class SupportDocuments {
                     <a href="/document/${data.documentId}/read" class="btn btn-${this.themeColor} btn-sm shadow my-1" title="Télécharger le document"><span class="fas fa-file-download"></span></a>
                 </th>
                     <td class="align-middle js-document-name" data-toggle="modal" data-target="#modal-document">${this.documentNameInput.value}</td>
-                    <td class="align-middle js -document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.getOption(this.documentTypeInput)}">${data.type}</td>
+                    <td class="align-middle js -document-type" data-toggle="modal" data-target="#modal-document" data-value="${this.select.getOption(this.documentTypeInput)}">${data.type}</td>
                     <td class="align-middle js -document-content" data-toggle="modal" data-target="#modal-document">${this.documentContentInput.value}</td>
                     <td class="align-middle js -document-size text-right" data-toggle="modal" data-target="#modal-document">${size}</td>
                     <td class="align-middle js -document-createdAt" data-toggle="modal" data-target="#modal-document">${data.createdAt}</td>

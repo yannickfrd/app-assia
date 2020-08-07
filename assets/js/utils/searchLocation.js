@@ -1,6 +1,7 @@
 import AjaxRequest from "../utils/ajaxRequest";
 import Loader from "./loader";
 
+// Gére la recerche d'une adresse avec l'API adresse.data.gouv.fr
 export default class SearchLocation {
 
     constructor(containerId, lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
@@ -28,6 +29,8 @@ export default class SearchLocation {
     }
 
     init() {
+        // this.containerElt.querySelector("label[for=support_location_search]").textContent = this.searchElt.getAttribute("data-label");
+
         this.searchElt.addEventListener("keyup", this.timer.bind(this));
         this.searchElt.addEventListener("click", () => {
             this.resultsSearchElt.classList.replace("fade-out", "fade-in");
@@ -55,7 +58,7 @@ export default class SearchLocation {
         this.countdownID = setTimeout(this.count.bind(this), this.time);
     }
 
-    // Compte le nombre de caratères saisis et lance la requête Ajax<
+    // Compte le nombre de caratères saisis et lance la requête Ajax
     count() {
         let valueSearch = this.searchElt.value;
         if (valueSearch.length >= this.lengthSearch) {
@@ -69,15 +72,14 @@ export default class SearchLocation {
 
     // Réponse Ajax
     responseAjax(response) {
-        let datas = JSON.parse(response);
-        this.features = datas.features;
-        console.log(this.features);
+        this.features = JSON.parse(response).features;
+        // console.log(this.features);
 
         this.resultsSearchElt.innerHTML = "";
         if (this.features.length > 0) {
             this.addItem();
         } else {
-            this.noResult();
+            this.displayNoResult();
         }
         this.resultsSearchElt.classList.replace("d-none", "d-block");
         this.resultsSearchElt.classList.replace("fade-out", "fade-in");
@@ -88,24 +90,37 @@ export default class SearchLocation {
     addItem() {
         let i = 0;
         this.features.forEach(feature => {
-            let label = feature.properties.label;
-            if (feature.properties.type === "municipality") {
-                label = label + " (" + feature.properties.context + ")";
-            }
-            let aElt = document.createElement("a");
-            aElt.innerHTML = "<span class='text-secondary small'>" + label + "</span>";
-            aElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 cursor-pointer";
-            aElt.setAttribute("data-feature", i);
-
-            let styleSeachElt = window.getComputedStyle(this.searchElt);
-            this.resultsSearchElt.style.maxWidth = styleSeachElt.width;
-
-            this.resultsSearchElt.appendChild(aElt);
-            aElt.addEventListener("click", () => {
-                this.updateLocation(aElt.getAttribute("data-feature"));
+            let itemElt = this.createItem(feature, i);
+            this.resultsSearchElt.appendChild(itemElt);
+            itemElt.addEventListener("click", () => {
+                this.updateLocation(itemElt.getAttribute("data-feature"));
             });
             i++;
         });
+        this.setWidthResultsSearchElt();
+    }
+
+    createItem(feature, i) {
+        let itemElt = document.createElement("a");
+        itemElt.innerHTML = "<span class='text-secondary small'>" + this.getLabel(feature) + "</span>";
+        itemElt.className = "list-group-item list-group-item-action pl-3 pr-1 py-1 cursor-pointer";
+        itemElt.setAttribute("data-feature", i);
+
+        return itemElt;
+    }
+
+    getLabel(feature) {
+        let label = feature.properties.label;
+        if (feature.properties.type === "municipality") {
+            label = label + " (" + feature.properties.context + ")";
+        }
+        return label;
+    }
+
+    setWidthResultsSearchElt() {
+        let styleSeachElt = window.getComputedStyle(this.searchElt);
+        this.resultsSearchElt.style.maxWidth = styleSeachElt.width;
+        this.resultsSearchElt.style.top = styleSeachElt.height;
     }
 
     // Met à jour les champs du formulaire
@@ -126,7 +141,7 @@ export default class SearchLocation {
     }
 
     // Affiche 'Aucun résultat.'
-    noResult() {
+    displayNoResult() {
         let spanElt = document.createElement("p");
         spanElt.textContent = "Aucun résultat.";
         spanElt.className = "list-group-item pl-3 py-2 text-secondary small";

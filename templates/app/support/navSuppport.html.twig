@@ -13,12 +13,6 @@
 				data-toggle="tooltip" data-placement="bottom" title="Page d'accueil du suivi">
 				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
 			</a>
-			{% if support.service.id == 5 %} <!-- AVDL -->
-			<a class="btn btn-{{ theme_color }} shadow px-1 mr-1 mb-2" href="{{ path('support_avdl_edit', {'id':support.id}) }}" 
-				data-toggle="tooltip" data-placement="bottom" title="Spécificités parcours AVDL">
-				<span class="small font-weight-bold">AVDL</span>
-			</a>
-			{% endif %}
 			{% if support.device and support.device.accommodation %}
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_accommodations', {'id':support.id}) }}" 
 				data-toggle="tooltip" data-placement="bottom" title="Modalités d'hébergement">

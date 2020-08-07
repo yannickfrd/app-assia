@@ -10,11 +10,11 @@ class LocationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $data = $options['data'];
+        $data = $options['attr'];
 
         $builder
             ->add('search', null, [
-                'label' => $data['seachLabel'] ?? 'Adresse',
+                'label' => $data['seachLabel'] ?? '',
                 'attr' => [
                     'class' => 'js-search',
                     'placeholder' => 'location.search.placeholder',

@@ -127,6 +127,19 @@ class SupportPerson
         $this->evaluationsPerson = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $now = new \DateTime();
+        $this->setCreatedAt($now);
+        $this->setUpdatedAt($now);
+        $this->setStartDate(null);
+        $this->setEndDate(null);
+        $this->setStatus(2);
+        $this->setEndStatus(null);
+        $this->setEndStatusComment(null);
+        $this->setComment(null);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

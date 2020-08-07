@@ -1,5 +1,4 @@
 // Système de déconnexion automatique après un laps de temps
-
 export default class AutoLogout {
 
     constructor(ajaxRequest, timeout = 30, timeAlert = 5) {

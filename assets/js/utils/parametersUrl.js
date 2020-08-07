@@ -1,3 +1,4 @@
+// Donne les paramètres présents dans l'URL
 export default class ParametersUrl {
 
     constructor() {

@@ -108,8 +108,8 @@ class ServiceRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->select('PARTIAL s.{id, name, email, phone1}')
-            ->leftJoin('s.pole', 'p')->addselect('PARTIAL p.{id, name}')
-            ->leftJoin('s.serviceUser', 'su')->addselect('su')
+            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}')
+            ->leftJoin('s.serviceUser', 'su')->addSelect('su')
 
             ->andWhere('su.user = :user')
             ->setParameter('user', $user)
@@ -128,17 +128,18 @@ class ServiceRepository extends ServiceEntityRepository
     public function getFullService(int $id): ?Service
     {
         return $this->createQueryBuilder('s')->select('s')
-            ->leftJoin('s.pole', 'p')->addselect('PARTIAL p.{id, name}')
+            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}')
+            ->leftJoin('s.chief', 'chief')->addSelect('PARTIAL chief.{id, firstname, lastname, status, phone1, email}')
 
-            ->leftJoin('s.chief', 'chief')->addselect('PARTIAL chief.{id, firstname, lastname, status, phone1, email}')
+            ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
+            ->leftJoin('sd.device', 'd')->addSelect('PARTIAL d.{id, name}')
 
-            ->leftJoin('s.serviceDevices', 'sd')->addselect('sd')
-            ->leftJoin('sd.device', 'd')->addselect('PARTIAL d.{id, name}')
+            ->leftJoin('s.organizations', 'organization')->addSelect('organization')
 
-            ->leftJoin('s.accommodations', 'a')->addselect('a')
+            ->leftJoin('s.accommodations', 'a')->addSelect('a')
 
-            ->leftJoin('s.serviceUser', 'su')->addselect('su')
-            ->leftJoin('su.user', 'u')->addselect('PARTIAL u.{id, firstname, lastname, status, phone1, email}')
+            ->leftJoin('s.serviceUser', 'su')->addSelect('su')
+            ->leftJoin('su.user', 'u')->addSelect('PARTIAL u.{id, firstname, lastname, status, phone1, email}')
 
             ->where('s.id = :id')
             ->setParameter('id', $id)

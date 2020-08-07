@@ -1,3 +1,4 @@
+// Permet de retourner une date au format texte
 export default class DateFormat {
 
     constructor() {

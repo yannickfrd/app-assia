@@ -7,11 +7,11 @@ export default class RemoveSupportPerson {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest();
+        this.loader = new Loader();
         this.trElts = document.querySelectorAll(".js-tr-support_pers");
         this.modalConfirmElt = document.getElementById("modal-confirm");
         this.addPeopleBtElt = document.getElementById("add-people");
         this.trElt = null;
-        this.loader = new Loader();
         this.init();
     }
 

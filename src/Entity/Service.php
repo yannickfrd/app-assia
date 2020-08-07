@@ -150,13 +150,18 @@ class Service
      */
     private $chief;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Organization::class, inversedBy="services")
+     */
+    private $organizations;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
         $this->serviceDevices = new ArrayCollection();
         $this->accommodations = new ArrayCollection();
-        // $this->organizations = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function __toString()
@@ -471,34 +476,6 @@ class Service
         return $this;
     }
 
-    // /**
-    //  * @return Collection|Organization[]
-    //  */
-    // public function getOrganizations(): ?Collection
-    // {
-    //     return $this->organizations;
-    // }
-
-    // public function addOrganization(Organization $organization): self
-    // {
-    //     if (!$this->organizations->contains($organization)) {
-    //         $this->organizations[] = $organization;
-    //         $organization->addService($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeOrganization(Organization $organization): self
-    // {
-    //     if ($this->organizations->contains($organization)) {
-    //         $this->organizations->removeElement($organization);
-    //         $organization->removeService($this);
-    //     }
-
-    //     return $this;
-    // }
-
     public function getChief(): ?User
     {
         return $this->chief;
@@ -507,6 +484,32 @@ class Service
     public function setChief(?User $chief): self
     {
         $this->chief = $chief;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Organization[]
+     */
+    public function getOrganizations(): Collection
+    {
+        return $this->organizations;
+    }
+
+    public function addOrganization(Organization $organization): self
+    {
+        if (!$this->organizations->contains($organization)) {
+            $this->organizations[] = $organization;
+        }
+
+        return $this;
+    }
+
+    public function removeOrganization(Organization $organization): self
+    {
+        if ($this->organizations->contains($organization)) {
+            $this->organizations->removeElement($organization);
+        }
 
         return $this;
     }

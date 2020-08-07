@@ -46,18 +46,18 @@ class SupportPersonRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('sp')
             ->select('sp')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
-            ->leftJoin('p.accommodationPeople', 'ap')->addselect('ap')
-            ->leftJoin('ap.accommodationGroup', 'ag')->addselect('ag')
-            ->leftJoin('ag.accommodation', 'a')->addselect('a')
-            ->leftJoin('sp.supportGroup', 'sg')->addselect('sg')
-            ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople}')
-            ->leftJoin('sg.referent', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name}')
-            ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
-            ->leftJoin('sg.device', 'd')->addselect('PARTIAL d.{id, name}')
-            ->leftJoin('sg.originRequest', 'origin')->addselect('origin')
-            ->leftJoin('origin.organization', 'orga')->addselect('PARTIAL orga.{id, name}');
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('p.accommodationPeople', 'ap')->addSelect('ap')
+            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('a')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}');
     }
 
     /**
@@ -172,21 +172,21 @@ class SupportPersonRepository extends ServiceEntityRepository
     {
         $query = $this->getSupportsQuery();
 
-        $query = $query->leftJoin('sp.evaluationsPerson', 'ep')->addselect('ep')
-            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addselect('initEvalPerson')
-            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addselect('evalJusticePerson')
-            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addselect('evalAdmPerson')
-            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addselect('evalBudgetPerson')
-            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addselect('evalFamilyPerson')
-            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addselect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addselect('evalSocialPerson')
+        $query = $query->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('ep')
+            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
+            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
+            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
+            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
+            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
+            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
 
-            ->leftJoin('ep.evaluationGroup', 'eg')->addselect('eg')
-            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addselect('initEvalGroup')
-            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addselect('evalBudgetGroup')
-            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addselect('evalFamilyGroup')
-            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addselect('evalHousingGroup')
-            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addselect('evalSocialGroup');
+            ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('eg')
+            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
+            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
+            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
+            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
+            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
 
         $query = $this->filtersExport($query, $search);
 
@@ -199,7 +199,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function countSupportsToExport($search = null)
     {
         $query = $this->createQueryBuilder('sp')->select('sp')
-            ->leftJoin('sp.supportGroup', 'sg')->addselect('sg')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->select('COUNT(sp.id)');
 
         $query = $this->filtersExport($query, $search);

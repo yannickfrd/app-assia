@@ -34,8 +34,8 @@ class NoteRepository extends ServiceEntityRepository
     public function findAllNotesQuery(NoteSearch $search): Query
     {
         $query = $this->createQueryBuilder('n')->select('n')
-            ->leftJoin('n.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('n.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('n.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
@@ -109,8 +109,8 @@ class NoteRepository extends ServiceEntityRepository
     public function findAllNotesFromSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
         $query = $this->createQueryBuilder('n')
-            ->leftJoin('n.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('n.updatedBy', 'u2')->addselect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
 
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
@@ -144,11 +144,11 @@ class NoteRepository extends ServiceEntityRepository
     public function findAllNotesFromUser(User $user, int $maxResults = 1000)
     {
         return $this->createQueryBuilder('n')
-            ->addselect('PARTIAL n.{id, title, status, createdAt, updatedAt}')
+            ->addSelect('PARTIAL n.{id, title, status, createdAt, updatedAt}')
 
-            ->leftJoin('n.supportGroup', 'sg')->addselect('PARTIAL sg.{id}')
-            ->leftJoin('sg.supportPeople', 'sp')->addselect('PARTIAL sp.{id, head, role}')
-            ->leftJoin('sp.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('n.createdBy = :user')
             ->setParameter('user', $user)
@@ -172,7 +172,7 @@ class NoteRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('n')->select('COUNT(n.id)');
 
         if ($criteria) {
-            // $query = $query->leftJoin("n.supportGroup", "sg")->addselect("PARTIAL sg.{id, referent, status, service, device}");
+            // $query = $query->leftJoin("n.supportGroup", "sg")->addSelect("PARTIAL sg.{id, referent, status, service, device}");
 
             foreach ($criteria as $key => $value) {
                 if ('user' == $key) {

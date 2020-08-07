@@ -1,12 +1,19 @@
+import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
+import Select from "../utils/select";
 import ValidationInput from "../utils/validationInput";
 import ParametersUrl from "../utils/parametersUrl";
 
 export default class SupportContributions {
 
-    constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest;
+    constructor() {
+        this.ajaxRequest = new AjaxRequest();
+        this.loader = new Loader("#modal-contribution");
+        this.select = new Select();
+        this.validationInput = new ValidationInput();
+        this.parametersUrl = new ParametersUrl();
+
         this.modalContributionElt = document.getElementById("modal-contribution");
         this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
         this.periodContributionYearSelect = document.getElementById("contribution_periodContribution_year");
@@ -53,12 +60,9 @@ export default class SupportContributions {
         this.nbTotalContributionsElt = document.getElementById("nb-total-contributions");
         this.supportId = document.getElementById("support").getAttribute("data-support");
 
-        this.loader = new Loader("#modal-contribution");
         this.modalElt = $("#modal-contribution");
         this.now = new Date();
         this.error = false;
-        this.validationInput = new ValidationInput();
-        this.parametersUrl = new ParametersUrl();
 
         this.init();
     }
@@ -152,7 +156,7 @@ export default class SupportContributions {
 
     // Vérifie le type de partipation (redevance ou caution)
     checkType() {
-        let option = parseInt(this.getOption(this.typeSelect));
+        let option = this.select.getOption(this.typeSelect);
         let otherOption = 1;
         if (option === 1) {
             otherOption = 2;
@@ -237,7 +241,7 @@ export default class SupportContributions {
 
     // Donne le ratio de jours de présence dans le mois
     getRateDays() {
-        let date = new Date(this.getOption(this.periodContributionYearSelect) + "-" + this.getOption(this.periodContributionMonthSelect) + "-01");
+        let date = new Date(this.select.getOption(this.periodContributionYearSelect) + "-" + this.select.getOption(this.periodContributionMonthSelect) + "-01");
         let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1);
         let nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24));
         let rateDays = 1;
@@ -309,7 +313,7 @@ export default class SupportContributions {
 
     // Vérifie le type de paiement saisie
     checkPaymentType() {
-        if ((!this.getOption(this.paymentTypeSelect) && this.paymentDateInput.value) || (!this.getOption(this.paymentTypeSelect) && this.paidAmtInput.value)) {
+        if ((!this.select.getOption(this.paymentTypeSelect) && this.paymentDateInput.value) || (!this.select.getOption(this.paymentTypeSelect) && this.paidAmtInput.value)) {
             this.error = true;
             return this.validationInput.invalid(this.paymentTypeSelect, "Ne peut pas être vide.");
         }
@@ -362,7 +366,7 @@ export default class SupportContributions {
 
     // Réinitialise le formulaire
     reinitForm() {
-        this.selectOption(this.paymentTypeSelect, null);
+        this.select.setOption(this.paymentTypeSelect, "");
         this.paymentTypeSelect.classList.remove("is-valid");
         this.formContributionElt.querySelectorAll("input").forEach(inputElt => {
             if (inputElt.type != "hidden") {
@@ -382,17 +386,6 @@ export default class SupportContributions {
                 option.selected = false;
             }
         });
-    }
-
-    // Retourne l'option sélectionnée
-    getOption(selectElt) {
-        let optionValue;
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.selected === true) {
-                optionValue = option.value;
-            }
-        });
-        return optionValue;
     }
 
     // Enregistre la redevance

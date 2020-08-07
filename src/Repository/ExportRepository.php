@@ -31,7 +31,7 @@ class ExportRepository extends ServiceEntityRepository
     public function findExportsQuery(): Query
     {
         return $this->createQueryBuilder('e')->select('e')
-            ->leftJoin('e.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('e.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->andWhere('e.createdBy = :user')
             ->setParameter('user', $this->currentUser->getUser())

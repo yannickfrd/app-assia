@@ -11,12 +11,13 @@ use App\Entity\SupportPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
 use App\Export\SupportPersonExport;
+use App\Repository\ServiceRepository;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
-use App\Repository\GroupPeopleRepository;
+use App\Form\Support\SupportGroupAvdlType;
 use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
@@ -81,12 +82,18 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(int $id, GroupPeopleRepository $repo, Request $request, SupportGroupService $supportGroupService): Response
+    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupService $supportGroupService, ServiceRepository $repoService): Response
     {
-        $groupPeople = $repo->findGroupPeopleById($id);
+        // $groupPeople = $repo->findGroupPeopleById($id);
         $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser());
+        // $serviceId = $request->request->get('support')['service'];
+        $serviceId = $_REQUEST['support']['service'];
 
-        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
+        if ((int)$serviceId) {
+            $supportGroup->setService($repoService->find($serviceId));
+        }
+
+        $form = ($this->createForm($this->getFormType($serviceId), $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
@@ -141,11 +148,13 @@ class SupportController extends AbstractController
      */
     public function editSupportGroup(int $id, Request $request, SupportGroupService $supportGroupService): Response
     {
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $this->repoSupportGroup->find($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
+        $supportGroup = $this->getSupportGroup($supportGroup);
+
+        $form = ($this->createForm($this->getFormType($supportGroup->getService()->getId()), $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -494,5 +503,35 @@ class SupportController extends AbstractController
         }
 
         return (new SupportPersonExport())->exportData($supports);
+    }
+
+    /**
+     * Récupère le suivi social en fonction du service choisi.
+     */
+    protected function getSupportGroup(SupportGroup $supportGroup)
+    {
+        switch ($supportGroup->getService()->getId()) {
+            case 5:
+                return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
+                break;
+            default:
+                return $this->repoSupportGroup->findFullSupportById($supportGroup->getId());
+                break;
+        }
+    }
+
+    /**
+     * Donne le formType en fonction du service choisi.
+     */
+    protected function getFormType(int $serviceId = null)
+    {
+        switch ($serviceId) {
+            case 5:
+                return SupportGroupAvdlType::class;
+                break;
+            default:
+                return SupportGroupType::class;
+                break;
+        }
     }
 }

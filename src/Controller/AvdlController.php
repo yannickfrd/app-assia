@@ -3,12 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Avdl;
-use App\Form\Avdl\AvdlType;
 use App\Entity\SupportGroup;
 use App\Repository\AvdlRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Support\SupportGroupAvdlType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +36,7 @@ class AvdlController extends AbstractController
      */
     public function editAvdl(int $id, Request $request): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $this->repoSupportGroup->findSupportAvdlById($id);
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         // Si le service n'est pas AVDL, redirige vers la page d'accueil du suivi
@@ -44,32 +44,42 @@ class AvdlController extends AbstractController
             return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
-        $avdl = $this->repo->findOneBy(['supportGroup' => $supportGroup]) ?? new Avdl();
-
-        $form = ($this->createForm(AvdlType::class, $avdl))
+        $form = ($this->createForm(SupportGroupAvdlType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateAvdl($supportGroup, $avdl);
+            $this->updateAvdl($supportGroup);
         }
 
-        return $this->render('app/avdl/avdl.html.twig', [
+        $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
+            ->handleRequest($request);
+
+        if ($this->isGranted('ROLE_ADMIN') && $formCoeff->isSubmitted() && $formCoeff->isValid()) {
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
+
+            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+        }
+
+        return $this->render('app/support/supportGroupEdit.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
+            'formCoeff' => $formCoeff->createView(),
         ]);
     }
 
     /**
      * Met à jour l'AVDL.
      */
-    protected function updateAvdl(SupportGroup $supportGroup, Avdl $avdl)
+    protected function updateAvdl(SupportGroup $supportGroup)
     {
-        if (null == $avdl->getId()) {
-            $avdl->setSupportGroup($supportGroup);
-            $this->manager->persist($avdl);
-        }
+        $avdl = $supportGroup->getAvdl();
 
-        ($avdl->getSupportGroup())
+        $supportGroup
+            ->setStatus($this->getStatus($avdl))
+            ->setStartDate($this->getStartDate($avdl))
+            ->setEndDate($this->getEndDate($avdl))
             ->setCoefficient($this->getCoeffSupport($avdl))
             ->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->getUser());
@@ -80,11 +90,45 @@ class AvdlController extends AbstractController
     }
 
     /**
+     * Donne le statut du suivi.
+     */
+    protected function getStatus(Avdl $avdl): int
+    {
+        if ($avdl->getSupportEndDate() || ($avdl->getDiagEndDate() && $avdl->getSupportStartDate() == null)) {
+            return 4; // Terminé
+        }
+
+        return 2; // En cours
+    }
+
+    /**
+     * Donne la date de début du suivi.
+     */
+    protected function getStartDate(Avdl $avdl): ?\DateTimeInterface
+    {
+        return min([
+            $avdl->getDiagStartDate(),
+            $avdl->getSupportStartDate(),
+        ]);
+    }
+
+    /**
+     * Donne la date de fin du suivi.
+     */
+    protected function getEndDate(Avdl $avdl): ?\DateTimeInterface
+    {
+        return max([
+            $avdl->getDiagEndDate(),
+            $avdl->getSupportEndDate(),
+        ]);
+    }
+
+    /**
      * Donne le coefficient du suivi.
      *
      * @return float
      */
-    protected function getCoeffSupport(Avdl $avdl)
+    protected function getCoeffSupport(Avdl $avdl): int
     {
         // Si accompagnement lourd : coeff 2
         if ($avdl->getSupportType() == 3) {

@@ -26,7 +26,7 @@
 
 	{% if support.id and is_granted("ROLE_ADMIN") %}
 		<section>
-			<h2 class="h4 my-4">Coefficient du suivi</h2>
+			<h2 class="h5 my-4">Coefficient du suivi</h2>
 			{{ form_start(formCoeff) }}
 				<div class="form-inline">
 					{{ form_label(formCoeff.coefficient) }}
@@ -37,67 +37,22 @@
 					</div>
 				</div>
 				{{ form_row(formCoeff._token) }}
-
 			{{ form_end(formCoeff, {"render_rest": false}) }}
 		</section>
-	<hr>
+		<hr>
 	{% endif %}
 
 	{{ form_start(form) }}
 
-	<div class="card mb-4 border border-{{ theme_color }}">
-	  	<h5 class="card-header">Orientation / pré-admission</h5>
-		<div class="card-body bg-light">
-			<div class="form-group row">
-				<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
-				<div class="col-md-6">{{ form_row(form.originRequest.organizationComment) }}</div>
-				<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
-				<div class="col-md-6">{{ form_row(form.originRequest.preAdmissionDate) }}</div>
-				<div class="col-md-6">{{ form_row(form.originRequest.resulPreAdmission) }}</div>
-				<div class="col-md-6">{{ form_row(form.originRequest.decisionDate) }}</div>
-				<div class="col-md-12">{{ form_label(form.originRequest.comment) }}{{ form_widget(form.originRequest.comment) }}</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row mt-5">
-		<div class="col-md-6">{{ form_row(form.service) }}</div>
-		<div class="col-md-6">{{ form_row(form.device) }}</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6">{{ form_row(form.status) }}</div>
-		<div class="col-md-6">{{ form_row(form.startDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.theoreticalEndDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.endDate) }}</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
-		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatusComment) }}</div>
-		{% if support.id and support.device.accommodation %}
-			<div class="col-md-6 js-status d-block">
-				<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-					{{ form_row(form.endAccommodation) }}
-				</div>
-			</div>
-		{% endif %}
-	</div>
-	<div class="form-group row">
-		<div class="col-md-6">{{ form_row(form.referent) }}</div>
-		<div class="col-md-6">{{ form_row(form.referent2) }}</div>
-	</div>
-
-	<div class="form-group row {% if support.device and support.device.accommodation == 1 %}d-none{% endif %}" id="support_location">
-		<div class="col-md-6">{{ form_row(form.location.search) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.address) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.city) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
-	</div>
+	{% set serviceId = support.service.id %}
+	{% if serviceId == 5 %}
+		{% include "app/support/supportAvdl.html.twig" %}
+	{% else %}		
+		{% include "app/support/supportRegular.html.twig" %}
+	{% endif %}
 
 	{% if support.id %}
-
     {# {% cache "support.edit" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
-
 	<div class="form-group row">
 		<div class="col-md-12">
 			<div class="mb-4 float-right">
@@ -109,70 +64,7 @@
 
 	<hr>
 	
-	<section>
-		<h2 class="h4 my-4">Personnes rattachées au suivi social</h2>
-		<div class="row">
-			<div class="col-md-12">
-				<div class="table-responsive mb-3">
-					<table id="table-support-people" class="table table-sm table-striped table-hover text-dark shadow-sm">
-						<thead>
-							<tr>
-								<th scope="col" class="align-middle th-w-20"></th>
-								<th scope="col" class="align-middle th-w-150">Nom et prénom</th>
-								<th scope="col" class="align-middle th-w-20" data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
-								<th scope="col" class="align-middle th-w-150">Rôle</th>
-								<th scope="col" class="align-middle th-date">Date de début</th>
-								<th scope="col" class="align-middle th-date">Date de fin</th>
-								<th scope="col" class="align-middle th-w-120">Statut</th>
-								<th scope="col" class="align-middle th-w-150">Situation à la fin</th>
-								<th scope="col" class="align-middle th-w-150">Commentaire situation à la fin</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% for form_support_pers in form.supportPeople.children %}
-								{% set person = form_support_pers.vars.data.person %}
-								<tr class="js-tr-support_pers">
-									<th scope="row" class="px-1 align-middle">
-										<button class="js-remove btn btn-danger btn-sm shadow" data-url="{{ path('remove_support_pers', 
-											{'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
-											data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne du suivi">
-											<span class="fas fa-user-times"></span>
-										</button>
-									</th>
-									<td class="px-2 align-middle w-min-150">{{ person.fullname }}</td>
-									<td class="px-1 align-middle">
-										<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
-											{{ form_widget(form_support_pers.head) }}
-										</div>
-									</td>										
-									<td class="px-1">{{ form_widget(form_support_pers.role) }}</td>
-									<td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
-									<td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
-									<td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
-									<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
-									<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-		<div class="form-group row">
-			<div class="col-md-12">
-				<a id="add-people" href="{{ path('support_add_people', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
-					<span class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe au suivi</a>
-				<div class="float-right">
-					<button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">
-						<span class="fas fa-save mr-2"></span>Mettre à jour</button>
-				</div>
-			</div>
-		</div>
-
-	</section>
-	
+	{% include "app/support/supportPeople.html.twig" %}
 	{# {% endcache %} #}
 
 	{% endif %}

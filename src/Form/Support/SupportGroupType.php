@@ -35,9 +35,10 @@ class SupportGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $supportGroup = $options['data'];
+        $service = $supportGroup->getService();
 
-        $referentQueryBuilder = function (UserRepository $repo) use ($supportGroup) {
-            return $repo->getUsersQueryList($this->currentUser, $supportGroup->getReferent());
+        $referentQueryBuilder = function (UserRepository $repo) use ($service, $supportGroup) {
+            return $repo->getUsersQueryList($service, $supportGroup->getReferent());
         };
 
         $builder
@@ -47,13 +48,16 @@ class SupportGroupType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
+                'attr' => [
+                    'readonly' => true,
+                ],
                 'placeholder' => 'placeholder.select',
             ])
             ->add('device', EntityType::class, [
                 'class' => Device::class,
                 'choice_label' => 'name',
-                'query_builder' => function (DeviceRepository $repo) {
-                    return $repo->getDevicesFromUserQueryList($this->currentUser);
+                'query_builder' => function (DeviceRepository $repo) use ($service) {
+                    return $repo->getDevicesFromUserQueryList($this->currentUser, $service);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -61,7 +65,11 @@ class SupportGroupType extends AbstractType
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'placeholder' => 'placeholder.select',
             ])
-            ->add('originRequest', OriginRequestType::class)
+            ->add('originRequest', OriginRequestType::class, [
+                'attr' => [
+                    'serviceId' => $service->getId(),
+                ],
+            ])
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -124,8 +132,8 @@ class SupportGroupType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Accommodation::class,
-                'data' => [
-                    'seachLabel' => 'Adresse du suivi',
+                'attr' => [
+                    // 'seachLabel' => 'Adresse du suivi',
                     'seachHelp' => 'Adresse du logement, hébergement, domiciliation...',
                 ],
             ])

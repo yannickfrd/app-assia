@@ -59,7 +59,7 @@ class ReferentType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Referent::class,
-                'data' => ['seachLabel' => 'Adresse du service référent'],
+                'attr' => ['seachLabel' => 'Adresse du service référent'],
             ])
             ->add('comment', null, [
                 'attr' => [

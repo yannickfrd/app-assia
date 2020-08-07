@@ -2,8 +2,8 @@
 export default class Loader {
 
     constructor(modalId) {
-        this.inLoading = false;
         this.loaderElt = document.getElementById("loader");
+        this.inLoading = false;
         this.modalElt = $(modalId);
     }
     // Active le loader

@@ -26,7 +26,7 @@ class DatabaseBackupRepository extends ServiceEntityRepository
     public function findBackupsQuery(): Query
     {
         return $this->createQueryBuilder('b')->select('b')
-            ->leftJoin('b.createdBy', 'u')->addselect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('b.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->orderBy('b.createdAt', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);

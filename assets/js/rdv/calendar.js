@@ -141,17 +141,6 @@ export default class Calendar {
         this.ajaxRequest.init("GET", "/rdv/" + this.rdvId + "/get", this.responseAjax.bind(this), true);
     }
 
-    // Retourne l'option sélectionnée
-    getOption(selectElt) {
-        let optionValue;
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.selected === true) {
-                optionValue = option.value;
-            }
-        });
-        return optionValue;
-    }
-
     // Requête pour sauvegarder le RDV
     requestSaveRdv() {
         if (this.modalRdvElt.querySelector("#rdv_title").value != "") {

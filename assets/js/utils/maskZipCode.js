@@ -1,3 +1,4 @@
+// Masque de saisie pour le code postal
 import "jquery-mask-plugin";
 
 $(document).ready(function ($) {

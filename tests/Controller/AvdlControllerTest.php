@@ -6,7 +6,6 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class AvdlControllerTest extends WebTestCase
 {
@@ -31,16 +30,6 @@ class AvdlControllerTest extends WebTestCase
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
-    }
-
-    public function testAvdlPageIsUp()
-    {
-        $this->client->request('GET', $this->generateUri('support_avdl_edit', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'AVDL');
     }
 
     protected function tearDown(): void

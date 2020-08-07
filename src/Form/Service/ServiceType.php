@@ -125,9 +125,23 @@ class ServiceType extends AbstractType
                     'attr' => ['class' => 'form-inline'],
                 ],
             ])
+            // ->add('organizations', CollectionType::class, [
+            //     'entry_type' => ServiceOrganizationType::class,
+            //     'allow_add' => true,
+            //     'allow_delete' => true,
+            //     'delete_empty' => true,
+            //     'prototype' => true,
+            //     'by_reference' => false,
+            //     'label_attr' => [
+            //         'class' => 'sr-only',
+            //     ],
+            //     'entry_options' => [
+            //         'attr' => ['class' => 'form-inline'],
+            //     ],
+            // ])
             ->add('location', LocationType::class, [
                 'data_class' => Service::class,
-                'data' => ['seachLabel' => 'Adresse du service'],
+                'attr' => ['seachLabel' => 'Adresse du service'],
             ]);
     }
 

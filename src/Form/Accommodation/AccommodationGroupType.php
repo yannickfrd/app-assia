@@ -20,8 +20,6 @@ class AccommodationGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // $service = ($options['data'])->getSupportGroup()->getService();
-
         $builder
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',

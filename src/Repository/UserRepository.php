@@ -46,14 +46,14 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('u')
             ->select('u')
-            ->leftJoin('u.referentSupport', 'sg')->addselect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
-            ->leftJoin('sg.service', 's')->addselect('PARTIAL s.{id, name, email, phone1}')
-            ->leftJoin('sg.groupPeople', 'g')->addselect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
-            ->leftJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
-            ->leftJoin('r.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname}')
-            ->leftJoin('u.serviceUser', 'su')->addselect('su')
-            ->leftJoin('su.service', 'service')->addselect('PARTIAL service.{id, name, email, phone1}')
-            ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
+            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
+            ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
+            ->leftJoin('r.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
+            ->leftJoin('su.service', 'service')->addSelect('PARTIAL service.{id, name, email, phone1}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
 
             ->andWhere('u.id = :id')
             ->setParameter('id', $id)
@@ -69,8 +69,8 @@ class UserRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('u')
             ->select('u')
-            ->leftJoin('u.createdBy', 'creatorUser')->addselect('creatorUser')
-            ->leftJoin('u.serviceUser', 'su')->addselect('su')
+            ->leftJoin('u.createdBy', 'creatorUser')->addSelect('creatorUser')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
             ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id,name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id,name}');
 
@@ -126,27 +126,17 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs.
      */
-    public function getUsersQueryList(CurrentUserService $currentUser, User $user = null): QueryBuilder
+    public function getUsersQueryList(Service $service, User $user = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}');
+        return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('u.serviceUser', 'r')
 
-        $expr = $query->expr();
-        $orX = $expr->orX();
+            ->where('r.service = :services')
+            ->setParameter('services', $service)
+            ->orWhere('u.id = :user')
+            ->setParameter('user', $user)
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->leftJoin('u.serviceUser', 'r')
-                ->andWhere('r.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
-            $orX->add($expr->eq('u.id', $currentUser->getUser()));
-        }
-        $orX->add($expr->isNull('u.disabledAt'));
-        if ($user) {
-            $orX->add($expr->eq('u.id', $user));
-        }
-        $query->andWhere($orX);
-
-        return $query->orderBy('u.lastname', 'ASC');
+            ->orderBy('u.lastname', 'ASC');
     }
 
     public function findAllUsersFromServices(CurrentUserService $currentUser)
@@ -196,7 +186,7 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, disabledAt}')
-            ->leftJoin('u.serviceUser', 'su')->addselect('su')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
 
             ->where('su.service = :service')
             ->setParameter('service', $service)

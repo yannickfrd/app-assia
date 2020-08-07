@@ -1,3 +1,5 @@
+// Masque de saisie avec rwmask (class de test)
+
 import rxmask from 'rxmask';
 
 export default class maskInput {

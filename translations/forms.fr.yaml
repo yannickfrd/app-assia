@@ -45,7 +45,7 @@ Pre admission: Pré-admission
 Referent: Référent
 Referent2: Référent suppléant
 Role: Rôle dans le groupe
-Search: Recherche...
+Search: Recherche
 Select: Sélectionner
 Service name: Nom du service
 Start: Début
@@ -155,6 +155,7 @@ Diag comment: Commentaire sur le diagnostic
 Support type: Niveau d'accompagnement
 Ready to housing: Prêt au logement
 Support comment: Commentaire sur l'accompagnement
+Support start date: Date de début d'accompagnement
 Support end date: Date de fin d'accompagnement
 End support reason: Motif de fin d'accompagnement
 Access housing type: Type d'accès au logement

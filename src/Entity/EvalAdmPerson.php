@@ -26,7 +26,7 @@ class EvalAdmPerson
         01 => 'CNI',
         03 => 'Papiers étrangers',
         02 => 'Passeport',
-        30 => 'Récépissé asile',
+        30 => 'Récépissé première demande',
         31 => 'Récépissé renouvellement de titre',
         97 => 'Autre',
         99 => 'Non renseigné',

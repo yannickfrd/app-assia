@@ -27,16 +27,16 @@ class GroupPeopleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('g')
             ->select('g')
-            ->leftJoin('g.createdBy', 'createdBy')->addselect('PARTIAL createdBy.{id, firstname, lastname}')
-            ->leftJoin('g.updatedBy', 'updatedBy')->addselect('PARTIAL updatedBy.{id, firstname, lastname}')
-            ->leftJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
-            ->leftJoin('r.person', 'p')->addselect('p')
-            ->leftJoin('g.supports', 'sg')->addselect('sg')
-            ->leftJoin('sg.referent', 'ref')->addselect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
-            ->leftJoin('sg.service', 's')->addselect('s')
-            ->leftJoin('sg.device', 'd')->addselect('d')
-            ->leftJoin('s.pole', 'pole')->addselect('PARTIAL pole.{id, name}')
-            ->leftJoin('g.referents', 'referents')->addselect('referents')
+            ->leftJoin('g.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
+            ->leftJoin('g.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname}')
+            ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
+            ->leftJoin('r.person', 'p')->addSelect('p')
+            ->leftJoin('g.supports', 'sg')->addSelect('sg')
+            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('sg.service', 's')->addSelect('s')
+            ->leftJoin('sg.device', 'd')->addSelect('d')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+            ->leftJoin('g.referents', 'referents')->addSelect('referents')
 
             ->andWhere('g.id = :id')
             ->setParameter('id', $id)
@@ -55,8 +55,8 @@ class GroupPeopleRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('g')
             ->select('PARTIAL g.{id, familyTypology, nbPeople}')
 
-            ->innerJoin('g.rolePeople', 'r')->addselect('PARTIAL r.{id, role, head}')
-            ->innerJoin('r.person', 'p')->addselect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->innerJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
+            ->innerJoin('r.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
             ->andWhere('r.head = TRUE');
 

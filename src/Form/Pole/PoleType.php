@@ -44,7 +44,7 @@ class PoleType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Pole::class,
-                'data' => ['seachLabel' => 'Adresse du pôle'],
+                'attr' => ['seachLabel' => 'Adresse du pôle'],
             ]);
     }
 

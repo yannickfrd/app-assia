@@ -11,8 +11,8 @@ use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\EvaluationPerson;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\EvaluationGroupRepository;
 use App\Repository\SupportGroupRepository;
+use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,12 +21,18 @@ class SupportGroupService
     private $container;
     private $repo;
     private $manager;
+    private $avdlService;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $manager, SupportGroupRepository $repo)
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $manager,
+        SupportGroupRepository $repo,
+        AvdlService $avdlService)
     {
         $this->container = $container;
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->avdlService = $avdlService;
     }
 
     /**
@@ -51,6 +57,13 @@ class SupportGroupService
         $supportGroup
             ->setGroupPeople($groupPeople)
             ->setCoefficient($supportGroup->getDevice()->getCoefficient());
+
+        // Contrôle le service du suivi
+        switch ($supportGroup->getService()->getId()) {
+            case 5:
+                $this->updateAvdl($supportGroup);
+            break;
+        }
 
         $this->manager->persist($supportGroup);
 
@@ -94,11 +107,17 @@ class SupportGroupService
     }
 
     /**
-     * Met à jour le suivi social de la personne.
+     * Met à jour le suivi social du groupe.
      */
     public function update(SupportGroup $supportGroup)
     {
         $supportGroup->setUpdatedAt(new \DateTime());
+        // Contrôle le service du suivi
+        switch ($supportGroup->getService()->getId()) {
+            case 5:
+                $supportGroup = $this->avdlService->updateAvdl($supportGroup);
+            break;
+        }
 
         $nbPeople = count($supportGroup->getSupportPeople());
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
@@ -138,7 +157,7 @@ class SupportGroupService
                 }
             }
         }
-        $this->discached($supportGroup);
+        // $this->discached($supportGroup);
     }
 
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation)

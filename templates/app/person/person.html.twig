@@ -119,10 +119,6 @@
 
     {% if edit_mode %}
 
-    {% include "app/support/historySupportsPerson.html.twig" %}
-
-    <hr>
-
     <section>
 
         <h2 class="h4 my-4">Groupes d'appartenance</h2>
@@ -179,6 +175,10 @@
             class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</button>
 
     </section>
+
+    <hr>
+
+    {% include "app/support/historySupportsPerson.html.twig" %}
 
     {% endif %}
 

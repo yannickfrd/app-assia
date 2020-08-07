@@ -94,12 +94,10 @@ export default class ValidationPerson {
     }
 
     checkEmail() {
-        let regex = this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}");
-        if (regex || this.emailInputElt.value === "") {
-            this.valid("email", this.emailInputElt);
-            this.validationInput.valid(this.emailInputElt);
+        if (this.emailInputElt.value === "" || this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}")) {
+            return this.validationInput.valid(this.emailInputElt);
         } else {
-            this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
+            return this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
         }
     }
 
@@ -135,45 +133,5 @@ export default class ValidationPerson {
         } else {
             this.validationInput.invalid(this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
         }
-    }
-
-    // Met le champ en valide 
-    valid(field, input) {
-        if (input.classList.contains("is-invalid")) {
-            input.classList.replace("is-invalid", "is-valid");
-            // document.querySelector(".invalid-" + field).remove();
-            document.querySelector(".js-invalid-" + field).remove();
-        } else {
-            input.classList.add("is-valid");
-        }
-    }
-
-    // Met le champ en invalide et met un message d'erreur
-    invalid(field, label, input, msg) {
-        if (document.querySelector("label.invalid-" + field)) {
-            document.querySelector(".invalid-" + field).remove();
-            if (document.querySelector("label>span.js-invalid-" + field)) {
-                document.querySelector("span.js-invalid-" + field).remove();
-            }
-            if (!input.classList.contains("is-invalid")) {
-                input.classList.add("is-invalid");
-            }
-            let invalidFeedbackElt = document.createElement("span");
-            invalidFeedbackElt.className = "invalid-feedback d-block js-invalid js-invalid-" + field;
-            invalidFeedbackElt.innerHTML = `
-                <span class="form-error-icon badge badge-danger text-uppercase">Erreur</span> 
-                <span class="form-error-message">${msg}</span>
-                `
-            label.appendChild(invalidFeedbackElt);
-            this.validationInput.valid(this.nbPeopleInputElt);
-        } else {
-            this.validationInput.invalid(this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
-        }
-    }
-
-    // Renvoie le nombre de champs invalides
-    getNbErrors() {
-        let nbErrors = document.querySelectorAll(".js-invalid").length + document.querySelectorAll("select.is-invalid").length;
-        return nbErrors;
     }
 }
