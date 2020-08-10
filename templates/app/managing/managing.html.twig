@@ -14,20 +14,7 @@
 
     <div class="my-4">
 
-        <h2 class="h5">Suivis</h2>
-        <ul>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("supports_by_user") }}">Synthèse des suivis en cours</a>
-            </li>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
-            </li>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("avdl_supports") }}">Tableau de suivis de l'AVDL</a>
-            </li>
-        </ul>
-
-        <hr class="my-3">
+        {% include "app/managing/managingServices.html.twig" %}
 
         <h2 class="h5">Paiements</h2>
         <ul>

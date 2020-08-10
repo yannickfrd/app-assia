@@ -123,6 +123,7 @@
 
     <hr>
 
+    {% if app.user.status == 1 %}
     <section>
 
         <h2 class="h4 my-4">Suivis sociaux en cours</h2>
@@ -171,8 +172,9 @@
         <br />
 
     </section>
-
     <hr>
+    {% endif %}
+
 
     <section>
 

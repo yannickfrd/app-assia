@@ -51,11 +51,12 @@ class LoginListener
         }
 
         // Récupère en session les services rattachés à l'utilisateur
-        $servicesUser = [];
+        $userServices = [];
         foreach ($user->getServiceUser() as $serviceUser) {
-            $servicesUser[] = $serviceUser->getService()->getName();
+            $service = $serviceUser->getService();
+            $userServices[$service->getId()] = $service->getName();
         }
-        $this->session->set('servicesUser', $servicesUser);
+        $this->session->set('userServices', $userServices);
     }
 
     public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)
