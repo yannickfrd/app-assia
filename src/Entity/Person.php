@@ -227,7 +227,7 @@ class Person
     public function getAge(): ?int
     {
         if ($this->birthdate) {
-            return $this->birthdate->diff(new \DateTime())->y;
+            return $this->birthdate->diff(new \DateTime())->y ?? 0;
         }
 
         return null;

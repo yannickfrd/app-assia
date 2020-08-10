@@ -139,9 +139,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne tous les suivis sociaux.
+     * Donne tous les suivis sociaux d'un service.
      */
-    public function findAllAvdlSupportsQuery(AvdlSupportSearch $search, int $serviceId): Query
+    public function findAllSupportsFromServiceQuery(AvdlSupportSearch $search, int $serviceId): Query
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
@@ -159,6 +159,17 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('service', $serviceId);
 
         $query = $this->filter($query, $search);
+
+        if ($search->getDiagOrSupport() == 1) {
+            $query->andWhere('avdl.diagStartDate IS NOT NULL');
+        }
+        if ($search->getDiagOrSupport() == 2) {
+            $query->andWhere('avdl.supportStartDate IS NOT NULL');
+        }
+        if ($search->getReadyToHousing()) {
+            $query->andWhere('avdl.readyToHousing = :readyToHousing')
+            ->setParameter('readyToHousing', $search->getReadyToHousing());
+        }
 
         return $query->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
@@ -190,11 +201,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Filtres.
-     *
-     * @return mixed
+     * Filtre.
      */
-    protected function filter(QueryBuilder $query, $search)
+    protected function filter(QueryBuilder $query, $search): QueryBuilder
     {
         if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')

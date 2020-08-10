@@ -10,10 +10,19 @@ class AvdlSupportSearch
     use DateSearchTrait;
     use ReferentServiceDeviceSearchTrait;
 
+    public const STATUS = [
+        2 => 'En cours',
+        4 => 'Terminé',
+    ];
+
     public const SUPPORT_DATES = [
         1 => 'Début du suivi',
         2 => 'Fin du suivi',
         3 => 'Période de suivi',
+    ];
+    public const DIAG_OR_SUPPORT = [
+        1 => 'Diagnostic',
+        2 => 'Accompagnement',
     ];
 
     /**
@@ -37,13 +46,19 @@ class AvdlSupportSearch
     private $supportDates;
 
     /**
+     * @var int|null
+     */
+    private $diagOrSupport;
+
+    /**
+     * @var int|null
+     */
+    private $readyToHousing;
+
+    /**
      * @var bool
      */
     private $export;
-
-    public function __construct()
-    {
-    }
 
     public function getFullname(): ?string
     {
@@ -89,6 +104,30 @@ class AvdlSupportSearch
     public function setSupportDates(int $supportDates): self
     {
         $this->supportDates = $supportDates;
+
+        return $this;
+    }
+
+    public function getDiagOrSupport(): ?int
+    {
+        return $this->diagOrSupport;
+    }
+
+    public function setDiagOrSupport(int $diagOrSupport): self
+    {
+        $this->diagOrSupport = $diagOrSupport;
+
+        return $this;
+    }
+
+    public function getReadyToHousing(): ?int
+    {
+        return $this->readyToHousing;
+    }
+
+    public function setReadyToHousing(int $readyToHousing): self
+    {
+        $this->readyToHousing = $readyToHousing;
 
         return $this;
     }

@@ -18,11 +18,12 @@ class ResponseListener
     public function onKernelResponse(ResponseEvent $event)
     {
         $request = $event->getRequest();
+        $response = $event->getResponse();
 
         $serverName = $request->server->get('SERVER_NAME');
 
-        if ($request->server->get('APP_ENV') != 'prod' || $serverName == '127.0.0.1:8000') {
-            return $this->addBeta($event->getResponse());
+        if ($response->getContent() && ($request->server->get('APP_ENV') != 'prod' || $serverName == '127.0.0.1:8000')) {
+            return $this->addBeta($response);
         }
     }
 

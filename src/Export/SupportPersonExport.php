@@ -44,7 +44,7 @@ class SupportPersonExport
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
         $groupPeople = $supportGroup->getGroupPeople();
-        $originRequest = $supportGroup->getOriginRequest() ? $supportGroup->getOriginRequest() : new OriginRequest();
+        $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
 
         $startAccommodations = [];
         $endAccommodations = [];
@@ -73,7 +73,7 @@ class SupportPersonExport
             'Typologie familiale' => $groupPeople->getFamilyTypologyToString(),
             'Nb de personnes' => $groupPeople->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
-            'DP' => $supportPerson->getHead() ? 'Oui' : 'Non',
+            'DP' => $supportPerson->getHeadToString(),
             'Statut suivi (personne)' => $supportPerson->getStatusToString(),
             'Coefficient' => $supportGroup->getCoefficient(),
             'Date début suivi (personne)' => $this->formatDate($supportPerson->getStartDate()),
@@ -110,7 +110,7 @@ class SupportPersonExport
         return $datas;
     }
 
-    public function formatDate($date)
+    public function formatDate(?\DateTimeInterface $date)
     {
         return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }

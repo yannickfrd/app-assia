@@ -59,10 +59,10 @@
                         </thead>
                         <tbody>            
                             {% for support in supports %}
-                                {% if support.supportPeople|filter(s => s.role != 3)|length %}
-                                    {% set supportPeople = support.supportPeople|filter(s => s.role != 3) %}
+                                {% if support.supportPeople|filter(s => s.head == true)|length %}
+                                    {% set supportPerson = support.supportPeople|filter(s => s.head == true)|first %}
                                 {% else %} 
-                                    {% set supportPeople = support.supportPeople %}
+                                    {% set supportPerson = support.supportPeople|first %}
                                 {% endif %}
                             <tr>
                                 <td scope="row" class="align-middle">
@@ -74,11 +74,9 @@
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">
-                                    {% for supportPerson in supportPeople %}
                                     <a href="{{ path('group_person_show', {'id':support.groupPeople.id, 'person_id':supportPerson.person.id, 'slug':supportPerson.person.slug}) }}"
                                         class="text-{{ theme_color }}" title="Voir la fiche de la personne" data-toggle="tooltip" 
                                         data-placement="bottom">{{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}</a><br />
-                                {% endfor %}
                                 </td>
                                 {# <td class="align-middle">
                                     {{ support.groupPeople.familyTypologyToString }}<!--

@@ -86,10 +86,9 @@ class SupportController extends AbstractController
     {
         // $groupPeople = $repo->findGroupPeopleById($id);
         $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser());
-        // $serviceId = $request->request->get('support')['service'];
-        $serviceId = $_REQUEST['support']['service'];
+        $serviceId = $request->request->get('support')['service'] ?? $_POST['support']['service'];
 
-        if ((int)$serviceId) {
+        if ((int) $serviceId) {
             $supportGroup->setService($repoService->find($serviceId));
         }
 

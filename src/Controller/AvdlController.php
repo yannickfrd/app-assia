@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Service\Pagination;
-use App\Repository\AvdlRepository;
 use App\Form\Model\AvdlSupportSearch;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Form\Support\AvdlSupportSearchType;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Export\AvdlSupportPersonExport;
+use App\Repository\SupportPersonRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,14 +21,14 @@ class AvdlController extends AbstractController
 
     private $manager;
     private $repoSupportGroup;
-    private $repo;
+    private $repoSupportPerson;
     private $serviceId;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, AvdlRepository $repo)
+    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, SupportPersonRepository $repoSupportPerson)
     {
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
-        $this->repo = $repo;
+        $this->repoSupportPerson = $repoSupportPerson;
         $this->serviceId = 5;
     }
 
@@ -44,13 +45,29 @@ class AvdlController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            // return $this->exportData($search);
+            return $this->exportData($search);
         }
 
         return $this->render('app/avdl/listAvdlSupports.html.twig', [
             'supportGroupSearch' => $search,
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->repoSupportGroup->findAllAvdlSupportsQuery($search, $this->serviceId), $request),
+            'supports' => $pagination->paginate($this->repoSupportGroup->findAllSupportsFromServiceQuery($search, $this->serviceId), $request),
         ]);
+    }
+
+    /**
+     * Exporte les données.
+     */
+    protected function exportData(AvdlSupportSearch $search)
+    {
+        $supports = $this->repoSupportPerson->findSupportsFromServiceToExport($search, $this->serviceId);
+
+        if (!$supports) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
+
+            return $this->redirectToRoute('avdl_supports');
+        }
+
+        return (new AvdlSupportPersonExport())->exportData($supports);
     }
 }

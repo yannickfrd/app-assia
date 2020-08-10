@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\Query;
 use App\Entity\SupportPerson;
+use App\Form\Model\AvdlSupportSearch;
 use App\Security\CurrentUserService;
 use App\Form\Model\SupportGroupSearch;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,11 +28,30 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les places pour l'export.
+     * Retourne toutes les suivis pour l'export.
      */
     public function findSupportsToExport(?SupportGroupSearch $search = null)
     {
         $query = $this->getSupportsQuery();
+
+        if ($search) {
+            $query = $this->filter($query, $search);
+        }
+
+        return $query->orderBy('sp.startDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
+     * Retourne toutes les suivis d'un service pour l'export.
+     */
+    public function findSupportsFromServiceToExport(?AvdlSupportSearch $search = null, int $serviceId)
+    {
+        $query = $this->getSupportsFromServiceQuery()
+
+            ->where('sg.service = :service')
+            ->setParameter('service', $serviceId);
 
         if ($search) {
             $query = $this->filter($query, $search);
@@ -60,10 +80,25 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}');
     }
 
+    protected function getSupportsFromServiceQuery()
+    {
+        return $this->createQueryBuilder('sp')
+            ->select('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
+    }
+
     /**
      * Filtre la recherche.
      */
-    protected function filter($query, SupportGroupSearch $search)
+    protected function filter($query, $search)
     {
         if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             // if ($this->currentUser->isRole("ROLE_ADMIN")) {

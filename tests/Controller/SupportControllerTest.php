@@ -8,6 +8,7 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SupportControllerTest extends WebTestCase
@@ -75,11 +76,12 @@ class SupportControllerTest extends WebTestCase
 
     public function testNewSupportGroupIsUp()
     {
-        $groupPeople = $this->dataFixtures['groupPeople'];
-        $_REQUEST['support'] = ['service' => 1];
+        $request = $this->client->getRequest();
+        $request->request->set('support', ['service' => 1]);
+        $_POST['support'] = ['service' => 1];
 
         $this->client->request('GET', $this->generateUri('support_new', [
-            'id' => $groupPeople->getId(),
+            'id' => $this->dataFixtures['groupPeople']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());

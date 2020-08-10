@@ -3,7 +3,6 @@
 namespace App\Form\Support;
 
 use App\Form\Utils\Choices;
-use App\Entity\SupportGroup;
 use App\Form\Model\AvdlSupportSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
@@ -28,7 +27,7 @@ class AvdlSupportSearchType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
-                'choices' => Choices::getChoices(SupportGroup::STATUS),
+                'choices' => Choices::getChoices(AvdlSupportSearch::STATUS),
                 'attr' => [
                     'class' => 'multi-select js-status',
                 ],
@@ -43,13 +42,25 @@ class AvdlSupportSearchType extends AbstractType
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => SupportGroupSearch::class,
+                ])
+                ->add('service', ServiceSearchType::class, [
+                    'data_class' => AvdlSupportSearch::class,
+                    'attr' => [
+                        'options' => ['devices', 'referents'],
+                        'serviceId' => 5,
+                    ],
             ])
-            ->add('service', ServiceSearchType::class, [
-                'data_class' => AvdlSupportSearch::class,
-                'attr' => [
-                    'options' => ['devices', 'referents'],
-                    'serviceId' => 5,
-                ],
+            ->add('diagOrSupport', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(AvdlSupportSearch::DIAG_OR_SUPPORT),
+                'placeholder' => '-- Type de suivi --',
+                'required' => false,
+            ])
+            ->add('readyToHousing', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => '-- Prêt au logement --',
+                'required' => false,
             ])
             ->add('export');
     }
