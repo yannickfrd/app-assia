@@ -7,17 +7,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="mb-0">Paiement</h2>
-                {% if contribution.id %}
-
-                    {% set theme_color = "dark" %}
-                    {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %}
-                    
+                    {# {% set theme_color = "dark" %}
+                    {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %} #}
                     <div class="small text-secondary">
-                        <p class="mb-0 ml-3 text-right">Créé le {{contribution.createdAt|date("d/m/Y à H:i") }}{% if contribution.createdBy %} par {{ contribution.createdBy.fullname}}{% endif %}<br/>
-                            <span id="js-updatedSupport">(modifié le {{ contribution.updatedAt|date("d/m/Y à H:i") }} par {{ contribution.updatedBy.fullname }})</span>
+                        <p class="mb-0 ml-3 text-right" id="js-info-contrib">
+                            {% if contribution.id %}
+                                Créé le {{contribution.createdAt|date("d/m/Y à H:i") }}{% if contribution.createdBy %} par {{ contribution.createdBy.fullname}}{% endif %}<br/>
+                                <span id="js-updatedSupport">(modifié le {{ contribution.updatedAt|date("d/m/Y à H:i") }} par {{ contribution.updatedBy.fullname }})</span>
+                            {% endif %}
                         </p>
                     </div>
-                {% endif %}
             </div>
 
             {{ form_start(form) }}

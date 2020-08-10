@@ -103,8 +103,8 @@ class ContributionController extends AbstractController
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
-            'sumStillToPayAmt' => $this->repo->sumStillToPayAmt($supportGroup->getId()),
-            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 20) ?? null,
+            // 'sumStillToPayAmt' => $this->repo->sumStillToPayAmt($supportGroup->getId()),
+            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 50) ?? null,
         ]);
     }
 
@@ -206,7 +206,7 @@ class ContributionController extends AbstractController
      *
      * @Route("contribution/{id}/edit", name="contribution_edit", methods="POST")
      */
-    public function editContribution(Contribution $contribution, Request $request, NormalizerInterface $normalizer): Response
+    public function editContribution(Contribution $contribution, Request $request, NormalizerInterface $normalizer, Normalisation $normalisation): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
 
@@ -217,7 +217,7 @@ class ContributionController extends AbstractController
             return $this->updateContribution($contribution, $normalizer);
         }
 
-        return $this->getErrorMessage($form);
+        return $this->getErrorMessage($form, $normalisation);
     }
 
     /**

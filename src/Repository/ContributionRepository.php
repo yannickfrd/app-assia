@@ -195,7 +195,7 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $query->orderBy('c.periodContribution', 'DESC');
+        $query = $query->orderBy('c.createdAt', 'DESC');
 
         return $query->getQuery();
     }

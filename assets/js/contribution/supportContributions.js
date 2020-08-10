@@ -33,6 +33,7 @@ export default class SupportContributions {
         this.returnDateInput = document.getElementById("contribution_returnDate");
         this.returnAmtInput = document.getElementById("contribution_returnAmt");
         this.commentInput = document.getElementById("contribution_comment");
+        this.infoContribElt = document.getElementById("js-info-contrib");
 
         this.resourcesChecked = false; // Ressources vérifiées dans la base de données
         this.salaryAmt = null;
@@ -49,9 +50,9 @@ export default class SupportContributions {
         this.btnSaveElt = document.getElementById("js-btn-save");
         this.btnDeleteElt = document.getElementById("modal-btn-delete");
 
-        this.sumToPayAmtElt = document.getElementById("js-sumToPayAmt");
-        this.sumPaidAmtElt = document.getElementById("js-sumPaidAmt");
-        this.sumStillToPayAmtElt = document.getElementById("js-sumStillToPayAmt");
+        this.sumToPayAmtElt = document.querySelector(".js-sumToPayAmt");
+        this.sumPaidAmtElt = document.querySelector(".js-sumPaidAmt");
+        this.sumStillToPayAmtElt = document.querySelector(".js-sumStillToPayAmt");
 
         this.modalConfirmElt = document.getElementById("modal-confirm");
 
@@ -106,7 +107,6 @@ export default class SupportContributions {
 
         this.modalConfirmElt.addEventListener("click", e => {
             e.preventDefault();
-
             this.ajaxRequest.init("GET", this.modalConfirmElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
         });
 
@@ -200,18 +200,9 @@ export default class SupportContributions {
             });
         }
 
-        // Caution ou restitution caution
-        if (option === 2 || option === 22) {
-            this.formContributionElt.querySelector(".js-caution").classList.remove("d-none");
-        } else {
-            this.formContributionElt.querySelector(".js-caution").classList.add("d-none");
-            this.returnDateInput.value = "";
-            this.returnAmtInput.value = "";
-        }
-
         // Prêt ou restitution caution
-        if (option === 3 || option === 22) {
-            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant";
+        if (option === 3) {
+            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant prêté";
             this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
         } else {
             this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant à régler";
@@ -220,7 +211,6 @@ export default class SupportContributions {
 
         // Remboursement dette ou restitution caution
         if (option > 10) {
-            this.formContributionElt.querySelector(".js-toPayAmt").classList.add("d-none");
             this.toPayAmtInput.value = "";
         } else {
             this.formContributionElt.querySelector(".js-toPayAmt").classList.remove("d-none");
@@ -230,13 +220,36 @@ export default class SupportContributions {
         } else {
             this.formContributionElt.querySelector(".js-comment").classList.add("d-none");
         }
+        // Caution ou restitution caution
+        if (option === 22) {
+            this.formContributionElt.querySelector(".js-toPayAmt").classList.add("d-none");
+            this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
+            this.formContributionElt.querySelector(".js-caution").classList.remove("d-none");
+        } else {
+            this.formContributionElt.querySelector(".js-caution").classList.add("d-none");
+            this.returnDateInput.value = "";
+            this.returnAmtInput.value = "";
+        }
+        if (isNaN(option)) {
+            this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
+            this.formContributionElt.querySelector(".js-toPayAmt").classList.add("d-none");
+            this.paidAmtInput.value = "";
+        }
     }
 
     // Calcul la somme de tous les montants pour le footer du tableau
     calculateSumAmts() {
         this.sumToPayAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-toPayAmt")).toLocaleString() + " €";
         this.sumPaidAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-paidAmt")).toLocaleString() + " €";
-        this.sumStillToPayAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-stillToPayAmt")).toLocaleString() + " €";
+        let sumStillToPayAmt = this.getSumAmts(document.querySelectorAll("td.js-stillToPayAmt"));
+        this.sumStillToPayAmtElt.textContent = sumStillToPayAmt.toLocaleString() + " €";
+        if (sumStillToPayAmt > 0) {
+            this.sumStillToPayAmtElt.classList.remove("text-success");
+            this.sumStillToPayAmtElt.classList.add("text-danger");
+        } else {
+            this.sumStillToPayAmtElt.classList.remove("text-danger");
+            this.sumStillToPayAmtElt.classList.add("text-success");
+        }
     }
 
     // Donne le ratio de jours de présence dans le mois
@@ -337,7 +350,7 @@ export default class SupportContributions {
     // Affiche un formulaire modal vierge
     newContribution() {
         this.loader.on();
-        this.reinitForm();
+        this.initForm();
         this.modalContributionElt.querySelector("form").action = "/support/" + this.supportId + "/contribution/new";
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnSaveElt.textContent = "Enregistrer";
@@ -359,13 +372,14 @@ export default class SupportContributions {
         this.btnDeleteElt.href = "/contribution/" + id + "/delete";
         this.btnSaveElt.textContent = "Mettre à jour";
 
-        this.reinitForm();
+        this.initForm();
 
         this.ajaxRequest.init("GET", "/contribution/" + id + "/get", this.responseAjax.bind(this), true);
     }
 
     // Réinitialise le formulaire
-    reinitForm() {
+    initForm() {
+        this.select.setOption(this.typeSelect, "");
         this.select.setOption(this.paymentTypeSelect, "");
         this.paymentTypeSelect.classList.remove("is-valid");
         this.formContributionElt.querySelectorAll("input").forEach(inputElt => {
@@ -375,6 +389,7 @@ export default class SupportContributions {
             }
         });
         this.commentInput.value = "";
+        this.infoContribElt.innerHTML = "";
     }
 
     // Sélectionne une des options dans une liste select
@@ -477,10 +492,10 @@ export default class SupportContributions {
         // let modalContentElt = document.querySelector(".modal-content");
         // modalContentElt.innerHTML = contribution.content;
         this.modalElt.modal("show");
+        this.selectOption(this.typeSelect, contribution.type);
         if (contribution.periodContribution) {
             this.selectOption(this.periodContributionYearSelect, parseInt(contribution.periodContribution.substring(0, 4)));
             this.selectOption(this.periodContributionMonthSelect, parseInt(contribution.periodContribution.substring(5, 7)));
-            this.selectOption(this.typeSelect, contribution.type);
         }
         this.salaryAmtInput.value = contribution.salaryAmt;
         this.resourcesAmtInput.value = contribution.resourcesAmt;
@@ -493,6 +508,13 @@ export default class SupportContributions {
         this.returnDateInput.value = contribution.returnDate ? contribution.returnDate.substring(0, 10) : null;
         this.returnAmtInput.value = contribution.returnAmt;
         this.commentInput.value = contribution.comment;
+
+        this.infoContribElt.innerHTML =
+            `Créé le ${new Date(contribution.createdAt).toLocaleDateString("fr")} ${new Date(contribution.createdAt).toLocaleTimeString("fr").substring(0, 5)}
+            par ${contribution.createdBy.fullname}<br/>
+            <span id="js-updatedSupport">(modifié le ${new Date(contribution.updatedAt).toLocaleDateString("fr").substring(0, 10)}  ${new Date(contribution.updatedAt).toLocaleTimeString("fr").substring(0, 5)}) 
+            par ${contribution.updatedBy.fullname}</span>`;
+
         this.checkType();
         this.loader.off(false);
     }

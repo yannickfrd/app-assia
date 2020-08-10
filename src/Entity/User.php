@@ -107,7 +107,7 @@ class User implements UserInterface
     private $firstname;
 
     /**
-     * @Groups("export")
+     * @Groups({"export", "view"})
      */
     private $fullname;
 

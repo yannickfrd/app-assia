@@ -15,9 +15,9 @@ class Contribution
     use CreatedUpdatedEntityTrait;
 
     public const CONTRIBUTION_TYPE = [
-        1 => 'Redevance/Loyer',
+        1 => 'Redevance / Loyer',
         2 => 'Caution',
-        3 => 'Prêt/Avance financière',
+        3 => 'Prêt / Avance',
         11 => 'Remboursemt dette | Redevance',
         12 => 'Remboursemt dette | Caution',
         13 => 'Remboursemt dette | Prêt',
@@ -27,8 +27,8 @@ class Contribution
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
 
     public const PAYMENT_TYPE = [
-        1 => 'Virement bancaire',
-        2 => 'Virement bancaire',
+        1 => 'Virement',
+        2 => 'Virement',
         3 => 'Chèque',
         4 => 'Espèce',
     ];

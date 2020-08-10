@@ -56,8 +56,8 @@ class ContributionLightExport
             'Montant à réger (€)' => $contribution->getToPayAmt(),
             'Montant réglé (€)' => $contribution->getPaidAmt(),
             'Restant dû (€)' => $contribution->getStillToPayAmt(),
-            'Date de réglement' => $this->formatDate($contribution->getPaymentDate()),
-            'Mode de réglement' => $contribution->getPaymentType() ? $contribution->getPaymentTypeToString() : null,
+            'Date de règlement' => $this->formatDate($contribution->getPaymentDate()),
+            'Mode de règlement' => $contribution->getPaymentType() ? $contribution->getPaymentTypeToString() : null,
             'Commentaire' => $contribution->getComment(),
             'TS' => $contribution->getCreatedBy()->getFullname(),
         ];
