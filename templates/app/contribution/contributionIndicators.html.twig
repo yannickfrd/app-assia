@@ -25,7 +25,7 @@
                             <th class="align-middle">Mois</th>
                             <th class="align-middle text-right">Nombre</th>
                             <th class="align-middle text-right">Montant total dû</th>
-                            <th class="align-middle text-right">Moyenne Montant à réger</th>
+                            <th class="align-middle text-right">Moyenne Montant à régler</th>
                             <th class="align-middle text-right">Montant total réglé</th>
                             <th class="align-middle text-right">Moyenne montant réglé</th>
                             <th class="align-middle text-right">Montant restant dus</th>
@@ -39,8 +39,8 @@
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('contributions', {'type': form.vars.value.type, 
                                         'service': {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
-                                        'date': {'start': {'day': month.date|date('j'), 'month': month.date|date('n'), 'year': month.date|date('Y')}, 
-                                        'end': {'day': endMonth.date|date('j'), 'month': endMonth.date|date('n'), 'year': endMonth.date|date('Y')} } }) }}" 
+                                        'dateType': app.request.query.get('dateType'),
+                                        'date': {'start': month.date|date('Y-m-d'), 'end': endMonth.date|date('Y-m-d')} }) }}" 
                                         class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                         title="Voir le détail des paiements du mois"><span class="fas fa-eye fa-sm"></span>
                                     </a>

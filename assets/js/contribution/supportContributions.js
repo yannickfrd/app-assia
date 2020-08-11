@@ -14,27 +14,6 @@ export default class SupportContributions {
         this.validationInput = new ValidationInput();
         this.parametersUrl = new ParametersUrl();
 
-        this.modalContributionElt = document.getElementById("modal-contribution");
-        this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
-        this.periodContributionYearSelect = document.getElementById("contribution_periodContribution_year");
-        this.periodContributionMonthSelect = document.getElementById("contribution_periodContribution_month");
-        this.periodContributionDaySelect = document.getElementById("contribution_periodContribution_day");
-        this.typeSelect = document.getElementById("contribution_type");
-        this.salaryAmtInput = document.getElementById("contribution_salaryAmt");
-        this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
-        this.rentAmtInput = document.getElementById("contribution_rentAmt");
-        this.housingAssistanceInput = document.getElementById("contribution_housingAssitanceAmt");
-        this.toPayAmtInput = document.getElementById("contribution_toPayAmt");
-        this.calculationMethodElt = document.getElementById("calculationMethod");
-        this.paymentDateInput = document.getElementById("contribution_paymentDate");
-        this.paymentTypeSelect = document.getElementById("contribution_paymentType");
-        this.paidAmtInput = document.getElementById("contribution_paidAmt");
-        this.stillToPayAmtInput = document.getElementById("contribution_stillToPayAmt");
-        this.returnDateInput = document.getElementById("contribution_returnDate");
-        this.returnAmtInput = document.getElementById("contribution_returnAmt");
-        this.commentInput = document.getElementById("contribution_comment");
-        this.infoContribElt = document.getElementById("js-info-contrib");
-
         this.resourcesChecked = false; // Ressources vérifiées dans la base de données
         this.salaryAmt = null;
         this.resourcesAmt = null;
@@ -47,19 +26,41 @@ export default class SupportContributions {
         this.supportStartDate = new Date(this.btnNewElt.getAttribute("data-support-start-date"));
         this.supportEndDate = new Date(this.btnNewElt.getAttribute("data-support-end-date"));
         this.trElt = null;
-        this.btnSaveElt = document.getElementById("js-btn-save");
-        this.btnDeleteElt = document.getElementById("modal-btn-delete");
+
+        this.modalConfirmElt = document.getElementById("modal-confirm");
 
         this.sumToPayAmtElt = document.querySelector(".js-sumToPayAmt");
         this.sumPaidAmtElt = document.querySelector(".js-sumPaidAmt");
         this.sumStillToPayAmtElt = document.querySelector(".js-sumStillToPayAmt");
 
-        this.modalConfirmElt = document.getElementById("modal-confirm");
-
         this.themeColor = document.getElementById("header").getAttribute("data-color");
         this.countContributionsElt = document.getElementById("count-contributions");
         this.nbTotalContributionsElt = document.getElementById("nb-total-contributions");
         this.supportId = document.getElementById("support").getAttribute("data-support");
+
+        // Formulaire modal
+        this.modalContributionElt = document.getElementById("modal-contribution");
+        this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
+        this.typeSelect = document.getElementById("contribution_type");
+        this.periodContributionYearSelect = document.getElementById("contribution_periodContribution_year");
+        this.periodContributionMonthSelect = document.getElementById("contribution_periodContribution_month");
+        this.periodContributionDaySelect = document.getElementById("contribution_periodContribution_day");
+        this.salaryAmtInput = document.getElementById("contribution_salaryAmt");
+        this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
+        this.rentAmtInput = document.getElementById("contribution_rentAmt");
+        this.housingAssistanceInput = document.getElementById("contribution_housingAssitanceAmt");
+        this.toPayAmtInput = document.getElementById("contribution_toPayAmt");
+        this.calculationMethodElt = document.getElementById("calculationMethod");
+        this.paymentDateInput = document.getElementById("contribution_paymentDate");
+        this.paymentTypeSelect = document.getElementById("contribution_paymentType");
+        this.paidAmtInput = document.getElementById("contribution_paidAmt");
+        this.stillToPayAmtInput = document.getElementById("contribution_stillToPayAmt");
+        this.returnAmtInput = document.getElementById("contribution_returnAmt");
+        this.commentInput = document.getElementById("contribution_comment");
+        this.infoContribElt = document.getElementById("js-info-contrib");
+
+        this.btnDeleteElt = document.getElementById("modal-btn-delete");
+        this.btnSaveElt = document.getElementById("js-btn-save");
 
         this.modalElt = $("#modal-contribution");
         this.now = new Date();
@@ -94,7 +95,7 @@ export default class SupportContributions {
         this.btnSaveElt.addEventListener("click", e => {
             e.preventDefault();
             if (this.loader.isInLoading() === false) {
-                this.saveContribution();
+                this.tryToSave();
             }
         });
 
@@ -110,37 +111,35 @@ export default class SupportContributions {
             this.ajaxRequest.init("GET", this.modalConfirmElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
         });
 
-        this.periodContributionMonthSelect.addEventListener("input", () => {
-            this.calculateContrib();
-        });
-        this.periodContributionYearSelect.addEventListener("input", () => {
-            this.calculateContrib();
-        });
-
         this.typeSelect.addEventListener("input", () => {
+            this.initForm();
             this.checkType();
         });
 
-        this.resourcesAmtInput.addEventListener("input", () => {
-            this.checkMoney(this.resourcesAmtInput);
-            this.calculateContrib();
+        this.modalContributionElt.querySelectorAll(".js-money").forEach(elt => {
+            elt.addEventListener("input", () => {
+                this.checkMoney(elt);
+            });
+        })
+
+        // Récupère les ressources et calcul le montant à payer du suivi au clic sur le bouton.
+        document.getElementById("btn-update-contribution").addEventListener("click", e => {
+            e.preventDefault();
+            this.loader.on();
+            if (this.resourcesChecked === false) {
+                this.ajaxRequest.init("GET", this.btnNewElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
+            } else {
+                this.getResources();
+            }
         });
-        this.rentAmtInput.addEventListener("input", () => {
-            this.checkMoney(this.rentAmtInput);
-            this.calculateContrib();
-        });
-        this.housingAssistanceInput.addEventListener("input", () => {
-            this.checkMoney(this.housingAssistanceInput);
-            this.calculateContrib();
-        });
+
         this.toPayAmtInput.addEventListener("input", () => {
-            this.checkMoney(this.toPayAmtInput);
             this.calculateStillDue();
         });
         this.paidAmtInput.addEventListener("input", () => {
-            this.checkMoney(this.paidAmtInput);
             this.calculateStillDue();
         });
+
         this.paymentDateInput.addEventListener("focusout", () => {
             this.checkPaidAmt();
         });
@@ -157,102 +156,70 @@ export default class SupportContributions {
     // Vérifie le type de partipation (redevance ou caution)
     checkType() {
         let option = this.select.getOption(this.typeSelect);
-        let otherOption = 1;
-        if (option === 1) {
-            otherOption = 2;
-        } else {
-            this.calculationMethodElt.textContent = "";
-        }
 
-        this.formContributionElt.querySelectorAll(".js-type-" + option).forEach(elt => {
-            elt.classList.remove("d-none");
-        });
-
-        this.formContributionElt.querySelectorAll(".js-type-" + otherOption).forEach(elt => {
+        // Masque tous les champs du formulaire.
+        this.formContributionElt.querySelectorAll(".js-contrib").forEach(elt => {
             elt.classList.add("d-none");
         });
 
-        // Redevance et PF
+        // Si Redevance et PF.
         if (option === 1) {
-            // let today = new Date();
-            // this.selectOption(this.periodContributionYearSelect, today.getFullYear());
-            // this.selectOption(this.periodContributionMonthSelect, today.getMonth());
-            // this.selectOption(this.typeSelect, 1);
+            this.select.setOption(this.periodContributionDaySelect, "1");
+            // this.select.setOption(this.periodContributionMonthSelect, this.now.getMonth() + 1);
+            // this.select.setOption(this.periodContributionYearSelect, this.now.getFullYear());
+
             this.formContributionElt.querySelectorAll(".js-contribution").forEach(elt => {
                 elt.classList.remove("d-none");
             });
             if (this.rentAmt > 0 || parseInt(this.rentAmtInput.value) > 0) {
                 this.formContributionElt.querySelector(".js-rent").classList.remove("d-none");
-            } else {
-                this.formContributionElt.querySelector(".js-rent").classList.add("d-none");
             }
         } else {
-            this.selectOption(this.periodContributionYearSelect, '');
-            this.selectOption(this.periodContributionMonthSelect, '');
-            this.selectOption(this.periodContributionDaySelect, '');
-            this.resourcesAmtInput.value = "";
-            this.salaryAmtInput.value = "";
-            this.rentAmtInput.value = "";
-            this.housingAssistanceInput.value = "";
-            this.toPayAmtInput.value = "";
-            this.formContributionElt.querySelectorAll(".js-contribution").forEach(elt => {
-                elt.classList.add("d-none");
+            this.select.setOption(this.periodContributionYearSelect, "");
+            this.select.setOption(this.periodContributionMonthSelect, "");
+            this.select.setOption(this.periodContributionDaySelect, "");
+            this.calculationMethodElt.textContent = null;
+        }
+        if ([1, 2, 11, 12, 13].indexOf(option) != -1) { // Redevance, caution, remboursement
+            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant à régler";
+            this.formContributionElt.querySelectorAll(".js-payment").forEach(elt => {
+                elt.classList.remove("d-none");
             });
         }
-
-        // Prêt ou restitution caution
-        if (option === 3) {
-            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant prêté";
-            this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
-        } else {
-            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant à régler";
-            this.formContributionElt.querySelector(".js-payment").classList.remove("d-none");
+        if ([1, 2].indexOf(option) != -1) { // Redevance, caution
+            this.formContributionElt.querySelector(".js-stillToPayAmt").classList.remove("d-none");
         }
-
-        // Remboursement dette ou restitution caution
-        if (option > 10) {
-            this.toPayAmtInput.value = "";
-        } else {
+        if (option === 3) { // Prêt
+            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant prêté";
+        }
+        if (option < 10) { // Redevance, Caution, Prêt
             this.formContributionElt.querySelector(".js-toPayAmt").classList.remove("d-none");
         }
-        if (option >= 1) {
+        if (option === 22) { // Restitution caution
+            this.formContributionElt.querySelector(".js-returnAmt").classList.remove("d-none");
+        }
+        if (option >= 1) { // Tout sauf vide
+            this.formContributionElt.querySelector(".js-paymentDate").classList.remove("d-none");
+            this.formContributionElt.querySelector(".js-paymentType").classList.remove("d-none");
             this.formContributionElt.querySelector(".js-comment").classList.remove("d-none");
-        } else {
-            this.formContributionElt.querySelector(".js-comment").classList.add("d-none");
-        }
-        // Caution ou restitution caution
-        if (option === 22) {
-            this.formContributionElt.querySelector(".js-toPayAmt").classList.add("d-none");
-            this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
-            this.formContributionElt.querySelector(".js-caution").classList.remove("d-none");
-        } else {
-            this.formContributionElt.querySelector(".js-caution").classList.add("d-none");
-            this.returnDateInput.value = "";
-            this.returnAmtInput.value = "";
-        }
-        if (isNaN(option)) {
-            this.formContributionElt.querySelector(".js-payment").classList.add("d-none");
-            this.formContributionElt.querySelector(".js-toPayAmt").classList.add("d-none");
-            this.paidAmtInput.value = "";
         }
     }
 
-    // Calcul la somme de tous les montants pour le footer du tableau
+    // Calcul la somme de tous les montants pour le footer du tableau.
     calculateSumAmts() {
         this.sumToPayAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-toPayAmt")).toLocaleString() + " €";
         this.sumPaidAmtElt.textContent = this.getSumAmts(document.querySelectorAll("td.js-paidAmt")).toLocaleString() + " €";
-        let sumStillToPayAmt = this.getSumAmts(document.querySelectorAll("td.js-stillToPayAmt"));
+
+        let stillToPayAmtElts = document.querySelectorAll("td.js-stillToPayAmt");
+        let sumStillToPayAmt = this.getSumAmts(stillToPayAmtElts);
+        stillToPayAmtElts.forEach(elt => {
+            this.changeTextColor(elt, elt.textContent);
+        })
         this.sumStillToPayAmtElt.textContent = sumStillToPayAmt.toLocaleString() + " €";
-        if (sumStillToPayAmt > 0) {
-            this.sumStillToPayAmtElt.classList.remove("text-success");
-            this.sumStillToPayAmtElt.classList.add("text-danger");
-        } else {
-            this.sumStillToPayAmtElt.classList.remove("text-danger");
-            this.sumStillToPayAmtElt.classList.add("text-success");
-        }
+        this.changeTextColor(this.sumStillToPayAmtElt, sumStillToPayAmt);
     }
 
-    // Donne le ratio de jours de présence dans le mois
+    // Donne le ratio de jours de présence dans le mois.
     getRateDays() {
         let date = new Date(this.select.getOption(this.periodContributionYearSelect) + "-" + this.select.getOption(this.periodContributionMonthSelect) + "-01");
         let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1);
@@ -274,7 +241,7 @@ export default class SupportContributions {
         return rateDays;
     }
 
-    // Calcule le montant de la participation
+    // Calcule le montant de la participation.
     calculateContrib() {
         let rateDays = this.getRateDays();
         let calculationMethod = "";
@@ -298,15 +265,69 @@ export default class SupportContributions {
         this.calculationMethodElt.textContent = "Mode de calcul : " + calculationMethod;
     }
 
-    // Calcule le restant dû
+    // Calcule le restant dû.
     calculateStillDue() {
         if (!isNaN(this.toPayAmtInput.value) && !isNaN(this.paidAmtInput.value)) {
             this.stillToPayAmtInput.value = Math.round((this.toPayAmtInput.value - this.paidAmtInput.value) * 100) / 100;
         }
+        this.changeTextColor(this.stillToPayAmtInput, this.stillToPayAmtInput.value);
     }
 
-    // Vérifie la date du paiement
-    checkPaymentDate() {
+
+    isValidForm() {
+        this.error = false;
+
+        let option = this.select.getOption(this.typeSelect);
+
+        this.checkToPaidAmt(option);
+        this.checkReturnAmt(option);
+        this.checkPaymentDate(option);
+        this.checkPaymentType(option);
+        this.checkPaidAmt(option);
+
+        return this.error === false ? true : false;
+    }
+
+    // Vérfifie le montant à payer si redevance ou caution
+    checkToPaidAmt(option) {
+        if (isNaN(this.toPayAmtInput.value)) {
+            this.error = true;
+            return this.validationInput.invalid(this.toPayAmtInput, "La valeur est invalide.");
+        }
+        if ([1, 2, 3].indexOf(option) != -1 && !this.toPayAmtInput.value) {
+            this.error = true;
+            return this.validationInput.invalid(this.toPayAmtInput, "Ne peut pas être vide.");
+        }
+    }
+
+    // Vérifie le montant restitué si Restitution caution
+    checkReturnAmt(option) {
+        if (isNaN(this.returnAmtInput.value)) {
+            this.error = true;
+            return this.validationInput.invalid(this.returnAmtInput, "La valeur est invalide.");
+        }
+        if (option == 22 && !this.returnAmtInput.value) {
+            this.error = true;
+            return this.validationInput.invalid(this.returnAmtInput, "Ne peut pas être vide.");
+        }
+    }
+
+    // Vérifie le montant du paiement saisi.
+    checkPaidAmt(option) {
+        if (isNaN(this.paidAmtInput.value)) {
+            this.error = true;
+            return this.validationInput.invalid(this.paidAmtInput, "La valeur est invalide.");
+        }
+        if ((!this.paidAmtInput.value && [1, 2].indexOf(option) != -1 && (this.paymentDateInput.value || this.select.getOption(this.paymentTypeSelect))) ||
+            (!this.paidAmtInput.value && [11, 12, 13].indexOf(option) != -1)) {
+            this.error = true;
+            return this.validationInput.invalid(this.paidAmtInput, "Ne peut pas être vide.");
+        }
+        return this.validationInput.valid(this.paidAmtInput);
+    }
+
+    // Vérifie la date du paiement.
+    checkPaymentDate(option) {
         let intervalWithNow = (this.now - new Date(this.paymentDateInput.value)) / (1000 * 60 * 60 * 24);
 
         if ((this.paymentDateInput.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
@@ -317,52 +338,35 @@ export default class SupportContributions {
             this.error = true;
             return this.validationInput.invalid(this.paymentDateInput, "La date ne peut être postérieure à la date du jour.");
         }
-        if (!this.paymentDateInput.value && this.paidAmtInput.value) {
+        if (!this.paymentDateInput.value && (option === 3 || this.paidAmtInput.value || this.select.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
             this.error = true;
             return this.validationInput.invalid(this.paymentDateInput, "La date ne peut pas être vide.");
         }
         return this.validationInput.valid(this.paymentDateInput);
     }
 
-    // Vérifie le type de paiement saisie
-    checkPaymentType() {
-        if ((!this.select.getOption(this.paymentTypeSelect) && this.paymentDateInput.value) || (!this.select.getOption(this.paymentTypeSelect) && this.paidAmtInput.value)) {
+    // Vérifie le type de paiement saisi.
+    checkPaymentType(option) {
+        if (!this.select.getOption(this.paymentTypeSelect) && (option === 3 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
             this.error = true;
             return this.validationInput.invalid(this.paymentTypeSelect, "Ne peut pas être vide.");
         }
         return this.validationInput.valid(this.paymentTypeSelect);
-
     }
 
-    // Vérifie le montant du paiement saisi
-    checkPaidAmt() {
-        if (this.paymentDateInput.value && !this.paidAmtInput.value) {
-            this.error = true;
-            return this.validationInput.invalid(this.paidAmtInput, "Le montant ne pas être vide.");
-        }
-        if (isNaN(this.paidAmtInput.value)) {
-            this.error = true;
-            return this.validationInput.invalid(this.paidAmtInput, "Le montant n'est pas valide.");
-        }
-        return this.validationInput.valid(this.paidAmtInput);
-    }
 
-    // Affiche un formulaire modal vierge
+    // Affiche un formulaire modal vierge.
     newContribution() {
-        this.loader.on();
+        this.modalElt.modal("show");
+        this.select.setOption(this.typeSelect, "");
         this.initForm();
+        this.checkType();
         this.modalContributionElt.querySelector("form").action = "/support/" + this.supportId + "/contribution/new";
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnSaveElt.textContent = "Enregistrer";
-
-        if (this.resourcesChecked === false) {
-            this.ajaxRequest.init("GET", this.btnNewElt.getAttribute("data-url"), this.responseAjax.bind(this), true);
-        } else {
-            this.getResources();
-        }
     }
 
-    // Requête pour obtenir le RDV sélectionné dans le formulaire modal
+    // Requête pour obtenir le RDV sélectionné dans le formulaire modal.
     getContribution(id) {
         this.loader.on();
 
@@ -377,9 +381,8 @@ export default class SupportContributions {
         this.ajaxRequest.init("GET", "/contribution/" + id + "/get", this.responseAjax.bind(this), true);
     }
 
-    // Réinitialise le formulaire
+    // Réinitialise le formulaire.
     initForm() {
-        this.select.setOption(this.typeSelect, "");
         this.select.setOption(this.paymentTypeSelect, "");
         this.paymentTypeSelect.classList.remove("is-valid");
         this.formContributionElt.querySelectorAll("input").forEach(inputElt => {
@@ -392,7 +395,7 @@ export default class SupportContributions {
         this.infoContribElt.innerHTML = "";
     }
 
-    // Sélectionne une des options dans une liste select
+    // Sélectionne une des options dans une liste select.
     selectOption(selectElt, value) {
         selectElt.querySelectorAll("option").forEach(option => {
             if (parseInt(option.value) === value) {
@@ -403,15 +406,10 @@ export default class SupportContributions {
         });
     }
 
-    // Enregistre la redevance
-    saveContribution() {
+    // Enregistre l'opération.
+    tryToSave() {
         this.loader.on();
-        this.error = false;
-        this.checkPaymentDate();
-        this.checkPaymentType();
-        this.checkPaidAmt();
-
-        if (this.error === false) {
+        if (this.isValidForm()) {
             let formData = new FormData(this.formContributionElt);
             let formToString = new URLSearchParams(formData).toString();
             this.ajaxRequest.init("POST", this.formContributionElt.getAttribute("action"), this.responseAjax.bind(this), true, formToString);
@@ -421,15 +419,15 @@ export default class SupportContributions {
         }
     }
 
-    // Envoie une requête ajax pour supprimer la redevance
+    // Envoie une requête ajax pour supprimer l'enregistrement.
     deleteContribution(url) {
         this.loader.on();
-        if (window.confirm("Voulez-vous vraiment supprimer cette redevance ?")) {
+        if (window.confirm("Voulez-vous vraiment supprimer cette enregistrement ?")) {
             this.ajaxRequest.init("GET", url, this.responseAjax.bind(this), true);
         }
     }
 
-    // Réponse du serveur
+    // Réponse du serveur.
     responseAjax(response) {
         let data = JSON.parse(response);
         if (data.code === 200) {
@@ -464,9 +462,8 @@ export default class SupportContributions {
         this.calculateSumAmts();
     }
 
-    // Donne le montant des ressources du ménage
-    getResources(data) {
-        this.modalElt.modal("show");
+    // Donne le montant des ressources du ménage.
+    getResources(data = null) {
         if (this.resourcesChecked === false) {
             this.salaryAmt = data.salaryAmt;
             this.resourcesAmt = data.resourcesAmt;
@@ -476,18 +473,17 @@ export default class SupportContributions {
             this.resourcesChecked = true;
         }
 
-        this.salaryAmtInput.value = this.salaryAmt;
         this.resourcesAmtInput.value = this.resourcesAmt;
-        this.contributionAmt = this.contributionAmt;
+        this.salaryAmtInput.value = this.salaryAmt;
+        // this.contributionAmt = this.contributionAmt;
         this.toPayAmtInput.value = this.toPayAmt;
         this.rentAmtInput.value = this.rentAmt;
 
-        this.checkType();
         this.calculateContrib();
-        this.loader.off(false);
+        this.loader.off();
     }
 
-    // Donne la redevance sélectionnée dans le formulaire modal
+    // Donne la redevance sélectionnée dans le formulaire modal.
     showContribution(contribution) {
         // let modalContentElt = document.querySelector(".modal-content");
         // modalContentElt.innerHTML = contribution.content;
@@ -505,21 +501,25 @@ export default class SupportContributions {
         this.selectOption(this.paymentTypeSelect, contribution.paymentType);
         this.paidAmtInput.value = contribution.paidAmt;
         this.stillToPayAmtInput.value = Math.round(contribution.stillToPayAmt * 100) / 100;
-        this.returnDateInput.value = contribution.returnDate ? contribution.returnDate.substring(0, 10) : null;
         this.returnAmtInput.value = contribution.returnAmt;
         this.commentInput.value = contribution.comment;
 
-        this.infoContribElt.innerHTML =
-            `Créé le ${new Date(contribution.createdAt).toLocaleDateString("fr")} ${new Date(contribution.createdAt).toLocaleTimeString("fr").substring(0, 5)}
-            par ${contribution.createdBy.fullname}<br/>
-            <span id="js-updatedSupport">(modifié le ${new Date(contribution.updatedAt).toLocaleDateString("fr").substring(0, 10)}  ${new Date(contribution.updatedAt).toLocaleTimeString("fr").substring(0, 5)}) 
-            par ${contribution.updatedBy.fullname}</span>`;
+        this.infoContribElt.innerHTML = this.getInfoContribElt(contribution);
 
         this.checkType();
         this.loader.off(false);
     }
 
-    // Crée la ligne de la nouvelle redevance dans le tableau
+    // Donnes les informations sur l'enregistrements (date de création, créateur...).
+    getInfoContribElt(contribution) {
+        let htmlContent = `Créé le ${this.formatDatetime(contribution.createdAt)} par ${contribution.createdBy.fullname}`;
+        if (contribution.createdAt != contribution.updatedAt) {
+            htmlContent = htmlContent + `<br/> (modifié le ${this.formatDatetime(contribution.updatedAt)} par ${contribution.updatedBy.fullname})`;
+        }
+        return htmlContent;
+    }
+
+    // Crée la ligne de la nouvelle redevance dans le tableau.
     createContribution(data) {
         let contributionElt = document.createElement("tr");
         contributionElt.className = "js-payment";
@@ -548,46 +548,62 @@ export default class SupportContributions {
         this.loader.off(true);
     }
 
-    // Met à jour la ligne du tableau correspondant au contribution
+    // Met à jour la ligne du tableau correspondant au contribution.
     updateContribution(contribution) {
-        this.trElt.querySelector("td.js-type").textContent = contribution.typeToString;
-        this.trElt.querySelector("td.js-periodContribution").textContent = contribution.periodContribution ? new Date(contribution.periodContribution).toLocaleDateString("fr").substring(3, 10) : "";
-        this.trElt.querySelector("td.js-toPayAmt").textContent = contribution.toPayAmt ? contribution.toPayAmt.toFixed(2) + " €" : "";
-        this.trElt.querySelector("td.js-paidAmt").textContent = contribution.paidAmt ? contribution.paidAmt.toFixed(2) + " €" : "";
-        this.trElt.querySelector("td.js-stillToPayAmt").textContent = contribution.stillToPayAmt ? (Math.round(contribution.stillToPayAmt * 100) / 100).toFixed(2) + " €" : "";
-        this.trElt.querySelector("td.js-paymentDate").textContent = contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : "";
+        this.trElt.querySelector("td.js-type").textContent = contribution.typeToString + (contribution.type == 22 ? " (" + this.formatMoney(contribution.returnAmt) + ")" : "");
+        this.trElt.querySelector("td.js-periodContribution").textContent = this.formatDatetime(contribution.periodContribution, "d/m");
+        this.trElt.querySelector("td.js-toPayAmt").textContent = this.formatMoney(contribution.toPayAmt);
+        this.trElt.querySelector("td.js-paidAmt").textContent = this.formatMoney(contribution.paidAmt);
+        this.trElt.querySelector("td.js-stillToPayAmt").textContent = this.formatMoney(this.roundMoney(contribution.stillToPayAmt));
+        this.trElt.querySelector("td.js-paymentDate").textContent = this.formatDatetime(contribution.paymentDate, "date");
         this.trElt.querySelector("td.js-paymentType").textContent = contribution.paymentTypeToString;
-        this.trElt.querySelector("td.js-comment").textContent = contribution.comment && contribution.comment.length > 70 ? contribution.comment.slice(0, 65) + "..." : contribution.comment;
+        this.trElt.querySelector("td.js-comment").textContent = this.sliceComment(contribution.comment);
         this.calculateSumAmts();
         this.loader.off(true);
     }
 
-    // Crée la ligne de la contribution
+    // Crée la ligne de la contribution.
     getPrototypeContribution(contribution) {
         return `
-            <td scope="row" class="text-center">
+            <td scope="row" class="align-middle text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow js-get" data-id="${contribution.id}" 
                     data-url="/contribution/${contribution.id}/get" data-toggle="tooltip" 
-                    data-placement="bottom" title="Voir la redevance"><span class="fas fa-eye"></span>
+                    data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
                 </button>
             </td>
-            <td class="align-middle js-type">${contribution.typeToString}</td>
-            <td class="align-middle js-periodContribution">${contribution.periodContribution ? new Date(contribution.periodContribution).toLocaleDateString("fr").substring(3, 10) : ""}</td>
-            <td class="align-middle text-right js-toPayAmt">${contribution.toPayAmt ? contribution.toPayAmt.toFixed(2) + " €" : ""}</td>
-            <td class="align-middle text-right js-paidAmt">${contribution.paidAmt ? contribution.paidAmt.toFixed(2) + " €" : ""}</td>
-            <td class="align-middle text-right js-stillToPayAmt">${contribution.stillToPayAmt ? (Math.round(contribution.stillToPayAmt * 100) / 100).toFixed(2) + " €" : ""}</td>
-            <td class="align-middle js-paymentDate">${contribution.paymentDate ? new Date(contribution.paymentDate).toLocaleDateString("fr") : ""}</td>
+            <td class="align-middle js-type">${contribution.typeToString}<br/>
+                <span class="text-secondary">${contribution.type == 22 ? " (" + this.formatMoney(contribution.returnAmt) + ")" : "" }</span>
+            </td>
+            <td class="align-middle js-periodContribution">${this.formatDatetime(contribution.periodContribution, "d/m")}</td>
+            <td class="align-middle text-right js-toPayAmt">${this.formatMoney(contribution.toPayAmt)}</td>
+            <td class="align-middle text-right js-paidAmt">${this.formatMoney(contribution.paidAmt)}</td>
+            <td class="align-middle text-right js-stillToPayAmt">${this.formatMoney(this.roundMoney(contribution.stillToPayAmt))}</td>
+            <td class="align-middle text-center js-paymentDate">${this.formatDatetime(contribution.paymentDate, "date")}</td>
             <td class="align-middle js-paymentType">${contribution.paymentType ? contribution.paymentTypeToString : ""}</td>
-            <td class="align-middle js-comment">${contribution.comment ? contribution.comment.slice(0, 65) : "" }</td>
-            <td class="align-middle js-createdAt">${new Date().toLocaleDateString("fr").substring(0, 10)}</td>
+            <td class="align-middle js-comment">${this.sliceComment(contribution.comment)}</td>
+            <td class="align-middle js-createdAt">${this.formatDatetime(this.now, "date")}</td>
             <td class="align-middle text-center">
                 <button data-url="/contribution/${contribution.id}/delete" 
-                    class="js-delete btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer la redevance" data-toggle="modal" data-target="#modal-block">
+                    class="js-delete btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer l'enregistrement" data-toggle="modal" data-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>`
     }
 
+    // Arrondi un nombre en valeur monétaire.
+    roundMoney(number) {
+        return number ? Math.round(number * 100) / 100 : "";
+    }
+
+    // Coupe un texte en un nombre maximum de caractères.
+    sliceComment(comment, limit = 65) {
+        if (comment === null) {
+            return "";
+        }
+        return comment.length > limit ? comment.slice(0, limit) + "..." : comment;
+    }
+
+    // Met à jour le nombre d'enregistrements.
     updateCounts(value) {
         this.countContributionsElt.textContent = parseInt(this.countContributionsElt.textContent) + value;
         if (this.nbTotalContributionsElt) {
@@ -595,17 +611,17 @@ export default class SupportContributions {
         }
     }
 
-    // Vérifie si le montant saisie est valide
+    // Vérifie si le montant saisie est valide.
     checkMoney(moneyElt) {
-        moneyElt.value = moneyElt.value.replace(" ", "");
-        moneyElt.value = moneyElt.value.replace(",", ".");
-        if (Number(moneyElt.value) >= 0) {
+        let value = moneyElt.value;
+        value = value.replace(" ", "").replace(",", ".");
+        if (Number(value) >= 0) {
             return this.validationInput.valid(moneyElt);
         }
-        return this.validationInput.invalid(moneyElt, "Montant invalide.");
+        return this.validationInput.invalid(moneyElt, "Valeur invalide.");
     }
 
-    // Vérifie si la date est valide 
+    // Vérifie si la date est valide.
     checkDate(dateElt) {
         let interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24));
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
@@ -614,12 +630,14 @@ export default class SupportContributions {
         return this.validationInput.valid(dateElt);
     }
 
-    // Donne la somme des montants
+    // Donne la somme des montants.
     getSumAmts(elts) {
         let array = [];
         elts.forEach(elt => {
-            if (elt.textContent) {
-                array.push(parseFloat(elt.textContent.replace(",", ".")));
+            let value = elt.textContent;
+            if (value) {
+                value = value.replace(" ", "").replace(",", ".");
+                array.push(parseFloat(value));
             }
         });
 
@@ -629,5 +647,45 @@ export default class SupportContributions {
             return sum;
         }
         return "Erreur";
+    }
+
+    // Format un nombre en valeur monétaire.
+    formatMoney(number, locale = "fr") {
+        return number ? number.toFixed(2).replace(".", ",") + " €" : "";
+    }
+
+    // Formate une valeur texte en date.
+    formatDatetime(date, type = "datetime", locale = "fr") {
+        if (date === null) {
+            return "";
+        }
+
+        date = new Date(date);
+
+        switch (type) {
+            case "date":
+                return date.toLocaleDateString(locale);
+                break;
+            case "d/m":
+                return date.toLocaleDateString(locale).substring(3, 10);
+                break;
+            case "time":
+                return date.toLocaleTimeString(locale).substring(0, 5);
+                break;
+            default:
+                return date.toLocaleDateString(locale) + " " + date.toLocaleTimeString(locale).substring(0, 5);
+                break;
+        }
+    }
+
+    // Change la couleur du texte d'un élément on fonction de la valeur d'un nombre.
+    changeTextColor(elt, value) {
+        if (parseFloat(value) > 0) {
+            elt.classList.remove("text-success");
+            elt.classList.add("text-danger");
+        } else {
+            elt.classList.remove("text-danger");
+            elt.classList.add("text-success");
+        }
     }
 }

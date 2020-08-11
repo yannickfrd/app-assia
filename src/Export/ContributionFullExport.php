@@ -48,7 +48,7 @@ class ContributionFullExport
         }
 
         return [
-            'N° contribution' => $contribution->getId(),
+            'N° opération' => $contribution->getId(),
             'N° suivi' => $contribution->getSupportGroup()->getId(),
             'Nom' => $person ? $person->getLastname() : null,
             'Prénom' => $person ? $person->getFirstname() : null,
@@ -56,26 +56,25 @@ class ContributionFullExport
             'Date d\'arrivée' => $supportGroup->getStartDate() ? $this->formatDate($supportGroup->getStartDate()) : null,
             'Service' => $supportGroup->getService()->getName(),
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
-            'Type' => $contribution->getTypeToString(),
-            'Mois (Date)' => $this->formatDate($contribution->getPeriodContribution()),
+            'Type d\'opération' => $contribution->getTypeToString(),
+            'PF - Mois concerné (Date)' => $this->formatDate($contribution->getPeriodContribution()),
             'PF - Montant salaire (€)' => $contribution->getSalaryAmt(),
             'PF - Montant ressources (€)' => $contribution->getResourcesAmt(),
-            'Montant à réger (€)' => $contribution->getToPayAmt(),
+            'Montant à régler (€)' => $contribution->getToPayAmt(),
             'Montant réglé (€)' => $contribution->getPaidAmt(),
             'Restant dû (€)' => $contribution->getStillToPayAmt(),
-            'Date de règlement' => $this->formatDate($contribution->getPaymentDate()),
+            'Date de l\'opération' => $this->formatDate($contribution->getPaymentDate()),
             'Mode de règlement' => $contribution->getPaymentType() ? $contribution->getPaymentTypeToString() : null,
-            'Caution - Date de restitution' => $this->formatDate($contribution->getReturnDate()),
             'Caution - Montant restitué (€)' => $contribution->getReturnAmt(),
             'Commentaire' => $contribution->getComment(),
             'Date de création' => $this->formatDate($contribution->getCreatedAt()),
             'Créé par' => $contribution->getCreatedBy()->getFullname(),
             'Date de modification' => $this->formatDate($contribution->getUpdatedAt()),
             'Modifié par' => $contribution->getUpdatedBy()->getFullname(),
-            'Url' => $this->router ? $this->router->generate('support_contributions', [
-                'id' => $supportGroup->getId(),
-                'contributionId' => $contribution->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL) : null,
+            // 'Url' => $this->router ? $this->router->generate('support_contributions', [
+            //     'id' => $supportGroup->getId(),
+            //     'contributionId' => $contribution->getId(),
+            // ], UrlGeneratorInterface::ABSOLUTE_URL) : null,
         ];
     }
 

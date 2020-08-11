@@ -2,6 +2,7 @@
 
 namespace App\Service\Indicators;
 
+use App\Form\Model\ContributionSearch;
 use App\Service\Calendar;
 
 class ContributionIndicators
@@ -15,8 +16,22 @@ class ContributionIndicators
     {
     }
 
-    public function getIndicators(array $contributions, \DateTime $start, \DateTime $end)
+    public function getIndicators(array $contributions, ContributionSearch $search)
     {
+        switch ($search->getDateType()) {
+            case 1:
+                $date = 'getPeriodContribution';
+                break;
+            case 2:
+                $date = 'getPaymentDate';
+                break;
+            default:
+                $date = 'getCreatedAt';
+                break;
+        }
+
+        $start = $search->getStart() ?? new \DateTime('2019-01-01');
+        $end = $search->getEnd();
         $months = [];
         $months[] = $start;
         $month = clone $start;
@@ -36,7 +51,7 @@ class ContributionIndicators
             $sumPaidAmt = 0;
             $sumStillToPayAmt = 0;
             foreach ($contributions as $contribution) {
-                if ($this->withinMonth($contribution->getDate(), $month)) {
+                if ($this->withinMonth($contribution->{$date}(), $month)) {
                     ++$nbContributions;
                     $sumToPayAmt += $contribution->getToPayAmt();
                     $sumPaidAmt += $contribution->getPaidAmt();

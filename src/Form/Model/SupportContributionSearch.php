@@ -15,10 +15,6 @@ class SupportContributionSearch
      */
     private $contributionId;
 
-    /**
-     * @var array
-     */
-    private $type;
 
     public function getContributionId(): ?int
     {
@@ -28,18 +24,6 @@ class SupportContributionSearch
     public function setContributionId(int $contributionId): self
     {
         $this->contributionId = $contributionId;
-
-        return $this;
-    }
-
-    public function getType(): ?array
-    {
-        return $this->type;
-    }
-
-    public function setType(array $type): self
-    {
-        $this->type = $type;
 
         return $this;
     }

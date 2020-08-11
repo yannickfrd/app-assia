@@ -5,16 +5,17 @@
 <div id="modal-contribution" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalContributionLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
+        
             <div class="modal-header">
                 <h2 class="mb-0">Paiement</h2>
                     {# {% set theme_color = "dark" %}
                     {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %} #}
                     <div class="small text-secondary">
                         <p class="mb-0 ml-3 text-right" id="js-info-contrib">
-                            {% if contribution.id %}
+                            {# {% if contribution.id %}
                                 Créé le {{contribution.createdAt|date("d/m/Y à H:i") }}{% if contribution.createdBy %} par {{ contribution.createdBy.fullname}}{% endif %}<br/>
                                 <span id="js-updatedSupport">(modifié le {{ contribution.updatedAt|date("d/m/Y à H:i") }} par {{ contribution.updatedBy.fullname }})</span>
-                            {% endif %}
+                            {% endif %} #}
                         </p>
                     </div>
             </div>
@@ -24,7 +25,7 @@
             <div class="modal-body form-group pb-0">
                 <div class="row">
                     <div class="col-lg-6">{{ form_row(form.type) }}</div>
-                    <div class="col-lg-6 js-contribution d-none">
+                    <div class="col-lg-6 js-contrib js-contribution d-none">
                         <div class="form-group row">
                             {{ form_label(form.periodContribution) }}
                             <div class="col-4">{{ form_widget(form.periodContribution.month) }}</div>
@@ -34,35 +35,37 @@
                     </div>
                 </div>
                 <hr class="mt-0">
-                <div class="js-contribution d-none">
-                    <div class="row">
-                        <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
-                        <div class="col-lg-4">{{ form_row(form.salaryAmt) }}</div>
-                    </div>
-                    <div class="row js-rent d-none">
-                        <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
-                        <div class="col-lg-4">{{ form_row(form.housingAssitanceAmt) }}</div>
-                    </div>
+                <div class="row js-contrib js-contribution d-none">
+                    <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.salaryAmt) }}</div>
+				    <div class="col-lg-4">
+					<button id="btn-update-contribution" class="btn btn-secondary"
+						title="Calculer le montant à régler">
+						<span class="fas fa-sync mr-2"></span>Calculer</button>
+				    </div>
                 </div>
-                <div class="row js-toPayAmt d-none">
+                <div class="row js-contrib js-rent d-none">
+                    <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.housingAssitanceAmt) }}</div>
+                </div>
+                <div class="row js-contrib js-toPayAmt d-none">
                     <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
                     <div class="col-lg-8">
                         <span id="calculationMethod" class="small text-secondary"></span>
                     </div>
                 </div>
-                <div class="row js-payment d-none">
-                    <div class="col-lg-4">{{ form_row(form.paidAmt) }}</div>
-                    <div class="col-lg-4">{{ form_row(form.paymentDate) }}</div>
-                    <div class="col-lg-4">{{ form_row(form.paymentType) }}</div>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-4 js-contrib js-returnAmt d-none">{{ form_row(form.returnAmt) }}</div>
+                        <div class="col-lg-4 js-contrib js-payment js-paidAmt d-none">{{ form_row(form.paidAmt) }}</div>
+                        <div class="col-lg-4 js-contrib js-payment js-paymentDate d-none">{{ form_row(form.paymentDate) }}</div>
+                        <div class="col-lg-4 js-contrib js-payment js-paymentType d-none">{{ form_row(form.paymentType) }}</div>
+                    </div>
+                    <div class="row js-contrib js-stillToPayAmt d-none">
+                        <div class="col-lg-4">{{ form_row(form.stillToPayAmt) }}</div>
+                    </div>
                 </div>
-                <div class="row js-payment d-none">
-                    <div class="col-lg-4">{{ form_row(form.stillToPayAmt) }}</div>
-                </div>
-                <div class="row js-caution d-none">
-                    <div class="col-lg-4">{{ form_row(form.returnAmt) }}</div>
-                    <div class="col-lg-4">{{ form_row(form.returnDate) }}</div>
-                </div>
-                <div class="row js-comment d-none">
+                <div class="row js-contrib js-comment d-none">
                     <div class="col-lg-12">{{ form_widget(form.comment) }}</div>
                 </div>
             </div>
@@ -80,7 +83,7 @@
             </div>
             
             {{ form_row(form._token) }}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form) }}
 
         </div>
     </div>

@@ -4,8 +4,8 @@ namespace App\Form\Contribution;
 
 use App\Form\Utils\Choices;
 use App\Entity\Contribution;
+use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
-use App\Form\Type\DateListSearchType;
 use App\Form\Model\ContributionSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,13 @@ class ContributionSearchType extends AbstractType
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'required' => false,
             ])
-            ->add('periodContribution', DateListSearchType::class, [
+            ->add('dateType', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(ContributionSearch::DATE_TYPE),
+                'placeholder' => '-- Type de date --',
+                'required' => false,
+            ])
+            ->add('date', DateSearchType::class, [
                 'data_class' => ContributionSearch::class,
             ])
             ->add('service', ServiceSearchType::class, [

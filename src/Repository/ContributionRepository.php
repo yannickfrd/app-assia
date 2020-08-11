@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\Query;
 use App\Entity\Contribution;
+use App\Entity\SupportGroup;
 use App\Security\CurrentUserService;
 use App\Form\Model\ContributionSearch;
 use Doctrine\Persistence\ManagerRegistry;
@@ -67,11 +68,18 @@ class ContributionRepository extends ServiceEntityRepository
 
     /**
      * Donne toutes les participations financières à exporter.
+     *
+     * @param ContributionSearch|SupportContributionSearch $search
      */
-    public function findContributionsToExport(ContributionSearch $search): ?array
+    public function findContributionsToExport($search, SupportGroup $supportGroup = null): ?array
     {
         $query = $this->getContributionsQuery()
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}');
+
+        if ($supportGroup) {
+            $query->where('c.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup);
+        }
 
         $query = $this->filter($query, $search);
 
@@ -101,9 +109,10 @@ class ContributionRepository extends ServiceEntityRepository
      */
     protected function getContributionsQuery()
     {
-        return $this->createQueryBuilder('c')->select('c')
+        return $this->createQueryBuilder('c')->select('c') // 'c', '(c.toPayAmt - c.paidAmt) AS stillToPayAmt'
         ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate}')
         ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+        ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
         ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
         ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
         ->leftJoin('c.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -112,11 +121,13 @@ class ContributionRepository extends ServiceEntityRepository
 
     /**
      * Filtre la recherche.
+     *
+     * @param ContributionSearch|SupportContributionSearch $search
      */
-    protected function filter($query, ContributionSearch $search)
+    protected function filter($query, $search)
     {
         if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
-            $query->where('sg.service IN (:services)')
+            $query->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
@@ -125,45 +136,59 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('type', $search->getType());
         }
 
-        if ($search->getFullname()) {
-            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                ->setParameter('fullname', '%'.$search->getFullname().'%');
+        switch ($search->getDateType()) {
+            case 1:
+                $dateType = 'periodContribution';
+                break;
+            case 2:
+                $dateType = 'paymentDate';
+                break;
+            default:
+                $dateType = 'createdAt';
+                break;
         }
 
         if ($search->getStart()) {
-            $query->andWhere('c.periodContribution >= :start')
+            $query->andWhere('c.'.$dateType.' >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.periodContribution <= :end')
+            $query->andWhere('c.'.$dateType.' <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        if ($search->getReferents() && count($search->getReferents())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
+        if ($search instanceof ContributionSearch) {
+            if ($search->getFullname()) {
+                $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+                ->setParameter('fullname', '%'.$search->getFullname().'%');
             }
-            $query->andWhere($orX);
-        }
 
-        if ($search->getServices() && count($search->getServices())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('sg.service', $service));
+            if ($search->getReferents() && $search->getReferents()->count()) {
+                $expr = $query->expr();
+                $orX = $expr->orX();
+                foreach ($search->getReferents() as $referent) {
+                    $orX->add($expr->eq('sg.referent', $referent));
+                }
+                $query->andWhere($orX);
             }
-            $query->andWhere($orX);
-        }
 
-        if ($search->getDevices() && count($search->getDevices())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('sg.device', $device));
+            if ($search->getServices() && $search->getServices()->count()) {
+                $expr = $query->expr();
+                $orX = $expr->orX();
+                foreach ($search->getServices() as $service) {
+                    $orX->add($expr->eq('sg.service', $service));
+                }
+                $query->andWhere($orX);
             }
-            $query->andWhere($orX);
+
+            if ($search->getDevices() && $search->getDevices()->count()) {
+                $expr = $query->expr();
+                $orX = $expr->orX();
+                foreach ($search->getDevices() as $device) {
+                    $orX->add($expr->eq('sg.device', $device));
+                }
+                $query->andWhere($orX);
+            }
         }
 
         return $query;

@@ -47,7 +47,7 @@
 
 	{% if support.id %}
 	<div class="small text-secondary">
-		<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{% if support.createdBy %} par {{ support.createdBy.fullname}}{% endif %}
+		<p>Suivi créé le {{support.createdAt|date("d/m/Y à H:i") }}{% if support.createdBy %} par {{ support.createdBy.fullname}}{% endif %}
 			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }}{{ support.updatedBy ? " par " ~ support.updatedBy.fullname }})</span>
 		</p>
 	</div>

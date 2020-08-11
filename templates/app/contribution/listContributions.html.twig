@@ -41,21 +41,28 @@
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Suivi", "p.lastname") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Service", "s.name") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mois", "c.periodContribution") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Type", "c.type") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant à réger", "c.toPayAmt") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû", "c.stillToPayAmt") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de règlement", "c.paymentDate") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mode de règlement", "c.paymentType") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "contribution.type"|trans({}, "forms"), "c.type") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "contribution.periodContribution"|trans({}, "forms"), "c.periodContribution") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Montant à régler", "c.toPayAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Date de l\'opération", "c.paymentDate") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Mode de règlement", "c.paymentType") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Service (Dispositif)", "s.name") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Créé le", "c.createdAt") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Créé par", "u.lastname") }}</th>
                     </tr>
                 </thead>
                 <tbody id="container-contributions">
                     {% set toPayAmt = 0 %}
                     {% set paidAmt = 0 %}
                     {% for contribution in contributions %}
+                        {% if contribution.supportGroup.supportPeople|filter(s => s.head == true)|length %}
+                            {% set supportPerson = contribution.supportGroup.supportPeople|filter(s => s.head == true)|first %}
+                        {% else %} 
+                            {% set supportPerson = contribution.supportGroup.supportPeople|first %}
+                        {% endif %}
                         <tr>
                             <td scope="row" class="align-middle text-center">
                                 <a class="btn btn-{{ theme_color }} btn-sm shadow"
@@ -63,20 +70,22 @@
                                     data-toggle="tooltip" data-placement="bottom" title="Voir {{ contribution.typeToString }}"><span class="fas fa-eye"></span>
                                 </a>
                             </td>
-                            <td class="align-middle">
-                                {% for supportPerson in contribution.supportGroup.supportPeople|filter(a => a.head == true) %}
-                                    {{ supportPerson.person.fullname }}
-                                {% endfor %}                     
+                            <td class="align-middle">{{ supportPerson.person.fullname }}</td>
+                            <td class="align-middle">{{ contribution.typeToString }}<br/>
+								<span class="text-secondary">{{ contribution.type == 22 ? "(" ~ contribution.returnAmt|number_format(0, ",", " ") ~ " €)" }}</span>
                             </td>
-                            <td class="align-middle">{{ contribution.supportGroup.service.name }}</td>
-                            <td class="align-middle">{{ contribution.periodContribution|date("m/Y") }}</td>
-                            <td class="align-middle">{{ contribution.typeToString }}</td>
-                            <td class="align-middle text-right">{{ contribution.toPayAmt|number_format(2, ",", " ") }} €</td>
-                            <td class="align-middle text-right">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
-                            <td class="align-middle text-right">{{ contribution.stillToPayAmt|number_format(2, ",", " ") }} €</td>
+                            <td class="align-middle">{{ contribution.periodContribution ? contribution.periodContribution|date("m/Y") }}</td>
+                            <td class="align-middle text-right">{{ contribution.toPayAmt ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
+                            <td class="align-middle text-right">{{ contribution.paidAmt ? contribution.paidAmt|number_format(2, ",", " ") ~ " €" }}</td>
+                            <td class="align-middle text-right">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
                             <td class="align-middle text-center">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
                             <td class="align-middle">{{ contribution.comment|slice(0,65) }}{% if contribution.comment|length > 70 %}...{% endif %}</td>                  
+                            <td class="align-middle">{{ contribution.supportGroup.service ? contribution.supportGroup.service.name }}<br/>
+                                <span class="text-secondary">{{ contribution.supportGroup.device ? "(" ~ contribution.supportGroup.device.name ~ ")" }}</span>
+                            </td>
+                            <td class="align-middle">{{ contribution.createdAt|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ contribution.createdBy.fullname }}</td>
                         </tr>
                         {% set toPayAmt = toPayAmt + contribution.toPayAmt %}
                         {% set paidAmt = paidAmt + contribution.paidAmt %}
@@ -84,10 +93,11 @@
                 </tbody>
                 <tfoot>
                     <tr class="font-weight-bold">
-                        <td scope="row" colspan="5" class="align-middle text-center">Sous-total</td>
+                        <td scope="row" colspan="4" class="align-middle text-right">Sous-total (page)</td>
                         <td id="js-sumToPayAmt" class="align-middle text-right">{{ toPayAmt|number_format(2, ",", " ") }} €</td>
                         <td id="js-sumPaidAmt" class="align-middle text-right">{{ paidAmt|number_format(2, ",", " ") }} €</td>
-                        <td id="js-sumStillToPayAmt" class="align-middle text-right">{{ (toPayAmt - paidAmt)|number_format(2, ",", " ") }} €</td>
+                        <td id="js-sumStillToPayAmt" class="align-middle text-right ">{{ (toPayAmt - paidAmt)|number_format(2, ",", " ") }} €</td>
+                        <td scope="row" colspan="6" class="align-middle text-center"></td>
                     </tr>
                 </tfoot>
             </table>

@@ -18,9 +18,9 @@ class Contribution
         1 => 'Redevance / Loyer',
         2 => 'Caution',
         3 => 'Prêt / Avance',
-        11 => 'Remboursemt dette | Redevance',
-        12 => 'Remboursemt dette | Caution',
-        13 => 'Remboursemt dette | Prêt',
+        11 => 'Rembt dette | Redevance',
+        12 => 'Rembt dette | Caution',
+        13 => 'Rembt dette | Prêt',
         22 => 'Restitution Caution',
     ];
 
@@ -134,11 +134,6 @@ class Contribution
      */
     private $returnAmt;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     * @Groups({"get", "export"})
-     */
-    private $returnDate;
 
     /**
      * @ORM\ManyToOne(targetEntity=SupportGroup::class, inversedBy="contributions")
@@ -325,18 +320,6 @@ class Contribution
     public function setReturnAmt(?float $returnAmt): self
     {
         $this->returnAmt = $returnAmt;
-
-        return $this;
-    }
-
-    public function getReturnDate(): ?\DateTimeInterface
-    {
-        return $this->returnDate;
-    }
-
-    public function setReturnDate(?\DateTimeInterface $returnDate): self
-    {
-        $this->returnDate = $returnDate;
 
         return $this;
     }

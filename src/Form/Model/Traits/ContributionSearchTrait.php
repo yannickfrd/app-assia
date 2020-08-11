@@ -2,21 +2,57 @@
 
 namespace App\Form\Model\Traits;
 
+use App\Form\Model\ContributionSearch;
+
 trait ContributionSearchTrait
 {
     /**
-     * @var int|null
+     * @var array|null
      */
     private $type;
 
-    public function getType(): ?int
+    /**
+     * @var int
+     */
+    private $dateType = ContributionSearch::DATE_TYPE_DEFAULT;
+
+    /**
+     * @var bool
+     */
+    private $export;
+
+    public function getType(): ?array
     {
         return $this->type;
     }
 
-    public function setType(?int $type): self
+    public function setType(?array $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getDateType(): ?int
+    {
+        return $this->dateType;
+    }
+
+    public function setDateType(?int $dateType): self
+    {
+        $this->dateType = $dateType;
+
+        return $this;
+    }
+
+    public function getExport(): ?bool
+    {
+        return $this->export;
+    }
+
+    public function setExport(bool $export): self
+    {
+        $this->export = $export;
 
         return $this;
     }

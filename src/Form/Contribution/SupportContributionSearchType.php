@@ -4,10 +4,10 @@ namespace App\Form\Contribution;
 
 use App\Form\Utils\Choices;
 use App\Entity\Contribution;
-use App\Form\Type\DateListSearchType;
 use App\Form\Model\ContributionSearch;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Model\SupportContributionSearch;
+use App\Form\Type\DateSearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -29,9 +29,16 @@ class SupportContributionSearchType extends AbstractType
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'required' => false,
             ])
-            ->add('periodContribution', DateListSearchType::class, [
+            ->add('dateType', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(ContributionSearch::DATE_TYPE),
+                'placeholder' => '-- Type de date --',
+                'required' => false,
+            ])
+            ->add('date', DateSearchType::class, [
                 'data_class' => ContributionSearch::class,
-            ]);
+            ])
+            ->add('export');
     }
 
     public function configureOptions(OptionsResolver $resolver)

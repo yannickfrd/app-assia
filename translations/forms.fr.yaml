@@ -1,6 +1,6 @@
 Address: Adresse (auto.)
 Birthdate: Date de naissance
-City: Ville (auto.)
+City: Ville
 Coefficient: Coefficient du suivi
 Color: Couleur 
 Comment location: Complément adresse
@@ -79,6 +79,7 @@ Places number: Nb de places
 Disabled: Désactivé
 Enabled: Actif
 
+# Document
 document:
   name.placeholder: Nom du fichier
   content.placeholder: Ajouter une description
@@ -89,6 +90,7 @@ document:
 
 Agreement: Consentement de la personne
 
+# Referent
 Social worker: Travailleur social
 Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
@@ -97,6 +99,7 @@ referent:
   socialWorker2.placeholder: Travailleur social suppléant
   comment.plaholder: Ecrire un commentaire sur le service social référent...
 
+# Service
 Chief: Responsable
 Siret id: Numéro SIRET
 Finess id: Numéro FINESS
@@ -116,15 +119,16 @@ Configuration: Configuration
 Individual collective: Individuel ou collectif
 Contribution amt: Montant de la redevance
 
+# Contribution
 Month: Mois
 Year: Année
 Day: Jour
 Credential: Justificatif de ressources
 Housing assitance amt: Montant APL
 Paid amt: Montant réglé
-Payment date: Date de règlement
+Payment date: Date de l\'opération
 Payment type: Mode de règlement
-Period contribution: Période de référence
+Period contribution: Période concernée
 Rent amt: Montant du loyer
 Resources amt: Montant ressources
 Return amt: Montant restitué
@@ -134,7 +138,11 @@ Still to pay amt: Restant dû
 To pay amt: Montant à régler
 Type: Type
 Write a comment: Ecrire un commentaire
+contribution:
+  periodContribution: Redevance - Période concernée
+  type: Type d'opération
 
+# RDV
 rdv:
   placeholder: 
     location: Ajouter un lieu

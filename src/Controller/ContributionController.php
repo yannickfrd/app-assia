@@ -93,6 +93,10 @@ class ContributionController extends AbstractController
         $formSearch = ($this->createForm(SupportContributionSearchType::class, $search))
             ->handleRequest($request);
 
+        if ($search->getExport()) {
+            return $this->exportFullData($search, $supportGroup);
+        }
+
         $contribution = (new Contribution())
             ->setPeriodContribution((new \DateTime())->modify('-1 month')->modify('first day of this month'));
 
@@ -103,8 +107,7 @@ class ContributionController extends AbstractController
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
-            // 'sumStillToPayAmt' => $this->repo->sumStillToPayAmt($supportGroup->getId()),
-            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 50) ?? null,
+            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 100) ?? null,
         ]);
     }
 
@@ -236,7 +239,7 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'La redevance est supprimée.',
+            'msg' => 'L\'opération "'.$contribution->getTypeToString().'" est supprimée.',
         ], 200);
     }
 
@@ -258,8 +261,7 @@ class ContributionController extends AbstractController
 
         $datas = $indicators->getIndicators(
             $this->repo->findAllContributionsForIndicators($search),
-            $search->getStart() ?? new \DateTime('2019-01-01'),
-            $search->getEnd(),
+            $search,
         );
 
         return $this->render('app/contribution/contributionIndicators.html.twig', [
@@ -270,10 +272,12 @@ class ContributionController extends AbstractController
 
     /**
      * Exporte les données.
+     *
+     * @param ContributionSearch|SupportContributionSearch $search
      */
-    protected function exportFullData(ContributionSearch $search, UrlGeneratorInterface $router = null)
+    protected function exportFullData($search, $supportGroup = null, UrlGeneratorInterface $router = null)
     {
-        $supports = $this->repo->findContributionsToExport($search);
+        $supports = $this->repo->findContributionsToExport($search, $supportGroup);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -316,7 +320,7 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'create',
             'alert' => 'success',
-            'msg' => 'La redevance est enregistrée.',
+            'msg' => 'L\'opération "'.$contribution->getTypeToString().'" enregistrée.',
             'data' => [
                 'contribution' => $normalizer->normalize($contribution, null, [
                     'groups' => ['get', 'export'],
@@ -339,7 +343,7 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'update',
             'alert' => 'success',
-            'msg' => 'La redevance est modifiée.',
+            'msg' => 'L\'opération "'.$contribution->getTypeToString().'" est modifiée.',
             'data' => [
                 'contribution' => $normalizer->normalize($contribution, null, [
                     'groups' => ['get', 'export'],

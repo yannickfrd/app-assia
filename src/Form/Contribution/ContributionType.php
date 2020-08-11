@@ -18,12 +18,13 @@ class ContributionType extends AbstractType
         $builder
             ->add('periodContribution', DateType::class, [
                 'required' => true,
-                'years' => range((int) date('Y') - 10, (int) date('Y')),
+                'years' => range((int) date('Y'), (int) date('Y') - 10),
                 'placeholder' => [
                     'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
                 ],
             ])
             ->add('type', ChoiceType::class, [
+                'label' => 'contribution.type',
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'placeholder' => 'placeholder.select',
             ])
@@ -58,6 +59,7 @@ class ContributionType extends AbstractType
                 'required' => false,
             ])
             ->add('paymentDate', DateType::class, [
+                'label' => 'Date de l\'opération',
                 'widget' => 'single_text',
                 'required' => false,
             ])
@@ -77,10 +79,6 @@ class ContributionType extends AbstractType
                     'class' => 'text-right',
                     'readonly' => true,
                 ],
-                'required' => false,
-            ])
-            ->add('returnDate', DateType::class, [
-                'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('returnAmt', MoneyType::class, [
