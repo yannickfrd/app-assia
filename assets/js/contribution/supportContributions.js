@@ -37,6 +37,7 @@ export default class SupportContributions {
         this.countContributionsElt = document.getElementById("count-contributions");
         this.nbTotalContributionsElt = document.getElementById("nb-total-contributions");
         this.supportId = document.getElementById("support").getAttribute("data-support");
+        this.contributionId = null;
 
         // Formulaire modal
         this.modalContributionElt = document.getElementById("modal-contribution");
@@ -165,14 +166,15 @@ export default class SupportContributions {
         // Si Redevance et PF.
         if (option === 1) {
             this.select.setOption(this.periodContributionDaySelect, "1");
-            // this.select.setOption(this.periodContributionMonthSelect, this.now.getMonth() + 1);
-            // this.select.setOption(this.periodContributionYearSelect, this.now.getFullYear());
-
             this.formContributionElt.querySelectorAll(".js-contribution").forEach(elt => {
                 elt.classList.remove("d-none");
             });
             if (this.rentAmt > 0 || parseInt(this.rentAmtInput.value) > 0) {
                 this.formContributionElt.querySelector(".js-rent").classList.remove("d-none");
+            }
+            if (!this.contributionId) {
+                this.select.setOption(this.periodContributionMonthSelect, this.now.getMonth() + 1);
+                this.select.setOption(this.periodContributionYearSelect, this.now.getFullYear());
             }
         } else {
             this.select.setOption(this.periodContributionYearSelect, "");
@@ -276,9 +278,9 @@ export default class SupportContributions {
 
     isValidForm() {
         this.error = false;
-
         let option = this.select.getOption(this.typeSelect);
 
+        this.checkContributionDate(option);
         this.checkToPaidAmt(option);
         this.checkReturnAmt(option);
         this.checkPaymentDate(option);
@@ -286,6 +288,23 @@ export default class SupportContributions {
         this.checkPaidAmt(option);
 
         return this.error === false ? true : false;
+    }
+
+    checkContributionDate(option) {
+        if (option === 1) {
+            if (!this.select.getOption(this.periodContributionMonthSelect)) {
+                this.error = true;
+                this.validationInput.invalid(this.periodContributionMonthSelect, "Ne peut pas être vide.");
+            } else {
+                this.validationInput.valid(this.periodContributionMonthSelect);
+            }
+            if (!this.select.getOption(this.periodContributionYearSelect)) {
+                this.error = true;
+                this.validationInput.invalid(this.periodContributionYearSelect, "Ne peut pas être vide.");
+            } else {
+                this.validationInput.valid(this.periodContributionYearSelect);
+            }
+        }
     }
 
     // Vérfifie le montant à payer si redevance ou caution
@@ -357,10 +376,12 @@ export default class SupportContributions {
 
     // Affiche un formulaire modal vierge.
     newContribution() {
+        this.contributionId = null;
         this.modalElt.modal("show");
         this.select.setOption(this.typeSelect, "");
         this.initForm();
         this.checkType();
+
         this.modalContributionElt.querySelector("form").action = "/support/" + this.supportId + "/contribution/new";
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnSaveElt.textContent = "Enregistrer";
@@ -370,6 +391,7 @@ export default class SupportContributions {
     getContribution(id) {
         this.loader.on();
 
+        this.contributionId = id;
         this.modalContributionElt.querySelector("form").action = "/contribution/" + id + "/edit";
 
         this.btnDeleteElt.classList.replace("d-none", "d-block");
@@ -377,6 +399,7 @@ export default class SupportContributions {
         this.btnSaveElt.textContent = "Mettre à jour";
 
         this.initForm();
+        this.checkType();
 
         this.ajaxRequest.init("GET", "/contribution/" + id + "/get", this.responseAjax.bind(this), true);
     }

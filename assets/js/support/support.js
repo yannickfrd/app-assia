@@ -12,4 +12,5 @@ document.addEventListener("DOMContentLoaded", () => {
     new SearchLocation("support_location");
     new ValidationSupport();
     new CheckChange("support"); // form name
+
 });

@@ -339,7 +339,7 @@ class SupportController extends AbstractController
 
         $calendar = new Calendar($year, $month);
 
-        $supports = $pagination->paginate($this->repoSupportGroup->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search), $request);
+        $supports = $pagination->paginate($this->repoSupportGroup->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search), $request, 30);
 
         $supportsId = [];
         foreach ($supports->getItems() as $support) {

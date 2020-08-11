@@ -15,7 +15,7 @@ export default class MessageFlash {
         this.msg = document.createElement("div");
         this.msg.className = "msg-content rounded";
         this.msg.innerHTML =
-            `<div id="js-msg-flash" class="msg-flash alert alert-${this.alert} alert-dismissible fade show align-items-center"
+            `<div id="js-msg-flash" class="mb-2 msg-flash alert alert-${this.alert} alert-dismissible fade show align-items-center"
                 role="alert" aria-live="assertive" aria-atomic="true">
                 <div>${this.message}</div>
                 <button type="button" id="btn-close-msg" class="close" data-dismiss="alert" aria-label="Close">
