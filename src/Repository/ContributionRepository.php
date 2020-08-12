@@ -39,7 +39,7 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return  $query->orderBy('c.periodContribution', 'DESC')
+        return  $query->orderBy('c.monthContrib', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -56,9 +56,9 @@ class ContributionRepository extends ServiceEntityRepository
             ->andWhere('c.supportGroup IN (:supportsId)')
             ->setParameter('supportsId', $supportsId)
 
-            ->andWhere('c.periodContribution >= :start')
+            ->andWhere('c.monthContrib >= :start')
             ->setParameter('start', $start)
-            ->andWhere('c.periodContribution <= :end')
+            ->andWhere('c.monthContrib <= :end')
             ->setParameter('end', $end);
 
         return $query->getQuery()
@@ -83,7 +83,7 @@ class ContributionRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('c.periodContribution', 'DESC')
+        return  $query->orderBy('c.monthContrib', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -138,10 +138,10 @@ class ContributionRepository extends ServiceEntityRepository
 
         switch ($search->getDateType()) {
             case 1:
-                $dateType = 'periodContribution';
+                $dateType = 'paymentDate';
                 break;
             case 2:
-                $dateType = 'paymentDate';
+                $dateType = 'monthContrib';
                 break;
             default:
                 $dateType = 'createdAt';
@@ -212,11 +212,11 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('type', $search->getType());
         }
         if ($search->getStart()) {
-            $query->andWhere('c.periodContribution >= :start')
+            $query->andWhere('c.monthContrib >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.periodContribution <= :end')
+            $query->andWhere('c.monthContrib <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 

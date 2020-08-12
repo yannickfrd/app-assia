@@ -43,13 +43,13 @@ export default class SupportContributions {
         this.modalContributionElt = document.getElementById("modal-contribution");
         this.formContributionElt = this.modalContributionElt.querySelector("form[name=contribution]");
         this.typeSelect = document.getElementById("contribution_type");
-        this.periodContributionYearSelect = document.getElementById("contribution_periodContribution_year");
-        this.periodContributionMonthSelect = document.getElementById("contribution_periodContribution_month");
-        this.periodContributionDaySelect = document.getElementById("contribution_periodContribution_day");
+        this.monthContribYearSelect = document.getElementById("contribution_monthContrib_year");
+        this.monthContribMonthSelect = document.getElementById("contribution_monthContrib_month");
+        this.monthContribDaySelect = document.getElementById("contribution_monthContrib_day");
         this.salaryAmtInput = document.getElementById("contribution_salaryAmt");
         this.resourcesAmtInput = document.getElementById("contribution_resourcesAmt");
         this.rentAmtInput = document.getElementById("contribution_rentAmt");
-        this.housingAssistanceInput = document.getElementById("contribution_housingAssitanceAmt");
+        this.aplAmtInput = document.getElementById("contribution_aplAmt");
         this.toPayAmtInput = document.getElementById("contribution_toPayAmt");
         this.calculationMethodElt = document.getElementById("calculationMethod");
         this.paymentDateInput = document.getElementById("contribution_paymentDate");
@@ -134,13 +134,19 @@ export default class SupportContributions {
             }
         });
 
-        this.toPayAmtInput.addEventListener("input", () => {
-            this.calculateStillDue();
+        this.rentAmtInput.addEventListener("input", () => {
+            this.calculateAmountToPay();
         });
-        this.paidAmtInput.addEventListener("input", () => {
-            this.calculateStillDue();
+        this.aplAmtInput.addEventListener("input", () => {
+            this.calculateAmountToPay();
         });
 
+        this.toPayAmtInput.addEventListener("input", () => {
+            this.calculateAmountStillDue();
+        });
+        this.paidAmtInput.addEventListener("input", () => {
+            this.calculateAmountStillDue();
+        });
         this.paymentDateInput.addEventListener("focusout", () => {
             this.checkPaidAmt();
         });
@@ -163,41 +169,35 @@ export default class SupportContributions {
             elt.classList.add("d-none");
         });
 
-        // Si Redevance et PF.
-        if (option === 1) {
-            this.select.setOption(this.periodContributionDaySelect, "1");
+        // Si PF / Redevance et Loyer.
+        if ([1, 2].indexOf(option) != -1) {
+            this.select.setOption(this.monthContribDaySelect, "1");
             this.formContributionElt.querySelectorAll(".js-contribution").forEach(elt => {
                 elt.classList.remove("d-none");
             });
-            if (this.rentAmt > 0 || parseInt(this.rentAmtInput.value) > 0) {
-                this.formContributionElt.querySelector(".js-rent").classList.remove("d-none");
-            }
-            if (!this.contributionId) {
-                this.select.setOption(this.periodContributionMonthSelect, this.now.getMonth() + 1);
-                this.select.setOption(this.periodContributionYearSelect, this.now.getFullYear());
-            }
         } else {
-            this.select.setOption(this.periodContributionYearSelect, "");
-            this.select.setOption(this.periodContributionMonthSelect, "");
-            this.select.setOption(this.periodContributionDaySelect, "");
             this.calculationMethodElt.textContent = null;
         }
-        if ([1, 2, 11, 12, 13].indexOf(option) != -1) { // Redevance, caution, remboursement
+        if (option === 2) {
+            this.formContributionElt.querySelector(".js-rent").classList.remove("d-none");
+        }
+
+        if ([1, 2, 3, 30, 31, 32].indexOf(option) != -1) { // Redevance, caution, remboursement
             this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant à régler";
             this.formContributionElt.querySelectorAll(".js-payment").forEach(elt => {
                 elt.classList.remove("d-none");
             });
         }
-        if ([1, 2].indexOf(option) != -1) { // Redevance, caution
+        if ([1, 2, 10].indexOf(option) != -1) { // Redevance, caution
             this.formContributionElt.querySelector(".js-stillToPayAmt").classList.remove("d-none");
         }
-        if (option === 3) { // Prêt
+        if (option === 20) { // Prêt
             this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant prêté";
         }
-        if (option < 10) { // Redevance, Caution, Prêt
+        if ([1, 2, 10, 30, 31, 32].indexOf(option) != -1) { // Redevance, Caution, Prêt
             this.formContributionElt.querySelector(".js-toPayAmt").classList.remove("d-none");
         }
-        if (option === 22) { // Restitution caution
+        if (option === 11) { // Restitution caution
             this.formContributionElt.querySelector(".js-returnAmt").classList.remove("d-none");
         }
         if (option >= 1) { // Tout sauf vide
@@ -223,7 +223,7 @@ export default class SupportContributions {
 
     // Donne le ratio de jours de présence dans le mois.
     getRateDays() {
-        let date = new Date(this.select.getOption(this.periodContributionYearSelect) + "-" + this.select.getOption(this.periodContributionMonthSelect) + "-01");
+        let date = new Date(this.select.getOption(this.monthContribYearSelect) + "-" + this.select.getOption(this.monthContribMonthSelect) + "-01");
         let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1);
         let nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24));
         let rateDays = 1;
@@ -244,20 +244,20 @@ export default class SupportContributions {
     }
 
     // Calcule le montant de la participation.
-    calculateContrib() {
+    calculateAmountToPay() {
         let rateDays = this.getRateDays();
         let calculationMethod = "";
         // Si redevance ou PF à régler
         if (this.contributionAmt > 0) {
-            this.toPayAmtInput.value = this.contributionAmt - this.housingAssistanceInput.value;
+            this.toPayAmtInput.value = this.contributionAmt - this.aplAmtInput.value;
             calculationMethod = "Montant fixé dans l'évalution sociale (" + this.contributionAmt + " €)" +
-                (this.housingAssistanceInput.value > 0 ? " - Montant APL (" + this.housingAssistanceInput.value + " €)" : "") + ".";
+                (this.aplAmtInput.value > 0 ? " - Montant APL (" + this.aplAmtInput.value + " €)" : "") + ".";
             // Si loyer fixe à payer
-        } else if (this.rentAmt > 0) {
-            this.toPayAmtInput.value = (Math.round((this.rentAmtInput.value * rateDays) * 100) / 100) - this.housingAssistanceInput.value;
+        } else if (this.rentAmtInput.value > 0) {
+            this.toPayAmtInput.value = (Math.round((this.rentAmtInput.value * rateDays) * 100) / 100) - this.aplAmtInput.value;
             calculationMethod = "Montant du loyer (" + this.rentAmtInput.value + " €)" +
                 (rateDays < 1 ? " x Prorata présence sur le mois (" + (Math.round(rateDays * 10000) / 100) + " %)" : "") +
-                (this.housingAssistanceInput.value > 0 ? " - Montant APL (" + this.housingAssistanceInput.value + " €)." : ".");
+                (this.aplAmtInput.value > 0 ? " - Montant APL (" + this.aplAmtInput.value + " €)." : ".");
         } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
             this.toPayAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays * 100) / 100;
             calculationMethod = "Montant des ressources (" + this.resourcesAmtInput.value +
@@ -268,7 +268,7 @@ export default class SupportContributions {
     }
 
     // Calcule le restant dû.
-    calculateStillDue() {
+    calculateAmountStillDue() {
         if (!isNaN(this.toPayAmtInput.value) && !isNaN(this.paidAmtInput.value)) {
             this.stillToPayAmtInput.value = Math.round((this.toPayAmtInput.value - this.paidAmtInput.value) * 100) / 100;
         }
@@ -291,19 +291,23 @@ export default class SupportContributions {
     }
 
     checkContributionDate(option) {
-        if (option === 1) {
-            if (!this.select.getOption(this.periodContributionMonthSelect)) {
+        if ([1, 2].indexOf(option) != -1) { // PF et Loyer
+            if (!this.select.getOption(this.monthContribMonthSelect)) {
                 this.error = true;
-                this.validationInput.invalid(this.periodContributionMonthSelect, "Ne peut pas être vide.");
+                this.validationInput.invalid(this.monthContribMonthSelect, "Ne peut pas être vide.");
             } else {
-                this.validationInput.valid(this.periodContributionMonthSelect);
+                this.validationInput.valid(this.monthContribMonthSelect);
             }
-            if (!this.select.getOption(this.periodContributionYearSelect)) {
+            if (!this.select.getOption(this.monthContribYearSelect)) {
                 this.error = true;
-                this.validationInput.invalid(this.periodContributionYearSelect, "Ne peut pas être vide.");
+                this.validationInput.invalid(this.monthContribYearSelect, "Ne peut pas être vide.");
             } else {
-                this.validationInput.valid(this.periodContributionYearSelect);
+                this.validationInput.valid(this.monthContribYearSelect);
             }
+        } else {
+            this.select.setOption(this.monthContribYearSelect, "");
+            this.select.setOption(this.monthContribMonthSelect, "");
+            this.select.setOption(this.monthContribDaySelect, "");
         }
     }
 
@@ -313,7 +317,7 @@ export default class SupportContributions {
             this.error = true;
             return this.validationInput.invalid(this.toPayAmtInput, "La valeur est invalide.");
         }
-        if ([1, 2, 3].indexOf(option) != -1 && !this.toPayAmtInput.value) {
+        if ([1, 2, 10, 20].indexOf(option) != -1 && !this.toPayAmtInput.value) { // PF, loyer, cautionn prêt
             this.error = true;
             return this.validationInput.invalid(this.toPayAmtInput, "Ne peut pas être vide.");
         }
@@ -325,7 +329,7 @@ export default class SupportContributions {
             this.error = true;
             return this.validationInput.invalid(this.returnAmtInput, "La valeur est invalide.");
         }
-        if (option == 22 && !this.returnAmtInput.value) {
+        if (option == 11 && !this.returnAmtInput.value) { // Restitution Caution
             this.error = true;
             return this.validationInput.invalid(this.returnAmtInput, "Ne peut pas être vide.");
         }
@@ -337,8 +341,8 @@ export default class SupportContributions {
             this.error = true;
             return this.validationInput.invalid(this.paidAmtInput, "La valeur est invalide.");
         }
-        if ((!this.paidAmtInput.value && [1, 2].indexOf(option) != -1 && (this.paymentDateInput.value || this.select.getOption(this.paymentTypeSelect))) ||
-            (!this.paidAmtInput.value && [11, 12, 13].indexOf(option) != -1)) {
+        if ((!this.paidAmtInput.value && [1, 2, 10].indexOf(option) != -1 && (this.paymentDateInput.value || this.select.getOption(this.paymentTypeSelect))) ||
+            (!this.paidAmtInput.value && [30, 31, 32].indexOf(option) != -1)) {
             this.error = true;
             return this.validationInput.invalid(this.paidAmtInput, "Ne peut pas être vide.");
         }
@@ -357,7 +361,7 @@ export default class SupportContributions {
             this.error = true;
             return this.validationInput.invalid(this.paymentDateInput, "La date ne peut être postérieure à la date du jour.");
         }
-        if (!this.paymentDateInput.value && (option === 3 || this.paidAmtInput.value || this.select.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
+        if (!this.paymentDateInput.value && (option === 20 || this.paidAmtInput.value || this.select.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
             this.error = true;
             return this.validationInput.invalid(this.paymentDateInput, "La date ne peut pas être vide.");
         }
@@ -366,7 +370,7 @@ export default class SupportContributions {
 
     // Vérifie le type de paiement saisi.
     checkPaymentType(option) {
-        if (!this.select.getOption(this.paymentTypeSelect) && (option === 3 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
+        if (!this.select.getOption(this.paymentTypeSelect) && (option === 20 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
             this.error = true;
             return this.validationInput.invalid(this.paymentTypeSelect, "Ne peut pas être vide.");
         }
@@ -381,7 +385,10 @@ export default class SupportContributions {
         this.select.setOption(this.typeSelect, "");
         this.initForm();
         this.checkType();
-
+        if (!this.contributionId) {
+            this.select.setOption(this.monthContribMonthSelect, this.now.getMonth() + 1);
+            this.select.setOption(this.monthContribYearSelect, this.now.getFullYear());
+        }
         this.modalContributionElt.querySelector("form").action = "/support/" + this.supportId + "/contribution/new";
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnSaveElt.textContent = "Enregistrer";
@@ -502,7 +509,7 @@ export default class SupportContributions {
         this.toPayAmtInput.value = this.toPayAmt;
         this.rentAmtInput.value = this.rentAmt;
 
-        this.calculateContrib();
+        this.calculateAmountToPay();
         this.loader.off();
     }
 
@@ -512,9 +519,9 @@ export default class SupportContributions {
         // modalContentElt.innerHTML = contribution.content;
         this.modalElt.modal("show");
         this.selectOption(this.typeSelect, contribution.type);
-        if (contribution.periodContribution) {
-            this.selectOption(this.periodContributionYearSelect, parseInt(contribution.periodContribution.substring(0, 4)));
-            this.selectOption(this.periodContributionMonthSelect, parseInt(contribution.periodContribution.substring(5, 7)));
+        if (contribution.monthContrib) {
+            this.selectOption(this.monthContribYearSelect, parseInt(contribution.monthContrib.substring(0, 4)));
+            this.selectOption(this.monthContribMonthSelect, parseInt(contribution.monthContrib.substring(5, 7)));
         }
         this.salaryAmtInput.value = contribution.salaryAmt;
         this.resourcesAmtInput.value = contribution.resourcesAmt;
@@ -573,8 +580,8 @@ export default class SupportContributions {
 
     // Met à jour la ligne du tableau correspondant au contribution.
     updateContribution(contribution) {
-        this.trElt.querySelector("td.js-type").textContent = contribution.typeToString + (contribution.type == 22 ? " (" + this.formatMoney(contribution.returnAmt) + ")" : "");
-        this.trElt.querySelector("td.js-periodContribution").textContent = this.formatDatetime(contribution.periodContribution, "d/m");
+        this.trElt.querySelector("td.js-type").textContent = contribution.typeToString + (contribution.type == 11 ? " (" + this.formatMoney(contribution.returnAmt) + ")" : "");
+        this.trElt.querySelector("td.js-monthContrib").textContent = this.formatDatetime(contribution.monthContrib, "d/m");
         this.trElt.querySelector("td.js-toPayAmt").textContent = this.formatMoney(contribution.toPayAmt);
         this.trElt.querySelector("td.js-paidAmt").textContent = this.formatMoney(contribution.paidAmt);
         this.trElt.querySelector("td.js-stillToPayAmt").textContent = this.formatMoney(this.roundMoney(contribution.stillToPayAmt));
@@ -595,9 +602,9 @@ export default class SupportContributions {
                 </button>
             </td>
             <td class="align-middle js-type">${contribution.typeToString}<br/>
-                <span class="text-secondary">${contribution.type == 22 ? " (" + this.formatMoney(contribution.returnAmt) + ")" : "" }</span>
+                <span class="text-secondary">${contribution.type == 11 ? " (" + this.formatMoney(contribution.returnAmt) + ")" : "" }</span>
             </td>
-            <td class="align-middle js-periodContribution">${this.formatDatetime(contribution.periodContribution, "d/m")}</td>
+            <td class="align-middle js-monthContrib">${this.formatDatetime(contribution.monthContrib, "d/m")}</td>
             <td class="align-middle text-right js-toPayAmt">${this.formatMoney(contribution.toPayAmt)}</td>
             <td class="align-middle text-right js-paidAmt">${this.formatMoney(contribution.paidAmt)}</td>
             <td class="align-middle text-right js-stillToPayAmt">${this.formatMoney(this.roundMoney(contribution.stillToPayAmt))}</td>

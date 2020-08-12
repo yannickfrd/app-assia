@@ -50,7 +50,7 @@ class ContributionController extends AbstractController
      *
      * @Route("contributions", name="contributions", methods="GET|POST")
      */
-    public function listContributions(ContributionSearch $search = null, Request $request, Pagination $pagination, UrlGeneratorInterface $router): Response
+    public function listContributions(ContributionSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $search = new ContributionSearch();
         if ($this->getUser()->getStatus() == 1) {
@@ -63,10 +63,10 @@ class ContributionController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportFullData($search, $router);
+            return $this->exportFullData($search);
         }
         if ($request->query->get('export2')) {
-            return $this->exportLightData($search, $router);
+            return $this->exportLightData($search);
         }
 
         return $this->render('app/contribution/listContributions.html.twig', [
@@ -98,7 +98,7 @@ class ContributionController extends AbstractController
         }
 
         $contribution = (new Contribution())
-            ->setPeriodContribution((new \DateTime())->modify('-1 month')->modify('first day of this month'));
+            ->setMonthContrib((new \DateTime())->modify('-1 month')->modify('first day of this month'));
 
         $form = $this->createForm(ContributionType::class, $contribution);
 

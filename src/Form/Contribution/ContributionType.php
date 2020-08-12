@@ -16,7 +16,7 @@ class ContributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('periodContribution', DateType::class, [
+            ->add('monthContrib', DateType::class, [
                 'required' => true,
                 'years' => range((int) date('Y'), (int) date('Y') - 10),
                 'placeholder' => [
@@ -40,7 +40,7 @@ class ContributionType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('housingAssitanceAmt', MoneyType::class, [
+            ->add('aplAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money text-right',
                 ],

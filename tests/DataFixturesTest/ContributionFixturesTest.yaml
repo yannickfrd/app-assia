@@ -1,6 +1,6 @@
 App\Entity\Contribution:
   contribution1:
-    periodContribution: <date_create("2020-04-01")>
+    monthContrib: <date_create("2020-04-01")>
     type: 1
     salaryAmt: 0
     resourcesAmt: 666
@@ -15,13 +15,13 @@ App\Entity\Contribution:
     supportGroup: "@supportGroup"
     
   contribution{2..5}:
-    periodContribution: <dateTimeBetween("-2 years", "now")>
+    monthContrib: <dateTimeBetween("-2 years", "now")>
     type: <numberBetween(1, 2)>
     salaryAmt: <numberBetween(0, 1500)>
     resourcesAmt: <numberBetween($salaryAmt, 1500)>
     toPayAmt: <numberBetween(0, 200)>
     paidAmt: $toPayAmt
-    paymentDate: <dateTimeBetween($periodContribution, "+1 month")>
+    paymentDate: <dateTimeBetween($monthContrib, "+1 month")>
     paymentType: <numberBetween(1, 4)>
     createdAt: <dateTimeBetween($paymentDate, "+1 month")>
     updatedAt: $createdAt

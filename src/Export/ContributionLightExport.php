@@ -48,11 +48,11 @@ class ContributionLightExport
         }
 
         return [
-            'N° contribution' => $contribution->getId(),
+            'N° opération' => $contribution->getId(),
             'Nom' => $person ? $person->getFullname() : null,
             'Service' => $supportGroup->getService()->getName(),
-            'Type' => $contribution->getTypeToString(),
-            'Mois (Date)' => $this->formatDate($contribution->getPeriodContribution()),
+            'Type d\'opération' => $contribution->getTypeToString(),
+            'Mois (Date)' => $this->formatDate($contribution->getMonthContrib()),
             'Montant à régler (€)' => $contribution->getToPayAmt(),
             'Montant réglé (€)' => $contribution->getPaidAmt(),
             'Restant dû (€)' => $contribution->getStillToPayAmt(),

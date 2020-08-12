@@ -9,6 +9,7 @@ Confirm password: Confirmation du mot de passe
 ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe
 Contact other person: Contact autre personne
+Day: Jour
 Device: Dispositif
 device:
   coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
@@ -30,12 +31,22 @@ Fullname: Nom et prénom
 Gender: Sexe
 Lastname: Nom
 Location: Lieu
+Month: Mois
 Name: Nom
 Nb people: Nb. de personnes
 NbPeople: Nb. pers.
 New password: Nouveau mot de passe
-Password: Mot de passe
 Old password: Ancien mot de passe
+placeholder:
+  comment: Ecrire un commentaire...
+  device:  -- Dispositif --
+  familtyTypology: -- Typologie familiale --
+  gender: -- Sexe --
+  nbSupports: Nb de suivis
+  pole: -- Pôle --
+  select: -- Sélectionner --
+  service: -- Service --
+Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1
 Phone2: Téléphone 2
@@ -62,16 +73,8 @@ Write a comment about the group: Ecrire un commentaire sur le groupe
 Write a comment about the person: Ecrire un commentaire sur la personne
 comment.placeholder: Ecrire un commentaire sur le suivi social
 Write a comment about the service: Ecrire un commentaire sur le service
+Year: Année
 Zipcode: Code postal (auto.)
-placeholder:
-  comment: Ecrire un commentaire...
-  device:  -- Dispositif --
-  familtyTypology: -- Typologie familiale --
-  gender: -- Sexe --
-  nbSupports: Nb de suivis
-  pole: -- Pôle --
-  select: -- Sélectionner --
-  service: -- Service --
 End reason: Motif de fin
 Comment end reason: Commentaire
 Accommodation: Hébergement
@@ -79,7 +82,7 @@ Places number: Nb de places
 Disabled: Désactivé
 Enabled: Actif
 
-# Document
+### Document
 document:
   name.placeholder: Nom du fichier
   content.placeholder: Ajouter une description
@@ -90,7 +93,7 @@ document:
 
 Agreement: Consentement de la personne
 
-# Referent
+### Referent
 Social worker: Travailleur social
 Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
@@ -99,7 +102,7 @@ referent:
   socialWorker2.placeholder: Travailleur social suppléant
   comment.plaholder: Ecrire un commentaire sur le service social référent...
 
-# Service
+### Service
 Chief: Responsable
 Siret id: Numéro SIRET
 Finess id: Numéro FINESS
@@ -119,30 +122,25 @@ Configuration: Configuration
 Individual collective: Individuel ou collectif
 Contribution amt: Montant de la redevance
 
-# Contribution
-Month: Mois
-Year: Année
-Day: Jour
+### Contribution
+Apl amt: Montant APL
 Credential: Justificatif de ressources
-Housing assitance amt: Montant APL
+Month contrib: Mois concerné
 Paid amt: Montant réglé
 Payment date: Date de l\'opération
 Payment type: Mode de règlement
-Period contribution: Période concernée
 Rent amt: Montant du loyer
 Resources amt: Montant ressources
 Return amt: Montant restitué
-Return date: Date de restitution
 Salary amt: Montant salaire(s)
-Still to pay amt: Restant dû
+Still to pay amt: Montant restant dû
 To pay amt: Montant à régler
-Type: Type
-Write a comment: Ecrire un commentaire
 contribution:
-  periodContribution: Redevance - Période concernée
+  comment.placeholder: Ecrire un commentaire
+  monthContrib: Mois de la redevance
   type: Type d'opération
 
-# RDV
+### RDV
 rdv:
   placeholder: 
     location: Ajouter un lieu
@@ -151,7 +149,7 @@ rdv:
 
 location.search.placeholder: Saisir une adresse ou une ville...
 
-# AVDL
+### AVDL
 Mandate date: Date de mandatement
 City origin: Commune d'origine
 Propo housing: Proposition logement

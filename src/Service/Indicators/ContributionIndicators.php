@@ -20,7 +20,7 @@ class ContributionIndicators
     {
         switch ($search->getDateType()) {
             case 1:
-                $date = 'getPeriodContribution';
+                $date = 'getMonthContrib';
                 break;
             case 2:
                 $date = 'getPaymentDate';

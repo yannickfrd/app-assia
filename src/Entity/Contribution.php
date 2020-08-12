@@ -15,29 +15,23 @@ class Contribution
     use CreatedUpdatedEntityTrait;
 
     public const CONTRIBUTION_TYPE = [
-        1 => 'Redevance / Loyer',
-        2 => 'Caution',
-        3 => 'Prêt / Avance',
-        11 => 'Rembt dette | Redevance',
-        12 => 'Rembt dette | Caution',
-        13 => 'Rembt dette | Prêt',
-        22 => 'Restitution Caution',
+        1 => 'Participation / Redevance', // 1
+        2 => 'Loyer', // 1
+        10 => 'Caution', // ex 2
+        20 => 'Prêt / Avance',  // ex 3
+        30 => 'Rembt dette | PF / Loyer', // ex 11
+        31 => 'Rembt dette | Caution', // ex 12
+        32 => 'Rembt dette | Prêt', // ex 13
+        11 => 'Restitution Caution', // ex 22
     ];
 
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
 
     public const PAYMENT_TYPE = [
         1 => 'Virement',
-        2 => 'Virement',
         3 => 'Chèque',
         4 => 'Espèce',
     ];
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     * @Groups("get")
-     */
-    private $periodContribution;
 
     /**
      * @ORM\Id()
@@ -46,6 +40,29 @@ class Contribution
      * @Groups("get")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="smallint")
+     * @Groups("get")
+     */
+    private $type = self::DEFAULT_CONTRIBUTION_TYPE;
+
+    /**
+     * @Groups("export")
+     */
+    private $typeToString;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups("get")
+     */
+    private $monthContrib;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get", "export"})
+     */
+    private $resourcesAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -57,12 +74,13 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $resourcesAmt;
+    private $rentAmt;
+
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $housingAssitanceAmt;
+    private $aplAmt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -74,19 +92,7 @@ class Contribution
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $rentAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
-     */
     private $toPayAmt;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     * @Groups({"get", "export"})
-     */
-    private $paymentDate;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -106,27 +112,16 @@ class Contribution
     private $paidAmt;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups({"get", "export"})
+     */
+    private $paymentDate;
+
+    /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
     private $stillToPayAmt;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get", "export"})
-     */
-    private $comment;
-
-    /**
-     * @ORM\Column(type="smallint")
-     * @Groups("get")
-     */
-    private $type = self::DEFAULT_CONTRIBUTION_TYPE;
-
-    /**
-     * @Groups("export")
-     */
-    private $typeToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -134,6 +129,11 @@ class Contribution
      */
     private $returnAmt;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"get", "export"})
+     */
+    private $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity=SupportGroup::class, inversedBy="contributions")
@@ -146,26 +146,31 @@ class Contribution
         return $this->id;
     }
 
-    public function getPeriodContribution(): ?\DateTimeInterface
+    public function getType(): ?int
     {
-        return $this->periodContribution;
+        return $this->type;
     }
 
-    public function setPeriodContribution(?\DateTimeInterface $periodContribution): self
+    public function getTypeToString(): ?string
     {
-        $this->periodContribution = $periodContribution;
+        return $this->type ? self::CONTRIBUTION_TYPE[$this->type] : null;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
 
-    public function getSalaryAmt(): ?float
+    public function getMonthContrib(): ?\DateTimeInterface
     {
-        return $this->salaryAmt;
+        return $this->monthContrib;
     }
 
-    public function setSalaryAmt(?float $salaryAmt): self
+    public function setMonthContrib(?\DateTimeInterface $monthContrib): self
     {
-        $this->salaryAmt = $salaryAmt;
+        $this->monthContrib = $monthContrib;
 
         return $this;
     }
@@ -182,14 +187,38 @@ class Contribution
         return $this;
     }
 
-    public function getHousingAssitanceAmt(): ?float
+    public function getSalaryAmt(): ?float
     {
-        return $this->housingAssitanceAmt;
+        return $this->salaryAmt;
     }
 
-    public function setHousingAssitanceAmt(?float $housingAssitanceAmt): self
+    public function setSalaryAmt(?float $salaryAmt): self
     {
-        $this->housingAssitanceAmt = $housingAssitanceAmt;
+        $this->salaryAmt = $salaryAmt;
+
+        return $this;
+    }
+
+    public function getRentAmt(): ?float
+    {
+        return $this->rentAmt;
+    }
+
+    public function setRentAmt(?float $rentAmt): self
+    {
+        $this->rentAmt = $rentAmt;
+
+        return $this;
+    }
+
+    public function getAplAmt(): ?float
+    {
+        return $this->aplAmt;
+    }
+
+    public function setAplAmt(?float $aplAmt): self
+    {
+        $this->aplAmt = $aplAmt;
 
         return $this;
     }
@@ -214,18 +243,6 @@ class Contribution
     public function setToPayAmt(?float $toPayAmt): self
     {
         $this->toPayAmt = $toPayAmt;
-
-        return $this;
-    }
-
-    public function getRentAmt(): ?float
-    {
-        return $this->rentAmt;
-    }
-
-    public function setRentAmt(?float $rentAmt): self
-    {
-        $this->rentAmt = $rentAmt;
 
         return $this;
     }
@@ -283,35 +300,6 @@ class Contribution
         return $this;
     }
 
-    public function getComment(): ?string
-    {
-        return $this->comment;
-    }
-
-    public function setComment(?string $comment): self
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function getTypeToString(): ?string
-    {
-        return $this->type ? self::CONTRIBUTION_TYPE[$this->type] : null;
-    }
-
-    public function setType(int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function getReturnAmt(): ?float
     {
         return $this->returnAmt;
@@ -320,6 +308,18 @@ class Contribution
     public function setReturnAmt(?float $returnAmt): self
     {
         $this->returnAmt = $returnAmt;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

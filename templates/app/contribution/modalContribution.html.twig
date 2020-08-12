@@ -27,10 +27,10 @@
                     <div class="col-lg-6">{{ form_row(form.type) }}</div>
                     <div class="col-lg-6 js-contrib js-contribution d-none">
                         <div class="form-group row">
-                            {{ form_label(form.periodContribution) }}
-                            <div class="col-4">{{ form_widget(form.periodContribution.month) }}</div>
-                            <div class="col-4">{{ form_widget(form.periodContribution.year) }}</div>
-                            <div class="d-none">{{ form_widget(form.periodContribution.day) }}</div>
+                            {{ form_label(form.monthContrib) }}
+                            <div class="col-4 d-none">{{ form_widget(form.monthContrib.day) }}</div>
+                            <div class="col-4">{{ form_widget(form.monthContrib.month) }}</div>
+                            <div class="col-4">{{ form_widget(form.monthContrib.year) }}</div>
                         </div>
                     </div>
                 </div>
@@ -39,14 +39,13 @@
                     <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
                     <div class="col-lg-4">{{ form_row(form.salaryAmt) }}</div>
 				    <div class="col-lg-4">
-					<button id="btn-update-contribution" class="btn btn-secondary"
-						title="Calculer le montant à régler">
-						<span class="fas fa-sync mr-2"></span>Calculer</button>
+					    <button id="btn-update-contribution" class="btn btn-secondary mb-2" title="Calculer le montant à régler">
+                            <span class="fas fa-sync mr-2"></span>Calculer</button>
 				    </div>
                 </div>
                 <div class="row js-contrib js-rent d-none">
                     <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
-                    <div class="col-lg-4">{{ form_row(form.housingAssitanceAmt) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.aplAmt) }}</div>
                 </div>
                 <div class="row js-contrib js-toPayAmt d-none">
                     <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>

@@ -47,7 +47,7 @@
 						<tr>
 							<th scope="col" class="align-middle th-w-20"></th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "contribution.type"|trans({}, "forms"), "c.type") }}</th>
-							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "contribution.periodContribution"|trans({}, "forms"), "c.periodContribution") }}</th>
+							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "contribution.monthContrib"|trans({}, "forms"), "c.monthContrib") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant à régler", "c.toPayAmt") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
 							<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
@@ -66,10 +66,13 @@
 										data-toggle="tooltip" data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
 									</button>
 								</td>
-								<td class="align-middle js-type">{{ contribution.typeToString }}<br/>
-									<span class="text-secondary">{{ contribution.type == 22 ? "(" ~ contribution.returnAmt|number_format(0, ",", " ") ~ " €)" }}</span>
+								<td class="align-middle js-type">{{ contribution.typeToString }}
+									<span class="text-secondary">
+										{{ contribution.type == 2 ? "(" ~ contribution.rentAmt|number_format(0, ",", " ") ~ " €)" }}<br/>
+										{{ contribution.type == 11 ? "(" ~ contribution.returnAmt|number_format(0, ",", " ") ~ " €)" }}
+									</span>								
 								</td>
-								<td class="align-middle js-periodContribution">{{ contribution.periodContribution ? contribution.periodContribution|date("m/Y") }}</td>
+								<td class="align-middle js-monthContrib">{{ contribution.monthContrib ? contribution.monthContrib|date("m/Y") }}</td>
 								<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
 								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt ? contribution.paidAmt|number_format(2, ",", " ") ~ " €" }}</td>
 								<td class="align-middle text-right js-stillToPayAmt">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|number_format(2, ",", " ") ~ " €" }}</td>

@@ -1,12 +1,12 @@
 App\Entity\Contribution:
   contribution{1..200}:
-    periodContribution: <dateTimeBetween("-1 year", "now")>
+    monthContrib: <dateTimeBetween("-1 year", "now")>
     type: <numberBetween(1, 2)>
     salaryAmt: <numberBetween(0, 1500)>
     resourcesAmt: <numberBetween($salaryAmt, 1500)>
     toPayAmt: <numberBetween(0, 200)>
     paidAmt: $toPayAmt
-    paymentDate: <dateTimeBetween($periodContribution, "+1 month")>
+    paymentDate: <dateTimeBetween($monthContrib, "+1 month")>
     paymentType: <numberBetween(1, 4)>
     createdAt: <dateTimeBetween($paymentDate, "+1 month")>
     updatedAt: $createdAt

@@ -22,7 +22,7 @@ class AvdlOrganizationsCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Insert links beetween AVDL servide and organization.');
+        $this->setDescription('Insert links beetween AVDL service and organizations.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
