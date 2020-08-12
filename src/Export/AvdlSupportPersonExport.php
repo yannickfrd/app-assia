@@ -81,13 +81,13 @@ class AvdlSupportPersonExport
             'Prêt au logement' => $avdlSupport->getReadyToHousingToString(),
             'Commentaire sur l\'accompagnement' => $avdlSupport->getSupportComment(),
             'Motif de fin d\'accompagnement' => $avdlSupport->getEndSupportReasonToString(),
-            'Type d\'accès au logement' => $avdlSupport->getAccessHousingTypeToString(),
+            'Type d\'accès au logement' => $avdlSupport->getAccessHousingModalityToString(),
             'Situation à la fin' => $supportGroup->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportGroup->getEndStatusComment(),
             'Date de la proposition' => $this->formatDate($avdlSupport->getPropoHousingDate()),
             'Origine de la proposition' => $avdlSupport->getPropoOriginToString(),
             'Résultat de la proposition' => $avdlSupport->getPropoResultToString(),
-            'Commentaire fin d\'accompagnement ou propo. logement' => $avdlSupport->getPropoResultToString(),
+            'Commentaire fin d\'accompagnement ou propo. logement' => $avdlSupport->getEndSupportComment(),
         ];
 
         return $datas;

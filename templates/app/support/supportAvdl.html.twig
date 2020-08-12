@@ -11,20 +11,16 @@
 	{# <div class="col-md-6">{{ form_row(form.startDate) }}</div> 
 	<div class="col-md-6">{{ form_row(form.endDate) }}</div> #}
 </div>
-
 <hr>
-
 <div class="form-group row">
 	<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
 	<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
 	<div class="col-md-6">{{ form_row(form.originRequest.organizationComment) }}</div>
-	<div class="col-md-6">{{ form_row(form.avdl.mandateDate) }}</div>
+	<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
 	<div class="col-md-6">{{ form_row(form.avdl.propoHousing) }}</div>
 	<div class="col-md-12">{{ form_widget(form.originRequest.comment) }}</div>
 </div>
-
 <hr>
-
 <div class="form-group row" id="support_location">
 	<div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
 	<div class="col-md-6">{{ form_row(form.location.search) }}</div>
@@ -33,9 +29,7 @@
 	<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
 	<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
 </div>
-
 <hr>
-
 <div class="form-group row">
 	<div class="col-md-12"><h2 class="h5 mb-3">Diagnostic</h2></div>
 	<div class="col-md-6">{{ form_row(form.avdl.diagStartDate) }}</div>
@@ -44,9 +38,7 @@
 	<div class="col-md-6">{{ form_row(form.avdl.recommendationSupport) }}</div>
 	<div class="col-md-12">{{ form_widget(form.avdl.diagComment) }}</div>
 </div>
-
 <hr>
-
 <div class="form-group row">
 	<div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
 	<div class="col-md-6">{{ form_row(form.avdl.supportStartDate) }}</div>
@@ -55,16 +47,12 @@
 	<div class="col-md-6">{{ form_row(form.avdl.readyToHousing) }}</div>
 	<div class="col-md-12">{{ form_widget(form.avdl.supportComment) }}</div>
 </div>
-
 <hr>
-
 <div class="form-group row">
 	<div class="col-md-12"><h2 class="h5 mb-3">Fin d'accompagnement / Proposition logement</h2></div>
 	<div class="col-md-6">{{ form_row(form.avdl.endSupportReason) }}</div>
 	<div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
-	<div class="col-md-6 js-status d-block">{{ form_row(form.endStatusComment) }}</div>
-	<div class="col-md-6"></div>
-	<div class="col-md-6">{{ form_row(form.avdl.AccessHousingType) }}</div>
+	<div class="col-md-6">{{ form_row(form.avdl.AccessHousingModality) }}</div>
 	<div class="col-md-6">{{ form_row(form.avdl.propoHousingDate) }}</div>
 	<div class="col-md-6">{{ form_row(form.avdl.propoOrigin) }}</div>
 	<div class="col-md-6">{{ form_row(form.avdl.propoResult) }}</div>

@@ -38,7 +38,7 @@ class Avdl
         99 => 'Non renseigné',
     ];
 
-    public const ACCESS_HOUSING_TYPE = [
+    public const ACCESS_HOUSING_MODALITY = [
         1 => 'Propo. bailleur',
         2 => 'Propo. Préfecture',
         3 => 'Propo. DRIHL',
@@ -74,12 +74,12 @@ class Avdl
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $mandateDate;
+    private $mandateDate; // A supprimer ?
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $cityOrigin;
+    private $cityOrigin; // A supprimer ?
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -144,7 +144,7 @@ class Avdl
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $AccessHousingType;
+    private $AccessHousingModality;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -154,7 +154,7 @@ class Avdl
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $propoOrigin;
+    private $propoOrigin; // A supprimer ?
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -375,19 +375,19 @@ class Avdl
         return $this;
     }
 
-    public function getAccessHousingType(): ?int
+    public function getAccessHousingModality(): ?int
     {
-        return $this->AccessHousingType;
+        return $this->AccessHousingModality;
     }
 
-    public function getAccessHousingTypeToString(): ?string
+    public function getAccessHousingModalityToString(): ?string
     {
-        return $this->getAccessHousingType() ? self::ACCESS_HOUSING_TYPE[$this->getAccessHousingType()] : null;
+        return $this->getAccessHousingModality() ? self::ACCESS_HOUSING_MODALITY[$this->getAccessHousingModality()] : null;
     }
 
-    public function setAccessHousingType(?int $AccessHousingType): self
+    public function setAccessHousingModality(?int $AccessHousingModality): self
     {
-        $this->AccessHousingType = $AccessHousingType;
+        $this->AccessHousingModality = $AccessHousingModality;
 
         return $this;
     }

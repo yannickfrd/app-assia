@@ -179,7 +179,7 @@ class ExportSearchType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ExportSearch::class,
             'csrf_protection' => false,
-            'translation_domain' => 'support',
+            'translation_domain' => 'forms',
         ]);
     }
 

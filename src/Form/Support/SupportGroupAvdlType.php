@@ -14,6 +14,7 @@ class SupportGroupAvdlType extends AbstractType
             ->remove('status')
             // ->remove('startDate')
             // ->remove('endDate')
+            ->remove('endStatusComment')
             ->remove('theoreticalEndDate')
             ->add('avdl', AvdlType::class);
     }

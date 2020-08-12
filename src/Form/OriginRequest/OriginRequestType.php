@@ -2,7 +2,6 @@
 
 namespace App\Form\OriginRequest;
 
-use App\Entity\Service;
 use App\Form\Utils\Choices;
 use App\Entity\Organization;
 use App\Entity\OriginRequest;
@@ -33,6 +32,7 @@ class OriginRequestType extends AbstractType
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
+                'label' => $serviceId === 5 ? 'avdl.orientationDate' : '', // AVDL
                 'widget' => 'single_text',
                 'required' => false,
             ])
@@ -63,7 +63,7 @@ class OriginRequestType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => OriginRequest::class,
-            'translation_domain' => 'support',
+            'translation_domain' => 'forms',
         ]);
     }
 }

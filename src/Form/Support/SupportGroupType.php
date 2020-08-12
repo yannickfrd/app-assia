@@ -100,6 +100,7 @@ class SupportGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('endStatusComment')
             ->add('endAccommodation', CheckboxType::class, [
                 'label_attr' => [
                     'class' => 'custom-control-label',
@@ -110,7 +111,6 @@ class SupportGroupType extends AbstractType
                 'required' => false,
                 'help' => 'endAccommodation.help',
             ])
-            ->add('endStatusComment')
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
                 'label_attr' => [

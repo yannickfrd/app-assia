@@ -1,4 +1,4 @@
-Address: Adresse (auto.)
+Address: Adresse
 Birthdate: Date de naissance
 City: Ville
 Coefficient: Coefficient du suivi
@@ -11,6 +11,7 @@ Confirm new password: Confirmation nouveau mot de passe
 Contact other person: Contact autre personne
 Day: Jour
 Device: Dispositif
+Devices: Dispositifs
 device:
   coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
   accommodation.help: Ce dispositif a t-il une activité d'hébergement ?
@@ -22,8 +23,8 @@ End: Fin
 End accommodation: Mettre fin également à l'hébergement
 endAccommodation.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
 End date: Date de fin
-End status: Situation résidentielle à la fin
-End status comment: Précision sur la situation à la fin
+End status: Situation résidentielle à l'issue
+End status comment: Précision sur la situation à l'issue
 Error: Erreur
 Family typology: Typologie familiale
 Firstname: Prénom
@@ -39,7 +40,7 @@ New password: Nouveau mot de passe
 Old password: Ancien mot de passe
 placeholder:
   comment: Ecrire un commentaire...
-  device:  -- Dispositif --
+  device: -- Dispositif --
   familtyTypology: -- Typologie familiale --
   gender: -- Sexe --
   nbSupports: Nb de suivis
@@ -55,9 +56,12 @@ Pole name: Nom du pôle
 Pre admission: Pré-admission
 Referent: Référent
 Referent2: Référent suppléant
+Referents: Référents
 Role: Rôle dans le groupe
 Search: Recherche
 Select: Sélectionner
+Service: Service
+Services: Services
 Service name: Nom du service
 Start: Début
 Start date: Date de début
@@ -74,13 +78,31 @@ Write a comment about the person: Ecrire un commentaire sur la personne
 comment.placeholder: Ecrire un commentaire sur le suivi social
 Write a comment about the service: Ecrire un commentaire sur le service
 Year: Année
-Zipcode: Code postal (auto.)
+Zipcode: Code postal
 End reason: Motif de fin
 Comment end reason: Commentaire
 Accommodation: Hébergement
 Places number: Nb de places
 Disabled: Désactivé
 Enabled: Actif
+
+### SupportGroup
+Eval adm: Administratif
+Eval budget: Budget
+Eval family: Famille
+Eval housing: Logement
+Eval justice: Justice
+Eval prof: Professionnel
+Eval social: Sociale
+
+### OriginRequest
+Decision date: Date de décision
+Organization: Organisme prescripteur ou orienteur
+Organization comment: Précision concernant l'organisme
+Orientation date: Date d'orientation
+Pre admission date: Date d'entretien de pré-admission
+Resul pre admission: Résultat de la pré-admission
+Write a comment about the origin request: Ecrire un commentaire relatif à l'origine de la demande ou à la pré-admission
 
 ### Document
 document:
@@ -89,7 +111,7 @@ document:
   type.placeholder: -- Type --
   file:
     mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, pdf, png, rar, xls, xlsx, zip)
-    help: "5Mo maximum. Formats acceptés : doc, docx, jpg,  pdf, png, rar, xls, xlsx, zip."
+    help: "5Mo maximum. Formats acceptés : doc, docx, jpg, pdf, png, rar, xls, xlsx, zip."
 
 Agreement: Consentement de la personne
 
@@ -150,8 +172,8 @@ rdv:
 location.search.placeholder: Saisir une adresse ou une ville...
 
 ### AVDL
-Mandate date: Date de mandatement
-City origin: Commune d'origine
+# Mandate date: Date de mandatement
+# City origin: Commune d'origine
 Propo housing: Proposition logement
 Diag type: Type de diagnostic
 Diag start date: Date de début diagnostic
@@ -164,12 +186,13 @@ Support comment: Commentaire sur l'accompagnement
 Support start date: Date de début d'accompagnement
 Support end date: Date de fin d'accompagnement
 End support reason: Motif de fin d'accompagnement
-Access housing type: Type d'accès au logement
+Access housing modality: Modalité d'accès au logement
 Propo housing date: Date de la proposition
 Propo origin: Origine de la proposition
 Propo result: Résultat de la proposition
 End supportcomment: Commentaire sur la fin d'accompagnement
 avdl:
+  orientationDate: Date de mandatement
   diagComment.placeholder: Ecrire un commentaire sur le diagnostic
   supportComment.placeholder: Ecrire un commentaire sur l'accompagnement
   endSupportComment.placeholder: Ecrire un commentaire sur la fin d'accompagnement ou la proposition logement

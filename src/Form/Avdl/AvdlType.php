@@ -16,10 +16,10 @@ class AvdlType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('mandateDate', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
+            // ->add('mandateDate', DateType::class, [
+            //     'widget' => 'single_text',
+            //     'required' => false,
+            // ])
             // ->add('cityOrigin')
             ->add('propoHousing', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
@@ -81,8 +81,8 @@ class AvdlType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('AccessHousingType', ChoiceType::class, [
-                'choices' => Choices::getChoices(Avdl::ACCESS_HOUSING_TYPE),
+            ->add('AccessHousingModality', ChoiceType::class, [
+                'choices' => Choices::getChoices(Avdl::ACCESS_HOUSING_MODALITY),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
