@@ -78,47 +78,11 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-6 mb-1 py-2">
-			<span class="py-2 text-secondary">Service (dispositif) : </span>
-			<a href="{{ path('service_edit', {'id': support.service.id }) }}" class="text-{{ theme_color }}">
-				{{ support.service.name }}</a>
-			<span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
-		</div>
-		{{ utils.view(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
-		{% set originRequest = support.originRequest %}
-		{% if originRequest %}
-		{{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
-			~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "support") }}
-		{{ utils.view(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "support") }}
-		{% endif %}
-	</div>
-	<div class="row">
-		{{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
-			~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
-		{{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
-			~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
-	</div>
-	<div class="row">
-		{{ utils.view(support.theoreticalEndDate ? support.theoreticalEndDate|date("d/m/Y") : "", "Theoretical end date") }}
-	</div>
-	<div class="row">
-		{% for accommodationGroup in support.accommodationGroups %}
-			{% if loop.last %}
-					{{ utils.view(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
-						~ (accommodationGroup.endDate ? " - " ~ accommodationGroup.endDate|date("d/m/Y") : "") : "", "Date d'hébergement") }}
-					{# {{ utils.view(accommodationGroup.accommodation ? accommodationGroup.accommodation.name : "", "Nom du groupe de places") }} #}
-					{{ utils.view(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
-			{% endif %}	
-		{% endfor %}
-		{{ utils.view(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Adresse") }}
-	</div>
-	<div class="row">
-		{{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
-	</div>
-	<div class="row">
-		{{ utils.view(support.comment, "Comment") }}
-	</div>
+	{% if support.service.id == 5  and support.avdl %}
+		{% include "app/avdl/avdlView.html.twig" %}
+	{% else %}		
+		{% include "app/support/supportRegularView.html.twig" %}
+	{% endif %}
 
 	<div class="row mt-3">
 		<div class="col-md-12">

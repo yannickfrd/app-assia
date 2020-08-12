@@ -193,6 +193,17 @@ Propo result: Résultat de la proposition
 End supportcomment: Commentaire sur la fin d'accompagnement
 avdl:
   orientationDate: Date de mandatement
+  diag: Diagnostic
+  diagType: Type de diagnostic
+  recommendationSupport: Préconisation d'accompagnement
+  support: Accompagnement
+  supportType: Niveau d'accompagnement
+  readyToHousing: Prêt au logement
+  endSupportReason: Motif de fin d'accompagnement
+  accessHousingModality: Modalité d'accès au logement
+  propoHousingDate: Date de la proposition
+  propoOrigin: Origine de la proposition
+  propoResult: Résultat de la proposition
   diagComment.placeholder: Ecrire un commentaire sur le diagnostic
   supportComment.placeholder: Ecrire un commentaire sur l'accompagnement
   endSupportComment.placeholder: Ecrire un commentaire sur la fin d'accompagnement ou la proposition logement

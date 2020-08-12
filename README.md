@@ -18,6 +18,7 @@ https://demo.esperer95.app
 
 ## Version 1.17.7 - 12/08/2020
 - Modif importante du module de paiements/contributions (modif des variables, modif recherche, dont ajout contrôles de saisie).
+- Créé page de vue du suivi AVDL.
 
 ## Version 1.17.4 - 10/08/2020
 - Créé export Excel des suivis AVDL.

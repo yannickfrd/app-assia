@@ -29,7 +29,7 @@ class AvdlSupportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(AvdlSupportSearch::STATUS),
                 'attr' => [
-                    'class' => 'multi-select js-status',
+                    'class' => 'multi-select js-status w-min-120',
                 ],
                 'placeholder' => '-- Status --',
                 'required' => false,

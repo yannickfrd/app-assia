@@ -144,7 +144,7 @@ class Avdl
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $AccessHousingModality;
+    private $accessHousingModality;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -377,7 +377,7 @@ class Avdl
 
     public function getAccessHousingModality(): ?int
     {
-        return $this->AccessHousingModality;
+        return $this->accessHousingModality;
     }
 
     public function getAccessHousingModalityToString(): ?string
@@ -385,9 +385,9 @@ class Avdl
         return $this->getAccessHousingModality() ? self::ACCESS_HOUSING_MODALITY[$this->getAccessHousingModality()] : null;
     }
 
-    public function setAccessHousingModality(?int $AccessHousingModality): self
+    public function setAccessHousingModality(?int $accessHousingModality): self
     {
-        $this->AccessHousingModality = $AccessHousingModality;
+        $this->accessHousingModality = $accessHousingModality;
 
         return $this;
     }

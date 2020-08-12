@@ -51,7 +51,7 @@
                                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Type d'accompa-gnement", "avdl.supportType") }}</th>
                                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Prêt au logement", "avdl.readyToHousingToString") }}</th>
                                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Motif fin accompa-gnement", "avdl.endSupportReason") }}</th>
-                                <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Type d'accès au logement", "avdl.AccessHousingModality") }}</th>
+                                <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Modalités d'accès au logement", "avdl.accessHousingModality") }}</th>
                                 <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de la proposition", "avdl.propoHousingDate") }}</th>
                                 {# <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Origine de la proposition", "avdl.propoOrigin") }}</th> #}
                                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Résultat de la proposition", "avdl.propoResult") }}</th>
@@ -110,7 +110,7 @@
                                 <td class="align-middle">{{ support.avdl.supportTypeToString }}</td>
                                 <td class="align-middle">{{ support.avdl.readyToHousingToString }}</td>
                                 <td class="align-middle">{{ support.avdl.endSupportReasonToString }}</td>
-                                <td class="align-middle">{{ support.avdl.AccessHousingModalityToString }}</td>
+                                <td class="align-middle">{{ support.avdl.accessHousingModalityToString }}</td>
                                 <td class="align-middle">{{ support.avdl.propoHousingDate ? support.avdl.propoHousingDate|date("d/m/Y") }}</td>
                                 {# <td class="align-middle">{{ support.avdl.propoOriginToString }}</td> #}
                                 <td class="align-middle">{{ support.avdl.propoResultToString }}</td>

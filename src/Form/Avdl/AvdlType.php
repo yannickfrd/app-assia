@@ -81,7 +81,7 @@ class AvdlType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('AccessHousingModality', ChoiceType::class, [
+            ->add('accessHousingModality', ChoiceType::class, [
                 'choices' => Choices::getChoices(Avdl::ACCESS_HOUSING_MODALITY),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
