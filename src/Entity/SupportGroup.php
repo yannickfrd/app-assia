@@ -29,9 +29,10 @@ class SupportGroup
         2 => 'En cours',
         3 => 'Suspendu',
         4 => 'Terminé',
-        1 => 'Orientation/pré-admission en cours',
-        5 => 'Orientation/pré-admission non aboutie',
-        97 => 'Autre',
+        1 => 'Orientation/pré-adm. en cours',
+        5 => 'Orientation/pré-adm. non aboutie',
+        6 => 'Liste d\'attente',
+        // 97 => 'Autre',
     ];
 
     public const END_STATUS = [

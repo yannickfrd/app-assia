@@ -40,7 +40,7 @@ class OrganizationRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('o')->select('PARTIAL o.{id, name}');
 
         if ($this->countOrganizationsInService($serviceId)) {
-            $query = $query->leftJoin('o.services', 's')->addSelect('PARTIAL s.{id}')
+            $query = $query->leftJoin('o.services', 's')->addSelect('PARTIAL s.{id, name}')
                 ->where('s.id = :service')
                 ->setParameter('service', $serviceId);
         }

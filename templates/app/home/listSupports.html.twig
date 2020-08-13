@@ -43,11 +43,11 @@
                         {% for supportPerson in support.supportPeople|filter(a => a.role != 3) %}
                             {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br />
                         {% endfor %}
-                    <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
-                        {% set nbSupportPeople = support.supportPeople|length %}
-                        {{ nbSupportPeople > 1 ? "|" ~ nbSupportPeople ~ "pers." }}
-                        {% if nbSupportPeople != support.groupPeople.nbPeople %}
-                        <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
+                    <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
+                        -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
+                        {% if support.nbPeople != support.groupPeople.nbPeople %}
+                            <span class="fas fa-exclamation-triangle text-warning" 
+                                title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                         {% endif %}
                     </td>
                     <td class="align-middle">

@@ -29,6 +29,9 @@ use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Support\SupportsInMonthSearchType;
+use App\Repository\DocumentRepository;
+use App\Repository\NoteRepository;
+use App\Repository\RdvRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
@@ -188,7 +191,7 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
      */
-    public function viewSupportGroup(int $id, EvaluationGroupRepository $repo): Response
+    public function viewSupportGroup(int $id, EvaluationGroupRepository $repo, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
     {
         $cache = new FilesystemAdapter();
 
@@ -215,6 +218,10 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
+            'nbRdvs' => $repoRdv->count(['supportGroup' => $supportGroup->getId()]),
+            'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
+            'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
+            'nbContributions' => $supportGroup->getAccommodationGroups()->count() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
             'evaluation' => $evaluation,
         ]);
     }

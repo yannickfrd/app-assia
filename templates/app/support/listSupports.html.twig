@@ -76,8 +76,7 @@
                                 {{ supportPerson.person.birthdate|date("d/m/Y") }}<br/>
                             {% endfor %}
                         </td>
-                        <td class="align-middle">
-                            {{ support.groupPeople.familyTypologyToString }}<!--
+                        <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
                             -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
                             {% if support.nbPeople != support.groupPeople.nbPeople %}
                                 <span class="fas fa-exclamation-triangle text-warning" 

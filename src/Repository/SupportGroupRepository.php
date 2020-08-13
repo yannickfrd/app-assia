@@ -51,6 +51,8 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findFullSupportById(int $id): ?SupportGroup
     {
         $query = $this->getsupportQuery()
+            ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
+            ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
@@ -59,12 +61,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, startDate, endDate, endReason, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id, startDate, endDate, endReason}')
-            ->leftJoin('ap.person', 'p2')->addSelect('p2')
-            ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id, updatedAt}')
-            ->leftJoin('sg.rdvs', 'rdvs')->addSelect('PARTIAL rdvs.{id}')
-            ->leftJoin('sg.notes', 'notes')->addSelect('PARTIAL notes.{id}')
-            ->leftJoin('sg.documents', 'docs')->addSelect('PARTIAL docs.{id}')
-            ->leftJoin('sg.contributions', 'c')->addSelect('PARTIAL c.{id}')
+            // ->leftJoin('ap.person', 'p2')->addSelect('p2')
+            // ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id, updatedAt}')
 
             ->andWhere('sg.id = :id')
             ->setParameter('id', $id)
@@ -105,8 +103,6 @@ class SupportGroupRepository extends ServiceEntityRepository
     protected function getsupportQuery()
     {
         return $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
-            ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, preAdmission, accommodation, contribution, contributionType, contributionRate, justice}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')

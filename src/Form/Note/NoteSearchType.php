@@ -27,7 +27,7 @@ class NoteSearchType extends AbstractType
             ->add('fullname', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'placeholder' => 'Suivi concerné',
+                    'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
                 ],
             ])
