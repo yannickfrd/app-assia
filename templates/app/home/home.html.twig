@@ -23,7 +23,7 @@
           </div>
 		    </div>
       {% endif %} 
-    {% if app.user.status == 1 or supports|length > 0 %}
+    {% if app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) or supports|length > 0 %}
     {% include "app/home/listSupports.html.twig" %}
     {% include "app/home/listNotes.html.twig" %}
     {% endif %}

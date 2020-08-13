@@ -34,7 +34,7 @@ class AccommodationGroupController extends AbstractController
      *
      * @Route("support/{id}/accommodations", name="support_accommodations", methods="GET")
      */
-    public function listSupportAccommodations(int $id, SupportGroupRepository $supportRepo): Response
+    public function supportAccommodationsGroup(int $id, SupportGroupRepository $supportRepo): Response
     {
         $supportGroup = $supportRepo->findSupportById($id);
 
@@ -45,7 +45,7 @@ class AccommodationGroupController extends AbstractController
             ['startDate' => 'DESC'],
         );
 
-        return $this->render('app/accommodation/listAccommodationsGroup.html.twig', [
+        return $this->render('app/accommodation/supportAccommodationsGroup.html.twig', [
             'support' => $supportGroup,
             'support_group_accommodations' => $accommodationGroups,
         ]);
@@ -78,7 +78,7 @@ class AccommodationGroupController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createAccommodationGroup($accommodationGroup);
+            return $this->createAccommodationGroup($supportGroup, $accommodationGroup);
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
@@ -125,15 +125,19 @@ class AccommodationGroupController extends AbstractController
      *
      * @param int $id // AccommodationGroup
      */
-    public function addPeopleInAccommodation(int $id): Response
+    public function addPeopleInAccommodation(AccommodationGroup $accommodationGroup): Response
     {
-        $accommodationGroup = $this->repo->findAccommodationGroupById($id);
-
         $this->denyAccessUnlessGranted('EDIT', $accommodationGroup->getSupportGroup());
 
-        $this->createAccommodationPeople($accommodationGroup);
+        $countAddPeople = $this->createAccommodationPeople($accommodationGroup);
 
-        $this->addFlash('success', 'Les personnes sont ajoutées à la prise en charge.');
+        if ($countAddPeople > 1) {
+            $this->addFlash('success', $countAddPeople.' personnes sont ajoutées à la prise en charge.');
+        } elseif ($countAddPeople == 1) {
+            $this->addFlash('success', $countAddPeople.' personne est ajoutée à la prise en charge.');
+        } else {
+            $this->addFlash('warning', 'Aucune personne n\'a été ajoutée.');
+        }
 
         return $this->redirectToRoute('support_accommodation_edit', [
             'id' => $accommodationGroup->getId(),
@@ -181,10 +185,8 @@ class AccommodationGroupController extends AbstractController
     /**
      * Crée la prise en charge du groupe.
      */
-    protected function createAccommodationGroup(AccommodationGroup $accommodationGroup): Response
+    protected function createAccommodationGroup(SupportGroup $supportGroup, AccommodationGroup $accommodationGroup): Response
     {
-        $supportGroup = $accommodationGroup->getSupportGroup();
-
         $accommodationGroup->setGroupPeople($supportGroup->getGroupPeople());
 
         $this->manager->persist($accommodationGroup);
@@ -223,10 +225,10 @@ class AccommodationGroupController extends AbstractController
     protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup)
     {
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
-            $birthdate = $accommodationPerson->getPerson()->getBirthdate();
-            if ($accommodationPerson->getStartDate() < $birthdate) {
-                $accommodationPerson->setStartDate($birthdate);
-                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
+            $person = $accommodationPerson->getPerson();
+            if ($accommodationPerson->getStartDate() < $person->getBirthdate()) {
+                $accommodationPerson->setStartDate($person->getBirthdate());
+                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$person->getFullname().').');
             }
             if (null == $accommodationPerson->getEndDate()) {
                 $accommodationPerson->setEndDate($accommodationGroup->getEndDate());
@@ -238,37 +240,51 @@ class AccommodationGroupController extends AbstractController
         }
         $this->manager->flush();
 
-        $this->addFlash('success', "L'hébergement est mis à jour.");
+        $this->addFlash('success', 'L\'hébergement est mis à jour');
     }
 
     /**
      * Crée les prises en charge individuelles.
      */
-    protected function createAccommodationPeople(AccommodationGroup $accommodationGroup): void
+    protected function createAccommodationPeople(AccommodationGroup $accommodationGroup): int
+    {
+        $countAddPeople = 0;
+
+        foreach ($accommodationGroup->getSupportGroup()->getSupportPeople() as $supportPerson) {
+            // Vérifie si la personne n'est pas déjà rattachée à la prise en charge
+            if (!in_array($supportPerson->getPerson()->getId(), $this->getPeopleinAccommodation($accommodationGroup))) {
+                // Si elle n'est pas déjà pris en charge, on la créé
+                $accommodationPerson = (new AccommodationPerson())
+                    ->setAccommodationGroup($accommodationGroup)
+                    ->setSupportPerson($supportPerson)
+                    ->setPerson($supportPerson->getPerson())
+                    ->setStartDate($accommodationGroup->getStartDate())
+                    ->setEndDate($accommodationGroup->getEndDate());
+
+                // Vérifie si la date de prise enn charge n'est pas antérieure à la date de naissance
+                $person = $supportPerson->getPerson();
+                if ($accommodationPerson->getStartDate() < $person->getBirthdate()) {
+                    // Si c'est le cas, on prend en compte la date de naissance
+                    $accommodationPerson->setStartDate($person->getBirthdate());
+                }
+
+                $this->manager->persist($accommodationPerson);
+                ++$countAddPeople;
+            }
+        }
+        $this->manager->flush();
+
+        return $countAddPeople;
+    }
+
+    // Donne les ID des personnes rattachées à la prise en charge.
+    protected function getPeopleinAccommodation(AccommodationGroup $accommodationGroup)
     {
         $people = [];
-
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
             $people[] = $accommodationPerson->getPerson()->getId();
         }
 
-        foreach ($accommodationGroup->getGroupPeople()->getRolePeople() as $rolePerson) {
-            if (!in_array($rolePerson->getPerson()->getId(), $people)) {
-                $accommodationPerson = (new AccommodationPerson())
-                    ->setAccommodationGroup($accommodationGroup)
-                    ->setPerson($rolePerson->getPerson())
-                    ->setStartDate($accommodationGroup->getStartDate())
-                    ->setEndDate($accommodationGroup->getEndDate());
-
-                $birthdate = $rolePerson->getPerson()->getBirthdate();
-
-                if ($accommodationPerson->getStartDate() < $birthdate) {
-                    $accommodationPerson->setStartDate($birthdate);
-                }
-
-                $this->manager->persist($accommodationPerson);
-            }
-        }
-        $this->manager->flush();
+        return $people;
     }
 }

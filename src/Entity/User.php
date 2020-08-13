@@ -27,6 +27,12 @@ class User implements UserInterface
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
+    public const STATUS_SOCIAL_WORKER = 1;
+    public const STATUS_COORDO = 2;
+    public const STATUS_CHIEF = 3;
+    public const STATUS_DIRECTOR = 4;
+    public const STATUS_ADMINISTRATIVE = 5;
+
     public const STATUS = [
         1 => 'Travailleur social',
         5 => 'Administratif',

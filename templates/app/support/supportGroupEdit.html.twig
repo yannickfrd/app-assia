@@ -45,7 +45,7 @@
 	{{ form_start(form) }}
 
 	{% set serviceId = support.service.id %}
-	{% if serviceId == 5 %}
+	{% if serviceId == constant('SERVICE_AVDL_ID', support.service) %}
 		{% include "app/avdl/avdlEdit.html.twig" %}
 	{% else %}		
 		{% include "app/support/supportRegular.html.twig" %}

@@ -21,6 +21,7 @@
 </head>
 
 {% set theme_color = app.request.hasPreviousSession and app.session.get("themeColor") ? app.session.get("themeColor") : "dark" %}
+{# {% if app.environment != "prod" %}{% set theme_color = "primary" %}{% endif %} #}
 
 <body>
 	<div id="loader" role="status">
@@ -139,7 +140,7 @@
 				<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
 				<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février 1979.</span>
 			</p>
-			<p>Version 1.17.7 - 12/08/2020</p>
+			<p>Version 1.17.8 - 13/08/2020</p>
 		</div>
 	</footer>
 

@@ -121,10 +121,16 @@ class SupportPerson
      */
     private $initEvalPerson;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AccommodationPerson::class, mappedBy="supportPerson")
+     */
+    private $accommodationsPerson;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->evaluationsPerson = new ArrayCollection();
+        $this->accommodationsPerson = new ArrayCollection();
     }
 
     public function __clone()
@@ -359,6 +365,37 @@ class SupportPerson
         // set the owning side of the relation if necessary
         if ($this !== $initEvalPerson->getSupportPerson()) {
             $initEvalPerson->setSupportPerson($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AccommodationPerson[]
+     */
+    public function getAccommodationsPerson(): Collection
+    {
+        return $this->accommodationsPerson;
+    }
+
+    public function addAccommodationsPerson(AccommodationPerson $accommodationsPerson): self
+    {
+        if (!$this->accommodationsPerson->contains($accommodationsPerson)) {
+            $this->accommodationsPerson[] = $accommodationsPerson;
+            $accommodationsPerson->setSupportPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccommodationsPerson(AccommodationPerson $accommodationsPerson): self
+    {
+        if ($this->accommodationsPerson->contains($accommodationsPerson)) {
+            $this->accommodationsPerson->removeElement($accommodationsPerson);
+            // set the owning side to null (unless already changed)
+            if ($accommodationsPerson->getSupportPerson() === $this) {
+                $accommodationsPerson->setSupportPerson(null);
+            }
         }
 
         return $this;

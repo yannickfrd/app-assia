@@ -30,7 +30,7 @@ class PoleType extends AbstractType
                 'choice_label' => 'fullname',
                 'query_builder' => function (UserRepository $repo) {
                     return $repo->createQueryBuilder('u')
-                        ->where('u.status = 4')
+                        ->where('u.status = '.User::STATUS_DIRECTOR)
                         ->andWhere('u.disabledAt IS NULL')
                         ->orderBy('u.lastname', 'ASC');
                 },

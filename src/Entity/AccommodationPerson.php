@@ -55,6 +55,11 @@ class AccommodationPerson
      */
     private $person;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=SupportPerson::class, inversedBy="accommodationsPerson")
+     */
+    private $supportPerson;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,6 +141,18 @@ class AccommodationPerson
     public function setPerson(?Person $person): self
     {
         $this->person = $person;
+
+        return $this;
+    }
+
+    public function getSupportPerson(): ?SupportPerson
+    {
+        return $this->supportPerson;
+    }
+
+    public function setSupportPerson(?SupportPerson $supportPerson): self
+    {
+        $this->supportPerson = $supportPerson;
 
         return $this;
     }

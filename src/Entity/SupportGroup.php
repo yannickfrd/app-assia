@@ -25,6 +25,13 @@ class SupportGroup
     use LocationEntityTrait;
     use GeoLocationEntityTrait;
 
+    public const STATUS_PRE_ADD_IN_PROGRESS = 1;
+    public const STATUS_IN_PROGRESS = 2;
+    public const STATUS_SUSPENDED = 3;
+    public const STATUS_ENDED = 4;
+    public const STATUS_PRE_ADD_ENDED = 5;
+    public const STATUS_LIST = 6;
+
     public const STATUS = [
         2 => 'En cours',
         3 => 'Suspendu',
@@ -78,6 +85,11 @@ class SupportGroup
         97 => 'Autre',
         99 => 'Non renseignée',
     ];
+
+    public const COEFFICIENT_DEFAULT = 1;
+    public const COEFFICIENT_DOUBLE = 2;
+    public const COEFFICIENT_HALF = 0.5;
+    public const COEFFICIENT_QUARTER = 0.25;
 
     /**
      * @ORM\Id()
@@ -138,7 +150,7 @@ class SupportGroup
      * maxMessage="Le coefficient ne peut être supérieur à {{ limit }}")
      * @Groups("export")
      */
-    private $coefficient = 1;
+    private $coefficient = self::COEFFICIENT_DEFAULT;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

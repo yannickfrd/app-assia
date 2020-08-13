@@ -5,6 +5,7 @@ namespace App\Form\OriginRequest;
 use App\Form\Utils\Choices;
 use App\Entity\Organization;
 use App\Entity\OriginRequest;
+use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
 use App\Repository\OrganizationRepository;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,7 +33,7 @@ class OriginRequestType extends AbstractType
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
-                'label' => $serviceId === 5 ? 'avdl.orientationDate' : '', // AVDL
+                'label' => $serviceId == Service::SERVICE_AVDL_ID ? 'avdl.orientationDate' : '',
                 'widget' => 'single_text',
                 'required' => false,
             ])

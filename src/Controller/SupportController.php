@@ -22,6 +22,7 @@ use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Service;
 use App\Form\Support\SupportCoefficientType;
 use App\Form\Support\SupportGroupSearchType;
 use App\Service\Indicators\SocialIndicators;
@@ -468,10 +469,16 @@ class SupportController extends AbstractController
     protected function checkSupportGroup(SupportGroup $supportGroup)
     {
         // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
-        $nbSupportPeople = $supportGroup->getSupportPeople()->count();
         $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
-        if ($nbSupportPeople != $nbPeople) {
-            $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
+        $nbSupportPeople = $supportGroup->getSupportPeople()->count();
+        $nbActiveSupportPeople = 0;
+
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            $supportPerson->getEndDate() == null ? ++$nbActiveSupportPeople : null;
+        }
+
+        if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
+            $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies 
                 ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).<br/> 
                 Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
         }
@@ -487,8 +494,8 @@ class SupportController extends AbstractController
                     $nbAccommodationPeople += $accommodationGroup->getAccommodationPeople()->count();
                 }
             }
-            if (!$supportGroup->getEndDate() && 1 == $supportGroup->getDevice()->getAccommodation() && $nbSupportPeople != $nbAccommodationPeople) {
-                $this->addFlash('warning', 'Attention, le nombre de personnes rattachées au suivi ('.$nbSupportPeople.') 
+            if (!$supportGroup->getEndDate() && 1 == $supportGroup->getDevice()->getAccommodation() && $nbActiveSupportPeople != $nbAccommodationPeople) {
+                $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies ('.$nbActiveSupportPeople.') 
                     ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
                     Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
             }
@@ -517,7 +524,7 @@ class SupportController extends AbstractController
     protected function getSupportGroup(SupportGroup $supportGroup)
     {
         switch ($supportGroup->getService()->getId()) {
-            case 5:
+            case Service::SERVICE_AVDL_ID:
                 return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
                 break;
             default:
@@ -532,7 +539,7 @@ class SupportController extends AbstractController
     protected function getFormType(int $serviceId = null)
     {
         switch ($serviceId) {
-            case 5:
+            case Service::SERVICE_AVDL_ID:
                 return SupportGroupAvdlType::class;
                 break;
             default:

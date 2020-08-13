@@ -60,8 +60,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, startDate, endDate, endReason, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
-            ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id, startDate, endDate, endReason}')
-            // ->leftJoin('ap.person', 'p2')->addSelect('p2')
+            ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('ap')
+            ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2')
             // ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id, updatedAt}')
 
             ->andWhere('sg.id = :id')
@@ -307,7 +307,7 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->andWhere('sg.referent = :referent')
             ->setParameter('referent', $user)
-            ->andWhere('sg.status = 2')
+            ->andWhere('sg.status ='.SupportGroup::STATUS_IN_PROGRESS)
 
             ->orderBy('p.lastname', 'ASC')
 

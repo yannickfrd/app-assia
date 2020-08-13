@@ -21,11 +21,11 @@
 						<tr>
 							<th scope="row" class="align-middle th-w-20"></th>
 							<th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
-							<th scope="col" class="align-middle th-w-100">Dispositif</th>
+							<th scope="col" class="align-middle th-w-120">Dispositif</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
 							<th scope="col" class="align-middle th-date">Date de fin</th>
-							<th scope="col" class="align-middle th-w-100">Motif de fin</th>
-							<th scope="col" class="align-middle th-w-120">Nombre de personnes prises en charge</th>
+							<th scope="col" class="align-middle th-w-140">Motif de fin</th>
+							<th scope="col" class="align-middle th-w-140">Nombre de personnes prises en charge</th>
 							<th scope="col" class="align-middle th-w-180">Adresse</th>
 							<th scope="col" class="align-middle th-w-20"></th>
 						</tr>
@@ -45,7 +45,9 @@
 								<td class="align-middle">{{ accommodationGroup.accommodation.device.name }}</td>
 								<td class="align-middle">{{ accommodationGroup.startDate|date("d/m/Y") }}</td>
 								<td class="align-middle">{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate|date("d/m/Y") }}{% endif %}</td>
-								<td class="align-middle">{{ accommodationGroup.endReasonToString }}</td>
+								<td class="align-middle">{{ accommodationGroup.endReasonToString }}
+									{{ accommodationGroup.supportGroup.endStatus ? " (" ~ accommodationGroup.supportGroup.endStatusToString ~ ")" }}
+								</td>
 								<td class="align-middle">{{ accommodationGroup.accommodationPeople|length }}</td>
 								<td class="align-middle">{{ accommodationGroup.accommodation.address }}<br>
 									{{ accommodationGroup.accommodation.zipCode }} {{ accommodationGroup.accommodation.city }}

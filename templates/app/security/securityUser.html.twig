@@ -81,7 +81,7 @@
 
     </section>
 
-    {% if app.user.status == 1 %}
+    {% if app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
     <hr>
     <section id="supports-by-device">
         <h2 class="h4 mb-4">Nombre théorique de suivis par dispositif</h2>

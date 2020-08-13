@@ -8,29 +8,52 @@ use App\Entity\SupportGroup;
 class AvdlService
 {
     /**
-     * Met à jour l'AVDL.
+     * Met à jour le suivi social d'un AVDL.
      */
-    public function updateAvdl(SupportGroup $supportGroup)
+    public function updateSupportGroup(SupportGroup $supportGroup): SupportGroup
     {
         $avdl = $supportGroup->getAvdl();
 
-        return $supportGroup
+        $supportGroup
             ->setStatus($this->getAvdlStatus($avdl))
             ->setStartDate($this->getAvdlStartDate($avdl))
             ->setEndDate($this->getAvdlEndDate($avdl))
             ->setCoefficient($this->getAvdlCoeffSupport($avdl));
+
+        $this->updateSupportPeople($supportGroup);
+
+        return $supportGroup;
     }
 
     /**
-     * Donne le statut du suivi AVDL.
+     * Met à jour les suivis individuelles des personnes en AVDL.
+     */
+    protected function updateSupportPeople(SupportGroup $supportGroup): void
+    {
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            if (null == $supportPerson->getEndStatus()) {
+                $supportPerson
+                    ->setStatus($supportGroup->getStatus())
+                    ->setStartDate($supportGroup->getStartDate())
+                    ->setEndDate($supportGroup->getEndDate());
+            }
+        }
+    }
+
+    /**
+     * Donne le statut du suivi social en AVDL.
      */
     protected function getAvdlStatus(Avdl $avdl): int
     {
-        if ($avdl->getSupportEndDate() || ($avdl->getDiagEndDate() && $avdl->getSupportStartDate() == null)) {
-            return 4; // Terminé
+        if (null == $avdl->getDiagStartDate() && null == $avdl->getSupportStartDate()) {
+            return SupportGroup::STATUS_PRE_ADD_IN_PROGRESS;
         }
 
-        return 2; // En cours
+        if (($avdl->getDiagEndDate() && $avdl->getSupportStartDate() == null) || $avdl->getSupportEndDate()) {
+            return SupportGroup::STATUS_ENDED;
+        }
+
+        return SupportGroup::STATUS_IN_PROGRESS;
     }
 
     /**
@@ -67,15 +90,15 @@ class AvdlService
      */
     protected function getAvdlCoeffSupport(Avdl $avdl): int
     {
-        // Si accompagnement lourd : coeff 2
+        // Si accompagnement lourd : coeff. 2
         if ($avdl->getSupportType() == 3) {
-            return 2;
+            return SupportGroup::COEFFICIENT_DOUBLE;
         }
-        // Si prêt au logement : coeff 0.25
+        // Si prêt au logement : coeff. 0.25
         if ($avdl->getReadyToHousing() == 1) {
-            return 0.25;
+            return SupportGroup::COEFFICIENT_QUARTER;
         }
-        // Sinon par défaut : coeff 1
-        return 1;
+        // Sinon par défaut : coeff. 1
+        return SupportGroup::COEFFICIENT_DEFAULT;
     }
 }

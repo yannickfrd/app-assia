@@ -2,8 +2,10 @@
 
 namespace App\Service\SupportGroup;
 
+use App\Entity\AccommodationGroup;
 use App\Entity\User;
 use App\Entity\Person;
+use App\Entity\Service;
 use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
@@ -60,8 +62,8 @@ class SupportGroupService
 
         // Contrôle le service du suivi
         switch ($supportGroup->getService()->getId()) {
-            case 5:
-                $this->updateAvdl($supportGroup);
+            case Service::SERVICE_AVDL_ID:
+                $this->avdlService->updateSupportGroup($supportGroup);
             break;
         }
 
@@ -112,55 +114,91 @@ class SupportGroupService
     public function update(SupportGroup $supportGroup)
     {
         $supportGroup->setUpdatedAt(new \DateTime());
+
         // Contrôle le service du suivi
         switch ($supportGroup->getService()->getId()) {
-            case 5:
-                $supportGroup = $this->avdlService->updateAvdl($supportGroup);
+            case Service::SERVICE_AVDL_ID:
+                $supportGroup = $this->avdlService->updateSupportGroup($supportGroup);
             break;
         }
 
-        $nbPeople = count($supportGroup->getSupportPeople());
+        $this->updateSupportPeople($supportGroup);
+        $this->updateAccommodationGroup($supportGroup);
+
+        $this->discached($supportGroup);
+    }
+
+    /**
+     * Met à jour les suivis sociales individuelles des personnes.
+     */
+    protected function updateSupportPeople(SupportGroup $supportGroup): void
+    {
+        $nbPeople = $supportGroup->getSupportPeople()->count();
+
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            // Si personne seule dans le suivi, copie la date de début de suivi
             if (1 == $nbPeople) {
                 $supportPerson->setStartDate($supportGroup->getStartDate());
             }
-            if (1 == $nbPeople || !$supportPerson->getEndDate()) {
-                $supportPerson->setStatus($supportGroup->getStatus());
-                $supportPerson->setEndDate($supportGroup->getEndDate());
-                $supportPerson->setEndStatus($supportGroup->getEndStatus());
-                $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
+            // Si la personne est seule ou si la date de fin de suivi et le motif de fin sont vides, copie toutes les infos sur la fin du suivi suivi
+            if (1 == $nbPeople || (null == $supportPerson->getEndDate() && null == $supportPerson->getEndStatus())) {
+                $supportPerson->setStatus($supportGroup->getStatus())
+                    ->setEndDate($supportGroup->getEndDate())
+                    ->setEndStatus($supportGroup->getEndStatus())
+                    ->setEndStatusComment($supportGroup->getEndStatusComment());
             }
-            $birthdate = $supportPerson->getPerson()->getBirthdate();
 
-            if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
-                $supportPerson->setStartDate($birthdate);
+            // Vérifie si la date de suivi n'est pas antérieure à la date de naissance
+            $person = $supportPerson->getPerson();
+            if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
+                // Si c'est le cas, on prend en compte la date de naissance
+                $supportPerson->setStartDate($person->getBirthdate());
                 $this->container->get('session')->getFlashBag()->add('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');
             }
         }
+    }
 
+    /**
+     * Met à jour la prise en charge du groupe.
+     */
+    protected function updateAccommodationGroup(SupportGroup $supportGroup): void
+    {
+        // Si le statut du suivi est égal à terminé et si  "Fin d'hébergement" coché, alors met à jour la prise en charge
         if (4 == $supportGroup->getStatus() && $supportGroup->getEndAccommodation()) {
             foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
                 if (!$accommodationGroup->getEndDate()) {
                     $accommodationGroup->getEndDate() == null ? $accommodationGroup->setEndDate($supportGroup->getEndDate()) : null;
                     $accommodationGroup->getEndReason() == null ? $accommodationGroup->setEndReason(1) : null;
-                    foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
-                        $accommodationPerson->getEndDate() == null ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
-                        $accommodationPerson->getEndReason() == null ? $accommodationPerson->setEndReason(1) : null;
 
-                        $birthdate = $accommodationPerson->getPerson()->getBirthdate();
-
-                        if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
-                            $supportPerson->setStartDate($birthdate);
-                            $this->container->get('session')->getFlashBag()->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
-                        }
-                    }
+                    $this->updateAccommodationPeople($accommodationGroup);
                 }
             }
         }
-        // $this->discached($supportGroup);
     }
 
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation)
+    /**
+     * Met à jour la prise en charge des personnes du groupe.
+     */
+    protected function updateAccommodationPeople(AccommodationGroup $accommodationGroup)
+    {
+        foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
+            $supportPerson = $accommodationPerson->getSupportPerson();
+            $person = $supportPerson->getPerson();
+
+            $accommodationPerson->getEndDate() == null ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
+            $accommodationPerson->getEndReason() == null ? $accommodationPerson->setEndReason(1) : null;
+
+            if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
+                $supportPerson->setStartDate($person->getBirthdate());
+                $this->container->get('session')->getFlashBag()->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
+            }
+        }
+    }
+
+    /**
+     * Ajoute les personnes au suivi.
+     */
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation): bool
     {
         $addPeople = false;
 
@@ -196,7 +234,7 @@ class SupportGroupService
     {
         return $this->repo->findOneBy([
             'groupPeople' => $groupPeople,
-            'status' => 2,
+            'status' => SupportGroup::STATUS_IN_PROGRESS,
             'service' => $supportGroup->getService(),
         ]);
     }
@@ -215,12 +253,19 @@ class SupportGroupService
         return false;
     }
 
-    protected function discached(SupportGroup $supportGroup)
+    /**
+     * Vide l'item du suivi en cache.
+     */
+    protected function discached(SupportGroup $supportGroup): bool
     {
         $cache = new FilesystemAdapter();
         $cacheSupport = $cache->getItem('support_group'.$supportGroup->getId());
         if ($cacheSupport->isHit()) {
             $cache->deleteItem($cacheSupport->getKey());
+
+            return true;
         }
+
+        return false;
     }
 }

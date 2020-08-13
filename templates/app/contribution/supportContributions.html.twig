@@ -68,8 +68,8 @@
 								</td>
 								<td class="align-middle js-type">{{ contribution.typeToString }}
 									<span class="text-secondary">
-										{{ contribution.type == 2 ? "(" ~ contribution.rentAmt|number_format(0, ",", " ") ~ " €)" }}<br/>
-										{{ contribution.type == 11 ? "(" ~ contribution.returnAmt|number_format(0, ",", " ") ~ " €)" }}
+										{{ contribution.type == constant("TYPE_RENT", contribution) ? "(" ~ contribution.rentAmt|number_format(0, ",", " ") ~ " €)" }}<br/>
+										{{ contribution.type == constant("TYPE_RETURN_BAIL", contribution) ? "(" ~ contribution.returnAmt|number_format(0, ",", " ") ~ " €)" }}
 									</span>								
 								</td>
 								<td class="align-middle js-monthContrib">{{ contribution.monthContrib ? contribution.monthContrib|date("m/Y") }}</td>

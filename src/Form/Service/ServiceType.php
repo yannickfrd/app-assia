@@ -48,7 +48,12 @@ class ServiceType extends AbstractType
                 'query_builder' => function (UserRepository $repo) {
                     return $repo->createQueryBuilder('u')
                         ->where('u.disabledAt IS NULL')
-                        ->andWhere('u.status = 2 OR u.status = 3  OR u.status = 4')
+                        ->andWhere('u.status IN (:status)')
+                        ->setParameter('status', [
+                            User::STATUS_COORDO,
+                            User::STATUS_CHIEF,
+                            User::STATUS_DIRECTOR,
+                        ])
                         ->orderBy('u.lastname', 'ASC');
                 },
                 'placeholder' => 'placeholder.select',

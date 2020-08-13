@@ -78,7 +78,7 @@
 		</div>
 	</div>
 
-	{% if support.service.id == 5  and support.avdl %}
+	{% if support.service.id == constant('SERVICE_AVDL_ID', support.service) and support.avdl %}
 		{% include "app/avdl/avdlView.html.twig" %}
 	{% else %}		
 		{% include "app/support/supportRegularView.html.twig" %}

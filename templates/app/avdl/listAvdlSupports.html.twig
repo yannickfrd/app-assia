@@ -73,11 +73,7 @@
                                     </a>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle">
-                                    <a href="{{ path('group_person_show', {'id':support.groupPeople.id, 'person_id':supportPerson.person.id, 'slug':supportPerson.person.slug}) }}"
-                                        class="text-{{ theme_color }}" title="Voir la fiche de la personne" data-toggle="tooltip" 
-                                        data-placement="bottom">{{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}</a><br />
-                                </td>
+                                <td class="align-middle">{{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}</td>
                                 {# <td class="align-middle">
                                     {{ support.groupPeople.familyTypologyToString }}<!--
                                     -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}

@@ -14,6 +14,15 @@ class Contribution
 {
     use CreatedUpdatedEntityTrait;
 
+    public const TYPE_CONTRIBUTION = 1;
+    public const TYPE_RENT = 2;
+    public const TYPE_BAIL = 10;
+    public const TYPE_LOAN = 20;
+    public const TYPE_REFUND_CONTRIB = 30;
+    public const TYPE_REFUND_BAIL = 31;
+    public const TYPE_REFUND_LOAN = 32;
+    public const TYPE_RETURN_BAIL = 11;
+
     public const CONTRIBUTION_TYPE = [
         1 => 'Participation / Redevance', // 1
         2 => 'Loyer', // 1

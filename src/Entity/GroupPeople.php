@@ -27,8 +27,20 @@ class GroupPeople
         4 => 'Femme seule avec enfant(s)',
         5 => 'Homme seul avec enfant(s)',
         6 => 'Couple avec enfant(s)',
-        7 => "Groupe d'adultes sans enfant",
-        8 => "Groupe d'adultes avec enfant(s)",
+        7 => 'Groupe d\'adultes sans enfant',
+        8 => 'Groupe d\'adultes avec enfant(s)',
+        97 => 'Autre',
+    ];
+
+    public const FAMILY_TYPO_MIN = [
+        1 => 'FS',
+        2 => 'HS',
+        3 => 'C',
+        4 => 'F+E',
+        5 => 'H+E',
+        6 => 'C+E',
+        7 => 'G',
+        8 => 'G+E',
         97 => 'Autre',
     ];
 
@@ -113,6 +125,11 @@ class GroupPeople
     public function getFamilyTypologyToString(): string
     {
         return self::FAMILY_TYPOLOGY[$this->familyTypology];
+    }
+
+    public function getFamilyTypoMinToString(): string
+    {
+        return self::FAMILY_TYPO_MIN[$this->familyTypology];
     }
 
     public function setFamilyTypology(?int $familyTypology): self

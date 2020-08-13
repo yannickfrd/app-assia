@@ -27,6 +27,8 @@ class Service
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
+    public const SERVICE_AVDL_ID = 5;
+
     public const SUPPORT_ACCESS = [
         1 => 'Uniquement le référent du suivi',
         2 => 'Tou·te·s les salarié·e·s du service',
