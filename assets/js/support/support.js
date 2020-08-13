@@ -1,4 +1,5 @@
 import ValidationSupport from "./validationSupport";
+import ValidationAvdl from "./validationAvdl";
 import SelectRadioJS from "../utils/selectRadio";
 import RemoveSupportPerson from "./removeSupportPerson";
 import SearchLocation from "../utils/searchLocation";
@@ -9,8 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
         new SelectRadioJS("table-support-people");
         new RemoveSupportPerson();
     }
+    if (document.getElementById("avdl_support")) {
+        new ValidationAvdl();
+    } else {
+        new ValidationSupport();
+    }
     new SearchLocation("support_location");
-    new ValidationSupport();
     new CheckChange("support"); // form name
 
 });

@@ -28,9 +28,12 @@ class Person
     use ContactEntityTrait;
     use SoftDeleteableEntity;
 
+    public const GENDER_FEMALE = 1;
+    public const GENDER_MALE = 2;
+
     public const GENDER = [
-        1 => 'Femme',
-        2 => 'Homme',
+        1 => 'Féminin',
+        2 => 'Masculin',
         97 => 'Autre',
         99 => 'Non renseigné',
     ];

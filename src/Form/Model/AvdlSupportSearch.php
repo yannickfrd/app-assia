@@ -20,6 +20,10 @@ class AvdlSupportSearch
         2 => 'Fin du suivi',
         3 => 'Période de suivi',
     ];
+
+    public const DIAG = 1;
+    public const SUPPORT = 2;
+
     public const DIAG_OR_SUPPORT = [
         1 => 'Diagnostic',
         2 => 'Accompagnement',

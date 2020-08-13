@@ -125,7 +125,7 @@
                             </a>
                         </th>
                         <td>
-                            {% for supportPerson in accommodation_group.supportGroup.supportPeople|filter(a => a.role != 3) %}
+                            {% for supportPerson in accommodation_group.supportGroup.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
                             {{ supportPerson.person.fullname }}<br />
                             {% endfor %}                        
                         </td>

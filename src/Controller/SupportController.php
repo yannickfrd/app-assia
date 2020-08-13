@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Entity\Service;
 use App\Service\Grammar;
 use App\Service\Calendar;
 use App\Entity\GroupPeople;
@@ -10,10 +12,13 @@ use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
+use App\Repository\RdvRepository;
+use App\Repository\NoteRepository;
 use App\Export\SupportPersonExport;
 use App\Repository\ServiceRepository;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Support\SupportGroupType;
+use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
@@ -22,7 +27,6 @@ use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Service;
 use App\Form\Support\SupportCoefficientType;
 use App\Form\Support\SupportGroupSearchType;
 use App\Service\Indicators\SocialIndicators;
@@ -30,9 +34,6 @@ use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Support\SupportsInMonthSearchType;
-use App\Repository\DocumentRepository;
-use App\Repository\NoteRepository;
-use App\Repository\RdvRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
@@ -332,7 +333,7 @@ class SupportController extends AbstractController
     public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, SupportsInMonthSearch $search = null, ContributionRepository $repoContribution, Pagination $pagination): Response
     {
         $search = new SupportsInMonthSearch();
-        if ($this->getUser()->getStatus() == 1) {
+        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

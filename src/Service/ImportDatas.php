@@ -29,6 +29,7 @@ use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationPerson;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
+use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -841,7 +842,7 @@ class ImportDatas
         ->setFamilyBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
         ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
         ->setChildWelfareBackground($this->findInArray($row['Parcours institutionnel enfance'], self::YES_NO) ?? null)
-        ->setHealthProblem($row['Problématique santé mentale'] == 1 || $row['Problématique santé - Addiction'] == 1 ? 1 : null)
+        ->setHealthProblem($row['Problématique santé mentale'] == Choices::YES || $row['Problématique santé - Addiction'] == Choices::YES ? 1 : null)
         ->setMentalHealthProblem($this->findInArray($row['Problématique santé mentale'], self::YES_NO_BOOLEAN) ?? null)
         ->setAddictionProblem($this->findInArray($row['Problématique santé - Addiction'], self::YES_NO_BOOLEAN) ?? null)
         ->setCareSupport($this->findInArray($row['Service soin ou acc. à domicile'], self::CARE_SUPPORT) ?? null)

@@ -156,10 +156,10 @@ class SupportGroupRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        if ($search->getDiagOrSupport() == 1) {
+        if ($search->getDiagOrSupport() == AvdlSupportSearch::DIAG) {
             $query->andWhere('avdl.diagStartDate IS NOT NULL');
         }
-        if ($search->getDiagOrSupport() == 2) {
+        if ($search->getDiagOrSupport() == AvdlSupportSearch::SUPPORT) {
             $query->andWhere('avdl.supportStartDate IS NOT NULL');
         }
         if ($search->getReadyToHousing()) {

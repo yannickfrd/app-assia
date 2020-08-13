@@ -58,7 +58,7 @@
                             {% if note.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
                         </td>
                         <td class="align-middle">
-                            {% for supportPerson in note.supportGroup.supportPeople|filter(a => a.head == true) %}
+                            {% for supportPerson in note.supportGroup.supportPeople|filter(s => s.head == true) %}
                             {{ supportPerson.person.fullname }}
                             {% endfor %}
                         </td>

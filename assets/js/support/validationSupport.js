@@ -65,7 +65,6 @@ export default class ValidationSupport {
     checkDate(dateInputElt) {
         let checkDate = new CheckDate(dateInputElt);
 
-
         if (checkDate.isValid() === false) {
             return this.validationInput.invalid(dateInputElt, "La date est invalide.");
         }

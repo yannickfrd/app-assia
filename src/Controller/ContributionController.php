@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Service\Pagination;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
 use App\Service\Normalisation;
-use App\Export\ContributionFullExport;
 use App\Controller\Traits\CacheTrait;
+use App\Export\ContributionFullExport;
 use App\Form\Model\ContributionSearch;
+use App\Export\ContributionLightExport;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
 use App\Form\Contribution\ContributionType;
+use App\Repository\AccommodationRepository;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Export\ContributionLightExport;
 use App\Form\Model\SupportContributionSearch;
 use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,9 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Contribution\ContributionSearchType;
-use App\Form\Contribution\SupportContributionSearchType;
-use App\Repository\AccommodationRepository;
 use App\Service\Indicators\ContributionIndicators;
+use App\Form\Contribution\SupportContributionSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,7 +54,7 @@ class ContributionController extends AbstractController
     public function listContributions(ContributionSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $search = new ContributionSearch();
-        if ($this->getUser()->getStatus() == 1) {
+        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
@@ -360,7 +361,7 @@ class ContributionController extends AbstractController
             ->setStart(new \DateTime($today->format('Y').'-01-01'))
             ->setEnd($today);
 
-        if ($this->getUser()->getStatus() == 1) {
+        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

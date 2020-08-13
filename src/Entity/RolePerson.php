@@ -22,6 +22,8 @@ class RolePerson
 {
     use SoftDeleteableEntity;
 
+    public const ROLE_CHILD = 3;
+
     public const ROLE = [
         1 => 'Conjoint·e',
         2 => 'Époux/se',

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Entity\User;
 use Twig\Environment;
 use App\Service\ExportPDF;
 use App\Form\Note\NoteType;
@@ -50,7 +51,7 @@ class NoteController extends AbstractController
     public function listNotes(NoteSearch $search = null, Request $request, Pagination $pagination): Response
     {
         $search = new NoteSearch();
-        if ($this->getUser()->getStatus() == 1) {
+        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

@@ -151,7 +151,7 @@
                             </a>
                         </th>
                         <td class="align-middle">
-                        {% for supportPerson in support.supportPeople|filter(a => a.role != 3) %}
+                        {% for supportPerson in support.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
                         {{ supportPerson.person.fullname }}<br />
                         {% endfor %}
                         <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}

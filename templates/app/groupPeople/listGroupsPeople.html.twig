@@ -85,9 +85,9 @@
                         <td>{% if rolePerson.person.birthdate %}{{ rolePerson.person.birthdate|date("d/m/Y") }}<br />
                             ({{ rolePerson.person.age }}{% if rolePerson.person.age > 1 %}
                             ans{% elseif rolePerson.person.age > 0 %} an{% endif %}){% endif %}
-                        <td>{% if rolePerson.person.gender == 1 %}
+                        <td>{% if rolePerson.person.gender == constant("App\\Entity\\Person::GENDER_FEMALE") %}
                             <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
-                            {% elseif rolePerson.person.gender == 2 %}
+                            {% elseif rolePerson.person.gender == constant("App\\Entity\\Person::GENDER_MALE") %}
                             <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
                             {% endif %} </td>
                         <td>{{ rolePerson.roleToString }}{% if rolePerson.head %} (DP){% endif %}</td>

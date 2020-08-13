@@ -4,6 +4,7 @@ namespace App\Service\SupportGroup;
 
 use App\Entity\Avdl;
 use App\Entity\SupportGroup;
+use App\Form\Utils\Choices;
 
 class AvdlService
 {
@@ -95,7 +96,7 @@ class AvdlService
             return SupportGroup::COEFFICIENT_DOUBLE;
         }
         // Si prêt au logement : coeff. 0.25
-        if ($avdl->getReadyToHousing() == 1) {
+        if ($avdl->getReadyToHousing() == Choices::YES) {
             return SupportGroup::COEFFICIENT_QUARTER;
         }
         // Sinon par défaut : coeff. 1

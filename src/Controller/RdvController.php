@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\CacheTrait;
 use App\Entity\Rdv;
+use App\Entity\User;
+use App\Export\RdvExport;
 use App\Form\Rdv\RdvType;
 use App\Service\Calendar;
 use App\Service\Pagination;
@@ -12,11 +13,11 @@ use App\Form\Model\RdvSearch;
 use App\Form\Rdv\RdvSearchType;
 use App\Repository\RdvRepository;
 use App\Form\Model\SupportRdvSearch;
+use App\Controller\Traits\CacheTrait;
 use App\Form\Rdv\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Export\RdvExport;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +47,7 @@ class RdvController extends AbstractController
     public function viewListRdvs(Request $request, RdvSearch $search = null, Pagination $pagination): Response
     {
         $search = new RdvSearch();
-        if ($this->getUser()->getStatus() == 1) {
+        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
