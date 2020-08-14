@@ -95,7 +95,7 @@
                     <div class="row mb-2">
                         {{ utils.view(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
                             ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
-                        {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == constant("App\\Form\\Utils\\Choices::YES") ? 
+                        {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == yes ? 
                             " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
                     </div>
                     {% if evalSocial.commentEvalSocialPerson %}
@@ -135,7 +135,7 @@
         </div>
         {% for evalPerson in evaluation.evaluationPeople %}
             {% set evalFamily = evalPerson.evalFamilyPerson %}
-            {% if evalFamily and evalPerson.supportPerson.role != constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+            {% if evalFamily and evalPerson.supportPerson.role != role_child %}
                 <div class="my-3">
                     {% if nbSupportPeople > 1 %}
                         <div class="row mb-2">
@@ -145,7 +145,7 @@
                     <div class="row mb-2">
                         {{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
                         {{ utils.view(evalFamily.noConciliationOrderToString, "No conciliation order", "evaluation") }}
-                        {{ utils.view(evalFamily.protectiveMeasure == constant("App\\Form\\Utils\\Choices::YES") and evalFamily.protectiveMeasureType ? 
+                        {{ utils.view(evalFamily.protectiveMeasure == yes and evalFamily.protectiveMeasureType ? 
                             evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
                         {{ utils.view(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
                             ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
@@ -174,7 +174,7 @@
                         <tbody>
                             {% for evalPerson in evaluation.evaluationPeople %}
                                 {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-                                {% if evalFamilyPerson and evalPerson.supportPerson.role == constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+                                {% if evalFamilyPerson and evalPerson.supportPerson.role == role_child %}
                                     <tr>
                                         <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
                                         <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
@@ -221,7 +221,7 @@
 
         {% for evalPerson in evaluation.evaluationPeople %}
             {% set evalAdm = evalPerson.evalAdmPerson %}
-            {% if evalAdm and evalPerson.supportPerson.role != constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+            {% if evalAdm and evalPerson.supportPerson.role != role_child %}
                 <div class="my-3">
                     {% if nbSupportPeople > 1 %}
                         <div class="row mb-2">
@@ -231,8 +231,8 @@
                     <div class="row">
                         {{ utils.view(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
                             ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
-                        {{ utils.view(evalAdm.paper == constant("App\\Form\\Utils\\Choices::YES") and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
-                        {{ utils.view(evalAdm.asylumBackground == constant("App\\Form\\Utils\\Choices::YES") and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
+                        {{ utils.view(evalAdm.paper == yes and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
+                        {{ utils.view(evalAdm.asylumBackground == yes and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
                             evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
                         {{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
                             ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation") }}
@@ -260,7 +260,7 @@
                     <tbody>
                             {% for evalPerson in evaluation.evaluationPeople %}
                                 {% set evalAdm = evalPerson.evalAdmPerson %}
-                                {% if evalAdm and evalPerson.supportPerson.role == constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+                                {% if evalAdm and evalPerson.supportPerson.role == role_child %}
                                     <tr>
                                         <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
                                         <td>{{ evalAdm.nationalityToString }}</td>
@@ -389,13 +389,13 @@
                         </div>
                     {% endif %}
                     <div class="row mb-2">
-                            {{ evalBudget.resources == constant("App\\Form\\Utils\\Choices::YES") and evalBudget.resourcesAmt > 0 ? '' : 
+                            {{ evalBudget.resources == yes and evalBudget.resourcesAmt > 0 ? '' : 
                                 utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
-                            {{ evalBudget.charges == constant("App\\Form\\Utils\\Choices::YES") and evalBudget.chargesAmt > 0 ? '' : 
+                            {{ evalBudget.charges == yes and evalBudget.chargesAmt > 0 ? '' : 
                                 utils.view(evalBudget.chargesToString, "Charges", "evaluation") }}
                     </div>
                     <div class="row">
-                        {% if evalBudget.resources == constant("App\\Form\\Utils\\Choices::YES") %}
+                        {% if evalBudget.resources == yes %}
                             <div class="col-md-6">
                                 <table class="table table-sm table-bordered table-hover">
                                     <thead>
@@ -439,7 +439,7 @@
                             </div>
                         {% endif %}
 
-                        {% if evalBudget.charges == constant("App\\Form\\Utils\\Choices::YES") %}
+                        {% if evalBudget.charges == yes %}
                             <div class="col-md-6">
                                 <table class="table table-sm table-bordered table-hover">
                                     <thead>
@@ -482,7 +482,7 @@
                     {% if evalBudget.debts %}
                     <div class="row mb-2">
                         {{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
-                        {% if evalBudget.debts == constant("App\\Form\\Utils\\Choices::YES") %}
+                        {% if evalBudget.debts == yes %}
                         <div class="col-md-6">
                             <div class="py-2 text-secondary">Type de dettes :</div>
                             <ul class="mb-0">
@@ -564,7 +564,7 @@
             {% endif %}
             {% if evalHousing.daloCommission %}
             <div class="row mb-3">
-                {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == constant("App\\Form\\Utils\\Choices::YES") ? 
+                {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == yes ? 
                     " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
                     ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
                 {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
@@ -614,7 +614,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-            {{ utils.view(evalHousing.domiciliation == constant("App\\Form\\Utils\\Choices::YES") ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+            {{ utils.view(evalHousing.domiciliation == yes ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
                 ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
             </div>
             <div class="row my-3">

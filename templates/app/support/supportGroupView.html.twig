@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 {% import "macros/view.html.twig" as utils %}
 
+{% set role_child = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+{% set yes = constant("App\\Form\\Utils\\Choices::YES") %}
+
 {% block title %}Suivi social | {{ title_website }}{% endblock %}
 
 {% block body %}

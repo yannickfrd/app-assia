@@ -154,7 +154,7 @@ export default class SupportNotes {
             this.autoSave = true;
             this.count = 0;
             this.autoSaveElt.classList.add("d-block");
-            setTimeout(e => {
+            setTimeout(() => {
                 this.autoSaveElt.classList.remove("d-block");
             }, 5000);
             this.saveNote();
@@ -229,7 +229,7 @@ export default class SupportNotes {
         this.btnDeleteElt.classList.replace("d-none", "d-block");
         let title = this.modalNoteElt.querySelector("#note_title").value;
 
-        noteElt.className = "col-sm-12 col-lg-6 mb-4 js-note";
+        noteElt.className = "col-sm-12 col-lg-6 mb-4 js-note reveal";
         noteElt.innerHTML =
             `<div class="card h-100 shadow">
                 <div class="card-header">
@@ -247,9 +247,15 @@ export default class SupportNotes {
 
         let containerNotesElt = document.getElementById("container-notes");
         containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild);
+        // Met à jour le nombre de notes
         this.updateCounts(1);
 
         this.getNote(noteElt);
+        // Créé l'animation d'apparition
+        setTimeout(() => {
+            noteElt.classList.add("reveal-on");
+        }, 100);
+
         noteElt.addEventListener("click", this.getNote.bind(this, noteElt));
     }
 

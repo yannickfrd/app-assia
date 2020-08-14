@@ -81,8 +81,8 @@ class NoteController extends AbstractController
 
         $search = new SupportNoteSearch();
 
-        $formSearch = $this->createForm(SupportNoteSearchType::class, $search);
-        $formSearch->handleRequest($request);
+        $formSearch = $this->createForm(SupportNoteSearchType::class, $search)
+            ->handleRequest($request);
 
         $form = $this->createForm(NoteType::class, new Note());
 

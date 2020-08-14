@@ -8,6 +8,7 @@
 
 	{% set evaluationGroup = form.vars.value %}
 	{% set edit_mode = form.vars.value.evalBudgetGroup ? true : false %}
+	{% set role_child = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 
 	<div class="container">
@@ -37,7 +38,7 @@
 		</div>
 
 		{% set form_evaluationPeople_filteredByAge = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
-		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
+		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != role_child) %}
 
 		<div class="mb-4" data-editMode="{% if edit_mode %}true{% else %}false{% endif %}">
 			{% include "app/evaluation/initEvaluation.html.twig" %}

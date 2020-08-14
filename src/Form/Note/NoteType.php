@@ -25,13 +25,6 @@ class NoteType extends AbstractType
                     'class' => 'd-none',
                 ],
             ])
-            // ->add("content", CKEditorType::class, [
-            //     "config" => [
-            //         // "uiColor" => "#fafafafa",
-            //         // "toolbar" => "full"
-            //     ],
-            //     // "required" => true
-            // ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Note::TYPE),
                 'placeholder' => '-- Type --',
