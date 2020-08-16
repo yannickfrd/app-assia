@@ -1,5 +1,9 @@
 @import "./bootstrap-custom";
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     padding-top: 64px;
     background-color: #fafafafa;
@@ -108,7 +112,7 @@ section {
 }
 
 //
-#logo-mail {
+#logo-site {
     max-width: 200px;
 }
 
@@ -252,14 +256,12 @@ th.required:after {
 
 .fade-in {
     opacity: 1;
-    /* height: 100%; */
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .fade-out {
     opacity: 0;
-    /* height: 0%; */
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 .position-fixed {
@@ -485,7 +487,11 @@ button.btn-outline-secondary a:hover {
     transition-delay: .3s;
 }
 
-@media (prefers-reduced-motion) {
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
     .reveal {
         opacity: 1 !important;
         transform: translateY(0) !important;

@@ -1,10 +1,8 @@
-import AjaxRequest from "../utils/ajaxRequest";
-import MessageFlash from "../utils/messageFlash";
-import DisplayInputs from "../utils/displayInputs";
-import ValidationInput from "../utils/validationInput";
-import Select from "../utils/select";
-import CheckDate from "../utils/checkDate";
-import Loader from "../utils/loader";
+import DisplayFields from '../utils/displayFields'
+import ValidationForm from '../utils/validationForm'
+import Select from '../utils/select'
+import ValidationDate from '../utils/validationDate'
+import Loader from '../utils/loader'
 
 // Contrôle saisie AVDL :
 // - Date de fin de diag sans date de début
@@ -20,25 +18,81 @@ import Loader from "../utils/loader";
 // - Résultat de la propo sans date de propo ou sans modalité d'accès
 // ...
 
-// Validation des données de la fiche personne
+/**
+ * Validation des données de la fiche personne
+ */
 export default class ValidationAvdlSupport {
 
     constructor() {
-        this.ajaxRequest = new AjaxRequest();
-        this.validationInput = new ValidationInput();
-        this.select = new Select();
-        this.loader = new Loader();
+        this.validationForm = new ValidationForm()
+        this.select = new Select()
+        this.loader = new Loader()
 
-        this.prefix = "support_avdl_"
+        this.prefix = 'support_avdl_'
 
-        this.serviceSelectElt = document.getElementById("support_service");
+        this.serviceSelectElt = document.getElementById('support_service')
+        this.btnSubmitElts = document.querySelectorAll('button[type="submit"]')
+        this.dateInputElts = document.querySelectorAll('input[type="date"]')
 
-        this.btnSubmitElts = document.querySelectorAll("button[type='submit']");
-        this.dateInputElts = document.querySelectorAll("input[type='date']");
-        this.now = new Date();
-
-        this.init();
+        this.init()
     }
 
-    init() {}
+    init() {
+        this.service = this.select.getOption(this.serviceSelectElt)
+        this.serviceSelectElt.addEventListener('change', this.changeService.bind(this))
+
+        this.dateInputElts.forEach(dateInputElt => {
+            dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
+        })
+        this.displayFields()
+
+        this.btnSubmitElts.forEach(btnElt => {
+            btnElt.addEventListener('click', e => {
+                if (this.validationForm.checkForm(e) > 0) {
+                    e.preventDefault(), {
+                        once: true
+                    }
+                }
+            })
+        })
+    }
+
+    /**
+     * Masque ou affiche les champs conditionnels
+     */
+    displayFields() {
+        new DisplayFields('support_originRequest_', 'organization')
+        new DisplayFields(this.prefix, 'diagStartDate')
+        new DisplayFields(this.prefix, 'supportStartDate')
+        new DisplayFields(this.prefix, 'supportEndDate')
+        new DisplayFields(this.prefix, 'accessHousingModality')
+    }
+
+    /**
+     * Si champ de la valeur du SELECT service
+     */
+    changeService() {
+        if (window.confirm('Le changement de service va recharger la page actuelle. Voulez-vous confirmer ?')) {
+            this.loader.on()
+            document.getElementById('send').click()
+        } else {
+            this.select.setOption(this.serviceSelectElt, this.service)
+        }
+    }
+
+    /**
+     * Vérifie la valeur du champ date
+     * @param {HTMLElement} inputElt 
+     */
+    checkDate(inputElt) {
+        let validationDate = new ValidationDate(inputElt, this.validationForm)
+
+        if (validationDate.isValid() === false) {
+            return
+        }
+        if (validationDate.isNotAfterToday() === false) {
+            return
+        }
+        this.validationForm.validField(inputElt)
+    }
 }

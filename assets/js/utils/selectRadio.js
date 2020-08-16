@@ -1,20 +1,22 @@
-// Sélection d'un bouton radio
+/**
+ * Sélection d'un bouton radio
+ */
 export default class SelectRadioJS {
     constructor(containerElt) {
-        this.checkboxElts = document.getElementById(containerElt).querySelectorAll(".checkbox.form-check-input");
-        this.init();
+        this.checkboxElts = document.getElementById(containerElt).querySelectorAll('.checkbox.form-check-input')
+        this.init()
     }
 
     init() {
-        this.checkboxElts.forEach(checkbox => {
-            checkbox.addEventListener("click", this.check.bind(this, checkbox));
-        });
+        this.checkboxElts.forEach(checkboxElt => {
+            checkboxElt.addEventListener('click', this.check.bind(this, checkboxElt))
+        })
     }
 
     check(checkboxSelected) {
-        this.checkboxElts.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        checkboxSelected.checked = true;
+        this.checkboxElts.forEach(checkboxElt => {
+            checkboxElt.checked = false
+        })
+        checkboxSelected.checked = true
     }
 }

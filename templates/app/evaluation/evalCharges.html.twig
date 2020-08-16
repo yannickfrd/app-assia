@@ -3,7 +3,7 @@
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.charges) }}</div>
-        <div class="col-md-12 js-{{ key }}_{{ entity }}_charges d-block">
+        <div class="col-md-12" data-parent-field="{{ key }}_{{ entity }}_charges">
             <div class="row">
                 <div class="col-form-label col-sm-4">Type de charges</div>
                 <div class="col-sm-8">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="table-responsive js-{{ key }}_{{ entity }}_charges d-block">
+            <div class="table-responsive" data-parent-field="{{ key }}_{{ entity }}_charges">
                 <table class="table table-sm table-hover text-dark">
                     <thead>
                         <tr>

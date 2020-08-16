@@ -1,4 +1,4 @@
-import ValidationInput from "../utils/validationInput";
+import ValidationForm from "../utils/validationForm";
 
 // Validation des données de la fiche personne
 export default class ValidationPerson {
@@ -30,7 +30,7 @@ export default class ValidationPerson {
         this.nbPeopleInputElt = document.getElementById(nbPeople);
         this.nbPeopleLabelElt = document.querySelector("label[for=" + nbPeople + "]");
 
-        this.validationInput = new ValidationInput();
+        this.validationForm = new ValidationForm();
         this.init();
     }
 
@@ -51,21 +51,21 @@ export default class ValidationPerson {
 
     checkLastname() {
         if (this.lastnameInputElt.value.length <= 1) {
-            this.validationInput.invalid(this.lastnameInputElt, "Le nom est trop court (2 caractères min.).");
+            this.validationForm.invalidField(this.lastnameInputElt, "Le nom est trop court (2 caractères min.).");
         } else if (this.lastnameInputElt.value.length >= 50) {
-            this.validationInput.invalid(this.lastnameInputElt, "Le nom est trop long (50 caractères max.).");
+            this.validationForm.invalidField(this.lastnameInputElt, "Le nom est trop long (50 caractères max.).");
         } else {
-            this.validationInput.valid(this.lastnameInputElt);
+            this.validationForm.validField(this.lastnameInputElt);
         }
     }
 
     checkFirstname() {
         if (this.firstnameInputElt.value.length <= 1) {
-            this.validationInput.invalid(this.firstnameInputElt, "Le prénom est trop court (2 caractères min.).");
+            this.validationForm.invalidField(this.firstnameInputElt, "Le prénom est trop court (2 caractères min.).");
         } else if (this.firstnameInputElt.value.length >= 50) {
-            this.validationInput.invalid(this.firstnameInputElt, "Le prénom est trop long (50 caractères max.).");
+            this.validationForm.invalidField(this.firstnameInputElt, "Le prénom est trop long (50 caractères max.).");
         } else {
-            this.validationInput.valid(this.firstnameInputElt);
+            this.validationForm.validField(this.firstnameInputElt);
         }
     }
 
@@ -74,9 +74,9 @@ export default class ValidationPerson {
         let now = new Date();
         let age = Math.round((now - birthdate) / (24 * 3600 * 1000 * 365.25));
         if (birthdate < now && age < 99) {
-            this.validationInput.valid(this.birthdateInputElt);
+            this.validationForm.validField(this.birthdateInputElt);
         } else {
-            this.validationInput.invalid(this.birthdateInputElt, "La date de naissance est incorrecte.");
+            this.validationForm.invalidField(this.birthdateInputElt, "La date de naissance est incorrecte.");
         }
     }
 
@@ -87,17 +87,17 @@ export default class ValidationPerson {
             }
         });
         if (this.genderValue >= 1 && this.genderValue <= 3) {
-            this.validationInput.valid(this.genderInputElt);
+            this.validationForm.validField(this.genderInputElt);
         } else {
-            this.validationInput.invalid(this.genderInputElt, "Le sexe doit être renseigné.");
+            this.validationForm.invalidField(this.genderInputElt, "Le sexe doit être renseigné.");
         }
     }
 
     checkEmail() {
         if (this.emailInputElt.value === "" || this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}")) {
-            return this.validationInput.valid(this.emailInputElt);
+            return this.validationForm.validField(this.emailInputElt);
         } else {
-            return this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
+            return this.validationForm.invalidField(this.emailInputElt, "L'adresse email est incorrecte.");
         }
     }
 
@@ -108,9 +108,9 @@ export default class ValidationPerson {
             }
         });
         if (this.roleValue >= 1 && this.roleValue <= 9) {
-            this.validationInput.valid(this.roleInputElt);
+            this.validationForm.validField(this.roleInputElt);
         } else {
-            this.validationInput.invalid(this.roleInputElt, "Le rôle  doit être renseigné.");
+            this.validationForm.invalidField(this.roleInputElt, "Le rôle  doit être renseigné.");
         }
     }
 
@@ -121,17 +121,17 @@ export default class ValidationPerson {
             }
         });
         if (this.typoValue >= 1 && this.typoValue <= 9) {
-            this.validationInput.valid(this.typoInputElt);
+            this.validationForm.validField(this.typoInputElt);
         } else {
-            this.validationInput.invalid(this.typoInputElt, "La typologie  doit être renseignée.");
+            this.validationForm.invalidField(this.typoInputElt, "La typologie  doit être renseignée.");
         }
     }
 
     checkNbPeople() {
         if (this.nbPeopleInputElt.value >= 1 && this.nbPeopleInputElt.value <= 19) {
-            this.validationInput.valid(this.nbPeopleInputElt);
+            this.validationForm.validField(this.nbPeopleInputElt);
         } else {
-            this.validationInput.invalid(this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
+            this.validationForm.invalidField(this.nbPeopleInputElt, "Le nombre de personnes est incorrect.");
         }
     }
 }

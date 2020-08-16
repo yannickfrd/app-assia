@@ -29,13 +29,13 @@ class OriginRequestType extends AbstractType
                     return $repo->getOrganizationsQueryList($serviceId);
                 },
                 'placeholder' => 'placeholder.select',
-                'required' => false,
+                'required' => $serviceId == Service::SERVICE_AVDL_ID ? true : false,
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
                 'label' => $serviceId == Service::SERVICE_AVDL_ID ? 'avdl.orientationDate' : '',
                 'widget' => 'single_text',
-                'required' => false,
+                'required' => $serviceId == Service::SERVICE_AVDL_ID ? true : false,
             ])
             ->add('preAdmissionDate', DateType::class, [
                 'widget' => 'single_text',

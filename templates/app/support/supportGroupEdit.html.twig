@@ -3,6 +3,7 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set support = form.vars.value %}
+{% set yes = constant("App\\Form\\Utils\\Choices::YES") %}
 
 {% if support.id %}
 	{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}

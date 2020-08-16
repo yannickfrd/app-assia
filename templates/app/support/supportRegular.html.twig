@@ -24,11 +24,11 @@
         <div class="col-md-6">{{ form_row(form.theoreticalEndDate) }}</div>
         <div class="col-md-6">{{ form_row(form.endDate) }}</div>
     </div>
-    <div class="row">
-        <div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
-        <div class="col-md-6 js-status d-block">{{ form_row(form.endStatusComment) }}</div>
+    <div class="row" data-parent-field="status">
+        <div class="col-md-6">{{ form_row(form.endStatus) }}</div>
+        <div class="col-md-6">{{ form_row(form.endStatusComment) }}</div>
         {% if support.id and support.device.accommodation %}
-            <div class="col-md-6 js-status d-block">
+            <div class="col-md-6">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
                     {{ form_row(form.endAccommodation) }}
                 </div>

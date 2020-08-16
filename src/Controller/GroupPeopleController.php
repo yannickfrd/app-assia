@@ -195,6 +195,7 @@ class GroupPeopleController extends AbstractController
         if ($rolePerson->getHead()) {
             return $this->json([
                 'code' => 200,
+                'action' => 'error',
                 'alert' => 'danger',
                 'msg' => 'Le demandeur principal ne peut pas être retiré du groupe.',
                 'data' => null,
@@ -208,6 +209,7 @@ class GroupPeopleController extends AbstractController
 
         return $this->json([
             'code' => 200,
+            'action' => 'delete',
             'alert' => 'warning',
             'msg' => $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.',
             'data' => $nbPeople - 1,

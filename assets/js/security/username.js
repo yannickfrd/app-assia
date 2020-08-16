@@ -1,5 +1,5 @@
 import AjaxRequest from "../utils/ajaxRequest";
-import ValidationInput from "../utils/validationInput";
+import ValidationForm from "../utils/validationForm";
 
 // Création automatique du login de l'utilisateur
 export default class Username {
@@ -20,7 +20,7 @@ export default class Username {
         this.confirmPasswordInputElt = document.getElementById(formName + "_confirmPassword");
 
         this.ajaxRequest = new AjaxRequest();
-        this.validationInput = new ValidationInput();
+        this.validationForm = new ValidationForm();
         this.init();
     }
 
@@ -49,7 +49,7 @@ export default class Username {
         if (this.usernameInputElt.value.length > 6) {
             return this.sendAjaxRequest();
         }
-        return this.validationInput.invalid(this.usernameInputElt, "Le login est invalide.");
+        return this.validationForm.invalidField(this.usernameInputElt, "Le login est invalide.");
     }
 
     updateUsername() {
@@ -65,37 +65,37 @@ export default class Username {
 
     response(data) {
         if (JSON.parse(data).response === true) {
-            return this.validationInput.invalid(this.usernameInputElt, "Ce login est déjà pris !");
+            return this.validationForm.invalidField(this.usernameInputElt, "Ce login est déjà pris !");
         }
-        return this.validationInput.valid(this.usernameInputElt);
+        return this.validationForm.validField(this.usernameInputElt);
     }
 
     checkEmail() {
         if (this.emailInputElt.value === "" || this.emailInputElt.value.match("^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}")) {
-            return this.validationInput.valid(this.emailInputElt);
+            return this.validationForm.validField(this.emailInputElt);
         }
-        return this.validationInput.invalid(this.emailInputElt, "L'adresse email est incorrecte.");
+        return this.validationForm.invalidField(this.emailInputElt, "L'adresse email est incorrecte.");
     }
 
     checkPassword() {
         if (this.passwordInputElt.value.match(this.regexPassword)) {
-            return this.validationInput.valid(this.passwordInputElt);
+            return this.validationForm.validField(this.passwordInputElt);
         }
     }
 
     checkoutPassword() {
         if (!this.passwordInputElt.value.match(this.regexPassword)) {
-            this.validationInput.invalid(this.passwordInputElt, "Le mot de passe est invalide.");
+            this.validationForm.invalidField(this.passwordInputElt, "Le mot de passe est invalide.");
         }
         this.checkConfirmPassword();
     }
 
     checkConfirmPassword() {
         if (this.confirmPasswordInputElt.value === this.passwordInputElt.value) {
-            return this.validationInput.valid(this.confirmPasswordInputElt);
+            return this.validationForm.validField(this.confirmPasswordInputElt);
         }
         if (this.confirmPasswordInputElt.value) {
-            return this.validationInput.invalid(this.confirmPasswordInputElt, "La confirmation est différente du mot de passe.");
+            return this.validationForm.invalidField(this.confirmPasswordInputElt, "La confirmation est différente du mot de passe.");
         }
     }
 }

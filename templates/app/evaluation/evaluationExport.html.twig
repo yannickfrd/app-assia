@@ -97,7 +97,7 @@
     <h3 class="h4"><b>FAMILLE</b></h3>
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalFamily = evalPerson.evalFamilyPerson %}
-        {% if evalFamily and evalPerson.supportPerson.role != role_child) %}
+        {% if evalFamily and evalPerson.supportPerson.role != role_child %}
             {% if nbSupportPeople > 1 %}
                 <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
             {% endif %}            
@@ -124,7 +124,7 @@
             <tbody>
                 {% for evalPerson in evaluation.evaluationPeople %}
                     {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-                    {% if evalFamilyPerson and evalPerson.supportPerson.role == role_child) %}
+                    {% if evalFamilyPerson and evalPerson.supportPerson.role == role_child %}
                         <tr>
                             <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
                             <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
@@ -153,7 +153,7 @@
 
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalAdm = evalPerson.evalAdmPerson %}
-        {% if evalAdm and evalPerson.supportPerson.role != role_child) %}
+        {% if evalAdm and evalPerson.supportPerson.role != role_child %}
             {% if nbSupportPeople > 1 %}
                 <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
             {% endif %}

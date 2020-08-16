@@ -6,49 +6,50 @@
 		<div class="col-md-6">{{ form_row(form.referent2) }}</div>
 	</div>
 	<hr>
-	<section class="form-group row">
+	<div class="form-group row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
 		<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
-		<div class="col-md-6">{{ form_row(form.originRequest.organizationComment) }}</div>
-		<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.propoHousing) }}</div>
-		<div class="col-md-12">{{ form_widget(form.originRequest.comment) }}</div>
-	</section>
-	<section class="form-group row" id="support_location">
+		<div class="col-md-6" data-parent-field="organization">{{ form_row(form.originRequest.organizationComment) }}</div>
+		<div class="col-md-6" data-parent-field="organization">{{ form_row(form.originRequest.orientationDate) }}</div>
+		<div class="col-md-6" data-parent-field="organization">{{ form_row(form.avdl.propoHousing) }}</div>
+		<div class="col-md-12" data-parent-field="organization">{{ form_widget(form.originRequest.comment) }}</div>
+	</div>
+	<hr>
+	<div class="form-group row" id="support_location">
 		<div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
 		<div class="col-md-6">{{ form_row(form.location.search) }}</div>
-		<div class="col-md-6 ">{{ form_row(form.location.address) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.address) }}</div>
 		<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
 		<div class="col-md-6">{{ form_row(form.location.city) }}</div>
 		<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
-	</section>
+	</div>
 	<hr>
-	<section class="form-group row">
+	<div class="form-group row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Diagnostic</h2></div>
-		<div class="col-md-6">{{ form_row(form.avdl.diagStartDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.diagEndDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.diagType) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.recommendationSupport) }}</div>
-		<div class="col-md-12">{{ form_widget(form.avdl.diagComment) }}</div>
-	</section>
+		<div class="col-md-6" data-check-valid="diagStart">{{ form_row(form.avdl.diagStartDate) }}</div>
+		<div class="col-md-6" data-parent-field="diagStartDate" data-check-valid="diagStart">{{ form_row(form.avdl.diagType) }}</div>
+		<div class="col-md-6" data-parent-field="diagStartDate">{{ form_row(form.avdl.recommendationSupport) }}</div>
+		<div class="col-md-6" data-parent-field="diagStartDate">{{ form_row(form.avdl.diagEndDate) }}</div>
+		<div class="col-md-12" data-parent-field="diagStartDate">{{ form_widget(form.avdl.diagComment) }}</div>
+	</div>
 	<hr>
-	<section class="form-group row">
+	<div class="form-group row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
-		<div class="col-md-6">{{ form_row(form.avdl.supportStartDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.supportEndDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.supportType) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.readyToHousing) }}</div>
-		<div class="col-md-12">{{ form_widget(form.avdl.supportComment) }}</div>
-	</section>
+		<div class="col-md-6" data-check-valid="supportStart">{{ form_row(form.avdl.supportStartDate) }}</div>
+		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportStart">{{ form_row(form.avdl.supportType) }}</div>
+		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportStart">{{ form_row(form.avdl.readyToHousing) }}</div>
+		<div class="col-md-6" data-parent-field="supportStartDate">{{ form_row(form.avdl.supportEndDate) }}</div>
+		<div class="col-md-12" data-parent-field="supportStartDate">{{ form_widget(form.avdl.supportComment) }}</div>
+	</div>
 	<hr>
-	<section class="form-group row" id="avdl_end_support">
+	<div class="form-group row" data-parent-field="supportEndDate">
 		<div class="col-md-12"><h2 class="h5 mb-3">Fin d'accompagnement / Proposition logement</h2></div>
 		<div class="col-md-6">{{ form_row(form.avdl.endSupportReason) }}</div>
-		<div class="col-md-6 js-status d-block">{{ form_row(form.endStatus) }}</div>
+		<div class="col-md-6">{{ form_row(form.endStatus) }}</div>
 		<div class="col-md-6">{{ form_row(form.avdl.accessHousingModality) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.propoHousingDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.propoOrigin) }}</div>
-		<div class="col-md-6">{{ form_row(form.avdl.propoResult) }}</div>
+		<div class="col-md-6" data-parent-field="accessHousingModality">{{ form_row(form.avdl.propoHousingDate) }}</div>
+		<div class="col-md-6" data-parent-field="accessHousingModality">{{ form_row(form.avdl.propoOrigin) }}</div>
+		<div class="col-md-6" data-parent-field="accessHousingModality">{{ form_row(form.avdl.propoResult) }}</div>
 		<div class="col-md-12">{{ form_widget(form.avdl.endSupportComment) }}</div>
-	</section>
+	</div>
 </div>

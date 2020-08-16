@@ -11,7 +11,8 @@
         <div class="mb-4">
             {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
 			{% set person = evalPerson.vars.value.supportPerson.person %}
-            <button type="button" id="heading-eval_social-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
+            <button type="button" id="heading-eval_social-{{ key }}" class="btn btn-outline-{{ theme_color }} 
+                {% if loop.first %}active{% endif %} mb-2 js-person"
                 data-toggle="collapse" data-target="#collapse-eval_social-{{ key }}" aria-expanded="false"
                 aria-controls="collapse-eval_social-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
             {% endfor %}
@@ -19,14 +20,15 @@
 
         {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
         <div id="collapse-eval_social-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-eval_social-{{ key }}" data-parent="#accordion-eval_social" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+            aria-labelledby="heading-eval_social-{{ key }}" data-parent="#accordion-eval_social" 
+            data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.rightSocialSecurity) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalSocialPerson_rightSocialSecurity d-block">
+                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
                     {{ form_row(evalPerson.evalSocialPerson.socialSecurity) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalSocialPerson_rightSocialSecurity d-block">
+                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
                     {{ form_row(evalPerson.evalSocialPerson.endRightsSocialSecurityDate) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalSocialPerson_rightSocialSecurity d-block">
+                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
                     {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
             </div>
 
@@ -34,7 +36,7 @@
 
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>
-				<div class="col-md-6 js-{{ key }}_evalSocialPerson_healthProblem d-block">
+				<div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
 					<div class="row">
 						<div class="col-form-label col-sm-4">Type de problématiques de santé</div>
 						<div class="col-sm-8">
@@ -47,12 +49,15 @@
 							</select>
 						</div>
 						<div class="col-md-12 mt-3">
-							<div class="table-responsive js-{{ key }}_evalSocialPerson_healthProblemType d-block">
+							<div class="table-responsive" data-parent-field="{{ key }}_evalSocialPerson_healthProblemType">
 								<table class="table table-sm table-hover text-dark">
 									<tbody>
 								        {% for healthKey, healthValue in healthProblemsType %}
-										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-{{ healthKey }}" class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-											<th scope="row"><div class="sr-only">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</div></th>
+										<tr id="js-{{ key }}_evalSocialPerson_healthProblemType-{{ healthKey }}" 
+                                            class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
+											<th scope="row">
+                                                <div class="sr-only">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</div>
+                                            </th>
 											<td class="align-middle">{{ healthValue }}</td>
 											<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
 										</tr>
@@ -66,8 +71,10 @@
 			</div>
 
             <div class="form-group row">
-                <div class="col-md-6 js-{{ key }}_evalSocialPerson_healthProblem d-block">{{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalSocialPerson_careSupport d-block">{{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
+                    {{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_careSupport">
+                    {{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
             </div>
 
             <div class="form-group row">
@@ -79,7 +86,8 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalSocialPerson_violenceVictim d-block">{{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_violenceVictim">
+                    {{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
             </div>
             <div class="form-group row">
                 {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
@@ -100,7 +108,7 @@
 </div>
 <div class="form-group row">
     <div class="col-md-6"> {{ form_row(form.evalSocialGroup.animal) }}</div>
-    <div class="col-md-6 js-animal d-block"> {{ form_row(form.evalSocialGroup.animalType) }}</div>
+    <div class="col-md-6" data-parent-field="animal">{{ form_row(form.evalSocialGroup.animalType) }}</div>
 </div>
 
 <div class="form-group row">

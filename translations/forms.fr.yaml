@@ -39,7 +39,7 @@ NbPeople: Nb. pers.
 New password: Nouveau mot de passe
 Old password: Ancien mot de passe
 placeholder:
-  comment: Ecrire un commentaire...
+  comment: Écrire un commentaire...
   device: -- Dispositif --
   familtyTypology: -- Typologie familiale --
   gender: -- Sexe --
@@ -72,11 +72,11 @@ Theoretical end date: Date de fin théorique
 Title: Titre
 Username: Login
 Usename or maiden name: Nom d'usage ou de jeune fille
-Write a note: Ecrire une note
-Write a comment about the group: Ecrire un commentaire sur le groupe
-Write a comment about the person: Ecrire un commentaire sur la personne
-comment.placeholder: Ecrire un commentaire sur le suivi social
-Write a comment about the service: Ecrire un commentaire sur le service
+Write a note: Écrire une note
+Write a comment about the group: Écrire un commentaire sur le groupe
+Write a comment about the person: Écrire un commentaire sur la personne
+comment.placeholder: Écrire un commentaire sur le suivi social
+Write a comment about the service: Écrire un commentaire sur le service
 Year: Année
 Zipcode: Code postal
 End reason: Motif de fin
@@ -104,7 +104,7 @@ Organization comment: Précision concernant l'organisme
 Orientation date: Date d'orientation
 Pre admission date: Date d'entretien de pré-admission
 Resul pre admission: Résultat de la pré-admission
-Write a comment about the origin request: Ecrire un commentaire relatif à l'origine de la demande ou à la pré-admission
+Write a comment about the origin request: Écrire un commentaire relatif à l'origine de la demande ou à la pré-admission
 
 ### Document
 document:
@@ -124,7 +124,7 @@ Social worker name 2: Nom du travailleur social suppléant
 referent:
   socialWorker.placeholder: Nom du travailleur social
   socialWorker2.placeholder: Travailleur social suppléant
-  comment.plaholder: Ecrire un commentaire sur le service social référent...
+  comment.plaholder: Écrire un commentaire sur le service social référent...
 
 ### Service
 Chief: Responsable
@@ -138,7 +138,7 @@ Contribution rate: Taux de participation financière
 Rate beetween 0 and 1.: Nombre entre 0 et 1.
 Justice activity: Activité Justice
 service:
-  comment.placeholder: Ecrire une information complémentaire...
+  comment.placeholder: Écrire une information complémentaire...
   name: Nom du service
 
 Accommodation type: Type de logement ou d'hébergement
@@ -160,7 +160,7 @@ Salary amt: Montant salaire(s)
 Still to pay amt: Montant restant dû
 To pay amt: Montant à régler
 contribution:
-  comment.placeholder: Ecrire un commentaire
+  comment.placeholder: Écrire un commentaire
   monthContrib: Mois de la redevance
   type: Type d'opération
 
@@ -206,6 +206,6 @@ avdl:
   propoHousingDate: Date de la proposition
   propoOrigin: Origine de la proposition
   propoResult: Résultat de la proposition
-  diagComment.placeholder: Ecrire un commentaire sur le diagnostic
-  supportComment.placeholder: Ecrire un commentaire sur l'accompagnement
-  endSupportComment.placeholder: Ecrire un commentaire sur la fin d'accompagnement ou la proposition logement
+  diagComment.placeholder: Écrire un commentaire sur le diagnostic
+  supportComment.placeholder: Écrire un commentaire sur l'accompagnement
+  endSupportComment.placeholder: Écrire un commentaire sur la fin d'accompagnement ou la proposition logement

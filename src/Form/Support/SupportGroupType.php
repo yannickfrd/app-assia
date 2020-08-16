@@ -79,6 +79,7 @@ class SupportGroupType extends AbstractType
                 'choice_label' => 'fullname',
                 'query_builder' => $referentQueryBuilder,
                 'placeholder' => 'placeholder.select',
+                'required' => false,
             ])
             ->add('referent2', EntityType::class, [
                 'class' => User::class,

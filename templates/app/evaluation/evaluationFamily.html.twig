@@ -22,18 +22,18 @@
             aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalFamilyPerson_maritalStatus d-block">{{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_maritalStatus">{{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
             </div>
             <div class="form-group row">
                 {% if evalPerson.vars.value.supportPerson.person.gender == constant("App\\Entity\\Person::GENDER_FEMALE") %}
                 <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalFamilyPerson_unbornChild d-block">{{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalFamilyPerson_unbornChild d-block">{{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
                 {% endif %}
             </div>
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasure) }}</div>
-                <div class="col-md-6 js-{{ key }}_evalFamilyPerson_protectiveMeasure d-block">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_protectiveMeasure">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
             </div>
             <div class="form-group row">
                 <div class="col-md-12">{{ form_label(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
@@ -80,11 +80,11 @@
 {% endif %}
 
 <div class="form-group row">
-    <div class="col-md-6 js-0_evalAdmPerson_nationality d-block">
+    <div class="col-md-6" data-parent-field="0_evalAdmPerson_nationality">
         {{ form_row(form.evalFamilyGroup.childrenBehind) }}</div>
-    <div class="col-md-6 js-0_evalAdmPerson_nationality d-block">
+    <div class="col-md-6" data-parent-field="0_evalAdmPerson_nationality">
         {{ form_row(form.evalFamilyGroup.famlReunification) }}</div>
-    <div class="col-md-6 js-famlReunification d-block">{{ form_row(form.evalFamilyGroup.nbPeopleReunification) }}</div>
+    <div class="col-md-6" data-parent-field="js-famlReunification">{{ form_row(form.evalFamilyGroup.nbPeopleReunification) }}</div>
     <div class="col-md-6">{{ form_row(form.evalFamilyGroup.cafId) }}</div>
 </div>
 

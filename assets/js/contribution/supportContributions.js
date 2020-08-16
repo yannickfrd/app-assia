@@ -2,7 +2,7 @@ import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
 import Select from "../utils/select";
-import ValidationInput from "../utils/validationInput";
+import ValidationForm from "../utils/validationForm";
 import ParametersUrl from "../utils/parametersUrl";
 
 export default class SupportContributions {
@@ -11,7 +11,7 @@ export default class SupportContributions {
         this.ajaxRequest = new AjaxRequest();
         this.loader = new Loader("#modal-contribution");
         this.select = new Select();
-        this.validationInput = new ValidationInput();
+        this.validationForm = new ValidationForm();
         this.parametersUrl = new ParametersUrl();
 
         this.resourcesChecked = false; // Ressources vérifiées dans la base de données
@@ -294,15 +294,15 @@ export default class SupportContributions {
         if ([1, 2].indexOf(option) != -1) { // PF et Loyer
             if (!this.select.getOption(this.monthContribMonthSelect)) {
                 this.error = true;
-                this.validationInput.invalid(this.monthContribMonthSelect, "Ne peut pas être vide.");
+                this.validationForm.invalidField(this.monthContribMonthSelect, "Ne peut pas être vide.");
             } else {
-                this.validationInput.valid(this.monthContribMonthSelect);
+                this.validationForm.validField(this.monthContribMonthSelect);
             }
             if (!this.select.getOption(this.monthContribYearSelect)) {
                 this.error = true;
-                this.validationInput.invalid(this.monthContribYearSelect, "Ne peut pas être vide.");
+                this.validationForm.invalidField(this.monthContribYearSelect, "Ne peut pas être vide.");
             } else {
-                this.validationInput.valid(this.monthContribYearSelect);
+                this.validationForm.validField(this.monthContribYearSelect);
             }
         } else {
             this.select.setOption(this.monthContribYearSelect, "");
@@ -315,11 +315,11 @@ export default class SupportContributions {
     checkToPaidAmt(option) {
         if (isNaN(this.toPayAmtInput.value)) {
             this.error = true;
-            return this.validationInput.invalid(this.toPayAmtInput, "La valeur est invalide.");
+            return this.validationForm.invalidField(this.toPayAmtInput, "La valeur est invalide.");
         }
         if ([1, 2, 10, 20].indexOf(option) != -1 && !this.toPayAmtInput.value) { // PF, loyer, cautionn prêt
             this.error = true;
-            return this.validationInput.invalid(this.toPayAmtInput, "Ne peut pas être vide.");
+            return this.validationForm.invalidField(this.toPayAmtInput, "Ne peut pas être vide.");
         }
     }
 
@@ -327,11 +327,11 @@ export default class SupportContributions {
     checkReturnAmt(option) {
         if (isNaN(this.returnAmtInput.value)) {
             this.error = true;
-            return this.validationInput.invalid(this.returnAmtInput, "La valeur est invalide.");
+            return this.validationForm.invalidField(this.returnAmtInput, "La valeur est invalide.");
         }
         if (option == 11 && !this.returnAmtInput.value) { // Restitution Caution
             this.error = true;
-            return this.validationInput.invalid(this.returnAmtInput, "Ne peut pas être vide.");
+            return this.validationForm.invalidField(this.returnAmtInput, "Ne peut pas être vide.");
         }
     }
 
@@ -339,14 +339,14 @@ export default class SupportContributions {
     checkPaidAmt(option) {
         if (isNaN(this.paidAmtInput.value)) {
             this.error = true;
-            return this.validationInput.invalid(this.paidAmtInput, "La valeur est invalide.");
+            return this.validationForm.invalidField(this.paidAmtInput, "La valeur est invalide.");
         }
         if ((!this.paidAmtInput.value && [1, 2, 10].indexOf(option) != -1 && (this.paymentDateInput.value || this.select.getOption(this.paymentTypeSelect))) ||
             (!this.paidAmtInput.value && [30, 31, 32].indexOf(option) != -1)) {
             this.error = true;
-            return this.validationInput.invalid(this.paidAmtInput, "Ne peut pas être vide.");
+            return this.validationForm.invalidField(this.paidAmtInput, "Ne peut pas être vide.");
         }
-        return this.validationInput.valid(this.paidAmtInput);
+        return this.validationForm.validField(this.paidAmtInput);
     }
 
     // Vérifie la date du paiement.
@@ -355,26 +355,26 @@ export default class SupportContributions {
 
         if ((this.paymentDateInput.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             this.error = true;
-            return this.validationInput.invalid(this.paymentDateInput, "La date est invalide.");
+            return this.validationForm.invalidField(this.paymentDateInput, "Date invalide.");
         }
         if (intervalWithNow < 0) {
             this.error = true;
-            return this.validationInput.invalid(this.paymentDateInput, "La date ne peut être postérieure à la date du jour.");
+            return this.validationForm.invalidField(this.paymentDateInput, "La date ne peut être postérieure à la date du jour.");
         }
         if (!this.paymentDateInput.value && (option === 20 || this.paidAmtInput.value || this.select.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
             this.error = true;
-            return this.validationInput.invalid(this.paymentDateInput, "La date ne peut pas être vide.");
+            return this.validationForm.invalidField(this.paymentDateInput, "La date ne peut pas être vide.");
         }
-        return this.validationInput.valid(this.paymentDateInput);
+        return this.validationForm.validField(this.paymentDateInput);
     }
 
     // Vérifie le type de paiement saisi.
     checkPaymentType(option) {
         if (!this.select.getOption(this.paymentTypeSelect) && (option === 20 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
             this.error = true;
-            return this.validationInput.invalid(this.paymentTypeSelect, "Ne peut pas être vide.");
+            return this.validationForm.invalidField(this.paymentTypeSelect, "Ne peut pas être vide.");
         }
-        return this.validationInput.valid(this.paymentTypeSelect);
+        return this.validationForm.validField(this.paymentTypeSelect);
     }
 
 
@@ -646,18 +646,18 @@ export default class SupportContributions {
         let value = moneyElt.value;
         value = value.replace(" ", "").replace(",", ".");
         if (Number(value) >= 0) {
-            return this.validationInput.valid(moneyElt);
+            return this.validationForm.validField(moneyElt);
         }
-        return this.validationInput.invalid(moneyElt, "Valeur invalide.");
+        return this.validationForm.invalidField(moneyElt, "Valeur invalide.");
     }
 
     // Vérifie si la date est valide.
     checkDate(dateElt) {
         let interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24));
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
-            return this.validationInput.invalid(dateElt, "Date invalide.");
+            return this.validationForm.invalidField(dateElt, "Date invalide.");
         }
-        return this.validationInput.valid(dateElt);
+        return this.validationForm.validField(dateElt);
     }
 
     // Donne la somme des montants.

@@ -167,8 +167,7 @@ class SupportController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Le suivi social est mis à jour.');
-
-            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+            // return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
         $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
@@ -178,8 +177,7 @@ class SupportController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
-
-            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+            // return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
         return $this->render('app/support/supportGroupEdit.html.twig', [
@@ -253,7 +251,7 @@ class SupportController extends AbstractController
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupService $supportGroupService): Response
     {
         if (!$supportGroupService->addPeopleInSupport($supportGroup, $repo)) {
-            $this->addFlash('warning', "Aucune personne n'est ajoutée au suivi.");
+            $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
         return $this->redirectToRoute('support_edit', [

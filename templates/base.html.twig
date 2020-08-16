@@ -17,13 +17,11 @@
 	<meta property="og:url" content="https://esperer95.app" />
 	<meta property="og:image" content="" />
 	<meta name="description" content="Application de gestion de l'accompagnement social de l'association ESPERER 95" />
-
 </head>
 
 {% set theme_color = app.request.hasPreviousSession and app.session.get("themeColor") ? app.session.get("themeColor") : "dark" %}
-{# {% if app.environment != "prod" %}{% set theme_color = "primary" %}{% endif %} #}
 
-<body>
+<body id="top-body">
 	<div id="loader" role="status">
 		<span class="fas fa-circle-notch text-{{ theme_color }}"></span>
 		<span class="sr-only">Chargement...</span>
@@ -33,7 +31,11 @@
 		<header id="header" data-color="{{ theme_color }}">
 			<nav class=" navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
 				<a class="navbar-brand text-light" href="{{ path("home") }}">
-					<img id="logo-mail" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95.app">
+					{% if app.environment == "prod" %}
+						<img id="logo" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95.app">
+					{% else %}
+						<span class="fas fa-exclamation-triangle text-warning mr-2"></span>Esperer95.app version test
+					{% endif %}
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
 					aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +77,6 @@
 								<a class="dropdown-item" href="{{ path("services") }}">Services</a>
 								<a class="dropdown-item" href="{{ path("poles") }}">Pôles</a>
 							</div>
-
 						</li>
 						<li class="nav-item">
 							<a class="nav-link text-light" href="{{ path("managing") }}">Gestion</a>
@@ -127,7 +128,7 @@
 
 		{% block body %}{% endblock %}
 
-		<a id="scroll-top" href="#header">
+		<a id="scroll-top" href="#top-body">
 			<span class="fa fa-chevron-up"></span>
 		</a>
 

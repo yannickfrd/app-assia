@@ -15,7 +15,7 @@ Paper: Papier d'identité
 Renewal permit date: Date de renouvellement du titre
 Resid permit request: Demande de titre de séjour
 Work right: Autorisation de travail
-Write a comment about the administrative situation: Ecrire un commentaire relatif à la situation administrative
+Write a comment about the administrative situation: Écrire un commentaire relatif à la situation administrative
 
 # Budget
 Activity bonus amt: Montant Prime d'activité (€)
@@ -123,7 +123,7 @@ Unempl benefit amt: Montant ARE (€)
 Unempl benefit: ARE
 Water amt: Montant Eau (€)
 Water: Eau
-Write a comment about the budget situation : Ecrire un commentaire relatif à la situation budgétaire
+Write a comment about the budget situation : Écrire un commentaire relatif à la situation budgétaire
 Youth guarantee amt: Montant Garantie jeunes (€)
 Youth guarantee: Garantie jeunes
 
@@ -147,8 +147,8 @@ Pregnancy type: Type de grossesse
 Protective measure type: Type de mesure de protection
 Protective measure: Mesure de protection
 Unborn child: Enfant à naître
-Write a comment about the family situation of the group: Ecrire un commentaire relatif à la situation familiale du groupe
-Write a comment about the family situation of the person: Ecrire un commentaire relatif à la situation familiale de la personne
+Write a comment about the family situation of the group: Écrire un commentaire relatif à la situation familiale du groupe
+Write a comment about the family situation of the person: Écrire un commentaire relatif à la situation familiale de la personne
 
 # Prof
 Comment eval prof:  Commentaire relatif la situation professionnelle
@@ -169,7 +169,7 @@ Transport means type: Moyen(s) de transport
 Transport means: Précision moyen(s) de transport 
 Work place: Lieu de travail (commune)
 Working hours: Horaires de travail
-Write a comment about the professional situation: Ecrire un commentaire relatif à la situation professionnelle
+Write a comment about the professional situation: Écrire un commentaire relatif à la situation professionnelle
 
 # Housing
 Housing status before the start of support.: Situation résidentielle avant le début du suivi.
@@ -227,13 +227,13 @@ Start domiciliation date: Date de début domiciliation
 Syplo date: Date du SYPLO
 Syplo id: Numéro SYPLO
 Syplo: SYPLO
-Write a comment about the housing situation: Ecrire un commentaire relatif à la situation liée au logement et à l'hébergement
+Write a comment about the housing situation: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement
 
 # Justice
 Comment eval justice: Commentaire sur la situation judiciaire
 Justice act: Mesure judiciaire
 Justice status: Situation judiciaire
-Write a comment about the justice situation of the person: Ecrire un commentaire relatif à la situation judiciaire de la personne
+Write a comment about the justice situation of the person: Écrire un commentaire relatif à la situation judiciaire de la personne
 
 # Social person
 Addiction problem: Problématique d'addiction
@@ -260,7 +260,7 @@ Social: Social
 Violence victim: Personne victime de violence
 Wandering time: Durée d'errance
 Wheelchair: Personne en fauteuil roulant
-Write a comment about the social situation of the group: Ecrire un commentaire relatif à la situation sociale du groupe
-Write a comment about the social situation of the person: Ecrire un commentaire relatif à la situation sociale de la personne
+Write a comment about the social situation of the group: Écrire un commentaire relatif à la situation sociale du groupe
+Write a comment about the social situation of the person: Écrire un commentaire relatif à la situation sociale de la personne
 
 location.search.placeholder: Saisir une adresse ou une ville...

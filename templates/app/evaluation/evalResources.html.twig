@@ -3,9 +3,9 @@
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.resources.resources) }}</div>
-        <div class="col-md-12 js-{{ key }}_{{ entity }}_resources_resources d-block">
+        <div class="col-md-12" data-parent-field="{{ key }}_{{ entity }}_resources_resources">
             <div class="row">
-                <div class="col-form-label col-sm-4 js-resources d-block">Type de ressources</div>
+                <div class="col-form-label col-sm-4" data-parent-field="resources">Type de ressources</div>
                 <div class="col-sm-8">
                     <select id="js-{{ key }}_{{ entity }}_resources_type"
                         name="js-{{ key }}_{{ entity }}_resources_type" class="form-control" 
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="table-responsive js-{{ key }}_{{ entity }}_resources_resources d-block">
+            <div class="table-responsive" data-parent-field="{{ key }}_{{ entity }}_resources_resources">
                 <table class="table table-sm table-hover text-dark">
                     <thead>
                         <tr>

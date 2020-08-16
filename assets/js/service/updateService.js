@@ -1,4 +1,4 @@
-import DisplayInputs from "../utils/displayInputs";
+import DisplayFields from "../utils/displayFields";
 
 export default class UpdateService {
 
@@ -12,8 +12,8 @@ export default class UpdateService {
     }
 
     init() {
-        new DisplayInputs(this.prefix, "accommodation", "select", [1]);
-        new DisplayInputs(this.prefix, "contribution", "select", [1]);
-        new DisplayInputs(this.prefix, "contributionType", "select", [1, 3]);
+        new DisplayFields(this.prefix, "accommodation", [1]);
+        new DisplayFields(this.prefix, "contribution", [1]);
+        new DisplayFields(this.prefix, "contributionType", [1, 3]);
     }
 }

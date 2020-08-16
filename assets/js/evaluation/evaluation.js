@@ -1,5 +1,5 @@
-import DisplayInputs from "../utils/displayInputs";
-import ValidationInput from "../utils/validationInput";
+import DisplayFields from "../utils/displayFields";
+import ValidationForm from "../utils/validationForm";
 
 // Evaluation sociale
 export default class evaluation {
@@ -32,7 +32,7 @@ export default class evaluation {
         this.now = new Date();
         this.dateElts = document.querySelectorAll("input[type='date']");
 
-        this.validationInput = new ValidationInput();
+        this.validationForm = new ValidationForm();
         this.init();
     }
 
@@ -90,12 +90,12 @@ export default class evaluation {
 
     // Evaluation sociale du groupe
     evalSocialGroup() {
-        new DisplayInputs(this.prefix + "evalSocialGroup_", "animal", "select", [1]);
+        new DisplayFields(this.prefix + "evalSocialGroup_", "animal", [1]);
     }
 
     // Evaluation familiale du groupe
     evalFamilyGroup() {
-        new DisplayInputs(this.prefix + "evalFamilyGroup_", "famlReunification", "select", [1, 3, 4, 5]);
+        new DisplayFields(this.prefix + "evalFamilyGroup_", "famlReunification", [1, 3, 4, 5]);
     }
 
     // Evaluation budgétaire
@@ -109,18 +109,18 @@ export default class evaluation {
     // Evaluation liée au logement
     evalHousingGroup() {
         let prefix = this.prefix + "evalHousingGroup_";
-        // new DisplayInputs(prefix, "housingAccessType", "select", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        new DisplayInputs(prefix, "housingStatus", "select", [200, 201, 202, 203, 204, 205, 206, 207, 300, 301, 302, 303, 304]);
-        new DisplayInputs(prefix, "siaoRequest", "select", [1]);
-        new DisplayInputs(prefix, "socialHousingRequest", "select", [1]);
-        new DisplayInputs(prefix, "syplo", "select", [1]);
-        new DisplayInputs(prefix, "daloCommission", "select", [1]);
-        new DisplayInputs(prefix, "daloTribunalAction", "select", [1]);
-        new DisplayInputs(prefix, "collectiveAgreementHousing", "select", [1]);
-        new DisplayInputs(prefix, "hsgActionEligibility", "select", [1]);
-        new DisplayInputs(prefix, "expulsionInProgress", "select", [1]);
-        new DisplayInputs(prefix, "housingExperience", "select", [1]);
-        new DisplayInputs(prefix, "domiciliation", "select", [1]);
+        // new DisplayFields(prefix, "housingAccessType", [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        new DisplayFields(prefix, "housingStatus", [200, 201, 202, 203, 204, 205, 206, 207, 300, 301, 302, 303, 304]);
+        new DisplayFields(prefix, "siaoRequest", [1]);
+        new DisplayFields(prefix, "socialHousingRequest", [1]);
+        new DisplayFields(prefix, "syplo", [1]);
+        new DisplayFields(prefix, "daloCommission", [1]);
+        new DisplayFields(prefix, "daloTribunalAction", [1]);
+        new DisplayFields(prefix, "collectiveAgreementHousing", [1]);
+        new DisplayFields(prefix, "hsgActionEligibility", [1]);
+        new DisplayFields(prefix, "expulsionInProgress", [1]);
+        new DisplayFields(prefix, "housingExperience", [1]);
+        new DisplayFields(prefix, "domiciliation", [1]);
         this.editElt("", "_evalHousingGroup_hsgHelps", "d-table-row");
         this.selectTrElts("eval_housing", "evalHousingGroup", "", "hsgHelps");
     }
@@ -129,10 +129,10 @@ export default class evaluation {
     initEvalPerson(prefix) {
         document.getElementById("accordion-init_eval").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_initEvalPerson_rightSocialSecurity", "select", [1, 3]);
-            new DisplayInputs(prefix, i + "_initEvalPerson_profStatus", "select", [3, 5, 8]);
-            new DisplayInputs(prefix, i + "_initEvalPerson_resources_resources", "select", [1, 3]);
-            new DisplayInputs(prefix, i + "_initEvalPerson_debts", "select", [1]);
+            new DisplayFields(prefix, i + "_initEvalPerson_rightSocialSecurity", [1, 3]);
+            new DisplayFields(prefix, i + "_initEvalPerson_profStatus", [3, 5, 8]);
+            new DisplayFields(prefix, i + "_initEvalPerson_resources_resources", [1, 3]);
+            new DisplayFields(prefix, i + "_initEvalPerson_debts", [1]);
             this.editElt(i, "_initEvalPerson_resources_type", "d-table-row");
             this.selectTrElts("init_eval", "initEvalPerson", i, "resources_type");
             this.editAmt(prefix, "init_eval", "initEvalPerson", i, "resources");
@@ -144,10 +144,10 @@ export default class evaluation {
     evalSocialPerson(prefix) {
         document.getElementById("accordion-eval_social").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_evalSocialPerson_rightSocialSecurity", "select", [1, 3]);
-            new DisplayInputs(prefix, i + "_evalSocialPerson_healthProblem", "select", [1]);
-            new DisplayInputs(prefix, i + "_evalSocialPerson_careSupport", "select", [1]);
-            new DisplayInputs(prefix, i + "_evalSocialPerson_violenceVictim", "select", [1]);
+            new DisplayFields(prefix, i + "_evalSocialPerson_rightSocialSecurity", [1, 3]);
+            new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1]);
+            new DisplayFields(prefix, i + "_evalSocialPerson_careSupport", [1]);
+            new DisplayFields(prefix, i + "_evalSocialPerson_violenceVictim", [1]);
             this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row");
             this.selectTrElts("eval_social", "evalSocialPerson", i, "healthProblemType");
         });
@@ -157,10 +157,10 @@ export default class evaluation {
     evalAdmPerson(prefix) {
         document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_evalAdmPerson_nationality", "select", [2, 3, 4]);
-            new DisplayInputs(prefix, i + "_evalAdmPerson_paper", "select", [1, 3]);
-            new DisplayInputs(prefix, i + "_evalAdmPerson_paperType", "select", [20, 21, 22, 30, 31, 97]);
-            new DisplayInputs(prefix, i + "_evalAdmPerson_asylumBackground", "select", [1]);
+            new DisplayFields(prefix, i + "_evalAdmPerson_nationality", [2, 3, 4]);
+            new DisplayFields(prefix, i + "_evalAdmPerson_paper", [1, 3]);
+            new DisplayFields(prefix, i + "_evalAdmPerson_paperType", [20, 21, 22, 30, 31, 97]);
+            new DisplayFields(prefix, i + "_evalAdmPerson_asylumBackground", [1]);
         });
     }
 
@@ -168,9 +168,9 @@ export default class evaluation {
     evalFamily(prefix) {
         document.getElementById("accordion-eval_family").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_evalFamilyPerson_maritalStatus", "select", [6]);
-            new DisplayInputs(prefix, i + "_evalFamilyPerson_unbornChild", "select", [1]);
-            new DisplayInputs(prefix, i + "_evalFamilyPerson_protectiveMeasure", "select", [1, 3]);
+            new DisplayFields(prefix, i + "_evalFamilyPerson_maritalStatus", [6]);
+            new DisplayFields(prefix, i + "_evalFamilyPerson_unbornChild", [1]);
+            new DisplayFields(prefix, i + "_evalFamilyPerson_protectiveMeasure", [1, 3]);
 
         });
     }
@@ -179,9 +179,9 @@ export default class evaluation {
     evalProfPerson(prefix) {
         document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_evalProfPerson_profStatus", "select", [3, 5, 8]);
-            new DisplayInputs(prefix, i + "_evalProfPerson_transportMeansType", "select", [1, 2, 3]);
-            new DisplayInputs(prefix, i + "_evalProfPerson_rqth", "select", [1]);
+            new DisplayFields(prefix, i + "_evalProfPerson_profStatus", [3, 5, 8]);
+            new DisplayFields(prefix, i + "_evalProfPerson_transportMeansType", [1, 2, 3]);
+            new DisplayFields(prefix, i + "_evalProfPerson_rqth", [1]);
         });
     }
 
@@ -190,10 +190,10 @@ export default class evaluation {
         let entity = "evalBudgetPerson";
         document.getElementById("accordion-eval_budget").querySelectorAll("button.js-person").forEach(personElt => {
             let i = personElt.getAttribute("data-key");
-            new DisplayInputs(prefix, i + "_evalBudgetPerson_resources_resources", "select", [1, 3]);
-            new DisplayInputs(prefix, i + "_evalBudgetPerson_charges", "select", [1]);
-            new DisplayInputs(prefix, i + "_evalBudgetPerson_debts", "select", [1]);
-            new DisplayInputs(prefix, i + "_evalBudgetPerson_overIndebtRecord", "select", [1]);
+            new DisplayFields(prefix, i + "_evalBudgetPerson_resources_resources", [1, 3]);
+            new DisplayFields(prefix, i + "_evalBudgetPerson_charges", [1]);
+            new DisplayFields(prefix, i + "_evalBudgetPerson_debts", [1]);
+            new DisplayFields(prefix, i + "_evalBudgetPerson_overIndebtRecord", [1]);
             this.editElt(i, "_evalBudgetPerson_resources_type", "d-table-row");
             this.editElt(i, "_evalBudgetPerson_charges_type", "d-table-row");
             this.editElt(i, "_evalBudgetPerson_debts_type", "d-table-row");
@@ -509,17 +509,17 @@ export default class evaluation {
         moneyElt.value = moneyElt.value.replace(" ", "");
         moneyElt.value = moneyElt.value.replace(",", ".");
         if (Number(moneyElt.value) >= 0) {
-            return this.validationInput.valid(moneyElt);
+            return this.validationForm.validField(moneyElt);
         }
-        return this.validationInput.invalid(moneyElt, "Montant invalide.");
+        return this.validationForm.invalidField(moneyElt, "Montant invalide.");
     }
 
     checkDate(dateElt) {
         let interval = Math.round((this.now - new Date(dateElt.value)) / (24 * 3600 * 1000));
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
-            return this.validationInput.invalid(dateElt, "Date invalide.");
+            return this.validationForm.invalidField(dateElt, "Date invalide.");
         }
-        return this.validationInput.valid(dateElt);
+        return this.validationForm.validField(dateElt);
     }
 
     updateContribution() {

@@ -46,11 +46,11 @@
 		<div id="collapse-init_eval-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
 			aria-labelledby="heading-init_eval-{{ key }}" data-parent="#accordion-init_eval" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="form-group row">
-				<div class="col-md-6 js-{{ key }}_initEvalPerson_paper d-block">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
+				<div class="col-md-6" data-parent-field="{{ key }}_initEvalPerson_paper">{{ form_row(evalPerson.initEvalPerson.paperType) }}</div>
 			</div>			
 		    <div class="form-group row mb-0">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.rightSocialSecurity) }}</div>
-                <div class="col-md-6 js-{{ key }}_initEvalPerson_rightSocialSecurity d-block">{{ form_row(evalPerson.initEvalPerson.socialSecurity) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_initEvalPerson_rightSocialSecurity">{{ form_row(evalPerson.initEvalPerson.socialSecurity) }}</div>
             </div>		
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.familyBreakdown) }}</div>
@@ -58,14 +58,14 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.initEvalPerson.profStatus) }}</div>
-                <div class="col-md-6 js-{{ key }}_initEvalPerson_profStatus d-block">{{ form_row(evalPerson.initEvalPerson.contractType) }}</div>
+                <div class="col-md-6" data-parent-field="{{ key }}_initEvalPerson_profStatus">{{ form_row(evalPerson.initEvalPerson.contractType) }}</div>
 			</div>
 			<div class="form-group row">
 				{% include "app/evaluation/evalResources.html.twig" %}
 				<div class="col-md-6">
 					<div class="form-group row">
 						<div class="col-md-12">{{ form_row(evalBudgetPerson.debts) }}</div>
-						<div class="col-md-12 js-{{ key }}_initEvalPerson_debts d-block">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
+						<div class="col-md-12" data-parent-field="{{ key }}_initEvalPerson_debts">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
 					</div>
 				</div>
 			</div>

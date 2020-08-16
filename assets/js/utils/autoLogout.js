@@ -2,62 +2,60 @@
 export default class AutoLogout {
 
     constructor(ajaxRequest, timeout = 30, timeAlert = 5) {
-        this.ajaxRequest = ajaxRequest;
-        this.userNameElt = document.getElementById("user-name");
-        this.modalElt = $("#modal-autoLogout");
-        this.timerElt = document.getElementById("timer-logout");
-        this.cancelLogoutElt = document.getElementById("cancel-logout");
-        this.time = timeout * 60;
-        this.timeAlert = timeAlert * 60;
-        this.initTime = this.time;
-        this.intervalID = null;
-        this.init();
+        this.ajaxRequest = ajaxRequest
+        this.userNameElt = document.getElementById("user-name")
+        this.modalElt = $("#modal-autoLogout")
+        this.timerElt = document.getElementById("timer-logout")
+        this.time = timeout * 60
+        this.timeAlert = timeout * 60
+        this.initTime = this.time
+        this.intervalID = null
+        this.init()
     }
 
     init() {
         if (this.userNameElt) {
-            this.intervalID = window.setInterval(this.count.bind(this), 1000);
-            this.cancelLogoutElt.addEventListener("click", this.clearTimer.bind(this));
-            document.addEventListener("click", this.clearTimer.bind(this));
-            document.addEventListener("keydown", this.clearTimer.bind(this));
+            this.intervalID = window.setInterval(this.count.bind(this), 1000)
         }
     }
 
     // Compte le temps restant
     count() {
-        this.time--;
+        this.time--
         if (this.time === this.timeAlert) {
-            this.modalElt.modal("show");
+            this.modalElt.modal("show")
+            document.addEventListener("click", this.clearTimer.bind(this))
+            document.addEventListener("keydown", this.clearTimer.bind(this))
         }
         if (this.time <= this.timeAlert) {
-            this.timerElt.textContent = this.getFullTime();
+            this.timerElt.textContent = this.getFullTime()
         }
         if (this.time <= 0) {
-            this.deconnection();
+            this.deconnection()
         }
     }
 
     // Donne le temps
     getFullTime() {
-        let minutes = Math.round((this.time / 60) - 0.5);
-        let seconds = this.time - (minutes * 60);
+        let minutes = Math.round((this.time / 60) - 0.5)
+        let seconds = this.time - (minutes * 60)
 
-        return minutes.toString().padStart(2, "0") + "mn " + seconds.toString().padStart(2, "0") + "s";
+        return minutes.toString().padStart(2, "0") + "mn " + seconds.toString().padStart(2, "0") + "s"
     }
 
     // Remet à zéro le timer
     clearTimer() {
-        this.time = this.initTime;
+        this.time = this.initTime
     }
 
     // Déconnection via requête Ajax
     deconnection() {
-        clearInterval(this.intervalID);
-        this.ajaxRequest.init("GET", "/deconnexion", this.reloadPage.bind(this), true);
+        clearInterval(this.intervalID)
+        this.ajaxRequest.init("GET", "/deconnexion", this.reloadPage.bind(this), true)
     }
 
     // Recharge la page
     reloadPage() {
-        document.location.reload(true);
+        document.location.reload(true)
     }
 }
