@@ -52,15 +52,15 @@ class SupportPersonType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('status', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getChoices(SupportGroup::STATUS),
-                'attr' => [
-                    'class' => 'w-min-150',
-                ],
-                'placeholder' => 'placeholder.select',
-                'required' => true,
-            ])
+            // ->add('status', ChoiceType::class, [
+            //     'label_attr' => ['class' => 'sr-only'],
+            //     'choices' => Choices::getChoices(SupportGroup::STATUS),
+            //     'attr' => [
+            //         'class' => 'w-min-150',
+            //     ],
+            //     'placeholder' => 'placeholder.select',
+            //     'required' => true,
+            // ])
             ->add('endStatus', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(SupportGroup::END_STATUS),
@@ -72,7 +72,7 @@ class SupportPersonType extends AbstractType
             ])
             ->add('endStatusComment', null, [
                 'attr' => [
-                    'class' => 'w-min-180',
+                    'class' => 'w-min-160',
                 ],
             ]);
     }

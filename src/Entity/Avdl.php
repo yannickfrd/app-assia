@@ -61,6 +61,7 @@ class Avdl
     public const PROPO_RESULT = [
         1 => 'Favorable',
         2 => 'Refus',
+        3 => 'En attente',
         99 => 'Non renseigné',
     ];
 

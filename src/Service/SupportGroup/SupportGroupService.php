@@ -140,6 +140,9 @@ class SupportGroupService
             if (1 == $nbPeople) {
                 $supportPerson->setStartDate($supportGroup->getStartDate());
             }
+            if ($supportPerson->getEndDate()) {
+                $supportPerson->setStatus(SupportGroup::STATUS_ENDED);
+            }
             // Si la personne est seule ou si la date de fin de suivi et le motif de fin sont vides, copie toutes les infos sur la fin du suivi suivi
             if (1 == $nbPeople || (null == $supportPerson->getEndDate() && null == $supportPerson->getEndStatus())) {
                 $supportPerson->setStatus($supportGroup->getStatus())

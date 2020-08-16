@@ -6,15 +6,15 @@
 				<table id="table-support-people" class="table table-sm table-striped table-hover text-dark shadow-sm">
 					<thead>
 						<tr>
-							<th scope="col" class="align-middle th-w-20"></th>
-							<th scope="col" class="align-middle th-w-150">Nom et prénom</th>
-							<th scope="col" class="align-middle th-w-20" data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
-							<th scope="col" class="align-middle th-w-150">Rôle</th>
+							<th scope="col" class="align-middle text-center th-w-20" data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
+							<th scope="col" class="align-middle th-w-140">Nom et prénom</th>
+							<th scope="col" class="align-middle th-w-140">Rôle</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
 							<th scope="col" class="align-middle th-date">Date de fin</th>
-							<th scope="col" class="align-middle th-w-120">Statut</th>
-							<th scope="col" class="align-middle th-w-150">Situation à la fin</th>
-							<th scope="col" class="align-middle th-w-150">Commentaire situation à la fin</th>
+							{# <th scope="col" class="align-middle th-w-120">Statut</th> #}
+							<th scope="col" class="align-middle th-w-140">Situation à la fin</th>
+							<th scope="col" class="align-middle th-w-100">Commentaire situation à la fin</th>
+							<th scope="col" class="align-middle th-w-20"></th>
 						</tr>
 					</thead>
 
@@ -22,6 +22,18 @@
 						{% for form_support_pers in form.supportPeople.children %}
 							{% set person = form_support_pers.vars.data.person %}
 							<tr class="js-tr-support_pers">
+								<td class="px-1 align-middle">
+									<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
+										{{ form_widget(form_support_pers.head) }}
+									</div>
+								</td>										
+								<td class="px-2 align-middle w-min-150">{{ person.fullname }}</td>
+								<td class="px-1">{{ form_widget(form_support_pers.role) }}</td>
+								<td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
+								<td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
+								{# <td class="px-1">{{ form_widget(form_support_pers.status) }}</td> #}
+								<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
+								<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
 								<th scope="row" class="px-1 align-middle">
 									<button class="js-remove btn btn-danger btn-sm shadow" data-url="{{ path('remove_support_pers', 
 										{'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
@@ -29,18 +41,6 @@
 										<span class="fas fa-user-times"></span>
 									</button>
 								</th>
-								<td class="px-2 align-middle w-min-150">{{ person.fullname }}</td>
-								<td class="px-1 align-middle">
-									<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
-										{{ form_widget(form_support_pers.head) }}
-									</div>
-								</td>										
-								<td class="px-1">{{ form_widget(form_support_pers.role) }}</td>
-								<td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
-								<td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
-								<td class="px-1">{{ form_widget(form_support_pers.status) }}</td>
-								<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
-								<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
