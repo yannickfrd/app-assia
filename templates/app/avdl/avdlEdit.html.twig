@@ -38,8 +38,8 @@
 		<div class="col-md-6" data-check-valid="supportStart">{{ form_row(form.avdl.supportStartDate) }}</div>
 		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportStart">{{ form_row(form.avdl.supportType) }}</div>
 		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportStart">{{ form_row(form.avdl.readyToHousing) }}</div>
-		<div class="col-md-6" data-parent-field="supportStartDate">{{ form_row(form.avdl.supportEndDate) }}</div>
-		<div class="col-md-12" data-parent-field="supportStartDate">{{ form_widget(form.avdl.supportComment) }}</div>
+		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="endSupport">{{ form_row(form.avdl.supportEndDate) }}</div>
+		<div class="col-md-12" data-parent-field="supportStartDate" >{{ form_widget(form.avdl.supportComment) }}</div>
 	</div>
 	<hr>
 	<div class="form-group row" data-parent-field="supportEndDate">

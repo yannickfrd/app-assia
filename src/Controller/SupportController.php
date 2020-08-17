@@ -176,7 +176,8 @@ class SupportController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
-            // return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+
+            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
         return $this->render('app/support/supportGroupEdit.html.twig', [

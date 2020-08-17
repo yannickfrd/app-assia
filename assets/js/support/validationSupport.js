@@ -117,7 +117,6 @@ export default class ValidationSupport {
         if (intervalWithNow || (!intervalWithNow && status === 1)) {
             return this.validationForm.validField(this.startDateInputElt)
         }
-        return this.validationForm.validField(this.startDateInputElt)
     }
 
     /**
@@ -145,7 +144,6 @@ export default class ValidationSupport {
             this.selectType.setOption(this.statusSelectElt, 4)
             this.statusSelectElt.click()
         }
-        return this.validationForm.validField(this.endDateInputElt)
     }
 
     /**
@@ -156,6 +154,5 @@ export default class ValidationSupport {
             return this.validationForm.invalidField(this.endStatusInputElt, 'La situation à la fin du suivi ne peut pas être vide.')
         }
         return this.validationForm.validField(this.endStatusInputElt)
-
     }
 }

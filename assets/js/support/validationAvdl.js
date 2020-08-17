@@ -4,20 +4,6 @@ import SelectType from '../utils/selectType'
 import ValidationDate from '../utils/validationDate'
 import Loader from '../utils/loader'
 
-// Contrôle saisie AVDL :
-// - Date de fin de diag sans date de début
-// - Date de fin de diag sans type de diag
-// - Date de fin de diag sans préco d'acc.
-// - Date de début d'acc. sans niv d'acc.
-// - Date de fin d'acc. sans date de début
-// - Date de fin d'acc. sans PAL
-// - Date de fin d'acc. sans motif de fin d'acc.
-// - Date de fin d'acc. sans situation résidentielle à l'issue
-// - Date de propo logement sans modalité d'accès au logement
-// - Date de propo logement sans origine de la propo (?)
-// - Résultat de la propo sans date de propo ou sans modalité d'accès
-// ...
-
 /**
  * Validation des données de la fiche personne
  */
@@ -34,6 +20,12 @@ export default class ValidationAvdlSupport {
         this.btnSubmitElts = document.querySelectorAll('button[type="submit"]')
         this.dateInputElts = document.querySelectorAll('input[type="date"]')
 
+        this.orientationDateElt = document.getElementById('support_originRequest_orientationDate')
+        this.diagStartDateElt = document.getElementById(this.prefix + 'diagStartDate')
+        this.diagEndDateElt = document.getElementById(this.prefix + 'diagEndDate')
+        this.supportStartDateElt = document.getElementById(this.prefix + 'supportStartDate')
+        this.supportEndDateElt = document.getElementById(this.prefix + 'supportEndDate')
+
         this.init()
     }
 
@@ -44,7 +36,37 @@ export default class ValidationAvdlSupport {
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
         })
+
         this.displayFields()
+
+        this.diagStartDateElt.addEventListener('focusout', () => {
+            this.validationForm.checkIntervalBeetweenDates(
+                this.orientationDateElt,
+                this.diagStartDateElt,
+                'La date ne peut pas être antérieure à la date de mandatement.')
+        })
+
+        this.diagEndDateElt.addEventListener('focusout', () => {
+            this.validationForm.checkIntervalBeetweenDates(
+                this.diagStartDateElt,
+                this.diagEndDateElt,
+                'La date de fin ne peut pas être antérieure au début du diagnostic.')
+        })
+
+        this.supportStartDateElt.addEventListener('focusout', () => {
+            this.validationForm.checkIntervalBeetweenDates(
+                this.diagEndDateElt,
+                this.supportStartDateElt,
+                'La date ne peut pas être antérieure à la fin du diagnostic.')
+        })
+
+        this.supportEndDateElt.addEventListener('focusout', () => {
+            this.validationForm.checkIntervalBeetweenDates(
+                this.supportStartDateElt,
+                this.supportEndDateElt,
+                'La date ne peut pas être antérieure au début de l\'accompagnement.')
+        })
+        // - Date de fin de diag sans préco d'acc.
 
         this.btnSubmitElts.forEach(btnElt => {
             btnElt.addEventListener('click', e => {
