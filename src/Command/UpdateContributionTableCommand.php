@@ -27,16 +27,8 @@ class UpdateContributionTableCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $sql = 'ALTER TABLE contribution CHANGE date month_contrib DATE ; ';
-        $sql = $sql.'ALTER TABLE contribution CHANGE housing_assitance_amt apl_amt DOUBLE ; ';
-        $sql = $sql.'ALTER TABLE contribution CHANGE due_amt to_pay_amt DOUBLE ; ';
-        $sql = $sql.'UPDATE contribution SET type=10 WHERE type=2 ; ';
-        $sql = $sql.'UPDATE contribution SET type=32 WHERE type=13 ; ';
-        $sql = $sql.'UPDATE contribution SET type=31 WHERE type=12 ; ';
-        $sql = $sql.'UPDATE contribution SET type=30 WHERE type=11 ; ';
-        $sql = $sql.'UPDATE contribution SET type=20 WHERE type=3 ; ';
-        $sql = $sql.'UPDATE contribution SET type=11 WHERE type=22 ; ';
-        $sql = $sql.'UPDATE contribution SET payment_type=1 WHERE payment_type=2 ; ';
+        $sql = 'ALTER TABLE contribution CHANGE date month_contrib DATE ; ALTER TABLE contribution CHANGE housing_assitance_amt apl_amt DOUBLE ; ALTER TABLE contribution CHANGE due_amt to_pay_amt DOUBLE ; ';
+        $sql = $sql.'UPDATE contribution SET type=10 WHERE type=2 ; UPDATE contribution SET type=32 WHERE type=13 ; UPDATE contribution SET type=31 WHERE type=12 ; UPDATE contribution SET type=30 WHERE type=11 ; UPDATE contribution SET type=20 WHERE type=3 ; UPDATE contribution SET type=11 WHERE type=22 ; UPDATE contribution SET payment_type=1 WHERE payment_type=2 ; ';
         
         $cmd = 'php bin/console doctrine:query:sql "'.$sql.'"';
 

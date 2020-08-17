@@ -39,6 +39,13 @@ class UpdateSupportsGeoAPICommand extends Command
      */
     protected function updateLocationSupports()
     {
+        $listenersType = $this->manager->getEventManager()->getListeners();
+        foreach ($listenersType as $listenerType) {
+            foreach ($listenerType as $listener) {
+                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
+            }
+        }
+
         $count = 0;
         $supports = $this->repo->findAll();
         foreach ($supports as $support) {

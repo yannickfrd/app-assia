@@ -39,6 +39,13 @@ class UpdateAccommodationsGeoAPICommand extends Command
      */
     protected function updateLocationAccommodations()
     {
+        $listenersType = $this->manager->getEventManager()->getListeners();
+        foreach ($listenersType as $listenerType) {
+            foreach ($listenerType as $listener) {
+                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
+            }
+        }
+
         $count = 0;
         $accommodations = $this->repo->findAll();
         foreach ($accommodations as $accommodation) {

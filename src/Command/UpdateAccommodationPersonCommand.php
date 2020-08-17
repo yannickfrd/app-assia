@@ -30,10 +30,18 @@ class UpdateAccommodationPersonCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $listenersType = $this->manager->getEventManager()->getListeners();
+        foreach ($listenersType as $listenerType) {
+            foreach ($listenerType as $listener) {
+                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
+            }
+        }
+
+        $this->manager->getFilters()->disable('softdeleteable');
+
         $nbAccommodationPeople = 0;
         $countUpdate = 0;
 
-        $this->manager->getFilters()->disable('softdeleteable');
         $accommodationGroups = $this->repo->findAll();
 
         foreach ($accommodationGroups as $accommodationGroup) {

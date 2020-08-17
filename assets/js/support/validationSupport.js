@@ -60,7 +60,6 @@ export default class ValidationSupport {
         this.displayFields()
     }
 
-
     /**
      * Masque ou affiche les champs conditionnels
      */
