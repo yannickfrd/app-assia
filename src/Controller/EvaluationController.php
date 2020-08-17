@@ -229,9 +229,13 @@ class EvaluationController extends AbstractController
     protected function cacheEvaluation(EvaluationGroup $evaluationGroup)
     {
         $cache = new FilesystemAdapter();
+        $supportGroup = $evaluationGroup->getSupportGroup();
+        $cacheEvaluation = $cache->getItem('support_group.evaluation.'.$supportGroup->getId());
 
-        $cacheEvaluation = $cache->getItem('support_group.evaluation.'.$evaluationGroup->getSupportGroup()->getId());
         $cacheEvaluation->set($evaluationGroup);
         $cache->save($cacheEvaluation);
+        $cache->deleteItems([
+                $cache->getItem('support_group_full.'.$supportGroup->getId())->getKey(),
+        ]);
     }
 }
