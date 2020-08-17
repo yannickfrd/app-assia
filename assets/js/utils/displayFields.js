@@ -1,4 +1,4 @@
-import Select from './select'
+import SelectType from './selectType'
 
 /**
  * Masque ou rend visible les champs Input dépendants d'un input parent
@@ -11,7 +11,7 @@ export default class DisplayFields {
      * @param {Array} optionValues 
      */
     constructor(prefix, inputId, optionValues = []) {
-        this.select = new Select()
+        this.selectType = new SelectType()
         this.inputElt = document.getElementById(prefix + inputId)
         this.childrenElts = document.querySelectorAll(`div[data-parent-field='${inputId}'`)
         this.optionValues = optionValues
@@ -55,7 +55,7 @@ export default class DisplayFields {
      * Vérifie le champ de type Select.
      */
     checkSelect() {
-        let selectedOption = this.select.getOption(this.inputElt)
+        let selectedOption = this.selectType.getOption(this.inputElt)
         let isVisible = false
 
         if (this.optionValues.length > 0) {

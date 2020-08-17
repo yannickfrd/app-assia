@@ -1,7 +1,7 @@
 import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
-import Select from "../utils/select";
+import SelectType from "../utils/selectType";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import ParametersUrl from "../utils/parametersUrl";
 import language from "@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js";
@@ -11,7 +11,7 @@ export default class SupportNotes {
     constructor(ajaxRequest) {
         this.ajaxRequest = new AjaxRequest();
         this.loader = new Loader("#modal-note");
-        this.select = new Select();
+        this.selectType = new SelectType();
         this.parametersUrl = new ParametersUrl();
 
         this.newNoteBtn = document.getElementById("js-new-note");
@@ -102,8 +102,8 @@ export default class SupportNotes {
     newNote() {
         this.modalNoteElt.querySelector("form").action = "/support/" + this.supportId + "/note/new";
         this.modalNoteElt.querySelector("#note_title").value = "";
-        this.select.setOption(this.modalNoteElt.querySelector("#note_type"), 1);
-        this.select.setOption(this.modalNoteElt.querySelector("#note_status"), 1);
+        this.selectType.setOption(this.modalNoteElt.querySelector("#note_type"), 1);
+        this.selectType.setOption(this.modalNoteElt.querySelector("#note_status"), 1);
         this.editor.setData("");
         this.btnDeleteElt.classList.replace("d-block", "d-none");
         this.btnExportElt.classList.replace("d-block", "d-none");
@@ -123,10 +123,10 @@ export default class SupportNotes {
         this.modalNoteElt.querySelector("#note_title").value = this.titleNoteElt.textContent;
 
         let typeValue = noteElt.querySelector(".js-note-type").getAttribute("data-value");
-        this.select.setOption(this.modalNoteElt.querySelector("#note_type"), typeValue);
+        this.selectType.setOption(this.modalNoteElt.querySelector("#note_type"), typeValue);
 
         let statusValue = noteElt.querySelector(".js-note-status").getAttribute("data-value");
-        this.select.setOption(this.modalNoteElt.querySelector("#note_status"), statusValue);
+        this.selectType.setOption(this.modalNoteElt.querySelector("#note_status"), statusValue);
 
         this.editor.setData(this.contentNoteElt.innerHTML);
 
@@ -267,11 +267,11 @@ export default class SupportNotes {
         let noteTypeElt = this.noteElt.querySelector(".js-note-type");
         noteTypeElt.textContent = data.type;
 
-        noteTypeElt.setAttribute("data-value", this.select.getOption(this.modalNoteElt.querySelector("#note_type")));
+        noteTypeElt.setAttribute("data-value", this.selectType.getOption(this.modalNoteElt.querySelector("#note_type")));
 
         let noteStatusElt = this.noteElt.querySelector(".js-note-status");
         noteStatusElt.textContent = "(" + data.status + ")";
-        noteStatusElt.setAttribute("data-value", this.select.getOption(this.modalNoteElt.querySelector("#note_status")));
+        noteStatusElt.setAttribute("data-value", this.selectType.getOption(this.modalNoteElt.querySelector("#note_status")));
 
         this.noteElt.querySelector(".js-note-updated").textContent = data.editInfo;
     }

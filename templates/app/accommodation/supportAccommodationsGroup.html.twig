@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 
+{% set support_group_accommodations = support.accommodationGroups %}
+
 {% block title %}Logement/hébergement | {{ title_website }}{% endblock %}
 
 {% block body %}
@@ -42,7 +44,7 @@
 								</th>
 								<td class="align-middle"><a href="{{ path('accommodation_edit', {'id': accommodationGroup.accommodation.id}) }}"
 									class="text-{{ theme_color }}">{{ accommodationGroup.accommodation.name }}</a></td>
-								<td class="align-middle">{{ accommodationGroup.accommodation.device.name }}</td>
+								<td class="align-middle">{{ accommodationGroup.supportGroup.device.name }}</td>
 								<td class="align-middle">{{ accommodationGroup.startDate|date("d/m/Y") }}</td>
 								<td class="align-middle">{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate|date("d/m/Y") }}{% endif %}</td>
 								<td class="align-middle">{{ accommodationGroup.endReasonToString }}

@@ -42,7 +42,7 @@ class DocumentControllerTest extends WebTestCase
     public function testListDocumentsIsUp()
     {
         $this->client->request('GET', $this->generateUri('support_documents', [
-            'supportId' => $this->supportGroup->getId(),
+            'id' => $this->supportGroup->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -53,7 +53,7 @@ class DocumentControllerTest extends WebTestCase
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('support_documents', [
-            'supportId' => $this->supportGroup->getId(),
+            'id' => $this->supportGroup->getId(),
         ]));
 
         $form = $crawler->selectButton('search')->form([
@@ -71,7 +71,7 @@ class DocumentControllerTest extends WebTestCase
     public function testFailToCreateNewDocument()
     {
         $this->client->request('POST', $this->generateUri('document_new', [
-            'supportId' => $this->supportGroup->getId(),
+            'id' => $this->supportGroup->getId(),
         ]));
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
@@ -93,7 +93,7 @@ class DocumentControllerTest extends WebTestCase
     // public function testEditDocument()
     // {
     //     $crawler = $this->client->request('GET', $this->generateUri('support_documents', [
-    //         'supportId' => $this->supportGroup->getId(),
+    //         'id' => $this->supportGroup->getId(),
     //     ]));
 
     //     $form = $crawler->selectButton('js-btn-save')->form([]);

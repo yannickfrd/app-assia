@@ -1,7 +1,7 @@
 import AjaxRequest from "../utils/ajaxRequest";
 import MessageFlash from "../utils/messageFlash";
 import Loader from "../utils/loader";
-import Select from "../utils/select";
+import SelectType from "../utils/selectType";
 import ValidationForm from "../utils/validationForm";
 import ParametersUrl from "../utils/parametersUrl";
 
@@ -10,7 +10,7 @@ export default class SupportContributions {
     constructor() {
         this.ajaxRequest = new AjaxRequest();
         this.loader = new Loader("#modal-contribution");
-        this.select = new Select();
+        this.selectType = new SelectType();
         this.validationForm = new ValidationForm();
         this.parametersUrl = new ParametersUrl();
 
@@ -162,7 +162,7 @@ export default class SupportContributions {
 
     // Vérifie le type de partipation (redevance ou caution)
     checkType() {
-        let option = this.select.getOption(this.typeSelect);
+        let option = this.selectType.getOption(this.typeSelect);
 
         // Masque tous les champs du formulaire.
         this.formContributionElt.querySelectorAll(".js-contrib").forEach(elt => {
@@ -171,7 +171,7 @@ export default class SupportContributions {
 
         // Si PF / Redevance et Loyer.
         if ([1, 2].indexOf(option) != -1) {
-            this.select.setOption(this.monthContribDaySelect, "1");
+            this.selectType.setOption(this.monthContribDaySelect, "1");
             this.formContributionElt.querySelectorAll(".js-contribution").forEach(elt => {
                 elt.classList.remove("d-none");
             });
@@ -223,7 +223,7 @@ export default class SupportContributions {
 
     // Donne le ratio de jours de présence dans le mois.
     getRateDays() {
-        let date = new Date(this.select.getOption(this.monthContribYearSelect) + "-" + this.select.getOption(this.monthContribMonthSelect) + "-01");
+        let date = new Date(this.selectType.getOption(this.monthContribYearSelect) + "-" + this.selectType.getOption(this.monthContribMonthSelect) + "-01");
         let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1);
         let nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24));
         let rateDays = 1;
@@ -278,7 +278,7 @@ export default class SupportContributions {
 
     isValidForm() {
         this.error = false;
-        let option = this.select.getOption(this.typeSelect);
+        let option = this.selectType.getOption(this.typeSelect);
 
         this.checkContributionDate(option);
         this.checkToPaidAmt(option);
@@ -292,22 +292,22 @@ export default class SupportContributions {
 
     checkContributionDate(option) {
         if ([1, 2].indexOf(option) != -1) { // PF et Loyer
-            if (!this.select.getOption(this.monthContribMonthSelect)) {
+            if (!this.selectType.getOption(this.monthContribMonthSelect)) {
                 this.error = true;
                 this.validationForm.invalidField(this.monthContribMonthSelect, "Ne peut pas être vide.");
             } else {
                 this.validationForm.validField(this.monthContribMonthSelect);
             }
-            if (!this.select.getOption(this.monthContribYearSelect)) {
+            if (!this.selectType.getOption(this.monthContribYearSelect)) {
                 this.error = true;
                 this.validationForm.invalidField(this.monthContribYearSelect, "Ne peut pas être vide.");
             } else {
                 this.validationForm.validField(this.monthContribYearSelect);
             }
         } else {
-            this.select.setOption(this.monthContribYearSelect, "");
-            this.select.setOption(this.monthContribMonthSelect, "");
-            this.select.setOption(this.monthContribDaySelect, "");
+            this.selectType.setOption(this.monthContribYearSelect, "");
+            this.selectType.setOption(this.monthContribMonthSelect, "");
+            this.selectType.setOption(this.monthContribDaySelect, "");
         }
     }
 
@@ -341,7 +341,7 @@ export default class SupportContributions {
             this.error = true;
             return this.validationForm.invalidField(this.paidAmtInput, "La valeur est invalide.");
         }
-        if ((!this.paidAmtInput.value && [1, 2, 10].indexOf(option) != -1 && (this.paymentDateInput.value || this.select.getOption(this.paymentTypeSelect))) ||
+        if ((!this.paidAmtInput.value && [1, 2, 10].indexOf(option) != -1 && (this.paymentDateInput.value || this.selectType.getOption(this.paymentTypeSelect))) ||
             (!this.paidAmtInput.value && [30, 31, 32].indexOf(option) != -1)) {
             this.error = true;
             return this.validationForm.invalidField(this.paidAmtInput, "Ne peut pas être vide.");
@@ -361,7 +361,7 @@ export default class SupportContributions {
             this.error = true;
             return this.validationForm.invalidField(this.paymentDateInput, "La date ne peut être postérieure à la date du jour.");
         }
-        if (!this.paymentDateInput.value && (option === 20 || this.paidAmtInput.value || this.select.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
+        if (!this.paymentDateInput.value && (option === 20 || this.paidAmtInput.value || this.selectType.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
             this.error = true;
             return this.validationForm.invalidField(this.paymentDateInput, "La date ne peut pas être vide.");
         }
@@ -370,7 +370,7 @@ export default class SupportContributions {
 
     // Vérifie le type de paiement saisi.
     checkPaymentType(option) {
-        if (!this.select.getOption(this.paymentTypeSelect) && (option === 20 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
+        if (!this.selectType.getOption(this.paymentTypeSelect) && (option === 20 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
             this.error = true;
             return this.validationForm.invalidField(this.paymentTypeSelect, "Ne peut pas être vide.");
         }
@@ -382,12 +382,12 @@ export default class SupportContributions {
     newContribution() {
         this.contributionId = null;
         this.modalElt.modal("show");
-        this.select.setOption(this.typeSelect, "");
+        this.selectType.setOption(this.typeSelect, "");
         this.initForm();
         this.checkType();
         if (!this.contributionId) {
-            this.select.setOption(this.monthContribMonthSelect, this.now.getMonth() + 1);
-            this.select.setOption(this.monthContribYearSelect, this.now.getFullYear());
+            this.selectType.setOption(this.monthContribMonthSelect, this.now.getMonth() + 1);
+            this.selectType.setOption(this.monthContribYearSelect, this.now.getFullYear());
         }
         this.modalContributionElt.querySelector("form").action = "/support/" + this.supportId + "/contribution/new";
         this.btnDeleteElt.classList.replace("d-block", "d-none");
@@ -413,7 +413,7 @@ export default class SupportContributions {
 
     // Réinitialise le formulaire.
     initForm() {
-        this.select.setOption(this.paymentTypeSelect, "");
+        this.selectType.setOption(this.paymentTypeSelect, "");
         this.paymentTypeSelect.classList.remove("is-valid");
         this.formContributionElt.querySelectorAll("input").forEach(inputElt => {
             if (inputElt.type != "hidden") {

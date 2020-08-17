@@ -13,13 +13,13 @@ use App\Entity\SupportGroup;
 use App\Form\Model\NoteSearch;
 use App\Form\Note\NoteSearchType;
 use App\Repository\NoteRepository;
-use App\Controller\Traits\CacheTrait;
 use App\Form\Model\SupportNoteSearch;
 use App\Form\Note\SupportNoteSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\SupportGroupRepository;
+use App\Service\SupportGroup\SupportGroupService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,17 +30,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class NoteController extends AbstractController
 {
     use ErrorMessageTrait;
-    use CacheTrait;
 
     private $manager;
     private $repo;
-    private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, NoteRepository $repo, SupportGroupRepository $repoSupportGroup)
+    public function __construct(EntityManagerInterface $manager, NoteRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;
-        $this->repoSupportGroup = $repoSupportGroup;
     }
 
     /**
@@ -73,9 +70,9 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportNoteSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportGroupService $supportGroupService, SupportNoteSearch $search = null, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $supportGroupService->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -102,10 +99,8 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function newNote(int $id, Note $note = null, Request $request): Response
+    public function newNote(SupportGroup $supportGroup, Note $note = null, Request $request): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
-
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $note = new Note();
@@ -163,9 +158,9 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, EvaluationGroupRepository $repo, Environment $renderer): Response
+    public function generateNoteEvaluation(int $id, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo, Environment $renderer): Response
     {
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -211,8 +206,6 @@ class NoteController extends AbstractController
 
         $this->manager->persist($note);
         $this->manager->flush();
-
-        // $this->discachedSupport($supportGroup);
 
         return $this->json([
             'code' => 200,

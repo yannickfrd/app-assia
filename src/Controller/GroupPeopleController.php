@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\GroupPeople\GroupPeopleSearchType;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -139,6 +140,8 @@ class GroupPeopleController extends AbstractController
     {
         $this->manager->flush();
 
+        $this->discacheSupport($groupPeople);
+
         $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
 
@@ -226,5 +229,20 @@ class GroupPeopleController extends AbstractController
             'alert' => 'danger',
             'msg' => "Vous n'avez pas les droits pour cette action. Demandez à un administrateur de votre service.",
         ], 200);
+    }
+
+    /**
+     * Supprime le chache du suivi.
+     */
+    protected function discacheSupport(GroupPeople $groupPeople): void
+    {
+        $cache = new FilesystemAdapter();
+
+        foreach ($groupPeople->getSupports() as $supportGroup) {
+            $cache->deleteItems([
+                $cache->getItem('support_group_full.'.$supportGroup->getId())->getKey(),
+                $cache->getItem('support_group.'.$supportGroup->getId())->getKey(),
+            ]);
+        }
     }
 }

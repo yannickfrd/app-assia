@@ -37,7 +37,6 @@ use App\Form\Support\SupportsInMonthSearchType;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -105,7 +104,7 @@ class SupportController extends AbstractController
             if ($supportGroupService->create($groupPeople, $supportGroup)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
-                if ($supportGroup->getService()->getAccommodation()) {
+                if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation()) {
                     return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
                 }
 
@@ -191,30 +190,11 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
      */
-    public function viewSupportGroup(int $id, EvaluationGroupRepository $repo, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
+    public function viewSupportGroup(int $id, SupportGroupService $supportGroupService, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
     {
-        $cache = new FilesystemAdapter();
-
-        // $cacheSupport = $cache->getItem('support_group'.$id);
-        // if (!$cacheSupport->isHit()) {
-        //     $cacheSupport->set($this->repoSupportGroup->findFullSupportById($id));
-        //     // $cacheSupport->expiresAfter(365 * 24 * 60 * 60);  // 5 * 60 seconds
-        //     $cache->save($cacheSupport);
-        // }
-        // $supportGroup = $cacheSupport->get();
-
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $supportGroupService->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
-
-        $cacheEvaluation = $cache->getItem('support_group.evaluation'.$id);
-        if (!$cacheEvaluation->isHit()) {
-            $cacheEvaluation->set($repo->findEvaluationById($id));
-            $cache->save($cacheEvaluation);
-        }
-        $evaluation = $cacheEvaluation->get();
-
-        $this->checkSupportGroup($supportGroup);
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
@@ -222,7 +202,7 @@ class SupportController extends AbstractController
             'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
             'nbContributions' => $supportGroup->getAccommodationGroups()->count() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
-            'evaluation' => $evaluation,
+            'evaluation' => $supportGroupService->getEvaluation($id),
         ]);
     }
 
@@ -456,49 +436,6 @@ class SupportController extends AbstractController
         }
 
         return $object;
-    }
-
-    /**
-     * Vérifie la cohérence des données du suivi social.
-     *
-     * @param SupportGroup $supportGroup
-     *
-     * @return void
-     */
-    protected function checkSupportGroup(SupportGroup $supportGroup)
-    {
-        // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
-        $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
-        $nbSupportPeople = $supportGroup->getSupportPeople()->count();
-        $nbActiveSupportPeople = 0;
-
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            $supportPerson->getEndDate() == null ? ++$nbActiveSupportPeople : null;
-        }
-
-        if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
-            $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies 
-                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).<br/> 
-                Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
-        }
-
-        // Vérifie qu'il y a un hébergement créé
-        if (1 == $supportGroup->getDevice()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
-            $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
-        } else {
-            // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
-            $nbAccommodationPeople = 0;
-            foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
-                if (null == $accommodationGroup->getEndDate()) {
-                    $nbAccommodationPeople += $accommodationGroup->getAccommodationPeople()->count();
-                }
-            }
-            if (!$supportGroup->getEndDate() && 1 == $supportGroup->getDevice()->getAccommodation() && $nbActiveSupportPeople != $nbAccommodationPeople) {
-                $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies ('.$nbActiveSupportPeople.') 
-                    ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
-                    Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
-            }
-        }
     }
 
     /**

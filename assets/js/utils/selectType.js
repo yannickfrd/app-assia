@@ -1,11 +1,12 @@
 /**
  * Permet d'obtenir ou de définir l'option d'un élément <select>
  */
-export default class Select {
+export default class SelectType {
 
     /**
      * Donne la valeur de l'option sélectionnée.
-     * @param {HTMLElement} selectElt 
+     * @param {HTMLSelectElement} selectElt 
+     * @return {Number}
      */
     getOption(selectElt) {
         if (selectElt === null) {
@@ -24,7 +25,7 @@ export default class Select {
 
     /**
      * Définie l'option sélectionnée
-     * @param {HTMLElement} selectElt 
+     * @param {HTMLSelectElement} selectElt 
      * @param {String} value 
      */
     setOption(selectElt, value) {

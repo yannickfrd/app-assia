@@ -7,12 +7,13 @@ use App\Entity\Accommodation;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AccommodationGroupRepository;
+use App\Service\SupportGroup\SupportGroupService;
 use App\Form\Accommodation\AccommodationGroupType;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -34,20 +35,20 @@ class AccommodationGroupController extends AbstractController
      *
      * @Route("support/{id}/accommodations", name="support_accommodations", methods="GET")
      */
-    public function supportAccommodationsGroup(int $id, SupportGroupRepository $supportRepo): Response
+    public function supportAccommodationsGroup(int $id, SupportGroupService $supportGroupService): Response
     {
-        $supportGroup = $supportRepo->findSupportById($id);
+        $supportGroup = $supportGroupService->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $accommodationGroups = $this->repo->findBy(
-            ['supportGroup' => $supportGroup],
-            ['startDate' => 'DESC'],
-        );
+        // $accommodationGroups = $this->repo->findBy(
+        //     ['supportGroup' => $supportGroup],
+        //     ['startDate' => 'DESC'],
+        // );
 
         return $this->render('app/accommodation/supportAccommodationsGroup.html.twig', [
             'support' => $supportGroup,
-            'support_group_accommodations' => $accommodationGroups,
+            // 'support_group_accommodations' => $accommodationGroups,
         ]);
     }
 
@@ -98,10 +99,11 @@ class AccommodationGroupController extends AbstractController
      *
      * @param int $id // AccommodationGroup
      */
-    public function editAccommodationGroup(int $id, Request $request, SupportGroupRepository $repoSupport): Response
+    public function editAccommodationGroup(int $id, SupportGroupService $supportGroupService, Request $request): Response
     {
         $accommodationGroup = $this->repo->findAccommodationGroupById($id);
-        $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup()->getId());
+        // $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup()->getId());
+        $supportGroup = $supportGroupService->getSupportGroup($accommodationGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -109,7 +111,7 @@ class AccommodationGroupController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->updateAccommodationGroup($accommodationGroup);
+            return $this->updateAccommodationGroup($supportGroup, $accommodationGroup);
         }
 
         return $this->render('app/accommodation/accommodationGroup.html.twig', [
@@ -158,6 +160,8 @@ class AccommodationGroupController extends AbstractController
         $this->manager->remove($accommodationGroup);
         $this->manager->flush();
 
+        $this->discacheSupport($supportGroup);
+
         $this->addFlash('warning', 'La prise en charge est supprimée.');
 
         return $this->redirectToRoute('support_accommodations', ['id' => $supportGroup->getId()]);
@@ -170,10 +174,14 @@ class AccommodationGroupController extends AbstractController
      */
     public function deleteAccommodationPerson(AccommodationPerson $accommodationPerson): Response
     {
-        $this->denyAccessUnlessGranted('DELETE', $accommodationPerson->getAccommodationGroup()->getSupportGroup());
+        $supportGroup = $accommodationPerson->getAccommodationGroup()->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('DELETE', $supportGroup);
 
         $this->manager->remove($accommodationPerson);
         $this->manager->flush();
+
+        $this->discacheSupport($supportGroup);
 
         $this->addFlash('warning', $accommodationPerson->getPerson()->getFullname().' est retiré de la prise en charge.');
 
@@ -196,6 +204,8 @@ class AccommodationGroupController extends AbstractController
         $this->updateLocationSupportGroup($supportGroup, $accommodationGroup->getAccommodation());
 
         $this->manager->flush();
+
+        $this->discacheSupport($supportGroup);
 
         $this->addFlash('success', "L'hébergement est créé.");
 
@@ -222,10 +232,13 @@ class AccommodationGroupController extends AbstractController
     /**
      * Met à jour la prise en charge du groupe.
      */
-    protected function updateAccommodationGroup(AccommodationGroup $accommodationGroup)
+    protected function updateAccommodationGroup(SupportGroup $supportGroup, AccommodationGroup $accommodationGroup)
     {
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
             $person = $accommodationPerson->getPerson();
+            // if (null == $accommodationPerson->getEndDate()) {
+            $accommodationPerson->setStartDate($accommodationGroup->getStartDate());
+            // }
             if ($accommodationPerson->getStartDate() < $person->getBirthdate()) {
                 $accommodationPerson->setStartDate($person->getBirthdate());
                 $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$person->getFullname().').');
@@ -241,6 +254,10 @@ class AccommodationGroupController extends AbstractController
         $this->manager->flush();
 
         $this->addFlash('success', 'L\'hébergement est mis à jour');
+
+        $this->discacheSupport($supportGroup);
+
+        return $this->redirectToRoute('support_accommodation_edit', ['id' => $accommodationGroup->getId()]);
     }
 
     /**
@@ -252,7 +269,7 @@ class AccommodationGroupController extends AbstractController
 
         foreach ($accommodationGroup->getSupportGroup()->getSupportPeople() as $supportPerson) {
             // Vérifie si la personne n'est pas déjà rattachée à la prise en charge
-            if (!in_array($supportPerson->getPerson()->getId(), $this->getPeopleinAccommodation($accommodationGroup))) {
+            if (null == $supportPerson->getEndDate() && !in_array($supportPerson->getPerson()->getId(), $this->getPeopleInAccommodation($accommodationGroup))) {
                 // Si elle n'est pas déjà pris en charge, on la créé
                 $accommodationPerson = (new AccommodationPerson())
                     ->setAccommodationGroup($accommodationGroup)
@@ -278,7 +295,7 @@ class AccommodationGroupController extends AbstractController
     }
 
     // Donne les ID des personnes rattachées à la prise en charge.
-    protected function getPeopleinAccommodation(AccommodationGroup $accommodationGroup)
+    protected function getPeopleInAccommodation(AccommodationGroup $accommodationGroup)
     {
         $people = [];
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
@@ -286,5 +303,14 @@ class AccommodationGroupController extends AbstractController
         }
 
         return $people;
+    }
+
+    /**
+     * Vide l'item du suivi en cache.
+     */
+    public function discacheSupport(SupportGroup $supportGroup): void
+    {
+        $cache = new FilesystemAdapter();
+        $cache->deleteItem($cache->getItem('support_group_full.'.$supportGroup->getId())->getKey());
     }
 }

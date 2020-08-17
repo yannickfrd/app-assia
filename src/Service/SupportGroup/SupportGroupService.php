@@ -3,6 +3,7 @@
 namespace App\Service\SupportGroup;
 
 use App\Entity\AccommodationGroup;
+use App\Entity\EvaluationGroup;
 use App\Entity\User;
 use App\Entity\Person;
 use App\Entity\Service;
@@ -21,20 +22,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SupportGroupService
 {
     private $container;
-    private $repo;
+    private $repoSupportGroup;
+    private $repoEvaluationGroup;
     private $manager;
     private $avdlService;
 
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $manager,
-        SupportGroupRepository $repo,
+        SupportGroupRepository $repoSupportGroup,
+        EvaluationGroupRepository $repoEvaluationGroup,
         AvdlService $avdlService)
     {
         $this->container = $container;
-        $this->repo = $repo;
+        $this->repoSupportGroup = $repoSupportGroup;
+        $this->repoEvaluationGroup = $repoEvaluationGroup;
         $this->manager = $manager;
         $this->avdlService = $avdlService;
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
@@ -45,6 +50,60 @@ class SupportGroupService
         return  (new SupportGroup())
             ->setStatus(2)
             ->setReferent($user);
+    }
+
+    /**
+     * Donne le suivi social complet.
+     */
+    public function getFullSupportGroup(int $id): ?SupportGroup
+    {
+        $cacheSupport = $this->cache->getItem('support_group_full.'.$id);
+
+        if (!$cacheSupport->isHit()) {
+            $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+
+            $cacheSupport->set($supportGroup);
+            $cacheSupport->expiresAfter(365 * 24 * 60 * 60);
+            $this->cache->save($cacheSupport);
+        }
+        $supportGroup = $cacheSupport->get();
+
+        $this->checkSupportGroup($supportGroup);
+
+        return $supportGroup;
+    }
+
+    /**
+     * Donne le suivi social complet.
+     */
+    public function getSupportGroup(int $id): ?SupportGroup
+    {
+        $cacheSupport = $this->cache->getItem('support_group.'.$id);
+
+        if (!$cacheSupport->isHit()) {
+            $supportGroup = $this->repoSupportGroup->findSupportById($id);
+
+            $cacheSupport->set($supportGroup);
+            $cacheSupport->expiresAfter(365 * 24 * 60 * 60);
+            $this->cache->save($cacheSupport);
+        }
+
+        return $cacheSupport->get();
+    }
+
+    /**
+     * Donne l'évaluation sociale complète.
+     */
+    public function getEvaluation(int $id): ?EvaluationGroup
+    {
+        $cacheEvaluation = $this->cache->getItem('support_group.evaluation.'.$id);
+
+        if (!$cacheEvaluation->isHit()) {
+            $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($id));
+            $this->cache->save($cacheEvaluation);
+        }
+
+        return $cacheEvaluation->get();
     }
 
     /**
@@ -125,7 +184,54 @@ class SupportGroupService
         $this->updateSupportPeople($supportGroup);
         $this->updateAccommodationGroup($supportGroup);
 
-        $this->discached($supportGroup);
+        $this->discache($supportGroup);
+    }
+
+    /**
+     * Vérifie la cohérence des données du suivi social.
+     *
+     * @param SupportGroup $supportGroup
+     *
+     * @return void
+     */
+    protected function checkSupportGroup(SupportGroup $supportGroup)
+    {
+        // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
+        $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
+        $nbSupportPeople = $supportGroup->getSupportPeople()->count();
+        $nbActiveSupportPeople = 0;
+
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            $supportPerson->getEndDate() == null ? ++$nbActiveSupportPeople : null;
+        }
+
+        if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
+            $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies 
+                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).<br/> 
+                Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
+        }
+
+        // Vérifie qu'il y a un hébergement créé
+        if (1 == $supportGroup->getDevice()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
+            $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
+        } else {
+            // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
+            $nbAccommodationPeople = 0;
+            foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
+                if (null == $accommodationGroup->getEndDate()) {
+                    foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
+                        if (null == $accommodationPerson->getEndDate()) {
+                            ++$nbAccommodationPeople;
+                        }
+                    }
+                }
+            }
+            if (!$supportGroup->getEndDate() && 1 == $supportGroup->getDevice()->getAccommodation() && $nbActiveSupportPeople != $nbAccommodationPeople) {
+                $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies ('.$nbActiveSupportPeople.') 
+                    ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
+                    Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
+            }
+        }
     }
 
     /**
@@ -156,7 +262,7 @@ class SupportGroupService
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 // Si c'est le cas, on prend en compte la date de naissance
                 $supportPerson->setStartDate($person->getBirthdate());
-                $this->container->get('session')->getFlashBag()->add('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');
+                $this->addFlash('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');
             }
         }
     }
@@ -193,7 +299,7 @@ class SupportGroupService
 
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 $supportPerson->setStartDate($person->getBirthdate());
-                $this->container->get('session')->getFlashBag()->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
+                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
             }
         }
     }
@@ -219,7 +325,7 @@ class SupportGroupService
                     $this->manager->persist($evaluationPerson);
                 }
 
-                $this->container->get('session')->getFlashBag()->add('success', $rolePerson->getPerson()->getFullname().' est ajouté'.Grammar::gender($supportPerson->getPerson()->getGender()).' au suivi.');
+                $this->addFlash('success', $rolePerson->getPerson()->getFullname().' est ajouté'.Grammar::gender($supportPerson->getPerson()->getGender()).' au suivi.');
 
                 $addPeople = true;
             }
@@ -235,7 +341,7 @@ class SupportGroupService
      */
     protected function activeSupportExists(GroupPeople $groupPeople, SupportGroup $supportGroup): ?SupportGroup
     {
-        return $this->repo->findOneBy([
+        return $this->repoSupportGroup->findOneBy([
             'groupPeople' => $groupPeople,
             'status' => SupportGroup::STATUS_IN_PROGRESS,
             'service' => $supportGroup->getService(),
@@ -259,16 +365,17 @@ class SupportGroupService
     /**
      * Vide l'item du suivi en cache.
      */
-    protected function discached(SupportGroup $supportGroup): bool
+    public function discache(SupportGroup $supportGroup): void
     {
-        $cache = new FilesystemAdapter();
-        $cacheSupport = $cache->getItem('support_group'.$supportGroup->getId());
-        if ($cacheSupport->isHit()) {
-            $cache->deleteItem($cacheSupport->getKey());
+        $cacheSupport = $this->cache->getItem('support_group_full.'.$supportGroup->getId());
+        $this->cache->deleteItem($cacheSupport->getKey());
+    }
 
-            return true;
-        }
-
-        return false;
+    /**
+     * Ajoute un message flash.
+     */
+    protected function addFlash(string $alert, string $msg)
+    {
+        $this->container->get('session')->getFlashBag()->add($alert, $msg);
     }
 }

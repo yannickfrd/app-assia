@@ -29,7 +29,7 @@ class GroupPeople
         6 => 'Couple avec enfant(s)',
         7 => 'Groupe d\'adultes sans enfant',
         8 => 'Groupe d\'adultes avec enfant(s)',
-        97 => 'Autre',
+        9 => 'Autre',
     ];
 
     public const FAMILY_TYPO_MIN = [

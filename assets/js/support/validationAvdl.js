@@ -1,6 +1,6 @@
 import DisplayFields from '../utils/displayFields'
 import ValidationForm from '../utils/validationForm'
-import Select from '../utils/select'
+import SelectType from '../utils/selectType'
 import ValidationDate from '../utils/validationDate'
 import Loader from '../utils/loader'
 
@@ -25,7 +25,7 @@ export default class ValidationAvdlSupport {
 
     constructor() {
         this.validationForm = new ValidationForm()
-        this.select = new Select()
+        this.selectType = new SelectType()
         this.loader = new Loader()
 
         this.prefix = 'support_avdl_'
@@ -38,7 +38,7 @@ export default class ValidationAvdlSupport {
     }
 
     init() {
-        this.service = this.select.getOption(this.serviceSelectElt)
+        this.service = this.selectType.getOption(this.serviceSelectElt)
         this.serviceSelectElt.addEventListener('change', this.changeService.bind(this))
 
         this.dateInputElts.forEach(dateInputElt => {
@@ -76,7 +76,7 @@ export default class ValidationAvdlSupport {
             this.loader.on()
             document.getElementById('send').click()
         } else {
-            this.select.setOption(this.serviceSelectElt, this.service)
+            this.selectType.setOption(this.serviceSelectElt, this.service)
         }
     }
 
@@ -87,11 +87,8 @@ export default class ValidationAvdlSupport {
     checkDate(inputElt) {
         let validationDate = new ValidationDate(inputElt, this.validationForm)
 
-        if (validationDate.isValid() === false) {
-            return
-        }
-        if (validationDate.isNotAfterToday() === false) {
-            return
+        if (validationDate.isValid() === false || validationDate.isNotAfterToday() === false) {
+            return false
         }
         this.validationForm.validField(inputElt)
     }

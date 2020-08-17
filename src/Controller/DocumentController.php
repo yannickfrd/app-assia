@@ -8,13 +8,12 @@ use App\Entity\SupportGroup;
 use App\Service\FileUploader;
 use App\Form\Model\DocumentSearch;
 use App\Form\Document\DocumentType;
-use App\Controller\Traits\CacheTrait;
 use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Document\DocumentSearchType;
-use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Service\Download;
+use App\Service\SupportGroup\SupportGroupService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,27 +23,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DocumentController extends AbstractController
 {
     use ErrorMessageTrait;
-    use CacheTrait;
 
     private $manager;
     private $repo;
-    private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, DocumentRepository $repo, SupportGroupRepository $repoSupportGroup)
+    public function __construct(EntityManagerInterface $manager, DocumentRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;
-        $this->repoSupportGroup = $repoSupportGroup;
     }
 
     /**
      * Liste des documents du suivi.
      *
-     * @Route("support/{supportId}/documents", name="support_documents", methods="GET|POST")
+     * @Route("support/{id}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listDocuments(int $supportId, DocumentSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $id, SupportGroupService $supportGroupService, DocumentSearch $search = null, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($supportId);
+        $supportGroup = $supportGroupService->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -66,12 +62,10 @@ class DocumentController extends AbstractController
     /**
      * Nouveau document.
      *
-     * @Route("support/{supportId}/document/new", name="document_new", methods="POST")
+     * @Route("support/{id}/document/new", name="document_new", methods="POST")
      */
-    public function newDocument($supportId, Request $request, FileUploader $fileUploader): Response
+    public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($supportId);
-
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $document = new Document();
@@ -178,8 +172,6 @@ class DocumentController extends AbstractController
 
         $this->manager->persist($document);
         $this->manager->flush();
-
-        // $this->discachedSupport($supportGroup);
 
         return $this->json([
             'code' => 200,

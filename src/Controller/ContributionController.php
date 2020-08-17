@@ -7,13 +7,11 @@ use App\Service\Pagination;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
 use App\Service\Normalisation;
-use App\Controller\Traits\CacheTrait;
 use App\Export\ContributionFullExport;
 use App\Form\Model\ContributionSearch;
 use App\Export\ContributionLightExport;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ContributionRepository;
-use App\Repository\SupportGroupRepository;
 use App\Form\Contribution\ContributionType;
 use App\Repository\AccommodationRepository;
 use App\Controller\Traits\ErrorMessageTrait;
@@ -24,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Contribution\ContributionSearchType;
+use App\Service\SupportGroup\SupportGroupService;
 use App\Service\Indicators\ContributionIndicators;
 use App\Form\Contribution\SupportContributionSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -33,17 +32,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ContributionController extends AbstractController
 {
     use ErrorMessageTrait;
-    use CacheTrait;
 
     private $manager;
     private $repo;
-    private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, ContributionRepository $repo, SupportGroupRepository $repoSupportGroup)
+    public function __construct(EntityManagerInterface $manager, ContributionRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;
-        $this->repoSupportGroup = $repoSupportGroup;
     }
 
     /**
@@ -83,9 +79,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportContributions(int $id, SupportContributionSearch $search = null, Request $request, Pagination $pagination): Response
+    public function showSupportContributions(int $id, SupportGroupService $supportGroupService, SupportContributionSearch $search = null, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $supportGroupService->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -119,9 +115,10 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function getResources(int $id, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
+    public function getResources(int $id, SupportGroupService $supportGroupService, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $supportGroupService->getSupportGroup($id);
+
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
         $evaluation = $repoEvaluation->findEvaluationResourceById($id);
@@ -163,10 +160,8 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function newContribution(int $id, Contribution $contribution = null, Request $request, NormalizerInterface $normalizer, Normalisation $normalisation): Response
+    public function newContribution(SupportGroup $supportGroup, Contribution $contribution = null, Request $request, NormalizerInterface $normalizer, Normalisation $normalisation): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
-
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $contribution = (new Contribution())

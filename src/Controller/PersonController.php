@@ -20,6 +20,7 @@ use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -349,6 +350,8 @@ class PersonController extends AbstractController
     {
         $this->manager->flush();
 
+        $this->discacheSupport($person);
+
         return $this->json([
             'code' => 200,
             'alert' => 'success',
@@ -381,5 +384,20 @@ class PersonController extends AbstractController
         $this->addFlash('success', 'Le nouveau groupe est créé.');
 
         return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
+    }
+
+    /**
+     * Supprime le chache du suivi.
+     */
+    protected function discacheSupport(Person $person)
+    {
+        $cache = new FilesystemAdapter();
+
+        foreach ($person->getSupports() as $supportPerson) {
+            $cache->deleteItems([
+                $cache->getItem('support_group_full.'.$supportPerson->getSupportGroup()->getId())->getKey(),
+                $cache->getItem('support_group.'.$supportPerson->getSupportGroup()->getId())->getKey(),
+            ]);
+        }
     }
 }

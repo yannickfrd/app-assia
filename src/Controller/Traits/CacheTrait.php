@@ -11,10 +11,7 @@ trait CacheTrait
     {
         $cache = new FilesystemAdapter();
 
-        $cacheSupport = $cache->getItem('support_group'.$supportGroup->getId());
-
-        if ($cacheSupport->isHit()) {
-            $cache->deleteItem($cacheSupport->getKey());
-        }
+        $cacheSupport = $cache->getItem('support_group_full.'.$supportGroup->getId());
+        $cache->deleteItem($cacheSupport->getKey());
     }
 }

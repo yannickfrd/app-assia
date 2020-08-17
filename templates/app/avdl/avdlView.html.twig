@@ -35,7 +35,7 @@
             ~ (avdl.diagEndDate ? " - " ~ avdl.diagEndDate|date("d/m/Y") : "") : "", "avdl.diag") }}
         {{ utils.view(avdl.diagTypeToString, "avdl.diagType") }}
         {{ utils.view(avdl.recommendationSupportToString, "avdl.recommendationSupport") }}
-        {{ utils.view(avdl.diagComment, "comment") }}
+        {{ utils.view(avdl.diagComment, "Comment") }}
     </div>
 {% endif %}
 
@@ -44,7 +44,7 @@
         {{ utils.view(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
             ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y") : "") : "", "avdl.support") }}
         {{ utils.view(avdl.supportTypeToString ~ (avdl.readyToHousing ? " | PAL : " ~ avdl.readyToHousingToString), "avdl.supportType") }}
-        {{ utils.view(avdl.supportComment, "comment") }}
+        {{ utils.view(avdl.supportComment, "Comment") }}
     </div>
 {% endif %}
 {% if avdl.supportStartDate %}
@@ -54,7 +54,7 @@
         {{ utils.view(avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") ~
             (avdl.propoResult ? " | Resultat : " ~ avdl.propoResultToString ), "avdl.propoHousingDate") }}
         {{ utils.view(avdl.propoOriginToString, "avdl.propoOrigin") }}
-        {{ utils.view(avdl.endSupportComment, "comment") }}
+        {{ utils.view(avdl.endSupportComment, "Comment") }}
     </div>
 {% endif %}
 

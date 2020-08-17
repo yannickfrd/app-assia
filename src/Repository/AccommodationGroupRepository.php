@@ -57,7 +57,7 @@ class AccommodationGroupRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('ag')
             ->select('ag')
-            // ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id}')
+            ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id}')
             ->leftJoin('ag.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
             ->leftJoin('ag.groupPeople', 'gp')->addSelect('PARTIAL gp.{id, familyTypology}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role, startDate, endDate}')

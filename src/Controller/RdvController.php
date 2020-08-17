@@ -13,22 +13,20 @@ use App\Form\Model\RdvSearch;
 use App\Form\Rdv\RdvSearchType;
 use App\Repository\RdvRepository;
 use App\Form\Model\SupportRdvSearch;
-use App\Controller\Traits\CacheTrait;
 use App\Form\Rdv\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\SupportGroup\SupportGroupService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
 {
     use ErrorMessageTrait;
-    use CacheTrait;
 
     private $manager;
     private $repo;
@@ -74,9 +72,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportGroupRepository $repoSupport, SupportRdvSearch $search = null, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportGroupService $supportGroupService, SupportRdvSearch $search = null, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $repoSupport->findSupportById($id);
+        $supportGroup = $supportGroupService->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -125,9 +123,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportGroupRepository $repoSupport, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, SupportGroupService $supportGroupService, $year = null, $month = null): Response
     {
-        $supportGroup = $repoSupport->findSupportById($id);
+        $supportGroup = $supportGroupService->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -174,10 +172,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function newRdv(int $id = null, SupportGroupRepository $repoSupport, Rdv $rdv = null, Request $request): Response
+    public function newRdv(SupportGroup $supportGroup = null, Rdv $rdv = null, Request $request): Response
     {
-        if ($id) {
-            $supportGroup = $repoSupport->findSupportById($id);
+        if ($supportGroup) {
             $this->denyAccessUnlessGranted('EDIT', $supportGroup);
         }
 
@@ -275,7 +272,6 @@ class RdvController extends AbstractController
 
         if ($supportGroup) {
             $supportGroup->setUpdatedAt(new \DateTime());
-            // $this->discachedSupport($supportGroup);
         }
 
         $this->manager->persist($rdv);

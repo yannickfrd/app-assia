@@ -1,4 +1,4 @@
-import Select from './select'
+import SelectType from './selectType'
 import MessageFlash from '../utils/messageFlash'
 
 /**
@@ -7,8 +7,9 @@ import MessageFlash from '../utils/messageFlash'
  */
 export default class ValidationForm {
 
-    constructor() {
-        this.select = new Select()
+    constructor(containerElt = document) {
+        this.containerElt = containerElt
+        this.selectType = new SelectType()
     }
 
     /**
@@ -44,7 +45,7 @@ export default class ValidationForm {
      * Défilement vers le premier élément invalide
      */
     scrollToFirstInvalidElt() {
-        var rectElt = document.querySelector('.is-invalid').getBoundingClientRect()
+        var rectElt = this.containerElt.querySelector('.is-invalid').getBoundingClientRect()
         window.scrollTo(0, window.scrollY + rectElt.top - 70)
     }
 
@@ -52,10 +53,10 @@ export default class ValidationForm {
      * Vide tous les champs masqués dnas le formulaires.
      */
     cleanHidedFields() {
-        document.querySelectorAll('div[data-parent-field].d-none').forEach(hideElt => {
+        this.containerElt.querySelectorAll('div[data-parent-field].d-none').forEach(hideElt => {
             let fieldElt = hideElt.querySelector('input, select, textarea')
             if (fieldElt.type === 'select-one') {
-                this.select.setOption(fieldElt, null)
+                this.selectType.setOption(fieldElt, null)
             } else {
                 fieldElt.value = null
             }
@@ -66,7 +67,7 @@ export default class ValidationForm {
      * Vérifie les champs obligatoires à la saisie.
      */
     checkRequiredFields() {
-        document.querySelectorAll('input[required], select[required]').forEach(fieldElt => {
+        this.containerElt.querySelectorAll('input[required], select[required]').forEach(fieldElt => {
             if (this.isFilledField(fieldElt)) {
                 this.validField(fieldElt)
             } else {
@@ -117,8 +118,8 @@ export default class ValidationForm {
      * @return {Boolean}
      */
     isFilledField(fieldElt) {
-        let value = this.select.getOption(fieldElt)
-        if ((fieldElt.type === 'date' && fieldElt.value != '') ||
+        let value = this.selectType.getOption(fieldElt)
+        if ((fieldElt.nodeName === 'INPUT' && fieldElt.value != '') ||
             (fieldElt.type === 'checkbox' && fieldElt.checked === true) ||
             (fieldElt.type === 'select-one' && value != '' && !isNaN(value))) {
             return true
@@ -197,7 +198,7 @@ export default class ValidationForm {
      * @return {Number}
      */
     getNbErrors() {
-        let nbErrors = document.querySelectorAll('.js-invalid').length
+        let nbErrors = this.containerElt.querySelectorAll('.js-invalid').length
 
         if (nbErrors > 0) {
             console.error(nbErrors + ' error(s)')
