@@ -2,8 +2,6 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\AccommodationGroup;
-use App\Entity\EvaluationGroup;
 use App\Entity\User;
 use App\Entity\Person;
 use App\Entity\Service;
@@ -12,12 +10,16 @@ use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
+use App\Entity\AccommodationGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SupportGroupService
 {
@@ -188,6 +190,95 @@ class SupportGroupService
     }
 
     /**
+     * Crée une copie d'un suivi social.
+     */
+    public function cloneSupport(SupportGroup $supportGroup, $user, NormalizerInterface $normalizer): SupportGroup
+    {
+        $newSupportGroup = clone $supportGroup;
+
+        $newSupportGroup
+            ->setReferent($user)
+            ->setReferent2(null)
+            ->setStatus(2)
+            ->setStartDate(null)
+            ->setEndDate(null)
+            ->setTheoreticalEndDate(null)
+            ->setEndStatus(null)
+            ->setEndStatusComment(null)
+            ->setCreatedBy($user)
+            ->setUpdatedBy($user);
+
+        $this->manager->persist($newSupportGroup);
+
+        /** @var EvaluationGroup */
+        $evaluationGroup = $newSupportGroup->getEvaluationsGroup()->last();
+
+        if ($evaluationGroup) {
+            $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
+            $evalHousingGroup = $evaluationGroup->getEvalHousingGroup();
+
+            $initEvalGroup = $evaluationGroup->getInitEvalGroup();
+
+            if ($evalBudgetGroup) {
+                $initEvalGroup
+            ->setResourcesGroupAmt($evalBudgetGroup->getResourcesGroupAmt())
+            ->setDebtsGroupAmt($evalBudgetGroup->getDebtsGroupAmt());
+            }
+            if ($evalHousingGroup) {
+                $initEvalGroup
+            ->setHousingStatus($evalHousingGroup->getHousingStatus())
+            ->setSiaoRequest($evalHousingGroup->getSiaoRequest())
+            ->setSocialHousingRequest($evalHousingGroup->getSocialHousingRequest());
+            }
+
+            foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
+                /** @var EvaluationPerson */
+                $evaluationPerson = $evaluationPerson;
+                $evalAdminPerson = $evaluationPerson->getEvalAdmPerson();
+                $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
+                $evalProfPerson = $evaluationPerson->getEvalProfPerson();
+                $evalSocialPerson = $evaluationPerson->getEvalSocialPerson();
+
+                $initEvalPerson = $evaluationPerson->getInitEvalPerson();
+
+                $initEvalPerson->setPaperType($evalAdminPerson ? $evalAdminPerson->getPaperType() : null);
+
+                if ($evalSocialPerson) {
+                    $arrayEvalSocialPerson = $normalizer->normalize($evalSocialPerson, null, [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
+                ]);
+                    $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalSocialPerson);
+                }
+                if ($evalProfPerson) {
+                    $initEvalPerson
+                    ->setProfStatus($evalProfPerson->getProfStatus())
+                    ->setContractType($evalProfPerson->getContractType());
+                }
+                if ($evalBudgetPerson) {
+                    $arrayEvalBudgetPerson = $normalizer->normalize($evalBudgetPerson, null, [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
+                ]);
+                    $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalBudgetPerson);
+                }
+            }
+        }
+
+        return $newSupportGroup;
+    }
+
+    protected function hydrateObjectWithArray($object, $array)
+    {
+        foreach ($array as $key => $value) {
+            $method = 'set'.ucfirst($key);
+            if (method_exists($object, $method)) {
+                $object->$method($value);
+            }
+        }
+
+        return $object;
+    }
+
+    /**
      * Vérifie la cohérence des données du suivi social.
      *
      * @param SupportGroup $supportGroup
@@ -242,9 +333,11 @@ class SupportGroupService
         $nbPeople = $supportGroup->getSupportPeople()->count();
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            // Si personne seule dans le suivi, copie la date de début de suivi
-            if (1 == $nbPeople) {
-                $supportPerson->setStartDate($supportGroup->getStartDate());
+            // Si personne seule dans le suivi ou si ladate de début de suivi est vide, copie la date de début de suivi
+            if (1 == $nbPeople || null == $supportPerson->getStartDate()) {
+                $supportPerson
+                    ->setStatus($supportGroup->getStatus())
+                    ->setStartDate($supportGroup->getStartDate());
             }
             if ($supportPerson->getEndDate()) {
                 $supportPerson->setStatus(SupportGroup::STATUS_ENDED);

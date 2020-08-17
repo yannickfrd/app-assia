@@ -10,8 +10,6 @@ use App\Entity\GroupPeople;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Entity\EvaluationGroup;
-use App\Entity\EvaluationPerson;
 use App\Repository\RdvRepository;
 use App\Repository\NoteRepository;
 use App\Export\SupportPersonExport;
@@ -38,7 +36,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -343,100 +340,24 @@ class SupportController extends AbstractController
     }
 
     /**
+     * Crée une copie d'un suivi social.
+     *
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, NormalizerInterface $normalizer): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportGroupService $supportGroupService, NormalizerInterface $normalizer): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        // $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $newSupportGroup = clone $supportGroup;
-
-        $newSupportGroup
-            ->setReferent($this->getUser())
-            ->setReferent2(null)
-            ->setStatus(2)
-            ->setStartDate(null)
-            ->setEndDate(null)
-            ->setTheoreticalEndDate(null)
-            ->setEndStatus(null)
-            ->setEndStatusComment(null)
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($newSupportGroup);
-
-        /** @var EvaluationGroup */
-        $evaluationGroup = $newSupportGroup->getEvaluationsGroup()->last();
-
-        if ($evaluationGroup) {
-            $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
-            $evalHousingGroup = $evaluationGroup->getEvalHousingGroup();
-
-            $initEvalGroup = $evaluationGroup->getInitEvalGroup();
-
-            if ($evalBudgetGroup) {
-                $initEvalGroup
-            ->setResourcesGroupAmt($evalBudgetGroup->getResourcesGroupAmt())
-            ->setDebtsGroupAmt($evalBudgetGroup->getDebtsGroupAmt());
-            }
-            if ($evalHousingGroup) {
-                $initEvalGroup
-            ->setHousingStatus($evalHousingGroup->getHousingStatus())
-            ->setSiaoRequest($evalHousingGroup->getSiaoRequest())
-            ->setSocialHousingRequest($evalHousingGroup->getSocialHousingRequest());
-            }
-
-            foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
-                /** @var EvaluationPerson */
-                $evaluationPerson = $evaluationPerson;
-                $evalAdminPerson = $evaluationPerson->getEvalAdmPerson();
-                $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
-                $evalProfPerson = $evaluationPerson->getEvalProfPerson();
-                $evalSocialPerson = $evaluationPerson->getEvalSocialPerson();
-
-                $initEvalPerson = $evaluationPerson->getInitEvalPerson();
-
-                $initEvalPerson->setPaperType($evalAdminPerson ? $evalAdminPerson->getPaperType() : null);
-
-                if ($evalSocialPerson) {
-                    $arrayEvalSocialPerson = $normalizer->normalize($evalSocialPerson, null, [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
-                ]);
-                    $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalSocialPerson);
-                }
-                if ($evalProfPerson) {
-                    $initEvalPerson
-                    ->setProfStatus($evalProfPerson->getProfStatus())
-                    ->setContractType($evalProfPerson->getContractType());
-                }
-                if ($evalBudgetPerson) {
-                    $arrayEvalBudgetPerson = $normalizer->normalize($evalBudgetPerson, null, [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
-                ]);
-                    $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalBudgetPerson);
-                }
-            }
-        }
+        $newSupportGroup = $supportGroupService->cloneSupport($supportGroup, $this->getUser(), $normalizer);
 
         $this->manager->flush();
 
-        $this->addFlash('success', 'Le suivi social a été duppliqué.');
+        $this->addFlash('success', 'Le suivi social a été dupliqué.');
 
         return $this->redirectToRoute('support_edit', [
             'id' => $newSupportGroup->getId(),
         ]);
-    }
-
-    protected function hydrateObjectWithArray($object, $array)
-    {
-        foreach ($array as $key => $value) {
-            $method = 'set'.ucfirst($key);
-            if (method_exists($object, $method)) {
-                $object->$method($value);
-            }
-        }
-
-        return $object;
     }
 
     /**

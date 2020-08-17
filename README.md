@@ -17,7 +17,9 @@ https://demo.esperer95.app
 # Mise à jour
 
 ## Version 1.17.10 - 17/08/2020
+- Ajout contrôles de saisie sur les dates d'un suivi AVDL.
 - Mise en place du cache pour le suivi social.
+- Modif de la fonctionnalité de duplication du suivi. 
 - Factorisation et correction des classes Javascript.
 
 ## Version 1.17.9 - 16/08/2020

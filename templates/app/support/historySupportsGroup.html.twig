@@ -76,7 +76,7 @@
                     </td>
                     <td class="align-middle">{% if support.service %}{{ support.service.pole.name }}{% endif %}</td>
                     <td class="align-middle">
-                        {% if is_granted("EDIT", support) %}
+                        {% if is_granted("ROLE_SUPER_ADMIN") %}
                         <a href="{{ path('support_clone', {'id':support.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir dupliquer ce suivi ?')){return true;}else{return false;}"
