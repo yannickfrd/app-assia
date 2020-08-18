@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\AccommodationRepository;
+use App\Repository\ContributionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Indicators\OccupancyIndicators;
@@ -35,6 +36,7 @@ class AppController extends AbstractController
     protected $repoNote;
     protected $repoRdv;
     protected $repoDocument;
+    protected $repoContribution;
 
     public function __construct(
         PersonRepository $repoPerson,
@@ -43,7 +45,8 @@ class AppController extends AbstractController
         SupportGroupRepository $repoSupport,
         NoteRepository $repoNote,
         RdvRepository $repoRdv,
-        DocumentRepository $repoDocument)
+        DocumentRepository $repoDocument,
+        ContributionRepository $repoContribution)
     {
         $this->repoUser = $repoUser;
         $this->repoPerson = $repoPerson;
@@ -52,6 +55,7 @@ class AppController extends AbstractController
         $this->repoNote = $repoNote;
         $this->repoRdv = $repoRdv;
         $this->repoDocument = $repoDocument;
+        $this->repoContribution = $repoContribution;
     }
 
     /**
@@ -96,7 +100,7 @@ class AppController extends AbstractController
 
         if (!$userSupports->isHit()) {
             $userSupports->set($this->repoSupport->findAllSupportsFromUser($this->getUser()));
-            $userSupports->expiresAfter(2 * 60);  // 5 * 60 seconds
+            $userSupports->expiresAfter(1 * 60 * 60);  // 1h
             $cache->save($userSupports);
         }
 
@@ -113,13 +117,14 @@ class AppController extends AbstractController
 
         if (!$indicators->isHit()) {
             $datas = [];
-            $datas['Nombre de personnes'] = (int) $this->repoPerson->countAllPeople();
-            $datas['Nombre de groupes'] = (int) $this->repoGroupPeople->countAllGroups();
-            $datas['Nombre de suivis'] = (int) $this->repoSupport->countAllSupports();
-            $datas['Nombre de suivis en cours'] = (int) $this->repoSupport->countAllSupports(['status' => 2]);
-            $datas['Nombre de notes'] = (int) $this->repoNote->countAllNotes();
-            $datas['Nombre de RDVs'] = (int) $this->repoRdv->countAllRdvs();
-            $datas['Nombre de documents'] = $this->repoDocument->countAllDocuments().' ('.round($this->repoDocument->sumSizeAllDocuments() / 1024 / 1024).' Mo.)';
+            $datas['Nombre de personnes'] = (int) $this->repoPerson->count([]);
+            $datas['Nombre de groupes'] = (int) $this->repoGroupPeople->count([]);
+            $datas['Nombre de suivis'] = (int) $this->repoSupport->count([]);
+            $datas['Nombre de suivis en cours'] = (int) $this->repoSupport->count(['status' => 2]);
+            $datas['Nombre de notes'] = (int) $this->repoNote->count([]);
+            $datas['Nombre de RDVs'] = (int) $this->repoRdv->count([]);
+            $datas['Nombre de documents'] = $this->repoDocument->count([]).' ('.round($this->repoDocument->sumSizeAllDocuments() / 1024 / 1024).' Mo.)';
+            $datas['Nombre de paiements'] = (int) $this->repoContribution->count([]);
 
             $indicators->set($datas);
             $indicators->expiresAfter(5 * 60);  // 5 * 60 seconds
@@ -136,13 +141,14 @@ class AppController extends AbstractController
                 $users[] = [
                     'id' => $user->getId(),
                     'name' => $user->getFullname(),
-                    'activeSupports' => (int) $this->repoSupport->countAllSupports([
-                        'user' => $user,
+                    'activeSupports' => (int) $this->repoSupport->count([
+                        'referent' => $user,
                         'status' => 2,
                     ]),
-                    'notes' => (int) $this->repoNote->countAllNotes(['user' => $user]),
-                    'rdvs' => (int) $this->repoRdv->countAllRdvs(['user' => $user]),
-                    'documents' => (int) $this->repoDocument->countAllDocuments(['user' => $user]),
+                    'notes' => (int) $this->repoNote->count(['createdBy' => $user]),
+                    'rdvs' => (int) $this->repoRdv->count(['createdBy' => $user]),
+                    'documents' => (int) $this->repoDocument->count(['createdBy' => $user]),
+                    'contributions' => (int) $this->repoContribution->count(['createdBy' => $user]),
                 ];
             }
             $usersIndicators->set($users);
