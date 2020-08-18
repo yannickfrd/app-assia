@@ -16,6 +16,17 @@
     <div class="col-md-12" data-parent-field="orientationDate">{{ form_label(form.originRequest.comment) }}{{ form_widget(form.originRequest.comment) }}</div>
 </section>
 <hr>
+<section class="{% if support.device and support.device.accommodation == yes %}d-none{% endif %}">
+    <div class="form-group row" id="support_location">
+        <div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
+        <div class="col-md-6">{{ form_row(form.location.search) }}</div>
+        <div class="col-md-6">{{ form_row(form.location.address) }}</div>
+        <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
+        <div class="col-md-6">{{ form_row(form.location.city) }}</div>
+        <div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
+    </div>
+</section>
+<hr>
 <section class="form-group">
     <div class="row">
         <div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
@@ -25,8 +36,8 @@
         <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.endDate) }}</div>
     </div>
     <div class="row">
-        <div class="col-md-6" data-parent-field="endDate">{{ form_row(form.endStatus) }}</div>
-        <div class="col-md-6" data-parent-field="endDate">{{ form_row(form.endStatusComment) }}</div>
+        <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.endStatus) }}</div>
+        <div class="col-md-6" data-parent-field="endStatus">{{ form_row(form.endStatusComment) }}</div>
         {% if support.id and support.device.accommodation %}
             <div class="col-md-6">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
@@ -34,17 +45,6 @@
                 </div>
             </div>
         {% endif %}
-    </div>
-</section>
-<section class="{% if support.device and support.device.accommodation == yes %}d-none{% endif %}">
-    <hr>
-    <div class="form-group row" id="support_location">
-        <div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
-        <div class="col-md-6">{{ form_row(form.location.search) }}</div>
-        <div class="col-md-6">{{ form_row(form.location.address) }}</div>
-        <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-        <div class="col-md-6">{{ form_row(form.location.city) }}</div>
-        <div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
     </div>
 </section>
 <div class="form-group row">

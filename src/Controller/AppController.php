@@ -163,24 +163,14 @@ class AppController extends AbstractController
      */
     public function showSupportsByUser(SupportsByUserIndicators $indicators, SupportsByUserSearch $search, Request $request): Response
     {
-        // $cache = new FilesystemAdapter();
-
-        // $cacheStatsService = $cache->getItem('stats.service'.$this->getUser()->getId());
-
-        // if (!$cacheStatsService->isHit()) {
-        //     $cacheStatsService->set($indicators->getSupportsbyDevice());
-        //     $cacheStatsService->expiresAfter(2 * 60);
-        //     $cache->save($cacheStatsService);
-        // }
-
-        // $statsService = $cacheStatsService->get();
-
         $form = ($this->createForm(SupportsByUserSearchType::class, $search))
         ->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $datas = $indicators->getSupportsbyDevice($search);
         }
+
+        // dd($datas);
 
         return $this->render('app/dashboard/supportsByUser.html.twig', [
             'form' => $form->createView(),

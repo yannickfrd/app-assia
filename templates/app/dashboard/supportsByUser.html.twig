@@ -96,6 +96,9 @@
                                 {% endif %}
                                 {% for device in devices %}
                                     <td class="align-middle text-right">{{ device.nbSupports }}
+                                {% if device.nbTheoreticalSupports > 0 %}
+                                    <span class="small"> /{{ device.nbTheoreticalSupports }}</span>
+                                {% endif %}
                                     {% if device.nbSupports != device.sumCoeff %}
                                         <br /><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
                                     {% endif %}

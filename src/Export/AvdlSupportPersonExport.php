@@ -84,6 +84,7 @@ class AvdlSupportPersonExport
             'Commentaire situation à la fin' => $supportGroup->getEndStatusComment(),
             'Date de la proposition' => $this->formatDate($avdlSupport->getPropoHousingDate()),
             'Résultat de la proposition' => $avdlSupport->getPropoResultToString(),
+            'Date d\'accès au logement' => $this->formatDate($avdlSupport->getAccessHousingDate()),
             'Commentaire fin d\'accompagnement ou propo. logement' => $avdlSupport->getEndSupportComment(),
         ];
 

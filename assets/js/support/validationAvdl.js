@@ -87,7 +87,8 @@ export default class ValidationAvdlSupport {
         new DisplayFields(this.prefix, 'diagStartDate')
         new DisplayFields(this.prefix, 'supportStartDate')
         new DisplayFields(this.prefix, 'supportEndDate')
-        new DisplayFields(this.prefix, 'accessHousingModality')
+        new DisplayFields(this.prefix, 'propoHousingDate')
+        new DisplayFields(this.prefix, 'propoResult', [1])
     }
 
     /**

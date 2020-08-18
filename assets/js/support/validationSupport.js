@@ -66,7 +66,7 @@ export default class ValidationSupport {
     displayFields() {
         new DisplayFields(this.prefix + 'originRequest_', 'orientationDate')
         new DisplayFields(this.prefix, 'startDate')
-        new DisplayFields(this.prefix, 'endDate')
+        new DisplayFields(this.prefix, 'endStatus')
     }
 
     checkDate(dateInputElt) {
@@ -104,13 +104,13 @@ export default class ValidationSupport {
             return this.validationForm.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieur de 30 jours par rapport à la date du jour.')
         }
 
-        if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) {
-            return this.validationForm.invalidField(this.startDateInputElt, 'Saisie obligaotoire.')
+        if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) { // Statut = En cours, Supsendu, Terminé
+            return this.validationForm.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         }
-        if (intervalWithNow && [1, 5].indexOf(status) != -1) {
+        if (intervalWithNow && [1, 5].indexOf(status) != -1) { // Statut =  Orientation/pré-adm.
             return this.validationForm.invalidField(this.startDateInputElt, 'Il ne peut pas y avoir de date début de suivi pour une pré-admission.')
         }
-        if (intervalWithNow || (!intervalWithNow && status === 1)) {
+        if (intervalWithNow || (!intervalWithNow && [1, 6].indexOf(status) != -1)) { // Statut =  Orientation/pré-adm. / Liste d'attente
             return this.validationForm.validField(this.startDateInputElt)
         }
     }

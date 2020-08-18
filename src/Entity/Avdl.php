@@ -133,6 +133,10 @@ class Avdl
     private $propoResult;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $accessHousingDate;
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $endSupportComment;
@@ -354,6 +358,18 @@ class Avdl
     public function setPropoResult(?int $propoResult): self
     {
         $this->propoResult = $propoResult;
+
+        return $this;
+    }
+
+    public function getAccessHousingDate(): ?\DateTimeInterface
+    {
+        return $this->accessHousingDate;
+    }
+
+    public function setAccessHousingDate(?\DateTimeInterface $accessHousingDate): self
+    {
+        $this->accessHousingDate = $accessHousingDate;
 
         return $this;
     }

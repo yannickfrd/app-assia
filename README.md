@@ -17,7 +17,9 @@ https://demo.esperer95.app
 # Mise à jour
 
 ## Version 1.17.11 - 18/08/2020
-- Modif et suppressions de variables AVDL (Type d'accompagnement).
+- Modif et suppression de variables AVDL (Type d'accompagnement).
+- Ajout du champ 'Date d'accès au logement' pour l'AVDL.
+- Modif de l'affichage conditionnelle des champs sur le formulaire du suivi et AVDL.
 - Staut du suivi : correction bug lors de la sélection du statut 'Liste d'attente'.
 
 ## Version 1.17.11 - 18/08/2020

@@ -80,6 +80,10 @@ class AvdlType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('accessHousingDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
             ->add('endSupportComment', TextareaType::class, [
                 'attr' => [
                     'rows' => 2,

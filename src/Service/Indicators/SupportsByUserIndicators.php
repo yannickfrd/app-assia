@@ -37,6 +37,7 @@ class SupportsByUserIndicators
 
         $devices = $initDevicesUser;
         $dataUsers = [];
+        $sumTheoreticalSupports = 0;
         $sumCoeffSupports = 0;
 
         foreach ($users as $user) {
@@ -66,6 +67,7 @@ class SupportsByUserIndicators
                 if (array_key_exists($deviceId, $devices)) {
                     $devicesUser[$deviceId]['nbTheoreticalSupports'] = $userDevice->getNbSupports();
                     $nbTheoreticalSupports += $userDevice->getNbSupports();
+                    $devices[$deviceId]['nbTheoreticalSupports'] += $userDevice->getNbSupports();
                 }
             }
 
@@ -87,6 +89,7 @@ class SupportsByUserIndicators
 
         return [
             'nbSupports' => count($supports),
+            'sumTheoreticalSupports' => $sumTheoreticalSupports,
             'sumCoeffSupports' => $sumCoeffSupports,
             'devices' => $devices,
             'dataUsers' => $dataUsers,
@@ -109,6 +112,7 @@ class SupportsByUserIndicators
         $initDevicesUser['NR'] = [
                 'name' => 'NR',
                 'nbSupports' => 0,
+                'nbTheoreticalSupports' => 0,
                 'sumCoeff' => 0,
         ];
 
