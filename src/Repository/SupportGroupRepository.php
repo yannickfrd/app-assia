@@ -162,9 +162,9 @@ class SupportGroupRepository extends ServiceEntityRepository
         if ($search->getDiagOrSupport() == AvdlSupportSearch::SUPPORT) {
             $query->andWhere('avdl.supportStartDate IS NOT NULL');
         }
-        if ($search->getReadyToHousing()) {
-            $query->andWhere('avdl.readyToHousing = :readyToHousing')
-            ->setParameter('readyToHousing', $search->getReadyToHousing());
+        if ($search->getSupportType()) {
+            $query->andWhere('avdl.supportType IN (:supportType)')
+            ->setParameter('supportType', $search->getSupportType());
         }
 
         return $query->orderBy('sg.updatedAt', 'DESC')

@@ -4,7 +4,6 @@ namespace App\Service\SupportGroup;
 
 use App\Entity\Avdl;
 use App\Entity\SupportGroup;
-use App\Form\Utils\Choices;
 
 class AvdlService
 {
@@ -89,15 +88,15 @@ class AvdlService
      *
      * @return float
      */
-    protected function getAvdlCoeffSupport(Avdl $avdl): int
+    protected function getAvdlCoeffSupport(Avdl $avdl): float
     {
-        // Si accompagnement lourd : coeff. 2
-        if ($avdl->getSupportType() == 3) {
-            return SupportGroup::COEFFICIENT_DOUBLE;
-        }
-        // Si prêt au logement : coeff. 0.25
-        if ($avdl->getReadyToHousing() == Choices::YES) {
+        // Si prêt au logement (PAL) : coeff. 0.25
+        if ($avdl->getSupportType() == 1) {
             return SupportGroup::COEFFICIENT_QUARTER;
+        }
+        // Si accompagnement lourd : coeff. 2
+        if ($avdl->getSupportType() == 5) {
+            return SupportGroup::COEFFICIENT_DOUBLE;
         }
         // Sinon par défaut : coeff. 1
         return SupportGroup::COEFFICIENT_DEFAULT;

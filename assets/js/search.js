@@ -8,16 +8,17 @@ import "select2";
 let select2Array = {
     "typology": "Typologie familiale",
     "status": "Statut",
-    "referent": "Référent",
-    "service": "Service",
-    "device": "Dispositif",
+    "referents": "Référents",
+    "services": "Services",
+    "devices": "Dispositifs",
     "contribution-type": "Type",
+    "support-type": "Type d'acc.",
 }
 
 for (let i in select2Array) {
-    $("select.multi-select.js-" + i).select2({
-        // theme: 'bootstrap4',
+    $(`select[data-select2-id="${i}"]`).select2({
         placeholder: "  -- " + select2Array[i] + " --",
+        // theme: 'bootstrap4',
     });
 }
 

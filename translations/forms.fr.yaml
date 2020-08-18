@@ -176,13 +176,12 @@ location.search.placeholder: Saisir une adresse ou une ville...
 ### AVDL
 # Mandate date: Date de mandatement
 # City origin: Commune d'origine
-Propo housing: Proposition logement
 Diag type: Type de diagnostic
 Diag start date: Date de début diagnostic
 Diag end date: Date de fin diagnostic
 Recommendation support: Préconisation d'accompagnement
 Diag comment: Commentaire sur le diagnostic
-Support type: Niveau d'accompagnement
+Support type: Type d'accompagnement
 Ready to housing: Prêt au logement
 Support comment: Commentaire sur l'accompagnement
 Support start date: Date de début d'accompagnement
@@ -190,7 +189,6 @@ Support end date: Date de fin d'accompagnement
 End support reason: Motif de fin d'accompagnement
 Access housing modality: Modalité d'accès au logement
 Propo housing date: Date de la proposition
-Propo origin: Origine de la proposition
 Propo result: Résultat de la proposition
 End supportcomment: Commentaire sur la fin d'accompagnement
 avdl:
@@ -199,12 +197,10 @@ avdl:
   diagType: Type de diagnostic
   recommendationSupport: Préconisation d'accompagnement
   support: Accompagnement
-  supportType: Niveau d'accompagnement
-  readyToHousing: Prêt au logement
+  supportType: Type d'accompagnement
   endSupportReason: Motif de fin d'accompagnement
   accessHousingModality: Modalité d'accès au logement
   propoHousingDate: Date de la proposition
-  propoOrigin: Origine de la proposition
   propoResult: Résultat de la proposition
   diagComment.placeholder: Écrire un commentaire sur le diagnostic
   supportComment.placeholder: Écrire un commentaire sur l'accompagnement

@@ -66,7 +66,6 @@ export default class ValidationAvdlSupport {
                 this.supportEndDateElt,
                 'La date ne peut pas être antérieure au début de l\'accompagnement.')
         })
-        // - Date de fin de diag sans préco d'acc.
 
         this.btnSubmitElts.forEach(btnElt => {
             btnElt.addEventListener('click', e => {
@@ -84,6 +83,7 @@ export default class ValidationAvdlSupport {
      */
     displayFields() {
         new DisplayFields('support_originRequest_', 'orientationDate')
+        new DisplayFields('support_originRequest_', 'organization')
         new DisplayFields(this.prefix, 'diagStartDate')
         new DisplayFields(this.prefix, 'supportStartDate')
         new DisplayFields(this.prefix, 'supportEndDate')

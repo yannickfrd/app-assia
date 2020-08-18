@@ -10,9 +10,8 @@
 		<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
 		<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
 		<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
-		<div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.organizationComment) }}</div>
-		<div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.avdl.propoHousing) }}</div>
-		<div class="col-md-12" data-parent-field="orientationDate">{{ form_widget(form.originRequest.comment) }}</div>
+		<div class="col-md-6" data-parent-field="organization">{{ form_row(form.originRequest.organizationComment) }}</div>
+		<div class="col-md-12" data-parent-field="organization">{{ form_widget(form.originRequest.comment) }}</div>
 	</div>
 	<hr>
 	<div class="form-group row" id="support_location">
@@ -37,7 +36,6 @@
 		<div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
 		<div class="col-md-6" data-check-valid="supportStart">{{ form_row(form.avdl.supportStartDate) }}</div>
 		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportStart">{{ form_row(form.avdl.supportType) }}</div>
-		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportStart">{{ form_row(form.avdl.readyToHousing) }}</div>
 		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="endSupport">{{ form_row(form.avdl.supportEndDate) }}</div>
 		<div class="col-md-12" data-parent-field="supportStartDate" >{{ form_widget(form.avdl.supportComment) }}</div>
 	</div>
@@ -48,7 +46,6 @@
 		<div class="col-md-6" data-check-valid="endSupport">{{ form_row(form.endStatus) }}</div>
 		<div class="col-md-6" data-check-valid="accessHousing">{{ form_row(form.avdl.accessHousingModality) }}</div>
 		<div class="col-md-6" data-parent-field="accessHousingModality" data-check-valid="accessHousing">{{ form_row(form.avdl.propoHousingDate) }}</div>
-		<div class="col-md-6" data-parent-field="accessHousingModality">{{ form_row(form.avdl.propoOrigin) }}</div>
 		<div class="col-md-6" data-parent-field="accessHousingModality">{{ form_row(form.avdl.propoResult) }}</div>
 		<div class="col-md-12">{{ form_widget(form.avdl.endSupportComment) }}</div>
 	</div>

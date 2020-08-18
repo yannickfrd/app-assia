@@ -43,7 +43,7 @@
     <div class="row my-2">
         {{ utils.view(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
             ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y") : "") : "", "avdl.support") }}
-        {{ utils.view(avdl.supportTypeToString ~ (avdl.readyToHousing ? " | PAL : " ~ avdl.readyToHousingToString), "avdl.supportType") }}
+        {{ utils.view(avdl.supportTypeToString, "avdl.supportType") }}
         {{ utils.view(avdl.supportComment, "Comment") }}
     </div>
 {% endif %}
@@ -53,7 +53,6 @@
         {{ utils.view(avdl.accessHousingModalityToString, "avdl.accessHousingModality") }}
         {{ utils.view(avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") ~
             (avdl.propoResult ? " | Resultat : " ~ avdl.propoResultToString ), "avdl.propoHousingDate") }}
-        {{ utils.view(avdl.propoOriginToString, "avdl.propoOrigin") }}
         {{ utils.view(avdl.endSupportComment, "Comment") }}
     </div>
 {% endif %}

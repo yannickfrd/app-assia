@@ -2,6 +2,8 @@
 
 namespace App\Form\Avdl;
 
+use App\Entity\Avdl;
+use App\Entity\SupportGroup;
 use App\Form\Utils\Choices;
 use App\Form\Model\AvdlSupportSearch;
 use App\Form\Type\DateSearchType;
@@ -27,9 +29,10 @@ class AvdlSupportSearchType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
-                'choices' => Choices::getChoices(AvdlSupportSearch::STATUS),
+                'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select js-status w-min-120',
+                    'class' => 'multi-select w-min-120',
+                    'data-select2-id' => 'status',
                 ],
                 'placeholder' => '-- Status --',
                 'required' => false,
@@ -53,13 +56,18 @@ class AvdlSupportSearchType extends AbstractType
             ->add('diagOrSupport', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(AvdlSupportSearch::DIAG_OR_SUPPORT),
-                'placeholder' => '-- Type de suivi --',
+                'placeholder' => '-- Diag/Acc. --',
                 'required' => false,
             ])
-            ->add('readyToHousing', ChoiceType::class, [
+            ->add('supportType', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => '-- Prêt au logement --',
+                'multiple' => true,
+                'choices' => Choices::getChoices(Avdl::SUPPORT_TYPE),
+                'attr' => [
+                    'class' => 'multi-select w-min-120',
+                    'data-select2-id' => 'support-type',
+                ],
+                'placeholder' => '-- Type --',
                 'required' => false,
             ])
             ->add('export');

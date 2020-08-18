@@ -37,7 +37,8 @@ class ExportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select js-status',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'status',
                 ],
                 'placeholder' => '-- Status --',
                 'required' => false,
@@ -73,7 +74,8 @@ class ExportSearchType extends AbstractType
                 },
                 'placeholder' => '-- Référent --',
                 'attr' => [
-                    'class' => 'multi-select js-referent',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'referents',
                 ],
                 'required' => false,
             ])
@@ -86,7 +88,8 @@ class ExportSearchType extends AbstractType
                 },
                 'placeholder' => '-- Service --',
                 'attr' => [
-                    'class' => 'multi-select js-service',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'services',
                 ],
                 'required' => false,
             ])
@@ -99,7 +102,8 @@ class ExportSearchType extends AbstractType
                 },
                 'placeholder' => '-- Device --',
                 'attr' => [
-                    'class' => 'multi-select js-device',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'devices',
                 ],
                 'required' => false,
             ])

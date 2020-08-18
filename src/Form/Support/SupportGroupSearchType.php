@@ -30,7 +30,8 @@ class SupportGroupSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
                 'attr' => [
-                    'class' => 'multi-select js-typology',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'typology',
                 ],
                 'placeholder' => 'placeholder.familtyTypology',
                 'required' => false,
@@ -47,7 +48,8 @@ class SupportGroupSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select js-status',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'status',
                 ],
                 'placeholder' => '-- Status --',
                 'required' => false,

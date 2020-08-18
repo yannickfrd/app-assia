@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Form\Utils\Choices;
 use App\Repository\AvdlRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,10 +24,15 @@ class Avdl
     ];
 
     public const SUPPORT_TYPE = [
-        1 => '1 - Léger',
-        2 => '2 - Moyen',
-        3 => '3 - Lourd',
+        1 => 'Prêt au logement (0,25)', // 0.25
+        2 => 'Acc. dans le logement (1)', // 1
+        3 => 'Propo. en cours (1)', //1
+        4 => 'Non prêt au logement (1)', //1
+        5 => 'Acc. lourd (2)', //2
     ];
+    // 1 => '1 - Léger',
+    // 2 => '2 - Moyen',
+    // 3 => '3 - Lourd',
 
     public const END_SUPPORT_REASON = [
         1 => 'Autonome',
@@ -39,21 +43,12 @@ class Avdl
     ];
 
     public const ACCESS_HOUSING_MODALITY = [
-        1 => 'Propo. bailleur',
+        1 => 'Propo. Bailleur',
         2 => 'Propo. Préfecture',
-        3 => 'Propo. DRIHL',
+        3 => 'Propo. DRIHL (Région)',
         5 => 'Propo. Action Logement',
+        7 => 'Propo. Mairie',
         6 => 'Protocole Logement d’Abord',
-        97 => 'Autre',
-        99 => 'Non renseigné',
-    ];
-
-    public const PROPO_ORIGIN = [
-        1 => 'Préfecture',
-        2 => 'Action Logement',
-        3 => 'DRIHL (Région)',
-        5 => 'Mairie',
-        6 => 'Protocoles',
         97 => 'Autre',
         99 => 'Non renseigné',
     ];
@@ -71,21 +66,6 @@ class Avdl
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $mandateDate; // A supprimer ?
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $cityOrigin; // A supprimer ?
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $propoHousing;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -128,11 +108,6 @@ class Avdl
     private $supportType;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $readyToHousing;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $supportComment;
@@ -151,11 +126,6 @@ class Avdl
      * @ORM\Column(type="date", nullable=true)
      */
     private $propoHousingDate;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $propoOrigin; // A supprimer ?
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -198,23 +168,6 @@ class Avdl
     public function setCityOrigin(?string $cityOrigin): self
     {
         $this->cityOrigin = $cityOrigin;
-
-        return $this;
-    }
-
-    public function getPropoHousing(): ?int
-    {
-        return $this->propoHousing;
-    }
-
-    public function getPropoHousingToString(): ?string
-    {
-        return $this->getPropoHousing() ? Choices::YES_NO[$this->getPropoHousing()] : null;
-    }
-
-    public function setPropoHousing(?int $propoHousing): self
-    {
-        $this->propoHousing = $propoHousing;
 
         return $this;
     }
@@ -330,23 +283,6 @@ class Avdl
         return $this;
     }
 
-    public function getReadyToHousing(): ?int
-    {
-        return $this->readyToHousing;
-    }
-
-    public function getReadyToHousingToString(): ?string
-    {
-        return $this->getReadyToHousing() ? Choices::YES_NO[$this->getReadyToHousing()] : null;
-    }
-
-    public function setReadyToHousing(?int $readyToHousing): self
-    {
-        $this->readyToHousing = $readyToHousing;
-
-        return $this;
-    }
-
     public function getSupportComment(): ?string
     {
         return $this->supportComment;
@@ -401,23 +337,6 @@ class Avdl
     public function setPropoHousingDate(?\DateTimeInterface $propoHousingDate): self
     {
         $this->propoHousingDate = $propoHousingDate;
-
-        return $this;
-    }
-
-    public function getPropoOrigin(): ?int
-    {
-        return $this->propoOrigin;
-    }
-
-    public function getPropoOriginToString(): ?string
-    {
-        return $this->getPropoOrigin() ? self::PROPO_ORIGIN[$this->getPropoOrigin()] : null;
-    }
-
-    public function setPropoOrigin(?int $propoOrigin): self
-    {
-        $this->propoOrigin = $propoOrigin;
 
         return $this;
     }

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.17.11 - 18/08/2020
+1.17.12 - 18/08/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,10 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.17.11 - 18/08/2020
+- Modif et suppressions de variables AVDL (Type d'accompagnement).
+- Staut du suivi : correction bug lors de la sélection du statut 'Liste d'attente'.
 
 ## Version 1.17.11 - 18/08/2020
 - Tableau AVDL : correction erreur date de mandatement.

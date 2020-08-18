@@ -40,11 +40,12 @@ class ServiceSearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Référent --',
                     'attr' => [
-                        'class' => 'multi-select js-referent w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-150 w-max-180',
+                        'data-select2-id' => 'referents',
                     ],
                     'required' => false,
                 ]);
-            }
+        }
         if (null == $attrOptions || in_array('services', $attrOptions)) {
             $builder
                 ->add('services', EntityType::class, [
@@ -57,7 +58,8 @@ class ServiceSearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Service --',
                     'attr' => [
-                        'class' => 'multi-select js-service w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-150 w-max-180',
+                        'data-select2-id' => 'services',
                     ],
                     'required' => false,
                 ]);
@@ -74,7 +76,8 @@ class ServiceSearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Device --',
                     'attr' => [
-                        'class' => 'multi-select js-device w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-150 w-max-180',
+                        'data-select2-id' => 'devices',
                     ],
                     'required' => false,
                 ]);

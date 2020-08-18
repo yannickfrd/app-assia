@@ -122,7 +122,6 @@ class SupportGroup
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotNull(message="Le statut doit être renseigné.")
-     * @Assert\Range(min = 1, max = 5, minMessage="Le statut doit être renseigné.",  maxMessage="Le statut doit être renseigné.")
      */
     private $status;
 

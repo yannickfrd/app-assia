@@ -24,7 +24,8 @@ class SupportContributionSearchType extends AbstractType
                 ],
                 'multiple' => true,
                 'attr' => [
-                    'class' => 'multi-select js-contribution-type',
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'contribution-type',
                 ],
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'required' => false,

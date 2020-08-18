@@ -133,10 +133,10 @@ export default class ValidationSupport {
         if (intervalWithNow < 0) {
             return this.validationForm.invalidField(this.endDateInputElt, 'La date ne peut pas être postérieure à la date du jour.')
         }
-        if (!this.endDateInputElt.value && this.selectType.getOption(this.statusSelectElt) === 4) { // statut égal à Terminé
+        if (!this.endDateInputElt.value && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
             return this.validationForm.invalidField(this.endDateInputElt, 'La date de fin ne peut pas être vide si le suivi est terminé.')
         }
-        if (this.endDateInputElt.value) {
+        if (this.endDateInputElt.value) { // Statut = Terminé
             this.selectType.setOption(this.statusSelectElt, 4)
         }
     }
@@ -145,7 +145,7 @@ export default class ValidationSupport {
      * Vérifie le motif de fin de suivi.
      */
     checkEndStatus() {
-        if (!this.endStatusInputElt.value && this.selectType.getOption(this.statusSelectElt) === 4) { // statut égal à Terminé
+        if (!this.endStatusInputElt.value && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
             return this.validationForm.invalidField(this.endStatusInputElt, 'La situation à la fin du suivi ne peut pas être vide.')
         }
         return this.validationForm.validField(this.endStatusInputElt)

@@ -10,11 +10,6 @@ class AvdlSupportSearch
     use DateSearchTrait;
     use ReferentServiceDeviceSearchTrait;
 
-    public const STATUS = [
-        2 => 'En cours',
-        4 => 'Terminé',
-    ];
-
     public const SUPPORT_DATES = [
         1 => 'Début du suivi',
         2 => 'Fin du suivi',
@@ -55,9 +50,9 @@ class AvdlSupportSearch
     private $diagOrSupport;
 
     /**
-     * @var int|null
+     * @var array
      */
-    private $readyToHousing;
+    private $supportType;
 
     /**
      * @var bool
@@ -124,14 +119,14 @@ class AvdlSupportSearch
         return $this;
     }
 
-    public function getReadyToHousing(): ?int
+    public function getSupportType(): ?array
     {
-        return $this->readyToHousing;
+        return $this->supportType;
     }
 
-    public function setReadyToHousing(int $readyToHousing): self
+    public function setSupportType(array $supportType): self
     {
-        $this->readyToHousing = $readyToHousing;
+        $this->supportType = $supportType;
 
         return $this;
     }
