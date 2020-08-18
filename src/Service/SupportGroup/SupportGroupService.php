@@ -59,16 +59,17 @@ class SupportGroupService
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
     {
-        $cacheSupport = $this->cache->getItem('support_group_full.'.$id);
+        // $cacheSupport = $this->cache->getItem('support_group_full.'.$id);
 
-        if (!$cacheSupport->isHit()) {
-            $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        // if (!$cacheSupport->isHit()) {
+        //     $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
-            $cacheSupport->set($supportGroup);
-            $cacheSupport->expiresAfter(365 * 24 * 60 * 60);
-            $this->cache->save($cacheSupport);
-        }
-        $supportGroup = $cacheSupport->get();
+        //     $cacheSupport->set($supportGroup);
+        //     $cacheSupport->expiresAfter(365 * 24 * 60 * 60);
+        //     $this->cache->save($cacheSupport);
+        // }
+        // $supportGroup = $cacheSupport->get();
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->checkSupportGroup($supportGroup);
 

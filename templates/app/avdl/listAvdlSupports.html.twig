@@ -40,7 +40,7 @@
                                 <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Dispositif", "d.name") }}</th>
                                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Commune", "sg.city") }}</th>
-                                <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de manda-tement", "avdl.mandateDate") }}</th>
+                                <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de manda-tement", "origin.orientationDate") }}</th>
                                 {# <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Proposition logement", "avdl.propoHousing") }}</th> #}
                                 <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début du diagnostic", "avdl.diagStartDate") }}</th>
                                 <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin du diagnostic", "avdl.diagEndDate") }}</th>
@@ -94,8 +94,8 @@
                                 <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
                                 <td class="align-middle">{{ support.device ? support.device.name }}</td>
                                 <td class="align-middle">{{ support.city }}</td>
+                                <td class="align-middle">{{ support.originRequest and support.originRequest.orientationDate ? support.originRequest.orientationDate|date("d/m/Y") }}</td>
                                 {% if support.avdl %}
-                                <td class="align-middle">{{ support.avdl.mandateDate ? support.avdl.mandateDate|date("d/m/Y") }}</td>
                                 {# <td class="align-middle">{{ support.avdl.propoHousingToString }}</td> #}
                                 <td class="align-middle">{{ support.avdl.diagStartDate ? support.avdl.diagStartDate|date("d/m/Y") }}</td>
                                 <td class="align-middle">{{ support.avdl.diagEndDate ? support.avdl.diagEndDate|date("d/m/Y") }}</td>
@@ -111,7 +111,7 @@
                                 {# <td class="align-middle">{{ support.avdl.propoOriginToString }}</td> #}
                                 <td class="align-middle">{{ support.avdl.propoResultToString }}</td>
                                 {% else %}
-                                <td class="align-middle" colspan="13"></td>
+                                <td class="align-middle" colspan="12"></td>
                                 {% endif %}
                             </tr>
                             {% endfor %}

@@ -2,6 +2,8 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
+{% set user = form.vars.value %}
+
 {% block title %}Compte utilisateur | {{ title_website }}{% endblock %}
 
 {% block body %}
@@ -12,7 +14,7 @@
     
     <section>
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3">Compte utilisateur : {{ form.vars.value.fullname }}</h1>
+        <h1 class="h2 mb-3">Compte utilisateur : {{ user.fullname }}</h1>
         <hr>
         <div class="row">
             <div class="col-md-6">{{ form_row(form.firstname) }}</div>
@@ -27,11 +29,11 @@
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="float-left d-flex">
-                    {% if form.vars.value.isDisabled %} 
-                    <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('security_user_enable', {'id':form.vars.value.id}) }}"
+                    {% if user.isDisabled %} 
+                    <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('security_user_enable', {'id':user.id}) }}"
                         title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"><span class="fas fa-user-plus mr-2"></span>Ré-activer</a>
                     {% else %}
-                    <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
+                    <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('security_user_disable', {'id':user.id}) }}"
                         title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"
                         onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"><span
                             class="fas fa-user-slash mr-2"></span>Désactiver</a>
@@ -81,7 +83,7 @@
 
     </section>
 
-    {% if app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
+    {% if user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
     <hr>
     <section id="supports-by-device">
         <h2 class="h4 mb-4">Nombre théorique de suivis par dispositif</h2>

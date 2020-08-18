@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -118,6 +119,11 @@ class Device
     public function getAccommodation(): ?int
     {
         return $this->accommodation;
+    }
+
+    public function getAccommodationToString(): ?string
+    {
+        return $this->accommodation ? Choices::YES_NO[$this->accommodation] : null;
     }
 
     public function setAccommodation(?int $accommodation): self

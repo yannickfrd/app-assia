@@ -16,21 +16,21 @@
       <h2 class="h5">Création</h2>
       <ul>
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("security_registration") }}">Créer un nouvel utilisateur</a>
+            <a class="text-dark" href="{{ path("security_registration") }}">Nouvel utilisateur</a>
         </li>
         {% if is_granted("ROLE_SUPER_ADMIN") %}
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("service_new") }}">Créer un nouveau service</a>
+            <a class="text-dark" href="{{ path("service_new") }}">Nouveau service</a>
         </li>
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("pole_new") }}">Créer un nouveau pôle</a>
+            <a class="text-dark" href="{{ path("pole_new") }}">Nouveau pôle</a>
         </li>
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("admin_device_new") }}">Ajouter un dispositif</a>
+            <a class="text-dark" href="{{ path("admin_device_new") }}">Dispositif</a>
         </li class="mb-2">
         {% endif %}
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("admin_organization_new") }}">Ajouter un organisme prescripteur</a>
+            <a class="text-dark" href="{{ path("admin_organization_new") }}">Organisme prescripteur</a>
         </li>
       </ul>
 
@@ -40,11 +40,11 @@
         <ul>
             {% if is_granted("ROLE_SUPER_ADMIN") %}
             <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("admin_users") }}">Liste de tous les utilisateurs</a>
+                <a class="text-dark" href="{{ path("admin_users") }}">Utilisateurs</a>
             </li>
             {% endif %}
             <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("admin_devices") }}">Liste de tous les dispositifs</a>
+                <a class="text-dark" href="{{ path("admin_devices") }}">Dispositifs</a>
             </li>
         </ul>
 

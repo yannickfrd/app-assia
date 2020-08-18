@@ -30,6 +30,9 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(devices, "Coefficient", "d.coefficient") }}
                         </th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(devices, "Hébergement", "d.accommodation") }}
+                        </th>
                         <th scope="col" class="align-middle th-w-150">
                             {{ knp_pagination_sortable(devices, "Description", "d.comment") }}
                         </th>
@@ -60,6 +63,7 @@
                         </th>
                         <td>{{ device.name }}</td>
                         <td>{{ device.coefficient }}</td>
+                        <td>{{ device.accommodationToString }}</td>
                         <td>{{ device.comment }}</td>
                         <td>{{ device.createdAt|date("d/m/Y H:i") }}</td>
                         <td>{{ device.createdBy ? device.createdBy.fullname }}</td>
