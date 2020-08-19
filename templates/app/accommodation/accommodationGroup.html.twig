@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% if form.vars.value.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
+{% if form.vars.value.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
 
 {% block title %}Logement/hébergement | {{ title_website }}{% endblock %}
 
@@ -27,7 +27,7 @@
 	</div>
 	<div class="form-group row">
 		<div class="col-md-12">
-			{% if edit_mode == true and is_granted("DELETE", support) %}
+			{% if EDIT_MODE == true and is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
 				<a href="{{ path('support_group_people_accommodation_delete', {'id':form.vars.value.id}) }}" 
 					class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
@@ -36,12 +36,12 @@
 			</div>
 			{% endif %}
 			<div class="mb-4 float-right">
-			     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+			     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 			</div>
 		</div>
 	</div>
 
-	{% if edit_mode %}
+	{% if EDIT_MODE %}
 	
 		<hr>
 
@@ -91,7 +91,7 @@
 			<div class="form-group row">
 				<div class="col-md-12">
 					<div class="float-right">
-						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 					</div>
 				</div>
 			</div>

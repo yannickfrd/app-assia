@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                	{% for evalPerson in form.evaluationPeople|filter(e => e.vars.value.supportPerson.role == role_child) %}
+                	{% for evalPerson in form.evaluationPeople|filter(e => e.vars.value.supportPerson.role == ROLE_CHILD) %}
 					{% set person = evalPerson.vars.value.supportPerson.person %}
                     <tr>
                         <th scope="row"></th>

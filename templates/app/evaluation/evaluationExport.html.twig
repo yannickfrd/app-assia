@@ -1,7 +1,7 @@
 {% import "macros/wordView.html.twig" as utils %}
 
 {% set nbSupportPeople = support.supportPeople|length %}
-{% set role_child = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set yes = constant("App\\Form\\Utils\\Choices::YES") %}
 
 {% apply spaceless %}
@@ -42,7 +42,7 @@
     {% if evalHousing %}
         {# {{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
             ~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
-        {{ utils.view(evalHousing.domiciliation == yes ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+        {{ utils.view(evalHousing.domiciliation == YES ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
             ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }} #}
     {% endif %}
 
@@ -77,7 +77,7 @@
                 {% endif %}
                 {{ utils.view(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
                     ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
-                {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == yes ? 
+                {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
                     " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
                 {{ evalSocial.commentEvalSocialPerson }}
             {% endif %}
@@ -97,12 +97,12 @@
     <h3 class="h4"><b>FAMILLE</b></h3>
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalFamily = evalPerson.evalFamilyPerson %}
-        {% if evalFamily and evalPerson.supportPerson.role != role_child %}
+        {% if evalFamily and evalPerson.supportPerson.role != ROLE_CHILD %}
             {% if nbSupportPeople > 1 %}
                 <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
             {% endif %}            
             {{ utils.view(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
-            {{ utils.view(evalFamily.protectiveMeasure == yes and evalFamily.protectiveMeasureType ? 
+            {{ utils.view(evalFamily.protectiveMeasure == YES and evalFamily.protectiveMeasureType ? 
                 evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
             {{ utils.view(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
                 ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
@@ -124,7 +124,7 @@
             <tbody>
                 {% for evalPerson in evaluation.evaluationPeople %}
                     {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-                    {% if evalFamilyPerson and evalPerson.supportPerson.role == role_child %}
+                    {% if evalFamilyPerson and evalPerson.supportPerson.role == ROLE_CHILD %}
                         <tr>
                             <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
                             <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
@@ -153,14 +153,14 @@
 
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalAdm = evalPerson.evalAdmPerson %}
-        {% if evalAdm and evalPerson.supportPerson.role != role_child %}
+        {% if evalAdm and evalPerson.supportPerson.role != ROLE_CHILD %}
             {% if nbSupportPeople > 1 %}
                 <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
             {% endif %}
             {{ utils.view(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
                 ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
-            {{ utils.view(evalAdm.paper == yes and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
-            {{ utils.view(evalAdm.asylumBackground == yes and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
+            {{ utils.view(evalAdm.paper == YES and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
+            {{ utils.view(evalAdm.asylumBackground == YES and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
                 evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
             {{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
                 ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation") }}
@@ -182,7 +182,7 @@
             <tbody>
                     {% for evalPerson in evaluation.evaluationPeople %}
                         {% set evalAdm = evalPerson.evalAdmPerson %}
-                        {% if evalAdm and evalPerson.supportPerson.role == role_child %}
+                        {% if evalAdm and evalPerson.supportPerson.role == ROLE_CHILD %}
                             <tr>
                                 <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
                                 <td>{{ evalAdm.nationalityToString }}</td>
@@ -274,11 +274,11 @@
             {% if nbSupportPeople > 1 %}
                 <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
             {% endif %}            
-            {{ evalBudget.resources == yes and evalBudget.resourcesAmt > 0 ? '' : 
+            {{ evalBudget.resources == YES and evalBudget.resourcesAmt > 0 ? '' : 
                 utils.view(evalBudget.resourcesToString, "Resources", "evaluation") }}
-            {{ evalBudget.charges == yes and evalBudget.chargesAmt > 0 ? '' : 
+            {{ evalBudget.charges == YES and evalBudget.chargesAmt > 0 ? '' : 
                 utils.view(evalBudget.chargesToString, "Charges", "evaluation") }}
-            {% if evalBudget.resources == yes %}
+            {% if evalBudget.resources == YES %}
                 <table class="table-bordered">
                     <thead>
                         <tr>
@@ -320,7 +320,7 @@
                 </table>
             {% endif %}
 
-                {% if evalBudget.charges == yes %}
+                {% if evalBudget.charges == YES %}
                     <table class="table-bordered">
                         <thead>
                             <tr>
@@ -355,7 +355,7 @@
                 {{ utils.view(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
             {% if evalBudget.debts %}
                 {{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
-                {% if evalBudget.debts == yes %}
+                {% if evalBudget.debts == YES %}
                 Type de dettes :
                 <ul>
                     {% for key, value in evalBudget.debtsType %}
@@ -410,7 +410,7 @@
             {{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
         {% endif %}
         {% if evalHousing.daloCommission %}
-            {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == yes ? 
+            {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == YES ? 
                 " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
                 ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
             {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
@@ -446,7 +446,7 @@
                 {% endif %}
             {% endfor %}
         </ul>
-        {{ utils.view(evalHousing.domiciliation == yes ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+        {{ utils.view(evalHousing.domiciliation == YES ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
                 ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
         {{ evalHousing.commentEvalHousing }}
                 

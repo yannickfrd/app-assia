@@ -3,9 +3,9 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set service = form.vars.value %}
-{% if service.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
+{% if service.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
 
-{% block title %}{% if edit_mode %}{{ service.name }}{% else %}Nouveau service{% endif %} | {{ title_website }}{% endblock %}
+{% block title %}{% if EDIT_MODE %}{{ service.name }}{% else %}Nouveau service{% endif %} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -15,8 +15,8 @@
     
     <section>
 
-    <h1 class="h2 mb-3">{{ edit_mode ? service.name : "Nouveau service" }}</h1>
-    {% if edit_mode %}
+    <h1 class="h2 mb-3">{{ EDIT_MODE ? service.name : "Nouveau service" }}</h1>
+    {% if EDIT_MODE %}
     <div class="small text-secondary">
         <p> Créé le {{service.createdAt|date("d/m/Y à H:i") }}
             {{ service.createdBy ? " par " ~ service.createdBy.fullname }}
@@ -84,7 +84,7 @@
         <div class="form-group row">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
-                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                 </div>
             </div>
         </div>
@@ -190,7 +190,7 @@
     {{ form_row(form._token) }}
     {{ form_end(form, {"render_rest": false}) }}
 
-    {% if edit_mode %}
+    {% if EDIT_MODE %}
 
     <hr>
 

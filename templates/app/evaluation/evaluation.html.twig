@@ -7,8 +7,10 @@
 {% block body %}
 
 	{% set evaluationGroup = form.vars.value %}
-	{% set edit_mode = form.vars.value.evalBudgetGroup ? true : false %}
-	{% set role_child = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+	{% set EDIT_MODE = form.vars.value.evalBudgetGroup ? true : false %}
+	{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+	{% set YES = 1 %}
+
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 
 	<div class="container">
@@ -32,17 +34,17 @@
 			<div class="col-md-4 my-1">
 				<div class="float-right">
 					<button type="submit" name="send2" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" 
-						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
 		</div>
 
 		{% set form_evaluationPeople_filteredByAge = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
-		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != role_child) %}
+		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
 
-		<div class="mb-4" data-editMode="{% if edit_mode %}true{% else %}false{% endif %}">
+		<div class="mb-4" data-edit-mode="{% if EDIT_MODE %}true{% else %}false{% endif %}">
 			{% include "app/evaluation/initEvaluation.html.twig" %}
-			{% if support.service.justice %}
+			{% if support.service.justice == YES %}
 			{% include "app/evaluation/evaluationJustice.html.twig" %}
 			{% endif %}
 			{% include "app/evaluation/evaluationSocial.html.twig" %}
@@ -57,7 +59,7 @@
 			<div class="col-md-12">
 				<div class="mb-4 float-right">
 					<button type="submit" name="send" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" 
-						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
 		</div>

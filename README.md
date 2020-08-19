@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.17.12 - 18/08/2020
+1.17.13 - 19/08/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,11 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.17.13 - 19/08/2020
+- Ajout de la commande OPTIMIZE des tables SQL avant la commande de Dump de la base de données.
+- Créé tests phpunit pour DatabaseBackupController.
+- Renommage des constantes en masjuscule dans les vues Twig.
 
 ## Version 1.17.12 - 18/08/2020
 - Modif et suppression de variables AVDL (Type d'accompagnement).

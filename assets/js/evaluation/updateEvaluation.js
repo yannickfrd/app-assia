@@ -9,7 +9,7 @@ export default class UpdateEvaluation {
         this.ajaxRequest = new AjaxRequest();
         this.formElt = document.querySelector("form[name='evaluation']");
         this.btnSubmitElts = this.formElt.querySelectorAll("button[type='submit']");
-        this.editMode = document.querySelector("div[data-editMode]").getAttribute("data-editMode");
+        this.editMode = document.querySelector("div[data-edit-mode]").getAttribute("data-edit-mode");
         this.loader = new Loader();
         this.init();
     }

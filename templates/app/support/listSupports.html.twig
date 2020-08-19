@@ -44,9 +44,9 @@
                 <tbody>            
                     {% for support in supports %}
                     {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
-                        {% set role_child = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
-                        {% if support.supportPeople|filter(s => s.role != role_child)|length %}
-                            {% set supportPeople = support.supportPeople|filter(s => s.role != role_child) %}
+                        {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+                        {% if support.supportPeople|filter(s => s.role != ROLE_CHILD)|length %}
+                            {% set supportPeople = support.supportPeople|filter(s => s.role != ROLE_CHILD) %}
                         {% else %} 
                             {% set supportPeople = support.supportPeople %}
                         {% endif %}

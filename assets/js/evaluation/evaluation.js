@@ -7,7 +7,7 @@ export default class evaluation {
     constructor() {
         this.evalBudgetElt = document.getElementById("accordion-parent-eval_budget");
         this.prefix = "evaluation_";
-        this.editMode = document.querySelector("div[data-editMode]").getAttribute("data-editMode");
+        this.editMode = document.querySelector("div[data-edit-mode]").getAttribute("data-edit-mode");
 
         this.resourcesGroupAmtElt = document.getElementById("resourcesGroupAmt");
         this.chargesGroupAmtElt = document.getElementById("chargesGroupAmt");

@@ -78,7 +78,7 @@ class DatabaseBackupController extends AbstractController
      * @Route("admin/database-backup/{id}/get", name="database_backup_get", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function getExport(DatabaseBackup $databaseBackup, Download $download): Response
+    public function getDatabaseBackup(DatabaseBackup $databaseBackup, Download $download): Response
     {
         $path = $this->getPathDatabaseBackup($databaseBackup);
 
