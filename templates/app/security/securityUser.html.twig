@@ -24,7 +24,7 @@
             <div class="col-md-6">{{ form_row(form.username) }}</div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row mb-4">
             <div class="col-md-12">
                 <div class="float-left d-flex">
                     {% if form.vars.value.isDisabled %} 
@@ -37,7 +37,7 @@
                             class="fas fa-user-slash mr-2"></span>Désactiver</a>
                     {% endif %}
                 </div>
-                <div class="mb-4 float-right">
+                <div class="float-right">
                     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }}">Enregistrer</button>
                 </div>
             </div>
@@ -75,10 +75,16 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-            data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
-            service</button>
-
+        <div class="form-group row mb-4">
+            <div class="col-md-12">
+                <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                    data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+                    service</button>
+                <div class="float-right">
+                    <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
+        </div>
     </section>
 
     {% if form.vars.value.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
@@ -120,18 +126,18 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-            data-list-selector="#userDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
+        <div class="form-group row mb-4">
+            <div class="col-md-12">
+                <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                    data-list-selector="#userDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
+                <div class="float-right">
+                    <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                </div>
+            </div>
+        </div>
     </section>
     {% endif %}
 
-    <div class="form-group row">
-        <div class="col-md-12">
-            <div class="mb-4 float-right">
-                <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }}">Enregistrer</button>
-            </div>
-        </div>
-    </div>
 
     {{ form_row(form._token) }}
     {{ form_end(form, {"render_rest": false}) }}

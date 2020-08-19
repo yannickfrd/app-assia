@@ -9,7 +9,7 @@
 	{% set evaluationGroup = form.vars.value %}
 	{% set EDIT_MODE = form.vars.value.evalBudgetGroup ? true : false %}
 	{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
-	{% set YES = 1 %}
+	{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 

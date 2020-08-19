@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Form\OccupancySearchType;
@@ -13,11 +14,9 @@ use App\Repository\PersonRepository;
 use App\Form\SupportsByUserSearchType;
 use App\Repository\DocumentRepository;
 use App\Form\Model\SupportsByUserSearch;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
-use App\Repository\SupportGroupRepository;
-use App\Repository\AccommodationRepository;
 use App\Repository\ContributionRepository;
+use App\Repository\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Indicators\OccupancyIndicators;
@@ -67,7 +66,7 @@ class AppController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
-        if (1 == $this->getUser()->getStatus()) {
+        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
             return $this->dashboardSocialWorker($cache);
         }
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
@@ -96,16 +95,8 @@ class AppController extends AbstractController
 
     protected function dashboardSocialWorker(FilesystemAdapter $cache)
     {
-        $userSupports = $cache->getItem('stats.user'.$this->getUser()->getId().'_supports');
-
-        if (!$userSupports->isHit()) {
-            $userSupports->set($this->repoSupport->findAllSupportsFromUser($this->getUser()));
-            $userSupports->expiresAfter(1 * 60 * 60);  // 1h
-            $cache->save($userSupports);
-        }
-
         return $this->render('app/home/home.html.twig', [
-            'supports' => $userSupports->get(),
+            'supports' => $this->repoSupport->findAllSupportsFromUser($this->getUser()),
             'notes' => $this->repoNote->findAllNotesFromUser($this->getUser(), 10),
             'rdvs' => $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10),
         ]);
@@ -127,7 +118,7 @@ class AppController extends AbstractController
             $datas['Nombre de paiements'] = (int) $this->repoContribution->count([]);
 
             $indicators->set($datas);
-            $indicators->expiresAfter(5 * 60);  // 5 * 60 seconds
+            $indicators->expiresAfter(5 * 60); // 5mn
             $cache->save($indicators);
         }
 
@@ -152,11 +143,11 @@ class AppController extends AbstractController
                 ];
             }
             $usersIndicators->set($users);
-            $usersIndicators->expiresAfter(5 * 60);  // 5 * 60 seconds
+            $usersIndicators->expiresAfter(5 * 60); // 5mn
             $cache->save($usersIndicators);
         }
 
-        return $this->render('app/home/dashboard.html.twig', [
+        return $this->render('app/home/dashboardAdmin.html.twig', [
             'datas' => $indicators->get(),
             'users' => $usersIndicators->get(),
         ]);
@@ -170,17 +161,11 @@ class AppController extends AbstractController
     public function showSupportsByUser(SupportsByUserIndicators $indicators, SupportsByUserSearch $search, Request $request): Response
     {
         $form = ($this->createForm(SupportsByUserSearchType::class, $search))
-        ->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $datas = $indicators->getSupportsbyDevice($search);
-        }
-
-        // dd($datas);
+            ->handleRequest($request);
 
         return $this->render('app/dashboard/supportsByUser.html.twig', [
             'form' => $form->createView(),
-            'datas' => $datas ?? null,
+            'datas' => $form->isSubmitted() || false == $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupportsbyDevice($search) : null,
         ]);
     }
 
@@ -194,7 +179,7 @@ class AppController extends AbstractController
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
-            ->setStart(new \DateTime($today->format('Y').'-01-01'));
+            ->setStart((new \DateTime('midnight'))->modify('-1 day'));
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -221,7 +206,7 @@ class AppController extends AbstractController
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
-            ->setStart(new \DateTime($today->format('Y').'-01-01'));
+            ->setStart((new \DateTime('midnight'))->modify('-1 day'));
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -253,7 +238,7 @@ class AppController extends AbstractController
             $search->setStart(new \DateTime($request->query->get('start')))
                 ->setEnd(new \DateTime($request->query->get('end')));
         } else {
-            $search->setStart(new \DateTime($today->format('Y').'-01-01'));
+            $search->setStart((new \DateTime('midnight'))->modify('-1 day'));
         }
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
@@ -269,48 +254,6 @@ class AppController extends AbstractController
             'form' => $form->createView(),
             'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($start, $end, $service),
         ]);
-    }
-
-    /**
-     * Met à jour les adresses des groupes de places (TEMPORAIRE, A SUPPRIMER).
-     *
-     * @Route("admin/accommodations/update_location", name="admin_accommodations_update_location", methods="GET")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function updateLocation(AccommodationRepository $repo, EntityManagerInterface $manager): Response
-    {
-        $count = 0;
-        $accommodations = $repo->findAll();
-
-        foreach ($accommodations as $accommodation) {
-            if (null == $accommodation->getLocationId() && $accommodation->getCity() != 'goussainville') {
-                $valueSearch = $accommodation->getAddress().'+'.$accommodation->getCity();
-                $valueSearch = $this->cleanString($valueSearch);
-                $geo = '&lat=49.04&lon=2.04';
-                $url = 'https://api-adresse.data.gouv.fr/search/?q='.$valueSearch.$geo.'&limit=1';
-                $raw = file_get_contents($url);
-                $json = json_decode($raw);
-
-                if (count($json->features)) {
-                    $feature = $json->features[0];
-                    // if ($feature->properties->score > 0.4) {
-                    $accommodation
-                        ->setCity($feature->properties->city)
-                        ->setAddress($feature->properties->name)
-                        ->setZipcode($feature->properties->postcode)
-                        ->setLocationId($feature->properties->id)
-                        ->setLon($feature->geometry->coordinates[0])
-                        ->setLat($feature->geometry->coordinates[1]);
-                    // }
-                }
-                ++$count;
-                $manager->flush();
-            }
-        }
-
-        $this->addFlash('success', 'Les adresses des groupes de places ont été mis à jour.<br/>'.$count.' / '.count($accommodations));
-
-        return $this->redirectToRoute('accommodations');
     }
 
     public function cleanString(string $string)

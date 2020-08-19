@@ -8,27 +8,23 @@
 
 <div class="container">
 
-  <h1 class="h2 mb-3">Mon espace personnel</h1>
-  <p class="small text-secondary">Dernière connexion le {{ user.lastLogin|date("d/m/Y à H:i") }}</p>
+    <h1 class="h2 mb-3">Mon espace personnel</h1>
+    <p class="small text-secondary">Dernière connexion le {{ user.lastLogin|date("d/m/Y à H:i") }}</p>
 
-  {% include "model/msgFlash.html.twig" %}
+    {% include "model/msgFlash.html.twig" %}
 
-  <hr>
+    <hr>
 
-  <div class="my-4">
-  	  {% if is_granted("ROLE_ADMIN") %}
-	      <div class="row">
-          <div class="col-md-12 mb-3">
+    <div class="my-4">
+        {% if is_granted("ROLE_ADMIN") %}
             {% include "app/managing/managingServices.html.twig" %}
-          </div>
-		    </div>
-      {% endif %} 
-    {% if app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) or supports|length > 0 %}
-    {% include "app/home/listSupports.html.twig" %}
-    {% include "app/home/listNotes.html.twig" %}
-    {% endif %}
-    {% include "app/home/listRdvs.html.twig" %}
-  </div>
+        {% endif %} 
+        {% if app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) or supports|length > 0 %}
+            {% include "app/home/listSupports.html.twig" %}
+            {% include "app/home/listNotes.html.twig" %}
+        {% endif %}
+        {% include "app/home/listRdvs.html.twig" %}
+    </div>
 
 </div>
 

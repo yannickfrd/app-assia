@@ -57,38 +57,38 @@
 
                 <tbody>
                     {% for user in users %}
-                    {#{% cache "user" ~ app.user.id ~ user.id user.updatedAt.timestamp %}#}
                     <tr>
-                        <th scope="row">
+                        <td scope="row" class="align-middle">
                             {% if is_granted("ROLE_ADMIN") %}
-                            <a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                data-toggle="tooltip" data-placement="bottom" title="Voir la fiche"><span class="fas fa-eye"></span>
-                            </a>
+                                <a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                    data-toggle="tooltip" data-placement="bottom" title="Voir la fiche"><span class="fas fa-eye"></span>
+                                </a>
                             {% endif %}
-                        </th>
-                        <td class="text-uppercase">{{ user.lastname }}</td>
-                        <td>{{ user.firstname }}</td>
-                        <td>{{ user.statusToString }}</td>
-                        <td>{{ user.phone1}}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
-                            <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
-                                class="text-{{ theme_color }}">{{  role.service.name }}</a>{% if not loop.last %}, {% endif %}
-                            {% endfor %}
                         </td>
-                        <td>
+                        <td class="align-middle text-uppercase">{{ user.lastname }}</td>
+                        <td class="align-middle">{{ user.firstname }}</td>
+                        <td class="align-middle">{{ user.statusToString }}</td>
+                        <td class="align-middle">{{ user.phone1}}</td>
+                        <td class="align-middle">{{ user.email }}</td>
+                        <td class="position-relative overflow-auto">
+                            <div class="position-absolute h-100" style="">
+                                {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
+                                    <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
+                                        class="text-{{ theme_color }}">{{ role.service.name }}</a>{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="align-middle">
                             {% set poles = [] %}
                             {% for role in user.serviceUser %}
-                            {% if role.service.pole.id not in poles %}
-                            {% set poles = poles|merge([role.service.pole.id]) %}
-                            <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
-                                class="text-{{ theme_color }}">{{  role.service.pole.name }}</a><br>
-                            {% endif %}
+                                {% if role.service.pole.id not in poles %}
+                                    {% set poles = poles|merge([role.service.pole.id]) %}
+                                    <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
+                                        class="text-{{ theme_color }}">{{ role.service.pole.name }}</a><br>
+                                {% endif %}
                             {% endfor %}
                         </td>
                     </tr>
-                    {#{% endcache %}#}
                     {% endfor %}
                 </tbody>
             </table>
