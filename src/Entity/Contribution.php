@@ -27,7 +27,7 @@ class Contribution
         1 => 'Participation / Redevance', // 1
         2 => 'Loyer', // 1
         10 => 'Caution', // ex 2
-        20 => 'Prêt / Avance',  // ex 3
+        20 => 'Prêt / Avance', // ex 3
         30 => 'Rembt dette | PF / Loyer', // ex 11
         31 => 'Rembt dette | Caution', // ex 12
         32 => 'Rembt dette | Prêt', // ex 13

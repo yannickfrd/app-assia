@@ -181,20 +181,21 @@ export default class SupportContributions {
         if (option === 2) {
             this.formContributionElt.querySelector(".js-rent").classList.remove("d-none");
         }
-
-        if ([1, 2, 3, 30, 31, 32].indexOf(option) != -1) { // Redevance, caution, remboursement
-            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant à régler";
+        if ([1, 2, 10, 30, 31, 32].indexOf(option) != -1) { // Redevance, caution, remboursement
             this.formContributionElt.querySelectorAll(".js-payment").forEach(elt => {
                 elt.classList.remove("d-none");
             });
         }
-        if ([1, 2, 10].indexOf(option) != -1) { // Redevance, caution
+        if ([1, 2, 10].indexOf(option) != -1) { // Redevance, loyer, caution
             this.formContributionElt.querySelector(".js-stillToPayAmt").classList.remove("d-none");
+        }
+        if ([1, 2, 10].indexOf(option) != -1) { // Redevance, loyer, caution
+            this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant à régler";
         }
         if (option === 20) { // Prêt
             this.formContributionElt.querySelector("label[for='contribution_toPayAmt']").textContent = "Montant prêté";
         }
-        if ([1, 2, 10, 30, 31, 32].indexOf(option) != -1) { // Redevance, Caution, Prêt
+        if ([1, 2, 10, 20].indexOf(option) != -1) { // Redevance, loyer, caution, prêt
             this.formContributionElt.querySelector(".js-toPayAmt").classList.remove("d-none");
         }
         if (option === 11) { // Restitution caution
