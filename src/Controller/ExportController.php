@@ -47,9 +47,6 @@ class ExportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $supports = $this->repoSupportPerson->findSupportsFullToExport($search);
-            // return $exportSupport->exportData($supports);
-            // $this->addFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.');
 
             return $this->json([
                 'code' => 200,

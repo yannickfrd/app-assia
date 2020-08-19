@@ -493,7 +493,7 @@ class Service
     /**
      * @return Collection|Organization[]
      */
-    public function getOrganizations(): Collection
+    public function getOrganizations(): ?Collection
     {
         return $this->organizations;
     }

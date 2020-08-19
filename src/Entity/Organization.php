@@ -144,7 +144,7 @@ class Organization
     /**
      * @return Collection|Service[]
      */
-    public function getServices(): Collection
+    public function getServices(): ?Collection
     {
         return $this->services;
     }

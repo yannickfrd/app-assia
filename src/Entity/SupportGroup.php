@@ -765,7 +765,7 @@ class SupportGroup
     /**
      * @return Collection|Contribution[]
      */
-    public function getContributions(): Collection
+    public function getContributions(): ?Collection
     {
         return $this->contributions;
     }

@@ -241,7 +241,7 @@ class Device
     /**
      * @return Collection|UserDevice[]
      */
-    public function getUserDevices(): Collection
+    public function getUserDevices(): ?Collection
     {
         return $this->userDevices;
     }

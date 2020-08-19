@@ -659,7 +659,7 @@ class User implements UserInterface
     /**
      * @return Collection|UserDevice[]
      */
-    public function getUserDevices(): Collection
+    public function getUserDevices(): ?Collection
     {
         return $this->userDevices;
     }

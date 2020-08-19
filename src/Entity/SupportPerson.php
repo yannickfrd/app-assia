@@ -373,7 +373,7 @@ class SupportPerson
     /**
      * @return Collection|AccommodationPerson[]
      */
-    public function getAccommodationsPerson(): Collection
+    public function getAccommodationsPerson(): ?Collection
     {
         return $this->accommodationsPerson;
     }

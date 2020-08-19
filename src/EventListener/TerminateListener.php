@@ -118,7 +118,7 @@ class TerminateListener
     public function editEvaluation($request)
     {
         if (!$this->evaluationListener) {
-            return;
+            return false;
         }
 
         $evaluationGroup = $request->request->get('evaluation');

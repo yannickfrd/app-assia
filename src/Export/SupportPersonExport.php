@@ -2,10 +2,9 @@
 
 namespace App\Export;
 
-use App\Entity\Accommodation;
+use App\Service\ExportExcel;
 use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
-use App\Service\ExportExcel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
@@ -51,12 +50,10 @@ class SupportPersonExport
         $endReasonAccommodations = [];
         $nameAccommodations = [];
 
-        $accommodationPeople = $person->getAccommodationPeople();
-        foreach ($accommodationPeople as $accommodationPerson) {
-            $startAccommodations[] = $this->formatDate($accommodationPerson->getStartDate());
-            $endAccommodations[] = $this->formatDate($accommodationPerson->getEndDate());
-            $endReasonAccommodations[] = $accommodationPerson->getEndReasonToString();
-            /** @var Accommodation */
+        foreach ($supportPerson->getAccommodationsPerson() as $accommodationPerson) {
+            $startAccommodations[] = $accommodationPerson->getStartDate() ? $accommodationPerson->getStartDate()->format('d/m/Y') : null;
+            $accommodationPerson->getEndDate() ? $endAccommodations[] = $accommodationPerson->getEndDate()->format('d/m/Y') : null;
+            $accommodationPerson->getEndReason() ? $endReasonAccommodations[] = $accommodationPerson->getEndReasonToString() : null;
             $accommodation = $accommodationPerson->getAccommodationGroup()->getAccommodation();
             $nameAccommodations[] = $accommodation->getName().' ';
         }
