@@ -81,6 +81,8 @@ services:
         arguments:
             $targetDirectory: '%documents_directory%'
             $tinifyKey: '%env(TINIFY_KEY)%'
+            $projectKey: '%env(ILOVEPDF_PROJECT_KEY)%'
+            $secretKey: '%env(ILOVEPDF_SECRET_KEY)%'
 
     App\Service\OptimizeImage:
         arguments:

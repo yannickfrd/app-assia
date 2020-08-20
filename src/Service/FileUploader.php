@@ -5,13 +5,16 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tinify\Tinify;
+use Ilovepdf\Ilovepdf;
 
 class FileUploader
 {
     protected $targetDirectory;
     protected $tinify;
+    protected $projectKey;
+    protected $secretKey;
 
-    public function __construct($targetDirectory, Tinify $tinify, $tinifyKey)
+    public function __construct($targetDirectory, Tinify $tinify, $tinifyKey, $projectKey, $secretKey)
     {
         $this->targetDirectory = $targetDirectory;
         $this->tinify = $tinify;
@@ -47,10 +50,21 @@ class FileUploader
         $pathFile = $this->getTargetDirectory().$path.'/'.$newFilename;
         $pathParts = pathinfo($pathFile);
 
-        if (in_array($pathParts['extension'], $imageExtensions) && $this->tinify->getCompressionCount() < 450) {
-            $source = \Tinify\fromFile($pathFile);
-            $source->toFile($pathFile);
+        if (in_array($pathParts['extension'], $imageExtensions)) {
+            $iLovePdf = new Ilovepdf($this->projectKey, $this->secretKey);
+            $myTask = $iLovePdf->newTask('compress');
+            $myTask->setCompressionLevel('recommended');
+            $myTask->setOutputFilename('compression');
+
+            $file1 = $myTask->addFile($pathFile);
+            $myTask->execute();
+            $myTask->download($pathFile);
         }
+
+        // if (in_array($pathParts['extension'], $imageExtensions) && $this->tinify->getCompressionCount() < 450) {
+        //     $source = \Tinify\fromFile($pathFile);
+        //     $source->toFile($pathFile);
+        // }
     }
 
     public function getTargetDirectory()

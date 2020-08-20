@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7672efe594fba4799c94fa8987221a54",
+    "content-hash": "ffc710dad4fefef2363900c68bbfe2ef",
     "packages": [
         {
             "name": "antishov/doctrine-extensions-bundle",
@@ -1743,6 +1743,47 @@
                 "uploadable"
             ],
             "time": "2020-05-10T22:20:03+00:00"
+        },
+        {
+            "name": "ilovepdf/ilovepdf-php",
+            "version": "v1.1.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ilovepdf/ilovepdf-php.git",
+                "reference": "efee56a0921a175fc5281123fed002ed7e156d29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ilovepdf/ilovepdf-php/zipball/efee56a0921a175fc5281123fed002ed7e156d29",
+                "reference": "efee56a0921a175fc5281123fed002ed7e156d29",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ilovepdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ilovepdf",
+                    "email": "info@ilovepdf.com"
+                }
+            ],
+            "description": "iLovePDF Php Api",
+            "homepage": "https://ilovepdf.com/",
+            "time": "2019-09-25T10:20:20+00:00"
         },
         {
             "name": "knplabs/knp-components",

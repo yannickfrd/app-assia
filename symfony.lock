@@ -170,6 +170,9 @@
             "./fixtures/.gitignore"
         ]
     },
+    "ilovepdf/ilovepdf-php": {
+        "version": "v1.1.17"
+    },
     "knplabs/knp-components": {
         "version": "v2.2.0"
     },
