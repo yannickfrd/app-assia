@@ -3,13 +3,14 @@
 namespace App\Export;
 
 use App\Entity\Avdl;
+use App\Service\ExportExcel;
 use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
-use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class AvdlSupportPersonExport
 {
+    use ExportExcelTrait;
+
     protected $arrayData;
 
     public function __construct()
@@ -89,18 +90,5 @@ class AvdlSupportPersonExport
         ];
 
         return $datas;
-    }
-
-    public function formatDate(?\DateTimeInterface $date = null)
-    {
-        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
-    }
-
-    /**
-     * Ajoute l'objet normalisé.
-     */
-    protected function add(object $object, string $name = null)
-    {
-        $this->datas = array_merge($this->datas, $this->normalisation->normalize($object, $name));
     }
 }

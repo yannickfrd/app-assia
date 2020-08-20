@@ -5,10 +5,11 @@ namespace App\Export;
 use App\Service\ExportExcel;
 use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SupportPersonExport
 {
+    use ExportExcelTrait;
+
     protected $arrayData;
 
     public function __construct()
@@ -105,18 +106,5 @@ class SupportPersonExport
         ];
 
         return $datas;
-    }
-
-    public function formatDate(?\DateTimeInterface $date)
-    {
-        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
-    }
-
-    /**
-     * Ajoute l'objet normalisé.
-     */
-    protected function add(object $object, string $name = null)
-    {
-        $this->datas = array_merge($this->datas, $this->normalisation->normalize($object, $name));
     }
 }

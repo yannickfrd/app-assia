@@ -2,12 +2,12 @@
 
 namespace App\Export;
 
+use App\Service\ExportExcel;
 use App\Entity\EvalAdmPerson;
 use App\Entity\InitEvalGroup;
 use App\Entity\SupportPerson;
 use App\Entity\EvalProfPerson;
 use App\Entity\InitEvalPerson;
-use App\Service\ExportExcel;
 use App\Service\Normalisation;
 use App\Entity\EvalBudgetGroup;
 use App\Entity\EvalFamilyGroup;
@@ -22,6 +22,8 @@ use App\Entity\EvalJusticePerson;
 
 class SupportPersonFullExport
 {
+    use ExportExcelTrait;
+
     protected $normalisation;
     protected $datas;
 
@@ -109,13 +111,5 @@ class SupportPersonFullExport
         $this->add($this->evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, 'housing');
 
         return $this->datas;
-    }
-
-    /**
-     * Ajoute l'objet normalisé.
-     */
-    protected function add(object $object, string $name = null)
-    {
-        $this->datas = array_merge($this->datas, $this->normalisation->normalize($object, $name));
     }
 }

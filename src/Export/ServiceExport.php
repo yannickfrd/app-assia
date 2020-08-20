@@ -4,10 +4,11 @@ namespace App\Export;
 
 use App\Entity\Service;
 use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ServiceExport
 {
+    use ExportExcelTrait;
+
     /**
      * Exporte les données.
      */
@@ -35,7 +36,7 @@ class ServiceExport
             'Email' => $service->getEmail(),
             'Adresse' => $service->getAddress(),
             'Ville' => $service->getCity(),
-            'Date de création' => Date::PHPToExcel($service->getCreatedAt()->format('d/m/Y')),
+            'Date de création' => $this->formatDate($service->getCreatedAt()),
         ];
     }
 }

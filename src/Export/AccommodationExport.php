@@ -2,12 +2,13 @@
 
 namespace App\Export;
 
-use App\Entity\Accommodation;
 use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
+use App\Entity\Accommodation;
 
 class AccommodationExport
 {
+    use ExportExcelTrait;
+
     protected $arrayData;
 
     public function __construct()
@@ -65,10 +66,5 @@ class AccommodationExport
             'Commentaire' => $accommodation->getComment(),
             'Occupation actuelle (Nb de personnes)' => $numberPeople,
         ];
-    }
-
-    public function formatDate($date)
-    {
-        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }
 }

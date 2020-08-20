@@ -4,10 +4,11 @@ namespace App\Export;
 
 use App\Entity\Person;
 use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class PersonExport
 {
+    use ExportExcelTrait;
+
     /**
      * Exporte les données.
      */
@@ -41,13 +42,13 @@ class PersonExport
             'N° utilisateur' => $person->getId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
-            'Date de naissance' => Date::PHPToExcel($person->getBirthdate()->format('d/m/Y')),
+            'Date de naissance' => $this->formatDate($person->getBirthdate()),
             'Sexe' => $person->getGenderToString(),
             'Typologie familiale' => join(', ', $typologies),
             'Nb de personnes' => join(', ', $nbPeople),
             'Rôle dans le groupe' => join(', ', $roles),
-            'Date de création' => Date::PHPToExcel($person->getCreatedAt()->format('d/m/Y')),
-            'Date de mise à jour' => Date::PHPToExcel($person->getUpdatedAt()->format('d/m/Y')),
+            'Date de création' => $this->formatDate($person->getCreatedAt()),
+            'Date de mise à jour' => $this->formatDate($person->getUpdatedAt()),
         ];
     }
 }

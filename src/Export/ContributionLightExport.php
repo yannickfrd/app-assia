@@ -4,11 +4,12 @@ namespace App\Export;
 
 use App\Entity\Contribution;
 use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContributionLightExport
 {
+    use ExportExcelTrait;
+
     protected $router;
 
     public function __construct(UrlGeneratorInterface $router = null)
@@ -52,19 +53,14 @@ class ContributionLightExport
             'Nom' => $person ? $person->getFullname() : null,
             'Service' => $supportGroup->getService()->getName(),
             'Type d\'opération' => $contribution->getTypeToString(),
-            'Mois (Date)' => $this->formatDate($contribution->getMonthContrib()),
+            'Mois concerné (Date)' => $this->formatDate($contribution->getMonthContrib()),
             'Montant à régler (€)' => $contribution->getToPayAmt(),
             'Montant réglé (€)' => $contribution->getPaidAmt(),
             'Restant dû (€)' => $contribution->getStillToPayAmt(),
             'Date de l\'opération' => $this->formatDate($contribution->getPaymentDate()),
             'Mode de règlement' => $contribution->getPaymentType() ? $contribution->getPaymentTypeToString() : null,
             'Commentaire' => $contribution->getComment(),
-            'TS' => $contribution->getCreatedBy()->getFullname(),
+            'Travailleur social' => $contribution->getCreatedBy()->getFullname(),
         ];
-    }
-
-    public function formatDate($date)
-    {
-        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }
 }

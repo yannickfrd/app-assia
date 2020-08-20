@@ -4,11 +4,12 @@ namespace App\Export;
 
 use App\Entity\Rdv;
 use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RdvExport
 {
+    use ExportExcelTrait;
+
     protected $router;
 
     public function __construct(UrlGeneratorInterface $router = null)
@@ -53,8 +54,8 @@ class RdvExport
             'N° RDV' => $rdv->getId(),
             'N° suivi' => $supportGroup ? $supportGroup->getId() : null,
             'Titre' => $rdv->getTitle(),
-            'Date de début' => Date::PHPToExcel($rdv->getStart()->format('Y-m-d H:i')),
-            'Date de fin' => Date::PHPToExcel($rdv->getEnd()->format('Y-m-d H:i')),
+            'Date de début' => $this->formatDatetime($rdv->getStart()),
+            'Date de fin' => $this->formatDatetime($rdv->getEnd()),
             'Lieu' => $rdv->getLocation(),
             'Suivi' => $person ? $person->getFullname() : null,
             'Service' => $supportGroup ? $supportGroup->getService()->getName() : null,
@@ -64,10 +65,5 @@ class RdvExport
             'Date de modification' => $this->formatDate($rdv->getUpdatedAt()),
             'Modifié par' => $rdv->getUpdatedBy()->getFullname(),
         ];
-    }
-
-    public function formatDate($date)
-    {
-        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }
 }

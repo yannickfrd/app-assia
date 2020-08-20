@@ -4,11 +4,12 @@ namespace App\Export;
 
 use App\Entity\Contribution;
 use App\Service\ExportExcel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContributionFullExport
 {
+    use ExportExcelTrait;
+
     protected $router;
 
     public function __construct(UrlGeneratorInterface $router = null)
@@ -78,10 +79,5 @@ class ContributionFullExport
             //     'contributionId' => $contribution->getId(),
             // ], UrlGeneratorInterface::ABSOLUTE_URL) : null,
         ];
-    }
-
-    public function formatDate($date)
-    {
-        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
     }
 }
