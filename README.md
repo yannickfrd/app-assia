@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.17.14 - 20/08/2020
+1.17.15 - 20/08/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,8 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.17.14 - 20/08/2020
+## Version 1.17.15 - 20/08/2020
 - Ajout variable 'lastActivityAt' pour connaître les utilisateurs connectés à l'application.
+- Groupe de places : Date de début et montant du loyer non obligatoire à la saisie.
+- Taux d'occupation des groupes de places : non pris en compte des groupes de places sans date de début.
 
 ## Version 1.17.13 - 19/08/2020
 - Ajout de la commande OPTIMIZE des tables SQL avant la commande de Dump de la base de données.

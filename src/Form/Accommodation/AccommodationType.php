@@ -45,11 +45,12 @@ class AccommodationType extends AbstractType
                 return $repo->getServicesFromUserQueryList($this->currentUser);
             },
             'placeholder' => 'placeholder.select',
-        ])
+            ])
         ->add('nbPlaces')
         ->add('startDate', DateType::class, [
             'widget' => 'single_text',
             'label' => 'Opening date',
+            'required' => false,
         ])
         ->add('endDate', DateType::class, [
             'widget' => 'single_text',
@@ -77,6 +78,7 @@ class AccommodationType extends AbstractType
             'attr' => [
                 'class' => 'js-money text-right',
             ],
+            'required' => false,
         ])
         ->add('location', LocationType::class, [
             'data_class' => Accommodation::class,

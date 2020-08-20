@@ -78,8 +78,7 @@ class Accommodation
     private $nbPlaces;
 
     /**
-     * @ORM\Column(name="opening_date", type="date")
-     * @Assert\NotNull()
+     * @ORM\Column(name="opening_date", type="date", nullable=true)
      */
     private $startDate;
 

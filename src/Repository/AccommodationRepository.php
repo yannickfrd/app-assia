@@ -103,10 +103,12 @@ class AccommodationRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('a')->select('a')
             ->innerJoin('a.service', 's')->addSelect('PARTIAL s.{id, name}')
-            ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id, name}');
+            ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id, name}')
+
+            ->where('a.startDate IS NOT NULL');
 
         if ($service) {
-            $query->where('a.service = :service')
+            $query->andWhere('a.service = :service')
                 ->setParameter('service', $service);
         }
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
