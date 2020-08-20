@@ -1,8 +1,8 @@
-import AjaxRequest from "../utils/ajaxRequest";
-import ExportData from "./exportData";
+import AjaxRequest from '../utils/ajaxRequest'
+import ExportData from './exportData'
 
-let ajaxRequest = new AjaxRequest();
+let ajaxRequest = new AjaxRequest()
 
-document.addEventListener("DOMContentLoaded", () => {
-    new ExportData(ajaxRequest);
-});
+document.addEventListener('DOMContentLoaded', () => {
+    new ExportData(ajaxRequest)
+})

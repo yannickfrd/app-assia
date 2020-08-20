@@ -3,6 +3,7 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set service = form.vars.value %}
+{% set YES = 1 %}
 {% if service.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
 
 {% block title %}{% if EDIT_MODE %}{{ service.name }}{% else %}Nouveau service{% endif %} | {{ title_website }}{% endblock %}
@@ -194,7 +195,7 @@
 
     <hr>
 
-    {% if service.accommodation %}
+    {% if service.accommodation == YES %}
     <section>
         <h2 class="h4 my-4">Groupes de places rattachés</h2>
         <p class="align-middle">{{ accommodations|length }} groupe{% if accommodations|length > 0 %}s{% endif %}<!--

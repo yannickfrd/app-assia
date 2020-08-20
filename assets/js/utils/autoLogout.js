@@ -3,9 +3,9 @@ export default class AutoLogout {
 
     constructor(ajaxRequest, timeout = 30, timeAlert = 5) {
         this.ajaxRequest = ajaxRequest
-        this.userNameElt = document.getElementById("user-name")
-        this.modalElt = $("#modal-autoLogout")
-        this.timerElt = document.getElementById("timer-logout")
+        this.userNameElt = document.getElementById('user-name')
+        this.modalElt = $('#modal-autoLogout')
+        this.timerElt = document.getElementById('timer-logout')
         this.time = timeout * 60
         this.timeAlert = timeout * 60
         this.initTime = this.time
@@ -23,9 +23,9 @@ export default class AutoLogout {
     count() {
         this.time--
         if (this.time === this.timeAlert) {
-            this.modalElt.modal("show")
-            document.addEventListener("click", this.clearTimer.bind(this))
-            document.addEventListener("keydown", this.clearTimer.bind(this))
+            this.modalElt.modal('show')
+            document.addEventListener('click', this.clearTimer.bind(this))
+            document.addEventListener('keydown', this.clearTimer.bind(this))
         }
         if (this.time <= this.timeAlert) {
             this.timerElt.textContent = this.getFullTime()
@@ -40,7 +40,7 @@ export default class AutoLogout {
         let minutes = Math.round((this.time / 60) - 0.5)
         let seconds = this.time - (minutes * 60)
 
-        return minutes.toString().padStart(2, "0") + "mn " + seconds.toString().padStart(2, "0") + "s"
+        return minutes.toString().padStart(2, '0') + 'mn ' + seconds.toString().padStart(2, '0') + 's'
     }
 
     // Remet à zéro le timer
@@ -51,7 +51,7 @@ export default class AutoLogout {
     // Déconnection via requête Ajax
     deconnection() {
         clearInterval(this.intervalID)
-        this.ajaxRequest.init("GET", "/deconnexion", this.reloadPage.bind(this), true)
+        this.ajaxRequest.init('GET', '/deconnexion', this.reloadPage.bind(this), true)
     }
 
     // Recharge la page

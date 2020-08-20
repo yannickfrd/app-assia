@@ -1,7 +1,7 @@
 /** 
  * Masque de saisie pour le numéro de téléphone
  */
-import 'jquery-mask-plugin';
+import 'jquery-mask-plugin'
 
 $(document).ready(function ($) {
     $('.js-phone').mask('99 99 99 99 99', {

@@ -1,6 +1,6 @@
 // import ValidationForm from './validationForm'
 
-import ValidationForm from "./validationForm"
+import ValidationForm from './validationForm'
 
 /**
  * Permet de vérfiier la validité d 'une date.

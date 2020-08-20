@@ -207,7 +207,7 @@ export default class ValidationForm {
         return nbErrors
     }
 
-    checkIntervalBeetweenDates(startDateElt, endDateElt, msg = "Date de fin antérieure à la date de début.") {
+    checkIntervalBeetweenDates(startDateElt, endDateElt, msg = 'Date de fin antérieure à la date de début.') {
         let intervalWithStart = (new Date(endDateElt.value) - new Date(startDateElt.value)) / (24 * 3600 * 1000)
 
         if (intervalWithStart < 0) {

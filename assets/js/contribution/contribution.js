@@ -1,5 +1,5 @@
-import SupportContributions from "./supportContributions";
+import SupportContributions from "./supportContributions"
 
 document.addEventListener("DOMContentLoaded", () => {
-    new SupportContributions();
-});
+    new SupportContributions()
+})
