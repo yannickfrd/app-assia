@@ -2,9 +2,9 @@
 
 namespace App\EventListener;
 
+use App\Entity\User;
 use Twig\Environment;
 use App\Entity\Export;
-use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Form\Model\ExportSearch;
 use App\Form\Export\ExportSearchType;
@@ -21,47 +21,49 @@ class TerminateListener
     private $renderer;
     private $notification;
     private $exportSupport;
-    private $evaluationListener;
 
     public function __construct(
         Security $security,
         ContainerInterface $container,
         Environment $renderer,
         MailNotification $notification,
-        SupportPersonFullExport $exportSupport,
-        bool $evaluationListener
+        SupportPersonFullExport $exportSupport
     ) {
         $this->security = $security;
         $this->container = $container;
         $this->renderer = $renderer;
         $this->notification = $notification;
         $this->exportSupport = $exportSupport;
-        $this->evaluationListener = $evaluationListener;
     }
 
     public function onKernelTerminate(TerminateEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
-        // $response = $event->getResponse();
         $route = $request->attributes->get('_route');
 
-        // if (!$event->isMasterRequest()) {
-        //     return;
-        // }
+        $this->updateLastActivity();
 
         switch ($route) {
             case 'export':
                 $this->export($request);
                 break;
-            // case 'support_evaluation_show':
-            //     $this->editEvaluation($request);
-            //     break;
-            // case 'support_evaluation_edit':
-            //     $this->editEvaluation($request);
-            //     break;
-            default:
-                return;
-                break;
+        }
+    }
+
+    /**
+     * Met à jour la date de dernière activité de l'utilisateur connecté.
+     */
+    protected function updateLastActivity(): void
+    {
+        /** @var User */
+        $user = $this->security->getUser();
+        if ($user && !$user->isActiveNow()) {
+            $user->setLastActivityAt(new \DateTime());
+            $this->container->get('doctrine')->getManager()->flush();
         }
     }
 
@@ -112,46 +114,6 @@ class TerminateListener
                     'Esperer95.app | Export de données',
                     $htmlBody,
                 );
-        }
-    }
-
-    public function editEvaluation($request)
-    {
-        if (!$this->evaluationListener) {
-            return false;
-        }
-
-        $evaluationGroup = $request->request->get('evaluation');
-
-        if ($evaluationGroup) {
-            $manager = $this->container->get('doctrine')->getManager();
-
-            $repo = $manager->getRepository(SupportGroup::class);
-            $supportId = $request->attributes->get('id');
-            $supportGroup = $repo->findSupportById($supportId);
-
-            $fullnamePerson = '';
-
-            foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-                if ($supportPerson->getHead()) {
-                    $fullnamePerson = $supportPerson->getPerson()->getFullname();
-                }
-            }
-
-            $htmlBody = $this->renderer->render(
-                'emails/EvaluationEmail.html.twig',
-                [
-                    'supportId' => $supportId,
-                    'fullnamePerson' => $fullnamePerson,
-                    'evaluation' => $evaluationGroup,
-                ]
-            );
-
-            $this->notification->send(
-                ['email' => ('romain.madelaine@esperer-95.org'), 'name' => 'Admin'],
-                'Esperer95.app | Evaluation enregistrée : '.$fullnamePerson.' ('.$supportId.')',
-                $htmlBody,
-            );
         }
     }
 }

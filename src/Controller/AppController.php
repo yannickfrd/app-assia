@@ -14,6 +14,7 @@ use App\Repository\PersonRepository;
 use App\Form\SupportsByUserSearchType;
 use App\Repository\DocumentRepository;
 use App\Form\Model\SupportsByUserSearch;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
@@ -62,7 +63,7 @@ class AppController extends AbstractController
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
-    public function home(): Response
+    public function home(EntityManagerInterface $manager): Response
     {
         $cache = new FilesystemAdapter();
 

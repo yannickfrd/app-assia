@@ -45,7 +45,7 @@
                             {{ knp_pagination_sortable(users, "Nombre de connexion", "u.loginCount") }}
                         </th>
                         <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(users, "Dernière connexion", "u.lastLogin") }}
+                            {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}
                         </th>
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(users, "Date de création", "u.createdAt") }}
@@ -86,7 +86,7 @@
                             {% endfor %}
                         </td>
                         <td>{{ user.loginCount }}</td>
-                        <td>{% if user.lastLogin %}{{ user.lastLogin|date("d/m/Y H:i") }}{% endif %}</td>
+                        <td>{% if user.lastActivityAt %}{{ user.lastActivityAt|date("d/m/Y H:i") }}{% endif %}</td>
                         <td>{{ user.createdAt|date("d/m/Y") }}</td>
                     </tr>
                     {# {% endcache %} #}

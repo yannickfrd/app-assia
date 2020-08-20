@@ -143,6 +143,11 @@ class User implements UserInterface
     private $failureLoginCount = 0;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastActivityAt;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="createdBy")
      */
     private $supports;
@@ -382,6 +387,21 @@ class User implements UserInterface
         $this->failureLoginCount = $failureLoginCount;
 
         return $this;
+    }
+
+    public function setLastActivityAt(\DateTimeInterface $lastActivityAt)
+    {
+        $this->lastActivityAt = $lastActivityAt;
+    }
+
+    public function getLastActivityAt(): ?\DateTimeInterface
+    {
+        return $this->lastActivityAt;
+    }
+
+    public function isActiveNow(): bool
+    {
+        return  $this->getLastActivityAt() > new \DateTime('5 minutes ago');
     }
 
     /**

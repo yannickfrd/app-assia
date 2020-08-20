@@ -106,7 +106,7 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        $query = $query->orderBy('u.lastname', 'ASC');
+        $query = $query->orderBy('u.lastActivityAt', 'DESC');
 
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -167,7 +167,7 @@ class UserRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.serviceUser', 'su')
-            
+
             ->where('u.disabledAt IS NULL');
 
         if ($serviceId) {
@@ -225,5 +225,14 @@ class UserRepository extends ServiceEntityRepository
         return $query->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    public function countActiveUsers()
+    {
+        return $this->createQueryBuilder('u')->select('COUNT(u.id)')
+            ->where('u.lastActivityAt >= :delay')
+            ->setParameter('delay', new \DateTime('5 minutes ago'))
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

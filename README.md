@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.17.13 - 19/08/2020
+1.17.14 - 20/08/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,9 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.17.14 - 20/08/2020
+- Ajout variable 'lastActivityAt' pour connaître les utilisateurs connectés à l'application.
 
 ## Version 1.17.13 - 19/08/2020
 - Ajout de la commande OPTIMIZE des tables SQL avant la commande de Dump de la base de données.
@@ -165,7 +168,7 @@ https://demo.esperer95.app
 
 ## Version 1.8.0 - 11/05/2020
 - Création de la page de synthèse donnant la répartition des suivis par travailleur social, ainsi que le coefficient attribué.
-- Modification possible du coefficient du suivi sur la page d'édition du suivi  (profil administrateur)
+- Modification possible du coefficient du suivi sur la page d'édition du suivi (profil administrateur)
 - Affichage du coefficient du suivi sur la page du suivi
 - Amélioration de l'affiche de la page du suivi avec l'évaluation
 
@@ -226,7 +229,7 @@ https://demo.esperer95.app
 - Ajout de l'adresse du logement sur la page d'accueil du suivi
 - Page d'accueil (Mon espace) : tri des suivis en cours par ordre alphabétique
 - Modification du tri des personnes d'un groupe ou d'un suivi par âge
-- Modification du contrôle de saisie dans le suivi social  (statut et dates de début et de fin)
+- Modification du contrôle de saisie dans le suivi social (statut et dates de début et de fin)
 - Correction du problème de modification de la prise en charge (erreur 500)
 - Correction du problème d'ajout des personnes à un suivi existant
 - Correction du bug de duplication des notes en raison de la sauvegarde automatique
@@ -242,7 +245,7 @@ https://demo.esperer95.app
 - Administration : possibilité de supprimer une personne, un groupe ou un suivi social (profil "Administrateur")
 - Correction des droits d'accès aux RDVS, notes et documents (édition et suppression)
 - Correction du problème d'affichage des champs conditionnels dans l'évaluation sociale sur téléphone mobile
-- Tableau de bord "Super Administrateur" : Nb de suivis,  Nb de RDVs, Nb de documents,  Nb de notes
+- Tableau de bord "Super Administrateur" : Nb de suivis, Nb de RDVs, Nb de documents, Nb de notes
 - Correctif export des suivis
 - "Les suivis" : ajout du lieu d'hébergement si pris en charge (nom, adresse et ville du groupe de places).
 - "Les suivis" : ajout de la possibilité de filtrer par dispositif et typologie familiale.
