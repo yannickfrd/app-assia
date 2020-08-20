@@ -248,7 +248,7 @@ export default class SupportContributions {
     calculateAmountToPay() {
         let rateDays = this.getRateDays();
         let calculationMethod = "";
-        // Si redevance ou PF à régler
+        // Si redevance ou PF à payer
         if (this.contributionAmt > 0) {
             this.toPayAmtInput.value = this.contributionAmt - this.aplAmtInput.value;
             calculationMethod = "Montant fixé dans l'évalution sociale (" + this.contributionAmt + " €)" +
@@ -504,8 +504,8 @@ export default class SupportContributions {
             this.resourcesChecked = true;
         }
 
-        this.resourcesAmtInput.value = this.resourcesAmt;
-        this.salaryAmtInput.value = this.salaryAmt;
+        this.resourcesAmtInput.value === "" ? this.resourcesAmtInput.value = this.resourcesAmt : null;
+        this.salaryAmtInput.value === "" ? this.salaryAmtInput.value = this.salaryAmt : null;
         // this.contributionAmt = this.contributionAmt;
         this.toPayAmtInput.value = this.toPayAmt;
         this.rentAmtInput.value = this.rentAmt;
