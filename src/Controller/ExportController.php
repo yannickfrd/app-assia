@@ -70,7 +70,7 @@ class ExportController extends AbstractController
      */
     public function import(Request $request, Import $import, ImportDatas $importDatas): Response
     {
-        $fileName = 'uploads/import.csv';
+        $fileName =  \dirname(__DIR__).'/../public/import/datas/import.csv';
 
         $datas = $importDatas->getDatas($fileName);
 

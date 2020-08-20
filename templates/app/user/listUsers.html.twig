@@ -71,7 +71,7 @@
                         <td class="align-middle">{{ user.phone1}}</td>
                         <td class="align-middle">{{ user.email }}</td>
                         <td class="position-relative overflow-auto">
-                            <div class="position-absolute h-100" style="">
+                            <div class="position-absolute h-100">
                                 {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
                                     <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
                                         class="text-{{ theme_color }}">{{ role.service.name }}</a>{% if not loop.last %}, {% endif %}

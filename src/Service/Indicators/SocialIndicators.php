@@ -2,11 +2,13 @@
 
 namespace App\Service\Indicators;
 
-use App\Entity\EvalProfPerson;
+use App\Entity\EvalBudgetPerson;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
+use App\Form\Utils\Choices;
 use App\Entity\SupportPerson;
+use App\Entity\EvalProfPerson;
 use App\Entity\EvaluationPerson;
 
 class SocialIndicators
@@ -32,6 +34,8 @@ class SocialIndicators
         $this->roleDatas = $this->initVar(RolePerson::ROLE);
         $this->profStatusDatas = $this->initVar(EvalProfPerson::PROF_STATUS);
         $this->contractTypeDatas = $this->initVar(EvalProfPerson::CONTRACT_TYPE);
+        $this->resourcesDatas = $this->initVar(Choices::YES_NO_IN_PROGRESS);
+        $this->chargesDatas = $this->initVar(Choices::YES_NO_IN_PROGRESS);
 
         foreach ($supportPeople as $supportPerson) {
             /** @var SupportPerson */
@@ -57,19 +61,14 @@ class SocialIndicators
             /** @var EvaluationPerson */
             $evaluationPerson = $evaluations ? $evaluations[($evaluations->count()) - 1] : new EvaluationPerson();
 
-            $evalProfPerson = $evaluationPerson && $evaluationPerson->getEvalProfPerson() ? $evaluationPerson->getEvalProfPerson() : null;
+            $evalProfPerson = $evaluationPerson && $evaluationPerson->getEvalProfPerson() ? $evaluationPerson->getEvalProfPerson() : new EvalProfPerson();
+            $evalBudgetPerson = $evaluationPerson && $evaluationPerson->getEvalBudgetPerson() ? $evaluationPerson->getEvalBudgetPerson() : new EvalBudgetPerson();
 
-            $this->profStatusDatas = $this->updateVar(
-                $supportPerson,
-                $evalProfPerson ? $evalProfPerson->getProfStatus() : null,
-                $this->profStatusDatas,
-            );
+            $this->profStatusDatas = $this->updateVar($supportPerson, $evalProfPerson->getProfStatus(), $this->profStatusDatas);
+            $this->contractTypeDatas = $this->updateVar($supportPerson, $evalProfPerson->getContractType(), $this->contractTypeDatas);
 
-            $this->contractTypeDatas = $this->updateVar(
-                $supportPerson,
-                $evalProfPerson ? $evalProfPerson->getContractType() : null,
-                $this->contractTypeDatas,
-            );
+            $this->resourcesDatas = $this->updateVar($supportPerson, $evalBudgetPerson->getResources(), $this->resourcesDatas);
+            $this->chargesDatas = $this->updateVar($supportPerson, $evalBudgetPerson->getCharges(), $this->chargesDatas);
 
             if ($supportPerson->getHead()) {
                 ++$this->nbGroups;
@@ -79,7 +78,9 @@ class SocialIndicators
         $datas['Sexe'] = $this->genderDatas;
         $datas['Rôle'] = $this->roleDatas;
         $datas['Statut professionnel'] = $this->profStatusDatas;
-        $datas['Type de contrat de travail'] = $this->profStatusDatas;
+        $datas['Type de contrat de travail'] = $this->contractTypeDatas;
+        $datas['Ressources'] = $this->resourcesDatas;
+        $datas['Charges'] = $this->chargesDatas;
 
         $datas['nbGroups'] = $this->nbGroups;
         $datas['nbPeople'] = count($supportPeople);

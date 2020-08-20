@@ -58,7 +58,7 @@ class UserControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('table tbody tr td', 'MADELAINE');
+        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'MADELAINE');
     }
 
     public function testExportPeopleIsSuccessful()
