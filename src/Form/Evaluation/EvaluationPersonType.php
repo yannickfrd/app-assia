@@ -2,7 +2,10 @@
 
 namespace App\Form\Evaluation;
 
+use App\Form\Utils\Choices;
 use App\Entity\EvaluationPerson;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,16 +19,22 @@ class EvaluationPersonType extends AbstractType
             ->add('evalAdmPerson', EvalAdmPersonType::class)
             ->add('evalBudgetPerson', EvalBudgetPersonType::class)
             ->add('evalFamilyPerson', EvalFamilyPersonType::class)
-            ->add('evalJusticePerson', EvalJusticePersonType::class)
             ->add('evalProfPerson', EvalProfPersonType::class)
             ->add('evalSocialPerson', EvalSocialPersonType::class);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $evaluationPerson = $event->getData();
+            $service = $evaluationPerson->getEvaluationGroup()->getSupportGroup()->getService();
+            if ($service->getJustice() == Choices::YES) {
+                $event->getForm()->add('evalJusticePerson', EvalJusticePersonType::class);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EvaluationPerson::class,
-            // "translation_domain" => "forms"
         ]);
     }
 }

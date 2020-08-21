@@ -2,11 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\EvaluationGroup;
-use App\Entity\SupportGroup;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Service;
 use Doctrine\ORM\Query;
+use App\Form\Utils\Choices;
+use App\Entity\SupportGroup;
+use App\Entity\EvaluationGroup;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method EvaluationGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,9 +26,11 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     /**
      * Donne toute l'évaluation sociale du groupe.
      */
-    public function findEvaluationById(int $supportGroupId): ?EvaluationGroup
+    public function findEvaluationById(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        return $this->createQueryBuilder('eg')->select('eg')
+        $service = $supportGroup->getService();
+
+        $query = $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->join('sg.groupPeople', 'gp')->addSelect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
@@ -44,12 +48,18 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
             ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
             ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
-            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
             ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
+            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson');
 
-            ->andWhere('eg.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroupId)
+        if ($service && $service->getJustice() == Choices::YES) {
+            $query = $query->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp');
+        }
+        if ($service && in_array($service->getId(), Service::SERVICES_PAMH_ID)) {
+            $query = $query->leftJoin('eg.evalHotelLifeGroup', 'ehlg')->addSelect('ehlg');
+        }
+
+        return $query->andWhere('eg.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup->getId())
 
             ->orderBy('p.birthdate', 'ASC')
             // ->setMaxResults(1)

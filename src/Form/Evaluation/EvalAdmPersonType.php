@@ -20,6 +20,10 @@ class EvalAdmPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('arrivalDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
             ->add('country')
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),

@@ -18,7 +18,11 @@ class EvalBudgetPersonType extends AbstractType
     {
         $builder
             ->add('resources', ResourcesType::class)
-
+            ->add('incomeTax', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('incomeN1Amt', MoneyType::class, [
                 'attr' => ['class' => 'js-money text-right'],
                 'required' => false,

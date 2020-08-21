@@ -3,6 +3,7 @@ placeholder.select: -- Sélectionner --
 
 # Administratif
 Adm: Administratif
+Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile
 Comment eval adm: Commentaire relatif à la situation administrative
@@ -72,6 +73,7 @@ Electricity gas: Electricité / Gaz
 End rights date: Date de fin de droits
 Family allowance amt: Montant allocations familiales (€)
 Family allowance: Allocations familiales
+Income tax: Impôt sur le revenu
 Income n1 amt: Revenu fiscal n-1
 Income n2 amt: Revenu fiscal n-2
 Incomen1amt: Revenu fiscal n-1
@@ -218,6 +220,8 @@ Public force: Concours de la Force Publique
 Siao request date: Date de demande initiale SIAO
 Siao request: Demande SIAO active
 Siao updated request date: Date de dernière actualisation SIAO
+Siao request dept: Département de la demande SIAO
+Siao recommendation: Préconisation d'orientation
 Social housing request date: Date de demande de logement social
 Social housing request id: Numéro unique régional (NUR)
 Social housing request: Demande de logement social
@@ -264,3 +268,9 @@ Write a comment about the social situation of the group: Écrire un commentaire 
 Write a comment about the social situation of the person: Écrire un commentaire relatif à la situation sociale de la personne
 
 location.search.placeholder: Saisir une adresse ou une ville...
+
+## Vie à l'hôtel
+Food: Alimentation
+Clothing: Habillement
+Room maintenance: Entretien de la chambre
+Other comment hotel life: Autre commentaire sur la vie à l'hôtel

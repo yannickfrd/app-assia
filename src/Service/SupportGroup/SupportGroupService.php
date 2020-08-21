@@ -97,12 +97,12 @@ class SupportGroupService
     /**
      * Donne l'évaluation sociale complète.
      */
-    public function getEvaluation(int $id): ?EvaluationGroup
+    public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacheEvaluation = $this->cache->getItem('support_group.evaluation.'.$id);
+        $cacheEvaluation = $this->cache->getItem('support_group.evaluation.'.$supportGroup->getId());
 
         if (!$cacheEvaluation->isHit()) {
-            $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($id));
+            $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));
             $this->cache->save($cacheEvaluation);
         }
 

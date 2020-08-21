@@ -194,6 +194,7 @@ export default class evaluation {
             new DisplayFields(prefix, i + "_evalBudgetPerson_charges", [1])
             new DisplayFields(prefix, i + "_evalBudgetPerson_debts", [1])
             new DisplayFields(prefix, i + "_evalBudgetPerson_overIndebtRecord", [1])
+            new DisplayFields(prefix, i + "_evalBudgetPerson_incomeTax", [1])
             this.editElt(i, "_evalBudgetPerson_resources_type", "d-table-row")
             this.editElt(i, "_evalBudgetPerson_charges_type", "d-table-row")
             this.editElt(i, "_evalBudgetPerson_debts_type", "d-table-row")

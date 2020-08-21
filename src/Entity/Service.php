@@ -28,6 +28,7 @@ class Service
     use DisableEntityTrait;
 
     public const SERVICE_AVDL_ID = 5;
+    public const SERVICES_PAMH_ID = [10, 11, 12, 13];
 
     public const SUPPORT_ACCESS = [
         1 => 'Uniquement le référent du suivi',

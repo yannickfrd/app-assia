@@ -48,6 +48,25 @@ class EvalHousingGroup
         99 => 'Non renseignée',
     ];
 
+    public const SIAO_DEPT = [
+        75 => '75',
+        77 => '77',
+        78 => '78',
+        91 => '91',
+        92 => '92',
+        93 => '93',
+        94 => '94',
+        95 => '95',
+        98 => 'Hors IDF',
+    ];
+
+    public const SIAO_RECOMMENDATION = [
+        10 => 'Hébergement',
+        20 => 'Logement adapté/accompagné',
+        30 => 'Logement de droit commun',
+        99 => 'Non renseignée',
+    ];
+
     public const HOUSING_HELPS = [
         'fsl' => 'Fonds de solidarité pour le logement (FSL)',
         'fslEligibility' => 'Eligibilité aide à l\'installation FSL',
@@ -78,6 +97,16 @@ class EvalHousingGroup
      * @Groups("export")
      */
     private $siaoUpdatedRequestDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $siaoRequestDept;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $siaoRecommendation;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -388,6 +417,46 @@ class EvalHousingGroup
     public function setSiaoUpdatedRequestDate(?\DateTimeInterface $siaoUpdatedRequestDate): self
     {
         $this->siaoUpdatedRequestDate = $siaoUpdatedRequestDate;
+
+        return $this;
+    }
+
+    public function getSiaoRequestDept(): ?int
+    {
+        return $this->siaoRequestDept;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getSiaoRequestDeptToString(): ?string
+    {
+        return $this->siaoRequestDept ? self::SIAO_DEPT[$this->siaoRequestDept] : null;
+    }
+
+    public function setSiaoRequestDept(?int $siaoRequestDept): self
+    {
+        $this->siaoRequestDept = $siaoRequestDept;
+
+        return $this;
+    }
+
+    public function getSiaoRecommendation(): ?int
+    {
+        return $this->siaoRecommendation;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getSiaoRecommendationToString(): ?string
+    {
+        return $this->siaoRecommendation ? self::SIAO_RECOMMENDATION[$this->siaoRecommendation] : null;
+    }
+
+    public function setSiaoRecommendation(?int $siaoRecommendation): self
+    {
+        $this->siaoRecommendation = $siaoRecommendation;
 
         return $this;
     }

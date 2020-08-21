@@ -32,6 +32,7 @@ use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Support\SupportsInMonthSearchType;
+use App\Form\Utils\Choices;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
@@ -101,7 +102,7 @@ class SupportController extends AbstractController
             if ($supportGroupService->create($groupPeople, $supportGroup)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
-                if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation()) {
+                if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation() == Choices::YES) {
                     return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
                 }
 
@@ -200,7 +201,7 @@ class SupportController extends AbstractController
             'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
             'nbContributions' => $supportGroup->getAccommodationGroups()->count() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
-            'evaluation' => $supportGroupService->getEvaluation($id),
+            'evaluation' => $supportGroupService->getEvaluation($supportGroup),
         ]);
     }
 
@@ -381,14 +382,15 @@ class SupportController extends AbstractController
      */
     protected function getSupportGroup(SupportGroup $supportGroup)
     {
-        switch ($supportGroup->getService()->getId()) {
-            case Service::SERVICE_AVDL_ID:
-                return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
-                break;
-            default:
-                return $this->repoSupportGroup->findFullSupportById($supportGroup->getId());
-                break;
+        $serviceId = $supportGroup->getService()->getId();
+        if ($serviceId == Service::SERVICE_AVDL_ID) {
+            return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
         }
+        if (in_array($serviceId, Service::SERVICES_PAMH_ID)) {
+            return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
+        }
+
+        return $this->repoSupportGroup->findFullSupportById($supportGroup->getId());
     }
 
     /**

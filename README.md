@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.17.15 - 20/08/2020
+1.18.0 - 21/08/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,10 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.18.0 - 21/08/2020
+- Créé bloc 'Vie à l'hôtel' dans l'évaluation sociale.
+- Créé champs supplémentaires dans l'évaluation sociale (Date d'arrivée en France, Charge de cantine, Impôts sur le revenu, Département de la demande SIAO, Préconisation d’orientation SIAO).
 
 ## Version 1.17.15 - 20/08/2020
 - Ajout variable 'lastActivityAt' pour connaître les utilisateurs connectés à l'application.

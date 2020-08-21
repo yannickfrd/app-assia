@@ -72,6 +72,11 @@ class EvaluationGroup
      */
     private $initEvalGroup;
 
+    /**
+     * @ORM\OneToOne(targetEntity=EvalHotelLifeGroup::class, mappedBy="evaluationGroup", cascade={"persist", "remove"})
+     */
+    private $evalHotelLifeGroup;
+
     public function __construct()
     {
         $this->evaluationPeople = new ArrayCollection();
@@ -284,5 +289,22 @@ class EvaluationGroup
         }
 
         return true;
+    }
+
+    public function getEvalHotelLifeGroup(): ?EvalHotelLifeGroup
+    {
+        return $this->evalHotelLifeGroup;
+    }
+
+    public function setEvalHotelLifeGroup(EvalHotelLifeGroup $evalHotelLifeGroup): self
+    {
+        $this->evalHotelLifeGroup = $evalHotelLifeGroup;
+
+        // set the owning side of the relation if necessary
+        if ($evalHotelLifeGroup->getEvaluationGroup() !== $this) {
+            $evalHotelLifeGroup->setEvaluationGroup($this);
+        }
+
+        return $this;
     }
 }

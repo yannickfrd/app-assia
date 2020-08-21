@@ -7,16 +7,12 @@
 {% block card_body %}
 
 <div class="js-evalGroup" data-support-id="g-{{form.vars.value.supportGroup.id}}">
-    <div class="form-group row">
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
-        <div class="col-md-6" data-parent-field="housingStatus">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
-        {# <div class="col-md-6" data-parent-field="housingAccessType">{{ form_row(form.evalHousingGroup.housingAccessType) }}</div> #}
-        {# <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingAddress) }}</div>
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingCity) }}</div>
-        <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingDept) }}</div> #}
-    </div>
-    <div class="js-housingStatus" data-parent-field="housingStatus">
-        <div class="form-group row">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
+            <div class="col-md-6" data-parent-field="housingStatus">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
+        </div>
+        <div class="row" data-parent-field="housingStatus">
             <div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
             <div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
             <div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
@@ -27,6 +23,8 @@
         <div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
         <div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
         <div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoUpdatedRequestDate) }}</div>
+        <div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDept) }}</div>
+        <div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRecommendation) }}</div>
     </div>
     <div class="form-group row">
         <div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequest) }}</div>

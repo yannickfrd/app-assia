@@ -36,9 +36,19 @@ class EvalHousingGroupType extends AbstractType
             ->add('siaoRequestDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
-            ])
+                ])
             ->add('siaoUpdatedRequestDate', DateType::class, [
                 'widget' => 'single_text',
+                'required' => false,
+                ])
+            ->add('siaoRequestDept', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalHousingGroup::SIAO_DEPT),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('siaoRecommendation', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalHousingGroup::SIAO_RECOMMENDATION),
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialHousingRequest', ChoiceType::class, [

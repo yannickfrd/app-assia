@@ -48,7 +48,23 @@
 
     <br/>
 
-    <h3 class="h4"><b>SOCIAL</b></h3>
+    {# Justice #}
+    {% if support.service.justice == YES %}
+        <h3 class="h4"><b>Situation judiciaire</b></h3>
+        {% for evalPerson in evaluation.evaluationPeople %}
+            {% set evalJustice = evalPerson.evalJusticePerson %}
+            {% if evalJustice %}
+                {% if nbSupportPeople > 1 %}
+                    <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
+                {% endif %}
+                {{ utils.view(evalJustice.justiceStatusToString, "Justice status", "evaluation") }}
+                {{ utils.view(evalJustice.justiceActToString, "Justice act", "evaluation") }}
+                {{ evalJustice.commentEvalJustice }}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <h3 class="h4"><b>Situation sociale</b></h3>
     
     <ul>
         {% for evalPerson in evaluation.evaluationPeople %}
@@ -94,7 +110,7 @@
 
     <br/>
 
-    <h3 class="h4"><b>FAMILLE</b></h3>
+    <h3 class="h4"><b>Situation familiale</b></h3>
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalFamily = evalPerson.evalFamilyPerson %}
         {% if evalFamily and evalPerson.supportPerson.role != ROLE_CHILD %}
@@ -149,7 +165,7 @@
 
     <br/>
 
-    <h3 class="h4"><b>IDENTITÉ - PAPIER</b></h3>
+    <h3 class="h4"><b>Situation administrative</b></h3>
 
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalAdm = evalPerson.evalAdmPerson %}
@@ -159,6 +175,7 @@
             {% endif %}
             {{ utils.view(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
                 ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
+            {{ utils.view(evalAdm.arrivalDate ? evalAdm.arrivalDate|date("d/m/Y"), "Arrival date", "evaluation") }}
             {{ utils.view(evalAdm.paper == YES and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
             {{ utils.view(evalAdm.asylumBackground == YES and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
                 evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
@@ -196,7 +213,7 @@
 
     <br/>
 
-    <h3 class="h4"><b>EMPLOI</b></h3>
+    <h3 class="h4"><b>Situation professionnelle</b></h3>
 
     {% for evalPerson in evaluation.evaluationPeople %}
         {% set evalProf = evalPerson.evalProfPerson %}
@@ -228,7 +245,7 @@
 
     <br/>
 
-    <h3 class="h4"><b>BUDGET</b></h3>
+    <h3 class="h4"><b>Situation budgétaire</b></h3>
     <table class="table-bordered">
         <thead>
             <tr>
@@ -353,6 +370,7 @@
                 {{ utils.view(evalBudget.chargeComment, "Charge comment", "evaluation") }}
             {% endif %}
                 {{ utils.view(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
+                {{ utils.view(evalBudget.incomeTaxToString, "Income tax", "evaluation") }}
             {% if evalBudget.debts %}
                 {{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
                 {% if evalBudget.debts == YES %}
@@ -383,16 +401,17 @@
 
     {% set evalHousing = evaluation.evalHousingGroup %}
     {% if evalHousing %}
-
     <br/>
-
-        <h3 class="h4"><b>LOGEMENT - HÉBERGEMENT</b></h3>
+        <h3 class="h4"><b>Situation au regard du logement</b></h3>
         {{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
         {% if evalHousing.siaoRequest %}
             {{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
             {{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
                 ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
                 ~ ")" : "") : "", "Siao request date", "evaluation") }}
+        
+           {{ utils.view(evalHousing.siaoRequestDept, "Siao request dept", "evaluation") }}
+            {{ utils.view(evalHousing.siaoRecommendationToString, "Siao recommendation", "evaluation") }}
         {% endif %}
         {% if evalHousing.socialHousingRequest %}
             {{ utils.view(evalHousing.socialHousingRequestToString ~ (evalHousing.socialHousingRequestId ? " (NUR : " 
@@ -450,6 +469,17 @@
                 ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
         {{ evalHousing.commentEvalHousing }}
                 
+    {% endif %}
+
+    {# Vie à l'hôtel #}
+    {% set evalHotelLife = evaluation.evalHotelLifeGroup %}
+    {% if evalHotelLife %}
+        <br/>
+        <h3 class="h4"><b>Vie à l'hôtel</b></h3>
+        {{ utils.view(evalHotelLife.food, "Food", "evaluation") }}
+        {{ utils.view(evalHotelLife.clothing, "Clothing", "evaluation") }}
+        {{ utils.view(evalHotelLife.roomMaintenance, "Room maintenance", "evaluation") }}
+        {{ utils.view(evalHotelLife.otherCommentHotelLife, "Other comment hotel life", "evaluation") }}
     {% endif %}
 
 {% endapply %}

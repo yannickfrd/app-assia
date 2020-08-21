@@ -54,6 +54,11 @@ class EvalAdmPerson
     private $nationality;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $arrivalDate;
+
+    /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $country;
@@ -130,6 +135,18 @@ class EvalAdmPerson
     public function setNationality(?int $nationality): self
     {
         $this->nationality = $nationality;
+
+        return $this;
+    }
+
+    public function getArrivalDate(): ?\DateTimeInterface
+    {
+        return $this->arrivalDate;
+    }
+
+    public function setArrivalDate(?\DateTimeInterface $arrivalDate): self
+    {
+        $this->arrivalDate = $arrivalDate;
 
         return $this;
     }

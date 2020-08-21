@@ -96,18 +96,20 @@
 		<div id="collapse-eval_budget-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
 			aria-labelledby="heading-eval_budget-{{ key }}" data-parent="#accordion-eval_budget" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
 			<div class="row">
-
 				{% include "app/evaluation/evalResources.html.twig" %}
-
 				{% include "app/evaluation/evalCharges.html.twig" %}
-
 			</div>
 			<div class="form-group row">
-				<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
+				<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources_resources">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
 			</div>
-			<div class="form-group row">
-				<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
-				<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources_resources">{{ form_row(evalBudgetPerson.incomeTax) }}</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_incomeTax">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
+					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_incomeTax">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
+				</div>
 			</div>
 
 			<hr>

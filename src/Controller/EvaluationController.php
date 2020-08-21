@@ -45,7 +45,7 @@ class EvaluationController extends AbstractController
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $evaluationGroup = $this->repo->findEvaluationById($id);
+        $evaluationGroup = $this->repo->findEvaluationById($supportGroup);
 
         if (!$evaluationGroup) {
             return $this->createEvaluationGroup($supportGroup);
@@ -58,7 +58,7 @@ class EvaluationController extends AbstractController
             $this->updateEvaluation($evaluationGroup);
         }
 
-        return $this->render('app/evaluation/evaluation.html.twig', [
+        return $this->render('app/evaluation/evaluationEdit.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
         ]);
@@ -74,7 +74,7 @@ class EvaluationController extends AbstractController
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $evaluationGroup = $this->repo->findEvaluationById($id);
+        $evaluationGroup = $this->repo->findEvaluationById($supportGroup);
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);

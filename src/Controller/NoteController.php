@@ -164,7 +164,7 @@ class NoteController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $evaluation = $repo->findEvaluationById($id);
+        $evaluation = $repo->findEvaluationById($supportGroup);
 
         $note = (new Note())
             ->setTitle('Rapport social '.$evaluation->getUpdatedAt()->format('d/m/Y'))

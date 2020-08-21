@@ -37,6 +37,7 @@ class EvalBudgetPerson
 
     public const CHARGES_TYPE = [
         'insurance' => 'Assurance(s)',
+        'canteen' => 'Cantine',
         'consumerCredit' => 'Crédit(s) à la consommation',
         'water' => 'Eau',
         'electricityGas' => 'Electricité / Gaz',
@@ -74,6 +75,11 @@ class EvalBudgetPerson
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $incomeTax;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -158,6 +164,11 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $canteen;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $chargeOther;
 
     /**
@@ -219,6 +230,11 @@ class EvalBudgetPerson
      * @ORM\Column(type="float", nullable=true)
      */
     private $consumerCreditAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $canteenAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -337,6 +353,26 @@ class EvalBudgetPerson
     public function getResourcesType(): array
     {
         return self::RESOURCES_TYPE;
+    }
+
+    public function getIncomeTax(): ?int
+    {
+        return $this->incomeTax;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getIncomeTaxToString(): ?string
+    {
+        return $this->incomeTax ? Choices::YES_NO[$this->incomeTax] : null;
+    }
+
+    public function setIncomeTax(?int $incomeTax): self
+    {
+        $this->incomeTax = $incomeTax;
+
+        return $this;
     }
 
     public function getIncomeN1Amt(): ?float
@@ -594,6 +630,23 @@ class EvalBudgetPerson
         return $this;
     }
 
+    public function getCanteen(): ?int
+    {
+        return $this->canteen;
+    }
+
+    public function getCanteenToString(): ?string
+    {
+        return $this->canteen ? Choices::YES_NO_BOOLEAN[$this->canteen] : null;
+    }
+
+    public function setCanteen(?int $canteen): self
+    {
+        $this->canteen = $canteen;
+
+        return $this;
+    }
+
     public function getChargeOther(): ?int
     {
         return $this->chargeOther;
@@ -751,6 +804,18 @@ class EvalBudgetPerson
     public function setConsumerCreditAmt(?float $consumerCreditAmt): self
     {
         $this->consumerCreditAmt = $consumerCreditAmt;
+
+        return $this;
+    }
+
+    public function getCanteenAmt(): ?float
+    {
+        return $this->canteenAmt;
+    }
+
+    public function setCanteenAmt(?float $canteenAmt): self
+    {
+        $this->canteenAmt = $canteenAmt;
 
         return $this;
     }

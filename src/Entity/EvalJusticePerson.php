@@ -17,7 +17,7 @@ class EvalJusticePerson
         4 => 'Détention',
         5 => 'Libération conditionnelle (LC)',
         6 => 'Placement extérieur (PE)',
-        7 => 'Placement sous surveillannce électronique (PSE)', // détention à domicile sous surveillance électronique (DDSE)
+        7 => 'Placement sous surveillance électronique (PSE)', // détention à domicile sous surveillance électronique (DDSE)
         8 => 'Semi-liberté',
         9 => 'Sortie de détention',
         10 => 'Suivi socio-judiciaire (SSJ)',
@@ -36,8 +36,8 @@ class EvalJusticePerson
         4 => 'Enquête de personnalité victime',
         5 => 'Enquête sociale rapide',
         6 => 'Placement extérieur (PE)',
-        7 => 'Placement sous surveillannce électronique (PSE)', // détention à domicile sous surveillance électronique (DDSE)
-        8 => 'Placement sous surveillannce électronique mobile (PSEM)', // détention à domicile sous surveillance électronique (DDSE)
+        7 => 'Placement sous surveillance électronique (PSE)', // détention à domicile sous surveillance électronique (DDSE)
+        8 => 'Placement sous surveillance électronique mobile (PSEM)', // détention à domicile sous surveillance électronique (DDSE)
         9 => 'Libération conditionnelle (LC)',
         10 => 'Réduction conditionnelle de peine',
         11 => 'Stage de citoyenneté',
