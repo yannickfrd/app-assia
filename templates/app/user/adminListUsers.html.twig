@@ -30,25 +30,25 @@
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(users, "Nom", "u.lastname") }}
-                        </th>
+                            {{ knp_pagination_sortable(users, "Nom", "u.lastname") }}</th>
                         <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">Fonction</th>
+                            {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}</th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(users, "Fonction", "u.status") }}</th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(users, "Profil", "u.roles") }}</th>
                         <th scope="col" class="align-middle th-w-120">Téléphone</th>
                         <th scope="col" class="align-middle th-w-150">Email</th>
-                        <th scope="col" class="align-middle th-w-150">Service</th>
-                        <th scope="col" class="align-middle th-w-150">Pôle</th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(users, "Service", "s.name") }}</th>
+                        <th scope="col" class="align-middle th-w-150">
+                            {{ knp_pagination_sortable(users, "Pôle", "p.name") }}</th>
                         <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(users, "Nombre de connexion", "u.loginCount") }}
-                        </th>
+                            {{ knp_pagination_sortable(users, "Nombre de connexion", "u.loginCount") }}</th>
                         <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}
-                        </th>
+                            {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}</th>
                         <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(users, "Date de création", "u.createdAt") }}
-                        </th>
+                            {{ knp_pagination_sortable(users, "Date de création", "u.createdAt") }}</th>
                     </tr>
                 </thead>
 
@@ -66,6 +66,7 @@
                             <td class="align-middle text-uppercase">{{ user.lastname }}</td>
                             <td class="align-middle">{{ user.firstname }}</td>
                             <td class="align-middle">{{ user.statusToString }}</td>
+                            <td class="align-middle">{{ user.roles|first }}</td>
                             <td class="align-middle">{{ user.phone1}}</td>
                             <td class="align-middle">{{ user.email }}</td>
                             <td class="align-middle">
