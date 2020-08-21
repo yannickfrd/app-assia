@@ -242,10 +242,10 @@ export default class SupportDocuments {
                     <a href='/document/${data.documentId}/read' class='btn btn-${this.themeColor} btn-sm shadow my-1' title='Télécharger le document'><span class='fas fa-file-download'></span></a>
                 </th>
                     <td class='align-middle js-document-name' data-toggle='modal' data-target='#modal-document'>${this.documentNameInput.value}</td>
-                    <td class='align-middle js -document-type' data-toggle='modal' data-target='#modal-document' data-value='${this.selectType.getOption(this.documentTypeInput)}'>${data.type}</td>
-                    <td class='align-middle js -document-content' data-toggle='modal' data-target='#modal-document'>${this.documentContentInput.value}</td>
-                    <td class='align-middle js -document-size text-right' data-toggle='modal' data-target='#modal-document'>${size}</td>
-                    <td class='align-middle js -document-createdAt' data-toggle='modal' data-target='#modal-document'>${data.createdAt}</td>
+                    <td class='align-middle js-document-type' data-toggle='modal' data-target='#modal-document' data-value='${this.selectType.getOption(this.documentTypeInput)}'>${data.type}</td>
+                    <td class='align-middle js-document-content' data-toggle='modal' data-target='#modal-document'>${this.documentContentInput.value}</td>
+                    <td class='align-middle js-document-size text-right' data-toggle='modal' data-target='#modal-document'>${size}</td>
+                    <td class='align-middle js-document-createdAt' data-toggle='modal' data-target='#modal-document'>${data.createdAt}</td>
                     <td class='align-middle text-center'>
                         <button data-url='/document/${data.documentId}/delete' class='js-delete btn btn-danger btn-sm shadow my-1' title='Supprimer le document' data-toggle='modal' data-target='#modal-document'><span class='fas fa-trash-alt'></span></button>
                 </td>`

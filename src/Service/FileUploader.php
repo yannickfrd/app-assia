@@ -2,26 +2,26 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tinify\Tinify;
-use Ilovepdf\Ilovepdf;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class FileUploader
 {
     protected $targetDirectory;
     protected $tinify;
-    protected $projectKey;
-    protected $secretKey;
 
-    public function __construct($targetDirectory, Tinify $tinify, $tinifyKey, $projectKey, $secretKey)
+    public function __construct(string $targetDirectory, Tinify $tinify, string $tinifyKey)
     {
         $this->targetDirectory = $targetDirectory;
         $this->tinify = $tinify;
         $this->tinify->setKey($tinifyKey);
     }
 
-    public function upload(UploadedFile $file, $path = null)
+    /**
+     * Télécharge un fichier.
+     */
+    public function upload(UploadedFile $file, string $path = null): string
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $originalFilename = str_replace([' ', '/'], '-', $originalFilename);
@@ -44,27 +44,19 @@ class FileUploader
         return $newFilename;
     }
 
-    public function compressImage($path, $newFilename)
+    /**
+     * Compresse le fichier si c'est une image.
+     */
+    public function compressImage(string $path, string $newFilename): void
     {
         $imageExtensions = ['jpg', 'jpeg', 'png'];
-        $pathFile = $this->getTargetDirectory().$path.'/'.$newFilename;
+        $pathFile = $this->targetDirectory.$path.'/'.$newFilename;
         $pathParts = pathinfo($pathFile);
 
-        if (in_array($pathParts['extension'], $imageExtensions)) {
-            $iLovePdf = new Ilovepdf($this->projectKey, $this->secretKey);
-            $myTask = $iLovePdf->newTask('compress');
-            $myTask->setCompressionLevel('recommended');
-            $myTask->setOutputFilename('compression');
-
-            $file1 = $myTask->addFile($pathFile);
-            $myTask->execute();
-            $myTask->download($pathFile);
+        if (in_array($pathParts['extension'], $imageExtensions) && $this->tinify->getCompressionCount() < 450) {
+            $source = \Tinify\fromFile($pathFile);
+            $source->toFile($pathFile);
         }
-
-        // if (in_array($pathParts['extension'], $imageExtensions) && $this->tinify->getCompressionCount() < 450) {
-        //     $source = \Tinify\fromFile($pathFile);
-        //     $source->toFile($pathFile);
-        // }
     }
 
     public function getTargetDirectory()
