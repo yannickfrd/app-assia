@@ -23,6 +23,7 @@
 		<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
 	</div>
 	<hr>
+	{# <div data-parent-field="device"> #}
 	<div class="form-group row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Diagnostic</h2></div>
 		<div class="col-md-6" data-check-valid="diagStart">{{ form_row(form.avdl.diagStartDate) }}</div>
@@ -32,6 +33,7 @@
 		<div class="col-md-12" data-parent-field="diagStartDate">{{ form_widget(form.avdl.diagComment) }}</div>
 	</div>
 	<hr>
+	{# </div> #}
 	<div class="form-group row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
 		<div class="col-md-6" data-check-valid="supportStart">{{ form_row(form.avdl.supportStartDate) }}</div>
@@ -41,13 +43,15 @@
 		<div class="col-md-6" data-parent-field="supportEndDate" data-check-valid="supportEndDate">{{ form_row(form.endStatus) }}</div>
 		<div class="col-md-12" data-parent-field="supportStartDate" >{{ form_widget(form.avdl.supportComment) }}</div>
 	</div>
-	<hr>
-	<div class="form-group row">
-		<div class="col-md-12"><h2 class="h5 mb-3">Proposition logement</h2></div>
-		<div class="col-md-6" data-check-valid="accessHousing">{{ form_row(form.avdl.propoHousingDate) }}</div>
-		<div class="col-md-6" data-parent-field="propoHousingDate" data-check-valid="accessHousing">{{ form_row(form.avdl.accessHousingModality) }}</div>
-		<div class="col-md-6" data-parent-field="propoHousingDate">{{ form_row(form.avdl.propoResult) }}</div>
-		<div class="col-md-6" data-parent-field="propoResult">{{ form_row(form.avdl.accessHousingDate) }}</div>
-		<div class="col-md-12" data-parent-field="propoHousingDate">{{ form_widget(form.avdl.endSupportComment) }}</div>
+	<div data-parent-field="supportStartDate">
+		<hr>
+		<div class="form-group row">
+			<div class="col-md-12"><h2 class="h5 mb-3">Proposition logement</h2></div>
+			<div class="col-md-6" data-check-valid="accessHousing">{{ form_row(form.avdl.propoHousingDate) }}</div>
+			<div class="col-md-6" data-parent-field="propoHousingDate" data-check-valid="accessHousing">{{ form_row(form.avdl.accessHousingModality) }}</div>
+			<div class="col-md-6" data-parent-field="propoHousingDate">{{ form_row(form.avdl.propoResult) }}</div>
+			<div class="col-md-6" data-parent-field="propoResult">{{ form_row(form.avdl.accessHousingDate) }}</div>
+			<div class="col-md-12" data-parent-field="propoHousingDate">{{ form_widget(form.avdl.endSupportComment) }}</div>
+		</div>
 	</div>
 </div>

@@ -3,6 +3,7 @@
 namespace App\Service\SupportGroup;
 
 use App\Entity\Avdl;
+use App\Entity\Device;
 use App\Entity\SupportGroup;
 
 class AvdlService
@@ -17,8 +18,11 @@ class AvdlService
         $supportGroup
             ->setStatus($this->getAvdlStatus($avdl))
             ->setStartDate($this->getAvdlStartDate($avdl))
-            ->setEndDate($this->getAvdlEndDate($avdl))
-            ->setCoefficient($this->getAvdlCoeffSupport($avdl));
+            ->setEndDate($this->getAvdlEndDate($avdl));
+
+        if ($supportGroup->getDevice()->getId() == Device::AVDL_DALO) {
+            $supportGroup->setCoefficient($this->getAvdlCoeffSupport($avdl));
+        }
 
         $this->updateSupportPeople($supportGroup);
 
@@ -45,9 +49,9 @@ class AvdlService
      */
     protected function getAvdlStatus(Avdl $avdl): int
     {
-        if (null == $avdl->getDiagStartDate() && null == $avdl->getSupportStartDate()) {
-            return SupportGroup::STATUS_PRE_ADD_IN_PROGRESS;
-        }
+        // if (null == $avdl->getDiagStartDate() && null == $avdl->getSupportStartDate()) {
+        //     return SupportGroup::STATUS_PRE_ADD_IN_PROGRESS;
+        // }
 
         if (($avdl->getDiagEndDate() && $avdl->getSupportStartDate() == null) || $avdl->getSupportEndDate()) {
             return SupportGroup::STATUS_ENDED;

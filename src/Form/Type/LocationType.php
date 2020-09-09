@@ -27,18 +27,21 @@ class LocationType extends AbstractType
                 'help' => 'commentLocation.help',
             ])
             ->add('address', null, [
+                'label' => 'location.address_auto',
                 'attr' => [
                     'class' => 'js-address',
                     'readonly' => true,
                 ],
             ])
             ->add('city', null, [
+                'label' => 'location.city_auto',
                 'attr' => [
                     'class' => 'js-city',
                     'readonly' => true,
                 ],
             ])
             ->add('zipcode', null, [
+                'label' => 'location.zipcode_auto',
                 'attr' => [
                     'class' => 'js-zipcode',
                     'readonly' => true,

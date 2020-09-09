@@ -22,6 +22,9 @@ class Device
 {
     use CreatedUpdatedEntityTrait;
 
+    public const AVDL_DALO = 10;
+    public const AVDL_HORS_DALO = 4;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

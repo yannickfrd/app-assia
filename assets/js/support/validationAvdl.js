@@ -82,6 +82,7 @@ export default class ValidationAvdlSupport {
      * Masque ou affiche les champs conditionnels
      */
     displayFields() {
+        // new DisplayFields('support_', 'device', [10])
         new DisplayFields('support_originRequest_', 'orientationDate')
         new DisplayFields('support_originRequest_', 'organization')
         new DisplayFields(this.prefix, 'diagStartDate')

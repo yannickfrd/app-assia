@@ -171,7 +171,12 @@ rdv:
     content: Ajouter une note
     title: Ajouter un titre
 
-location.search.placeholder: Saisir une adresse ou une ville...
+### Adresse
+location:
+  address_auto: Adresse (auto.)
+  city_auto:  Ville (auto.)
+  zipcode_auto: Code postal (auto.)
+  search.placeholder: Saisir une adresse ou une ville...
 
 ### AVDL
 # Mandate date: Date de mandatement
