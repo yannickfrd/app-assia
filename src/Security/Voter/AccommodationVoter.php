@@ -41,7 +41,7 @@ class AccommodationVoter extends Voter
                 return $this->canView();
                 break;
             case 'EDIT':
-                return $this->canView();
+                return $this->canEdit();
                 break;
             case 'DELETE':
                 return $this->canDelete();

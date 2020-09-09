@@ -8,6 +8,7 @@ use App\Entity\Service;
 use App\Service\Grammar;
 use App\Entity\RolePerson;
 use App\Entity\GroupPeople;
+use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\EvaluationGroup;
@@ -59,13 +60,13 @@ class SupportGroupService
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
     {
-        // $cacheSupport = $this->cache->getItem('support_group_full.'.$id);
+        // $cacheSupport = $this->cache->getItem('support_group_full.'.$supportGroup->getId());
 
         // if (!$cacheSupport->isHit()) {
         //     $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         //     $cacheSupport->set($supportGroup);
-        //     $cacheSupport->expiresAfter(365 * 24 * 60 * 60);
+        //     $cacheSupport->expiresAfter(30 * 24 * 60 * 60);
         //     $this->cache->save($cacheSupport);
         // }
         // $supportGroup = $cacheSupport->get();
@@ -87,7 +88,7 @@ class SupportGroupService
             $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
             $cacheSupport->set($supportGroup);
-            $cacheSupport->expiresAfter(365 * 24 * 60 * 60);
+            $cacheSupport->expiresAfter(30 * 24 * 60 * 60);
             $this->cache->save($cacheSupport);
         }
 
@@ -103,6 +104,7 @@ class SupportGroupService
 
         if (!$cacheEvaluation->isHit()) {
             $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));
+            $cacheEvaluation->expiresAfter(30 * 24 * 60 * 60);
             $this->cache->save($cacheEvaluation);
         }
 
@@ -303,25 +305,27 @@ class SupportGroupService
                 Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
         }
 
-        // Vérifie qu'il y a un hébergement créé
-        if (1 == $supportGroup->getDevice()->getAccommodation() && 0 == $supportGroup->getAccommodationGroups()->count()) {
-            $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
-        } else {
-            // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
-            $nbAccommodationPeople = 0;
-            foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
-                if (null == $accommodationGroup->getEndDate()) {
-                    foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
-                        if (null == $accommodationPerson->getEndDate()) {
-                            ++$nbAccommodationPeople;
+        if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
+            // Vérifie qu'il y a un hébergement créé
+            if (0 == $supportGroup->getAccommodationGroups()->count()) {
+                $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
+            } else {
+                // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
+                $nbAccommodationPeople = 0;
+                foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
+                    if (null == $accommodationGroup->getEndDate()) {
+                        foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
+                            if (null == $accommodationPerson->getEndDate()) {
+                                ++$nbAccommodationPeople;
+                            }
                         }
                     }
                 }
-            }
-            if (!$supportGroup->getEndDate() && 1 == $supportGroup->getDevice()->getAccommodation() && $nbActiveSupportPeople != $nbAccommodationPeople) {
-                $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies ('.$nbActiveSupportPeople.') 
+                if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbAccommodationPeople) {
+                    $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies ('.$nbActiveSupportPeople.') 
                     ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
                     Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
+                }
             }
         }
     }

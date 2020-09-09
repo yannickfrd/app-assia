@@ -15,6 +15,7 @@ class Document
 
     public const TYPE = [
         2 => 'Administratif',
+        10 => 'Dettes',
         9 => 'Emploi',
         1 => 'Identité/Etat civil',
         4 => 'Impôts',

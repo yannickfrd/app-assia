@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Service;
 use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
 use Doctrine\ORM\QueryBuilder;
@@ -10,6 +11,7 @@ use App\Security\CurrentUserService;
 use App\Form\Model\AvdlSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Model\SupportsInMonthSearch;
+use App\Form\Utils\Choices;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -46,7 +48,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne le suivi social avec le groupe et les personnes rattachées.
+     * Donne le suivi social complet avec le groupe et les personnes rattachées.
      */
     public function findFullSupportById(int $id): ?SupportGroup
     {
@@ -55,16 +57,24 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
-            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+
+        // if ($service->getId() == Service::SERVICE_AVDL_ID) {
+            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
+        // }
+        // if (in_array($service->getId(), Service::SERVICES_PAMH_ID)) {
+        // $query = $query->leftJoin('sg.pamh', 'pamh')->addSelect('pamh');
+        // }
+
+        // if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, startDate, endDate, endReason, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('ap')
-            ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2')
-            // ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id, updatedAt}')
+            ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2');
+        // }
 
-            ->andWhere('sg.id = :id')
+        return $query->andWhere('sg.id = :id')
             ->setParameter('id', $id)
 
             ->orderBy('p.birthdate', 'ASC')
@@ -72,32 +82,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
-
-        return $query;
-    }
-
-    /**
-     * Donne le suivi social avec le groupe et les personnes rattachées.
-     */
-    public function findSupportAvdlById(int $id): ?SupportGroup
-    {
-        $query = $this->getsupportQuery()
-            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
-            ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
-            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
-            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
-            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
-
-            ->andWhere('sg.id = :id')
-            ->setParameter('id', $id)
-
-            ->orderBy('p.birthdate', 'ASC')
-
-            ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
-
-        return $query;
     }
 
     protected function getsupportQuery()

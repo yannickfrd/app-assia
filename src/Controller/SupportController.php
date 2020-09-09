@@ -149,11 +149,9 @@ class SupportController extends AbstractController
      */
     public function editSupportGroup(int $id, Request $request, SupportGroupService $supportGroupService): Response
     {
-        $supportGroup = $this->repoSupportGroup->find($id);
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
-        $supportGroup = $this->getSupportGroup($supportGroup);
 
         $form = ($this->createForm($this->getFormType($supportGroup->getService()->getId()), $supportGroup))
             ->handleRequest($request);
@@ -164,7 +162,8 @@ class SupportController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', 'Le suivi social est mis à jour.');
-            // return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+
+            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
 
         $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
@@ -200,7 +199,7 @@ class SupportController extends AbstractController
             'nbRdvs' => $repoRdv->count(['supportGroup' => $supportGroup->getId()]),
             'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
-            'nbContributions' => $supportGroup->getAccommodationGroups()->count() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
+            'nbContributions' => $supportGroup->getAccommodationGroups() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
             'evaluation' => $supportGroupService->getEvaluation($supportGroup),
         ]);
     }
@@ -375,22 +374,6 @@ class SupportController extends AbstractController
         }
 
         return (new SupportPersonExport())->exportData($supports);
-    }
-
-    /**
-     * Récupère le suivi social en fonction du service choisi.
-     */
-    protected function getSupportGroup(SupportGroup $supportGroup)
-    {
-        $serviceId = $supportGroup->getService()->getId();
-        if ($serviceId == Service::SERVICE_AVDL_ID) {
-            return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
-        }
-        if (in_array($serviceId, Service::SERVICES_PAMH_ID)) {
-            return $this->repoSupportGroup->findSupportAvdlById($supportGroup->getId());
-        }
-
-        return $this->repoSupportGroup->findFullSupportById($supportGroup->getId());
     }
 
     /**

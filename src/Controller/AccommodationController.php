@@ -88,10 +88,11 @@ class AccommodationController extends AbstractController
      * Modification d'un groupe de places.
      *
      * @Route("/accommodation/{id}", name="accommodation_edit", methods="GET|POST")
-     * @IsGranted("VIEW", subject="accommodation")
      */
     public function editAccommodation(Accommodation $accommodation, Request $request, AccommodationGroupRepository $repo): Response
     {
+        $this->denyAccessUnlessGranted('VIEW', $accommodation->getService());
+
         $form = ($this->createForm(AccommodationType::class, $accommodation))
             ->handleRequest($request);
 

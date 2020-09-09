@@ -55,7 +55,7 @@ export default class DisplayFields {
      * Vérifie le champ de type Select.
      */
     checkSelect() {
-        let selectedOption = this.selectType.getOption(this.inputElt)
+        const selectedOption = this.selectType.getOption(this.inputElt)
         let isVisible = false
 
         if (this.optionValues.length > 0) {
@@ -68,26 +68,45 @@ export default class DisplayFields {
             isVisible = true
         }
 
-        this.editChildrenElts(isVisible)
+        this.editChildrenElts(isVisible, selectedOption)
     }
 
     /**
      * Masque ou rend visible les éléments enfants de l'input parent.
      * @param {Boolean} isVisible 
      */
-    editChildrenElts(isVisible) {
+    editChildrenElts(isVisible, selectedOption = null) {
         this.childrenElts.forEach(elt => {
-            if (isVisible) {
-                elt.classList.remove('d-none')
-                setTimeout(() => {
-                    elt.classList.add('fade-in')
-                    elt.classList.remove('fade-out')
-                }, 10)
-            } else {
-                elt.classList.add('d-none', 'fade-out')
-                elt.classList.remove('fade-in')
+            let visibility = isVisible
+            const options = elt.getAttribute('data-parent-field-options')
+            if (options) {
+                visibility = false
+                options.split(', ').forEach(option => {
+                    if (parseInt(option) === selectedOption) {
+                        visibility = true
+                    }
+                })
             }
+            this.visibleElt(elt, visibility)
         })
+    }
+
+    /**
+     * Rend visible ou non un élément HTML
+     * @param {HTMLElement} elt 
+     * @param {Boolean} isVisible 
+     */
+    visibleElt(elt, visibility) {
+        if (visibility === true) {
+            elt.classList.remove('d-none')
+            setTimeout(() => {
+                elt.classList.add('fade-in')
+                elt.classList.remove('fade-out')
+            }, 10)
+        } else {
+            elt.classList.add('d-none', 'fade-out')
+            elt.classList.remove('fade-in')
+        }
     }
 
     /**

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.18.0 - 21/08/2020
+1.18.2 - 09/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,11 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.18.2 - 09/09/2020
+- Modification des droits d'accès à la fiche d'un groupe de places.
+- Ajout de l'item 'Dettes' dans la liste des types de document administratif.
+- Modif conditionnalité d'affichage dans l'évaluation sociale (Numéro Pôle Emploi et Regroupement familial).
 
 ## Version 1.18.0 - 21/08/2020
 - Créé bloc 'Vie à l'hôtel' dans l'évaluation sociale.
