@@ -135,7 +135,7 @@ class SupportGroupType extends AbstractType
                 'data_class' => Accommodation::class,
                 'attr' => [
                     // 'seachLabel' => 'Adresse du suivi',
-                    'seachHelp' => 'Adresse du logement, hébergement, domiciliation...',
+                    'searchHelp' => 'Adresse du logement, hébergement, domiciliation...',
                 ],
             ])
             ->add('comment', null, [

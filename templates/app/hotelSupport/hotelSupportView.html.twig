@@ -1,0 +1,60 @@
+{% import "macros/view.html.twig" as utils %}
+
+<div class="row">
+    <div class="col-md-6 mb-1 py-2">
+        <span class="py-2 text-secondary">Service (dispositif) : </span>
+        <a href="{{ path('service_edit', {'id': support.service.id }) }}" class="text-{{ theme_color }}">
+            {{ support.service.name }}</a>
+        <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
+    </div>
+    {{ utils.view(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
+    {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+        ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
+    {{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
+        ~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
+</div>
+
+{% set originRequest = support.originRequest %}
+{% if originRequest %}
+    <div class="row my-2">
+        {{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
+            ~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "forms") }}
+        {{ utils.view(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
+    </div>
+{% endif %}
+
+{% set hotelSupport = support.hotelSupport %}
+
+<div class="row my-2">
+    {{ utils.view(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
+    {{ utils.view(hotelSupport.originDept, "Origin dept") }}
+    {{ utils.view(hotelSupport.gipId, "Gip id") }}
+    {{ utils.view(hotelSupport.diagComment, "Comment") }}
+</div>
+
+<div class="row my-2">
+    {{ utils.view(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "hotelSupport.locationHotel") }}
+</div>
+
+
+{% if hotelSupport.diagStartDate %}
+    <div class="row my-2">
+        {{ utils.view(hotelSupport.diagStartDate ? hotelSupport.diagStartDate|date("d/m/Y") 
+            ~ (hotelSupport.diagEndDate ? " - " ~ hotelSupport.diagEndDate|date("d/m/Y") : "") : "", "hotelSupport.diag") }}
+        {# {{ utils.view(hotelSupport.endStatusDiag, "hotelSupport.endStatusDiag") }} #}
+        {{ utils.view(hotelSupport.diagComment, "Comment") }}
+    </div>
+{% endif %}
+
+{% if hotelSupport.supportStartDate %}
+    <div class="row my-2">
+        {{ utils.view(hotelSupport.supportStartDate ? hotelSupport.supportStartDate|date("d/m/Y") 
+            ~ (hotelSupport.supportEndDate ? " - " ~ hotelSupport.supportEndDate|date("d/m/Y") : "") : "", "hotelSupport.support") }}
+        {{ utils.view(hotelSupport.endSupportReasonToString, "hotelSupport.endSupportReason") }}
+        {{ utils.view(hotelSupport.supportComment, "Comment") }}
+    </div>
+{% endif %}
+
+<div class="row">
+    {{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
+</div>

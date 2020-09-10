@@ -17,6 +17,7 @@ use App\Entity\AccommodationGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\SupportGroup\HotelSupportService;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -28,20 +29,17 @@ class SupportGroupService
     private $repoSupportGroup;
     private $repoEvaluationGroup;
     private $manager;
-    private $avdlService;
 
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $manager,
         SupportGroupRepository $repoSupportGroup,
-        EvaluationGroupRepository $repoEvaluationGroup,
-        AvdlService $avdlService)
+        EvaluationGroupRepository $repoEvaluationGroup)
     {
         $this->container = $container;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoEvaluationGroup = $repoEvaluationGroup;
         $this->manager = $manager;
-        $this->avdlService = $avdlService;
         $this->cache = new FilesystemAdapter();
     }
 
@@ -124,11 +122,14 @@ class SupportGroupService
             ->setGroupPeople($groupPeople)
             ->setCoefficient($supportGroup->getDevice()->getCoefficient());
 
+        $serviceId = $supportGroup->getService()->getId();
+
         // Contrôle le service du suivi
-        switch ($supportGroup->getService()->getId()) {
-            case Service::SERVICE_AVDL_ID:
-                $this->avdlService->updateSupportGroup($supportGroup);
-            break;
+        if ($serviceId == Service::SERVICE_AVDL_ID) {
+            $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
+        }
+        if (in_array($serviceId, Service::SERVICES_PASH_ID)) {
+            $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
         $this->manager->persist($supportGroup);
@@ -178,12 +179,14 @@ class SupportGroupService
     public function update(SupportGroup $supportGroup)
     {
         $supportGroup->setUpdatedAt(new \DateTime());
+        $serviceId = $supportGroup->getService()->getId();
 
         // Contrôle le service du suivi
-        switch ($supportGroup->getService()->getId()) {
-            case Service::SERVICE_AVDL_ID:
-                $supportGroup = $this->avdlService->updateSupportGroup($supportGroup);
-            break;
+        if ($serviceId == Service::SERVICE_AVDL_ID) {
+            $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
+        }
+        if (in_array($serviceId, Service::SERVICES_PASH_ID)) {
+            $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
         $this->updateSupportPeople($supportGroup);

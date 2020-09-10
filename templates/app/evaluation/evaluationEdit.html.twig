@@ -53,7 +53,7 @@
 			{% include "app/evaluation/evaluationProf.html.twig" %}
 			{% include "app/evaluation/evaluationBudget.html.twig" %}
 			{% include "app/evaluation/evaluationHousing.html.twig" %}
-			{% if support.service.id in constant("App\\Entity\\Service::SERVICES_PAMH_ID") %}
+			{% if support.service.id in constant("App\\Entity\\Service::SERVICES_PASH_ID") %}
 				{% include "app/evaluation/evaluationHotelLife.html.twig" %}
 			{% endif %}
 		</div>

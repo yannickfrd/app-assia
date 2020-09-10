@@ -179,8 +179,6 @@ location:
   search.placeholder: Saisir une adresse ou une ville...
 
 ### AVDL
-# Mandate date: Date de mandatement
-# City origin: Commune d'origine
 Diag type: Type de diagnostic
 Diag start date: Date de début diagnostic
 Diag end date: Date de fin diagnostic
@@ -211,3 +209,16 @@ avdl:
   diagComment.placeholder: Écrire un commentaire sur le diagnostic
   supportComment.placeholder: Écrire un commentaire sur l'accompagnement
   endSupportComment.placeholder: Écrire un commentaire sur la fin d'accompagnement ou la proposition logement
+
+### Suivi hôtel
+Agreement date: Date de signature de la convention
+Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
+Gip id: Identifiant GIP
+Origin dept: Département d'origine
+hotelSupport:
+  locationHotel: Adresse de l'hôtel
+  commentLocationHelp: Nom de l'hôtel, numéro de chambre
+  diag: Diagnostic
+  orientationDate: Date d'orientation
+  support: Suivi
+  endSupportReason: Motif de fin d'accompagnement

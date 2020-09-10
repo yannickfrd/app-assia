@@ -63,8 +63,8 @@ class SupportGroupRepository extends ServiceEntityRepository
         // if ($service->getId() == Service::SERVICE_AVDL_ID) {
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
         // }
-        // if (in_array($service->getId(), Service::SERVICES_PAMH_ID)) {
-        // $query = $query->leftJoin('sg.pamh', 'pamh')->addSelect('pamh');
+        // if (in_array($service->getId(), Service::SERVICES_PASH_ID)) {
+            ->leftJoin('sg.hotelSupport', 'hotelSupport')->addSelect('hotelSupport')
         // }
 
         // if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
@@ -87,8 +87,8 @@ class SupportGroupRepository extends ServiceEntityRepository
     protected function getsupportQuery()
     {
         return $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, preAdmission, accommodation, contribution, contributionType, contributionRate, justice}')
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, preAdmission, justice}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')
             ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')

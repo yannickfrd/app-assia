@@ -24,6 +24,37 @@ class DeviceType extends AbstractType
                 'required' => false,
                 'help' => 'device.accommodation.help',
             ])
+
+            ->add('justice', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'label' => 'Justice activity',
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('preAdmission', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('contribution', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('contributionType', ChoiceType::class, [
+                'choices' => Choices::getChoices(Device::CONTRIBUTION_TYPE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('contributionRate', null, [
+                'help' => 'Rate beetween 0 and 1.',
+            ])
+            ->add('comment', null, [
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'service.comment.placeholder',
+                ],
+            ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,

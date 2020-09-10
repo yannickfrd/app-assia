@@ -19,6 +19,8 @@
 				data-toggle="tooltip" data-placement="bottom" title="Modalités d'hébergement">
 				<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 			</a>
+			{% endif %}
+			{% if support.device and support.device.contribution == YES %}
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_contributions', {'id':support.id}) }}" 
 				data-toggle="tooltip" data-placement="bottom" title="Paiements (redevances, PF, caution...)">
 				<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Paiements</span>

@@ -1,0 +1,52 @@
+<div id="hotel_support">
+	<div class="form-group row">
+		<div class="col-md-6">{{ form_row(form.service) }}</div>
+		<div class="col-md-6">{{ form_row(form.device) }}</div>
+		<div class="col-md-6">{{ form_row(form.referent) }}</div>
+		<div class="col-md-6">{{ form_row(form.referent2) }}</div>
+	</div>
+	<hr>
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
+			<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
+			<div class="col-md-6" data-parent-field="organization">{{ form_row(form.originRequest.organizationComment) }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">{{ form_row(form.hotelSupport.entryHotelDate) }}</div>
+			<div class="col-md-6">{{ form_row(form.hotelSupport.originDept) }}</div>
+			<div class="col-md-6">{{ form_row(form.hotelSupport.gipId) }}</div>
+			<div class="col-md-12">{{ form_widget(form.originRequest.comment) }}</div>
+		</div>
+	</div>
+	<hr>
+	<div class="form-group row" id="support_location">
+		<div class="col-md-12"><h2 class="h5 mb-3">Adresse de l'hôtel</h2></div>
+		<div class="col-md-6">{{ form_row(form.location.search) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.address) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.city) }}</div>
+		<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
+	</div>
+	<hr>
+	<div class="form-group row">
+		<div class="col-md-12"><h2 class="h5 mb-3">Diagnostic</h2></div>
+		<div class="col-md-6" data-check-valid="diagStart">{{ form_row(form.hotelSupport.diagStartDate) }}</div>
+		{# <div class="col-md-6" data-parent-field="diagStartDate">{{ form_row(form.hotelSupport.endStatusDiag) }}</div> #}
+		<div class="col-md-6" data-parent-field="diagStartDate">{{ form_row(form.hotelSupport.diagEndDate) }}</div>
+		<div class="col-md-12" data-parent-field="diagStartDate">{{ form_widget(form.hotelSupport.diagComment) }}</div>
+	</div>
+	<hr>
+	<div class="form-group row">
+		<div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
+		<div class="col-md-6" data-check-valid="supportStart">{{ form_row(form.hotelSupport.supportStartDate) }}</div>
+		<div class="col-md-6" data-parent-field="supportStartDate">{{ form_row(form.hotelSupport.agreementDate) }}</div>
+		<div class="col-md-6" data-parent-field="supportStartDate" data-check-valid="supportEndDate">{{ form_row(form.hotelSupport.supportEndDate) }}</div>
+		<div class="col-md-6" data-parent-field="supportEndDate" data-check-valid="supportEndDate">{{ form_row(form.hotelSupport.endSupportReason) }}</div>
+		<div class="col-md-6" data-parent-field="supportEndDate" data-check-valid="supportEndDate">{{ form_row(form.endStatus) }}</div>
+		<div class="col-md-12" data-parent-field="supportStartDate" >{{ form_widget(form.hotelSupport.supportComment) }}</div>
+	</div>
+</div>

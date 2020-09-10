@@ -7,6 +7,7 @@ use App\Entity\Service;
 use App\Service\Grammar;
 use App\Service\Calendar;
 use App\Entity\GroupPeople;
+use App\Form\Utils\Choices;
 use App\Service\Pagination;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
@@ -23,6 +24,7 @@ use App\Form\Support\NewSupportGroupType;
 use App\Form\Support\SupportGroupAvdlType;
 use App\Repository\ContributionRepository;
 use App\Repository\SupportGroupRepository;
+use App\Form\Support\SupportGroupHotelType;
 use App\Repository\SupportPersonRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Support\SupportCoefficientType;
@@ -32,7 +34,6 @@ use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Support\SupportsInMonthSearchType;
-use App\Form\Utils\Choices;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\SupportGroup\SupportGroupService;
@@ -381,13 +382,13 @@ class SupportController extends AbstractController
      */
     protected function getFormType(int $serviceId = null)
     {
-        switch ($serviceId) {
-            case Service::SERVICE_AVDL_ID:
-                return SupportGroupAvdlType::class;
-                break;
-            default:
-                return SupportGroupType::class;
-                break;
+        if ($serviceId == Service::SERVICE_AVDL_ID) {
+            return SupportGroupAvdlType::class;
         }
+        if (in_array($serviceId, Service::SERVICES_PASH_ID)) {
+            return SupportGroupHotelType::class;
+        }
+
+        return SupportGroupType::class;
     }
 }

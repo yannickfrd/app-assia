@@ -15,7 +15,7 @@
 		<div class="d-flex col-md-6 mb-1 align-items-center">
 			<button id="js-new-contribution" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
 				data-url="{{ path('support_resources', {'id': support.id}) }}" 
-				data-contribution-rate="{{ support.service.contributionRate }}" 
+				data-contribution-rate="{{ support.device.contributionRate }}" 
 				data-support-start-date="{{ support.startDate ? support.startDate|date('Y-m-d') }}" 
 				data-support-end-date="{{ support.endDate ? support.endDate|date('Y-m-d') }}" 
 				data-toggle="tooltip"  data-placement="bottom" title="Créer un nouvel enregistrement">

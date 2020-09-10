@@ -3,7 +3,7 @@
 
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
-{% set SERVICES_PAMH_ID = constant("App\\Entity\\Service::SERVICES_PAMH_ID") %}
+{% set SERVICES_PASH_ID = constant("App\\Entity\\Service::SERVICES_PASH_ID") %}
 
 {% block title %}Suivi social | {{ title_website }}{% endblock %}
 
@@ -54,6 +54,8 @@
 			href="{{ path('support_accommodations', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
 			title="Modalités d'hébergement">Hébergement<span class="badge badge-light ml-2">{{ support.accommodationGroups|length }}</span></a>
 		</div>
+		{% endif %}
+		{% if support.device and support.device.contribution == YES %}
 		<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 			<a id='support-contributions' class="btn btn-{{ theme_color }} btn-block shadow" 
 			href="{{ path('support_contributions', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
@@ -84,6 +86,8 @@
 
 	{% if support.service.id == constant('SERVICE_AVDL_ID', support.service) and support.avdl %}
 		{% include "app/avdl/avdlView.html.twig" %}
+	{% elseif support.service.id in SERVICES_PASH_ID %}
+		{% include "app/hotelSupport/hotelSupportView.html.twig" %}
 	{% else %}		
 		{% include "app/support/supportRegularView.html.twig" %}
 	{% endif %}

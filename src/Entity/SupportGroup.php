@@ -268,6 +268,11 @@ class SupportGroup
      */
     private $avdl;
 
+    /**
+     * @ORM\OneToOne(targetEntity=HotelSupport::class, mappedBy="supportGroup", cascade={"persist", "remove"})
+     */
+    private $hotelSupport;
+
     public function __construct()
     {
         $this->supportPeople = new ArrayCollection();
@@ -805,6 +810,23 @@ class SupportGroup
         // set the owning side of the relation if necessary
         if ($avdl->getSupportGroup() !== $this) {
             $avdl->setSupportGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function getHotelSupport(): ?HotelSupport
+    {
+        return $this->hotelSupport;
+    }
+
+    public function setHotelSupport(HotelSupport $hotelSupport): self
+    {
+        $this->hotelSupport = $hotelSupport;
+
+        // set the owning side of the relation if necessary
+        if ($hotelSupport->getSupportGroup() !== $this) {
+            $hotelSupport->setSupportGroup($this);
         }
 
         return $this;

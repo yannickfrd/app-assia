@@ -20,11 +20,11 @@ class LocationType extends AbstractType
                     'placeholder' => 'location.search.placeholder',
                     'autocomplete' => 'off',
                 ],
-                'help' => $data['seachHelp'] ?? null,
+                'help' => $data['searchHelp'] ?? null,
                 'mapped' => false,
             ])
             ->add('commentLocation', null, [
-                'help' => 'commentLocation.help',
+                'help' => $data['commentLocationHelp'] ?? 'commentLocation.help',
             ])
             ->add('address', null, [
                 'label' => 'location.address_auto',

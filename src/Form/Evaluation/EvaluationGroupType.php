@@ -31,7 +31,7 @@ class EvaluationGroupType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $evaluationGroup = $event->getData();
             $service = $evaluationGroup->getSupportGroup()->getService();
-            if (in_array($service->getId(), Service::SERVICES_PAMH_ID)) {
+            if (in_array($service->getId(), Service::SERVICES_PASH_ID)) {
                 $event->getForm()->add('evalHotelLifeGroup', EvalHotelLifeGroupType::class);
             }
         });

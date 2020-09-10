@@ -25,6 +25,12 @@ class Device
     public const AVDL_DALO = 10;
     public const AVDL_HORS_DALO = 4;
 
+    public const CONTRIBUTION_TYPE = [
+        1 => 'Taux de participation sur les ressources',
+        2 => 'Loyer/redevance fixe',
+        3 => 'Mixte',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -50,7 +56,32 @@ class Device
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $preAdmission;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $accommodation;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $contribution;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $contributionType;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $contributionRate = 0.1;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $justice;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -119,6 +150,18 @@ class Device
         return $this;
     }
 
+    public function getPreAdmission(): ?int
+    {
+        return $this->preAdmission;
+    }
+
+    public function setPreAdmission(?int $preAdmission): self
+    {
+        $this->preAdmission = $preAdmission;
+
+        return $this;
+    }
+
     public function getAccommodation(): ?int
     {
         return $this->accommodation;
@@ -132,6 +175,59 @@ class Device
     public function setAccommodation(?int $accommodation): self
     {
         $this->accommodation = $accommodation;
+
+        return $this;
+    }
+
+    public function getContribution(): ?int
+    {
+        return $this->contribution;
+    }
+
+    public function setContribution(?int $contribution): self
+    {
+        $this->contribution = $contribution;
+
+        return $this;
+    }
+
+    public function getContributionType(): ?int
+    {
+        return $this->contributionType;
+    }
+
+    public function getContributionTypeToString(): ?string
+    {
+        return $this->contributionType ? self::CONTRIBUTION_TYPE[$this->contributionType] : null;
+    }
+
+    public function setContributionType(?int $contributionType): self
+    {
+        $this->contributionType = $contributionType;
+
+        return $this;
+    }
+
+    public function getContributionRate(): ?float
+    {
+        return $this->contributionRate;
+    }
+
+    public function setContributionRate(?float $contributionRate): self
+    {
+        $this->contributionRate = $contributionRate;
+
+        return $this;
+    }
+
+    public function getJustice(): ?int
+    {
+        return $this->justice;
+    }
+
+    public function setJustice(?int $justice): self
+    {
+        $this->justice = $justice;
 
         return $this;
     }

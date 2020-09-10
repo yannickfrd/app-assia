@@ -152,30 +152,6 @@ class Avdl
         return $this->id;
     }
 
-    public function getMandateDate(): ?\DateTimeInterface
-    {
-        return $this->mandateDate;
-    }
-
-    public function setMandateDate(?\DateTimeInterface $mandateDate): self
-    {
-        $this->mandateDate = $mandateDate;
-
-        return $this;
-    }
-
-    public function getCityOrigin(): ?string
-    {
-        return $this->cityOrigin;
-    }
-
-    public function setCityOrigin(?string $cityOrigin): self
-    {
-        $this->cityOrigin = $cityOrigin;
-
-        return $this;
-    }
-
     public function getDiagType(): ?int
     {
         return $this->diagType;

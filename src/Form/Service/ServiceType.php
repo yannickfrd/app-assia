@@ -14,7 +14,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ServiceType extends AbstractType
@@ -86,17 +85,13 @@ class ServiceType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+
             ->add('justice', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'label' => 'Justice activity',
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            // ->add('preAdmission', CheckBoxType::class, [
-            //     'label_attr' => ['class' => 'custom-control-label'],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            //     'required' => false,
-            // ])
             ->add('contribution', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
