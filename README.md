@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.19.0 - 10/09/2020
+1.19.1 - 10/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,9 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.19.1 - 10/09/2020
+- Correction du bug lors de la sauvegarde automatique d'une note (problème de retour du curseur au début de la note).
 
 ## Version 1.19.0 - 10/09/2020
 - Créé fiche de suivi hôtel (vue + édition).

@@ -8,7 +8,7 @@ import language from '@ckeditor/ckeditor5-build-decoupled-document/build/transla
 
 export default class SupportNotes {
 
-    constructor(ajaxRequest) {
+    constructor() {
         this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader('#modal-note')
         this.selectType = new SelectType()
@@ -128,7 +128,9 @@ export default class SupportNotes {
         let statusValue = noteElt.querySelector('.js-note-status').getAttribute('data-value')
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), statusValue)
 
-        this.editor.setData(this.contentNoteElt.innerHTML)
+        if (this.autoSave === false) {
+            this.editor.setData(this.contentNoteElt.innerHTML)
+        }
 
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
         this.btnDeleteElt.href = '/note/' + this.cardId + '/delete'
@@ -149,7 +151,7 @@ export default class SupportNotes {
     // Timer pour la sauvegarde automatique
     timerAutoSave() {
         clearInterval(this.countdownID)
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000) // 2 minutes
+        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000) // toutes les 2 minutes
         if (this.count > 10) {
             this.autoSave = true
             this.count = 0
