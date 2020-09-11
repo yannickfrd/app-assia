@@ -10,6 +10,7 @@ let select2Array = {
     'status': 'Statut',
     'referents': 'Référents',
     'services': 'Services',
+    'sub-services': 'Sous-services',
     'devices': 'Dispositifs',
     'contribution-type': 'Type',
     'support-type': 'Type d\'acc.',

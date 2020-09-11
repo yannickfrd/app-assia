@@ -2,30 +2,31 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\OccupancySearchType;
-use App\Repository\RdvRepository;
-use App\Repository\NoteRepository;
-use App\Repository\UserRepository;
+use App\Entity\SubService;
+use App\Entity\User;
 use App\Form\Model\OccupancySearch;
-use App\Repository\PersonRepository;
-use App\Form\SupportsByUserSearchType;
-use App\Repository\DocumentRepository;
 use App\Form\Model\SupportsByUserSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\GroupPeopleRepository;
+use App\Form\OccupancySearchType;
+use App\Form\SupportsByUserSearchType;
 use App\Repository\ContributionRepository;
+use App\Repository\DocumentRepository;
+use App\Repository\GroupPeopleRepository;
+use App\Repository\NoteRepository;
+use App\Repository\PersonRepository;
+use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Repository\UserRepository;
 use App\Service\Indicators\OccupancyIndicators;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Indicators\SupportsByUserIndicators;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
@@ -225,12 +226,38 @@ class AppController extends AbstractController
     }
 
     /**
+     * Taux d'occupation des services.
+     *
+     * @Route("/occupancy/service/{id}/sub_services", name="occupancy_sub_services", methods="GET|POST")
+     */
+    public function showOccupancyBySubService(Service $service, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    {
+        $today = new \DateTime('midnight');
+        $search = (new OccupancySearch())
+            ->setStart((new \DateTime('midnight'))->modify('-1 day'));
+
+        $form = ($this->createForm(OccupancySearchType::class, $search))
+            ->handleRequest($request);
+
+        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
+        $end = $search->getEnd() ?? $today;
+
+        return $this->render('app/dashboard/occupancyBySubService.html.twig', [
+            'service' => $service,
+            'start' => $start,
+            'end' => $end,
+            'form' => $form->createView(),
+            'datas' => $occupancyIndicators->getOccupancyRateBySubService($start, $end, $service),
+        ]);
+    }
+
+    /**
      * Taux d'occupation des groupes de place.
      *
      * @Route("/occupancy/service/{id}/accommodations", name="occupancy_service_accommodations", methods="GET|POST")
      * @Route("/occupancy/accommodations", name="occupancy_accommodations", methods="GET|POST")
      */
-    public function showOccupancyByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancyServiceByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = new OccupancySearch();
@@ -254,6 +281,38 @@ class AppController extends AbstractController
             'end' => $end,
             'form' => $form->createView(),
             'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($start, $end, $service),
+        ]);
+    }
+
+    /**
+     * Taux d'occupation des groupes de place.
+     *
+     * @Route("/occupancy/sub_services/{id}/accommodations", name="occupancy_sub_service_accommodations", methods="GET|POST")
+     */
+    public function showOccupancySubServiceByAccommodation(SubService $subService, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    {
+        $today = new \DateTime('midnight');
+        $search = new OccupancySearch();
+
+        if ($request->query->get('start') && $request->query->get('end')) {
+            $search->setStart(new \DateTime($request->query->get('start')))
+                ->setEnd(new \DateTime($request->query->get('end')));
+        } else {
+            $search->setStart((new \DateTime('midnight'))->modify('-1 day'));
+        }
+
+        $form = ($this->createForm(OccupancySearchType::class, $search))
+            ->handleRequest($request);
+
+        $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
+        $end = $search->getEnd() ?? $today;
+
+        return $this->render('app/dashboard/occupancySubServiceByAccommodation.html.twig', [
+            'subService' => $subService,
+            'start' => $start,
+            'end' => $end,
+            'form' => $form->createView(),
+            'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($start, $end, null, $subService),
         ]);
     }
 

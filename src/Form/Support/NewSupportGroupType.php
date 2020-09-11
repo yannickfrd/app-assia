@@ -3,13 +3,15 @@
 namespace App\Form\Support;
 
 use App\Entity\Service;
-use App\Security\CurrentUserService;
+use App\Entity\SubService;
 use App\Repository\ServiceRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Repository\SubServiceRepository;
+use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NewSupportGroupType extends AbstractType
 {
@@ -31,6 +33,14 @@ class NewSupportGroupType extends AbstractType
                 },
                 'placeholder' => 'placeholder.select',
             ])
+            // ->add('subService', EntityType::class, [
+            //     'class' => SubService::class,
+            //     'choice_label' => 'name',
+            //     'query_builder' => function (SubServiceRepository $repo) {
+            //         return $repo->getSubServicesFromUserQueryList($this->currentUser);
+            //     },
+            //     'placeholder' => 'placeholder.select',
+            // ])
             ->add('referent', HiddenType::class)
             ->add('status', HiddenType::class);
     }

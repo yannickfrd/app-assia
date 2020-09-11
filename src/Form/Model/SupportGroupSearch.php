@@ -3,8 +3,8 @@
 namespace App\Form\Model;
 
 use App\Form\Model\Traits\DateSearchTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class SupportGroupSearch
 {

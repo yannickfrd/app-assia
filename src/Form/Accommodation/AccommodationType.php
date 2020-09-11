@@ -2,23 +2,25 @@
 
 namespace App\Form\Accommodation;
 
+use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\Utils\Choices;
-use App\Entity\Accommodation;
+use App\Entity\SubService;
 use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
+use App\Repository\SubServiceRepository;
+use App\Security\CurrentUserService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 class AccommodationType extends AbstractType
 {
@@ -94,14 +96,23 @@ class AccommodationType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $accommodation = $event->getData();
 
-            $event->getForm()->add('device', EntityType::class, [
+            $event->getForm()
+                ->add('subService', EntityType::class, [
+                    'class' => SubService::class,
+                    'choice_label' => 'name',
+                    'query_builder' => function (SubServiceRepository $repo) {
+                        return $repo->getSubServicesFromUserQueryList($this->currentUser);
+                    },
+                    'placeholder' => 'placeholder.select',
+                ])
+                ->add('device', EntityType::class, [
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($accommodation) {
                     return $repo->getDevicesFromServiceQueryList($accommodation);
                 },
                 'placeholder' => 'placeholder.select',
-            ]);
+                ]);
         });
     }
 

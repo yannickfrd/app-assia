@@ -9,6 +9,7 @@ use App\Form\Service\ServiceSearchType;
 use App\Form\Service\ServiceType;
 use App\Repository\AccommodationRepository;
 use App\Repository\ServiceRepository;
+use App\Repository\SubServiceRepository;
 use App\Repository\UserRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,7 +49,7 @@ class ServiceController extends AbstractController
         return $this->render('app/service/listServices.html.twig', [
             'serviceSearch' => $search,
             'form' => $form->createView(),
-            'services' => $pagination->paginate($this->repo->findAllServicesQuery($search), $request) ?? null,
+            'services' => $pagination->paginate($this->repo->findAllServicesQuery($search, $this->getUser()), $request) ?? null,
         ]);
     }
 
@@ -86,7 +87,7 @@ class ServiceController extends AbstractController
      *
      * @param int $id from Service
      */
-    public function editService(int $id, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
+    public function editService(int $id, SubServiceRepository $repoSubService, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
     {
         $service = $this->repo->getFullService($id);
 
@@ -112,10 +113,33 @@ class ServiceController extends AbstractController
 
         return $this->render('app/service/service.html.twig', [
             'form' => $form->createView(),
+            'subServices' => $repoSubService->findSubServicesFromService($service),
             'users' => $repoUser->findUsersFromService($service),
             'accommodations' => $accommodations,
             'nbPlaces' => $nbPlaces,
         ]);
+    }
+
+    /**
+     * Désactive ou réactive le service.
+     *
+     * @Route("/service/{id}/disable", name="service_disable", methods="GET")
+     */
+    public function disableService(Service $service): Response
+    {
+        $this->denyAccessUnlessGranted('DISABLE', $service);
+
+        if ($service->getDisabledAt()) {
+            $service->setDisabledAt(null);
+            $this->addFlash('success', 'Le service est réactivé.');
+        } else {
+            $service->setDisabledAt(new \DateTime());
+            $this->addFlash('warning', 'Le service est désactivé.');
+        }
+
+        $this->manager->flush();
+
+        return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
     }
 
     /**

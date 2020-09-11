@@ -4,12 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Note;
 use App\Entity\User;
-use Doctrine\ORM\Query;
 use App\Form\Model\NoteSearch;
-use App\Security\CurrentUserService;
 use App\Form\Model\SupportNoteSearch;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Note|null find($id, $lockMode = null, $lockVersion = null)
@@ -86,6 +86,15 @@ class NoteRepository extends ServiceEntityRepository
             $orX = $expr->orX();
             foreach ($search->getServices() as $service) {
                 $orX->add($expr->eq('sg.service', $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getSubServices() && count($search->getSubServices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getSubServices() as $subService) {
+                $orX->add($expr->eq('sg.subService', $subService));
             }
             $query->andWhere($orX);
         }

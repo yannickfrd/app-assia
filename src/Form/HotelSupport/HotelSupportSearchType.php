@@ -2,19 +2,18 @@
 
 namespace App\Form\HotelSupport;
 
-use App\Entity\HotelSupport;
 use App\Entity\SupportGroup;
-use App\Form\Utils\Choices;
-use App\Form\Model\HotelSupportSupportSearch;
+use App\Form\Model\HotelSupportSearch;
+use App\Form\Model\SupportGroupSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class HotelSupportSupportSearchType extends AbstractType
+class HotelSupportSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -47,7 +46,7 @@ class HotelSupportSupportSearchType extends AbstractType
                 'data_class' => SupportGroupSearch::class,
                 ])
                 ->add('service', ServiceSearchType::class, [
-                    'data_class' => HotelSupportSupportSearch::class,
+                    'data_class' => HotelSupportSearch::class,
                     'attr' => [
                         'options' => ['devices', 'referents'],
                         'serviceId' => 5,
@@ -59,7 +58,7 @@ class HotelSupportSupportSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => HotelSupportSupportSearch::class,
+            'data_class' => HotelSupportSearch::class,
             'method' => 'get',
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,

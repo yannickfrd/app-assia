@@ -20,7 +20,7 @@ trait LocationEntityTrait
     private $zipcode;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $commentLocation;
 

@@ -4,6 +4,7 @@ import '../utils/maskPhone'
 
 let select2Array = {
     'service': 'Service',
+    'sub-service': 'Sous-service',
     'device': 'Dispositif',
 }
 

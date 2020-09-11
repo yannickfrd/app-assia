@@ -2,16 +2,15 @@
 
 namespace App\Form\Support;
 
-use App\Entity\GroupPeople;
-use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
+use App\Form\Model\SupportGroupSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SupportGroupSearchType extends AbstractType
 {
@@ -25,17 +24,17 @@ class SupportGroupSearchType extends AbstractType
                     'class' => 'w-max-170',
                 ],
             ])
-            ->add('familyTypologies', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'multiple' => true,
-                'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
-                'attr' => [
-                    'class' => 'multi-select',
-                    'data-select2-id' => 'typology',
-                ],
-                'placeholder' => 'placeholder.familtyTypology',
-                'required' => false,
-            ])
+            // ->add('familyTypologies', ChoiceType::class, [
+            //     'label_attr' => ['class' => 'sr-only'],
+            //     'multiple' => true,
+            //     'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
+            //     'attr' => [
+            //         'class' => 'multi-select',
+            //         'data-select2-id' => 'typology',
+            //     ],
+            //     'placeholder' => 'placeholder.familtyTypology',
+            //     'required' => false,
+            // ])
             // ->add("nbPeople", null, [
             //     "attr" => [
             //         "class" => "w-max-100",

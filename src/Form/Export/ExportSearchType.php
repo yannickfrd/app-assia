@@ -5,21 +5,22 @@ namespace App\Form\Export;
 use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\Model\ExportSearch;
+use App\Entity\SubService;
 use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
+use App\Form\Model\ExportSearch;
 use App\Repository\UserRepository;
 use App\Repository\DeviceRepository;
 use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
 use App\Form\Model\SupportGroupSearch;
+use App\Repository\SubServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ExportSearchType extends AbstractType
 {
@@ -86,10 +87,22 @@ class ExportSearchType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
-                'placeholder' => '-- Service --',
                 'attr' => [
                     'class' => 'multi-select',
                     'data-select2-id' => 'services',
+                ],
+                'required' => false,
+            ])
+            ->add('subServices', EntityType::class, [
+                'class' => SubService::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'query_builder' => function (SubServiceRepository $repo) {
+                    return $repo->getSubServicesFromUserQueryList($this->currentUser);
+                },
+                'attr' => [
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'sub-services',
                 ],
                 'required' => false,
             ])
@@ -100,76 +113,75 @@ class ExportSearchType extends AbstractType
                 'query_builder' => function (DeviceRepository $repo) {
                     return $repo->getDevicesFromUserQueryList($this->currentUser);
                 },
-                'placeholder' => '-- Device --',
                 'attr' => [
                     'class' => 'multi-select',
                     'data-select2-id' => 'devices',
                 ],
                 'required' => false,
             ])
-            ->add('evalSocial', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
-            ->add('evalAdm', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
-            ->add('evalFamily', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
-            ->add('evalBudget', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
-            ->add('evalProf', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
-            ->add('evalHousing', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
-            ->add('evalJustice', CheckBoxType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
-            ])
+            // ->add('evalSocial', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
+            // ->add('evalAdm', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
+            // ->add('evalFamily', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
+            // ->add('evalBudget', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
+            // ->add('evalProf', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
+            // ->add('evalHousing', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
+            // ->add('evalJustice', CheckBoxType::class, [
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'custom-control-label',
+            //     ],
+            //     'attr' => [
+            //         'class' => 'custom-control-input checkbox',
+            //     ],
+            // ])
             ->add('calcul', null, [
                 'mapped' => false,
             ])

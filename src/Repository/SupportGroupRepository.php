@@ -2,18 +2,19 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use App\Entity\Service;
-use Doctrine\ORM\Query;
 use App\Entity\SupportGroup;
-use Doctrine\ORM\QueryBuilder;
-use App\Security\CurrentUserService;
+use App\Entity\User;
 use App\Form\Model\AvdlSupportSearch;
 use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\SupportsByUserSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Utils\Choices;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method SupportGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -88,6 +89,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, preAdmission, justice}')
+            ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')
@@ -103,6 +105,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             // ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
             // ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city}')
@@ -265,6 +268,15 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
+        if ($search->getSubServices() && $search->getSubServices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getSubServices() as $subService) {
+                $orX->add($expr->eq('sg.subService', $subService));
+            }
+            $query->andWhere($orX);
+        }
+
         if ($search->getDevices() && $search->getDevices()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -352,7 +364,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
-    public function findSupportsForDashboard()
+    public function findSupportsForDashboard(SupportsByUserSearch $search)
     {
         $query = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
@@ -362,6 +374,33 @@ class SupportGroupRepository extends ServiceEntityRepository
         if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->where('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        if ($search->getServices() && $search->getServices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getServices() as $service) {
+                $orX->add($expr->eq('sg.service', $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getSubServices() && $search->getSubServices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getSubServices() as $subService) {
+                $orX->add($expr->eq('sg.subService', $subService));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getDevices() && $search->getDevices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getDevices() as $device) {
+                $orX->add($expr->eq('sg.device', $device));
+            }
+            $query->andWhere($orX);
         }
 
         $query = $query->andWhere('sg.status = :status')

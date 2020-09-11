@@ -2,15 +2,15 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
+use App\Entity\User;
 use App\Form\Model\ServiceSearch;
 use App\Security\CurrentUserService;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Service|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,10 +28,14 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les services.
      */
-    public function findAllServicesQuery(ServiceSearch $serviceSearch): Query
+    public function findAllServicesQuery(ServiceSearch $serviceSearch, User $user = null): Query
     {
         $query = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id,name}');
+
+        if ($user && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $query->where('s.disabledAt IS NULL');
+        }
 
         if ($serviceSearch->getName()) {
             $query->andWhere('s.name LIKE :name')
@@ -64,7 +68,9 @@ class ServiceRepository extends ServiceEntityRepository
      */
     public function getServicesFromUserQueryList(CurrentUserService $currentUser): QueryBuilder
     {
-        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission}');
+        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission}')
+
+        ->where('s.disabledAt IS NULL');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')
@@ -77,6 +83,7 @@ class ServiceRepository extends ServiceEntityRepository
     public function findServicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Device $device = null)
     {
         $query = $this->createQueryBuilder('s')->select('s')
+            ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('s.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces}')
             ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
 
@@ -110,6 +117,8 @@ class ServiceRepository extends ServiceEntityRepository
             ->select('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}')
             ->leftJoin('s.serviceUser', 'su')->addSelect('su')
+
+            ->where('s.disabledAt IS NULL')
 
             ->andWhere('su.user = :user')
             ->setParameter('user', $user)

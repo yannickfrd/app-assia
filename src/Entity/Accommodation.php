@@ -2,17 +2,17 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccommodationRepository")
@@ -112,6 +112,11 @@ class Accommodation
      * @ORM\JoinColumn(nullable=false)
      */
     private $service;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SubService::class, inversedBy="accommodations")
+     */
+    private $subService;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Device", inversedBy="accommodations")
@@ -271,6 +276,18 @@ class Accommodation
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getSubService(): ?SubService
+    {
+        return $this->subService;
+    }
+
+    public function setSubService(?SubService $subService): self
+    {
+        $this->subService = $subService;
 
         return $this;
     }

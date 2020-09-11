@@ -19,12 +19,18 @@ trait ReferentServiceDeviceSearchTrait
     /**
      * @var ArrayCollection
      */
+    private $subServices;
+
+    /**
+     * @var ArrayCollection
+     */
     private $devices;
 
     public function __construct()
     {
         $this->referents = new ArrayCollection();
         $this->services = new ArrayCollection();
+        $this->subServices = new ArrayCollection();
         $this->devices = new ArrayCollection();
     }
 
@@ -37,7 +43,7 @@ trait ReferentServiceDeviceSearchTrait
     {
         $referents = [];
 
-        foreach ($this->referents  as $referent) {
+        foreach ($this->referents as $referent) {
             $referents[] = $referent->getFullname();
         }
 
@@ -60,7 +66,7 @@ trait ReferentServiceDeviceSearchTrait
     {
         $services = [];
 
-        foreach ($this->services  as $service) {
+        foreach ($this->services as $service) {
             $services[] = $service->getName();
         }
 
@@ -74,6 +80,29 @@ trait ReferentServiceDeviceSearchTrait
         return $this;
     }
 
+    public function getSubServices(): ?ArrayCollection
+    {
+        return $this->subServices;
+    }
+
+    public function getSubServicesToString(): array
+    {
+        $subServices = [];
+
+        foreach ($this->subServices as $subService) {
+            $subServices[] = $subService->getName();
+        }
+
+        return $subServices;
+    }
+
+    public function setSubServices(?ArrayCollection $subServices): self
+    {
+        $this->subServices = $subServices;
+
+        return $this;
+    }
+
     public function getDevices(): ?ArrayCollection
     {
         return $this->devices;
@@ -83,7 +112,7 @@ trait ReferentServiceDeviceSearchTrait
     {
         $devices = [];
 
-        foreach ($this->devices  as $device) {
+        foreach ($this->devices as $device) {
             $devices[] = $device->getName();
         }
 

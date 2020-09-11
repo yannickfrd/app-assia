@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Service;
-use Doctrine\ORM\Query;
 use App\Entity\AccommodationPerson;
+use App\Entity\Service;
+use App\Entity\SubService;
 use App\Security\CurrentUserService;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method AccommodationPerson|null find($id, $lockMode = null, $lockVersion = null)
@@ -40,12 +41,13 @@ class AccommodationPersonRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findAccommodationPeople(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null)
+    public function findAccommodationPeople(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null, SubService $subService = null)
     {
         $query = $this->createQueryBuilder('ap')->select('ap')
             ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addSelect('a')
             ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id}')
+            ->leftJoin('a.subService', 'ss')->addSelect('PARTIAL ss.{id}')
 
             ->andWhere('ap.endDate > :start OR ap.endDate IS NULL')->setParameter('start', $start)
             ->andWhere('ap.startDate < :end')->setParameter('end', $end);
@@ -53,6 +55,10 @@ class AccommodationPersonRepository extends ServiceEntityRepository
         if ($service) {
             $query = $query->andWhere('a.service = :service')
                 ->setParameter('service', $service);
+        }
+        if ($subService) {
+            $query->andWhere('a.subService = :subService')
+                ->setParameter('subService', $subService);
         }
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')

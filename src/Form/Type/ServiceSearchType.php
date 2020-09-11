@@ -2,16 +2,18 @@
 
 namespace App\Form\Type;
 
-use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Repository\UserRepository;
+use App\Entity\SubService;
+use App\Entity\User;
 use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
 use App\Repository\ServiceRepository;
+use App\Repository\SubServiceRepository;
+use App\Repository\UserRepository;
+use App\Security\CurrentUserService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceSearchType extends AbstractType
@@ -60,6 +62,24 @@ class ServiceSearchType extends AbstractType
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-180',
                         'data-select2-id' => 'services',
+                    ],
+                    'required' => false,
+                ]);
+        }
+        if (null == $attrOptions || in_array('subServices', $attrOptions)) {
+            $builder
+                ->add('subServices', EntityType::class, [
+                    'class' => SubService::class,
+                    'choice_label' => 'name',
+                    'multiple' => true,
+                    'query_builder' => function (SubServiceRepository $repo) {
+                        return $repo->getSubServicesFromUserQueryList($this->currentUser);
+                    },
+                    'label_attr' => ['class' => 'sr-only'],
+                    'placeholder' => '-- Sous-service --',
+                    'attr' => [
+                        'class' => 'multi-select w-min-150 w-max-180',
+                        'data-select2-id' => 'sub-services',
                     ],
                     'required' => false,
                 ]);

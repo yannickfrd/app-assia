@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,8 +36,8 @@ class SupportGroup
         2 => 'En cours',
         3 => 'Suspendu',
         4 => 'Terminé',
-        1 => 'Orientation/pré-adm. en cours',
-        5 => 'Orientation/pré-adm. non aboutie',
+        1 => 'Pré-admission en cours',
+        5 => 'Pré-admission non aboutie',
         6 => 'Liste d\'attente',
         // 97 => 'Autre',
     ];
@@ -209,6 +209,12 @@ class SupportGroup
      * @Groups("export")
      */
     private $service;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SubService::class, inversedBy="supportGroup")
+     * @Groups("export")
+     */
+    private $subService;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Device", inversedBy="supportGroup")
@@ -553,6 +559,18 @@ class SupportGroup
         return $this;
     }
 
+    public function getSubService(): ?SubService
+    {
+        return $this->subService;
+    }
+
+    public function setSubService(?SubService $subService): self
+    {
+        $this->subService = $subService;
+
+        return $this;
+    }
+
     public function getDevice(): ?Device
     {
         return $this->device;
@@ -756,7 +774,7 @@ class SupportGroup
         return $this;
     }
 
-    protected function objectIsEmpty(Object $originRequest)
+    protected function objectIsEmpty(object $originRequest)
     {
         foreach ((array) $originRequest as $value) {
             if ($value) {

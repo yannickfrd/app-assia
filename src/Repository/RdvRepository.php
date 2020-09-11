@@ -112,6 +112,15 @@ class RdvRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
+        if ($search->getSubServices() && count($search->getSubServices())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getSubServices() as $subService) {
+                $orX->add($expr->eq('sg.subService', $subService));
+            }
+            $query->andWhere($orX);
+        }
+
         if ($search->getDevices() && count($search->getDevices())) {
             $expr = $query->expr();
             $orX = $expr->orX();

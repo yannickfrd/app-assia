@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Accommodation;
 use App\Entity\Service;
+use App\Entity\SubService;
 use App\Entity\SupportGroup;
 use App\Form\Model\AccommodationSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -95,14 +96,34 @@ class AccommodationRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne toutes les places du sous-service.
+     *
+     * @return mixed
+     */
+    public function findAccommodationsFromSubService(SubService $subService)
+    {
+        return $this->createQueryBuilder('a')->select('a')
+            ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id,name}')
+
+            ->where('a.subService = :subService')
+            ->setParameter('subService', $subService)
+
+            ->orderBy('a.name', 'ASC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
      * Donne toutes les groupes de places pour les taux d'occupation.
      *
      * @return mixed
      */
-    public function findAccommodationsForOccupancy($currentUser, Service $service = null)
+    public function findAccommodationsForOccupancy($currentUser, Service $service = null, SubService $subService = null)
     {
         $query = $this->createQueryBuilder('a')->select('a')
             ->innerJoin('a.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('a.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id, name}')
 
             ->where('a.startDate IS NOT NULL');
@@ -110,6 +131,10 @@ class AccommodationRepository extends ServiceEntityRepository
         if ($service) {
             $query->andWhere('a.service = :service')
                 ->setParameter('service', $service);
+        }
+        if ($subService) {
+            $query->andWhere('a.subService = :subService')
+                ->setParameter('subService', $subService);
         }
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('a.service IN (:services)')
@@ -144,6 +169,7 @@ class AccommodationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')->select('a')
             ->leftJoin('a.device', 'd')->addSelect('PARTIAL d.{id,name}')
             ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id,name}')
+            ->leftJoin('a.subService', 'ss')->addSelect('PARTIAL ss.{id,name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id,name}')
             ->leftJoin('a.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id,startDate, endDate}')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id,startDate, endDate}');
@@ -216,7 +242,14 @@ class AccommodationRepository extends ServiceEntityRepository
             }
             $query->andWhere($orX);
         }
-
+        if ($search->getSubServices() && $search->getSubServices()->count() > 0) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getSubServices() as $subService) {
+                $orX->add($expr->eq('ss.id', $subService));
+            }
+            $query->andWhere($orX);
+        }
         if ($search->getDevices() && $search->getDevices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();

@@ -158,6 +158,11 @@ class Service
      */
     private $organizations;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SubService::class, mappedBy="service", orphanRemoval=true)
+     */
+    private $subServices;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
@@ -165,6 +170,7 @@ class Service
         $this->serviceDevices = new ArrayCollection();
         $this->accommodations = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+        $this->subServices = new ArrayCollection();
     }
 
     public function __toString()
@@ -512,6 +518,37 @@ class Service
     {
         if ($this->organizations->contains($organization)) {
             $this->organizations->removeElement($organization);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SubService[]
+     */
+    public function getSubServices(): Collection
+    {
+        return $this->subServices;
+    }
+
+    public function addSubService(SubService $subService): self
+    {
+        if (!$this->subServices->contains($subService)) {
+            $this->subServices[] = $subService;
+            $subService->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubService(SubService $subService): self
+    {
+        if ($this->subServices->contains($subService)) {
+            $this->subServices->removeElement($subService);
+            // set the owning side to null (unless already changed)
+            if ($subService->getService() === $this) {
+                $subService->setService(null);
+            }
         }
 
         return $this;

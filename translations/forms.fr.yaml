@@ -66,6 +66,8 @@ Service name: Nom du service
 Start: Début
 Start date: Date de début
 Status: Statut
+Sub service: Sous-service
+Sub services: Sous-services
 Support access: Accès aux suivis sociaux du service
 Support dates: Dates de suivi
 Theoretical end date: Date de fin théorique
@@ -219,6 +221,7 @@ hotelSupport:
   locationHotel: Adresse de l'hôtel
   commentLocationHelp: Nom de l'hôtel, numéro de chambre
   diag: Diagnostic
-  orientationDate: Date d'orientation
-  support: Suivi
   endSupportReason: Motif de fin d'accompagnement
+  orientationDate: Date d'orientation
+  subService.help: Secteur géographique 
+  support: Suivi

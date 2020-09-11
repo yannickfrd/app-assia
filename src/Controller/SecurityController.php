@@ -4,27 +4,27 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\Model\UserChangeInfo;
-use App\Repository\UserRepository;
+use App\Form\Model\UserChangePassword;
 use App\Form\Model\UserInitPassword;
 use App\Form\Model\UserResetPassword;
-use App\Form\User\UserChangeInfoType;
-use App\Repository\ServiceRepository;
-use App\Form\Model\UserChangePassword;
-use App\Notification\MailNotification;
-use App\Form\Security\InitPasswordType;
-use App\Form\Security\SecurityUserType;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Security\ChangePasswordType;
 use App\Form\Security\ForgotPasswordType;
+use App\Form\Security\InitPasswordType;
 use App\Form\Security\ReinitPasswordType;
-use App\Repository\SupportGroupRepository;
 use App\Form\Security\SecurityUserEditType;
+use App\Form\Security\SecurityUserType;
+use App\Form\User\UserChangeInfoType;
+use App\Notification\MailNotification;
+use App\Repository\ServiceRepository;
+use App\Repository\SupportGroupRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
@@ -185,7 +185,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * Désactive l'utilisateur.
+     * Désactive ou réactive l'utilisateur.
      *
      * @Route("/admin/user/{id}/disable", name="security_user_disable", methods="GET")
      */
@@ -199,7 +199,14 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
         }
 
-        $user->setDisabledAt(new \DateTime());
+        if ($user->getDisabledAt()) {
+            $user->setDisabledAt(null);
+            $this->addFlash('success', 'L\'utilisateur est réactivé.');
+        } else {
+            $user->setDisabledAt(new \DateTime());
+            $this->addFlash('warning', 'L\'utilisateur est désactivé.');
+        }
+
         $this->manager->flush();
 
         return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
