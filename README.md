@@ -19,6 +19,7 @@ https://demo.esperer95.app
 ## Version 1.20.1 - 14/09/2020
 - Créé tests pour SubServiceController (sous-service).
 - Correction bug fiche de création de service.
+- Modif AVDL hors-DALO : ajout Date de fin théorique de suivi.
 
 ## Version 1.20.0 - 11/09/2020
 - Créé fonctionnalité de "sous-services" pour les Services.
