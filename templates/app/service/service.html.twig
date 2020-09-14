@@ -84,7 +84,7 @@
         {% if is_granted("EDIT", service) %}
             <div class="form-group row">
                 <div class="col-md-12">
-                    {% if is_granted("DISABLE", service) %}
+                    {% if EDIT_MODE and is_granted("DISABLE", service) %}
                         <div class="float-left d-flex">
                             {% if form.vars.value.isDisabled %} 
                             <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('service_disable', {'id':form.vars.value.id}) }}"
@@ -105,69 +105,70 @@
 
     </section>
 
-    <hr>
+    {% if EDIT_MODE == true %}
 
-    <section>
-        <h2 class="h4 my-4">Sous-services</h2>
-        {% if subServices|length > 0 %}
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="align-middle th-w-20"></th>
-                            <th scope="col" class="align-middle th-w-140">Nom</th>
-                            <th scope="col" class="align-middle th-w-140">Responsable</th>
-                            <th scope="col" class="align-middle th-w-140">Téléphone</th>
-                            <th scope="col" class="align-middle th-w-140">Email</th>
-                            <th scope="col" class="align-middle th-w-20"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for subService in subServices %}
+        <hr>
+        <section>
+            <h2 class="h4 my-4">Sous-services</h2>
+            {% if subServices|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                        <thead>
                             <tr>
-                                <td class="align-middle" scope="row">
-                                    {% if is_granted("EDIT", service) %}
-                                    <a href="{{ path('sub_service_edit', {'id':subService.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                        data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du sous-service"><span class="fas fa-eye"></span>
-                                    </a>                    
-                                    {% endif %}
-                                </td>
-                                <td class="align-middle">{{ subService.name }}</td>
-                                <td class="align-middle">{{ subService.chief ? subService.chief.fullname }}</td>
-                                <td class="align-middle">{{ subService.phone1}}</td>
-                                <td class="align-middle">{{ subService.email }}</td>
-                                <td class="align-middle">
-                                    {% if is_granted("DISABLE", service) %}
-                                        <a id="modal-btn-disable" class="mr-3 btn btn-danger" href="{{ path('sub_service_disable', {'id':subService.id}) }}"
-                                            title="Supprimer le sous-service" data-toggle="tooltip" data-placement="bottom"
-                                            onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce sous-service ?')){return true;}else{return false;}">
-                                            <span class="fas fa-trash-alt"></span>
-                                        </a>
-                                    {% endif %}
-                                </td>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                                <th scope="col" class="align-middle th-w-140">Nom</th>
+                                <th scope="col" class="align-middle th-w-140">Responsable</th>
+                                <th scope="col" class="align-middle th-w-140">Téléphone</th>
+                                <th scope="col" class="align-middle th-w-140">Email</th>
+                                <th scope="col" class="align-middle th-w-20"></th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-        <p>Aucun sous-service.<p>
-        {% endif %}
-        {% if is_granted("EDIT", service) %}
-            <div class="row">
-                <div class="col-md-12">
-                    <a href="{{ path('sub_service_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
-                        class="fas fa-plus-square pr-2"></span>Créer un sous-service</a>
+                        </thead>
+                        <tbody>
+                            {% for subService in subServices %}
+                                <tr>
+                                    <td class="align-middle" scope="row">
+                                        {% if is_granted("EDIT", service) %}
+                                        <a href="{{ path('sub_service_edit', {'id':subService.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du sous-service"><span class="fas fa-eye"></span>
+                                        </a>                    
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">{{ subService.name }}</td>
+                                    <td class="align-middle">{{ subService.chief ? subService.chief.fullname }}</td>
+                                    <td class="align-middle">{{ subService.phone1}}</td>
+                                    <td class="align-middle">{{ subService.email }}</td>
+                                    <td class="align-middle">
+                                        {% if is_granted("DISABLE", service) %}
+                                            <a id="modal-btn-disable" class="mr-3 btn btn-danger" href="{{ path('sub_service_disable', {'id':subService.id}) }}"
+                                                title="Supprimer le sous-service" data-toggle="tooltip" data-placement="bottom"
+                                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce sous-service ?')){return true;}else{return false;}">
+                                                <span class="fas fa-trash-alt"></span>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        {% endif %}
+            {% else %}
+            <p>Aucun sous-service.<p>
+            {% endif %}
+            {% if is_granted("EDIT", service) %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{{ path('sub_service_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                            class="fas fa-plus-square pr-2"></span>Créer un sous-service</a>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
 
-    </section>
+    {% endif %}
 
     {% if is_granted("EDIT", service) %}
     <hr>
     <section>
-
         <h2 class="h4 mb-4">Dispositif(s) rattaché(s)</h2>
         <div class="row">
             <div class="col-md-6">

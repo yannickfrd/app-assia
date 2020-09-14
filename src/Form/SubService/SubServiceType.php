@@ -17,7 +17,7 @@ class SubServiceType extends AbstractType
         $builder
             ->add('name', null, [
                 'attr' => [
-                    'placeholder' => 'service.name',
+                    'placeholder' => 'subService.name',
                 ],
             ])
             ->add('phone1', null, [
@@ -30,22 +30,28 @@ class SubServiceType extends AbstractType
                     'placeholder' => 'Email',
                 ],
             ])
-            ->add('chief', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'fullname',
-                'query_builder' => function (UserRepository $repo) {
-                    return $repo->createQueryBuilder('u')
-                        ->where('u.disabledAt IS NULL')
-                        ->andWhere('u.status IN (:status)')
-                        ->setParameter('status', [
-                            User::STATUS_COORDO,
-                            User::STATUS_CHIEF,
-                            User::STATUS_DIRECTOR,
-                        ])
-                        ->orderBy('u.lastname', 'ASC');
-                },
-                'placeholder' => 'placeholder.select',
-                'required' => false,
+            // ->add('chief', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'fullname',
+            //     'query_builder' => function (UserRepository $repo) {
+            //         return $repo->createQueryBuilder('u')
+            //             ->where('u.disabledAt IS NULL')
+            //             ->andWhere('u.status IN (:status)')
+            //             ->setParameter('status', [
+            //                 User::STATUS_COORDO,
+            //                 User::STATUS_CHIEF,
+            //                 User::STATUS_DIRECTOR,
+            //             ])
+            //             ->orderBy('u.lastname', 'ASC');
+            //     },
+            //     'placeholder' => 'placeholder.select',
+            //     'required' => false,
+            // ])
+            ->add('comment', null, [
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'service.comment.placeholder',
+                ],
             ]);
     }
 

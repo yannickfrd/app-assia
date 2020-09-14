@@ -40,13 +40,13 @@ class DatabaseBackupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Sauvegarde et export base de données');
     }
 
-    public function testCreateBackup()
-    {
-        $this->client->request('GET', $this->generateUri('database_backup_create'));
+    // public function testCreateBackup()
+    // {
+    //     $this->client->request('GET', $this->generateUri('database_backup_create'));
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-success');
-    }
+    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    //     $this->assertSelectorExists('.alert.alert-success');
+    // }
 
     // public function testGetDatabaseBackup()
     // {
@@ -59,17 +59,17 @@ class DatabaseBackupControllerTest extends WebTestCase
     //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     // }
 
-    public function testDeleteDatabase()
-    {
-        $this->client->request('GET', $this->generateUri('database_backup_create'));
+    // public function testDeleteDatabase()
+    // {
+    //     $this->client->request('GET', $this->generateUri('database_backup_create'));
 
-        $this->client->request('GET', $this->generateUri('database_backup_delete', [
-            'id' => 1,
-        ]));
+    //     $this->client->request('GET', $this->generateUri('database_backup_delete', [
+    //         'id' => 1,
+    //     ]));
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-warning');
-    }
+    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    //     $this->assertSelectorExists('.alert.alert-warning');
+    // }
 
     protected function tearDown(): void
     {

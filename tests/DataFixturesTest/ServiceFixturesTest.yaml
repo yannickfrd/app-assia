@@ -59,3 +59,8 @@ App\Entity\Pole:
 App\Entity\Device:
   device:
     name: AVDL
+
+App\Entity\SubService:
+  subService1:
+    service: "@service1"
+    name: AVDL sous-service

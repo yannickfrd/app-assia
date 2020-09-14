@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class ServiceControllerTest extends WebTestCase
+class SubServiceControllerTest extends WebTestCase
 {
     use FixturesTrait;
     use AppTestTrait;
@@ -32,52 +32,29 @@ class ServiceControllerTest extends WebTestCase
         $this->createLogin($this->dataFixtures['userSuperAdmin']);
 
         $this->service = $this->dataFixtures['service1'];
+        $this->subService = $this->dataFixtures['subService1'];
     }
 
-    public function testListServicesIsUp()
+    public function testNewSubServiceIsUp()
     {
-        $this->client->request('GET', $this->generateUri('services'));
+        $this->client->request('GET', $this->generateUri('sub_service_new', [
+            'id' => $this->service->getId(),
+        ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Services');
+        $this->assertSelectorTextContains('h1', 'Nouveau sous-service');
     }
 
-    public function testSearchServicesIsSuccessful()
+    public function testCreateNewSubServiceIsSuccessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('services'));
-
-        $form = $crawler->selectButton('search')->form([
-            'name' => 'AVDL',
-            'city' => 'Pontoise',
-            'phone' => '01 00 00 00 00',
-            'pole' => 1,
-        ]);
-
-        $this->client->submit($form);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Services');
-    }
-
-    public function testNewServiceIsUp()
-    {
-        $this->client->request('GET', $this->generateUri('service_new'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Nouveau service');
-    }
-
-    public function testCreateNewServiceIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_new'));
+        $crawler = $this->client->request('GET', $this->generateUri('sub_service_new', [
+            'id' => $this->service->getId(),
+        ]));
 
         $form = $crawler->selectButton('send')->form([
-            'service[name]' => 'Service test',
-            'service[location][city]' => 'Pontoise',
-            'service[phone1]' => '01 00 00 00 00',
-            'service[pole]' => 1,
+            'sub_service[name]' => 'Sous-service test',
+            'sub_service[phone1]' => '01 00 00 00 00',
         ]);
 
         $this->client->submit($form);
@@ -88,8 +65,8 @@ class ServiceControllerTest extends WebTestCase
 
     public function testEditServiceisUp()
     {
-        $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $this->service->getId(),
+        $this->client->request('GET', $this->generateUri('sub_service_edit', [
+            'id' => $this->subService->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -99,8 +76,8 @@ class ServiceControllerTest extends WebTestCase
     public function testEditServiceisSuccessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $this->service->getId(),
+        $crawler = $this->client->request('GET', $this->generateUri('sub_service_edit', [
+            'id' => $this->subService->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([]);
@@ -111,10 +88,10 @@ class ServiceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testDisableService()
+    public function testDisableSubService()
     {
-        $this->client->request('GET', $this->generateUri('service_disable', [
-            'id' => $this->service->getId(),
+        $this->client->request('GET', $this->generateUri('sub_service_disable', [
+            'id' => $this->subService->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());

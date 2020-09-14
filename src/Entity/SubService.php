@@ -47,6 +47,11 @@ class SubService
     private $service;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
      * @ORM\OneToMany(targetEntity=Accommodation::class, mappedBy="subService")
      */
     private $accommodations;
@@ -130,6 +135,18 @@ class SubService
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }
