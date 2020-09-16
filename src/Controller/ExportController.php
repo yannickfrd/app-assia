@@ -2,23 +2,24 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Export;
-use App\Service\Download;
-use App\Form\Model\Import;
-use App\Service\Pagination;
-use App\Service\ImportDatas;
+use App\Form\Export\ExportSearchType;
 use App\Form\Import\ImportType;
 use App\Form\Model\ExportSearch;
+use App\Form\Model\Import;
 use App\Repository\ExportRepository;
-use App\Form\Export\ExportSearchType;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportPersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\Download;
+use App\Service\Import\ImportDatasHebergement;
+use App\Service\Import\ImportDatasOC;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ExportController extends AbstractController
 {
@@ -47,7 +48,6 @@ class ExportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->json([
                 'code' => 200,
                 'alert' => 'success',
@@ -68,9 +68,9 @@ class ExportController extends AbstractController
      * @Route("import", name="import", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function import(Request $request, Import $import, ImportDatas $importDatas): Response
+    public function import(Request $request, Import $import, ImportDatasHebergement $importDatas): Response
     {
-        $fileName =  \dirname(__DIR__).'/../public/import/datas/import.csv';
+        $fileName = \dirname(__DIR__).'/../public/import/datas/import.csv';
 
         $datas = $importDatas->getDatas($fileName);
 
@@ -79,6 +79,37 @@ class ExportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $importDatas->importInDatabase($fileName, $import->getService());
+        } else {
+            dump($datas);
+        }
+
+        return $this->render('app/import.html.twig', [
+            'form' => $form->createView(),
+            'datas' => $datas,
+        ]);
+    }
+
+    /**
+     * Import de données de l'opération ciblée hôtel.
+     *
+     * @Route("import_oc", name="import_oc", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function importOC(Request $request, Import $import, ImportDatasOC $importDatas): Response
+    {
+        $fileName = \dirname(__DIR__).'/../public/import/datas/import_oc.csv';
+
+        $datas = $importDatas->getDatas($fileName);
+
+        $form = ($this->createForm(ImportType::class, $import))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $importDatas->importInDatabase($fileName, $import->getService());
+
+            $this->addFlash('success', 'Les données ont été importées !');
+
+            return $this->redirectToRoute('home');
         } else {
             dump($datas);
         }

@@ -13,7 +13,7 @@ class EvalFamilyPerson
 {
     public const MARITAL_STATUS = [
         1 => 'Célibataire',
-        2 => 'Concubinage',
+        2 => 'Concubin·e',
         3 => 'Divorcé·e',
         4 => 'Marié·e',
         5 => 'Pacsé·e',

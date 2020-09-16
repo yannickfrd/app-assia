@@ -30,7 +30,8 @@ class SupportGroup
     public const STATUS_SUSPENDED = 3;
     public const STATUS_ENDED = 4;
     public const STATUS_PRE_ADD_ENDED = 5;
-    public const STATUS_LIST = 6;
+    public const STATUS_WAITING_LIST = 6;
+    public const STATUS_OTHER = 97;
 
     public const STATUS = [
         2 => 'En cours',
@@ -39,7 +40,7 @@ class SupportGroup
         1 => 'Pré-admission en cours',
         5 => 'Pré-admission non aboutie',
         6 => 'Liste d\'attente',
-        // 97 => 'Autre',
+        97 => 'Autre',
     ];
 
     public const END_STATUS = [

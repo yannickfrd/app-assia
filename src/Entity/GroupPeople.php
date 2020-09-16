@@ -41,7 +41,7 @@ class GroupPeople
         6 => 'C+E',
         7 => 'G',
         8 => 'G+E',
-        97 => 'Autre',
+        9 => 'Autre',
     ];
 
     /**

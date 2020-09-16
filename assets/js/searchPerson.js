@@ -21,6 +21,7 @@ export default class SearchPerson {
 
     // Timer avant de lancer la requête Ajax
     timer() {
+        this.searchElt.value = this.searchElt.value.replace("	", " ").replace("  ", " ")
         clearInterval(this.countdownID)
         this.countdownID = setTimeout(this.count.bind(this), this.time)
     }

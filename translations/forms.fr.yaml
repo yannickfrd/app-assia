@@ -83,7 +83,8 @@ Write a comment about the service: Écrire un commentaire sur le service
 Year: Année
 Zipcode: Code postal
 End reason: Motif de fin
-Comment end reason: Commentaire
+Comment: Commentaire
+Comment end reason: Commentaire sur le motif de fin
 Accommodation: Hébergement
 Places number: Nb de places
 Disabled: Désactivé

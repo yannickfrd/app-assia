@@ -1,41 +1,41 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Import;
 
-use DateTime;
-use App\Entity\Note;
-use App\Entity\User;
-use App\Entity\Device;
-use App\Entity\Person;
-use App\Entity\Service;
-use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-use App\Entity\SupportGroup;
 use App\Entity\Accommodation;
-use App\Entity\EvalAdmPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\OriginRequest;
-use App\Entity\SupportPerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\InitEvalPerson;
-use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalFamilyGroup;
-use App\Entity\EvalSocialGroup;
-use App\Entity\EvaluationGroup;
-use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalFamilyPerson;
-use App\Entity\EvalHousingGroup;
-use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationPerson;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
+use App\Entity\Device;
+use App\Entity\EvalAdmPerson;
+use App\Entity\EvalBudgetGroup;
+use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalFamilyPerson;
+use App\Entity\EvalHousingGroup;
+use App\Entity\EvalProfPerson;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvalSocialPerson;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvaluationPerson;
+use App\Entity\GroupPeople;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
+use App\Entity\Note;
+use App\Entity\OriginRequest;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Entity\Service;
+use App\Entity\SupportGroup;
+use App\Entity\SupportPerson;
+use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class ImportDatas
+class ImportDatasHebergement
 {
     public const FAMILY_TYPOLOGY = [
         'Femme isolée' => 1,
@@ -368,7 +368,7 @@ class ImportDatas
     protected $head;
     protected $role;
 
-    public function __construct(Security $security, EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository	$repoPerson)
+    public function __construct(Security $security, EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
     {
         $this->security = $security;
         $this->manager = $manager;
@@ -415,7 +415,7 @@ class ImportDatas
 
                 $typology = $this->findInArray($row['Typologie familiale'], self::FAMILY_TYPOLOGY) ?? 9;
 
-                $this->checkGroupExists($row, $typology, $service, $accommodation, $device);
+                $this->checkGroupExists($row, $typology, $service, $device, $accommodation);
 
                 $groupPeople = $this->groups[$row['N° ménage']][0];
                 $supportGroup = $this->groups[$row['N° ménage']][1];
@@ -432,7 +432,7 @@ class ImportDatas
             ++$i;
         }
 
-        // dd($this->accommodations);
+        dd($this->groups);
         $this->manager->flush();
     }
 
@@ -474,7 +474,7 @@ class ImportDatas
         return $this->accommodations[$row['Nom place']][0];
     }
 
-    protected function checkGroupExists(array $row, int $typology, Service $service, Accommodation $accommodation, Device $device)
+    protected function checkGroupExists(array $row, int $typology, Service $service, Device $device, Accommodation $accommodation = null)
     {
         $groupExists = false;
         foreach ($this->groups as $key => $value) {
@@ -537,6 +537,7 @@ class ImportDatas
                     ->setEndDate($this->getEndDate($row))
                     ->setEndStatus($this->findInArray($row['Type sortie'], self::END_STATUS) ?? null)
                     ->setEndStatusComment($row['Commentaire sur la sortie'])
+                    ->setNbPeople((int) $row['Nb pers'])
                     ->setGroupPeople($groupPeople)
                     ->setService($service)
                     ->setDevice($device)
@@ -587,7 +588,7 @@ class ImportDatas
         $accommodationGroup = (new AccommodationGroup())
             ->setStartDate($supportGroup->getStartDate() ? $supportGroup->getStartDate() : null)
             ->setEndDate($supportGroup->getEndDate() ? $supportGroup->getEndDate() : null)
-            ->setEndReason($supportGroup->getEndDate() ? 1 : null)
+            ->setEndReason($supportGroup->getEndDate() ? Choices::YES : null)
             ->setGroupPeople($groupPeople)
             ->setSupportGroup($supportGroup)
             ->setAccommodation($accommodation)
@@ -777,7 +778,7 @@ class ImportDatas
         $accommodationPerson = (new AccommodationPerson())
             ->setStartDate($supportPerson->getStartDate() ? $supportPerson->getStartDate() : null)
             ->setEndDate($supportPerson->getEndDate() ? $supportPerson->getEndDate() : null)
-            ->setEndReason($supportPerson->getEndDate() ? 1 : null)
+            ->setEndReason($supportPerson->getEndDate() ? Choices::YES : null)
             ->setAccommodationGroup($accommodationGroup)
             ->setPerson($person)
             ->setCreatedBy($this->getUser())
@@ -821,11 +822,11 @@ class ImportDatas
             ->setContractType($this->findInArray($row['Emploi (entrée)'], self::CONTRACT_TYPE) ?? null)
             ->setResources($this->findInArray($row['Ressources (entrée)'], self::YES_NO) ?? null)
             ->setResourcesAmt((float) $row['Montant ressources (entrée)'])
-            ->setUnemplBenefit($row['ARE (entrée)'] == 'Oui' ? 1 : null)
-            ->setMinimumIncome($row['RSA (entrée)'] == 'Oui' ? 1 : null)
-            ->setFamilyAllowance($row['AF (entrée)'] == 'Oui' ? 1 : null)
-            ->setSalary($row['Salaire (entrée)'] == 'Oui' ? 1 : null)
-            ->setRessourceOther($row['Autres ressources (entrée)'] ? 1 : null)
+            ->setUnemplBenefit($row['ARE (entrée)'] == 'Oui' ? Choices::YES : null)
+            ->setMinimumIncome($row['RSA (entrée)'] == 'Oui' ? Choices::YES : null)
+            ->setFamilyAllowance($row['AF (entrée)'] == 'Oui' ? Choices::YES : null)
+            ->setSalary($row['Salaire (entrée)'] == 'Oui' ? Choices::YES : null)
+            ->setRessourceOther($row['Autres ressources (entrée)'] ? Choices::YES : null)
             ->setRessourceOtherPrecision($row['Autres ressources (entrée)'])
             ->setComment($row['Commentaire situation à l\'entrée']);
 
@@ -842,7 +843,7 @@ class ImportDatas
         ->setFamilyBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
         ->setFriendshipBreakdown($this->findInArray($row['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
         ->setChildWelfareBackground($this->findInArray($row['Parcours institutionnel enfance'], self::YES_NO) ?? null)
-        ->setHealthProblem($row['Problématique santé mentale'] == Choices::YES || $row['Problématique santé - Addiction'] == Choices::YES ? 1 : null)
+        ->setHealthProblem($row['Problématique santé mentale'] == Choices::YES || $row['Problématique santé - Addiction'] == Choices::YES ? Choices::YES : null)
         ->setMentalHealthProblem($this->findInArray($row['Problématique santé mentale'], self::YES_NO_BOOLEAN) ?? null)
         ->setAddictionProblem($this->findInArray($row['Problématique santé - Addiction'], self::YES_NO_BOOLEAN) ?? null)
         ->setCareSupport($this->findInArray($row['Service soin ou acc. à domicile'], self::CARE_SUPPORT) ?? null)
@@ -903,11 +904,11 @@ class ImportDatas
             ->setEvaluationPerson($evaluationPerson)
             ->setResources($this->findInArray($row['Ressources'], self::YES_NO) ?? null)
             ->setResourcesAmt((float) $row['Montant ressources'])
-            ->setUnemplBenefit($row['ARE'] == 'Oui' ? 1 : null)
-            ->setMinimumIncome($row['RSA'] == 'Oui' ? 1 : null)
-            ->setFamilyAllowance($row['AF'] == 'Oui' ? 1 : null)
-            ->setSalary($row['Salaire'] == 'Oui' ? 1 : null)
-            ->setRessourceOther($row['Autres ressources'] ? 1 : null)
+            ->setUnemplBenefit($row['ARE'] == 'Oui' ? Choices::YES : null)
+            ->setMinimumIncome($row['RSA'] == 'Oui' ? Choices::YES : null)
+            ->setFamilyAllowance($row['AF'] == 'Oui' ? Choices::YES : null)
+            ->setSalary($row['Salaire'] == 'Oui' ? Choices::YES : null)
+            ->setRessourceOther($row['Autres ressources'] ? Choices::YES : null)
             ->setRessourceOtherPrecision($row['Autres ressources']);
 
         $this->manager->persist($evalBudgetPerson);
@@ -941,15 +942,15 @@ class ImportDatas
     {
         $this->gender = 99;
         $this->head = false;
-        $this->role = 7;
+        $this->role = 97;
 
         if ($row['Rôle'] == ' DP') {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
-                $this->gender = 1;
+                $this->gender = Person::GENDER_FEMALE;
             }
             if (in_array($typology, [2, 5])) {
-                $this->gender = 2;
+                $this->gender = Person::GENDER_MALE;
             }
             if (in_array($typology, [1, 2])) {
                 $this->role = 5;
@@ -959,7 +960,7 @@ class ImportDatas
                 $this->role = 1;
             }
         } elseif ($row['Rôle'] == 'Enfant') {
-            $this->role = 3;
+            $this->role = RolePerson::ROLE_CHILD;
         } elseif ($row['Rôle'] == 'Conjoint·e') {
             $this->role = 1;
         }
@@ -967,7 +968,7 @@ class ImportDatas
 
     protected function getStatus(array $row): int
     {
-        return $row['Date sortie'] ? 4 : ($row['Date entrée'] ? 2 : 5);
+        return $row['Date sortie'] ? SupportGroup::STATUS_ENDED : ($row['Date entrée'] ? SupportGroup::STATUS_IN_PROGRESS : SupportGroup::STATUS_PRE_ADD_ENDED);
     }
 
     protected function getStartDate(array $row): ?DateTime

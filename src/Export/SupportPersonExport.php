@@ -2,9 +2,9 @@
 
 namespace App\Export;
 
-use App\Service\ExportExcel;
 use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
+use App\Service\ExportExcel;
 
 class SupportPersonExport
 {
@@ -79,10 +79,11 @@ class SupportPersonExport
             'Date fin suivi (personne)' => $this->formatDate($supportPerson->getEndDate()),
             'Situation à la fin (personne)' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin (personne)' => $supportPerson->getEndStatusComment(),
-            'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
-            'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Service' => $supportGroup->getService()->getName(),
+            'Sous-service' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : null,
+            'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
+            'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Date début hébergement' => join(', ', $startAccommodations),
             'Date fin hébergement' => join(', ', $endAccommodations),

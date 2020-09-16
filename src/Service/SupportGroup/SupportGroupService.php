@@ -2,22 +2,21 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\User;
-use App\Entity\Person;
-use App\Entity\Service;
-use App\Service\Grammar;
-use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-use App\Form\Utils\Choices;
-use App\Entity\SupportGroup;
-use App\Entity\SupportPerson;
+use App\Entity\AccommodationGroup;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\AccommodationGroup;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
+use App\Entity\GroupPeople;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Entity\Service;
+use App\Entity\SupportGroup;
+use App\Entity\SupportPerson;
+use App\Entity\User;
+use App\Form\Utils\Choices;
 use App\Repository\EvaluationGroupRepository;
-use App\Service\SupportGroup\HotelSupportService;
+use App\Repository\SupportGroupRepository;
+use App\Service\Grammar;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -98,7 +97,7 @@ class SupportGroupService
      */
     public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacheEvaluation = $this->cache->getItem('support_group.evaluation.'.$supportGroup->getId());
+        $cacheEvaluation = $this->cache->getItem('support_group.'.$supportGroup->getId().'.evaluation');
 
         if (!$cacheEvaluation->isHit()) {
             $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));
@@ -286,8 +285,6 @@ class SupportGroupService
 
     /**
      * Vérifie la cohérence des données du suivi social.
-     *
-     * @param SupportGroup $supportGroup
      *
      * @return void
      */

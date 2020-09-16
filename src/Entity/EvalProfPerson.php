@@ -40,6 +40,7 @@ class EvalProfPerson
         4 => 'En invalidité',
         5 => 'Étudiant·e',
         6 => 'Indépendant·e',
+        9 => 'Inactif/ve',
         7 => 'Retraité·e',
         8 => 'Salarié·e',
         97 => 'Autre',

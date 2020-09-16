@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\SupportPerson;
 use App\Form\Model\AvdlSupportSearch;
-use App\Security\CurrentUserService;
 use App\Form\Model\SupportGroupSearch;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method SupportPerson|null find($id, $lockMode = null, $lockVersion = null)
@@ -74,6 +74,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')

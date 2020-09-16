@@ -16,14 +16,14 @@
       <h2 class="h5">Création</h2>
       <ul>
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("security_registration") }}">Nouvel utilisateur</a>
+            <a class="text-dark" href="{{ path("security_registration") }}">Utilisateur</a>
         </li>
         {% if is_granted("ROLE_SUPER_ADMIN") %}
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("service_new") }}">Nouveau service</a>
+            <a class="text-dark" href="{{ path("service_new") }}">Service</a>
         </li>
         <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("pole_new") }}">Nouveau pôle</a>
+            <a class="text-dark" href="{{ path("pole_new") }}">Pôle</a>
         </li>
         <li class="mb-2 text-{{ theme_color }}">
             <a class="text-dark" href="{{ path("admin_device_new") }}">Dispositif</a>

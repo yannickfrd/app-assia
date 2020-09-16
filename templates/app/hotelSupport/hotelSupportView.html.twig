@@ -30,7 +30,7 @@
     {{ utils.view(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
     {{ utils.view(hotelSupport.originDept, "Origin dept") }}
     {{ utils.view(hotelSupport.gipId, "Gip id") }}
-    {{ utils.view(hotelSupport.diagComment, "Comment") }}
+    {{ originRequest ? utils.view(originRequest.comment, "Comment") }}
 </div>
 
 <div class="row my-2">
