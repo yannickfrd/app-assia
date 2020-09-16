@@ -153,14 +153,16 @@ export default class SupportContributions {
 
         this.calculateSumAmts()
 
-        let contributionId = Number(this.parametersUrl.get('contributionId'))
+        const contributionId = Number(this.parametersUrl.get('contributionId'))
         this.trElt = document.getElementById('contribution-' + contributionId)
         if (this.trElt) {
             this.getContribution(contributionId)
         }
     }
 
-    // Vérifie le type de partipation (redevance ou caution)
+    /**
+     * Vérifie le type de partipation (redevance ou caution).
+     */
     checkType() {
         let option = this.selectType.getOption(this.typeSelect)
 
@@ -208,7 +210,9 @@ export default class SupportContributions {
         }
     }
 
-    // Calcul la somme de tous les montants pour le footer du tableau.
+    /**
+     * Calcul la somme de tous les montants pour le footer du tableau.
+     */
     calculateSumAmts() {
         this.sumToPayAmtElt.textContent = this.getSumAmts(document.querySelectorAll('td.js-toPayAmt')).toLocaleString() + ' €'
         this.sumPaidAmtElt.textContent = this.getSumAmts(document.querySelectorAll('td.js-paidAmt')).toLocaleString() + ' €'
@@ -222,7 +226,9 @@ export default class SupportContributions {
         this.changeTextColor(this.sumStillToPayAmtElt, sumStillToPayAmt)
     }
 
-    // Donne le ratio de jours de présence dans le mois.
+    /**
+     * Donne le ratio de jours de présence dans le mois.
+     */
     getRateDays() {
         let date = new Date(this.selectType.getOption(this.monthContribYearSelect) + '-' + this.selectType.getOption(this.monthContribMonthSelect) + '-01')
         let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1)
@@ -244,7 +250,9 @@ export default class SupportContributions {
         return rateDays
     }
 
-    // Calcule le montant de la participation.
+    /**
+     * Calcule le montant de la participation.
+     */
     calculateAmountToPay() {
         let rateDays = this.getRateDays()
         let calculationMethod = ''
@@ -268,7 +276,9 @@ export default class SupportContributions {
         this.calculationMethodElt.textContent = 'Mode de calcul : ' + calculationMethod
     }
 
-    // Calcule le restant dû.
+    /**
+     * Calcule le restant dû.
+     */
     calculateAmountStillDue() {
         if (!isNaN(this.toPayAmtInput.value) && !isNaN(this.paidAmtInput.value)) {
             this.stillToPayAmtInput.value = Math.round((this.toPayAmtInput.value - this.paidAmtInput.value) * 100) / 100
@@ -276,7 +286,9 @@ export default class SupportContributions {
         this.changeTextColor(this.stillToPayAmtInput, this.stillToPayAmtInput.value)
     }
 
-
+    /**
+     * Retourne vrai si le formualaire est valide.
+     */
     isValidForm() {
         this.error = false
         let option = this.selectType.getOption(this.typeSelect)
@@ -291,6 +303,10 @@ export default class SupportContributions {
         return this.error === false ? true : false
     }
 
+    /**
+     * Vérifie la date de contribution.
+     * @param {Number} option 
+     */
     checkContributionDate(option) {
         if ([1, 2].indexOf(option) != -1) { // PF et Loyer
             if (!this.selectType.getOption(this.monthContribMonthSelect)) {
@@ -312,7 +328,10 @@ export default class SupportContributions {
         }
     }
 
-    // Vérfifie le montant à payer si redevance ou caution
+    /**
+     * Vérfifie le montant à payer si redevance ou caution.
+     * @param {Number} option 
+     */
     checkToPaidAmt(option) {
         if (isNaN(this.toPayAmtInput.value)) {
             this.error = true
@@ -324,7 +343,10 @@ export default class SupportContributions {
         }
     }
 
-    // Vérifie le montant restitué si Restitution caution
+    /**
+     * Vérifie le montant restitué si Restitution caution.
+     * @param {Number} option 
+     */
     checkReturnAmt(option) {
         if (isNaN(this.returnAmtInput.value)) {
             this.error = true
@@ -336,7 +358,10 @@ export default class SupportContributions {
         }
     }
 
-    // Vérifie le montant du paiement saisi.
+    /**
+     * Vérifie le montant du paiement saisi.
+     * @param {Number} option 
+     */
     checkPaidAmt(option) {
         if (isNaN(this.paidAmtInput.value)) {
             this.error = true
@@ -350,7 +375,10 @@ export default class SupportContributions {
         return this.validationForm.validField(this.paidAmtInput)
     }
 
-    // Vérifie la date du paiement.
+    /**
+     * Vérifie la date du paiement.
+     * @param {Number} option 
+     */
     checkPaymentDate(option) {
         let intervalWithNow = (this.now - new Date(this.paymentDateInput.value)) / (1000 * 60 * 60 * 24)
 
@@ -369,7 +397,10 @@ export default class SupportContributions {
         return this.validationForm.validField(this.paymentDateInput)
     }
 
-    // Vérifie le type de paiement saisi.
+    /**
+     * Vérifie le type de paiement saisi.
+     * @param {Number} option 
+     */
     checkPaymentType(option) {
         if (!this.selectType.getOption(this.paymentTypeSelect) && (option === 20 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
             this.error = true
@@ -379,7 +410,9 @@ export default class SupportContributions {
     }
 
 
-    // Affiche un formulaire modal vierge.
+    /**
+     * Affiche un formulaire modal vierge.
+     */
     newContribution() {
         this.contributionId = null
         this.modalElt.modal('show')
@@ -395,7 +428,10 @@ export default class SupportContributions {
         this.btnSaveElt.textContent = 'Enregistrer'
     }
 
-    // Requête pour obtenir le RDV sélectionné dans le formulaire modal.
+    /**
+     * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
+     * @param {String} id 
+     */
     getContribution(id) {
         this.loader.on()
 
@@ -412,7 +448,9 @@ export default class SupportContributions {
         this.ajaxRequest.init('GET', '/contribution/' + id + '/get', this.responseAjax.bind(this), true)
     }
 
-    // Réinitialise le formulaire.
+    /**
+     * Réinitialise le formulaire.
+     */
     initForm() {
         this.selectType.setOption(this.paymentTypeSelect, '')
         this.paymentTypeSelect.classList.remove('is-valid')
@@ -426,7 +464,11 @@ export default class SupportContributions {
         this.infoContribElt.innerHTML = ''
     }
 
-    // Sélectionne une des options dans une liste select.
+    /**
+     * Sélectionne une des options dans une liste select.
+     * @param {HTMLElement} selectElt 
+     * @param {Number} value 
+     */
     selectOption(selectElt, value) {
         selectElt.querySelectorAll('option').forEach(option => {
             if (parseInt(option.value) === value) {
@@ -437,7 +479,9 @@ export default class SupportContributions {
         })
     }
 
-    // Enregistre l'opération.
+    /**
+     * Enregistre l'opération.
+     */
     tryToSave() {
         this.loader.on()
         if (this.isValidForm()) {
@@ -450,7 +494,10 @@ export default class SupportContributions {
         }
     }
 
-    // Envoie une requête ajax pour supprimer l'enregistrement.
+    /**
+     * Envoie une requête ajax pour supprimer l 'enregistrement.
+     * @param {String} url 
+     */
     deleteContribution(url) {
         this.loader.on()
         if (window.confirm('Voulez-vous vraiment supprimer cette enregistrement ?')) {
@@ -458,7 +505,10 @@ export default class SupportContributions {
         }
     }
 
-    // Réponse du serveur.
+    /**
+     * Réponse du serveur.
+     * @param {JSON} response 
+     */
     responseAjax(response) {
         let data = JSON.parse(response)
         if (data.code === 200) {
@@ -467,7 +517,7 @@ export default class SupportContributions {
                     this.getResources(data.data)
                     break
                 case 'show':
-                    this.showContribution(data.data.contribution)
+                    this.showContribution(data.data)
                     break
                 case 'create':
                     this.createContribution(data.data.contribution)
@@ -493,7 +543,10 @@ export default class SupportContributions {
         this.calculateSumAmts()
     }
 
-    // Donne le montant des ressources du ménage.
+    /**
+     * Donne le montant des ressources du ménage.
+     * @param {Array} data 
+     */
     getResources(data = null) {
         if (this.resourcesChecked === false) {
             this.salaryAmt = data.salaryAmt
@@ -514,10 +567,14 @@ export default class SupportContributions {
         this.loader.off()
     }
 
-    // Donne la redevance sélectionnée dans le formulaire modal.
-    showContribution(contribution) {
+    /**
+     * Donne la redevance sélectionnée dans le formulaire modal.
+     * @param {Array} data 
+     */
+    showContribution(data) {
         // let modalContentElt = document.querySelector('.modal-content')
         // modalContentElt.innerHTML = contribution.content
+        const contribution = data.contribution;
         this.modalElt.modal('show')
         this.selectOption(this.typeSelect, contribution.type)
         if (contribution.monthContrib) {
@@ -535,22 +592,29 @@ export default class SupportContributions {
         this.returnAmtInput.value = contribution.returnAmt
         this.commentInput.value = contribution.comment
 
-        this.infoContribElt.innerHTML = this.getInfoContribElt(contribution)
+        this.infoContribElt.innerHTML = this.getInfoContribElt(data)
 
         this.checkType()
         this.loader.off(false)
     }
 
-    // Donnes les informations sur l'enregistrements (date de création, créateur...).
-    getInfoContribElt(contribution) {
-        let htmlContent = `Créé le ${this.formatDatetime(contribution.createdAt)} par ${contribution.createdBy.fullname}`
+    /**  
+     * Donnes les informations sur l'enregistrement (date de création, créateur...).
+     * @param {data} data
+     */
+    getInfoContribElt(data) {
+        const contribution = data.contribution;
+        let htmlContent = `Créé le ${this.formatDatetime(contribution.createdAt)} par ${data.createdBy}`
         if (contribution.createdAt != contribution.updatedAt) {
-            htmlContent = htmlContent + `<br/> (modifié le ${this.formatDatetime(contribution.updatedAt)} par ${contribution.updatedBy.fullname})`
+            htmlContent = htmlContent + `<br/> (modifié le ${this.formatDatetime(contribution.updatedAt)} par ${data.updatedBy})`
         }
         return htmlContent
     }
 
-    // Crée la ligne de la nouvelle redevance dans le tableau.
+    /**
+     * Crée la ligne de la nouvelle redevance dans le tableau.
+     * @param {Array} data 
+     */
     createContribution(data) {
         let contributionElt = document.createElement('tr')
         contributionElt.className = 'js-payment'
@@ -579,7 +643,10 @@ export default class SupportContributions {
         this.loader.off(true)
     }
 
-    // Met à jour la ligne du tableau correspondant au contribution.
+    /**
+     * Met à jour la ligne du tableau correspondant au contribution.
+     * @param {Object} contribution 
+     */
     updateContribution(contribution) {
         this.trElt.querySelector('td.js-type').textContent = contribution.typeToString + (contribution.type == 11 ? ' (' + this.formatMoney(contribution.returnAmt) + ')' : '')
         this.trElt.querySelector('td.js-monthContrib').textContent = this.formatDatetime(contribution.monthContrib, 'd/m')
@@ -593,7 +660,10 @@ export default class SupportContributions {
         this.loader.off(true)
     }
 
-    // Crée la ligne de la contribution.
+    /**
+     * Crée la ligne de la contribution.
+     * @param {Object} contribution 
+     */
     getPrototypeContribution(contribution) {
         return `
             <td scope='row' class='align-middle text-center'>
@@ -621,12 +691,19 @@ export default class SupportContributions {
             </td>`
     }
 
-    // Arrondi un nombre en valeur monétaire.
+    /**
+     * Arrondi un nombre en valeur monétaire.
+     * @param {Number} number 
+     */
     roundMoney(number) {
         return number ? Math.round(number * 100) / 100 : ''
     }
 
-    // Coupe un texte en un nombre maximum de caractères.
+    /**
+     * Coupe un texte en un nombre maximum de caractères.
+     * @param {String} comment 
+     * @param {Number} limit 
+     */
     sliceComment(comment, limit = 65) {
         if (comment === null) {
             return ''
@@ -634,7 +711,10 @@ export default class SupportContributions {
         return comment.length > limit ? comment.slice(0, limit) + '...' : comment
     }
 
-    // Met à jour le nombre d'enregistrements.
+    /**
+     * Met à jour le nombre d'enregistrements.
+     * @param {Number} value 
+     */
     updateCounts(value) {
         this.countContributionsElt.textContent = parseInt(this.countContributionsElt.textContent) + value
         if (this.nbTotalContributionsElt) {
@@ -642,7 +722,10 @@ export default class SupportContributions {
         }
     }
 
-    // Vérifie si le montant saisie est valide.
+    /**
+     * Vérifie si le montant saisie est valide.
+     * @param {inputElt} moneyElt 
+     */
     checkMoney(moneyElt) {
         let value = moneyElt.value
         value = value.replace(' ', '').replace(',', '.')
@@ -652,7 +735,10 @@ export default class SupportContributions {
         return this.validationForm.invalidField(moneyElt, 'Valeur invalide.')
     }
 
-    // Vérifie si la date est valide.
+    /**
+     * Vérifie si la date est valide.
+     * @param {inputElt} dateElt 
+     */
     checkDate(dateElt) {
         let interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24))
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
@@ -661,7 +747,10 @@ export default class SupportContributions {
         return this.validationForm.validField(dateElt)
     }
 
-    // Donne la somme des montants.
+    /**
+     * Donne la somme des montants.
+     * @param {*} elts 
+     */
     getSumAmts(elts) {
         let array = []
         elts.forEach(elt => {
@@ -680,12 +769,21 @@ export default class SupportContributions {
         return 'Erreur'
     }
 
-    // Format un nombre en valeur monétaire.
+    /**
+     * Formate un nombre en valeur monétaire.
+     * @param {Number} number 
+     * @param {String} locale 
+     */
     formatMoney(number, locale = 'fr') {
         return number ? number.toFixed(2).replace('.', ',') + ' €' : ''
     }
 
-    // Formate une valeur texte en date.
+    /**
+     * Formate une valeur texte en date.
+     * @param {String} date 
+     * @param {String} type 
+     * @param {String} locale 
+     */
     formatDatetime(date, type = 'datetime', locale = 'fr') {
         if (date === null) {
             return ''
@@ -709,7 +807,11 @@ export default class SupportContributions {
         }
     }
 
-    // Change la couleur du texte d'un élément on fonction de la valeur d'un nombre.
+    /**
+     * Change la couleur du texte d'un élément on fonction de la valeur d'un nombre.
+     * @param {HTMLElement} elt 
+     * @param {String} value 
+     */
     changeTextColor(elt, value) {
         if (parseFloat(value) > 0) {
             elt.classList.remove('text-success')

@@ -2,32 +2,32 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Service\Pagination;
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
-use App\Service\Normalisation;
+use App\Entity\User;
 use App\Export\ContributionFullExport;
-use App\Form\Model\ContributionSearch;
 use App\Export\ContributionLightExport;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\ContributionRepository;
+use App\Form\Contribution\ContributionSearchType;
 use App\Form\Contribution\ContributionType;
-use App\Repository\AccommodationRepository;
-use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Contribution\SupportContributionSearchType;
+use App\Form\Model\ContributionSearch;
 use App\Form\Model\SupportContributionSearch;
+use App\Repository\AccommodationRepository;
+use App\Repository\ContributionRepository;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\Indicators\ContributionIndicators;
+use App\Service\Normalisation;
+use App\Service\Pagination;
+use App\Service\SupportGroup\SupportGroupService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\Form\Contribution\ContributionSearchType;
-use App\Service\SupportGroup\SupportGroupService;
-use App\Service\Indicators\ContributionIndicators;
-use App\Form\Contribution\SupportContributionSearchType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ContributionController extends AbstractController
 {
@@ -157,8 +157,6 @@ class ContributionController extends AbstractController
      * Nouvelle participation financière.
      *
      * @Route("support/{id}/contribution/new", name="contribution_new", methods="POST")
-     *
-     * @param int $id // SupportGroup
      */
     public function newContribution(SupportGroup $supportGroup, Contribution $contribution = null, Request $request, NormalizerInterface $normalizer, Normalisation $normalisation): Response
     {
@@ -196,6 +194,8 @@ class ContributionController extends AbstractController
                 //     'form' => $form->createView(),
                 // ]),
                 'contribution' => $normalizer->normalize($contribution, null, ['groups' => ['get', 'view']]),
+                'createdBy' => $contribution->getCreatedBy()->getFullname(),
+                'updatedBy' => $contribution->getUpdatedBy()->getFullname(),
             ],
         ], 200);
     }

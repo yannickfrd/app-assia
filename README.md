@@ -16,6 +16,9 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.21.1 - 16/09/2020
+- Correction problème erreur circulaire lors de la récupération d'une Contribution.
+
 ## Version 1.21.0 - 16/09/2020
 - Créé module d'import des données de l'Opération Ciblée hôtel.
 

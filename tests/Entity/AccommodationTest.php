@@ -74,7 +74,7 @@ class AccommodationTest extends WebTestCase
 
     public function testNullStartDate()
     {
-        $this->assertHasErrors($this->accommodation->setStartDate(null), 1);
+        $this->assertHasErrors($this->accommodation->setStartDate(null), 0);
     }
 
     public function testNullEndDate()
