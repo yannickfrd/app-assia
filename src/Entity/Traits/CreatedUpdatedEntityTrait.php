@@ -5,7 +5,6 @@ namespace App\Entity\Traits;
 use App\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 trait CreatedUpdatedEntityTrait
 {
@@ -22,8 +21,6 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Groups("view")
-     * @MaxDepth(1)
      */
     private $createdBy;
 
@@ -40,8 +37,6 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create", on="update")
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Groups("view")
-     * @MaxDepth(1)
      */
     private $updatedBy;
 
