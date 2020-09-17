@@ -56,6 +56,6 @@ export default class AutoLogout {
 
     // Recharge la page
     reloadPage() {
-        document.location.reload(true)
+        document.location.assign('/login')
     }
 }

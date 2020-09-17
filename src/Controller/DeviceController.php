@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Device;
+use App\Entity\Service;
 use App\Form\Device\DeviceType;
 use App\Repository\DeviceRepository;
+use App\Repository\SubServiceRepository;
+use App\Repository\UserRepository;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -84,5 +87,34 @@ class DeviceController extends AbstractController
         return $this->render('app/device/device.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Donne les dispositifs rattachés au service.
+     *
+     * @ROute("/service/{id}/devices", name="service_devices", methods="GET")
+     */
+    public function getDevicesFromService(Service $service, SubServiceRepository $repoSubService, DeviceRepository $repoDevice, UserRepository $repoUser)
+    {
+        $subServices = [];
+        foreach ($repoSubService->getSubServicesFromService($service) as $subService) {
+            $subServices[$subService->getId()] = $subService->getName();
+        }
+
+        $devices = [];
+        foreach ($repoDevice->getDevicesFromService($service->getId()) as $device) {
+            $devices[$device->getId()] = $device->getName();
+        }
+
+        $users = [];
+        foreach ($repoUser->getUsersFromService($service) as $user) {
+            $users[$user->getId()] = $user->getFullname();
+        }
+
+        return $this->json([
+            'subServices' => $subServices,
+            'devices' => $devices,
+            'users' => $users,
+        ], 200);
     }
 }

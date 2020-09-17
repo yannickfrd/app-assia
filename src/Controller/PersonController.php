@@ -2,28 +2,29 @@
 
 namespace App\Controller;
 
-use App\Entity\Person;
-use App\Service\Grammar;
-use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-use App\Service\Pagination;
-use App\Form\Person\PersonType;
-use App\Form\Model\PersonSearch;
-use App\Repository\PersonRepository;
-use App\Form\Person\PersonSearchType;
-use App\Form\Person\PersonNewGroupType;
-use App\Form\RolePerson\RolePersonType;
-use App\Form\Person\RolePersonGroupType;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Person\PersonRolePersonType;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\GroupPeople;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Form\Model\PersonSearch;
+use App\Form\Person\PersonNewGroupType;
+use App\Form\Person\PersonRolePersonType;
+use App\Form\Person\PersonSearchType;
+use App\Form\Person\PersonType;
+use App\Form\Person\RolePersonGroupType;
+use App\Form\RolePerson\RolePersonType;
+use App\Repository\PersonRepository;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PersonController extends AbstractController
 {
@@ -148,7 +149,7 @@ class PersonController extends AbstractController
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function editPersonInGroup(GroupPeople $groupPeople, int $person_id, Request $request): Response
+    public function editPersonInGroup(GroupPeople $groupPeople, int $person_id, Request $request, SessionInterface $session): Response
     {
         $person = $this->repo->findPersonById($person_id);
 
@@ -167,6 +168,7 @@ class PersonController extends AbstractController
             'group_people' => $groupPeople,
             'form' => $form->createView(),
             'form_new_group' => $formNewGroup->createView(),
+            'hasRights' => $this->hasRights($person, $session),
         ]);
     }
 
@@ -176,7 +178,7 @@ class PersonController extends AbstractController
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @Route("/person/{id}", name="person_show", methods="GET")
      */
-    public function personShow(Person $person, RolePerson $rolePerson = null, Request $request): Response
+    public function personShow(Person $person, RolePerson $rolePerson = null, Request $request, SessionInterface $session): Response
     {
         $form = ($this->createForm(PersonType::class, $person))
             ->handleRequest($request);
@@ -190,6 +192,7 @@ class PersonController extends AbstractController
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
             'form_new_group' => $formNewGroup->createView(),
+            'hasRights' => $this->hasRights($person, $session),
         ]);
     }
 
@@ -387,7 +390,25 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Supprime le chache du suivi.
+     * Vérifie si l'utilisateur a les droits concernant la personne.
+     */
+    protected function hasRights(Person $person, SessionInterface $session): bool
+    {
+        if ($person->getCreatedBy() == $this->getUser()) {
+            return true;
+        }
+
+        foreach ($person->getSupports() as $supportPerson) {
+            if (in_array($supportPerson->getSupportGroup()->getService()->getId(), array_keys($session->get('userServices')))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Supprime le cache du suivi.
      */
     protected function discacheSupport(Person $person)
     {

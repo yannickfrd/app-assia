@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.21.0 - 16/09/2020
+1.22.0 - 17/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,8 +16,13 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.22.0 - 17/09/2020
+- Créé système de mise à jour automatique des champs imbriqués d'un formulaire via AJAX (Service > SubService > Device).
+- Amélioration du système en cas de changement de service du suivi.
+- Coordonnées d'une personne masquées si l'utilisateur n'a pas les droits.
+
 ## Version 1.21.1 - 16/09/2020
-- Correction problème erreur circulaire lors de la récupération d'une Contribution.
+- Correction erreur référence circulaire lors de la récupération d'une Contribution.
 
 ## Version 1.21.0 - 16/09/2020
 - Créé module d'import des données de l'Opération Ciblée hôtel.

@@ -1,20 +1,6 @@
 <div id="hotel_support">
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-6">{{ form_row(form.service) }}</div>
-			<div class="col-md-6">{{ form_row(form.subService) }}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6">{{ form_row(form.device) }}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6">{{ form_row(form.referent) }}</div>
-			<div class="col-md-6">{{ form_row(form.referent2) }}</div>
-		</div>
-	</div>
-	<hr>
-	<div class="form-group">
-		<div class="row">
 			<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
 			<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
 		</div>
@@ -41,7 +27,7 @@
 	<hr>
 	<div class="form-group row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Diagnostic</h2></div>
-		<div class="col-md-6" data-check-valid="diagStart">{{ form_row(form.hotelSupport.diagStartDate) }}</div>
+		<div class="col-md-6">{{ form_row(form.hotelSupport.diagStartDate) }}</div>
 		{# <div class="col-md-6" data-parent-field="diagStartDate">{{ form_row(form.hotelSupport.endStatusDiag) }}</div> #}
 		<div class="col-md-6" data-parent-field="diagStartDate">{{ form_row(form.hotelSupport.diagEndDate) }}</div>
 		<div class="col-md-12" data-parent-field="diagStartDate">{{ form_widget(form.hotelSupport.diagComment) }}</div>

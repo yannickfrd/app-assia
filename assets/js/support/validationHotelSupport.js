@@ -5,7 +5,7 @@ import ValidationDate from '../utils/validationDate'
 import Loader from '../utils/loader'
 
 /**
- * Validation des données de la fiche personne
+ * Validation des données d'un suivi hôtel.
  */
 export default class ValidationHotelSupport {
 
@@ -16,7 +16,6 @@ export default class ValidationHotelSupport {
 
         this.prefix = 'support_hotelSupport_'
 
-        this.serviceSelectElt = document.getElementById('support_service')
         this.btnSubmitElts = document.querySelectorAll('button[type="submit"]')
         this.dateInputElts = document.querySelectorAll('input[type="date"]')
 
@@ -30,9 +29,6 @@ export default class ValidationHotelSupport {
     }
 
     init() {
-        this.service = this.selectType.getOption(this.serviceSelectElt)
-        this.serviceSelectElt.addEventListener('change', this.changeService.bind(this))
-
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
         })
@@ -90,25 +86,13 @@ export default class ValidationHotelSupport {
     }
 
     /**
-     * Si champ de la valeur du SELECT service
-     */
-    changeService() {
-        if (window.confirm('Le changement de service va recharger la page actuelle. Voulez-vous confirmer ?')) {
-            this.loader.on()
-            document.getElementById('send').click()
-        } else {
-            this.selectType.setOption(this.serviceSelectElt, this.service)
-        }
-    }
-
-    /**
      * Vérifie la valeur du champ date
      * @param {HTMLElement} inputElt 
      */
     checkDate(inputElt) {
         let validationDate = new ValidationDate(inputElt, this.validationForm)
 
-        if (validationDate.isValid() === false || validationDate.isNotAfterToday() === false) {
+        if (validationDate.isValid() === false) {
             return false
         }
         this.validationForm.validField(inputElt)

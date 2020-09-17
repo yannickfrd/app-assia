@@ -2,45 +2,45 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\Service;
-use App\Service\Grammar;
-use App\Service\Calendar;
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\GroupPeople;
-use App\Form\Utils\Choices;
-use App\Service\Pagination;
+use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Repository\RdvRepository;
-use App\Repository\NoteRepository;
+use App\Entity\User;
 use App\Export\SupportPersonExport;
-use App\Repository\ServiceRepository;
 use App\Form\Model\SupportGroupSearch;
-use App\Form\Support\SupportGroupType;
-use App\Repository\DocumentRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
-use App\Form\Support\SupportGroupAvdlType;
-use App\Repository\ContributionRepository;
-use App\Repository\SupportGroupRepository;
-use App\Form\Support\SupportGroupHotelType;
-use App\Repository\SupportPersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Support\SupportCoefficientType;
+use App\Form\Support\SupportGroupAvdlType;
+use App\Form\Support\SupportGroupHotelType;
 use App\Form\Support\SupportGroupSearchType;
-use App\Service\Indicators\SocialIndicators;
+use App\Form\Support\SupportGroupType;
+use App\Form\Support\SupportsInMonthSearchType;
+use App\Form\Utils\Choices;
+use App\Repository\ContributionRepository;
+use App\Repository\DocumentRepository;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\NoteRepository;
+use App\Repository\RdvRepository;
+use App\Repository\ServiceRepository;
+use App\Repository\SupportGroupRepository;
+use App\Repository\SupportPersonRepository;
+use App\Service\Calendar;
+use App\Service\Grammar;
+use App\Service\Indicators\SocialIndicators;
+use App\Service\Pagination;
+use App\Service\SupportGroup\SupportGroupService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\Support\SupportsInMonthSearchType;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\Service\SupportGroup\SupportGroupService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class SupportController extends AbstractController
 {
@@ -359,6 +359,30 @@ class SupportController extends AbstractController
         return $this->redirectToRoute('support_edit', [
             'id' => $newSupportGroup->getId(),
         ]);
+    }
+
+    /**
+     * Change le service d'un suivi.
+     *
+     * @Route("/support/{id}/switch_service/{service_id}", name="support_switch_service", methods="GET")
+     * @ParamConverter("service", options={"id" = "service_id"})
+     */
+    public function switchService(SupportGroup $supportGroup, Service $service)
+    {
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $supportGroup
+            ->setService($service)
+            ->setDevice(null);
+
+        $this->manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'action' => 'reload',
+            'alert' => 'warning',
+            'msg' => 'La page va se recharger...',
+        ], 200);
     }
 
     /**

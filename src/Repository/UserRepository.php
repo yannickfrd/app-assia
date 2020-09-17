@@ -131,7 +131,9 @@ class UserRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'r')
 
-            ->where('r.service = :services')
+            ->where('u.status IN (:status)')
+            ->setParameter('status', [1, 2, 3])
+            ->andWhere('r.service = :services')
             ->setParameter('services', $service)
             ->orWhere('u.id = :user')
             ->setParameter('user', $user)
@@ -155,6 +157,26 @@ class UserRepository extends ServiceEntityRepository
         }
 
         return $query->orderBy('u.lastname', 'ASC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    public function getUsersFromService(Service $service)
+    {
+        return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+            ->leftJoin('u.serviceUser', 'su')
+
+            ->where('u.disabledAt IS NULL')
+            ->where('u.status IN (:status)')
+            ->setParameter('status', [
+                User::STATUS_SOCIAL_WORKER,
+                User::STATUS_COORDO,
+                User::STATUS_CHIEF,
+            ])
+            ->andWhere('su.service = :service')
+            ->setParameter('service', $service)
+
+            ->orderBy('u.lastname', 'ASC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }

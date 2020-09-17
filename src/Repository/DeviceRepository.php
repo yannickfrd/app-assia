@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
+use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
-use Doctrine\ORM\Query;
-use App\Entity\Accommodation;
 use App\Form\Model\SupportsByUserSearch;
 use App\Security\CurrentUserService;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Device|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,17 +37,34 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne les dispositifs du service.
+     */
+    public function getDevicesFromService(int $id)
+    {
+        return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
+            ->leftJoin('d.serviceDevices', 'sd')
+
+            ->where('sd.service = :service')
+            ->setParameter('service', $id)
+
+            ->orderBy('d.name', 'ASC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
      * Donne la liste des dispositifs du service.
      */
     public function getDevicesFromServiceQueryList(Accommodation $accommodation)
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
+        return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
 
             ->where('sd.service = :service')
-            ->setParameter('service', $accommodation->getService());
+            ->setParameter('service', $accommodation->getService())
 
-        return $query->orderBy('d.name', 'ASC');
+            ->orderBy('d.name', 'ASC');
     }
 
     /**

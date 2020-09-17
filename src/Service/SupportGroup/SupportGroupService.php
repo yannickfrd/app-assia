@@ -305,7 +305,7 @@ class SupportGroupService
                 Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
         }
 
-        if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
+        if ($supportGroup->getDevice() && $supportGroup->getDevice()->getAccommodation() == Choices::YES) {
             // Vérifie qu'il y a un hébergement créé
             if (0 == $supportGroup->getAccommodationGroups()->count()) {
                 $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');

@@ -2,26 +2,28 @@
 
 namespace App\Form\Support;
 
-use App\Entity\User;
+use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\Utils\Choices;
+use App\Entity\SubService;
 use App\Entity\SupportGroup;
-use App\Entity\Accommodation;
-use App\Form\Type\LocationType;
-use App\Repository\UserRepository;
-use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
-use App\Repository\ServiceRepository;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\User;
 use App\Form\OriginRequest\OriginRequestType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
+use App\Repository\DeviceRepository;
+use App\Repository\ServiceRepository;
+use App\Repository\SubServiceRepository;
+use App\Repository\UserRepository;
+use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SupportGroupType extends AbstractType
 {
@@ -45,6 +47,11 @@ class SupportGroupType extends AbstractType
             ->add('service', EntityType::class, [
                 'class' => Service::class,
                 'choice_label' => 'name',
+                // 'query_builder' => function (ServiceRepository $repo) use ($service) {
+                //     return $repo->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
+                //         ->where('s.id = :service')
+                //         ->setParameter('service', $service->getId());
+                // },
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesFromUserQueryList($this->currentUser);
                 },
@@ -52,6 +59,15 @@ class SupportGroupType extends AbstractType
                     'readonly' => true,
                 ],
                 'placeholder' => 'placeholder.select',
+            ])
+            ->add('subService', EntityType::class, [
+                'class' => SubService::class,
+                'choice_label' => 'name',
+                'query_builder' => function (SubServiceRepository $repo) use ($service) {
+                    return $repo->getSubServicesFromUserQueryList($this->currentUser, $service->getId());
+                },
+                'placeholder' => 'placeholder.select',
+                'required' => false,
             ])
             ->add('device', EntityType::class, [
                 'class' => Device::class,

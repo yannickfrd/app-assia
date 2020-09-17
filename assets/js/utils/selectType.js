@@ -14,9 +14,9 @@ export default class SelectType {
             return
         }
         let value = false
-        selectElt.querySelectorAll('option').forEach(option => {
-            if (option.selected || option.selected === true) {
-                value = parseInt(option.value)
+        selectElt.querySelectorAll('option').forEach(optionElt => {
+            if (optionElt.selected || optionElt.selected === true) {
+                value = parseInt(optionElt.value)
             }
         })
 
@@ -29,12 +29,11 @@ export default class SelectType {
      * @param {String} value 
      */
     setOption(selectElt, value) {
-        selectElt.querySelectorAll('option').forEach(option => {
-            if (parseInt(option.value) === parseInt(value)) {
-                // console.log(option.value)
-                return option.selected = true
+        selectElt.querySelectorAll('option').forEach(optionElt => {
+            if (parseInt(optionElt.value) === parseInt(value)) {
+                return optionElt.selected = true
             }
-            return option.selected = false
+            return optionElt.selected = false
         })
     }
 

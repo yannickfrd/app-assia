@@ -29,7 +29,7 @@
 
 {% set avdl = support.avdl %}
 
-{% if avdl.diagStartDate %}
+{% if avdl and avdl.diagStartDate %}
     <div class="row my-2">
         {{ utils.view(avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") 
             ~ (avdl.diagEndDate ? " - " ~ avdl.diagEndDate|date("d/m/Y") : "") : "", "avdl.diag") }}
@@ -39,7 +39,7 @@
     </div>
 {% endif %}
 
-{% if avdl.supportStartDate %}
+{% if avdl and avdl.supportStartDate %}
     <div class="row my-2">
         {{ utils.view(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
             ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y") : "") : "", "avdl.support") }}
@@ -47,7 +47,7 @@
         {{ utils.view(avdl.supportComment, "Comment") }}
     </div>
 {% endif %}
-{% if avdl.supportStartDate %}
+{% if avdl and avdl.supportStartDate %}
     <div class="row my-2">
         {{ utils.view(avdl.endSupportReasonToString, "avdl.endSupportReason") }}
         {{ utils.view(avdl.accessHousingModalityToString, "avdl.accessHousingModality") }}

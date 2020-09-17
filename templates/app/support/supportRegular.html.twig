@@ -1,10 +1,3 @@
-<div class="form-group row">
-	<div class="col-md-6">{{ form_row(form.service) }}</div>
-	<div class="col-md-6">{{ form_row(form.device) }}</div>
-	<div class="col-md-6">{{ form_row(form.referent) }}</div>
-	<div class="col-md-6">{{ form_row(form.referent2) }}</div>
-</div>
-<hr>
 <section class="form-group row">
 	<div class="col-md-12"><h2 class="h5 mb-3">Orientation / pré-admission</h2></div>
     <div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
@@ -38,7 +31,7 @@
     <div class="row">
         <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.endStatus) }}</div>
         <div class="col-md-6" data-parent-field="endStatus">{{ form_row(form.endStatusComment) }}</div>
-        {% if support.id and support.device.accommodation == YES %}
+        {% if support.id and support.device and support.device.accommodation == YES %}
             <div class="col-md-6">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
                     {{ form_row(form.endAccommodation) }}

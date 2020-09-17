@@ -30,24 +30,6 @@ class ServiceSearchType extends AbstractType
         $attrOptions = $options['attr']['options'] ?? null;
         $serviceId = $options['attr']['serviceId'] ?? null;
 
-        if (null == $attrOptions || in_array('referents', $attrOptions)) {
-            $builder
-                ->add('referents', EntityType::class, [
-                    'class' => User::class,
-                    'choice_label' => 'fullname',
-                    'multiple' => true,
-                    'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                        return $repo->getAllUsersFromServicesQueryList($this->currentUser, $serviceId);
-                    },
-                    'label_attr' => ['class' => 'sr-only'],
-                    'placeholder' => '-- Référent --',
-                    'attr' => [
-                        'class' => 'multi-select w-min-150 w-max-180',
-                        'data-select2-id' => 'referents',
-                    ],
-                    'required' => false,
-                ]);
-        }
         if (null == $attrOptions || in_array('services', $attrOptions)) {
             $builder
                 ->add('services', EntityType::class, [
@@ -66,14 +48,15 @@ class ServiceSearchType extends AbstractType
                     'required' => false,
                 ]);
         }
+
         if (null == $attrOptions || in_array('subServices', $attrOptions)) {
             $builder
                 ->add('subServices', EntityType::class, [
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'multiple' => true,
-                    'query_builder' => function (SubServiceRepository $repo) {
-                        return $repo->getSubServicesFromUserQueryList($this->currentUser);
+                    'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
+                        return $repo->getSubServicesFromUserQueryList($this->currentUser, $serviceId);
                     },
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Sous-service --',
@@ -84,6 +67,7 @@ class ServiceSearchType extends AbstractType
                     'required' => false,
                 ]);
         }
+
         if (null == $attrOptions || in_array('devices', $attrOptions)) {
             $builder
                 ->add('devices', EntityType::class, [
@@ -98,6 +82,25 @@ class ServiceSearchType extends AbstractType
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-180',
                         'data-select2-id' => 'devices',
+                    ],
+                    'required' => false,
+                ]);
+        }
+
+        if (null == $attrOptions || in_array('referents', $attrOptions)) {
+            $builder
+                ->add('referents', EntityType::class, [
+                    'class' => User::class,
+                    'choice_label' => 'fullname',
+                    'multiple' => true,
+                    'query_builder' => function (UserRepository $repo) use ($serviceId) {
+                        return $repo->getAllUsersFromServicesQueryList($this->currentUser, $serviceId);
+                    },
+                    'label_attr' => ['class' => 'sr-only'],
+                    'placeholder' => '-- Référent --',
+                    'attr' => [
+                        'class' => 'multi-select w-min-150 w-max-180',
+                        'data-select2-id' => 'referents',
                     ],
                     'required' => false,
                 ]);

@@ -6,7 +6,10 @@
 
 <div class="modal-body">
     {{ form_row(form_new_support.service) }}
-    {# {{ form_row(form_new_support.subService) }} #}
+    <div data-parent-field="service">
+        <div id="sub-service-block">{{ form_row(form_new_support.subService) }}</div>
+        {{ form_row(form_new_support.device) }}
+    </div>
     {{ form_row(form_new_support.status) }}
     {{ form_row(form_new_support.referent) }}
 </div>

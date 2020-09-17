@@ -56,6 +56,17 @@ export default class ValidationDate {
     }
 
     /**
+     * Retourne vrai ou faux si la date est supérieure à un an.
+     * @return {Boolean}
+     */
+    isNotAfterOneYear() {
+        if (this.intervalWithNow < -365) {
+            return this.invalid('Ne peut pas être supérieur à plus d\'un an.')
+        }
+        return true
+    }
+
+    /**
      * Retourne vrai ou faux si la date est dans l'interval.
      * @return {Boolean}
      */

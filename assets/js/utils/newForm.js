@@ -1,5 +1,6 @@
 import AjaxRequest from './ajaxRequest'
 import Loader from './loader'
+import SwitchServiceSupport from '../support/switchServiceSupport'
 
 /**
  * Requête Ajax pour afficher un nouveau formulaire.
@@ -45,5 +46,6 @@ export default class NewForm {
         this.containerElt.innerHTML = JSON.parse(data).data.form.content
         this.modalElt.modal('show')
         this.loader.off()
+        new SwitchServiceSupport()
     }
 }

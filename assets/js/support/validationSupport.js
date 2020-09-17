@@ -1,11 +1,14 @@
-import MessageFlash from '../utils/messageFlash'
 import DisplayFields from '../utils/displayFields'
 import ValidationForm from '../utils/validationForm'
 import SelectType from '../utils/selectType'
 import ValidationDate from '../utils/validationDate'
 import Loader from '../utils/loader'
+import AjaxRequest from '../utils/ajaxRequest'
+import MessageFlash from '../utils/messageFlash'
 
-// Validation des données de la fiche personne
+/**
+ * Validation des données du suivi social.
+ */
 export default class ValidationSupport {
 
     constructor() {
@@ -29,7 +32,7 @@ export default class ValidationSupport {
 
     init() {
         this.service = this.selectType.getOption(this.serviceSelectElt)
-        this.serviceSelectElt.addEventListener('change', this.changeService.bind(this))
+        this.serviceSelectElt.addEventListener('change', this.switchService.bind(this))
 
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
@@ -39,8 +42,15 @@ export default class ValidationSupport {
             this.startDateInputElt.addEventListener('focusout', this.checkStartDate.bind(this))
             this.endDateInputElt.addEventListener('focusout', this.checkEndDate.bind(this))
             this.endStatusInputElt.addEventListener('change', this.checkEndStatus.bind(this))
+            this.checkFormBeforeSubmit()
         }
+        this.displayFields()
+    }
 
+    /**
+     * Vérifie la validité du formualire avant la soumission.
+     */
+    checkFormBeforeSubmit() {
         this.btnSubmitElts.forEach(btnElt => {
 
             btnElt.addEventListener('click', e => {
@@ -57,7 +67,6 @@ export default class ValidationSupport {
                 }
             })
         })
-        this.displayFields()
     }
 
     /**
@@ -81,15 +90,31 @@ export default class ValidationSupport {
     /**
      * Si changement de service.
      */
-    changeService() {
-        if (window.confirm('Le changement de service va recharger la page actuelle. Confirmer ?')) {
-            this.loader.on()
-            document.getElementById('send').click()
-        } else {
-            this.selectType.setOption(this.serviceSelectElt, this.service)
+    switchService() {
+        const serviceId = this.selectType.getOption(this.serviceSelectElt)
+
+        if (serviceId) {
+            if (window.confirm('Le changement de service va recharger la page actuelle. Confirmer ?')) {
+                this.loader.on()
+                const ajaxRequest = new AjaxRequest()
+                const supportId = document.getElementById('support').getAttribute('data-support')
+                const url = `/support/${supportId}/switch_service/${serviceId}`
+                ajaxRequest.init('GET', url, this.response.bind(this), true)
+            } else {
+                this.selectType.setOption(this.serviceSelectElt, this.service)
+            }
         }
     }
 
+    /**
+     * Récupère les résultats de la requête.
+     * @param {*} data 
+     */
+    response(data) {
+        const dataJSON = JSON.parse(data)
+        new MessageFlash(dataJSON.alert, dataJSON.msg)
+        document.location.assign(window.location.href)
+    }
     /**
      * Vérifie la date de début.
      */

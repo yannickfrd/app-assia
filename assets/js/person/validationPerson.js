@@ -42,7 +42,9 @@ export default class ValidationPerson {
         this.lastnameInputElt.addEventListener('focusout', this.checkLastname.bind(this))
         this.firstnameInputElt.addEventListener('focusout', this.checkFirstname.bind(this))
         this.birthdateInputElt.addEventListener('focusout', this.checkBirthdate.bind(this))
-        this.emailInputElt.addEventListener('focusout', this.checkEmail.bind(this))
+        if (this.emailInputElt) {
+            this.emailInputElt.addEventListener('focusout', this.checkEmail.bind(this))
+        }
         if (this.typoInputElt) {
             this.nbPeopleInputElt.addEventListener('change', this.checkNbPeople.bind(this))
         }

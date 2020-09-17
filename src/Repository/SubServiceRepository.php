@@ -24,7 +24,7 @@ class SubServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne tous les utilisateurs du service.
+     * Donne tous les sous-services du service.
      *
      * @return mixed
      */
@@ -46,9 +46,36 @@ class SubServiceRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne tous les sous-services du service.
+     *
+     * @return mixed
+     */
+    public function getSubServicesFromService(Service $service)
+    {
+        return $this->getSubServicesFromServiceQueryList($service)
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
+     * Donne la liste des sous-services du service.
+     */
+    public function getSubServicesFromServiceQueryList(Service $service): QueryBuilder
+    {
+        return $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name, disabledAt}')
+            ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
+
+            ->where('ss.disabledAt IS NULL')
+            ->andWhere('ss.service = :service')
+            ->setParameter('service', $service)
+
+            ->orderBy('ss.name', 'ASC');
+    }
+
+    /**
      * Donne la liste des services de l'utilisateur.
      */
-    public function getSubServicesFromUserQueryList(CurrentUserService $currentUser): QueryBuilder
+    public function getSubServicesFromUserQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -58,6 +85,11 @@ class SubServiceRepository extends ServiceEntityRepository
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
+        }
+
+        if ($serviceId) {
+            $query = $query->andWhere('s.id = :service')
+                ->setParameter('service', $serviceId);
         }
 
         return $query->orderBy('ss.name', 'ASC');

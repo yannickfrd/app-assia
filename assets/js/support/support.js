@@ -1,4 +1,5 @@
 import ValidationSupport from './validationSupport'
+// import SwitchServiceSupport from './switchServiceSupport'
 import ValidationAvdl from './validationAvdl'
 import ValidationHotelSupport from './validationHotelSupport'
 import SelectRadioJS from '../utils/selectRadio'
@@ -11,12 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
         new SelectRadioJS('table-support-people')
         new RemoveTableRow('.js-tr-support_pers')
     }
+
+    new ValidationSupport()
+    // new SwitchServiceSupport()
+
     if (document.getElementById('avdl_support')) {
         new ValidationAvdl()
     } else if (document.getElementById('hotel_support')) {
         new ValidationHotelSupport()
-    } else {
-        new ValidationSupport
     }
     new SearchLocation('support_location')
     new CheckChange('support') // form name

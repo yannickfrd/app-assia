@@ -79,7 +79,6 @@ export default class SearchLocation {
      */
     responseAjax(response) {
         this.features = JSON.parse(response).features
-        // console.log(this.features)
         this.resultsSearchElt.innerHTML = ''
         if (this.features.length > 0) {
             this.addItem()

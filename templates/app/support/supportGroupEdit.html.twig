@@ -47,6 +47,24 @@
 
 	{% set serviceId = support.service.id %}
 
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-6">{{ form_row(form.service) }}</div>
+			{% if form.subService.vars.choices|length > 1 %}
+				<div class="col-md-6">{{ form_row(form.subService) }}</div>
+			{% endif %}
+		</div>
+		<div class="row" data-parent-field="service">
+			<div class="col-md-6">{{ form_row(form.device) }}</div>
+		</div>
+		<div class="row" data-parent-field="service">
+			<div class="col-md-6">{{ form_row(form.referent) }}</div>
+			<div class="col-md-6">{{ form_row(form.referent2) }}</div>
+		</div>
+	</div>
+	
+	<hr>
+
 	{% if serviceId == constant('SERVICE_AVDL_ID', support.service) %}
 		{% include "app/avdl/avdlEdit.html.twig" %}
 	{% elseif serviceId in constant('SERVICES_PASH_ID', support.service) %}
