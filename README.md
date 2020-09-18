@@ -20,6 +20,7 @@ https://demo.esperer95.app
 - Créé champs suppl. dans suivi hôtel (SSD orienteur, niveau d'intervention, ancrage départementale, préconisation).
 - Modif fiche suivi hôtel : ajout d'affichage conditionnelle des champs.
 - Recherche d'un ville via API geo.api.gouv.fr
+- Ajout possibilité de désactiver un dispositif. 
 
 ## Version 1.22.0 - 17/09/2020
 - Créé système de mise à jour automatique des champs imbriqués d'un formulaire via AJAX (Service > SubService > Device).

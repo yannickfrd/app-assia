@@ -109,7 +109,7 @@ class AccommodationType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($accommodation) {
-                    return $repo->getDevicesFromServiceQueryList($accommodation);
+                    return $repo->getDevicesFromServiceQueryList($accommodation->getService());
                 },
                 'placeholder' => 'placeholder.select',
                 ]);

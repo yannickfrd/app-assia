@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Form\Model\SupportsByUserSearch;
@@ -29,10 +28,9 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function findAllDevicesQuery(): Query
     {
-        $query = $this->createQueryBuilder('d')
-            ->select('d');
-
-        return $query->orderBy('d.name', 'ASC')
+        return $this->createQueryBuilder('d')
+            ->select('d')
+            ->orderBy('d.name', 'ASC')
             ->getQuery();
     }
 
@@ -44,7 +42,8 @@ class DeviceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
 
-            ->where('sd.service = :service')
+            ->where('d.disabledAt IS NULL')
+            ->andWhere('sd.service = :service')
             ->setParameter('service', $id)
 
             ->orderBy('d.name', 'ASC')
@@ -56,13 +55,14 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs du service.
      */
-    public function getDevicesFromServiceQueryList(Accommodation $accommodation)
+    public function getDevicesFromServiceQueryList(Service $service)
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
 
-            ->where('sd.service = :service')
-            ->setParameter('service', $accommodation->getService())
+            ->where('d.disabledAt IS NULL')
+            ->andWhere('sd.service = :service')
+            ->setParameter('service', $service)
 
             ->orderBy('d.name', 'ASC');
     }
@@ -70,19 +70,26 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesFromUserQueryList(CurrentUserService $currentUser, $serviceId = null)
+    public function getDevicesFromUserQueryList(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, accommodation}')
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, accommodation, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
+
+        if ($serviceId) {
+            $query = $query->andWhere('sd.service = :service')
+                ->setParameter('service', $serviceId);
+        }
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        if ($serviceId) {
-            $query = $query->andWhere('sd.service = :service')
-                ->setParameter('service', $serviceId);
+        $query = $query->andWhere('d.disabledAt IS NULL');
+
+        if ($device) {
+            $query = $query->orWhere('d.id = :device')
+                ->setParameter('device', $device);
         }
 
         return $query->orderBy('d.name', 'ASC');
@@ -93,6 +100,7 @@ class DeviceRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces, service}')
 
+            ->where('d.disabledAt IS NULL')
             ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
             ->andWhere('a.startDate < :end')->setParameter('end', $end);
 
@@ -115,7 +123,9 @@ class DeviceRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
-            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}');
+            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
+
+            ->where('d.disabledAt IS NULL');
 
         if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
             $query = $query->where('sd.service IN (:services)')

@@ -42,6 +42,11 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(services, "Ville", "s.city") }}
                         </th>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <th scope="col" class="align-middle th-w-60">
+                                {{ knp_pagination_sortable(services, "Désactivé", "s.disabledAt") }}
+                            </th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +67,9 @@
                         <td class="align-middle">{{ service.email }}</td>
                         <td class="align-middle">{{ service.address }}</td>
                         <td class="align-middle">{{ service.city }}</td>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <td class="align-middle">{{ service.disabledAt ? "Oui" }}</td>
+                        {% endif %}
                     </td>
                     {% endfor %}
                 </tbody>

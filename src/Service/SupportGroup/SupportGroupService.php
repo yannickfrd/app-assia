@@ -75,11 +75,12 @@ class SupportGroupService
     }
 
     /**
-     * Donne le suivi social complet.
+     * Donne le suivi social.
      */
     public function getSupportGroup(int $id): ?SupportGroup
     {
-        $cacheSupport = $this->cache->getItem('support_group.'.$id);
+        // return $this->repoSupportGroup->findSupportById($id);
+        $cacheSupport = $this->cache->getItem('support_group_'.$id);
 
         if (!$cacheSupport->isHit()) {
             $supportGroup = $this->repoSupportGroup->findSupportById($id);
@@ -97,7 +98,7 @@ class SupportGroupService
      */
     public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacheEvaluation = $this->cache->getItem('support_group.'.$supportGroup->getId().'.evaluation');
+        $cacheEvaluation = $this->cache->getItem('support_group_'.$supportGroup->getId().'_evaluation');
 
         if (!$cacheEvaluation->isHit()) {
             $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));

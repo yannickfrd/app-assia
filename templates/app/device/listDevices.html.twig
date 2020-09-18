@@ -34,7 +34,7 @@
                             {{ knp_pagination_sortable(devices, "Hébergement", "d.accommodation") }}
                         </th>
                         <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(devices, "Description", "d.comment") }}
+                            {{ knp_pagination_sortable(devices, "Description", "d.comment") }}  
                         </th>
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(devices, "Date de création", "d.createdAt") }}
@@ -48,27 +48,31 @@
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(devices, "Modifié par", "d.updatedBy") }}
                         </th>
+                        <th scope="col" class="align-middle th-w-60">
+                            {{ knp_pagination_sortable(devices, "Désactivé", "d.disabledAt") }}
+                        </th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for device in devices %}
-                    <tr>
-                        <th scope="row">
+                    <tr class="{% if device.disabled %}text-secondary{% endif %}">
+                        <td  class="align-middle" scope="row">
                             <a href="{{ path('admin_device_edit', {'id':device.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
                                 data-placement="bottom" title="Voir la fiche du dispositif">
                                 <span class="fas fa-eye"></span>
                             </a>
-                        </th>
-                        <td>{{ device.name }}</td>
-                        <td>{{ device.coefficient }}</td>
-                        <td>{{ device.accommodationToString }}</td>
-                        <td>{{ device.comment }}</td>
-                        <td>{{ device.createdAt|date("d/m/Y H:i") }}</td>
-                        <td>{{ device.createdBy ? device.createdBy.fullname }}</td>
-                        <td>{{ device.updatedAt|date("d/m/Y H:i") }}</td>
-                        <td>{{ device.updatedBy ? device.updatedBy.fullname }}</td>
+                        </td>
+                        <td class="align-middle">{% if device.disabled %}<del>{{ device.name }}</del>{% else %}{{ device.name }}{% endif %}</td>
+                        <td class="align-middle">{{ device.coefficient }}</td>
+                        <td class="align-middle">{{ device.accommodationToString }}</td>
+                        <td class="align-middle">{{ device.comment }}</td>
+                        <td class="align-middle">{{ device.createdAt|date("d/m/Y H:i") }}</td>
+                        <td class="align-middle">{{ device.createdBy ? device.createdBy.fullname }}</td>
+                        <td class="align-middle">{{ device.updatedAt|date("d/m/Y H:i") }}</td>
+                        <td class="align-middle">{{ device.updatedBy ? device.updatedBy.fullname }}</td>
+                        <td class="align-middle">{{ device.disabledAt ? "Oui" }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

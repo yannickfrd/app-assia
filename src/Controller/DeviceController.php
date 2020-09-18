@@ -117,4 +117,26 @@ class DeviceController extends AbstractController
             'users' => $users,
         ], 200);
     }
+
+    /**
+     * Désactive ou réactive le dispositif.
+     *
+     * @Route("/device/{id}/disable", name="admin_device_disable", methods="GET")
+     */
+    public function disableDevice(Device $device): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
+        if ($device->getDisabledAt()) {
+            $device->setDisabledAt(null);
+            $this->addFlash('success', 'Le dispositif est réactivé.');
+        } else {
+            $device->setDisabledAt(new \DateTime());
+            $this->addFlash('warning', 'Le dispositif est désactivé.');
+        }
+
+        $this->manager->flush();
+
+        return $this->redirectToRoute('admin_device_edit', ['id' => $device->getId()]);
+    }
 }
