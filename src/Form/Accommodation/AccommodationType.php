@@ -84,7 +84,10 @@ class AccommodationType extends AbstractType
         ])
         ->add('location', LocationType::class, [
             'data_class' => Accommodation::class,
-                'attr' => ['seachLabel' => 'Adresse du groupe de places'],
+                'attr' => [
+                    'geoLocation' => true,
+                    'seachLabel' => 'Adresse du groupe de places',
+                ],
         ])
         ->add('comment', null, [
             'attr' => [

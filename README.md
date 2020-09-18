@@ -18,6 +18,7 @@ https://demo.esperer95.app
 
 ## Version 1.23.0 - 18/09/2020
 - Créé tableau de suivi PASH.
+- Correction erreur données de localisation 'lat', 'lon' et 'id'.
 
 ## Version 1.22.1 - 18/09/2020
 - Créé champs suppl. dans suivi hôtel (SSD orienteur, niveau d'intervention, ancrage départementale, préconisation).

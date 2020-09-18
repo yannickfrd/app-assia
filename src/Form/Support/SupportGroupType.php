@@ -2,7 +2,6 @@
 
 namespace App\Form\Support;
 
-use App\Entity\Accommodation;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\SubService;
@@ -148,8 +147,9 @@ class SupportGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('location', LocationType::class, [
-                'data_class' => Accommodation::class,
+                'data_class' => SupportGroup::class,
                 'attr' => [
+                    'geoLocation' => true,
                     // 'seachLabel' => 'Adresse du suivi',
                     'searchHelp' => 'Adresse du logement, hébergement, domiciliation...',
                 ],

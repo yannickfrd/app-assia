@@ -38,6 +38,7 @@ class SupportGroupHotelType extends AbstractType
             ->add('location', LocationType::class, [
                 'data_class' => SupportGroupType::class,
                 'attr' => [
+                    'geoLocation' => true,
                     'commentLocationHelp' => 'hotelSupport.commentLocationHelp',
                 ],
             ])

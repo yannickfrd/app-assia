@@ -47,25 +47,29 @@ class LocationType extends AbstractType
                     'class' => 'js-zipcode',
                     'readonly' => true,
                 ],
-            ])
-            ->add('locationId', HiddenType::class, [
-                'attr' => [
-                    'class' => 'js-locationId',
-                    'readonly' => true,
-                ],
-            ])
-            ->add('lat', HiddenType::class, [
-                'attr' => [
-                    'class' => 'js-lat',
-                    'readonly' => true,
-                ],
-            ])
-            ->add('lon', HiddenType::class, [
-                'attr' => [
-                    'class' => 'js-lon',
-                    'readonly' => true,
-                ],
             ]);
+
+        if (isset($data['geoLocation']) && $data['geoLocation'] == true) {
+            $builder
+                ->add('locationId', HiddenType::class, [
+                    'attr' => [
+                        'class' => 'js-locationId',
+                        'readonly' => true,
+                    ],
+                ])
+                ->add('lat', HiddenType::class, [
+                    'attr' => [
+                        'class' => 'js-lat',
+                        'readonly' => true,
+                    ],
+                ])
+                ->add('lon', HiddenType::class, [
+                    'attr' => [
+                        'class' => 'js-lon',
+                        'readonly' => true,
+                    ],
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
