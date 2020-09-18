@@ -3,6 +3,7 @@
 namespace App\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -44,6 +45,24 @@ class LocationType extends AbstractType
                 'label' => 'location.zipcode_auto',
                 'attr' => [
                     'class' => 'js-zipcode',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('locationId', HiddenType::class, [
+                'attr' => [
+                    'class' => 'js-locationId',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('lat', HiddenType::class, [
+                'attr' => [
+                    'class' => 'js-lat',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('lon', HiddenType::class, [
+                'attr' => [
+                    'class' => 'js-lon',
                     'readonly' => true,
                 ],
             ]);

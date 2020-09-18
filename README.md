@@ -21,6 +21,7 @@ https://demo.esperer95.app
 - Modif fiche suivi hôtel : ajout d'affichage conditionnelle des champs.
 - Recherche d'un ville via API geo.api.gouv.fr
 - Ajout possibilité de désactiver un dispositif. 
+- Récupération et enregistrement des données de localisation 'lat', 'lon' et 'id' des adresses des suivis.
 
 ## Version 1.22.0 - 17/09/2020
 - Créé système de mise à jour automatique des champs imbriqués d'un formulaire via AJAX (Service > SubService > Device).
