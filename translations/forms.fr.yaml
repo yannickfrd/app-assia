@@ -76,10 +76,10 @@ Title: Titre
 Username: Login
 Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Écrire une note
-Write a comment about the group: Écrire un commentaire sur le groupe
-Write a comment about the person: Écrire un commentaire sur la personne
-comment.placeholder: Écrire un commentaire sur le suivi social
-Write a comment about the service: Écrire un commentaire sur le service
+Write a comment about the group: Écrire un commentaire concernant le groupe
+Write a comment about the person: Écrire un commentaire concernant la personne
+comment.placeholder: Écrire un commentaire concernant le suivi social
+Write a comment about the service: Écrire un commentaire concernant le service
 Year: Année
 Zipcode: Code postal
 End reason: Motif de fin
@@ -128,7 +128,7 @@ Social worker name 2: Nom du travailleur social suppléant
 referent:
   socialWorker.placeholder: Nom du travailleur social
   socialWorker2.placeholder: Travailleur social suppléant
-  comment.plaholder: Écrire un commentaire sur le service social référent...
+  comment.plaholder: Écrire un commentaire concernant le service social référent...
 
 ### Service
 Chief: Responsable
@@ -187,10 +187,10 @@ Diag type: Type de diagnostic
 Diag start date: Date de début diagnostic
 Diag end date: Date de fin diagnostic
 Recommendation support: Préconisation d'accompagnement
-Diag comment: Commentaire sur le diagnostic
+Diag comment: Commentaire relatif au diagnostic
 Support type: Type d'accompagnement
 Ready to housing: Prêt au logement
-Support comment: Commentaire sur l'accompagnement
+Support comment: Commentaire relatif à l'accompagnement
 Support start date: Date de début d'accompagnement
 Support end date: Date de fin d'accompagnement
 End support reason: Motif de fin d'accompagnement
@@ -198,7 +198,7 @@ Access housing modality: Modalité d'accès au logement
 Propo housing date: Date de la proposition
 Propo result: Résultat de la proposition
 Access housing date: Date d'accès au logement
-End supportcomment: Commentaire sur la fin d'accompagnement
+End support comment: Commentaire sur la fin d'accompagnement
 avdl:
   orientationDate: Date de mandatement
   diag: Diagnostic
@@ -210,15 +210,18 @@ avdl:
   accessHousingModality: Modalité d'accès au logement
   propoHousingDate: Date de la proposition
   propoResult: Résultat de la proposition
-  diagComment.placeholder: Écrire un commentaire sur le diagnostic
-  supportComment.placeholder: Écrire un commentaire sur l'accompagnement
-  endSupportComment.placeholder: Écrire un commentaire sur la fin d'accompagnement ou la proposition logement
+  diagComment.placeholder: Écrire un commentaire concernant le diagnostic
+  supportComment.placeholder: Écrire un commentaire concernant l'accompagnement
+  endSupportComment.placeholder: Écrire un commentaire concernant la fin d'accompagnement ou la proposition logement
 
 ### Suivi hôtel
+Department anchor : Ancrage départementale (95)
 Agreement date: Date de signature de la convention
 Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
 Gip id: Identifiant GIP
+Level support: Niveau d'intervention
 Origin dept: Département d'origine
+Recommendation : Préconisation
 hotelSupport:
   locationHotel: Adresse de l'hôtel
   commentLocationHelp: Nom de l'hôtel, numéro de chambre
@@ -227,3 +230,8 @@ hotelSupport:
   orientationDate: Date d'orientation
   subService.help: Secteur géographique 
   support: Suivi
+  levelSupport: Niveau d'intervention
+  ssd:
+    search: Recherche du SSD orienteur
+    search.placeholder: Saisir une ville
+    city: SSD orienteur (auto.)

@@ -2,14 +2,15 @@
 
 namespace App\Form\HotelSupport;
 
+use App\Entity\EvalHousingGroup;
 use App\Entity\HotelSupport;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class HotelSupportType extends AbstractType
 {
@@ -26,6 +27,23 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('gipId')
+            ->add('searchSsd', null, [
+                'label' => 'hotelSupport.ssd.search',
+                'attr' => [
+                    'class' => 'js-search',
+                    'placeholder' => 'hotelSupport.ssd.search.placeholder',
+                    'autocomplete' => 'off',
+                ],
+                'help' => null,
+                'mapped' => false,
+            ])
+            ->add('ssd', null, [
+                'label' => 'hotelSupport.ssd.city',
+                'attr' => [
+                    'class' => 'js-city',
+                    'readonly' => true,
+                ],
+            ])
             ->add('diagStartDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -50,8 +68,23 @@ class HotelSupportType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
+            ->add('levelSupport', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::LEVEL_SUPPORT),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('agreementDate', DateType::class, [
                 'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('departmentAnchor', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+                ])
+            ->add('recommendation', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalHousingGroup::SIAO_RECOMMENDATION),
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('supportEndDate', DateType::class, [

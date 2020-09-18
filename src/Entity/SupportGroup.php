@@ -90,6 +90,7 @@ class SupportGroup
     public const COEFFICIENT_DEFAULT = 1;
     public const COEFFICIENT_DOUBLE = 2;
     public const COEFFICIENT_HALF = 0.5;
+    public const COEFFICIENT_THIRD = 0.3;
     public const COEFFICIENT_QUARTER = 0.25;
 
     /**

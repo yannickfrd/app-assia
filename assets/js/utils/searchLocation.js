@@ -6,7 +6,7 @@ import Loader from './loader'
  */
 export default class SearchLocation {
 
-    constructor(containerId, lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
+    constructor(containerId, locationType = 'address', codeDepartement = '95', lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
         this.containerElt = document.getElementById(containerId)
         if (this.containerElt) {
             this.ajaxRequest = new AjaxRequest()
@@ -18,12 +18,14 @@ export default class SearchLocation {
             this.latElt = this.containerElt.querySelector('.js-lat')
             this.lonElt = this.containerElt.querySelector('.js-lon')
             this.resultsSearchElt = this.createResultsListElt()
+            this.locationType = locationType
+            this.codeDepartement = codeDepartement
             this.lengthSearch = lengthSearch // Nombre de caractères minimum pour lancer la recherche
             this.time = time // Durée en millisecondes
             this.limit = limit // Nombre d'éléments retournés
             this.lat = lat // Latitude
             this.lon = lon // Longitude
-            this.features = null
+            this.results = null
             this.countdownID = null
             this.loader = new Loader()
             this.init()
@@ -39,10 +41,10 @@ export default class SearchLocation {
      * @return {HTMLDivElement}
      */
     createResultsListElt() {
-        let resultsListElt = document.createElement('div')
+        const resultsListElt = document.createElement('div')
         resultsListElt.id = 'results_list_location'
         resultsListElt.className = 'w-100 list-group d-block fade-in position-absolute z-index-1000'
-        if (this.addressElt) {
+        if (this.cityElt) {
             this.searchElt.parentNode.appendChild(resultsListElt)
         } else {
             this.searchElt.parentNode.parentNode.appendChild(resultsListElt)
@@ -67,8 +69,14 @@ export default class SearchLocation {
         if (valueSearch.length >= this.lengthSearch) {
             this.loader.on()
             let valueSearch = this.searchElt.value.replace(' ', '+')
-            let geo = `&lat=${this.lat}&lon=${this.lon}` // Donne une priorité géographique
+            const geo = `&lat=${this.lat}&lon=${this.lon}` // Donne une priorité géographique
+
             let url = 'https://api-adresse.data.gouv.fr/search/?q=' + valueSearch + geo + '&limit=' + this.limit
+
+            if (this.locationType === 'city') {
+                url = 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
+            }
+
             this.ajaxRequest.init('GET', url, this.responseAjax.bind(this), true)
         }
     }
@@ -78,9 +86,16 @@ export default class SearchLocation {
      * @param {JSON} response 
      */
     responseAjax(response) {
-        this.features = JSON.parse(response).features
+
+        if (this.locationType === 'address') {
+            this.results = JSON.parse(response).features
+        }
+        if (this.locationType === 'city') {
+            this.results = JSON.parse(response)
+        }
+
         this.resultsSearchElt.innerHTML = ''
-        if (this.features.length > 0) {
+        if (this.results.length > 0) {
             this.addItem()
         } else {
             this.displayNoResult()
@@ -101,11 +116,11 @@ export default class SearchLocation {
      */
     addItem() {
         let i = 0
-        this.features.forEach(feature => {
-            let itemElt = this.createItem(feature, i)
+        this.results.forEach(result => {
+            let itemElt = this.createItem(result, i)
             this.resultsSearchElt.appendChild(itemElt)
             itemElt.addEventListener('click', () => {
-                this.updateLocation(itemElt.getAttribute('data-feature'))
+                this.updateLocation(itemElt.getAttribute('data-result'))
             })
             i++
         })
@@ -114,27 +129,31 @@ export default class SearchLocation {
 
     /**
      * Créé un élément de résultat.
-     * @param {Array} feature 
+     * @param {Array} result 
      * @param {Number} i 
      * @return {HTMLElement}
      */
-    createItem(feature, i) {
-        let itemElt = document.createElement('a')
-        itemElt.innerHTML = `<span class='text-secondary small'>${this.getLabel(feature)}</span>`
+    createItem(result, i) {
+        const itemElt = document.createElement('a')
+        itemElt.innerHTML = `<span class='text-secondary small'>${this.getLabel(result)}</span>`
         itemElt.className = 'list-group-item list-group-item-action pl-3 pr-1 py-1 cursor-pointer'
-        itemElt.setAttribute('data-feature', i)
+        itemElt.setAttribute('data-result', i)
 
         return itemElt
     }
 
     /**
      * Donne le label de la recherche.
-     * @param {Array} feature 
+     * @param {Array} result 
      */
-    getLabel(feature) {
-        let label = feature.properties.label
-        if (feature.properties.type === 'municipality') {
-            label = label + ' (' + feature.properties.context + ')'
+    getLabel(result) {
+        if (this.locationType === 'city') {
+            return result.nom + ' (' + result.codesPostaux[0] + ')'
+        }
+
+        let label = result.properties.label
+        if (result.properties.type === 'municipality') {
+            label = label + ' (' + result.properties.context + ')'
         }
         return label
     }
@@ -143,24 +162,31 @@ export default class SearchLocation {
      * Modifie la largeur de l'élément avec la liste des résultats.
      */
     setWidthResultsSearchElt() {
-        let styleSeachElt = window.getComputedStyle(this.searchElt)
+        const styleSeachElt = window.getComputedStyle(this.searchElt)
         this.resultsSearchElt.style.maxWidth = styleSeachElt.width
         this.resultsSearchElt.style.top = styleSeachElt.height
     }
 
     // Met à jour les champs du formulaire.
     updateLocation(i) {
-        let feature = this.features[i]
-        this.searchElt.value = feature.properties.label
-        if (this.addressElt) {
-            this.addressElt.value = feature.properties.name
-            this.cityElt.value = feature.properties.city
-            this.zipcodeElt.value = feature.properties.postcode
+        const result = this.results[i]
+
+        if (this.locationType === 'city') {
+            this.cityElt.value = result.nom
         }
-        if (this.locationIdElt) {
-            this.locationIdElt.value = feature.properties.id
-            this.lonElt.value = feature.geometry.coordinates[0]
-            this.latElt.value = feature.geometry.coordinates[1]
+
+        if (this.locationType === 'address') {
+            this.searchElt.value = result.properties.label
+            if (this.addressElt) {
+                this.cityElt.value = result.properties.city
+                this.addressElt.value = result.properties.name
+                this.zipcodeElt.value = result.properties.postcode
+            }
+            if (this.locationIdElt) {
+                this.locationIdElt.value = result.properties.id
+                this.lonElt.value = result.geometry.coordinates[0]
+                this.latElt.value = result.geometry.coordinates[1]
+            }
         }
     }
 
@@ -168,7 +194,7 @@ export default class SearchLocation {
      * Affiche 'Aucun résultat.'
      */
     displayNoResult() {
-        let spanElt = document.createElement('p')
+        const spanElt = document.createElement('p')
         spanElt.textContent = 'Aucun résultat.'
         spanElt.className = 'list-group-item pl-3 py-2 text-secondary small'
         this.resultsSearchElt.appendChild(spanElt)

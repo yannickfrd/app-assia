@@ -69,11 +69,10 @@ export default class ValidationForm {
     checkRequiredFields() {
         this.containerElt.querySelectorAll('input[required], select[required]').forEach(fieldElt => {
             if (this.isFilledField(fieldElt)) {
-                this.validField(fieldElt)
-            } else {
-                this.invalidField(fieldElt, 'Saisie obligatoire.')
-                fieldElt.addEventListener('change', () => this.validField(fieldElt))
+                return this.validField(fieldElt)
             }
+            this.invalidField(fieldElt, 'Saisie obligatoire.')
+            fieldElt.addEventListener('change', () => this.validField(fieldElt))
         })
     }
 
@@ -119,7 +118,7 @@ export default class ValidationForm {
      */
     isFilledField(fieldElt) {
         let value = this.selectType.getOption(fieldElt)
-        if ((fieldElt.nodeName === 'INPUT' && fieldElt.value != '') ||
+        if (((fieldElt.type === 'text' || fieldElt.type === 'date') && fieldElt.value != '') ||
             (fieldElt.type === 'checkbox' && fieldElt.checked === true) ||
             (fieldElt.type === 'select-one' && value != '' && !isNaN(value))) {
             return true

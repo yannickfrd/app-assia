@@ -22,5 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         new ValidationHotelSupport()
     }
     new SearchLocation('support_location')
+    new SearchLocation('ssd_location', 'city')
     new CheckChange('support') // form name
 })

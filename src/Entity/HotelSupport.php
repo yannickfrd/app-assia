@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\HotelSupportRepository;
+use App\Form\Utils\Choices;
+use App\Entity\EvalHousingGroup;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\HotelSupportRepository;
 
 /**
  * @ORM\Entity(repositoryClass=HotelSupportRepository::class)
@@ -29,10 +31,18 @@ class HotelSupport
         99 => 'Non renseigné',
     ];
 
+    public const LEVEL_SUPPORT = [
+        1 => 'Evaluation (1)',
+        2 => 'Accompagnement global (1)',
+        3 => 'Accompagnement en complémentarité (0,5)',
+        4 => 'Veille sociale (0,3)',
+    ];
+
     public const END_SUPPORT_REASON = [
-        1 => 'Autonome',
-        2 => 'Non adhésion',
-        3 => 'Transfert (autre département)',
+        1 => 'Accès à une solution d\'hébgt/logt',
+        2 => 'Non respect de la convention AMH',
+        3 => 'Fin de prise en charge ASE',
+        4 => 'Départ vers un autre département',
         97 => 'Autre',
         99 => 'Non renseigné',
     ];
@@ -60,6 +70,11 @@ class HotelSupport
     private $gipId;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ssd;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $diagStartDate;
@@ -85,9 +100,24 @@ class HotelSupport
     private $supportStartDate;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $levelSupport;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $recommendation;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $agreementDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $departmentAnchor;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -161,6 +191,18 @@ class HotelSupport
         return $this;
     }
 
+    public function getSsd(): ?string
+    {
+        return $this->ssd;
+    }
+
+    public function setSsd(?string $ssd): self
+    {
+        $this->ssd = $ssd;
+
+        return $this;
+    }
+
     public function getDiagStartDate(): ?\DateTimeInterface
     {
         return $this->diagStartDate;
@@ -226,6 +268,40 @@ class HotelSupport
         return $this;
     }
 
+    public function getLevelSupport(): ?int
+    {
+        return $this->levelSupport;
+    }
+
+    public function getLevelSupportToString(): ?string
+    {
+        return $this->getLevelSupport() ? self::LEVEL_SUPPORT[$this->getLevelSupport()] : null;
+    }
+
+    public function setLevelSupport(?int $levelSupport): self
+    {
+        $this->levelSupport = $levelSupport;
+
+        return $this;
+    }
+
+    public function getRecommendation(): ?int
+    {
+        return $this->recommendation;
+    }
+
+    public function getRecommendationToString(): ?string
+    {
+        return $this->getRecommendation() ? EvalHousingGroup::SIAO_RECOMMENDATION[$this->getRecommendation()] : null;
+    }
+
+    public function setRecommendation(?int $recommendation): self
+    {
+        $this->recommendation = $recommendation;
+
+        return $this;
+    }
+
     public function getAgreementDate(): ?\DateTimeInterface
     {
         return $this->agreementDate;
@@ -234,6 +310,23 @@ class HotelSupport
     public function setAgreementDate(?\DateTimeInterface $agreementDate): self
     {
         $this->agreementDate = $agreementDate;
+
+        return $this;
+    }
+
+    public function getDepartmentAnchor(): ?int
+    {
+        return $this->departmentAnchor;
+    }
+
+    public function getDepartmentAnchorToString(): ?string
+    {
+        return $this->getDepartmentAnchor() ? Choices::YES_NO[$this->getDepartmentAnchor()] : null;
+    }
+
+    public function setDepartmentAnchor(?int $departmentAnchor): self
+    {
+        $this->departmentAnchor = $departmentAnchor;
 
         return $this;
     }

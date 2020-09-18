@@ -25,6 +25,10 @@ export default class ValidationHotelSupport {
         this.supportStartDateElt = document.getElementById(this.prefix + 'supportStartDate')
         this.supportEndDateElt = document.getElementById(this.prefix + 'supportEndDate')
 
+        this.HotelASE = 14
+        this.HotelDiag = 15
+        this.HotelSupport = 16
+
         this.init()
     }
 
@@ -39,7 +43,7 @@ export default class ValidationHotelSupport {
             this.validationForm.checkIntervalBeetweenDates(
                 this.orientationDateElt,
                 this.diagStartDateElt,
-                'La date ne peut pas être antérieure à la date de mandatement.')
+                'La date ne peut pas être antérieure à la date de la demande.')
         })
 
         this.diagEndDateElt.addEventListener('focusout', () => {
@@ -78,6 +82,7 @@ export default class ValidationHotelSupport {
      * Masque ou affiche les champs conditionnels
      */
     displayFields() {
+        new DisplayFields('support_', 'device')
         new DisplayFields('support_originRequest_', 'orientationDate')
         new DisplayFields('support_originRequest_', 'organization')
         new DisplayFields(this.prefix, 'diagStartDate')

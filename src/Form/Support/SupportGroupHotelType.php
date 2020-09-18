@@ -35,8 +35,6 @@ class SupportGroupHotelType extends AbstractType
             ->remove('status')
             ->remove('startDate')
             ->remove('endDate')
-            ->remove('endStatusComment')
-            ->remove('theoreticalEndDate')
             ->add('location', LocationType::class, [
                 'data_class' => SupportGroupType::class,
                 'attr' => [

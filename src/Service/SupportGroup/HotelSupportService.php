@@ -2,6 +2,7 @@
 
 namespace App\Service\SupportGroup;
 
+use App\Entity\Device;
 use App\Entity\HotelSupport;
 use App\Entity\SupportGroup;
 
@@ -18,6 +19,10 @@ class HotelSupportService
             ->setStatus($this->getHotelSupportStatus($hotelSupport))
             ->setStartDate($this->getHotelSupportStartDate($hotelSupport))
             ->setEndDate($this->getHotelSupportEndDate($hotelSupport));
+
+        if ($supportGroup->getDevice()->getId() == Device::HOTEL_SUPPORT) {
+            $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
+        }
 
         $this->updateSupportPeople($supportGroup);
 
@@ -76,5 +81,24 @@ class HotelSupportService
         }
 
         return null;
+    }
+
+    /**
+     * Donne le coefficient du suivi hôtel.
+     *
+     * @return float
+     */
+    protected function getCoeffSupport(HotelSupport $hotelSupport): float
+    {
+        // Si accompagnement en complémentarité : coeff. 0,5
+        if ($hotelSupport->getLevelSupport() == 3) {
+            return SupportGroup::COEFFICIENT_HALF;
+        }
+        // Si veille sociale : coeff. 0,3
+        if ($hotelSupport->getLevelSupport() == 4) {
+            return SupportGroup::COEFFICIENT_THIRD;
+        }
+        // Sinon par défaut : coeff. 1
+        return SupportGroup::COEFFICIENT_DEFAULT;
     }
 }

@@ -52,6 +52,7 @@
     <div class="row my-2">
         {{ utils.view(hotelSupport.supportStartDate ? hotelSupport.supportStartDate|date("d/m/Y") 
             ~ (hotelSupport.supportEndDate ? " - " ~ hotelSupport.supportEndDate|date("d/m/Y") : "") : "", "hotelSupport.support") }}
+        {{ utils.view(hotelSupport.levelSupportToString, "hotelSupport.levelSupport") }}
         {{ utils.view(hotelSupport.endSupportReasonToString, "hotelSupport.endSupportReason") }}
         {{ utils.view(hotelSupport.supportComment, "Comment") }}
     </div>
