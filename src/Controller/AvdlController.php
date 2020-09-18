@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Service;
 use App\Service\Pagination;
+use App\Entity\SupportGroup;
 use App\Form\Model\AvdlSupportSearch;
 use App\Export\AvdlSupportPersonExport;
 use App\Form\Avdl\AvdlSupportSearchType;
@@ -29,7 +31,7 @@ class AvdlController extends AbstractController
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoSupportPerson = $repoSupportPerson;
-        $this->serviceId = 5;
+        $this->serviceId = Service::SERVICE_AVDL_ID;
     }
 
     /**
@@ -39,7 +41,7 @@ class AvdlController extends AbstractController
      */
     public function viewListAvdlSupports(Request $request, AvdlSupportSearch $search = null, Pagination $pagination): Response
     {
-        $search = (new AvdlSupportSearch())->setStatus([2]);
+        $search = (new AvdlSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 
         $form = ($this->createForm(AvdlSupportSearchType::class, $search))
             ->handleRequest($request);
@@ -51,7 +53,7 @@ class AvdlController extends AbstractController
         return $this->render('app/avdl/listAvdlSupports.html.twig', [
             'supportGroupSearch' => $search,
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->repoSupportGroup->findAllSupportsFromServiceQuery($search, $this->serviceId), $request),
+            'supports' => $pagination->paginate($this->repoSupportGroup->findAllAvdlSupportsQuery($search, $this->serviceId), $request),
         ]);
     }
 

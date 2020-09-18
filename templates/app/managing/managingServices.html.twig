@@ -14,6 +14,11 @@
                     <a class="text-dark" href="{{ path("avdl_supports") }}">Tableau de suivi AVDL</a>
                 </li>
             {% endif %}   
+            {% if is_granted("ROLE_SUPER_ADMIN") or 10 in userServices|keys %}
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("hotel_supports") }}">Tableau de suivi PASH</a>
+                </li>
+            {% endif %}   
         </ul>
         <hr class="my-3">
     </div>

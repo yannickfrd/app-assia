@@ -16,6 +16,14 @@ class HotelSupportSearch
         3 => 'Période de suivi',
     ];
 
+    public const DIAG = 1;
+    public const SUPPORT = 2;
+
+    public const DIAG_OR_SUPPORT = [
+        1 => 'Diagnostic',
+        2 => 'Accompagnement',
+    ];
+
     /**
      * @var string|null
      */
@@ -35,6 +43,11 @@ class HotelSupportSearch
      * @var int|null
      */
     private $supportDates;
+
+    /**
+     * @var int|null
+     */
+    private $diagOrSupport;
 
     /**
      * @var bool
@@ -85,6 +98,18 @@ class HotelSupportSearch
     public function setSupportDates(int $supportDates): self
     {
         $this->supportDates = $supportDates;
+
+        return $this;
+    }
+
+    public function getDiagOrSupport(): ?int
+    {
+        return $this->diagOrSupport;
+    }
+
+    public function setDiagOrSupport(int $diagOrSupport): self
+    {
+        $this->diagOrSupport = $diagOrSupport;
 
         return $this;
     }

@@ -6,6 +6,7 @@ use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\AvdlSupportSearch;
+use App\Form\Model\HotelSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Model\SupportsByUserSearch;
 use App\Form\Model\SupportsInMonthSearch;
@@ -122,9 +123,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne tous les suivis sociaux d'un service.
+     * Donne tous les suivis sociaux AVDL.
      */
-    public function findAllSupportsFromServiceQuery(AvdlSupportSearch $search, int $serviceId): Query
+    public function findAllAvdlSupportsQuery(AvdlSupportSearch $search, int $serviceId): Query
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
@@ -153,6 +154,44 @@ class SupportGroupRepository extends ServiceEntityRepository
             $query->andWhere('avdl.supportType IN (:supportType)')
             ->setParameter('supportType', $search->getSupportType());
         }
+
+        return $query->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Donne tous les suivis sociaux PASH.
+     */
+    public function findAllHotelSupportsQuery(HotelSupportSearch $search, int $serviceId): Query
+    {
+        $query = $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate}')
+            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+
+            ->where('sg.service = :service')
+            ->setParameter('service', $serviceId);
+
+        $query = $this->filter($query, $search);
+
+        if ($search->getDiagOrSupport() == HotelSupportSearch::DIAG) {
+            $query->andWhere('hs.diagStartDate IS NOT NULL');
+        }
+        if ($search->getDiagOrSupport() == HotelSupportSearch::SUPPORT) {
+            $query->andWhere('hs.supportStartDate IS NOT NULL');
+        }
+        // if ($search->getSupportType()) {
+        //     $query->andWhere('hs.supportType IN (:supportType)')
+        //     ->setParameter('supportType', $search->getSupportType());
+        // }
 
         return $query->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()

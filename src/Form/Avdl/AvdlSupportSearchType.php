@@ -3,11 +3,12 @@
 namespace App\Form\Avdl;
 
 use App\Entity\Avdl;
-use App\Entity\SupportGroup;
+use App\Entity\Service;
 use App\Form\Utils\Choices;
-use App\Form\Model\AvdlSupportSearch;
+use App\Entity\SupportGroup;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
+use App\Form\Model\AvdlSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,7 +51,7 @@ class AvdlSupportSearchType extends AbstractType
                     'data_class' => AvdlSupportSearch::class,
                     'attr' => [
                         'options' => ['devices', 'referents'],
-                        'serviceId' => 5,
+                        'serviceId' => Service::SERVICE_AVDL_ID,
                     ],
             ])
             ->add('diagOrSupport', ChoiceType::class, [

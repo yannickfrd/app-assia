@@ -2,6 +2,7 @@
 
 namespace App\Form\HotelSupport;
 
+use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Form\Model\HotelSupportSearch;
 use App\Form\Model\SupportGroupSearch;
@@ -49,7 +50,7 @@ class HotelSupportSearchType extends AbstractType
                     'data_class' => HotelSupportSearch::class,
                     'attr' => [
                         'options' => ['devices', 'referents'],
-                        'serviceId' => 5,
+                        'serviceId' => Service::SERVICE_PASH_ID,
                     ],
             ])
             ->add('export');

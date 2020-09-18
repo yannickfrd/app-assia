@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.22.1 - 18/09/2020
+1.23.0 - 18/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,7 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 1.22.1 - 17809/2020
+## Version 1.23.0 - 18/09/2020
+- Créé tableau de suivi PASH.
+
+## Version 1.22.1 - 18/09/2020
 - Créé champs suppl. dans suivi hôtel (SSD orienteur, niveau d'intervention, ancrage départementale, préconisation).
 - Modif fiche suivi hôtel : ajout d'affichage conditionnelle des champs.
 - Recherche d'un ville via API geo.api.gouv.fr
