@@ -82,13 +82,13 @@ class SupportGroupService
         // return $this->repoSupportGroup->findSupportById($id);
         $cacheSupport = $this->cache->getItem('support_group_'.$id);
 
-        if (!$cacheSupport->isHit()) {
-            $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        // if (!$cacheSupport->isHit()) {
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
 
-            $cacheSupport->set($supportGroup);
-            $cacheSupport->expiresAfter(30 * 24 * 60 * 60);
-            $this->cache->save($cacheSupport);
-        }
+        $cacheSupport->set($supportGroup);
+        $cacheSupport->expiresAfter(30 * 24 * 60 * 60);
+        $this->cache->save($cacheSupport);
+        // }
 
         return $cacheSupport->get();
     }

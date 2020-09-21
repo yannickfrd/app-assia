@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Service;
-use Doctrine\ORM\Query;
-use App\Form\Utils\Choices;
-use App\Entity\SupportGroup;
 use App\Entity\EvaluationGroup;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Service;
+use App\Entity\SupportGroup;
+use App\Form\Utils\Choices;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method EvaluationGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -61,7 +61,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
         return $query->andWhere('eg.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup->getId())
 
-            ->orderBy('p.birthdate', 'ASC')
+            ->addOrderBy('sp.head', 'DESC')
+            ->addOrderBy('p.birthdate', 'ASC')
             // ->setMaxResults(1)
 
             ->getQuery()

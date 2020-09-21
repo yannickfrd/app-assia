@@ -79,7 +79,8 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $query->andWhere('sg.id = :id')
             ->setParameter('id', $id)
 
-            ->orderBy('p.birthdate', 'ASC')
+            ->addOrderBy('sp.head', 'DESC')
+            ->addOrderBy('p.birthdate', 'ASC')
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
@@ -96,7 +97,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')
             ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
 
-            ->orderBy('p.birthdate', 'ASC');
+            ->addOrderBy('sp.head', 'DESC')
+            ->addOrderBy('p.birthdate', 'ASC');
     }
 
     /**
