@@ -195,13 +195,17 @@ class SupportController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
+        $nbRdvs = $repoRdv->count(['supportGroup' => $supportGroup->getId()]);
+
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'nbRdvs' => $repoRdv->count(['supportGroup' => $supportGroup->getId()]),
-            'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
+            'nbRdvs' => $nbRdvs,
+            'nbNotes' => $repoRdv->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
             'nbContributions' => $supportGroup->getAccommodationGroups() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
             'evaluation' => $supportGroupService->getEvaluation($supportGroup),
+            'nextRdv' => $nbRdvs ? $repoRdv->findNextRdvFromSupport($supportGroup->getId()) : null,
+            'lastRdv' => $nbRdvs ? $repoRdv->findLastRdvFromSupport($supportGroup->getId()) : null,
         ]);
     }
 

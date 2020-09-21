@@ -174,6 +174,8 @@ rdv:
     location: Ajouter un lieu
     content: Ajouter une note
     title: Ajouter un titre
+  last: Dernier rendez-vous
+  next: Prochain rendez-vous
 
 ### Adresse
 location:
@@ -231,6 +233,8 @@ hotelSupport:
   subService.help: Secteur géographique 
   support: Suivi
   levelSupport: Niveau d'intervention
+  search:
+    departmentAnchor: -- Ancrage 95 --
   ssd:
     search: Recherche du SSD orienteur
     search.placeholder: Saisir une ville

@@ -2,20 +2,20 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Service;
-use App\Service\Pagination;
-use App\Form\Model\HotelSupportSearch;
+use App\Entity\SupportGroup;
 use App\Export\HotelSupportPersonExport;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\HotelSupport\HotelSupportSearchType;
+use App\Form\Model\HotelSupportSearch;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\SupportGroup;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\HotelSupport\HotelSupportSearchType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HotelSupportController extends AbstractController
 {
@@ -62,14 +62,14 @@ class HotelSupportController extends AbstractController
      */
     protected function exportData(HotelSupportSearch $search)
     {
-        // $supports = $this->repoSupportPerson->findSupportsFromServiceToExport($search, $this->serviceId);
+        $supports = $this->repoSupportPerson->findSupportsFromServiceToExport($search, $this->serviceId);
 
-        // if (!$supports) {
-        //     $this->addFlash('warning', 'Aucun résultat à exporter.');
+        if (!$supports) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-        //     return $this->redirectToRoute('hotel_supports');
-        // }
+            return $this->redirectToRoute('hotel_supports');
+        }
 
-        // return (new HotelSupportPersonExport())->exportData($supports);
+        return (new HotelSupportPersonExport())->exportData($supports);
     }
 }

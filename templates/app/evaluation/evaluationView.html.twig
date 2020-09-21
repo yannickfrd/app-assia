@@ -5,7 +5,7 @@
     {% set nbSupportPeople = support.supportPeople|length %}
 
     <div class="row mb-2">
-        {{ utils.view(support.groupPeople.familyTypologyToString~ (nbSupportPeople > 1 ? 
+        {{ utils.view(support.groupPeople.familyTypologyToString ~ (nbSupportPeople > 1 ? 
             ", " ~ nbSupportPeople ~ " personnes"), "Family typology") }}
     </div>
 

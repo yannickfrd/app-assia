@@ -3,9 +3,8 @@
 namespace App\Entity;
 
 use App\Form\Utils\Choices;
-use App\Entity\EvalHousingGroup;
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\HotelSupportRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=HotelSupportRepository::class)
@@ -33,8 +32,8 @@ class HotelSupport
 
     public const LEVEL_SUPPORT = [
         1 => 'Evaluation (1)',
-        2 => 'Accompagnement global (1)',
-        3 => 'Accompagnement en complémentarité (0,5)',
+        2 => 'Global (1)',
+        3 => 'Complémentarité (0,5)',
         4 => 'Veille sociale (0,3)',
     ];
 

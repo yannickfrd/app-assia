@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\SupportPerson;
-use App\Form\Model\AvdlSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -46,7 +45,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les suivis d'un service pour l'export.
      */
-    public function findSupportsFromServiceToExport(?AvdlSupportSearch $search = null, int $serviceId)
+    public function findSupportsFromServiceToExport($search = null, int $serviceId)
     {
         $query = $this->getSupportsFromServiceQuery()
 
@@ -89,6 +88,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
             ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')

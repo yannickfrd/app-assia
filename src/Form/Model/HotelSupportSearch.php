@@ -50,6 +50,21 @@ class HotelSupportSearch
     private $diagOrSupport;
 
     /**
+     * @var array
+     */
+    private $levelSupport;
+
+    /**
+     * @var int|null
+     */
+    private $departmentAnchor;
+
+    /**
+     * @var array
+     */
+    private $endSupportReasons;
+
+    /**
      * @var bool
      */
     private $export;
@@ -59,7 +74,7 @@ class HotelSupportSearch
         return $this->fullname;
     }
 
-    public function setFullname(string $fullname): self
+    public function setFullname(?string $fullname): self
     {
         $this->fullname = $fullname;
 
@@ -95,7 +110,7 @@ class HotelSupportSearch
         return $this->supportDates;
     }
 
-    public function setSupportDates(int $supportDates): self
+    public function setSupportDates(?int $supportDates): self
     {
         $this->supportDates = $supportDates;
 
@@ -107,9 +122,45 @@ class HotelSupportSearch
         return $this->diagOrSupport;
     }
 
-    public function setDiagOrSupport(int $diagOrSupport): self
+    public function setDiagOrSupport(?int $diagOrSupport): self
     {
         $this->diagOrSupport = $diagOrSupport;
+
+        return $this;
+    }
+
+    public function getLevelSupport(): ?array
+    {
+        return $this->levelSupport;
+    }
+
+    public function setLevelSupport(?array $levelSupport): self
+    {
+        $this->levelSupport = $levelSupport;
+
+        return $this;
+    }
+
+    public function getDepartmentAnchor(): ?int
+    {
+        return $this->departmentAnchor;
+    }
+
+    public function setDepartmentAnchor(?int $departmentAnchor): self
+    {
+        $this->departmentAnchor = $departmentAnchor;
+
+        return $this;
+    }
+
+    public function getEndSupportReasons(): ?array
+    {
+        return $this->endSupportReasons;
+    }
+
+    public function setEndSupportReasons(?array $endSupportReasons): self
+    {
+        $this->endSupportReasons = $endSupportReasons;
 
         return $this;
     }

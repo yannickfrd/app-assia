@@ -2,30 +2,31 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Note;
+use App\Entity\SupportGroup;
 use App\Entity\User;
-use Twig\Environment;
-use App\Service\ExportPDF;
+use App\Form\Model\NoteSearch;
+use App\Form\Model\SupportNoteSearch;
+use App\Form\Note\NoteSearchType;
 use App\Form\Note\NoteType;
+use App\Form\Note\SupportNoteSearchType;
+use App\Repository\EvaluationGroupRepository;
+use App\Repository\NoteRepository;
+use App\Repository\RdvRepository;
+use App\Repository\SupportGroupRepository;
+use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
-use App\Entity\SupportGroup;
-use App\Form\Model\NoteSearch;
-use App\Form\Note\NoteSearchType;
-use App\Repository\NoteRepository;
-use App\Form\Model\SupportNoteSearch;
-use App\Form\Note\SupportNoteSearchType;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Repository\EvaluationGroupRepository;
-use App\Repository\SupportGroupRepository;
 use App\Service\SupportGroup\SupportGroupService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Twig\Environment;
 
 class NoteController extends AbstractController
 {
@@ -96,8 +97,6 @@ class NoteController extends AbstractController
      * Nouvelle note.
      *
      * @Route("support/{id}/note/new", name="note_new", methods="POST")
-     *
-     * @param int $id // SupportGroup
      */
     public function newNote(SupportGroup $supportGroup, Note $note = null, Request $request): Response
     {
@@ -158,7 +157,7 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo, Environment $renderer): Response
+    public function generateNoteEvaluation(int $id, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo, RdvRepository $repoRdv, Environment $renderer): Response
     {
         $supportGroup = $repoSupportGroup->findFullSupportById($id);
 
@@ -171,6 +170,8 @@ class NoteController extends AbstractController
             ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
                 'support' => $supportGroup,
                 'evaluation' => $evaluation,
+                'nextRdv' => $repoRdv->findNextRdvFromSupport($supportGroup->getId()),
+                'lastRdv' => $repoRdv->findLastRdvFromSupport($supportGroup->getId()),
             ]))
             ->setType(2)
             ->setSupportGroup($supportGroup)

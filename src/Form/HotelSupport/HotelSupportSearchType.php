@@ -2,6 +2,7 @@
 
 namespace App\Form\HotelSupport;
 
+use App\Entity\HotelSupport;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Form\Model\HotelSupportSearch;
@@ -34,7 +35,6 @@ class HotelSupportSearchType extends AbstractType
                     'class' => 'multi-select w-min-120',
                     'data-select2-id' => 'status',
                 ],
-                'placeholder' => '-- Status --',
                 'required' => false,
             ])
             ->add('supportDates', ChoiceType::class, [
@@ -52,6 +52,32 @@ class HotelSupportSearchType extends AbstractType
                         'options' => ['devices', 'referents'],
                         'serviceId' => Service::SERVICE_PASH_ID,
                     ],
+            ])
+            ->add('levelSupport', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'multiple' => true,
+                'choices' => Choices::getChoices(HotelSupport::LEVEL_SUPPORT),
+                'attr' => [
+                    'class' => 'multi-select w-min-120',
+                    'data-select2-id' => 'levelSupport',
+                ],
+                'required' => false,
+            ])
+            ->add('departmentAnchor', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'hotelSupport.search.departmentAnchor',
+                'required' => false,
+            ])
+            ->add('endSupportReasons', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'multiple' => true,
+                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASON),
+                'attr' => [
+                    'class' => 'multi-select w-min-120',
+                    'data-select2-id' => 'endSupportReasons',
+                ],
+                'required' => false,
             ])
             ->add('export');
     }

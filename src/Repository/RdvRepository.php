@@ -138,8 +138,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findAllRdvsQueryFromSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
-        $query = $this->createQueryBuilder('r')
-            ->select('r')
+        $query = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
 
@@ -162,6 +161,38 @@ class RdvRepository extends ServiceEntityRepository
 
         return  $query->orderBy('r.createdAt', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    public function findLastRdvFromSupport(int $supportGroupId): ?Rdv
+    {
+        return $this->createQueryBuilder('r')->select('r')
+
+            ->andWhere('r.supportGroup= :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId)
+            ->andWhere('r.start <=  :now')
+            ->setParameter('now', new \DateTime())
+
+            ->setMaxResults(1)
+            ->orderBy('r.start', 'DESC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
+    public function findNextRdvFromSupport(int $supportGroupId): ?Rdv
+    {
+        return $this->createQueryBuilder('r')->select('r')
+
+            ->andWhere('r.supportGroup= :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId)
+            ->andWhere('r.start >  :now')
+            ->setParameter('now', new \DateTime())
+
+            ->setMaxResults(1)
+            ->orderBy('r.start', 'ASC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
     }
 
     /**

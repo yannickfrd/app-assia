@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.23.1 - 21/09/2020
+1.24.0 - 21/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,10 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.24.0 - 21/09/2020
+- Export des suivis hôtel PASH au format Excel.
+- Affichage du dernier et du prochain RDV du suivi social.
 
 ## Version 1.23.1 - 21/09/2020
 - Modif du tri des personnes d'un suivi : le demandeur principal apparaît dorénavant toujours en premier, puis tri en fonction de l'âge des autres personnes.

@@ -6,6 +6,11 @@
 
 {% apply spaceless %}
 
+    {{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y"), "rdv.last") }}
+    {{ utils.view(nextRdv ? nextRdv.start|date("d/m/Y"), "rdv.next") }}
+
+    <br/>
+
     {{ utils.view(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Address") }}
 
     <table class="table-bordered mb-2">
@@ -180,7 +185,7 @@
             {{ utils.view(evalAdm.asylumBackground == YES and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
                 evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
             {{ utils.view(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
-                ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation") }}
+                ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date"  ) }}
             {{ utils.view(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
             {{ utils.view(evalAdm.workRightToString, "Work right", "evaluation") }}
             {{ evalAdm.commentEvalAdmPerson }}
