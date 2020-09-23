@@ -23,7 +23,7 @@ export default class ValidationForm {
         // Récupère toutes les catégories de champs à vérifier
         let categories = []
         document.querySelectorAll('div[data-check-valid]').forEach(elt => {
-            let category = elt.getAttribute('data-check-valid')
+            const category = elt.getAttribute('data-check-valid')
             if (categories.indexOf(category) === -1) {
                 categories.push(category)
             }
@@ -33,7 +33,7 @@ export default class ValidationForm {
             this.checkFields(document.querySelectorAll(`div[data-check-valid=${category}]`))
         })
 
-        let nbErrors = this.getNbErrors()
+        const nbErrors = this.getNbErrors()
         if (nbErrors > 0) {
             this.scrollToFirstInvalidElt()
             new MessageFlash('danger', 'Veuillez corriger les erreurs indiquées avant d\'enregistrer.')
@@ -54,7 +54,7 @@ export default class ValidationForm {
      */
     cleanHidedFields() {
         this.containerElt.querySelectorAll('div[data-parent-field].d-none').forEach(hideElt => {
-            let fieldElt = hideElt.querySelector('input, select, textarea')
+            const fieldElt = hideElt.querySelector('input, select, textarea')
             if (fieldElt.type === 'select-one') {
                 this.selectType.setOption(fieldElt, null)
             } else {
@@ -82,9 +82,9 @@ export default class ValidationForm {
      * @param {Boolean} requiredField 
      */
     checkFields(elts, requiredField = null) {
-        let hasDatas = requiredField ? null : this.oneFieldIsFilled(elts)
+        const hasDatas = requiredField ? null : this.oneFieldIsFilled(elts)
         elts.forEach(elt => {
-            let fieldElt = elt.querySelector('input, select')
+            const fieldElt = elt.querySelector('input, select')
             if (!fieldElt.classList.contains('is-invalid')) {
                 if (this.isFilledField(fieldElt) || hasDatas === false) {
                     this.validField(fieldElt)
@@ -112,13 +112,13 @@ export default class ValidationForm {
     }
 
     /**
-     * Vérfifie si le champ est complété
+     * Vérfifie si le champ est complété.
      * @param {HTMLElement} fieldElt 
      * @return {Boolean}
      */
     isFilledField(fieldElt) {
-        let value = this.selectType.getOption(fieldElt)
-        if (((fieldElt.type === 'text' || fieldElt.type === 'date') && fieldElt.value != '') ||
+        const value = this.selectType.getOption(fieldElt)
+        if ((['text', 'number', 'date'].indexOf(fieldElt.type) != -1 && fieldElt.value != '') ||
             (fieldElt.type === 'checkbox' && fieldElt.checked === true) ||
             (fieldElt.type === 'select-one' && value != '' && !isNaN(value))) {
             return true
@@ -127,7 +127,7 @@ export default class ValidationForm {
     }
 
     /**
-     * Met le champ en valide 
+     * Met le champ en valide .
      * @param {HTMLElement} fieldElt 
      */
     validField(fieldElt) {
@@ -139,7 +139,7 @@ export default class ValidationForm {
     }
 
     /**
-     * Met le champ en invalide et indique un message d 'erreur.
+     * Met le champ en invalide et indique un message d'erreur.
      * @param {HTMLElement} fieldElt 
      * @param {string} msg 
      */
@@ -155,12 +155,12 @@ export default class ValidationForm {
     }
 
     /**
-     * Crée l 'élément avec l'information de l 'erreur.
+     * Crée l'élément avec l'information de l'erreur.
      * @param {string} msg 
      * @return {HTMLDivElement}
      */
     createInvalidFeedbackElt(msg) {
-        let elt = document.createElement('div')
+        const elt = document.createElement('div')
         elt.className = 'invalid-feedback d-block js-invalid'
         elt.innerHTML = `
                 <span class='form-error-icon badge badge-danger text-uppercase'>Erreur</span> 
@@ -170,11 +170,11 @@ export default class ValidationForm {
     }
 
     /**
-     * Donne le label du champ
+     * Donne le label du champ.
      * @param {HTMLElement} fieldElt 
      */
     getlabel(fieldElt) {
-        let labelElt = fieldElt.parentNode.parentNode.querySelector('label')
+        const labelElt = fieldElt.parentNode.parentNode.querySelector('label')
         if (labelElt) {
             return labelElt
         }
@@ -182,11 +182,11 @@ export default class ValidationForm {
     }
 
     /**
-     * Supprime l 'élement d'invalidité du champ
+     * Supprime l'élément d'invalidité du champ.
      * @param {HTMLElement} labelElt 
      */
     removeInvalidFeedbackElt(labelElt) {
-        let invalidFeedbackElt = labelElt.querySelector('div.js-invalid')
+        const invalidFeedbackElt = labelElt.querySelector('div.js-invalid')
         if (invalidFeedbackElt) {
             invalidFeedbackElt.remove()
         }
@@ -197,7 +197,7 @@ export default class ValidationForm {
      * @return {Number}
      */
     getNbErrors() {
-        let nbErrors = this.containerElt.querySelectorAll('.js-invalid').length
+        const nbErrors = this.containerElt.querySelectorAll('.js-invalid').length
 
         if (nbErrors > 0) {
             console.error(nbErrors + ' error(s)')
@@ -207,7 +207,7 @@ export default class ValidationForm {
     }
 
     checkIntervalBeetweenDates(startDateElt, endDateElt, msg = 'Date de fin antérieure à la date de début.') {
-        let intervalWithStart = (new Date(endDateElt.value) - new Date(startDateElt.value)) / (24 * 3600 * 1000)
+        const intervalWithStart = (new Date(endDateElt.value) - new Date(startDateElt.value)) / (24 * 3600 * 1000)
 
         if (intervalWithStart < 0) {
             return this.invalidField(endDateElt, msg)
