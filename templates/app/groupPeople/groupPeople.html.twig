@@ -15,8 +15,10 @@
         <div class="small text-secondary">
             <p>Créé le {{ group_people.createdAt|date("d/m/Y à H:i") }}
                 {{ group_people.createdBy ? " par " ~ group_people.createdBy.fullname }}
-                (modifié le {{ group_people.updatedAt|date("d/m/Y à H:i") }}
-                {{ group_people.updatedBy ? " par " ~ group_people.updatedBy.fullname }})
+                {% if group_people.updatedAt != group_people.createdAt %}
+                    (modifié le {{ group_people.updatedAt|date("d/m/Y à H:i") }}
+                    {{ group_people.updatedBy ? " par " ~ group_people.updatedBy.fullname }})
+                {% endif %}
             </p>
         </div>
         <nav aria-label="breadcrumb">
