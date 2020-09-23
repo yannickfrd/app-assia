@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.24.0 - 21/09/2020
+    1.24.1 - 23/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,11 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 1.24.1 - 23/09/2020
+- Modif class d'import des suivis Opération Ciblée.
+- Modif fiche 'Person', 'GroupPeople' et 'SupportGroup' : n'affiche la date de modification que si différente de la date de création.
+- Correction contrôle de complétude des champs Input dans lors de la validation d'un formulaire.
 
 ## Version 1.24.0 - 21/09/2020
 - Export des suivis hôtel PASH au format Excel.

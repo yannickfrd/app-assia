@@ -6,11 +6,9 @@ use App\Entity\Device;
 use App\Entity\EvalAdmPerson;
 use App\Entity\EvalBudgetGroup;
 use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalFamilyGroup;
 use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
 use App\Entity\EvalProfPerson;
-use App\Entity\EvalSocialGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
@@ -18,13 +16,11 @@ use App\Entity\GroupPeople;
 use App\Entity\HotelSupport;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
-use App\Entity\Note;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
@@ -257,6 +253,16 @@ class ImportDatasOC
         'NON' => 2,
     ];
 
+    public const OVER_INDEBT_RECORD = [
+        'OUI' => 1,
+        'NON' => null,
+    ];
+
+    public const SETTLEMENT_PLAN = [
+        'OUI' => 2,
+        'NON' => null,
+    ];
+
     public const DLS = [
         'OUI' => 1,
         'OUI - PROPO EN COURS' => 1,
@@ -279,11 +285,12 @@ class ImportDatasOC
         'SIAO 94' => 94,
         'SIAO 95' => 95,
     ];
-    public const SIAO_RECOMMENDATION = [
-    'Hébergement' => 1,
-    'Sorti d\'hôtel' => 99,
-    'Logement Intermédiaire' => 2,
-    'Logement ' => 3,
+    public const RECOMMENDATION = [
+    'Hébergement' => 10,
+    'Logement Intermédiaire' => 20,
+    // 'Sorti d\'hôtel' => 10,
+    'Logement' => 30,
+    'Logement ' => 30,
     ];
 
     public const DALO_COMMISSION = [
@@ -306,14 +313,22 @@ class ImportDatasOC
         // 'Solution personnelle' => 1,
     ];
 
-    protected $security;
+    protected $user;
     protected $manager;
     protected $repoPerson;
 
     protected $datas;
+    protected $row;
 
     protected $device;
+    protected $person;
+    protected $personExists;
+
     protected $groups = [];
+    protected $people = [];
+    protected $rolePeople = [];
+    protected $duplicatedPeople = [];
+    protected $existPeople = [];
 
     protected $gender;
     protected $head;
@@ -321,9 +336,9 @@ class ImportDatasOC
 
     public function __construct(Security $security, EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
     {
-        $this->security = $security;
+        $this->user = $security->getUser();
         $this->manager = $manager;
-        $this->device = $repoDevice->find(15); // Numéro à confirmer
+        $this->device = $repoDevice->find(17); // Opération ciblée
         $this->repoPerson = $repoPerson;
     }
 
@@ -360,169 +375,210 @@ class ImportDatasOC
         $i = 0;
 
         foreach ($this->datas as $row) {
+            $this->row = $row;
             if ($i > 0) {
-                $typology = $this->findInArray($row['Compo'], self::FAMILY_TYPOLOGY) ?? 9;
+                $typology = $this->findInArray($this->row['Compo'], self::FAMILY_TYPOLOGY) ?? 9;
 
-                $this->checkGroupExists($row, $typology, $service, $this->device);
+                $this->getRole($typology);
+                $this->person = $this->getPerson();
+                $this->personExists = $this->personExistsInDatabase($this->person);
 
-                $groupPeople = $this->groups[$row['ID_GIP']][0];
-                $supportGroup = $this->groups[$row['ID_GIP']][1];
-                $evaluationGroup = $this->groups[$row['ID_GIP']][2];
+                $this->checkGroupExists($typology, $service, $this->device);
 
-                $this->getRole($row, $typology);
-                $person = $this->createPerson($row);
-                $rolePerson = $this->createRolePerson($groupPeople, $person);
-                $supportPerson = $this->createSupportPerson($row, $supportGroup, $person, $rolePerson);
-                $evaluationPerson = $this->createEvaluationPerson($row, $evaluationGroup, $supportPerson);
+                $this->person = $this->createPerson($this->groups[$this->row['ID_GIP']]['groupPeople']);
+
+                $support = $this->groups[$this->row['ID_GIP']]['supports'][$this->row['ID_Support']];
+                $supportGroup = $support['support'];
+                $evaluationGroup = $support['evaluation'];
+
+                $supportPerson = $this->createSupportPerson($supportGroup);
+                $this->createEvaluationPerson($evaluationGroup, $supportPerson);
             }
             ++$i;
         }
 
+        // dump($this->existPeople);
+        // dump($this->duplicatedPeople);
         // dd($this->groups);
         $this->manager->flush();
     }
 
-    protected function checkGroupExists(array $row, int $typology, Service $service, Device $device)
+    protected function getPerson()
     {
-        $groupExists = false;
-        foreach ($this->groups as $key => $value) {
-            if ($key == $row['ID_GIP']) {
-                $groupExists = true;
+        return (new Person())
+                ->setLastname($this->row['Nom'])
+                ->setFirstname($this->row['Prénom'])
+                ->setBirthdate($this->row['Date naissance'] ? new \Datetime($this->row['Date naissance']) : null)
+                ->setGender($this->gender)
+                ->setCreatedBy($this->user)
+                ->setUpdatedBy($this->user);
+    }
+
+    protected function checkGroupExists(int $typology, Service $service, Device $device)
+    {
+        // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
+        if (false == $this->groupExists($service, $device)) {
+            // Si la personne existe déjà dans la base de données, on récupère son groupe.
+            if ($this->personExists) {
+                $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
+            // Sinon, on crée le groupe.
+            } else {
+                $groupPeople = $this->createGroupPeople($typology);
             }
-        }
 
-        if (!$groupExists) {
-            $groupPeople = $this->createGroupPeople($row, $typology);
-            $supportGroup = $this->createSupportGroup($row, $groupPeople, $service, $device);
-            $evaluationGroup = $this->createEvaluationGroup($row, $supportGroup);
+            $supportGroup = $this->createSupportGroup($groupPeople, $service, $device);
+            $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
-            $this->groups[$row['ID_GIP']] = [
-                $groupPeople,
-                $supportGroup,
-                $evaluationGroup,
+            // On ajoute le groupe et le suivi dans le tableau associatif.
+            $this->groups[$this->row['ID_GIP']] = [
+                'groupPeople' => $groupPeople,
+                'supports' => [
+                    $this->row['ID_Support'] => [
+                        'support' => $supportGroup,
+                        'evaluation' => $evaluationGroup,
+                    ],
+                ],
             ];
         }
     }
 
-    protected function createGroupPeople(array $row, int $typology): GroupPeople
+    protected function groupExists(Service $service, Device $device)
     {
+        $groupExists = false;
+        // Vérifie si le groupe de la personne existe déjà.
+        foreach ($this->groups as $key => $value) {
+            // Si déjà créé, on vérifie le suivi social.
+            if ($key == $this->row['ID_GIP']) {
+                $groupExists = true;
+
+                $supports = $this->groups[$this->row['ID_GIP']]['supports'];
+
+                $supportExists = false;
+                // Vérifie si le suivi du groupe de la personne a déjà été créé.
+                foreach ($supports as $key => $value) {
+                    if ($key == $this->row['ID_Support']) {
+                        $supportExists = true;
+                    }
+                }
+
+                // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
+                if (false == $supportExists) {
+                    $supportGroup = $this->createSupportGroup($this->groups[$this->row['ID_GIP']]['groupPeople'], $service, $device);
+                    $evaluationGroup = $this->createEvaluationGroup($supportGroup);
+
+                    $this->groups[$this->row['ID_GIP']]['supports'][$this->row['ID_Support']] = [
+                        'support' => $supportGroup,
+                        'evaluation' => $evaluationGroup,
+                    ];
+                }
+            }
+        }
+
+        return $groupExists;
+    }
+
+    protected function createGroupPeople(int $typology): GroupPeople
+    {
+        if ($this->row['Rôle'] == 'CHEF DE FAMILLE') {
+            $this->personExistsInDatabase();
+        }
+
         $groupPeople = (new GroupPeople())
                     ->setFamilyTypology($typology)
-                    ->setNbPeople($this->findInArray($row['Compo'], self::NB_PEOPLE) ?? null)
-                    ->setCreatedBy($this->getUser())
-                    ->setUpdatedBy($this->getUser());
+                    ->setNbPeople($this->findInArray($this->row['Compo'], self::NB_PEOPLE) ?? null)
+                    ->setCreatedBy($this->user)
+                    ->setUpdatedBy($this->user);
 
         $this->manager->persist($groupPeople);
 
         return $groupPeople;
     }
 
-    protected function createSupportGroup(array $row, GroupPeople $groupPeople, Service $service, Device $device): SupportGroup
+    protected function createSupportGroup(GroupPeople $groupPeople, Service $service, Device $device): SupportGroup
     {
         $supportGroup = (new SupportGroup())
-                    ->setStatus($this->getStatus($row))
-                    ->setStartDate($this->getStartDate($row))
-                    ->setEndDate($this->getEndDate($row))
+                    ->setStatus($this->getStatus($this->row))
+                    ->setStartDate($this->getStartDate($this->row))
+                    ->setEndDate($this->getEndDate($this->row))
                     ->setEndStatus(null)
-                    ->setEndStatusComment($row['Motif sortie'])
-                    ->setNbPeople($this->findInArray($row['Compo'], self::NB_PEOPLE) ?? null)
+                    ->setEndStatusComment($this->row['Motif sortie'])
+                    ->setNbPeople($this->findInArray($this->row['Compo'], self::NB_PEOPLE) ?? null)
                     ->setGroupPeople($groupPeople)
                     ->setService($service)
                     ->setDevice($device)
-                    ->setCreatedBy($this->getUser())
-                    ->setUpdatedBy($this->getUser());
+                    ->setCreatedBy($this->user)
+                    ->setUpdatedBy($this->user);
 
         $this->manager->persist($supportGroup);
 
-        if ($row['Date diagnostic']) {
-            $this->createHotelSupport($row, $supportGroup);
+        if ($this->row['Date diagnostic']) {
+            $this->createHotelSupport($supportGroup);
         }
 
         return $supportGroup;
     }
 
-    protected function createEvaluationGroup(array $row, $supportGroup): EvaluationGroup
+    protected function createEvaluationGroup($supportGroup): EvaluationGroup
     {
         $evaluationGroup = (new EvaluationGroup())
             ->setSupportGroup($supportGroup)
-            ->setInitEvalGroup($this->createInitEvalGroup($row, $supportGroup))
+            ->setInitEvalGroup($this->createInitEvalGroup($supportGroup))
             ->setDate($supportGroup->getCreatedAt())
             ->setCreatedAt($supportGroup->getCreatedAt())
             ->setUpdatedAt($supportGroup->getUpdatedAt())
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedBy($this->getUser());
+            ->setCreatedBy($this->user)
+            ->setUpdatedBy($this->user);
 
         $this->manager->persist($evaluationGroup);
 
-        $this->createEvalSocialGroup($row, $evaluationGroup);
-        $this->createEvalFamilyGroup($row, $evaluationGroup);
-        $this->createEvalBudgetGroup($row, $evaluationGroup);
-        $this->createEvalHousingGroup($row, $evaluationGroup);
+        $this->createEvalBudgetGroup($evaluationGroup);
+        $this->createEvalHousingGroup($evaluationGroup);
 
         return $evaluationGroup;
     }
 
-    protected function createInitEvalGroup(array $row, SupportGroup $supportGroup): InitEvalGroup
+    protected function createInitEvalGroup(SupportGroup $supportGroup): InitEvalGroup
     {
         $initEvalGroup = (new InitEvalGroup())
-        ->setSiaoRequest($this->findInArray($row['Demande SIAO préalable au diag'], self::YES_NO) ?? null)
-        ->setSocialHousingRequest($this->findInArray($row['Demande de logement social active'], self::DLS) ?? null)
-        ->setResourcesGroupAmt((float) $row['Montant ressources'])
-        ->setDebtsGroupAmt((float) $row['Montant dettes'])
-        ->setSupportGroup($supportGroup);
+            ->setHousingStatus(100)
+            ->setSiaoRequest($this->findInArray($this->row['Demande SIAO préalable au diag'], self::YES_NO) ?? null)
+            ->setSocialHousingRequest($this->findInArray($this->row['Demande de logement social active'], self::DLS) ?? null)
+            ->setResourcesGroupAmt((float) $this->row['Montant ressources'])
+            ->setDebtsGroupAmt((float) $this->row['Montant dettes'])
+            ->setSupportGroup($supportGroup);
 
         $this->manager->persist($initEvalGroup);
 
         return $initEvalGroup;
     }
 
-    protected function createEvalSocialGroup(array $row, EvaluationGroup $evaluationGroup): EvalSocialGroup
-    {
-        $evalSocialGroup = (new EvalSocialGroup())
-            ->setEvaluationGroup($evaluationGroup);
-
-        $this->manager->persist($evalSocialGroup);
-
-        return $evalSocialGroup;
-    }
-
-    protected function createEvalFamilyGroup(array $row, EvaluationGroup $evaluationGroup): EvalFamilyGroup
-    {
-        $evalFamilyGroup = (new EvalFamilyGroup())
-        ->setEvaluationGroup($evaluationGroup);
-
-        $this->manager->persist($evalFamilyGroup);
-
-        return $evalFamilyGroup;
-    }
-
-    protected function createEvalBudgetGroup(array $row, EvaluationGroup $evaluationGroup): EvalBudgetGroup
+    protected function createEvalBudgetGroup(EvaluationGroup $evaluationGroup): EvalBudgetGroup
     {
         $evalBudgetGroup = (new EvalBudgetGroup())
             ->setEvaluationGroup($evaluationGroup)
-            ->setResourcesGroupAmt((float) $row['Montant ressources'])
-            ->setChargesGroupAmt((float) $row['Montant charges'])
-            ->setDebtsGroupAmt((float) $row['Montant dettes']);
-        // ->setBudgetBalanceAmt((float) ($row['Montant ressources'] - $row['Montant charges']));
+            ->setResourcesGroupAmt((float) $this->row['Montant ressources'])
+            ->setChargesGroupAmt((float) $this->row['Montant charges'])
+            ->setDebtsGroupAmt((float) $this->row['Montant dettes']);
+        // ->setBudgetBalanceAmt((float) ($this->row['Montant ressources'] - $this->row['Montant charges']));
 
         $this->manager->persist($evalBudgetGroup);
 
         return $evalBudgetGroup;
     }
 
-    protected function createEvalHousingGroup(array $row, EvaluationGroup $evaluationGroup): EvalHousingGroup
+    protected function createEvalHousingGroup(EvaluationGroup $evaluationGroup): EvalHousingGroup
     {
         $evalHousingGroup = (new EvalHousingGroup())
-        ->setHousingStatus(null)
-        ->setSiaoRequest($row['Date demande initiale SIAO'] ? Choices::YES : Choices::NO)
-        ->setSiaoRequestDate($row['Date demande initiale SIAO'] ? new \Datetime($row['Date demande initiale SIAO']) : null)
-        ->setSiaoUpdatedRequestDate($row['Date dernière actualisation SIAO'] ? new \Datetime($row['Date dernière actualisation SIAO']) : null)
-        ->setSiaoRequestDept($this->findInArray($row['SIAO prescripteur'], self::SIAO_DEPT) ?? null)
-        // ->setSiaoRecommendation($this->findInArray($row['Préconisation'], self::SIAO_RECOMMENDATION) ?? null)
-        ->setSocialHousingRequest($this->findInArray($row['Demande de logement social active'], self::DLS) ?? null)
-        ->setSocialHousingRequestId($row['NUR'])
-        ->setDaloCommission($this->findInArray($row['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
-        ->setDaloRequalifiedDaho($this->findInArray($row['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
+        ->setHousingStatus(100)
+        ->setSiaoRequest($this->row['Date demande initiale SIAO'] ? Choices::YES : Choices::NO)
+        ->setSiaoRequestDate($this->row['Date demande initiale SIAO'] ? new \Datetime($this->row['Date demande initiale SIAO']) : null)
+        ->setSiaoUpdatedRequestDate($this->row['Date dernière actualisation SIAO'] ? new \Datetime($this->row['Date dernière actualisation SIAO']) : null)
+        ->setSiaoRequestDept($this->findInArray($this->row['SIAO prescripteur'], self::SIAO_DEPT) ?? null)
+        ->setSiaoRecommendation($this->findInArray($this->row['Préconisation'], self::RECOMMENDATION) ?? null)
+        ->setSocialHousingRequest($this->findInArray($this->row['Demande de logement social active'], self::DLS) ?? (!empty($this->row['NUR']) ? Choices::YES : Choices::NO))
+        ->setSocialHousingRequestId($this->row['NUR'])
+        ->setDaloCommission($this->findInArray($this->row['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
+        ->setDaloRequalifiedDaho($this->findInArray($this->row['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
         ->setEvaluationGroup($evaluationGroup);
 
         $this->manager->persist($evalHousingGroup);
@@ -530,76 +586,87 @@ class ImportDatasOC
         return $evalHousingGroup;
     }
 
-    protected function createPerson(array $row): Person
+    protected function createPerson(GroupPeople $groupPeople): Person
     {
-        $person = (new Person())
-                    ->setLastname($row['Nom'])
-                    ->setFirstname($row['Prénom'])
-                    ->setBirthdate($row['Date naissance'] ? new \Datetime($row['Date naissance']) : null)
-                    ->setGender($this->gender)
-                    ->setCreatedBy($this->getUser())
-                    ->setUpdatedBy($this->getUser());
+        $duplicatedPerson = false;
 
-        $personExists = $this->personExists($person);
-
-        if ($personExists) {
-            $person = $personExists;
+        if ($this->personExists) {
+            $this->person = $this->personExists;
+            $this->existPeople[] = $this->person;
         } else {
-            $this->manager->persist($person);
+            foreach ($this->people as $person2) {
+                if ($this->person->getLastname() == $person2->getLastname()
+                        && $this->person->getFirstname() == $person2->getFirstname()
+                        && $this->person->getBirthdate() == $person2->getBirthdate()) {
+                    $this->duplicatedPeople[] = $this->person;
+                    $duplicatedPerson = true;
+                    $this->person = $person2;
+                }
+            }
+            if (false == $duplicatedPerson) {
+                $this->manager->persist($this->person);
+                $this->person->addRolesPerson($this->createRolePerson($groupPeople));
+                $this->people[] = $this->person;
+            }
         }
 
-        return $person;
+        return $this->person;
     }
 
-    protected function personExists($person)
+    protected function personExistsInDatabase(): ?Person
     {
         return $this->repoPerson->findOneBy([
-            'firstname' => $person->getFirstname(),
-            'lastname' => $person->getLastname(),
-            'birthdate' => $person->getBirthdate(),
+            'firstname' => $this->person->getFirstname(),
+            'lastname' => $this->person->getLastname(),
+            'birthdate' => $this->person->getBirthdate(),
         ]);
     }
 
-    protected function createRolePerson(GroupPeople $groupPeople, Person $person): RolePerson
+    protected function createRolePerson(GroupPeople $groupPeople): RolePerson
     {
-        $this->rolePerson = (new RolePerson())
+        $rolePerson = (new RolePerson())
                  ->setHead($this->head)
                  ->setRole($this->role)
-                 ->setPerson($person)
+                 ->setPerson($this->person)
                  ->setGroupPeople($groupPeople);
 
-        $this->manager->persist($this->rolePerson);
+        $this->manager->persist($rolePerson);
 
-        return $this->rolePerson;
+        return $rolePerson;
     }
 
-    protected function createSupportPerson(array $row, SupportGroup $supportGroup, Person $person, RolePerson $rolePerson): SupportPerson
+    protected function createSupportPerson(SupportGroup $supportGroup): SupportPerson
     {
+        $rolePerson = $this->person->getRolesPerson()->first();
+
         $supportPerson = (new SupportPerson())
-                    ->setStatus($this->getStatus($row))
-                    ->setStartDate($this->getStartDate($row))
-                    ->setEndDate($this->getEndDate($row))
+                    ->setStatus($this->getStatus($this->row))
+                    ->setStartDate($this->getStartDate($this->row))
+                    ->setEndDate($this->getEndDate($this->row))
                     ->setSupportGroup($supportGroup)
-                    ->setPerson($person)
+                    ->setPerson($this->person)
                     ->setHead($rolePerson->getHead())
                     ->setRole($rolePerson->getRole())
-                    ->setCreatedBy($this->getUser())
-                    ->setUpdatedBy($this->getUser());
+                    ->setCreatedBy($this->user)
+                    ->setUpdatedBy($this->user);
 
         $this->manager->persist($supportPerson);
 
         return $supportPerson;
     }
 
-    protected function createHotelSupport(array $row, SupportGroup $supportGroup): HotelSupport
+    protected function createHotelSupport(SupportGroup $supportGroup): HotelSupport
     {
         $hotelSupport = (new HotelSupport())
-            ->setGipId($row['ID_GIP'])
-            ->setDiagStartDate($row['Date diagnostic'] ? new \Datetime($row['Date diagnostic']) : null)
-            ->setDiagComment($row['TS diagnostic'] ? 'TS : '.$row['TS diagnostic'] : null)
-            ->setSupportStartDate($this->getStartDate($row))
-            ->setSupportEndDate($this->getEndDate($row))
-            ->setSupportComment($row['TS accompagnement'] ? 'TS : '.$row['TS accompagnement'] : null)
+            ->setGipId($this->row['ID_GIP'])
+            ->setDiagStartDate($this->row['Date diagnostic'] ? new \Datetime($this->row['Date diagnostic']) : null)
+            ->setDiagEndDate($this->row['Date diagnostic'] ? new \Datetime($this->row['Date diagnostic']) : null)
+            ->setDiagComment($this->row['TS diagnostic'] ? 'TS : '.$this->row['TS diagnostic'] : null)
+            // ->setSupportStartDate($this->getStartDate($this->row))
+            ->setDepartmentAnchor($this->findInArray($this->row['Ancrage 95'], self::YES_NO) ?? null)
+            ->setRecommendation($this->findInArray($this->row['Préconisation'], self::RECOMMENDATION) ?? null)
+            ->setSupportEndDate($this->getEndDate($this->row))
+            ->setSupportComment($this->row['TS accompagnement'] ? 'TS : '.$this->row['TS accompagnement'] : null)
             ->setSupportGroup($supportGroup);
 
         $this->manager->persist($hotelSupport);
@@ -607,29 +674,33 @@ class ImportDatasOC
         return $hotelSupport;
     }
 
-    protected function createEvaluationPerson(array $row, EvaluationGroup $evaluationGroup, SupportPerson $supportPerson): EvaluationPerson
+    protected function createEvaluationPerson(EvaluationGroup $evaluationGroup, SupportPerson $supportPerson): EvaluationPerson
     {
         $evaluationPerson = (new EvaluationPerson())
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson)
-            ->setInitEvalPerson($this->createInitEvalPerson($row, $supportPerson))
-            ->setCreatedBy($this->getUser())
-            ->setUpdatedBy($this->getUser());
+            ->setInitEvalPerson($this->createInitEvalPerson($supportPerson))
+            ->setCreatedBy($this->user)
+            ->setUpdatedBy($this->user);
 
         $this->manager->persist($evaluationPerson);
 
-        $this->createEvalSocialPerson($row, $evaluationPerson);
-        $this->createEvalAdmPerson($row, $evaluationPerson);
-        $this->createEvalBudgetPerson($row, $evaluationPerson);
-        $this->createEvalFamilyPerson($row, $evaluationPerson);
-        $this->createEvalProfPerson($row, $evaluationPerson);
+        $this->createEvalSocialPerson($evaluationPerson);
+        $this->createEvalAdmPerson($evaluationPerson);
+        $this->createEvalBudgetPerson($evaluationPerson);
+        $this->createEvalFamilyPerson($evaluationPerson);
+        $this->createEvalProfPerson($evaluationPerson);
 
         return $evaluationPerson;
     }
 
-    protected function createInitEvalPerson(array $row, SupportPerson $supportPerson): InitEvalPerson
+    protected function createInitEvalPerson(SupportPerson $supportPerson): ?InitEvalPerson
     {
-        $resourceType = $row['Type ressources'];
+        if ($this->row['Rôle'] == 'ENFANT') {
+            return null;
+        }
+
+        $resourceType = $this->row['Type ressources'];
         $resourceOther = null;
 
         if ($resourceType == 'AIDE EXTERIEURE') {
@@ -640,13 +711,13 @@ class ImportDatasOC
         }
 
         $initEvalPerson = (new InitEvalPerson())
-            ->setPaperType($this->findInArray($row['Situation administrative'], self::PAPER_TYPE) ?? null)
-            ->setRightSocialSecurity($this->findInArray($row['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-            ->setSocialSecurity($this->findInArray($row['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
-            ->setProfStatus($this->findInArray($row['Emploi'], self::PROF_STATUS) ?? null)
-            ->setContractType($this->findInArray($row['Emploi'], self::CONTRACT_TYPE) ?? null)
+            ->setPaperType($this->findInArray($this->row['Situation administrative'], self::PAPER_TYPE) ?? null)
+            ->setRightSocialSecurity($this->findInArray($this->row['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+            ->setSocialSecurity($this->findInArray($this->row['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
+            ->setProfStatus($this->findInArray($this->row['Emploi'], self::PROF_STATUS) ?? null)
+            ->setContractType($this->findInArray($this->row['Emploi'], self::CONTRACT_TYPE) ?? null)
             ->setResources($this->findInArray($resourceType, self::RESOURCES) ?? null)
-            ->setResourcesAmt((float) $row['Montant ressources'])
+            ->setResourcesAmt((float) $this->row['Montant ressources'])
             ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
             ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
             ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
@@ -656,8 +727,8 @@ class ImportDatasOC
             ->setMaintenance(strstr($resourceType, 'PENSION ALIMENTAIRE') ? Choices::YES : 0)
             ->setRessourceOther($resourceOther ? Choices::YES : 0)
             ->setRessourceOtherPrecision($resourceOther)
-            ->setDebts($this->findInArray($row['Dettes'], self::DEBTS) ?? null)
-            ->setDebtsAmt((float) $row['Montant dettes'])
+            ->setDebts($this->findInArray($this->row['Dettes'], self::DEBTS) ?? null)
+            ->setDebtsAmt((float) $this->row['Montant dettes'])
             ->setSupportPerson($supportPerson);
 
         $this->manager->persist($initEvalPerson);
@@ -665,94 +736,95 @@ class ImportDatasOC
         return $initEvalPerson;
     }
 
-    protected function createEvalSocialPerson(array $row, EvaluationPerson $evaluationPerson): EvalSocialPerson
+    protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson)
     {
-        $evalSocialPerson = (new EvalSocialPerson())
-        ->setRightSocialSecurity($this->findInArray($row['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-        ->setSocialSecurity($this->findInArray($row['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
-        ->setEndRightsSocialSecurityDate($row['Date fin validité Sécurité sociale'] ? new \Datetime($row['Date fin validité Sécurité sociale']) : null)
-        ->setCommentEvalSocialPerson($row['Suivi social'] ? 'Suivi social : Oui' : null)
-        ->setEvaluationPerson($evaluationPerson);
+        if ($this->row['Rôle'] != 'ENFANT') {
+            $evalSocialPerson = (new EvalSocialPerson())
+                ->setRightSocialSecurity($this->findInArray($this->row['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+                ->setSocialSecurity($this->findInArray($this->row['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
+                ->setEndRightsSocialSecurityDate($this->row['Date fin validité Sécurité sociale'] ? new \Datetime($this->row['Date fin validité Sécurité sociale']) : null)
+                ->setCommentEvalSocialPerson($this->row['Suivi social'] ? 'Suivi social : Oui' : null)
+                ->setEvaluationPerson($evaluationPerson);
 
-        $this->manager->persist($evalSocialPerson);
-
-        return $evalSocialPerson;
-    }
-
-    protected function createEvalFamilyPerson(array $row, EvaluationPerson $evaluationPerson): EvalFamilyPerson
-    {
-        $evalFamilyPerson = (new EvalFamilyPerson())
-            ->setEvaluationPerson($evaluationPerson)
-            ->setMaritalStatus($this->findInArray($row['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
-            ->setUnbornChild($this->findInArray($row['Grossesse'], self::YES_NO) ?? null);
-
-        $this->manager->persist($evalFamilyPerson);
-
-        return $evalFamilyPerson;
-    }
-
-    protected function createEvalAdmPerson(array $row, EvaluationPerson $evaluationPerson): EvalAdmPerson
-    {
-        $evalAdmPerson = (new EvalAdmPerson())
-            ->setEvaluationPerson($evaluationPerson)
-            ->setNationality($this->findInArray($row['Nationalité'], self::NATIONALITY) ?? null)
-            ->setArrivalDate($row['Date arrivée France'] ? new \Datetime($row['Date arrivée France']) : null)
-            ->setPaper($this->findInArray($row['Situation administrative'], self::PAPER) ?? null)
-            ->setPaperType($this->findInArray($row['Situation administrative'], self::PAPER_TYPE) ?? null)
-            ->setEndValidPermitDate($row['Date fin validité titre'] ? new \Datetime($row['Date fin validité titre']) : null)
-            ->setAsylumBackground($this->findInArray($row['Situation administrative'], self::ASYLUM_BACKGROUND) ?? null)
-            ->setCommentEvalAdmPerson(null);
-
-        $this->manager->persist($evalAdmPerson);
-
-        return $evalAdmPerson;
-    }
-
-    protected function createEvalProfPerson(array $row, EvaluationPerson $evaluationPerson): EvalProfPerson
-    {
-        $evalProfPerson = (new EvalProfPerson())
-            ->setEvaluationPerson($evaluationPerson)
-            ->setProfStatus($this->findInArray($row['Emploi'], self::PROF_STATUS) ?? null)
-            ->setContractType($this->findInArray($row['Emploi'], self::CONTRACT_TYPE) ?? null);
-
-        $this->manager->persist($evalProfPerson);
-
-        return $evalProfPerson;
-    }
-
-    protected function createEvalBudgetPerson(array $row, EvaluationPerson $evaluationPerson): EvalBudgetPerson
-    {
-        $resourceType = $row['Type ressources'];
-        $resourceOther = null;
-
-        if ($resourceType == 'AIDE EXTERIEURE') {
-            $resourceOther = 'Aide extérieure';
+            $this->manager->persist($evalSocialPerson);
         }
-        if ($resourceType == 'RESSOURCES NON DECLAREES') {
-            $resourceOther = 'Ressources non déclarées';
+    }
+
+    protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson)
+    {
+        if ($this->row['Rôle'] != 'ENFANT' && (!empty($this->row['Grossesse']) || !empty($this->row['Situation matrimoniale']))) {
+            $evalFamilyPerson = (new EvalFamilyPerson())
+                ->setMaritalStatus($this->findInArray($this->row['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
+                ->setUnbornChild($this->findInArray($this->row['Grossesse'], self::YES_NO) ?? null)
+                ->setEvaluationPerson($evaluationPerson);
+
+            $this->manager->persist($evalFamilyPerson);
         }
+    }
 
-        $evalBudgetPerson = (new EvalBudgetPerson())
-            ->setEvaluationPerson($evaluationPerson)
-            ->setChargesAmt((float) $row['Montant charges'])
-            ->setDebts($this->findInArray($row['Dettes'], self::DEBTS) ?? null)
-            ->setDebtsAmt((float) $row['Montant dettes'])
-            ->setSettlementPlan($this->findInArray($row['Plan apurement'], self::YES_NO) ?? null)
-            ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
-            ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
-            ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
-            ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
-            ->setFamilyAllowance(strstr($resourceType, 'PF') ? Choices::YES : 0)
-            ->setSalary(strstr($resourceType, 'SALAIRE') ? Choices::YES : 0)
-            ->setMaintenance(strstr($resourceType, 'PENSION ALIMENTAIRE') ? Choices::YES : 0)
-            ->setRessourceOther($resourceOther ? Choices::YES : 0)
-            ->setRessourceOtherPrecision($resourceOther)
-            ->setResources($this->findInArray($row['Type ressources'], self::RESOURCES) ?? null)
-            ->setResourcesAmt((float) $row['Montant ressources']);
+    protected function createEvalAdmPerson(EvaluationPerson $evaluationPerson)
+    {
+        if (!empty($this->row['Nationalité']) || !empty($this->row['Situation administrative'])) {
+            $evalAdmPerson = (new EvalAdmPerson())
+            ->setNationality($this->findInArray($this->row['Nationalité'], self::NATIONALITY) ?? null)
+            ->setArrivalDate($this->row['Date arrivée France'] ? new \Datetime($this->row['Date arrivée France']) : null)
+            ->setPaper($this->findInArray($this->row['Situation administrative'], self::PAPER) ?? null)
+            ->setPaperType($this->findInArray($this->row['Situation administrative'], self::PAPER_TYPE) ?? null)
+            ->setEndValidPermitDate($this->row['Date fin validité titre'] ? new \Datetime($this->row['Date fin validité titre']) : null)
+            ->setAsylumBackground($this->findInArray($this->row['Situation administrative'], self::ASYLUM_BACKGROUND) ?? null)
+            ->setEvaluationPerson($evaluationPerson);
 
-        $this->manager->persist($evalBudgetPerson);
+            $this->manager->persist($evalAdmPerson);
+        }
+    }
 
-        return $evalBudgetPerson;
+    protected function createEvalProfPerson(EvaluationPerson $evaluationPerson)
+    {
+        if ((float) $this->row['Age'] >= 16 && !empty($this->row['Emploi'])) {
+            $evalProfPerson = (new EvalProfPerson())
+                ->setProfStatus($this->findInArray($this->row['Emploi'], self::PROF_STATUS) ?? null)
+                ->setContractType($this->findInArray($this->row['Emploi'], self::CONTRACT_TYPE) ?? null)
+                ->setEvaluationPerson($evaluationPerson);
+
+            $this->manager->persist($evalProfPerson);
+        }
+    }
+
+    protected function createEvalBudgetPerson(EvaluationPerson $evaluationPerson)
+    {
+        $resourceType = $this->row['Type ressources'];
+
+        if ((float) $this->row['Age'] >= 16 && (!empty($resourceType) || !empty($this->row['Montant ressources']) || !empty($this->row['Dettes']))) {
+            $resourceOther = null;
+            if ($resourceType == 'AIDE EXTERIEURE') {
+                $resourceOther = 'Aide extérieure';
+            } elseif ($resourceType == 'RESSOURCES NON DECLAREES') {
+                $resourceOther = 'Ressources non déclarées';
+            }
+
+            $evalBudgetPerson = (new EvalBudgetPerson())
+                ->setCharges((float) $this->row['Montant charges'] > 0 ? Choices::YES : Choices::NO)
+                ->setChargesAmt((float) $this->row['Montant charges'])
+                ->setDebts($this->findInArray($this->row['Dettes'], self::DEBTS) ?? null)
+                ->setIncomeTax($this->findInArray($this->row['AVIS D\'IMPOSITION'], self::YES_NO) ?? null)
+                ->setDebtsAmt((float) $this->row['Montant dettes'])
+                ->setOverIndebtRecord($this->findInArray($this->row['Plan apurement'], self::OVER_INDEBT_RECORD) ?? null)
+                ->setSettlementPlan($this->findInArray($this->row['Plan apurement'], self::SETTLEMENT_PLAN) ?? null)
+                ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
+                ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
+                ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
+                ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
+                ->setFamilyAllowance(strstr($resourceType, 'PF') ? Choices::YES : 0)
+                ->setSalary(strstr($resourceType, 'SALAIRE') ? Choices::YES : 0)
+                ->setMaintenance(strstr($resourceType, 'PENSION ALIMENTAIRE') ? Choices::YES : 0)
+                ->setRessourceOther($resourceOther ? Choices::YES : 0)
+                ->setRessourceOtherPrecision($resourceOther)
+                ->setResources($this->findInArray($resourceType, self::RESOURCES) ?? null)
+                ->setResourcesAmt((float) $this->row['Montant ressources'])
+                ->setEvaluationPerson($evaluationPerson);
+
+            $this->manager->persist($evalBudgetPerson);
+        }
     }
 
     protected function findInArray($needle, array $haystack): ?int
@@ -766,13 +838,13 @@ class ImportDatasOC
         return false;
     }
 
-    protected function getRole(array $row, int $typology)
+    protected function getRole(int $typology)
     {
         $this->gender = 99;
         $this->head = false;
         $this->role = 97;
 
-        if ($row['Rôle'] == 'CHEF DE FAMILLE') {
+        if ($this->row['Rôle'] == 'CHEF DE FAMILLE') {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
                 $this->gender = Person::GENDER_FEMALE;
@@ -787,52 +859,41 @@ class ImportDatasOC
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
-        } elseif ($row['Rôle'] == 'ENFANT') {
+        } elseif ($this->row['Rôle'] == 'ENFANT') {
             $this->role = RolePerson::ROLE_CHILD;
-        } elseif ($row['Rôle'] == 'CONJOINT( E )') {
+        } elseif ($this->row['Rôle'] == 'CONJOINT( E )') {
             $this->role = 1;
         }
     }
 
-    protected function getStatus(array $row): int
+    protected function getStatus(): int
     {
-        if ($row['Date entrée']) {
-            return SupportGroup::STATUS_IN_PROGRESS;
+        if ($this->row['Date diagnostic']) {
+            return SupportGroup::STATUS_ENDED;
         }
 
-        if ($row['Date sortie'] || $row['Date diagnostic']) {
+        if ($this->row['Date sortie']) {
             return SupportGroup::STATUS_ENDED;
         }
 
         return SupportGroup::STATUS_OTHER;
     }
 
-    protected function getStartDate(array $row): ?\DateTime
+    protected function getStartDate(): ?\DateTime
     {
-        return $row['Date entrée'] ? new \Datetime($row['Date entrée']) : null;
+        return $this->row['Date diagnostic'] ? new \Datetime($this->row['Date diagnostic']) : null;
     }
 
-    protected function getEndDate(array $row): ?\DateTime
+    protected function getEndDate(): ?\DateTime
     {
-        return $row['Date sortie'] ? new \Datetime($row['Date sortie']) : null;
-    }
+        if ($this->row['Date sortie']) {
+            return new \Datetime($this->row['Date sortie']);
+        }
 
-    protected function getUser(): User
-    {
-        return $this->security->getUser();
-    }
+        if ($this->row['Date diagnostic']) {
+            return new \Datetime($this->row['Date diagnostic']);
+        }
 
-    protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
-    {
-        $note = (new Note())
-        ->setTitle($title)
-        ->setContent($content)
-        ->setSupportGroup($supportGroup)
-        ->setCreatedBy($this->getUser())
-        ->setUpdatedBy($this->getUser());
-
-        $this->manager->persist($note);
-
-        return $note;
+        return null;
     }
 }
