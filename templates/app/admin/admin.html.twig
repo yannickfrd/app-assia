@@ -12,76 +12,93 @@
 
     <hr>
 
-    <div class="my-4">
-      <h2 class="h5">Création</h2>
-      <ul>
-        <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("security_registration") }}">Utilisateur</a>
-        </li>
-        {% if is_granted("ROLE_SUPER_ADMIN") %}
-        <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("service_new") }}">Service</a>
-        </li>
-        <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("pole_new") }}">Pôle</a>
-        </li>
-        <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("admin_device_new") }}">Dispositif</a>
-        </li class="mb-2">
-        {% endif %}
-        <li class="mb-2 text-{{ theme_color }}">
-            <a class="text-dark" href="{{ path("admin_organization_new") }}">Organisme prescripteur</a>
-        </li>
-      </ul>
+    <div class="row my-4">
 
-      <hr class="my-3">
+        <div class="col-md-6">
+                <h2 class="h5">Création</h2>
+                    <ul>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("security_registration") }}">Utilisateur</a>
+                        </li>
+                        {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("service_new") }}">Service</a>
+                        </li>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("pole_new") }}">Pôle</a>
+                        </li>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("admin_device_new") }}">Dispositif</a>
+                        </li class="mb-2">
+                        {% endif %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("admin_organization_new") }}">Organisme prescripteur</a>
+                        </li>
+                    </ul>
 
-        <h2 class="h5">Listes</h2>
-        <ul>
-            {% if is_granted("ROLE_SUPER_ADMIN") %}
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("admin_users") }}">Utilisateurs</a>
-            </li>
+            <hr class="my-3">
+
+            <h2 class="h5">Listes</h2>
+            <ul>
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("admin_users") }}">Utilisateurs</a>
+                    </li>
+                    {% endif %}
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("admin_devices") }}">Dispositifs</a>
+                    </li>
+            </ul>
+
+            <hr class="my-3">
+
+        </div>
+
+        <div class="col-md-6">
+
+            <h2 class="h5">Export</h2>
+            <ul>
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("export") }}">Export de données</a>
+                </li>
+            </ul>
+
+            {% if app.user.id == 1 %}
+
+                <hr class="my-3">
+
+                <h2 class="h5">Base de données</h2>
+                <ul>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("database_backups") }}">Sauvegarde et export de la base de données</a>
+                    </li>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("import") }}">Import de données</a>
+                    </li>
+                </ul>
+
+                <hr class="my-3">
+
+                <h2 class="h5">Indicateurs</h2>
+                <ul>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("indicators_social") }}">Indicateurs sociaux</a>
+                    </li>
+                </ul>
+
+                <hr class="my-3">
+
+                <h2 class="h5">Doublons</h2>
+                <ul>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("duplicated_people") }}">Personnes en doublon</a>
+                    </li>
+                </ul>
+
             {% endif %}
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("admin_devices") }}">Dispositifs</a>
-            </li>
-        </ul>
 
-        <hr class="my-3">
-
-        <h2 class="h5">Export</h2>
-        <ul>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("export") }}">Export de données</a>
-            </li>
-        </ul>
-
-        {% if app.user.id == 1 %}
-
-          <hr class="my-3">
-
-          <h2 class="h5">Base de données</h2>
-          <ul>
-              <li class="mb-2 text-{{ theme_color }}">
-                  <a class="text-dark" href="{{ path("database_backups") }}">Sauvegarde et export de la base de données</a>
-              </li>
-              <li class="mb-2 text-{{ theme_color }}">
-                  <a class="text-dark" href="{{ path("import") }}">Import de données</a>
-              </li>
-          </ul>
-
-              <hr class="my-3">
-
-          <h2 class="h5">Indicateurs</h2>
-          <ul>
-              <li class="mb-2 text-{{ theme_color }}">
-                  <a class="text-dark" href="{{ path("indicators_social") }}">Indicateurs sociaux</a>
-              </li>
-          </ul>
-        {% endif %}
+        </div>
     </div>
-
 </div>
 
 {% endblock %}

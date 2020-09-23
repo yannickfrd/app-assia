@@ -16,6 +16,9 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.25.0 - 23/09/2020
+- Créé module de recherche des personnes en doublon.
+
 ## Version 1.24.1 - 23/09/2020
 - Modif class d'import des suivis Opération Ciblée.
 - Modif fiche 'Person', 'GroupPeople' et 'SupportGroup' : n'affiche la date de modification que si différente de la date de création.

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Person;
+use App\Form\Model\DuplicatedPeopleSearch;
 use App\Form\Model\PersonSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -124,5 +125,25 @@ class PersonRepository extends ServiceEntityRepository
 
         return $query->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findDuplicatedPeople(DuplicatedPeopleSearch $search)
+    {
+        $query = $this->createQueryBuilder('p')->select('p');
+
+        if ($search->getLastname()) {
+            $query->addGroupBy('p.lastname');
+        }
+        if ($search->getFirstname()) {
+            $query->addGroupBy('p.firstname');
+        }
+        if ($search->getBirthdate()) {
+            $query->addGroupBy('p.birthdate');
+        }
+
+        return $query->having('COUNT(p.id) > 1')
+
+            ->getQuery()
+            ->getResult();
     }
 }

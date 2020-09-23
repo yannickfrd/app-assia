@@ -6,7 +6,9 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\GroupPeople;
 use App\Entity\Person;
 use App\Entity\RolePerson;
+use App\Form\Model\DuplicatedPeopleSearch;
 use App\Form\Model\PersonSearch;
+use App\Form\Person\DuplicatedPeopleType;
 use App\Form\Person\PersonNewGroupType;
 use App\Form\Person\PersonRolePersonType;
 use App\Form\Person\PersonSearchType;
@@ -280,6 +282,25 @@ class PersonController extends AbstractController
             'nb_results' => $nbResults,
             'results' => 'Aucun résultat.',
         ], 200);
+    }
+
+    /**
+     * Liste des personnes en doublons.
+     *
+     * @Route("/duplicated_people", name="duplicated_people", methods="GET|POST")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function listDuplicatedPeople(Request $request, DuplicatedPeopleSearch $search = null): Response
+    {
+        $search = new DuplicatedPeopleSearch();
+
+        $form = ($this->createForm(DuplicatedPeopleType::class, $search))
+            ->handleRequest($request);
+
+        return $this->render('app/person/listDuplicatedPeople.html.twig', [
+            'form' => $form->createView(),
+            'people' => $this->repo->findDuplicatedPeople($search),
+        ]);
     }
 
     /**
