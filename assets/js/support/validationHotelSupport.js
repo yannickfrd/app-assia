@@ -14,20 +14,20 @@ export default class ValidationHotelSupport {
         this.selectType = new SelectType()
         this.loader = new Loader()
 
-        this.prefix = 'support_hotelSupport_'
+        this.prefix = 'support_'
 
         this.btnSubmitElts = document.querySelectorAll('button[type="submit"]')
         this.dateInputElts = document.querySelectorAll('input[type="date"]')
 
         this.orientationDateElt = document.getElementById('support_originRequest_orientationDate')
-        this.diagStartDateElt = document.getElementById(this.prefix + 'diagStartDate')
-        this.diagEndDateElt = document.getElementById(this.prefix + 'diagEndDate')
-        this.supportStartDateElt = document.getElementById(this.prefix + 'supportStartDate')
-        this.supportEndDateElt = document.getElementById(this.prefix + 'supportEndDate')
+        this.startDateElt = document.getElementById(this.prefix + 'startDate')
+        this.evaluationDateElt = document.getElementById(this.prefix + 'hotelSupport_evaluationDate')
+        this.endDateElt = document.getElementById(this.prefix + 'endDate')
 
-        this.HotelASE = 14
-        this.HotelDiag = 15
-        this.HotelSupport = 16
+        this.AseMab = 15
+        this.AseHeb = 16
+        this.HotelSupport = 19
+        this.HotelUrg = 20
 
         this.init()
     }
@@ -39,31 +39,24 @@ export default class ValidationHotelSupport {
 
         this.displayFields()
 
-        this.diagStartDateElt.addEventListener('focusout', () => {
+        this.evaluationDateElt.addEventListener('focusout', () => {
             this.validationForm.checkIntervalBeetweenDates(
                 this.orientationDateElt,
-                this.diagStartDateElt,
+                this.evaluationDateElt,
                 'La date ne peut pas être antérieure à la date de la demande.')
         })
 
-        this.diagEndDateElt.addEventListener('focusout', () => {
+        this.startDateElt.addEventListener('focusout', () => {
             this.validationForm.checkIntervalBeetweenDates(
-                this.diagStartDateElt,
-                this.diagEndDateElt,
-                'La date de fin ne peut pas être antérieure au début du diagnostic.')
+                this.orientationDateElt,
+                this.startDateElt,
+                'La date ne peut pas être antérieure à la date de la demande.')
         })
 
-        this.supportStartDateElt.addEventListener('focusout', () => {
+        this.endDateElt.addEventListener('focusout', () => {
             this.validationForm.checkIntervalBeetweenDates(
-                this.diagEndDateElt,
-                this.supportStartDateElt,
-                'La date ne peut pas être antérieure à la fin du diagnostic.')
-        })
-
-        this.supportEndDateElt.addEventListener('focusout', () => {
-            this.validationForm.checkIntervalBeetweenDates(
-                this.supportStartDateElt,
-                this.supportEndDateElt,
+                this.startDateElt,
+                this.endDateElt,
                 'La date ne peut pas être antérieure au début de l\'accompagnement.')
         })
 
@@ -82,12 +75,12 @@ export default class ValidationHotelSupport {
      * Masque ou affiche les champs conditionnels
      */
     displayFields() {
-        new DisplayFields('support_', 'device')
+        new DisplayFields(this.prefix, 'device')
         new DisplayFields('support_originRequest_', 'orientationDate')
         new DisplayFields('support_originRequest_', 'organization')
-        new DisplayFields(this.prefix, 'diagStartDate')
-        new DisplayFields(this.prefix, 'supportStartDate')
-        new DisplayFields(this.prefix, 'supportEndDate')
+        new DisplayFields(this.prefix + 'hotelSupport_', 'evaluationDate')
+        new DisplayFields(this.prefix, 'startDate')
+        new DisplayFields(this.prefix, 'endDate')
     }
 
     /**

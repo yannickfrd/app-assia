@@ -86,7 +86,7 @@ class AccommodationGroupControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('send')->form([
-            'accommodation_group[accommodation]' => 1,
+            // 'accommodation_group[accommodation]' => 1,
             'accommodation_group[startDate]' => null,
         ]);
 

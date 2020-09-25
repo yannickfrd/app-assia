@@ -35,8 +35,7 @@ class AccommodationGroup
     private $id;
 
     /**
-     * @ORM\Column(type="date")
-     * @Assert\NotNull()
+     * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
 
@@ -78,9 +77,19 @@ class AccommodationGroup
      */
     private $groupPeople;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $comment;
+
     public function __construct()
     {
         $this->accommodationPeople = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return strval($this->id);
     }
 
     public function getId(): ?int
@@ -168,6 +177,30 @@ class AccommodationGroup
         return $this;
     }
 
+    public function getGroupPeople(): ?GroupPeople
+    {
+        return $this->groupPeople;
+    }
+
+    public function setGroupPeople(?GroupPeople $groupPeople): self
+    {
+        $this->groupPeople = $groupPeople;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
     /**
      * @return Collection|AccommodationPerson[]
      */
@@ -195,18 +228,6 @@ class AccommodationGroup
                 $accommodationPerson->setAccommodationGroup(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getGroupPeople(): ?GroupPeople
-    {
-        return $this->groupPeople;
-    }
-
-    public function setGroupPeople(?GroupPeople $groupPeople): self
-    {
-        $this->groupPeople = $groupPeople;
 
         return $this;
     }

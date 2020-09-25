@@ -24,7 +24,6 @@ use App\Repository\DocumentRepository;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
-use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Calendar;
@@ -85,15 +84,11 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupService $supportGroupService, ServiceRepository $repoService): Response
+    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupService $supportGroupService): Response
     {
-        // $groupPeople = $repo->findGroupPeopleById($id);
-        $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser());
         $serviceId = $request->request->get('support')['service'] ?? $_POST['support']['service'];
 
-        if ((int) $serviceId) {
-            $supportGroup->setService($repoService->find($serviceId));
-        }
+        $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser(), $groupPeople, $serviceId);
 
         $form = ($this->createForm($this->getFormType($serviceId), $supportGroup))
             ->handleRequest($request);
@@ -150,7 +145,7 @@ class SupportController extends AbstractController
      */
     public function editSupportGroup(int $id, Request $request, SupportGroupService $supportGroupService): Response
     {
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $supportGroupService->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -413,7 +408,7 @@ class SupportController extends AbstractController
         if ($serviceId == Service::SERVICE_AVDL_ID) {
             return SupportGroupAvdlType::class;
         }
-        if (in_array($serviceId, Service::SERVICES_PASH_ID)) {
+        if ($serviceId == Service::SERVICE_PASH_ID) {
             return SupportGroupHotelType::class;
         }
 

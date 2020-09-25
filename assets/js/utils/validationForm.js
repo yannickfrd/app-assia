@@ -92,6 +92,8 @@ export default class ValidationForm {
                     this.invalidField(fieldElt, 'Saisie obligatoire.')
                     fieldElt.addEventListener('change', () => this.validField(fieldElt))
                 }
+            } else {
+                this.validField(fieldElt)
             }
         })
     }
@@ -197,10 +199,14 @@ export default class ValidationForm {
      * @return {Number}
      */
     getNbErrors() {
-        const nbErrors = this.containerElt.querySelectorAll('.js-invalid').length
+        const invalidFields = this.containerElt.querySelectorAll('.js-invalid')
+        const nbErrors = invalidFields.length
 
         if (nbErrors > 0) {
-            console.error(nbErrors + ' error(s)')
+            console.error(nbErrors + ' error' + (nbErrors > 1 ? 's' : '') + ' :')
+            invalidFields.forEach(field => {
+                console.error(field.parentElement.textContent)
+            })
         }
 
         return nbErrors

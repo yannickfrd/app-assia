@@ -298,11 +298,10 @@
                             </a>
                         </td>
                         <td class="align-middle">{{ accommodation.name }}</td>
-                        <td class="align-middle">{{ accommodation.device.name }}</td>
+                        <td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
                         <td class="align-middle">{{ accommodation.nbPlaces }}</td>
-                        <td class="align-middle">{{ accommodation.startDate|date("d/m/Y") }}</td>
-                        <td class="align-middle">{% if accommodation.endDate %}{{ accommodation.endDate|date("d/m/Y") }}{% endif %}
-                        </td>
+                        <td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
                         <td class="align-middle">{{ accommodation.city|capitalize }}</td>
                         <td class="align-middle">{{ accommodation.zipcode }}</td>
                         <td class="align-middle">{{ accommodation.address }}</td>

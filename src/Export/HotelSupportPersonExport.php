@@ -50,6 +50,7 @@ class HotelSupportPersonExport
 
         $datas = [
             'N° Suivi' => $supportGroup->getId(),
+            'ID personne' => $person->getId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
@@ -72,22 +73,21 @@ class HotelSupportPersonExport
             'Date entrée à l\'hôtel' => $this->formatDate($hotelSupport->getEntryHotelDate()),
             'Département d\'origine' => $hotelSupport->getOriginDeptToString(),
             'Identifiant GIP' => $hotelSupport->getGipId(),
-            'Ville hôtel' => $supportGroup->getCity(),
-            'Hôtel' => $supportGroup->getCommentLocation(),
+            'Hôtel' => $supportGroup->getAccommodationGroups()->first()->getAccommodation()->getName(),
+            'Adresse' => $supportGroup->getAddress(),
+            'Commune' => $supportGroup->getCity(),
             'Commentaire sur la demande' => $originRequest->getOrganizationComment(),
-            'Date de début du diagnostic' => $this->formatDate($hotelSupport->getDiagStartDate()),
-            'Date de fin du diagnostic' => $this->formatDate($hotelSupport->getDiagEndDate()),
-            'Commentaire diagnostic' => $hotelSupport->getDiagComment(),
-            'Date de début de l\'accompagnement' => $this->formatDate($hotelSupport->getSupportStartDate()),
+            'Date de début de l\'accompagnement' => $this->formatDate($supportGroup->getStartDate()),
+            'Date de l\'évaluation' => $this->formatDate($hotelSupport->getEvaluationDate()),
             'Date de signature convention' => $this->formatDate($hotelSupport->getAgreementDate()),
-            'Ancrage 95' => $hotelSupport->getDepartmentAnchorToString(),
+            'Ancrage départementale' => $hotelSupport->getDepartmentAnchorToString(),
             'Préconisation d\'accompagnement' => $hotelSupport->getRecommendationToString(),
-            'Date de fin de l\'accompagnement' => $this->formatDate($hotelSupport->getSupportEndDate()),
+            'Date de fin de l\'accompagnement' => $this->formatDate($supportGroup->getEndDate()),
             'Niveau d\'intervention' => $hotelSupport->getLevelSupportToString(),
             'Motif de fin d\'accompagnement' => $hotelSupport->getEndSupportReasonToString(),
             'Situation à la fin' => $supportGroup->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportGroup->getEndStatusComment(),
-            'Commentaire sur l\'accompagnement' => $hotelSupport->getSupportComment(),
+            'Commentaire sur l\'accompagnement' => $supportGroup->getComment(),
         ];
 
         return $datas;

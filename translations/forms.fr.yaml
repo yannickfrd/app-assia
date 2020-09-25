@@ -30,6 +30,8 @@ Family typology: Typologie familiale
 Firstname: Prénom
 Fullname: Nom et prénom
 Gender: Sexe
+Hotel: Hôtel
+hotelName: Nom de l'hôtel
 Lastname: Nom
 Location: Lieu
 Month: Mois
@@ -100,6 +102,11 @@ Eval housing: Logement
 Eval justice: Justice
 Eval prof: Professionnel
 Eval social: Sociale
+support:
+  dates: Date d'accompagnement
+  startDate: Date de début d'accompagnement
+  endDate: Date de fin d'accompagnement
+
 
 ### OriginRequest
 Decision date: Date de décision
@@ -217,24 +224,24 @@ avdl:
   endSupportComment.placeholder: Écrire un commentaire concernant la fin d'accompagnement ou la proposition logement
 
 ### Suivi hôtel
-Department anchor : Ancrage départementale (95)
+Department anchor : Ancrage départementale
 Agreement date: Date de signature de la convention
 Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
+Evaluation date : Date de l'évaluation / diagnostic
 Gip id: Identifiant GIP
 Level support: Niveau d'intervention
 Origin dept: Département d'origine
 Recommendation : Préconisation
 hotelSupport:
-  locationHotel: Adresse de l'hôtel
-  commentLocationHelp: Nom de l'hôtel, numéro de chambre
-  diag: Diagnostic
+  startDate: Date d'arrivée
+  evaluation: Date de l'évaluation / diagnostic
   endSupportReason: Motif de fin d'accompagnement
   orientationDate: Date d'orientation
   subService.help: Secteur géographique 
   support: Suivi
   levelSupport: Niveau d'intervention
   search:
-    departmentAnchor: -- Ancrage 95 --
+    departmentAnchor: -- Ancrage départementale --
   ssd:
     search: Recherche du SSD orienteur
     search.placeholder: Saisir une ville

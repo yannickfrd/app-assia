@@ -14,9 +14,11 @@ use App\Entity\SupportPerson;
 use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
+use Svg\Tag\Group;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -26,6 +28,7 @@ class SupportGroupService
 {
     private $container;
     private $repoSupportGroup;
+    private $repoService;
     private $repoEvaluationGroup;
     private $manager;
 
@@ -33,11 +36,14 @@ class SupportGroupService
         ContainerInterface $container,
         EntityManagerInterface $manager,
         SupportGroupRepository $repoSupportGroup,
+        ServiceRepository $repoService,
         EvaluationGroupRepository $repoEvaluationGroup)
     {
         $this->container = $container;
         $this->repoSupportGroup = $repoSupportGroup;
+        $this->repoService = $repoService;
         $this->repoEvaluationGroup = $repoEvaluationGroup;
+
         $this->manager = $manager;
         $this->cache = new FilesystemAdapter();
     }
@@ -45,11 +51,21 @@ class SupportGroupService
     /**
      * Donne un nouveau suivi paramétré.
      */
-    public function getNewSupportGroup(User $user)
+    public function getNewSupportGroup(User $user, GroupPeople $groupPeople, int $serviceId = null)
     {
-        return  (new SupportGroup())
+        $supportGroup = (new SupportGroup())
             ->setStatus(2)
             ->setReferent($user);
+
+        if ((int) $serviceId) {
+            $supportGroup->setService($this->repoService->find($serviceId));
+        }
+
+        if ($serviceId == Service::SERVICE_PASH_ID && $supportGroup->getAccommodationGroups()->count() == 0) {
+            $supportGroup = $this->addAccommodationGroup($supportGroup, $groupPeople);
+        }
+
+        return $supportGroup;
     }
 
     /**
@@ -100,11 +116,11 @@ class SupportGroupService
     {
         $cacheEvaluation = $this->cache->getItem('support_group_'.$supportGroup->getId().'_evaluation');
 
-        if (!$cacheEvaluation->isHit()) {
-            $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));
-            $cacheEvaluation->expiresAfter(30 * 24 * 60 * 60);
-            $this->cache->save($cacheEvaluation);
-        }
+        // if (!$cacheEvaluation->isHit()) {
+        $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));
+        $cacheEvaluation->expiresAfter(30 * 24 * 60 * 60);
+        $this->cache->save($cacheEvaluation);
+        // }
 
         return $cacheEvaluation->get();
     }
@@ -128,7 +144,7 @@ class SupportGroupService
         if ($serviceId == Service::SERVICE_AVDL_ID) {
             $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
         }
-        if (in_array($serviceId, Service::SERVICES_PASH_ID)) {
+        if ($serviceId == Service::SERVICE_PASH_ID) {
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
@@ -181,11 +197,11 @@ class SupportGroupService
         $supportGroup->setUpdatedAt(new \DateTime());
         $serviceId = $supportGroup->getService()->getId();
 
-        // Contrôle le service du suivi
+        // Vérifie le service du suivi
         if ($serviceId == Service::SERVICE_AVDL_ID) {
             $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
         }
-        if (in_array($serviceId, Service::SERVICES_PASH_ID)) {
+        if ($serviceId == Service::SERVICE_PASH_ID) {
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
@@ -198,7 +214,7 @@ class SupportGroupService
     /**
      * Crée une copie d'un suivi social.
      */
-    public function cloneSupport(SupportGroup $supportGroup, $user, NormalizerInterface $normalizer): SupportGroup
+    public function cloneSupport(SupportGroup $supportGroup, User $user, NormalizerInterface $normalizer): SupportGroup
     {
         $newSupportGroup = clone $supportGroup;
 
@@ -291,6 +307,10 @@ class SupportGroupService
      */
     protected function checkSupportGroup(SupportGroup $supportGroup)
     {
+        if ($supportGroup->getService()->getId() == Service::SERVICE_PASH_ID && $supportGroup->getAccommodationGroups()->count() == 0) {
+            $supportGroup = $this->addAccommodationGroup($supportGroup);
+        }
+
         // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
         $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
         $nbSupportPeople = $supportGroup->getSupportPeople()->count();
@@ -476,5 +496,13 @@ class SupportGroupService
     protected function addFlash(string $alert, string $msg)
     {
         $this->container->get('session')->getFlashBag()->add($alert, $msg);
+    }
+
+    protected function addAccommodationGroup(SupportGroup $supportGroup, ?GroupPeople $groupPeople = null)
+    {
+        $accommodationGroup = (new AccommodationGroup())->setGroupPeople($groupPeople ?? $supportGroup->getGroupPeople());
+        $supportGroup->addAccommodationGroup($accommodationGroup);
+
+        return $supportGroup;
     }
 }

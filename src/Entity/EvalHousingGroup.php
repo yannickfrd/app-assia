@@ -48,18 +48,6 @@ class EvalHousingGroup
         99 => 'Non renseignée',
     ];
 
-    public const SIAO_DEPT = [
-        75 => '75',
-        77 => '77',
-        78 => '78',
-        91 => '91',
-        92 => '92',
-        93 => '93',
-        94 => '94',
-        95 => '95',
-        98 => 'Hors IDF',
-    ];
-
     public const SIAO_RECOMMENDATION = [
         10 => 'Hébergement',
         20 => 'Logement adapté/accompagné',
@@ -431,7 +419,7 @@ class EvalHousingGroup
      */
     public function getSiaoRequestDeptToString(): ?string
     {
-        return $this->siaoRequestDept ? self::SIAO_DEPT[$this->siaoRequestDept] : null;
+        return $this->siaoRequestDept ? Choices::DEPARTMENTS[$this->siaoRequestDept] : null;
     }
 
     public function setSiaoRequestDept(?int $siaoRequestDept): self

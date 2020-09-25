@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\SupportGroup;
 use App\Entity\Accommodation;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
+use App\Entity\SupportGroup;
+use App\Form\Accommodation\AccommodationGroupType;
+use App\Repository\AccommodationGroupRepository;
+use App\Service\SupportGroup\SupportGroupService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\AccommodationGroupRepository;
-use App\Service\SupportGroup\SupportGroupService;
-use App\Form\Accommodation\AccommodationGroupType;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Controller des hébergements des groupes de personnes.
@@ -124,8 +124,6 @@ class AccommodationGroupController extends AbstractController
      * Ajout de personnes à la prise en charge.
      *
      * @Route("/support/group_people_accommodation/{id}/add_people", name="support_group_people_accommodation_add_people", methods="GET")
-     *
-     * @param int $id // AccommodationGroup
      */
     public function addPeopleInAccommodation(AccommodationGroup $accommodationGroup): Response
     {

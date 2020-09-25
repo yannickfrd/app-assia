@@ -31,19 +31,20 @@
                     <tr>
                         <th scope="col" class="align-middle th-w-20"></th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}</th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Statut", "sg.status") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Service / Secteur", "ss.name") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Dispositif", "d.name") }}</th>
                         <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Commune hôtel", "sg.city") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Statut", "sg.status") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Hôtel (Commune)", "sg.city") }}</th>
                         <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de demande", "origin.orientationDate") }}</th>
                         <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Orienteur", "orga.name") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date du diagnostic", "hotelSupport.diagStartDate") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début de l'accompa-gnement", "hotelSupport.supportStartDate") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Niveau d'intervention", "hotelSupport.levelSupport") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de signature convention", "hotelSupport.agreementDate") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Ancrage 95", "hotelSupport.departmentAnchor") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin de l'accompa-gnement", "hotelSupport.supportEndDate") }}</th>
-                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Motif fin accompa-gnement", "hotelSupport.endSupportReason") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début de l'accompa-gnement", "sg.startDate") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de l'évaluation", "hs.evaluationDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Niveau d'intervention", "hs.levelSupport") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de signature convention", "hs.agreementDate") }}</th>
+                        <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(supports, "Ancrage dépt.", "hs.departmentAnchor") }}</th>
+                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin de l'accompa-gnement", "sg.endDate") }}</th>
+                        <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Motif fin accompa-gnement", "hs.endSupportReason") }}</th>
                     </tr>
                 </thead>
                 <tbody>            
@@ -63,12 +64,15 @@
                             {% endif %}
                         </td>
                         <td class="align-middle">{{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}</td>
+                        <td class="align-middle">{{ support.subService ? support.subService.name }}</td>
+                        <td class="align-middle">{{ support.device ? support.device.name }}</td>
+                        <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
                         <td class="align-middle">{{ support.statusToString }}<br/>
                             <span class="text-secondary">{{ support.coefficient ? "(coeff. " ~ support.coefficient ~ ")" }}</span>
                         </td>
-                        <td class="align-middle">{{ support.device ? support.device.name }}</td>
-                        <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
-                        <td class="align-middle">{{ support.city }}</td>
+                        <td class="align-middle">{{ support.accommodationGroups|length ? support.accommodationGroups[0].accommodation.name }}<br/>
+                            <span class="text-secondary">{{ support.city ? "(" ~ support.city ~ ")" }}</span>
+                        </td>
                         {% if support.hotelSupport %}
                             {% set hotelSupport = support.hotelSupport %}
                             <td class="align-middle">{{ support.originRequest and support.originRequest.orientationDate ? 
@@ -76,13 +80,12 @@
                             <td class="align-middle">{{ support.originRequest and support.originRequest.organization and 
                                 support.originRequest.organization ? support.originRequest.organization.name ~ 
                                 (hotelSupport.ssd ? " (" ~  hotelSupport.ssd ~ ")") }}</td>
-                            <td class="align-middle">{{ hotelSupport.diagStartDate ? hotelSupport.diagStartDate|date("d/m/Y") }}
-                                {{ hotelSupport.diagEndDate ? " - " ~ hotelSupport.diagEndDate|date("d/m/Y") }}</td>
-                            <td class="align-middle">{{ hotelSupport.supportStartDate ? hotelSupport.supportStartDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ hotelSupport.levelSupportToString }}</td>
                             <td class="align-middle">{{ hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ hotelSupport.departmentAnchorToString }}</td>
-                            <td class="align-middle">{{ hotelSupport.supportEndDate ? hotelSupport.supportEndDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ hotelSupport.endSupportReasonToString }}</td>
                         {% else %}
                             <td class="align-middle" colspan="10"></td>

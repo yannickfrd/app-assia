@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Form\Utils\Choices;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\DisableEntityTrait;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DeviceRepository")
@@ -26,9 +26,10 @@ class Device
 
     public const AVDL_DALO = 10;
     public const AVDL_HORS_DALO = 4;
-    public const HOTEL_ASE = 14;
-    public const HOTEL_DIAG = 15;
-    public const HOTEL_SUPPORT = 16;
+    public const ASE_MAB = 15; //14
+    public const ASE_HEB = 16; //14
+    public const HOTEL_SUPPORT = 19; // 19
+    public const HOTEL_URG = 20; //15
 
     public const CONTRIBUTION_TYPE = [
         1 => 'Taux de participation sur les ressources',

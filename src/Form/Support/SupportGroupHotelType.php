@@ -2,14 +2,12 @@
 
 namespace App\Form\Support;
 
-use App\Entity\SubService;
-use App\Form\HotelSupport\HotelSupportType;
-use App\Form\Type\LocationType;
-use App\Repository\SubServiceRepository;
 use App\Security\CurrentUserService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use App\Form\HotelSupport\HotelSupportType;
 use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Accommodation\AccommodationGroupHotelType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SupportGroupHotelType extends AbstractType
 {
@@ -23,24 +21,17 @@ class SupportGroupHotelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('subService', EntityType::class, [
-                'class' => SubService::class,
-                'choice_label' => 'name',
-                'query_builder' => function (SubServiceRepository $repo) {
-                    return $repo->getSubServicesFromUserQueryList($this->currentUser);
-                },
-                'placeholder' => 'placeholder.select',
-                'help' => 'hotelSupport.subService.help',
-            ])
             ->remove('status')
-            ->remove('startDate')
-            ->remove('endDate')
-            ->add('location', LocationType::class, [
-                'data_class' => SupportGroupType::class,
-                'attr' => [
-                    'geoLocation' => true,
-                    'commentLocationHelp' => 'hotelSupport.commentLocationHelp',
+            ->remove('location')
+            ->add('accommodationGroups', CollectionType::class, [
+                'entry_type' => AccommodationGroupHotelType::class,
+                'label_attr' => [
+                    'class' => 'sr-only',
                 ],
+                'allow_add' => false,
+                'allow_delete' => false,
+                'delete_empty' => true,
+                'label' => null,
             ])
             ->add('hotelSupport', HotelSupportType::class);
     }

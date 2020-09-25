@@ -276,7 +276,7 @@ class ImportDatasOC
         'NON' => 2,
     ];
 
-    public const SIAO_DEPT = [
+    public const DEPARTMENTS = [
         'SIAO 75' => 75,
         'SIAO 77' => 77,
         'SIAO 78' => 78,
@@ -573,7 +573,7 @@ class ImportDatasOC
         ->setSiaoRequest($this->row['Date demande initiale SIAO'] ? Choices::YES : Choices::NO)
         ->setSiaoRequestDate($this->row['Date demande initiale SIAO'] ? new \Datetime($this->row['Date demande initiale SIAO']) : null)
         ->setSiaoUpdatedRequestDate($this->row['Date dernière actualisation SIAO'] ? new \Datetime($this->row['Date dernière actualisation SIAO']) : null)
-        ->setSiaoRequestDept($this->findInArray($this->row['SIAO prescripteur'], self::SIAO_DEPT) ?? null)
+        ->setSiaoRequestDept($this->findInArray($this->row['SIAO prescripteur'], self::DEPARTMENTS) ?? null)
         ->setSiaoRecommendation($this->findInArray($this->row['Préconisation'], self::RECOMMENDATION) ?? null)
         ->setSocialHousingRequest($this->findInArray($this->row['Demande de logement social active'], self::DLS) ?? (!empty($this->row['NUR']) ? Choices::YES : Choices::NO))
         ->setSocialHousingRequestId($this->row['NUR'])
@@ -659,11 +659,10 @@ class ImportDatasOC
     {
         $hotelSupport = (new HotelSupport())
             ->setGipId($this->row['ID_GIP'])
-            ->setDiagStartDate($this->row['Date diagnostic'] ? new \Datetime($this->row['Date diagnostic']) : null)
-            ->setDiagEndDate($this->row['Date diagnostic'] ? new \Datetime($this->row['Date diagnostic']) : null)
+            ->setEvaluationDate($this->row['Date diagnostic'] ? new \Datetime($this->row['Date diagnostic']) : null)
             ->setDiagComment($this->row['TS diagnostic'] ? 'TS : '.$this->row['TS diagnostic'] : null)
             // ->setSupportStartDate($this->getStartDate($this->row))
-            ->setDepartmentAnchor($this->findInArray($this->row['Ancrage 95'], self::YES_NO) ?? null)
+            ->setDepartmentAnchor(['Ancrage 95'] == 'OUI' ? 95 : null)
             ->setRecommendation($this->findInArray($this->row['Préconisation'], self::RECOMMENDATION) ?? null)
             ->setSupportEndDate($this->getEndDate($this->row))
             ->setSupportComment($this->row['TS accompagnement'] ? 'TS : '.$this->row['TS accompagnement'] : null)

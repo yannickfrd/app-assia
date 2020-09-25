@@ -2,19 +2,19 @@
 
 namespace App\Form\Accommodation;
 
-use App\Form\Utils\Choices;
 use App\Entity\Accommodation;
 use App\Entity\AccommodationGroup;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\AbstractType;
+use App\Form\Utils\Choices;
 use App\Repository\AccommodationRepository;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AccommodationGroupType extends AbstractType
 {
@@ -23,6 +23,7 @@ class AccommodationGroupType extends AbstractType
         $builder
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
+                'required' => true,
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',

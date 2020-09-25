@@ -63,17 +63,16 @@ class AccommodationRepository extends ServiceEntityRepository
      */
     public function getAccommodationsQueryList(Service $service): QueryBuilder
     {
-        $query = $this->createQueryBuilder('a')
+        return $this->createQueryBuilder('a')
             ->select('PARTIAL a.{id, name, service, address, city, zipcode, commentLocation, locationId, lat, lon}')
 
             ->where('a.service = :service')
             ->setParameter('service', $service)
-
             ->andWhere('a.endDate IS NULL')
             ->orWhere('a.endDate > :date')
-            ->setParameter('date', new \Datetime());
+            ->setParameter('date', new \Datetime())
 
-        return $query->orderBy('a.name', 'ASC');
+            ->orderBy('a.name', 'ASC');
     }
 
     /**
@@ -84,7 +83,8 @@ class AccommodationRepository extends ServiceEntityRepository
     public function findAccommodationsFromService(Service $service)
     {
         return $this->createQueryBuilder('a')->select('a')
-            ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id,name}')
+            ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('a.device', 'd')->addSelect('PARTIAL d.{id, name}')
 
             ->where('a.service = :service')
             ->setParameter('service', $service)

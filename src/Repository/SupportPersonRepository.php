@@ -89,6 +89,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
             ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')

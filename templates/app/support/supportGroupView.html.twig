@@ -3,7 +3,8 @@
 
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
-{% set SERVICES_PASH_ID = constant("App\\Entity\\Service::SERVICES_PASH_ID") %}
+{% set SERVICE_AVDL_ID = constant('SERVICE_AVDL_ID', support.service) %}
+{% set SERVICE_PASH_ID = constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
 
 {% block title %}Suivi social | {{ title_website }}{% endblock %}
 
@@ -86,9 +87,9 @@
 		</div>
 	</div>
 
-	{% if support.service.id == constant('SERVICE_AVDL_ID', support.service) and support.avdl %}
+	{% if support.service.id == SERVICE_AVDL_ID and support.avdl %}
 		{% include "app/avdl/avdlView.html.twig" %}
-	{% elseif support.service.id in SERVICES_PASH_ID %}
+	{% elseif support.service.id == SERVICE_PASH_ID %}
 		{% include "app/hotelSupport/hotelSupportView.html.twig" %}
 	{% else %}		
 		{% include "app/support/supportRegularView.html.twig" %}

@@ -2,14 +2,14 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Service;
 use App\Entity\EvaluationGroup;
+use App\Entity\Service;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class EvaluationGroupType extends AbstractType
 {
@@ -31,7 +31,7 @@ class EvaluationGroupType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $evaluationGroup = $event->getData();
             $service = $evaluationGroup->getSupportGroup()->getService();
-            if (in_array($service->getId(), Service::SERVICES_PASH_ID)) {
+            if ($service->getId() == Service::SERVICE_PASH_ID) {
                 $event->getForm()->add('evalHotelLifeGroup', EvalHotelLifeGroupType::class);
             }
         });

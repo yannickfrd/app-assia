@@ -29,7 +29,6 @@ class Service
 
     public const SERVICE_AVDL_ID = 5;
     public const SERVICE_PASH_ID = 10;
-    public const SERVICES_PASH_ID = [10];
 
     public const SUPPORT_ACCESS = [
         1 => 'Uniquement le référent du suivi',

@@ -136,10 +136,10 @@
                             {% endfor %}                        
                         </td>
                         <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>
-                        <td>{{ accommodation_group.accommodationPeople|length }}</td>
-                        <td>{{ accommodation_group.startDate|date("d/m/Y") }}</td>                    
-                        <td>{% if accommodation_group.endDate %}{{ accommodation_group.endDate|date("d/m/Y") }}{% endif %}</td>                    
-                        <td>{% if accommodation_group.endReason %}{{ accommodation_group.endReasonToString }}{% endif %}</td>
+                        <td>{{ accommodation_group.accommodationPeople|length ? accommodation_group.accommodationPeople|length }}</td>
+                        <td>{{ accommodation_group.startDate ? accommodation_group.startDate|date("d/m/Y") }}</td>                    
+                        <td>{{ accommodation_group.endDate ? accommodation_group.endDate|date("d/m/Y") }}</td>                    
+                        <td>{{ accommodation_group.endReasonToString }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

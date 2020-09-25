@@ -106,7 +106,7 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        $query = $query->orderBy('u.lastActivityAt', 'DESC');
+        $query = $query->orderBy('u.lastname', 'DESC');
 
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }

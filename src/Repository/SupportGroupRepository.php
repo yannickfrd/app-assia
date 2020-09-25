@@ -65,8 +65,8 @@ class SupportGroupRepository extends ServiceEntityRepository
         // if ($service->getId() == Service::SERVICE_AVDL_ID) {
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
         // }
-        // if (in_array($service->getId(), Service::SERVICES_PASH_ID)) {
-            ->leftJoin('sg.hotelSupport', 'hotelSupport')->addSelect('hotelSupport')
+        // if ($service->getId() == Service::SERVICE_PASH_ID) {
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
         // }
 
         // if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
@@ -169,7 +169,11 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
+
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate}')
@@ -184,16 +188,19 @@ class SupportGroupRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        if ($search->getDiagOrSupport() == HotelSupportSearch::DIAG) {
-            $query->andWhere('hs.diagStartDate IS NOT NULL');
+        if ($search->getHotels()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getHotels() as $hotel) {
+                $orX->add($expr->eq('ag.accommodation', $hotel));
+            }
+            $query->andWhere($orX);
         }
-        if ($search->getDiagOrSupport() == HotelSupportSearch::SUPPORT) {
-            $query->andWhere('hs.supportStartDate IS NOT NULL');
+
+        if ($search->getLevelSupport()) {
+            $query->andWhere('hs.levelSupport IN (:levelSupport)')
+            ->setParameter('levelSupport', $search->getLevelSupport());
         }
-        // if ($search->getSupportType()) {
-        //     $query->andWhere('hs.supportType IN (:supportType)')
-        //     ->setParameter('supportType', $search->getSupportType());
-        // }
 
         return $query->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()

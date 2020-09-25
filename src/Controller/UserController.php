@@ -52,7 +52,7 @@ class UserController extends AbstractController
         return $this->render('app/user/listUsers.html.twig', [
             'userSearch' => $search,
             'form' => $form->createView(),
-            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search, ), $request) ?? null,
+            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search), $request) ?? null,
             'disabled_users' => false,
         ]);
     }

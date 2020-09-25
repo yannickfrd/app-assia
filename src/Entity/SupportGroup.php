@@ -243,7 +243,7 @@ class SupportGroup
     private $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="supportGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
      * @MaxDepth(1)
      */
     private $accommodationGroups;

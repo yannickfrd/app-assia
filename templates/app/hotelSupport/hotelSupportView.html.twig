@@ -35,26 +35,22 @@
     </div>
 {% endif %}
 
-<div class="row my-2">
-    {{ utils.view(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "hotelSupport.locationHotel") }}
-</div>
-
-{% if hotelSupport and hotelSupport.diagStartDate %}
+{% if support.accommodationGroups|length %}
     <div class="row my-2">
-        {{ utils.view(hotelSupport.diagStartDate ? hotelSupport.diagStartDate|date("d/m/Y") 
-            ~ (hotelSupport.diagEndDate ? " - " ~ hotelSupport.diagEndDate|date("d/m/Y") : "") : "", "hotelSupport.diag") }}
-        {# {{ utils.view(hotelSupport.endStatusDiag, "hotelSupport.endStatusDiag") }} #}
-        {{ utils.view(hotelSupport.diagComment, "Comment") }}
+        {{ utils.view(support.accommodationGroups[0].accommodation ? support.accommodationGroups[0].accommodation.name  
+            ~ " (" ~ support.address ~ ", " ~ support.city ~ ")", "Hotel") }}
+        {{ utils.view(support.accommodationGroups[0].comment, "Comment") }}
     </div>
 {% endif %}
 
-{% if hotelSupport and hotelSupport.supportStartDate %}
+{% if hotelSupport %}
     <div class="row my-2">
-        {{ utils.view(hotelSupport.supportStartDate ? hotelSupport.supportStartDate|date("d/m/Y") 
-            ~ (hotelSupport.supportEndDate ? " - " ~ hotelSupport.supportEndDate|date("d/m/Y") : "") : "", "hotelSupport.support") }}
+        {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+            ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "support.dates") }}
+        {{ utils.view(hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") : "", "hotelSupport.evaluation") }}
         {{ utils.view(hotelSupport.levelSupportToString, "hotelSupport.levelSupport") }}
         {{ utils.view(hotelSupport.endSupportReasonToString, "hotelSupport.endSupportReason") }}
-        {{ utils.view(hotelSupport.supportComment, "Comment") }}
+        {{ utils.view(support.comment, "Comment") }}
     </div>
 {% endif %}
 

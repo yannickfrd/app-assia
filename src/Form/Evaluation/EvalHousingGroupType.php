@@ -42,7 +42,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
                 ])
             ->add('siaoRequestDept', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalHousingGroup::SIAO_DEPT),
+                'choices' => Choices::getChoices(Choices::DEPARTMENTS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

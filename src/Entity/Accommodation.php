@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,6 +29,7 @@ class Accommodation
     use LocationEntityTrait;
     use GeoLocationEntityTrait;
     use SoftDeleteableEntity;
+    use DisableEntityTrait;
 
     public const ACCOMMODATION_TYPE = [
         1 => 'Chambre individuelle',
@@ -72,8 +74,7 @@ class Accommodation
     private $name;
 
     /**
-     * @ORM\Column(name="places_number", type="integer")
-     * @Assert\NotBlank()
+     * @ORM\Column(name="places_number", type="integer", nullable=true)
      */
     private $nbPlaces;
 
@@ -136,6 +137,11 @@ class Accommodation
     public function __construct()
     {
         $this->accommodationGroups = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return strval($this->id);
     }
 
     public function getId(): ?int

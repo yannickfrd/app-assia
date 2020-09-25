@@ -11,25 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class HotelSupport
 {
-    public const ORIGIN_DEPT = [
-        75 => '75',
-        77 => '77',
-        78 => '78',
-        91 => '91',
-        92 => '92',
-        93 => '93',
-        94 => '94',
-        95 => '95',
-        98 => 'Hors IDF',
-    ];
-
-    public const END_STATUS_DIAG = [
-        1 => 'XXX',
-        2 => 'XXX',
-        3 => 'XXX',
-        99 => 'Non renseigné',
-    ];
-
     public const LEVEL_SUPPORT = [
         1 => 'Evaluation (1)',
         2 => 'Global (1)',
@@ -76,27 +57,7 @@ class HotelSupport
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $diagStartDate;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $diagEndDate;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $endStatusDiag;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $diagComment;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $supportStartDate;
+    private $evaluationDate;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -117,16 +78,6 @@ class HotelSupport
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $departmentAnchor;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $supportEndDate;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $supportComment;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -168,7 +119,7 @@ class HotelSupport
 
     public function getOriginDeptToString(): ?string
     {
-        return $this->getOriginDept() ? self::ORIGIN_DEPT[$this->getOriginDept()] : null;
+        return $this->getOriginDept() ? Choices::DEPARTMENTS[$this->getOriginDept()] : null;
     }
 
     public function setOriginDept(?int $originDept): self
@@ -202,67 +153,14 @@ class HotelSupport
         return $this;
     }
 
-    public function getDiagStartDate(): ?\DateTimeInterface
+    public function getEvaluationDate(): ?\DateTimeInterface
     {
-        return $this->diagStartDate;
+        return $this->evaluationDate;
     }
 
-    public function setDiagStartDate(?\DateTimeInterface $diagStartDate): self
+    public function setEvaluationDate(?\DateTimeInterface $evaluationDate): self
     {
-        $this->diagStartDate = $diagStartDate;
-
-        return $this;
-    }
-
-    public function getDiagEndDate(): ?\DateTimeInterface
-    {
-        return $this->diagEndDate;
-    }
-
-    public function setDiagEndDate(?\DateTimeInterface $diagEndDate): self
-    {
-        $this->diagEndDate = $diagEndDate;
-
-        return $this;
-    }
-
-    public function getEndStatusDiag(): ?int
-    {
-        return $this->endStatusDiag;
-    }
-
-    public function getEndStatusDiagToString(): ?string
-    {
-        return $this->getEndStatusDiag() ? self::END_STATUS_DIAG[$this->getEndStatusDiag()] : null;
-    }
-
-    public function setEndStatusDiag(?int $endStatusDiag): self
-    {
-        $this->endStatusDiag = $endStatusDiag;
-
-        return $this;
-    }
-
-    public function getDiagComment(): ?string
-    {
-        return $this->diagComment;
-    }
-
-    public function setDiagComment(?string $diagComment): self
-    {
-        $this->diagComment = $diagComment;
-
-        return $this;
-    }
-
-    public function getSupportStartDate(): ?\DateTimeInterface
-    {
-        return $this->supportStartDate;
-    }
-
-    public function setSupportStartDate(?\DateTimeInterface $supportStartDate): self
-    {
-        $this->supportStartDate = $supportStartDate;
+        $this->evaluationDate = $evaluationDate;
 
         return $this;
     }
@@ -320,36 +218,12 @@ class HotelSupport
 
     public function getDepartmentAnchorToString(): ?string
     {
-        return $this->getDepartmentAnchor() ? Choices::YES_NO[$this->getDepartmentAnchor()] : null;
+        return $this->getDepartmentAnchor() ? Choices::DEPARTMENTS[$this->getDepartmentAnchor()] : null;
     }
 
     public function setDepartmentAnchor(?int $departmentAnchor): self
     {
         $this->departmentAnchor = $departmentAnchor;
-
-        return $this;
-    }
-
-    public function getSupportEndDate(): ?\DateTimeInterface
-    {
-        return $this->supportEndDate;
-    }
-
-    public function setSupportEndDate(?\DateTimeInterface $supportEndDate): self
-    {
-        $this->supportEndDate = $supportEndDate;
-
-        return $this;
-    }
-
-    public function getSupportComment(): ?string
-    {
-        return $this->supportComment;
-    }
-
-    public function setSupportComment(?string $supportComment): self
-    {
-        $this->supportComment = $supportComment;
 
         return $this;
     }

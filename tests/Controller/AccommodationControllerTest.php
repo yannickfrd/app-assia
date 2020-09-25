@@ -118,7 +118,7 @@ class AccommodationControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('send')->form([
-            'accommodation[name]' => 'Nouveau logement',
+            // 'accommodation[name]' => 'Nouveau logement',
         ]);
 
         $this->client->submit($form);

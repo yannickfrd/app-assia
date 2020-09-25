@@ -41,6 +41,19 @@ class Choices
         1 => 'Oui',
     ];
 
+    public const DEPARTMENTS = [
+        75 => '75',
+        77 => '77',
+        78 => '78',
+        91 => '91',
+        92 => '92',
+        93 => '93',
+        94 => '94',
+        95 => '95',
+        98 => 'Hors IDF',
+        99 => 'Non renseigné',
+    ];
+
     public static function getchoices($const): array
     {
         $output = [];

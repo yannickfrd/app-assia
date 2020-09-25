@@ -3,6 +3,7 @@
 namespace App\Form\Model;
 
 use App\Form\Model\Traits\DateSearchTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 
 class HotelSupportSearch
@@ -45,11 +46,6 @@ class HotelSupportSearch
     private $supportDates;
 
     /**
-     * @var int|null
-     */
-    private $diagOrSupport;
-
-    /**
      * @var array
      */
     private $levelSupport;
@@ -65,9 +61,19 @@ class HotelSupportSearch
     private $endSupportReasons;
 
     /**
+     * @var ArrayCollection
+     */
+    private $hotels;
+
+    /**
      * @var bool
      */
     private $export;
+
+    public function __construct()
+    {
+        $this->hotels = new ArrayCollection();
+    }
 
     public function getFullname(): ?string
     {
@@ -117,11 +123,6 @@ class HotelSupportSearch
         return $this;
     }
 
-    public function getDiagOrSupport(): ?int
-    {
-        return $this->diagOrSupport;
-    }
-
     public function setDiagOrSupport(?int $diagOrSupport): self
     {
         $this->diagOrSupport = $diagOrSupport;
@@ -161,6 +162,29 @@ class HotelSupportSearch
     public function setEndSupportReasons(?array $endSupportReasons): self
     {
         $this->endSupportReasons = $endSupportReasons;
+
+        return $this;
+    }
+
+    public function getHotels(): ?ArrayCollection
+    {
+        return $this->hotels;
+    }
+
+    public function getHotelsToString(): array
+    {
+        $hotels = [];
+
+        foreach ($this->hotels as $hotel) {
+            $hotels[] = $hotel->getname();
+        }
+
+        return $hotels;
+    }
+
+    public function setHotels(?ArrayCollection $hotels): self
+    {
+        $this->hotels = $hotels;
 
         return $this;
     }

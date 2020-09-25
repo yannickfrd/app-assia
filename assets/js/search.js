@@ -12,10 +12,10 @@ let select2Array = {
     'services': 'Services',
     'sub-services': 'Sous-services',
     'devices': 'Dispositifs',
+    'hotels': 'Hôtel',
     'contribution-type': 'Type',
     'support-type': 'Type d\'acc.',
     'levelSupport': 'Niveau d\'intervention',
-    'endSupportReasons': 'Motif de fin d\'acc.',
 }
 
 for (let i in select2Array) {

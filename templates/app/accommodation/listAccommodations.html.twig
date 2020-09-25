@@ -71,23 +71,25 @@
                         </th>
                         <td>{{ accommodation.name }}</td>
                         <td><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
-                        <td>{{ accommodation.device.name }}</td>
+                        <td>{{ accommodation.device ? accommodation.device.name }}</td>
                         <td>{{ accommodation.nbPlaces }}</td>
-                        <td>{{ accommodation.startDate|date("d/m/Y") }}</td>
-                        <td>{% if accommodation.endDate %} {{ accommodation.endDate|date("d/m/Y") }}{% endif %}</td>
+                        <td>{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
+                        <td>{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
                         <td>{{ accommodation.address }}</td>
                         <td>{{ accommodation.city|capitalize }}</td>
                         <td>{{ accommodation.zipcode }}</td>
                         <td>{% set nbPeople = 0 %}
-                            {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
-                                {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
-                                {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
-                                {% set nbPeople = nbPeople + nbAccommodationPeople %}
-                            {% endfor %}
-                            {% if nbPeople == 0 %}
-                                <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
-                            {% elseif accommodation.nbPlaces != nbPeople %}
-                                <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes ne correspond pas au nombre de places"></span>
+                            {% if accommodation.accommodationType != 3 %}
+                                {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
+                                    {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
+                                    {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
+                                    {% set nbPeople = nbPeople + nbAccommodationPeople %}
+                                {% endfor %}
+                                {% if nbPeople == 0 %}
+                                    <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
+                                {% elseif accommodation.nbPlaces != nbPeople %}
+                                    <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes ne correspond pas au nombre de places"></span>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

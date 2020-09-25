@@ -15,13 +15,14 @@ class HotelSupportService
     {
         $hotelSupport = $supportGroup->getHotelSupport();
 
-        $supportGroup
-            ->setStatus($this->getHotelSupportStatus($hotelSupport))
-            ->setStartDate($this->getHotelSupportStartDate($hotelSupport))
-            ->setEndDate($this->getHotelSupportEndDate($hotelSupport));
+        $supportGroup->setStatus($supportGroup->getEndDate() ? SupportGroup::STATUS_ENDED : SupportGroup::STATUS_IN_PROGRESS);
 
         if ($supportGroup->getDevice()->getId() == Device::HOTEL_SUPPORT) {
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
+        }
+
+        if ($supportGroup->getAccommodationGroups()->count() > 0) {
+            $this->updateLocation($supportGroup);
         }
 
         $this->updateSupportPeople($supportGroup);
@@ -45,42 +46,20 @@ class HotelSupportService
     }
 
     /**
-     * Donne le statut du suivi hôtel.
+     * Met à jour l'adresse du suivi via l'adresse du groupe de places.
      */
-    protected function getHotelSupportStatus(HotelSupport $hotelSupport): int
+    protected function updateLocation(SupportGroup $supportGroup)
     {
-        if (($hotelSupport->getDiagEndDate() && $hotelSupport->getSupportStartDate() == null) || $hotelSupport->getSupportEndDate()) {
-            return SupportGroup::STATUS_ENDED;
-        }
+        $accommodation = $supportGroup->getAccommodationGroups()->first()->getAccommodation();
 
-        return SupportGroup::STATUS_IN_PROGRESS;
-    }
-
-    /**
-     * Donne la date de début du suivi hôtel.
-     */
-    protected function getHotelSupportStartDate(HotelSupport $hotelSupport): ?\DateTimeInterface
-    {
-        if ($hotelSupport->getDiagStartDate()) {
-            return $hotelSupport->getDiagStartDate();
-        }
-
-        return $hotelSupport->getSupportStartDate();
-    }
-
-    /**
-     * Donne la date de fin du suivi hôtel.
-     */
-    protected function getHotelSupportEndDate(HotelSupport $hotelSupport): ?\DateTimeInterface
-    {
-        if ($hotelSupport->getSupportEndDate() || ($hotelSupport->getDiagEndDate() && $hotelSupport->getSupportStartDate() == null)) {
-            return max([
-                $hotelSupport->getDiagEndDate(),
-                $hotelSupport->getSupportEndDate(),
-            ]);
-        }
-
-        return null;
+        $supportGroup
+            ->setAddress($accommodation->getAddress())
+            ->setCity($accommodation->getCity())
+            ->setZipcode($accommodation->getZipcode())
+            ->setCommentLocation($accommodation->getCommentLocation())
+            ->setLocationId($accommodation->getLocationId())
+            ->setLat($accommodation->getLat())
+            ->setLon($accommodation->getLon());
     }
 
     /**

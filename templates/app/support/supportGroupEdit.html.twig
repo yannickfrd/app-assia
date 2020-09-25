@@ -67,7 +67,7 @@
 
 	{% if serviceId == constant('SERVICE_AVDL_ID', support.service) %}
 		{% include "app/avdl/avdlEdit.html.twig" %}
-	{% elseif serviceId in constant('SERVICES_PASH_ID', support.service) %}
+	{% elseif serviceId == constant('SERVICE_PASH_ID', support.service) %}
 		{% include "app/hotelSupport/hotelSupportEdit.html.twig" %}
 	{% else %}		
 		{% include "app/support/supportRegular.html.twig" %}

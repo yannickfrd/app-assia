@@ -107,6 +107,7 @@ class AccommodationType extends AbstractType
                         return $repo->getSubServicesFromUserQueryList($this->currentUser);
                     },
                     'placeholder' => 'placeholder.select',
+                    'required' => false,
                 ])
                 ->add('device', EntityType::class, [
                 'class' => Device::class,
@@ -115,6 +116,7 @@ class AccommodationType extends AbstractType
                     return $repo->getDevicesFromServiceQueryList($accommodation->getService());
                 },
                 'placeholder' => 'placeholder.select',
+                'required' => false,
                 ]);
         });
     }

@@ -62,11 +62,6 @@ class AccommodationTest extends WebTestCase
         $this->assertHasErrors($this->accommodation->setName(''), 1);
     }
 
-    public function testNotNullNbPlaces()
-    {
-        $this->assertHasErrors($this->accommodation->setNbPlaces(null), 1);
-    }
-
     public function testNbPlaces()
     {
         $this->assertHasErrors($this->accommodation->setNbPlaces(0), 0);
