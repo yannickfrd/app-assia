@@ -76,7 +76,7 @@
                         <td>{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
                         <td>{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
                         <td>{{ accommodation.address }}</td>
-                        <td>{{ accommodation.city|capitalize }}</td>
+                        <td>{{ accommodation.city }}</td>
                         <td>{{ accommodation.zipcode }}</td>
                         <td>{% set nbPeople = 0 %}
                             {% if accommodation.accommodationType != 3 %}

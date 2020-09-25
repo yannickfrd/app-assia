@@ -16,6 +16,7 @@ use App\Entity\GroupPeople;
 use App\Entity\HotelSupport;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
+use App\Entity\Note;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\Service;
@@ -27,240 +28,251 @@ use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class ImportDatasOC
+class ImportDatasAMH
 {
     public const YES_NO = [
-        'OUI' => 1,
-        'NON' => 2,
-        'EN COURS' => 3,
+        'Oui' => 1,
+        'Non' => 2,
+        'En cours' => 3,
         'NR' => 99,
     ];
 
     public const YES_NO_BOOLEAN = [
-        'NON' => 0,
-        'OUI' => 1,
+        'Non' => 0,
+        'Oui' => 1,
+        '' => 0,
     ];
 
     public const SOCIAL_WORKER = [
-        'LAURIE P' => 1,
-        'MYLENA E' => 1,
-        'FLORIANE B' => 1,
-        'MICHAEL O' => 1,
-        'ELLEN H' => 1,
-        'ROZENN D-Z' => 1,
-        'MARILYSE T' => 1,
+        'Marie-Laure PEBORDE' => 1,
+        'Camille RAVEZ' => 1,
+        'Typhaine PECHE' => 1,
+        'Cécile BAZIN' => 1,
+        'Nathalie POULIQUEN' => 1,
+        'Marina DJORDJEVIC' => 1,
+        'Melody ROMET' => 1,
+        'Marion LE PEZRON' => 1,
+        'Gaëlle PRINCET' => 1,
+        'Marion FRANCOIS' => 1,
+        'Margot COURAUDON' => 1,
+        'Marilyse TOURNIER' => 1,
+        'Rozenn DOUELE ZAHAR' => 1,
+        'Laurine VIALLE' => 1,
+        'Ophélie QUENEL' => 1,
+        'Camille GALAN' => 1,
+        'Christine VESTUR' => 1,
+        'Julie MARTIN' => 1,
     ];
 
     public const HEAD = [
-        'CHEF DE FAMILLE' => true,
-        'CONJOINT( E )' => false,
-        'CONJOINTE' => false,
-        'ENFANT' => false,
-        'MEMBRE DE LA FAMILLE' => false,
+        'Oui' => true,
         '' => false,
     ];
 
     public const GENDER = [
-        'F' => Person::GENDER_FEMALE, // A Vérifier
-        'H' => Person::GENDER_MALE, // A Vérifier
+        'Femme' => Person::GENDER_FEMALE, // A Vérifier
+        'Homme' => Person::GENDER_MALE, // A Vérifier
         '' => 99,
     ];
 
     public const ROLE = [
-        'CHEF DE FAMILLE' => 1,
-        'CONJOINT( E )' => 1,
-        'CONJOINTE' => 1,
-        'ENFANT' => 3,
-        'MEMBRE DE LA FAMILLE' => 6,
+        'Personne isolée' => 5,
+        'Parent isolé' => 4,
+        'Epoux(se)' => 2,
+        'Concubin(e)' => 1,
+        'Concubin(€)' => 1,
+        'Membre famille' => 6,
+        'Enfant' => 3,
+        'Autre' => 97,
         '' => 99,
     ];
 
     public const FAMILY_TYPOLOGY = [
-        'FS' => 1,
-        'HS' => 2,
-        'C' => 3,
-        'C+1' => 6,
-        'C+2' => 6,
-        'C+3' => 6,
-        'C+4' => 6,
-        'C+5' => 6,
-        'C+6' => 6,
-        'F+1' => 4,
-        'F+2' => 4,
-        'F+3' => 4,
-        'F+4' => 4,
-        'F+5' => 4,
-        'F+6' => 4,
-        'H+1' => 5,
-        'H+2' => 5,
-        'GRPE ADULTE AVEC ENF' => 8,
-        'GRPE ADULTE SS ENF' => 7,
-        '' => 9,
+        'Femme isolée' => 1,
+        'Homme isolé' => 2,
+        'Couple sans enfant' => 3,
+        'Couple avec enfant(s)' => 6,
+        'Femme seule avec enfant(s)' => 4,
+        'Homme seul avec enfant(s)' => 5,
+        'Groupe d\'adultes avec enfant(s)' => 8,
+        'Groupe d\'adultes sans enfant' => 7,
+        'Mineur isolé' => 9,
         ];
 
-    public const NB_PEOPLE = [
-        'FS' => 1,
-        'HS' => 1,
-        'C' => 2,
-        'C+1' => 3,
-        'C+2' => 4,
-        'C+3' => 5,
-        'C+4' => 6,
-        'C+5' => 7,
-        'C+6' => 8,
-        'F+1' => 2,
-        'F+2' => 3,
-        'F+3' => 4,
-        'F+4' => 5,
-        'F+5' => 6,
-        'F+6' => 7,
-        'H+1' => 2,
-        'H+2' => 3,
-        'GRPE ADULTE AVEC ENF' => 1,
-        'GRPE ADULTE SS ENF' => 1,
-        '' => 1,
-    ];
-
     public const MARITAL_STATUS = [
-        'CELIBATAIRE' => 1,
-        'DIVORCE( E )' => 3,
-        'MARIE( E )' => 4,
-        'SEPARE( E )' => 6,
-        'CONCUBIN (E )' => 2,
-        'VEUF (VE)' => 7,
-        'PACSE ( E )' => 5,
+        'Célibataire' => 1,
+        'Concubinage' => 2,
+        'Divorcé' => 3,
+        'Marié' => 4,
+        'Séparé' => 6,
+        'Veuf' => 7,
+        'Vie maritale' => 8,
+        'Pacsé' => 5,
+        'NR' => 99,
     ];
 
     public const NATIONALITY = [
-        'FRANCAISE' => 1,
-        'HORS UE' => 3,
+        'Française' => 1,
         'UE' => 2,
+        'Hors UE' => 3,
+        'Apatride' => 4,
     ];
 
     public const PAPER = [
-        'CARTE NATIONALE D\'IDENTITE' => 1,
-        'CARTE DE SEJOUR' => 1,
-        'DEMARCHES DE REGULARISATION EN COURS' => 3,
-        'DEMANDE D\'ASILE EN COURS' => null,
-        'EN SITUATION IRREGULIERE' => 2,
-        'NON RENSEIGNEE' => 99,
-        'EUROPEEN' => 1,
-        'ENFANT - REFUGIE' => 1,
+        'Autorisation Provisoire de Séjour' => 1,
+        'Carte de résident (10 ans)' => 1,
+        'Carte de séjour temporaire' => 1,
+        'Carte d\'identité européenne' => 1,
+        'CNI' => 1,
+        'Débouté du droit d\'asile' => 2,
+        'Demandeur d\'asile' => 1,
+        'Démarche en cours' => 3,
+        'OQTF' => 2,
+        'Récépissé asile' => 1,
+        'Récépissé de 1ère demande' => 1,
+        'Récépissé renouvellement de titre' => 1,
+        'Réfugié' => 1,
+        'Sans titre de séjour' => 2,
+        'Titre de séjour "vie privée et familiale"' => 1,
+        'Titre de séjour pour Soins' => 1,
+        'Visa de court séjour' => 1,
+        'Visa de long séjour' => 1,
+        'NR' => 99,
     ];
 
     public const PAPER_TYPE = [
-        'CARTE NATIONALE D\'IDENTITE' => 01,
-        'CARTE DE SEJOUR' => 21,
-        'DEMARCHES DE REGULARISATION EN COURS' => 1,
-        'DEMANDE D\'ASILE EN COURS' => null,
-        'EN SITUATION IRREGULIERE' => null,
-        'NON RENSEIGNEE' => 99,
-        'EUROPEEN' => 97,
-        'ENFANT - REFUGIE' => 97,
+        'Autorisation Provisoire de Séjour' => 22,
+        'Carte de résident (10 ans)' => 20,
+        'Carte de séjour temporaire' => 21,
+        'Carte d\'identité européenne' => 03,
+        'CNI' => 01,
+        'Débouté du droit d\'asile' => 99,
+        'Demandeur d\'asile' => null,
+        'Démarche en cours' => null,
+        'OQTF' => null,
+        'Récépissé asile' => 30,
+        'Récépissé de 1ère demande' => 30,
+        'Récépissé renouvellement de titre' => 31,
+        'Réfugié' => 20,
+        'Sans titre de séjour' => null,
+        'Titre de séjour "vie privée et familiale"' => 21,
+        'Titre de séjour pour Soins' => 21,
+        'Visa de court séjour' => 97,
+        'Visa de long séjour' => 97,
+        'NR' => 1,
     ];
 
     public const ASYLUM_BACKGROUND = [
-        'CARTE NATIONALE D\'IDENTITE' => null,
-        'CARTE DE SEJOUR' => null,
-        'DEMARCHES DE REGULARISATION EN COURS' => null,
-        'DEMANDE D\'ASILE EN COURS' => 1,
-        'EN SITUATION IRREGULIERE' => null,
-        'NON RENSEIGNEE' => null,
-        'EUROPEEN' => null,
-        'ENFANT - REFUGIE' => 1,
+        'Autorisation Provisoire de Séjour' => 2,
+        'Carte de résident (10 ans)' => null,
+        'Carte de séjour temporaire' => 2,
+        'Carte d\'identité européenne' => null,
+        'CNI' => null,
+        'Débouté du droit d\'asile' => 1,
+        'Demandeur d\'asile' => 1,
+        'Démarche en cours' => null,
+        'OQTF' => null,
+        'Récépissé asile' => 1,
+        'Récépissé de 1ère demande' => 2,
+        'Récépissé renouvellement de titre' => 2,
+        'Réfugié' => 1,
+        'Sans titre de séjour' => null,
+        'Titre de séjour "vie privée et familiale"' => 2,
+        'Titre de séjour pour Soins' => null,
+        'Visa de court séjour' => 2,
+        'Visa de long séjour' => 2,
+        'NR' => null,
     ];
 
     public const RIGHT_TO_RESIDE = [
-        'CARTE NATIONALE D\'IDENTITE' => null,
-        'CARTE DE SEJOUR' => null,
-        'DEMARCHES DE REGULARISATION EN COURS' => null,
-        'DEMANDE D\'ASILE EN COURS' => 2,
-        'EN SITUATION IRREGULIERE' => null,
-        'NON RENSEIGNEE' => null,
-        'EUROPEEN' => null,
-        'ENFANT - REFUGIE' => 4,
+        'Autorisation Provisoire de Séjour' => null,
+        'Carte de résident (10 ans)' => null,
+        'Carte de séjour temporaire' => null,
+        'Carte d\'identité européenne' => null,
+        'CNI' => null,
+        'Débouté du droit d\'asile' => 1,
+        'Demandeur d\'asile' => 2,
+        'Démarche en cours' => null,
+        'OQTF' => null,
+        'Récépissé asile' => 2,
+        'Récépissé de 1ère demande' => null,
+        'Récépissé renouvellement de titre' => null,
+        'Réfugié' => 4,
+        'Sans titre de séjour' => null,
+        'Titre de séjour "vie privée et familiale"' => null,
+        'Titre de séjour pour Soins' => null,
+        'Visa de court séjour' => null,
+        'Visa de long séjour' => null,
+        'NR' => null,
     ];
 
     public const RIGHT_SOCIAL_SECURITY = [
-        'AME' => 1,
-        'CMU' => 1,
-        'REGIME GENERALE' => 1,
-        'EN COURS D\'OUVERTURE' => 3,
-        'EN COURS DE RENOUVELLEMENT' => 3,
-        'SANS' => 2,
+        // 'Oui' => 1,
+        // '' => 2,
+        // 'SANS' => 2,
     ];
 
     public const SOCIAL_SECURITY = [
-        'AME' => 5,
-        'CMU' => 3,
-        'REGIME GENERALE' => 1,
-        'EN COURS D\'OUVERTURE' => null,
-        'EN COURS DE RENOUVELLEMENT' => null,
-        'SANS' => null,
     ];
 
     public const PROF_STATUS = [
-        'EN EMPLOI - CDI' => 8,
-        'EN EMPLOI - CDD' => 8,
-        'EN EMPLOI - INTERIM' => 8,
-        'EN EMPLOI - CONTRAT AIDE' => 8,
-        'EN RECHERCHE D\'EMPLOI' => 2,
-        'EN FORMATION' => 3,
-        'ETUDIANT' => 5,
-        'RETRAITE' => 7,
-        'SANS EMPLOI' => 9,
-        'AUTO ENTREPRENEUR' => 1,
+        'CDD' => 8,
+        'CDI' => 8,
+        'Intérim' => 8,
+        'Apprentissage' => 3,
+        'Formation' => 3,
+        'Indépendant' => 6,
+        'Auto-entrepreneur' => 1,
+        'CDD; CDI' => 8,
+        'CDD; Intérim' => 8,
+        'CDI; Intérim' => 8,
     ];
 
     public const CONTRACT_TYPE = [
-        'EN EMPLOI - CDI' => 2,
-        'EN EMPLOI - CDD' => 1,
-        'EN EMPLOI - INTERIM' => 7,
-        'EN EMPLOI - CONTRAT AIDE' => 3,
-        'EN RECHERCHE D\'EMPLOI' => null,
-        'EN FORMATION' => null,
-        'ETUDIANT' => null,
-        'RETRAITE' => null,
-        'SANS EMPLOI' => null,
-        'AUTO ENTREPRENEUR' => null,
+        'CDD' => 1,
+        'CDI' => 2,
+        'Intérim' => 7,
+        'Apprentissage' => 4,
+        'Formation' => null,
+        'Indépendant' => null,
+        'Auto-entrepreneur' => null,
+        'CDD; CDI' => 2,
+        'CDD; Intérim' => 2,
+        'CDI; Intérim' => 2,
     ];
 
     public const RESOURCES = [
-        'AAH' => 1,
-        'ADA' => 1,
-        'AIDE EXTERIEURE' => 1,
-        'ARE' => 1,
-        'PENSION ALIMENTAIRE' => 1,
-        'PF' => 1,
-        'RESSOURCES NON DECLAREES' => 1,
         'RSA' => 1,
-        'RSA + PF' => 1,
-        'SALAIRE' => 1,
-        'SALAIRE + PF' => 1,
-        'SALAIRE + RSA' => 1,
-        'SANS RESSOURCE' => 2,
+        'Assedic' => 1,
+        'ARE' => 1,
+        'AF' => 1,
+        'AAH' => 1,
+        'AAEH' => 1,
+        'ADA/ATA' => 1,
+        'Pension de retraite' => 1,
+        'Formation' => 1,
+        'ASS' => 1,
+        'PAJE' => 1,
+        'Pension alimentaire' => 1,
+        'Salaire' => 1,
+        'Garantie Jeunes' => 1,
+        'Prime d\'activité' => 1,
+        'Pension d\'invalidité' => 1,
+        'Indemnités journalières' => 1,
+        'Autre' => 1,
+        'Bourse d’étude' => 1,
         '' => 99,
     ];
 
-    public const INCOME_TAX = [
-        'OUI' => 1,
-        'NON' => 2,
-        'A VERIFIER' => 99,
-    ];
-
-    public const DEBTS = [
-        'OUI' => 1,
-        'NON' => 2,
-    ];
-
-    public const OVER_INDEBT_RECORD = [
-        'OUI' => 1,
-        'NON' => null,
-    ];
-
-    public const SETTLEMENT_PLAN = [
-        'OUI' => 2,
-        'NON' => null,
+    public const DEBTS_TYPE = [
+        'Loyer' => 1,
+        'Consommation' => 1,
+        'Découvert bancaire' => 1,
+        'Energie' => 1,
+        'Dommages et intérêts' => 1,
+        'Remise en état du logement' => 1,
+        'Santé' => 1,
+        'Autre' => 1,
     ];
 
     public const DLS = [
@@ -285,6 +297,7 @@ class ImportDatasOC
         'SIAO 94' => 94,
         'SIAO 95' => 95,
     ];
+
     public const RECOMMENDATION = [
     'Hébergement' => 10,
     'Logement Intermédiaire' => 20,
@@ -304,13 +317,60 @@ class ImportDatasOC
         'DALO' => 2,
     ];
 
+    public const END_SUPPORT_REASON = [
+        'Non respect de la convention AMH' => 2,
+        'Fin de prise en charge ASE' => 3,
+        'HU en CHU' => 1,
+        'HU en CHRS' => 1,
+        'Stab en CHU' => 1,
+        'Stab en CHRS' => 1,
+        'Insertion en CHRS' => 1,
+        'Résidence sociale' => 1,
+        'Logement intermédiaire' => 1,
+        'ALTHO' => 1,
+        'Solibail' => 1,
+        'Logement parc public' => 1,
+        'Logement parc privé' => 1,
+        'ALT' => 1,
+        'HUDA' => 1,
+        'CADA' => 1,
+        'Hébergé par famille/tiers' => 1,
+        'Prise en charge ASE' => 97,
+        'FTM' => 1,
+        'Autre' => 97,
+    ];
+
     public const END_STATUS = [
-        // 'APEC' => 1,
-        // 'Hébergement' => 1,
-        // 'Logement droit commun' => 301,
-        // 'Logement intermédiaire' => 1,
-        // 'Logement privé' => 1,
-        // 'Solution personnelle' => 1,
+        'Non respect de la convention AMH' => 99,
+        'Fin de prise en charge ASE' => 99,
+        'HU en CHU' => 102,
+        'HU en CHRS' => 102,
+        'Stab en CHU' => 103,
+        'Stab en CHRS' => 103,
+        'Insertion en CHRS' => 104,
+        'Résidence sociale' => 204,
+        'Logement intermédiaire' => 204,
+        'ALTHO' => 208,
+        'Solibail' => 206,
+        'Logement parc public' => 301,
+        'Logement parc privé' => 300,
+        'ALT' => 200,
+        'HUDA' => 401,
+        'CADA' => 400,
+        'Hébergé par famille/tiers' => 011,
+        'Prise en charge ASE' => 99,
+        'FTM' => 202,
+        'Autre' => 97,
+    ];
+
+    public const SECTEUR = [
+        'Cergy-Pontoise' => 1,
+        'Plaine de France' => 1,
+        'Rives de Seine' => 1,
+        'Vallée de Montmorency' => 1,
+        'Pays de France' => 1,
+        'Vexin' => 1,
+        'Plaine de France' => 1,
     ];
 
     protected $user;
@@ -338,7 +398,7 @@ class ImportDatasOC
     {
         $this->user = $security->getUser();
         $this->manager = $manager;
-        $this->device = $repoDevice->find(17); // Opération ciblée
+        $this->device = $repoDevice->find(16); // Opération ciblée
         $this->repoPerson = $repoPerson;
     }
 
@@ -358,7 +418,13 @@ class ImportDatasOC
                     if ($date) {
                         $cel = $date->format('Y-m-d');
                     }
-                    isset($this->datas[0]) ? $row[$this->datas[0][$col]] = $cel : $row[] = $cel;
+                    if (isset($this->datas[0])) {
+                        if (isset($this->datas[0][$col])) {
+                            $row[$this->datas[0][$col]] = $cel;
+                        }
+                    } else {
+                        $row[] = $cel;
+                    }
                 }
                 $this->datas[] = $row;
             }
@@ -373,7 +439,6 @@ class ImportDatasOC
         $this->fields = $this->getDatas($fileName);
 
         $i = 0;
-
         foreach ($this->fields as $field) {
             $this->field = $field;
             if ($i > 0) {
@@ -385,9 +450,9 @@ class ImportDatasOC
 
                 $this->checkGroupExists($typology, $service, $this->device);
 
-                $this->person = $this->createPerson($this->items[$this->field['ID_GIP']]['groupPeople']);
+                $this->person = $this->createPerson($this->items[$this->field['ID_ménage']]['groupPeople']);
 
-                $support = $this->items[$this->field['ID_GIP']]['supports'][$this->field['ID_Support']];
+                $support = $this->items[$this->field['ID_ménage']]['supports'][$this->field['ID_AMH']];
                 $supportGroup = $support['support'];
                 $evaluationGroup = $support['evaluation'];
 
@@ -399,7 +464,7 @@ class ImportDatasOC
 
         // dump($this->existPeople);
         // dump($this->duplicatedPeople);
-        // dd($this->items);
+        dd($this->items);
         $this->manager->flush();
 
         return $this->items;
@@ -411,7 +476,7 @@ class ImportDatasOC
                 ->setLastname($this->field['Nom'])
                 ->setFirstname($this->field['Prénom'])
                 ->setBirthdate($this->field['Date naissance'] ? new \Datetime($this->field['Date naissance']) : null)
-                ->setGender($this->gender)
+                ->setGender($this->findInArray($this->field['Sexe'], self::GENDER) ?? null)
                 ->setCreatedBy($this->user)
                 ->setUpdatedBy($this->user);
     }
@@ -432,10 +497,10 @@ class ImportDatasOC
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
-            $this->items[$this->field['ID_GIP']] = [
+            $this->items[$this->field['ID_ménage']] = [
                 'groupPeople' => $groupPeople,
                 'supports' => [
-                    $this->field['ID_Support'] => [
+                    $this->field['ID_AMH'] => [
                         'support' => $supportGroup,
                         'evaluation' => $evaluationGroup,
                     ],
@@ -450,25 +515,25 @@ class ImportDatasOC
         // Vérifie si le groupe de la personne existe déjà.
         foreach ($this->items as $key => $value) {
             // Si déjà créé, on vérifie le suivi social.
-            if ($key == $this->field['ID_GIP']) {
+            if ($key == $this->field['ID_ménage']) {
                 $groupExists = true;
 
-                $supports = $this->items[$this->field['ID_GIP']]['supports'];
+                $supports = $this->items[$this->field['ID_ménage']]['supports'];
 
                 $supportExists = false;
                 // Vérifie si le suivi du groupe de la personne a déjà été créé.
                 foreach ($supports as $key => $value) {
-                    if ($key == $this->field['ID_Support']) {
+                    if ($key == $this->field['ID_AMH']) {
                         $supportExists = true;
                     }
                 }
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
                 if (false == $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['groupPeople'], $service, $device);
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_ménage']]['groupPeople'], $service, $device);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
-                    $this->items[$this->field['ID_GIP']]['supports'][$this->field['ID_Support']] = [
+                    $this->items[$this->field['ID_ménage']]['supports'][$this->field['ID_AMH']] = [
                         'support' => $supportGroup,
                         'evaluation' => $evaluationGroup,
                     ];
@@ -487,7 +552,7 @@ class ImportDatasOC
 
         $groupPeople = (new GroupPeople())
                     ->setFamilyTypology($typology)
-                    ->setNbPeople($this->findInArray($this->field['Compo'], self::NB_PEOPLE) ?? null)
+                    ->setNbPeople((int) $this->field['Nb personnes'])
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -503,8 +568,8 @@ class ImportDatasOC
                     ->setStartDate($this->getStartDate($this->field))
                     ->setEndDate($this->getEndDate($this->field))
                     ->setEndStatus(null)
-                    ->setEndStatusComment($this->field['Motif sortie'])
-                    ->setNbPeople($this->findInArray($this->field['Compo'], self::NB_PEOPLE) ?? null)
+                    ->setEndStatusComment($this->field['Type sortie AMH'])
+                    ->setNbPeople((int) $this->field['Nb personnes'])
                     ->setGroupPeople($groupPeople)
                     ->setService($service)
                     ->setDevice($device)
@@ -543,8 +608,8 @@ class ImportDatasOC
     {
         $initEvalGroup = (new InitEvalGroup())
             ->setHousingStatus(100)
-            ->setSiaoRequest($this->findInArray($this->field['Demande SIAO préalable au diag'], self::YES_NO) ?? null)
-            ->setSocialHousingRequest($this->findInArray($this->field['Demande de logement social active'], self::DLS) ?? null)
+            ->setSiaoRequest(!empty($this->field['Date demande initiale']) ? Choices::YES : Choices::NO)
+            ->setSocialHousingRequest($this->findInArray($this->field['DLS'], self::YES_NO) ?? null)
             ->setResourcesGroupAmt((float) $this->field['Montant ressources'])
             ->setDebtsGroupAmt((float) $this->field['Montant dettes'])
             ->setSupportGroup($supportGroup);
@@ -572,15 +637,15 @@ class ImportDatasOC
     {
         $evalHousingGroup = (new EvalHousingGroup())
         ->setHousingStatus(100)
-        ->setSiaoRequest($this->field['Date demande initiale SIAO'] ? Choices::YES : Choices::NO)
-        ->setSiaoRequestDate($this->field['Date demande initiale SIAO'] ? new \Datetime($this->field['Date demande initiale SIAO']) : null)
-        ->setSiaoUpdatedRequestDate($this->field['Date dernière actualisation SIAO'] ? new \Datetime($this->field['Date dernière actualisation SIAO']) : null)
-        ->setSiaoRequestDept($this->findInArray($this->field['SIAO prescripteur'], self::DEPARTMENTS) ?? null)
-        ->setSiaoRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
-        ->setSocialHousingRequest($this->findInArray($this->field['Demande de logement social active'], self::DLS) ?? (!empty($this->field['NUR']) ? Choices::YES : Choices::NO))
-        ->setSocialHousingRequestId($this->field['NUR'])
-        ->setDaloCommission($this->findInArray($this->field['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
-        ->setDaloRequalifiedDaho($this->findInArray($this->field['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
+        ->setSiaoRequest(!empty($this->field['Date demande initiale']) ? Choices::YES : Choices::NO)
+        ->setSiaoRequestDate($this->field['Date demande initiale'] ? new \Datetime($this->field['Date demande initiale']) : null)
+        ->setSiaoUpdatedRequestDate($this->field['Date réactu'] ? new \Datetime($this->field['Date réactu']) : null)
+        // ->setSiaoRequestDept($this->findInArray($this->field['SIAO prescripteur'], self::DEPARTMENTS) ?? null)
+        // ->setSiaoRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
+        ->setSocialHousingRequest($this->findInArray($this->field['DLS'], self::YES_NO) ?? null)
+        // ->setSocialHousingRequestId($this->field['NUR'])
+        // ->setDaloCommission($this->findInArray($this->field['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
+        // ->setDaloRequalifiedDaho($this->findInArray($this->field['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
         ->setEvaluationGroup($evaluationGroup);
 
         $this->manager->persist($evalHousingGroup);
@@ -628,7 +693,7 @@ class ImportDatasOC
     {
         $rolePerson = (new RolePerson())
                  ->setHead($this->head)
-                 ->setRole($this->role)
+                 ->setRole($this->findInArray($this->field['Rôle'], self::ROLE) ?? null)
                  ->setPerson($this->person)
                  ->setGroupPeople($groupPeople);
 
@@ -660,10 +725,8 @@ class ImportDatasOC
     protected function createHotelSupport(SupportGroup $supportGroup): HotelSupport
     {
         $hotelSupport = (new HotelSupport())
-            ->setGipId($this->field['ID_GIP'])
             ->setEvaluationDate($this->field['Date diagnostic'] ? new \Datetime($this->field['Date diagnostic']) : null)
-            ->setDepartmentAnchor(['Ancrage 95'] == 'OUI' ? 95 : null)
-            ->setRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
+            // ->setRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
             ->setSupportGroup($supportGroup);
 
         $this->manager->persist($hotelSupport);
@@ -693,26 +756,18 @@ class ImportDatasOC
 
     protected function createInitEvalPerson(SupportPerson $supportPerson): ?InitEvalPerson
     {
-        if ($this->field['Rôle'] == 'ENFANT') {
+        if ($this->field['Rôle'] == 'Enfant') {
             return null;
         }
-
         $resourceType = $this->field['Type ressources'];
         $resourceOther = null;
 
-        if ($resourceType == 'AIDE EXTERIEURE') {
-            $resourceOther = 'Aide extérieure';
-        }
-        if ($resourceType == 'RESSOURCES NON DECLAREES') {
-            $resourceOther = 'Ressources non déclarées';
-        }
-
         $initEvalPerson = (new InitEvalPerson())
             ->setPaperType($this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) ?? null)
-            ->setRightSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-            ->setSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
-            ->setProfStatus($this->findInArray($this->field['Emploi'], self::PROF_STATUS) ?? null)
-            ->setContractType($this->findInArray($this->field['Emploi'], self::CONTRACT_TYPE) ?? null)
+            ->setRightSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+            ->setSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::SOCIAL_SECURITY) ?? null)
+            ->setProfStatus($this->findInArray($this->field['Type contrat'], self::PROF_STATUS) ?? null)
+            ->setContractType($this->findInArray($this->field['Type contrat'], self::CONTRACT_TYPE) ?? null)
             ->setResources($this->findInArray($resourceType, self::RESOURCES) ?? null)
             ->setResourcesAmt((float) $this->field['Montant ressources'])
             ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
@@ -724,7 +779,7 @@ class ImportDatasOC
             ->setMaintenance(strstr($resourceType, 'PENSION ALIMENTAIRE') ? Choices::YES : 0)
             ->setRessourceOther($resourceOther ? Choices::YES : 0)
             ->setRessourceOtherPrecision($resourceOther)
-            ->setDebts($this->findInArray($this->field['Dettes'], self::DEBTS) ?? null)
+            ->setDebts($this->findInArray($this->field['Dettes'], self::YES_NO) ?? null)
             ->setDebtsAmt((float) $this->field['Montant dettes'])
             ->setSupportPerson($supportPerson);
 
@@ -735,12 +790,12 @@ class ImportDatasOC
 
     protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson)
     {
-        if ($this->field['Rôle'] != 'ENFANT') {
+        if ($this->field['Rôle'] != 'Enfant') {
             $evalSocialPerson = (new EvalSocialPerson())
-                ->setRightSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-                ->setSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
-                ->setEndRightsSocialSecurityDate($this->field['Date fin validité Sécurité sociale'] ? new \Datetime($this->field['Date fin validité Sécurité sociale']) : null)
-                ->setCommentEvalSocialPerson($this->field['Suivi social'] ? 'Suivi social : Oui' : null)
+                ->setRightSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::RIGHT_SOCIAL_SECURITY) ?? null)
+                ->setSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::SOCIAL_SECURITY) ?? null)
+                // ->setEndRightsSocialSecurityDate($this->field['Date fin validité Sécurité sociale'] ? new \Datetime($this->field['Date fin validité Sécurité sociale']) : null)
+                // ->setCommentEvalSocialPerson($this->field['Suivi social'] ? 'Suivi social : Oui' : null)
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalSocialPerson);
@@ -749,10 +804,10 @@ class ImportDatasOC
 
     protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson)
     {
-        if ($this->field['Rôle'] != 'ENFANT' && (!empty($this->field['Grossesse']) || !empty($this->field['Situation matrimoniale']))) {
+        if ($this->field['Rôle'] != 'Enfant' && (!empty($this->field['Situation matrimoniale']))) {
             $evalFamilyPerson = (new EvalFamilyPerson())
                 ->setMaritalStatus($this->findInArray($this->field['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
-                ->setUnbornChild($this->findInArray($this->field['Grossesse'], self::YES_NO) ?? null)
+                // ->setUnbornChild($this->findInArray($this->field['Enfant à naître'], self::YES_NO) ?? null)
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalFamilyPerson);
@@ -764,10 +819,10 @@ class ImportDatasOC
         if (!empty($this->field['Nationalité']) || !empty($this->field['Situation administrative'])) {
             $evalAdmPerson = (new EvalAdmPerson())
             ->setNationality($this->findInArray($this->field['Nationalité'], self::NATIONALITY) ?? null)
-            ->setArrivalDate($this->field['Date arrivée France'] ? new \Datetime($this->field['Date arrivée France']) : null)
+            // ->setArrivalDate($this->field['Date arrivée France'] ? new \Datetime($this->field['Date arrivée France']) : null)
             ->setPaper($this->findInArray($this->field['Situation administrative'], self::PAPER) ?? null)
             ->setPaperType($this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) ?? null)
-            ->setEndValidPermitDate($this->field['Date fin validité titre'] ? new \Datetime($this->field['Date fin validité titre']) : null)
+            // ->setEndValidPermitDate($this->field['Date fin validité titre'] ? new \Datetime($this->field['Date fin validité titre']) : null)
             ->setAsylumBackground($this->findInArray($this->field['Situation administrative'], self::ASYLUM_BACKGROUND) ?? null)
             ->setEvaluationPerson($evaluationPerson);
 
@@ -777,10 +832,10 @@ class ImportDatasOC
 
     protected function createEvalProfPerson(EvaluationPerson $evaluationPerson)
     {
-        if ((float) $this->field['Age'] >= 16 && !empty($this->field['Emploi'])) {
+        if ((float) $this->field['Age'] >= 16 && !empty($this->field['Type contrat'])) {
             $evalProfPerson = (new EvalProfPerson())
-                ->setProfStatus($this->findInArray($this->field['Emploi'], self::PROF_STATUS) ?? null)
-                ->setContractType($this->findInArray($this->field['Emploi'], self::CONTRACT_TYPE) ?? null)
+                ->setProfStatus($this->findInArray($this->field['Type contrat'], self::PROF_STATUS) ?? null)
+                ->setContractType($this->findInArray($this->field['Type contrat'], self::CONTRACT_TYPE) ?? null)
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalProfPerson);
@@ -793,27 +848,22 @@ class ImportDatasOC
 
         if ((float) $this->field['Age'] >= 16 && (!empty($resourceType) || !empty($this->field['Montant ressources']) || !empty($this->field['Dettes']))) {
             $resourceOther = null;
-            if ($resourceType == 'AIDE EXTERIEURE') {
-                $resourceOther = 'Aide extérieure';
-            } elseif ($resourceType == 'RESSOURCES NON DECLAREES') {
-                $resourceOther = 'Ressources non déclarées';
-            }
 
             $evalBudgetPerson = (new EvalBudgetPerson())
                 ->setCharges((float) $this->field['Montant charges'] > 0 ? Choices::YES : Choices::NO)
                 ->setChargesAmt((float) $this->field['Montant charges'])
-                ->setDebts($this->findInArray($this->field['Dettes'], self::DEBTS) ?? null)
-                ->setIncomeTax($this->findInArray($this->field['AVIS D\'IMPOSITION'], self::YES_NO) ?? null)
+                ->setDebts($this->findInArray($this->field['Dettes'], self::YES_NO) ?? null)
+                // ->setIncomeTax($this->findInArray($this->field['AVIS D\'IMPOSITION'], self::YES_NO) ?? null)
                 ->setDebtsAmt((float) $this->field['Montant dettes'])
-                ->setOverIndebtRecord($this->findInArray($this->field['Plan apurement'], self::OVER_INDEBT_RECORD) ?? null)
-                ->setSettlementPlan($this->findInArray($this->field['Plan apurement'], self::SETTLEMENT_PLAN) ?? null)
+                // ->setOverIndebtRecord($this->findInArray($this->field['Plan apurement'], self::OVER_INDEBT_RECORD) ?? null)
+                // ->setSettlementPlan($this->findInArray($this->field['Plan apurement'], self::SETTLEMENT_PLAN) ?? null)
                 ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
                 ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
                 ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
                 ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
                 ->setFamilyAllowance(strstr($resourceType, 'PF') ? Choices::YES : 0)
-                ->setSalary(strstr($resourceType, 'SALAIRE') ? Choices::YES : 0)
-                ->setMaintenance(strstr($resourceType, 'PENSION ALIMENTAIRE') ? Choices::YES : 0)
+                ->setSalary(strstr($resourceType, 'Salaire') ? Choices::YES : 0)
+                ->setMaintenance(strstr($resourceType, 'Pension alimentaire') ? Choices::YES : 0)
                 ->setRessourceOther($resourceOther ? Choices::YES : 0)
                 ->setRessourceOtherPrecision($resourceOther)
                 ->setResources($this->findInArray($resourceType, self::RESOURCES) ?? null)
@@ -856,7 +906,7 @@ class ImportDatasOC
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
-        } elseif ($this->field['Rôle'] == 'ENFANT') {
+        } elseif ($this->field['Rôle'] == 'Enfant') {
             $this->role = RolePerson::ROLE_CHILD;
         } elseif ($this->field['Rôle'] == 'CONJOINT( E )') {
             $this->role = 1;
@@ -865,12 +915,12 @@ class ImportDatasOC
 
     protected function getStatus(): int
     {
-        if ($this->field['Date diagnostic']) {
+        if ($this->field['Date sortie AMH']) {
             return SupportGroup::STATUS_ENDED;
         }
 
-        if ($this->field['Date sortie']) {
-            return SupportGroup::STATUS_ENDED;
+        if ($this->field['Date entrée AMH'] || $this->field['Date diagnostic']) {
+            return SupportGroup::STATUS_IN_PROGRESS;
         }
 
         return SupportGroup::STATUS_OTHER;
@@ -878,13 +928,8 @@ class ImportDatasOC
 
     protected function getStartDate(): ?\DateTime
     {
-        return $this->field['Date diagnostic'] ? new \Datetime($this->field['Date diagnostic']) : null;
-    }
-
-    protected function getEndDate(): ?\DateTime
-    {
-        if ($this->field['Date sortie']) {
-            return new \Datetime($this->field['Date sortie']);
+        if ($this->field['Date entrée AMH']) {
+            return new \Datetime($this->field['Date sortie AMH']);
         }
 
         if ($this->field['Date diagnostic']) {
@@ -892,5 +937,28 @@ class ImportDatasOC
         }
 
         return null;
+    }
+
+    protected function getEndDate(): ?\DateTime
+    {
+        if ($this->field['Date sortie AMH']) {
+            return new \Datetime($this->field['Date sortie AMH']);
+        }
+
+        return null;
+    }
+
+    protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
+    {
+        $note = (new Note())
+        ->setTitle($title)
+        ->setContent($content)
+        ->setSupportGroup($supportGroup)
+        ->setCreatedBy($this->user)
+        ->setUpdatedBy($this->user);
+
+        $this->manager->persist($note);
+
+        return $note;
     }
 }

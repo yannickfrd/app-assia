@@ -2,25 +2,20 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Export;
-use App\Service\Download;
-use App\Form\Model\Import;
-use App\Service\Pagination;
-use App\Form\Import\ImportType;
+use App\Form\Export\ExportSearchType;
 use App\Form\Model\ExportSearch;
 use App\Repository\ExportRepository;
-use App\Form\Export\ExportSearchType;
-use App\Service\Import\ImportDatasOC;
-use App\Service\Import\ImportDatasAMH;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportPersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
-use Symfony\Component\HttpFoundation\Request;
-use App\Service\Import\ImportDatasHebergement;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Download;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ExportController extends AbstractController
 {
@@ -60,95 +55,6 @@ class ExportController extends AbstractController
         return $this->render('app/export/export.html.twig', [
             'form' => $form->createView(),
             'exports' => $pagination->paginate($this->repo->findExportsQuery(), $request, 10) ?? null,
-        ]);
-    }
-
-    /**
-     * Import de données.
-     *
-     * @Route("import", name="import", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function import(Request $request, Import $import, ImportDatasHebergement $importDatas): Response
-    {
-        $fileName = \dirname(__DIR__).'/../public/import/datas/import.csv';
-
-        $datas = $importDatas->getDatas($fileName);
-
-        $form = ($this->createForm(ImportType::class, $import))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $importDatas->importInDatabase($fileName, $import->getService());
-        } else {
-            dump($datas);
-        }
-
-        return $this->render('app/import.html.twig', [
-            'form' => $form->createView(),
-            'datas' => $datas,
-        ]);
-    }
-
-    /**
-     * Import de données de l'opération ciblée hôtel.
-     *
-     * @Route("import_oc", name="import_oc", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function importOC(Request $request, Import $import, ImportDatasOC $importDatas): Response
-    {
-        $fileName = \dirname(__DIR__).'/../public/import/datas/import_oc.csv';
-
-        $datas = $importDatas->getDatas($fileName);
-
-        $form = ($this->createForm(ImportType::class, $import))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $importDatas->importInDatabase($fileName, $import->getService());
-
-            $this->addFlash('success', 'Les données ont été importées !');
-
-            return $this->redirectToRoute('home');
-        } else {
-            dump($datas);
-        }
-
-        return $this->render('app/import.html.twig', [
-            'form' => $form->createView(),
-            'datas' => $datas,
-        ]);
-    }
-
-    /**
-     * Import de données de l'AMH.
-     *
-     * @Route("import_amh", name="import_amh", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function importAMH(Request $request, Import $import, ImportDatasAMH $importDatas): Response
-    {
-        $fileName = \dirname(__DIR__).'/../public/import/datas/import_amh.csv';
-
-        $datas = $importDatas->getDatas($fileName);
-
-        $form = ($this->createForm(ImportType::class, $import))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $importDatas->importInDatabase($fileName, $import->getService());
-
-            $this->addFlash('success', 'Les données ont été importées !');
-
-            return $this->redirectToRoute('home');
-        } else {
-            dump($datas);
-        }
-
-        return $this->render('app/import.html.twig', [
-            'form' => $form->createView(),
-            'datas' => $datas,
         ]);
     }
 
