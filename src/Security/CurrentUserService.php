@@ -2,15 +2,18 @@
 
 namespace App\Security;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
 
 class CurrentUserService
 {
-    private $user;
+    protected $user;
+    protected $session;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, SessionInterface $session)
     {
         $this->user = $security->getUser();
+        $this->session = $session;
     }
 
     public function getUser()
@@ -22,21 +25,15 @@ class CurrentUserService
     {
         $services = [];
 
-        foreach ($this->user->getServiceUser() as $role) {
-            $services[] = $role->getService()->getId();
+        foreach ($this->session->get('userServices') as $key => $value) {
+            $services[] = $key;
         }
 
         return $services;
     }
 
-    public function isRole($role)
+    public function hasRole($role)
     {
-        foreach ($this->user->getRoles() as $value) {
-            if ($value == $role) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($role, $this->user->getRoles()) ? true : false;
     }
 }

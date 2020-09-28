@@ -72,7 +72,7 @@ class ServiceRepository extends ServiceEntityRepository
 
         ->where('s.disabledAt IS NULL');
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
@@ -95,7 +95,7 @@ class ServiceRepository extends ServiceEntityRepository
             $query = $query->andWhere('sd.device = :device')
                 ->setParameter('device', $device);
         }
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }

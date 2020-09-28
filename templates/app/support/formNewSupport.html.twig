@@ -1,17 +1,17 @@
 {% set theme_color = app.request.hasPreviousSession and app.session.get("themeColor") ? app.session.get("themeColor") : "dark" %}
 
-{% form_theme form_new_support "form/bootstrap_4_horizontal.html.twig" %}
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{{ form_start(form_new_support) }}
+{{ form_start(form) }}
 
 <div class="modal-body">
-    {{ form_row(form_new_support.service) }}
+    {{ form_row(form.service) }}
     <div data-parent-field="service">
-        <div id="sub-service-block">{{ form_row(form_new_support.subService) }}</div>
-        {{ form_row(form_new_support.device) }}
+        <div id="sub-service-block">{{ form_row(form.subService) }}</div>
+        {{ form_row(form.device) }}
     </div>
-    {{ form_row(form_new_support.status) }}
-    {{ form_row(form_new_support.referent) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.referent) }}
 </div>
 
 <div class="modal-footer d-flex justify-content-between">
@@ -25,5 +25,5 @@
     {% endblock %}
 </div>
 
-{{ form_row(form_new_support._token) }}
-{{ form_end(form_new_support, {"render_rest": false}) }}
+{{ form_row(form._token) }}
+{{ form_end(form, {"render_rest": false}) }}

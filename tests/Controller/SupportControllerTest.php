@@ -77,8 +77,8 @@ class SupportControllerTest extends WebTestCase
     public function testNewSupportGroupIsUp()
     {
         $request = $this->client->getRequest();
-        $request->request->set('support', ['service' => 1]);
         $_POST['support'] = ['service' => 1];
+        $request->request->set('support', ['service' => 1]);
 
         $this->client->request('GET', $this->generateUri('support_new', [
             'id' => $this->dataFixtures['groupPeople']->getId(),

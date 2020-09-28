@@ -61,14 +61,20 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Donne la liste des groupes de places.
      */
-    public function getAccommodationsQueryList(Service $service): QueryBuilder
+    public function getAccommodationsQueryList(?int $serviceId = null, ?int $subServiceId = null): QueryBuilder
     {
-        return $this->createQueryBuilder('a')
-            ->select('PARTIAL a.{id, name, service, address, city, zipcode, commentLocation, locationId, lat, lon}')
+        $query = $this->createQueryBuilder('a')
+            ->select('PARTIAL a.{id, name, service, address, city, zipcode, commentLocation, locationId, lat, lon}');
 
-            ->where('a.service = :service')
-            ->setParameter('service', $service)
-            ->andWhere('a.endDate IS NULL')
+        if ($subServiceId) {
+            $query->where('a.subService = :subService')
+            ->setParameter('subService', $subServiceId);
+        } else {
+            $query->where('a.service = :service')
+            ->setParameter('service', $serviceId);
+        }
+
+        return  $query->andWhere('a.endDate IS NULL')
             ->orWhere('a.endDate > :date')
             ->setParameter('date', new \Datetime())
 
@@ -136,7 +142,7 @@ class AccommodationRepository extends ServiceEntityRepository
             $query->andWhere('a.subService = :subService')
                 ->setParameter('subService', $subService);
         }
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('a.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }

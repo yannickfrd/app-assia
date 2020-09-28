@@ -70,7 +70,7 @@ class RdvRepository extends ServiceEntityRepository
 
     protected function filter($query, RdvSearch $search)
     {
-        if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }

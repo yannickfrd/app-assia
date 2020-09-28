@@ -236,7 +236,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     protected function filter(QueryBuilder $query, $search): QueryBuilder
     {
-        if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
@@ -419,7 +419,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
 
-        if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->where('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }

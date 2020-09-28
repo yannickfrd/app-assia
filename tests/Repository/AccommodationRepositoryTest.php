@@ -80,7 +80,7 @@ class AccommodationRepositoryTest extends WebTestCase
 
     public function testGetAccommodationsQueryList()
     {
-        $query = $this->repo->getAccommodationsQueryList($this->service);
+        $query = $this->repo->getAccommodationsQueryList($this->service->getId());
         $this->assertGreaterThanOrEqual(1, count($query->getQuery()->getResult()));
     }
 

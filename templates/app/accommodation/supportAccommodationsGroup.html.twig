@@ -42,8 +42,12 @@
 										title="Voir le détail de l'hébergement"><span class="fas fa-eye"></span>
 									</a>
 								</th>
-								<td class="align-middle"><a href="{{ path('accommodation_edit', {'id': accommodationGroup.accommodation.id}) }}"
-									class="text-{{ theme_color }}">{{ accommodationGroup.accommodation.name }}</a></td>
+								<td class="align-middle">
+									{% if accommodationGroup.accommodation %}
+										<a href="{{ path('accommodation_edit', {'id': accommodationGroup.accommodation.id}) }}"
+										class="text-{{ theme_color }}">{{ accommodationGroup.accommodation.name }}</a>
+									{% endif %}
+								</td>
 								<td class="align-middle">{{ accommodationGroup.supportGroup.device.name }}</td>
 								<td class="align-middle">{{ accommodationGroup.startDate|date("d/m/Y") }}</td>
 								<td class="align-middle">{% if accommodationGroup.endDate %}{{ accommodationGroup.endDate|date("d/m/Y") }}{% endif %}</td>
@@ -51,8 +55,11 @@
 									{{ accommodationGroup.supportGroup.endStatus ? " (" ~ accommodationGroup.supportGroup.endStatusToString ~ ")" }}
 								</td>
 								<td class="align-middle">{{ accommodationGroup.accommodationPeople|length }}</td>
-								<td class="align-middle">{{ accommodationGroup.accommodation.address }}<br>
-									{{ accommodationGroup.accommodation.zipCode }} {{ accommodationGroup.accommodation.city }}
+								<td class="align-middle">
+									{% if accommodationGroup.accommodation %}
+										{{ accommodationGroup.accommodation.address }}<br>
+										{{ accommodationGroup.accommodation.zipCode }} {{ accommodationGroup.accommodation.city }}
+									{% endif %}
 								</td>
 								<td class="align-middle text-center">
 									<a href="{{ path('support_group_people_accommodation_delete', {'id':accommodationGroup.id}) }}" 

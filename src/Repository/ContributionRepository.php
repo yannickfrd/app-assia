@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
-use App\Security\CurrentUserService;
 use App\Form\Model\ContributionSearch;
-use Doctrine\Persistence\ManagerRegistry;
 use App\Form\Model\SupportContributionSearch;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Contribution|null find($id, $lockMode = null, $lockVersion = null)
@@ -126,7 +126,7 @@ class ContributionRepository extends ServiceEntityRepository
      */
     protected function filter($query, $search)
     {
-        if ($this->currentUser->getUser() && !$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }

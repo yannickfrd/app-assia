@@ -27,8 +27,9 @@ class ServiceSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $attrOptions = $options['attr']['options'] ?? null;
-        $serviceId = $options['attr']['serviceId'] ?? null;
+        $attr = $builder->getOption('attr');
+        $attrOptions = $attr['options'] ?? null;
+        $serviceId = $attr['serviceId'] ?? null;
 
         if (null == $attrOptions || in_array('services', $attrOptions)) {
             $builder

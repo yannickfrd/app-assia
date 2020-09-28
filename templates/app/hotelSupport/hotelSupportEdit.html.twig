@@ -11,9 +11,6 @@
 			<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
 			<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
 		</div>
-		{# <div class="row">
-			<div class="col-md-6" data-parent-field="organization">{{ form_row(form.originRequest.organizationComment) }}</div>
-		</div> #}
 		<div class="row" data-parent-field="device" data-parent-field-options="{{ HOTEL_SUPPORT }}, {{ HOTEL_URG }}">
 			<div class="col-md-6">{{ form_row(form.hotelSupport.entryHotelDate) }}</div>
 			<div class="col-md-6" >{{ form_row(form.hotelSupport.originDept) }}</div>

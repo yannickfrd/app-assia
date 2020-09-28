@@ -32,7 +32,7 @@
                     {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
             </div>
 
-            {% set healthProblemsType = constant('App\\Entity\\evalSocialPerson::HEALTH_PROBLEMS_TYPE') %}
+            {% set healthProblemsType = constant("App\\Entity\\EvalSocialPerson::HEALTH_PROBLEMS_TYPE") %}
 
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>

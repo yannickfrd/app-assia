@@ -175,10 +175,6 @@ class SecurityController extends AbstractController
             $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est mis à jour.');
         }
 
-        if (!$form->isSubmitted() && $user->isDisabled()) {
-            $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
-        }
-
         return $this->render('app/security/securityUser.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -203,7 +199,8 @@ class SecurityController extends AbstractController
             $user->setDisabledAt(null);
             $this->addFlash('success', 'L\'utilisateur est réactivé.');
         } else {
-            $user->setDisabledAt(new \DateTime());
+            $user->setPassword('xxx')
+                ->setDisabledAt(new \DateTime());
             $this->addFlash('warning', 'L\'utilisateur est désactivé.');
         }
 

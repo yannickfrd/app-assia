@@ -17,7 +17,7 @@ class HotelSupportService
 
         $supportGroup->setStatus($supportGroup->getEndDate() ? SupportGroup::STATUS_ENDED : SupportGroup::STATUS_IN_PROGRESS);
 
-        if ($supportGroup->getDevice()->getId() == Device::HOTEL_SUPPORT) {
+        if ($hotelSupport && $supportGroup->getDevice()->getId() == Device::HOTEL_SUPPORT) {
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
         }
 
@@ -51,6 +51,10 @@ class HotelSupportService
     protected function updateLocation(SupportGroup $supportGroup)
     {
         $accommodation = $supportGroup->getAccommodationGroups()->first()->getAccommodation();
+
+        if (null === $accommodation) {
+            return false;
+        }
 
         $supportGroup
             ->setAddress($accommodation->getAddress())

@@ -15,12 +15,14 @@ use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\ServiceRepository;
+use App\Repository\SubServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
 use Svg\Tag\Group;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -29,6 +31,7 @@ class SupportGroupService
     private $container;
     private $repoSupportGroup;
     private $repoService;
+    private $repoSubService;
     private $repoEvaluationGroup;
     private $manager;
 
@@ -37,11 +40,13 @@ class SupportGroupService
         EntityManagerInterface $manager,
         SupportGroupRepository $repoSupportGroup,
         ServiceRepository $repoService,
+        SubServiceRepository $repoSubService,
         EvaluationGroupRepository $repoEvaluationGroup)
     {
         $this->container = $container;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoService = $repoService;
+        $this->repoSubService = $repoSubService;
         $this->repoEvaluationGroup = $repoEvaluationGroup;
 
         $this->manager = $manager;
@@ -51,18 +56,21 @@ class SupportGroupService
     /**
      * Donne un nouveau suivi paramétré.
      */
-    public function getNewSupportGroup(User $user, GroupPeople $groupPeople, int $serviceId = null)
+    public function getNewSupportGroup(User $user, GroupPeople $groupPeople, Request $request = null)
     {
         $supportGroup = (new SupportGroup())
+            ->setGroupPeople($groupPeople)
             ->setStatus(2)
             ->setReferent($user);
+
+        $serviceId = $request->request->get('support')['service'];
+        $subServiceId = $request->request->get('support')['subService'];
 
         if ((int) $serviceId) {
             $supportGroup->setService($this->repoService->find($serviceId));
         }
-
-        if ($serviceId == Service::SERVICE_PASH_ID && $supportGroup->getAccommodationGroups()->count() == 0) {
-            $supportGroup = $this->addAccommodationGroup($supportGroup, $groupPeople);
+        if ((int) $subServiceId) {
+            $supportGroup->setSubService($this->repoSubService->find($subServiceId));
         }
 
         return $supportGroup;
@@ -307,10 +315,6 @@ class SupportGroupService
      */
     protected function checkSupportGroup(SupportGroup $supportGroup)
     {
-        if ($supportGroup->getService()->getId() == Service::SERVICE_PASH_ID && $supportGroup->getAccommodationGroups()->count() == 0) {
-            $supportGroup = $this->addAccommodationGroup($supportGroup);
-        }
-
         // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
         $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
         $nbSupportPeople = $supportGroup->getSupportPeople()->count();
@@ -496,13 +500,5 @@ class SupportGroupService
     protected function addFlash(string $alert, string $msg)
     {
         $this->container->get('session')->getFlashBag()->add($alert, $msg);
-    }
-
-    protected function addAccommodationGroup(SupportGroup $supportGroup, ?GroupPeople $groupPeople = null)
-    {
-        $accommodationGroup = (new AccommodationGroup())->setGroupPeople($groupPeople ?? $supportGroup->getGroupPeople());
-        $supportGroup->addAccommodationGroup($accommodationGroup);
-
-        return $supportGroup;
     }
 }

@@ -16,7 +16,7 @@ class LoginListener
     private $session;
     private $repo;
 
-    public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
+        public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
     {
         $this->session = $session;
         $this->repo = $repo;

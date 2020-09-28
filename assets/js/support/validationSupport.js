@@ -3,8 +3,6 @@ import ValidationForm from '../utils/validationForm'
 import SelectType from '../utils/selectType'
 import ValidationDate from '../utils/validationDate'
 import Loader from '../utils/loader'
-import AjaxRequest from '../utils/ajaxRequest'
-import MessageFlash from '../utils/messageFlash'
 
 /**
  * Validation des données du suivi social.
@@ -16,9 +14,9 @@ export default class ValidationSupport {
         this.selectType = new SelectType()
         this.loader = new Loader()
 
-
         this.prefix = 'support_'
         this.serviceSelectElt = document.getElementById(this.prefix + 'service')
+        this.subServiceSelectElt = document.getElementById(this.prefix + 'subService')
         this.statusSelectElt = document.getElementById(this.prefix + 'status')
         this.startDateInputElt = document.getElementById(this.prefix + 'startDate')
         this.endDateInputElt = document.getElementById(this.prefix + 'endDate')
@@ -31,8 +29,8 @@ export default class ValidationSupport {
     }
 
     init() {
-        this.service = this.selectType.getOption(this.serviceSelectElt)
-        this.serviceSelectElt.addEventListener('change', this.switchService.bind(this))
+        this.serviceSelectElt.addEventListener('change', this.changeService.bind(this))
+        this.subServiceSelectElt.addEventListener('change', this.changeService.bind(this))
 
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
@@ -87,34 +85,6 @@ export default class ValidationSupport {
         this.validationForm.validField(dateInputElt)
     }
 
-    /**
-     * Si changement de service.
-     */
-    switchService() {
-        const serviceId = this.selectType.getOption(this.serviceSelectElt)
-
-        if (serviceId) {
-            if (window.confirm('Le changement de service va recharger la page actuelle. Confirmer ?')) {
-                this.loader.on()
-                const ajaxRequest = new AjaxRequest()
-                const supportId = document.getElementById('support').getAttribute('data-support')
-                const url = `/support/${supportId}/switch_service/${serviceId}`
-                ajaxRequest.init('GET', url, this.response.bind(this), true)
-            } else {
-                this.selectType.setOption(this.serviceSelectElt, this.service)
-            }
-        }
-    }
-
-    /**
-     * Récupère les résultats de la requête.
-     * @param {*} data 
-     */
-    response(data) {
-        const dataJSON = JSON.parse(data)
-        new MessageFlash(dataJSON.alert, dataJSON.msg)
-        document.location.assign(window.location.href)
-    }
     /**
      * Vérifie la date de début.
      */
@@ -174,5 +144,89 @@ export default class ValidationSupport {
             return this.validationForm.invalidField(this.endStatusInputElt, 'La situation à la fin du suivi ne peut pas être vide.')
         }
         return this.validationForm.validField(this.endStatusInputElt)
+    }
+
+    /**
+     * Au changement de service dans la liste déroulante.
+     */
+    changeService() {
+        if (this.selectType.getOption(this.serviceSelectElt)) {
+            this.sendAjaxRequest()
+        }
+    }
+
+    /**
+     * Envoie requête Ajax.
+     * @param {Object} data 
+     */
+    sendAjaxRequest() {
+        this.loader.on()
+
+        $.ajax({
+            url: '/support/change_service',
+            type: 'POST',
+            data: this.getData(),
+            success: data => {
+                this.responseAjax(data)
+            }
+        })
+    }
+
+    /**
+     * Donne les données à envoyer.
+     */
+    getData() {
+        const selectElts = [this.serviceSelectElt, this.subServiceSelectElt]
+        const data = {}
+
+        selectElts.forEach(selectElt => {
+            data[selectElt.getAttribute('name')] = this.selectType.getOption(selectElt)
+        })
+
+        return data
+    }
+
+    /**
+     * Réponse à la requête Ajax.
+     * @param {String} data 
+     */
+    responseAjax(data) {
+        const html = new DOMParser().parseFromString(data, "text/xml")
+        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation'] // 'accommodationGroups_0_accommodation'
+
+        fields.forEach(field => {
+            let oldElt = document.querySelector('#support_' + field)
+            let newElt = html.querySelector('#support_' + field)
+
+            if (field === 'accommodation') {
+                oldElt = document.querySelector('#support_accommodationGroups_0_accommodation')
+            }
+
+            if (oldElt && newElt) {
+                this.updateField(oldElt, newElt)
+            }
+        })
+        this.loader.off()
+    }
+
+    /**
+     * Met à jour les items d'un select.
+     * @param {HTMLElement} oldElt 
+     * @param {HTMLElement} newElt 
+     */
+    updateField(oldElt, newElt) {
+        const option = this.selectType.getOption(oldElt)
+        this.selectType.setOption(oldElt, option)
+
+        oldElt.innerHTML = newElt.innerHTML
+
+        const optionElts = oldElt.querySelectorAll('option')
+        if (optionElts.length <= 2) {
+            optionElts.forEach(optionElt => {
+                if (optionElt != null) {
+                    optionElt.selected = true
+                }
+            })
+        }
     }
 }

@@ -2,38 +2,55 @@
 
 namespace App\Form\Support;
 
-use App\Security\CurrentUserService;
-use Symfony\Component\Form\AbstractType;
-use App\Form\HotelSupport\HotelSupportType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Entity\AccommodationGroup;
+use App\Entity\SupportGroup;
 use App\Form\Accommodation\AccommodationGroupHotelType;
+use App\Form\HotelSupport\HotelSupportType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class SupportGroupHotelType extends AbstractType
 {
-    private $currentUser;
-
-    public function __construct(CurrentUserService $currentUser)
-    {
-        $this->currentUser = $currentUser;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->remove('status')
             ->remove('location')
-            ->add('accommodationGroups', CollectionType::class, [
+            ->add('hotelSupport', HotelSupportType::class);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $supportGroup = $event->getData();
+            $serviceId = $supportGroup->getService() ? $supportGroup->getService()->getId() : null;
+            $subServiceId = $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null;
+
+            if ($supportGroup->getAccommodationGroups()->count() == 0) {
+                $this->addAccommodationGroup($supportGroup);
+            }
+
+            $form->add('accommodationGroups', CollectionType::class, [
                 'entry_type' => AccommodationGroupHotelType::class,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label' => null,
                 'allow_add' => false,
                 'allow_delete' => false,
                 'delete_empty' => true,
-                'label' => null,
-            ])
-            ->add('hotelSupport', HotelSupportType::class);
+                'attr' => [
+                    'serviceId' => $serviceId,
+                    'subServiceId' => $subServiceId,
+                ],
+            ]);
+        });
+    }
+
+    protected function addAccommodationGroup(SupportGroup $supportGroup)
+    {
+        $accommodationGroup = (new AccommodationGroup())->setGroupPeople($supportGroup->getGroupPeople());
+        $supportGroup->addAccommodationGroup($accommodationGroup);
+
+        return $supportGroup;
     }
 
     public function getParent()

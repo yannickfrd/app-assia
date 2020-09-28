@@ -5,15 +5,14 @@ namespace App\Form\Support;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\SubService;
-use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
+use App\Entity\SupportGroup;
 use App\Repository\ServiceRepository;
-use App\Repository\SubServiceRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NewSupportGroupType extends AbstractType
 {
@@ -38,18 +37,14 @@ class NewSupportGroupType extends AbstractType
             ->add('subService', EntityType::class, [
                 'class' => SubService::class,
                 'choice_label' => 'name',
-                'query_builder' => function (SubServiceRepository $repo) {
-                    return $repo->getSubServicesFromUserQueryList($this->currentUser);
-                },
+                'choices' => [],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('device', EntityType::class, [
                 'class' => Device::class,
                 'choice_label' => 'name',
-                'query_builder' => function (DeviceRepository $repo) {
-                    return $repo->getDevicesFromUserQueryList($this->currentUser);
-                },
+                'choices' => [],
                 'placeholder' => 'placeholder.select',
             ])
             ->add('referent', HiddenType::class)
@@ -59,6 +54,7 @@ class NewSupportGroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'data_class' => SupportGroup::class,
             'translation_domain' => 'forms',
         ]);
     }

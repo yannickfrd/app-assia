@@ -30,8 +30,6 @@ class AccommodationVoter extends Voter
         $this->userId = $this->user->getId();
         $this->accommodation = $accommodation;
 
-        // dd($this->user);
-
         if (!$this->user) {
             return false;
         }

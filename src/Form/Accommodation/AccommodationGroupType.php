@@ -49,13 +49,13 @@ class AccommodationGroupType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $accommodation = $event->getData();
 
-            $service = $accommodation->getSupportGroup()->getService();
+            $serviceId = $accommodation->getSupportGroup()->getService()->getId();
 
             $event->getForm()->add('accommodation', EntityType::class, [
                 'class' => Accommodation::class,
                 'choice_label' => 'name',
-                'query_builder' => function (AccommodationRepository $repo) use ($service) {
-                    return $repo->getAccommodationsQueryList($service);
+                'query_builder' => function (AccommodationRepository $repo) use ($serviceId) {
+                    return $repo->getAccommodationsQueryList($serviceId);
                 },
                 'placeholder' => 'placeholder.select',
             ]);

@@ -1,3 +1,7 @@
+accommodation:
+  name: Hébergement ou logement
+accommodationGroup:
+  startDate: Date d'entrée
 Address: Adresse
 Birthdate: Date de naissance
 City: Ville
@@ -189,7 +193,9 @@ location:
   address_auto: Adresse (auto.)
   city_auto:  Ville (auto.)
   zipcode_auto: Code postal (auto.)
-  search.placeholder: Saisir une adresse ou une ville...
+  search :
+    placeholder: Saisir une adresse ou une ville...
+    help: Adresse du logement, hébergement, domiciliation...
 
 ### AVDL
 Diag type: Type de diagnostic

@@ -45,12 +45,12 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les suivis d'un service pour l'export.
      */
-    public function findSupportsFromServiceToExport($search = null, int $serviceId)
+    public function findSupportsFromServiceToExport($search = null, Service $service)
     {
         $query = $this->getSupportsFromServiceQuery()
 
             ->where('sg.service = :service')
-            ->setParameter('service', $serviceId);
+            ->setParameter('service', $service);
 
         if ($search) {
             $query = $this->filter($query, $search);
@@ -103,20 +103,14 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     protected function filter($query, $search)
     {
-        if (!$this->currentUser->isRole('ROLE_SUPER_ADMIN')) {
-            // if ($this->currentUser->isRole("ROLE_ADMIN")) {
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
-            // } else {
-            //     $query->andWhere("sp.referent = :user")
-            //         ->setParameter("user",  $this->currentUser->getUser());
-            // }
         }
         if ($search->getFullname()) {
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
-
         // if ($search->getBirthdate()) {
         //     $query->andWhere("p.birthdate = :birthdate")
         //         ->setParameter("birthdate", $search->getBirthdate());

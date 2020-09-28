@@ -3,13 +3,13 @@
 namespace App\Service\Indicators;
 
 use App\Entity\EvalBudgetPerson;
-use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-use App\Form\Utils\Choices;
-use App\Entity\SupportPerson;
 use App\Entity\EvalProfPerson;
 use App\Entity\EvaluationPerson;
+use App\Entity\GroupPeople;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Entity\SupportPerson;
+use App\Form\Utils\Choices;
 
 class SocialIndicators
 {
@@ -84,6 +84,7 @@ class SocialIndicators
 
         $datas['nbGroups'] = $this->nbGroups;
         $datas['nbPeople'] = count($supportPeople);
+
         // dump($datas);
 
         return $datas;

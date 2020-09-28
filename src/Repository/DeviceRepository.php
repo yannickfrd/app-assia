@@ -80,7 +80,7 @@ class DeviceRepository extends ServiceEntityRepository
                 ->setParameter('service', $serviceId);
         }
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
@@ -104,7 +104,7 @@ class DeviceRepository extends ServiceEntityRepository
             ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
             ->andWhere('a.startDate < :end')->setParameter('end', $end);
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('a.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
@@ -127,7 +127,7 @@ class DeviceRepository extends ServiceEntityRepository
 
             ->where('d.disabledAt IS NULL');
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->where('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }

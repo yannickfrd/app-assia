@@ -11,21 +11,21 @@ class LocationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $data = $options['attr'];
+        $attr = $builder->getOption('attr');
 
         $builder
             ->add('search', null, [
-                'label' => $data['seachLabel'] ?? '',
+                'label' => $attr['seachLabel'] ?? '',
                 'attr' => [
                     'class' => 'js-search',
                     'placeholder' => 'location.search.placeholder',
                     'autocomplete' => 'off',
                 ],
-                'help' => $data['searchHelp'] ?? null,
+                'help' => $attr['searchHelp'] ?? null,
                 'mapped' => false,
             ])
             ->add('commentLocation', null, [
-                'help' => $data['commentLocationHelp'] ?? 'commentLocation.help',
+                'help' => $attr['commentLocationHelp'] ?? 'commentLocation.help',
             ])
             ->add('address', null, [
                 'label' => 'location.address_auto',
@@ -49,7 +49,7 @@ class LocationType extends AbstractType
                 ],
             ]);
 
-        if (isset($data['geoLocation']) && $data['geoLocation'] == true) {
+        if (isset($attr['geoLocation']) && $attr['geoLocation'] == true) {
             $builder
                 ->add('locationId', HiddenType::class, [
                     'attr' => [

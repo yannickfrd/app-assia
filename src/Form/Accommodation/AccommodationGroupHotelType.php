@@ -4,6 +4,7 @@ namespace App\Form\Accommodation;
 
 use App\Entity\Accommodation;
 use App\Entity\AccommodationGroup;
+use App\Entity\Service;
 use App\Repository\AccommodationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -18,21 +19,33 @@ class AccommodationGroupHotelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $service = $event->getData()->getSupportGroup()->getService();
+            $form = $event->getForm();
+            $serviceId = null;
+            $attr = $form->getParent()->getConfig()->getOption('attr');
 
-            $event->getForm()
+            if ($attr['serviceId']) {
+                $serviceId = $attr['serviceId'];
+                $subServiceId = $attr['subServiceId'];
+            } else {
+                $supportGroup = $form->getParent()->getParent()->getData();
+                $service = $supportGroup->getService();
+                $serviceId = $service ? $service->getId() : null;
+                $subServiceId = $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null;
+            }
+
+            $form
                 ->add('accommodation', EntityType::class, [
                     'class' => Accommodation::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (AccommodationRepository $repo) use ($service) {
-                        return $repo->getAccommodationsQueryList($service);
+                    'query_builder' => function (AccommodationRepository $repo) use ($serviceId, $subServiceId) {
+                        return $repo->getAccommodationsQueryList($serviceId, $subServiceId);
                     },
-                    'label' => 'hotelName',
+                    'label' => $serviceId == Service::SERVICE_PASH_ID ? 'hotelName' : 'accommodation.name',
                     'placeholder' => 'placeholder.select',
-                    'required' => true,
+                    'required' => false,
                 ])
                 ->add('startDate', DateType::class, [
-                    'label' => 'hotelSupport.startDate',
+                    'label' => $serviceId == Service::SERVICE_PASH_ID ? 'hotelSupport.startDate' : 'accommodationGroup.startDate',
                     'widget' => 'single_text',
                     'required' => false,
                 ])

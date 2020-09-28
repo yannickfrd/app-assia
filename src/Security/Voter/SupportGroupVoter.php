@@ -30,8 +30,6 @@ class SupportGroupVoter extends Voter
         $this->userId = $this->user->getId();
         $this->supportGroup = $supportGroup;
 
-        // dd($this->user);
-
         if (!$this->user) {
             return false;
         }

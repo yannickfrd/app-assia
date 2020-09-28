@@ -464,7 +464,7 @@ class ImportDatasAMH
 
         // dump($this->existPeople);
         // dump($this->duplicatedPeople);
-        dd($this->items);
+        // dd($this->items);
         $this->manager->flush();
 
         return $this->items;

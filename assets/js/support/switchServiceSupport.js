@@ -1,6 +1,5 @@
 import SelectType from '../utils/selectType'
 import Loader from '../utils/loader'
-import AjaxRequest from '../utils/ajaxRequest'
 
 /**
  * Changement du type de service du suivi.
@@ -10,16 +9,11 @@ export default class SwitchServiceSupport {
     constructor() {
         this.selectType = new SelectType()
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest()
 
         this.formElt = document.getElementById('modal-new-support')
-        this.prefix = 'support_'
-        this.serviceSelectElt = document.getElementById(this.prefix + 'service')
+        this.serviceSelectElt = document.getElementById('support_service')
         this.subServiceBlockElt = document.getElementById('sub-service-block')
-        this.subServiceSelectElt = document.getElementById(this.prefix + 'subService')
-        this.deviceSelectElt = document.getElementById(this.prefix + 'device')
-        this.referentSelectElt = document.getElementById(this.prefix + 'referent')
-        this.referent2SelectElt = document.getElementById(this.prefix + 'referent2')
+        this.subServiceSelectElt = document.getElementById('support_subService')
         this.btnSubmitElt = this.formElt ? this.formElt.querySelector('button[type="submit"]') : null
         this.init()
     }
@@ -27,8 +21,8 @@ export default class SwitchServiceSupport {
     init() {
         this.service = this.selectType.getOption(this.serviceSelectElt)
         this.serviceSelectElt.addEventListener('change', () => {
-            this.visibleElt(document.querySelector(`div[data-parent-field='service'`), false)
-            this.switchService()
+            this.visibleElt(document.querySelector('div[data-parent-field="service"'), false)
+            this.changeService()
         })
 
         if (this.formElt) {
@@ -41,69 +35,95 @@ export default class SwitchServiceSupport {
 
         this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.serviceSelectElt.querySelector('option[selected]').value ? true : false)
         this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
-        this.switchService()
+        this.changeService()
     }
-
-
     /**
-     * Si changement de service.
+     * Au changement de service dans la liste déroulante.
      */
-    switchService() {
-        const serviceId = this.selectType.getOption(this.serviceSelectElt)
-
-        if (serviceId) {
-            this.loader.on()
-            let url = `/service/${serviceId}/devices`
-            this.ajaxRequest.init('GET', url, this.response.bind(this), true)
+    changeService() {
+        if (this.selectType.getOption(this.serviceSelectElt)) {
+            this.sendAjaxRequest()
         }
     }
 
     /**
-     * Récupère les résultats de la requête.
-     * @param {*} data 
+     * Envoie requête Ajax.
+     * @param {Object} data 
      */
-    response(data) {
-        const dataJSON = JSON.parse(data)
+    sendAjaxRequest() {
+        this.loader.on()
 
-        this.updateOptionsSelect(this.subServiceSelectElt, dataJSON.subServices)
-        this.updateOptionsSelect(this.deviceSelectElt, dataJSON.devices)
-        this.updateOptionsSelect(this.referentSelectElt, dataJSON.users)
+        $.ajax({
+            url: '/support/change_service',
+            type: 'POST',
+            data: this.getData(),
+            success: data => {
+                this.responseAjax(data)
+            }
+        })
+    }
 
-        if (this.referent2SelectElt) {
-            this.updateOptionsSelect(this.referent2SelectElt, dataJSON.users)
-        }
+    /**
+     * Donne les données à envoyer.
+     */
+    getData() {
+        const selectElts = [this.serviceSelectElt, this.subServiceSelectElt]
+        const data = {}
+
+        selectElts.forEach(selectElt => {
+            if (selectElt) {
+                data[selectElt.getAttribute('name')] = this.selectType.getOption(selectElt)
+            }
+        })
+
+        return data
+    }
+
+    /**
+     * Réponse à la requête Ajax.
+     * @param {String} data 
+     */
+    responseAjax(data) {
+        const html = new DOMParser().parseFromString(data, "text/xml")
+        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation'] // 'accommodationGroups_0_accommodation'
+
+        fields.forEach(field => {
+            let oldElt = document.querySelector('#support_' + field)
+            let newElt = html.querySelector('#support_' + field)
+
+            if (field === 'accommodation') {
+                oldElt = document.querySelector('#support_accommodationGroups_0_accommodation')
+            }
+
+            if (oldElt && newElt) {
+                this.updateField(oldElt, newElt)
+            }
+        })
+        this.loader.off()
+    }
+
+    /**
+     * Met à jour les items d 'un select.
+     * @param {HTMLElement} oldElt 
+     * @param {HTMLElement} newElt 
+     */
+    updateField(oldElt, newElt) {
+        const option = this.selectType.getOption(oldElt)
+        this.selectType.setOption(oldElt, option)
 
         this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.selectType.getOption(this.serviceSelectElt) ? true : false)
-        this.visibleElt(this.subServiceBlockElt, Object.entries(dataJSON.subServices).length > 0 ? true : false)
-    }
+        this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
 
-    /**
-     * Met à jour les items d'un select.
-     * @param {HTMLElement} selectElt 
-     * @param {Object} options 
-     */
-    updateOptionsSelect(selectElt, options) {
-        const selectedOption = this.selectType.getOption(selectElt)
+        oldElt.innerHTML = newElt.innerHTML
 
-        selectElt.querySelectorAll('option').forEach(optionElt => {
-            if (optionElt.value) {
-                optionElt.remove()
-            }
-        })
-
-        const length = Object.keys(options).length
-
-        Object.entries(options).forEach(([key, value]) => {
-            let optionElt = document.createElement('option')
-            optionElt.setAttribute('value', key)
-            optionElt.textContent = value
-            if (length == 1 || optionElt.value == selectedOption) {
-                optionElt.selected = true
-            }
-            selectElt.appendChild(optionElt)
-        })
-
-        this.loader.off()
+        const optionElts = oldElt.querySelectorAll('option')
+        if (optionElts.length <= 2) {
+            optionElts.forEach(optionElt => {
+                if (optionElt != null) {
+                    optionElt.selected = true
+                }
+            })
+        }
     }
 
     /**
@@ -123,4 +143,26 @@ export default class SwitchServiceSupport {
             elt.classList.remove('fade-in')
         }
     }
+
+    // $serviceElt.change(function () {
+    //     // ... retrieve the corresponding form.
+    //     const $form = $(this).closest('form')
+    //     // Simulate form data, but only include the selected sport value.
+    //     let data = {}
+    //     data[$serviceElt.attr('name')] = $serviceElt.val()
+    //     // Submit data via AJAX to the form's action path.
+    //     $.ajax({
+    //         url: $form.attr('action'),
+    //         type: $form.attr('method'),
+    //         data: data,
+    //         success: function (html) {
+    //             // Replace current position field ...
+    //             $('#support_device').replaceWith(
+    //                 // ... with the returned one from the AJAX response.
+    //                 $(html).find('#support_device')
+    //             )
+    //             // Position field now displays the appropriate positions.
+    //         }
+    //     })
+    // })
 }

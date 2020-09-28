@@ -1,7 +1,6 @@
 import AjaxRequest from './ajaxRequest'
 import Loader from './loader'
 import SwitchServiceSupport from '../support/switchServiceSupport'
-
 /**
  * Requête Ajax pour afficher un nouveau formulaire.
  */

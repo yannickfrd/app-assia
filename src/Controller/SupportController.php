@@ -88,7 +88,7 @@ class SupportController extends AbstractController
     {
         $serviceId = $request->request->get('support')['service'] ?? $_POST['support']['service'];
 
-        $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser(), $groupPeople, $serviceId);
+        $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser(), $groupPeople, $request);
 
         $form = ($this->createForm($this->getFormType($serviceId), $supportGroup))
             ->handleRequest($request);
@@ -98,7 +98,8 @@ class SupportController extends AbstractController
             if ($supportGroupService->create($groupPeople, $supportGroup)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
-                if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation() == Choices::YES) {
+                if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation() == Choices::YES
+                    && $supportGroup->getDevice()->getAccommodation() == Choices::YES) {
                     return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
                 }
 
@@ -114,7 +115,7 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Donne le formulaire pour créer un nouveau suivi social au gorupe (via AJAX).
+     * Donne le formulaire pour créer un nouveau suivi social au groupe (via AJAX).
      *
      * @Route("/group/{id}/new_support", name="group_people_new_support", methods="GET")
      */
@@ -124,7 +125,7 @@ class SupportController extends AbstractController
             ->setStatus(2)
             ->setReferent($this->getUser());
 
-        $forwNewSupport = $this->createForm(NewSupportGroupType::class, $supportGroup, [
+        $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
             'action' => $this->generateUrl('support_new', ['id' => $groupPeople->getId()]),
         ]);
 
@@ -132,10 +133,26 @@ class SupportController extends AbstractController
             'code' => 200,
             'data' => [
                 'form' => $this->render('app/support/formNewSupport.html.twig', [
-                    'form_new_support' => $forwNewSupport->createView(),
+                    'form' => $form->createView(),
                 ]),
             ],
         ], 200);
+    }
+
+    /**
+     * Donne le formulaire pour éditer suivi social au groupe (via AJAX).
+     *
+     * @Route("/support/change_service", name="support_change_service", methods="GET|POST")
+     */
+    public function getSupportGroupType(Request $request)
+    {
+        $supportGroup = new SupportGroup();
+        $form = $this->createForm(SupportGroupType::class, $supportGroup)
+            ->handleRequest($request);
+
+        return $this->render('app/support/formSupportGroup.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

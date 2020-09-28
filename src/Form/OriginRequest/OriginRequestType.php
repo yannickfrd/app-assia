@@ -2,24 +2,25 @@
 
 namespace App\Form\OriginRequest;
 
-use App\Form\Utils\Choices;
 use App\Entity\Organization;
 use App\Entity\OriginRequest;
 use App\Entity\Service;
-use Symfony\Component\Form\AbstractType;
+use App\Form\Utils\Choices;
 use App\Repository\OrganizationRepository;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OriginRequestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $serviceId = ($options['attr']['serviceId']);
+        $serviceId = $builder->getOption('attr')['serviceId'] ?? null;
+        $required = $serviceId == Service::SERVICE_AVDL_ID ? true : false;
 
         $builder
             ->add('organization', EntityType::class, [
@@ -29,13 +30,13 @@ class OriginRequestType extends AbstractType
                     return $repo->getOrganizationsQueryList($serviceId);
                 },
                 'placeholder' => 'placeholder.select',
-                'required' => $serviceId == Service::SERVICE_AVDL_ID ? true : false,
+                'required' => $required,
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
                 'label' => $serviceId == Service::SERVICE_AVDL_ID ? 'avdl.orientationDate' : '',
                 'widget' => 'single_text',
-                'required' => $serviceId == Service::SERVICE_AVDL_ID ? true : false,
+                'required' => $required,
             ])
             ->add('preAdmissionDate', DateType::class, [
                 'widget' => 'single_text',

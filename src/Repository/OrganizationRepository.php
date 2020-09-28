@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Organization;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Organization|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,11 +35,11 @@ class OrganizationRepository extends ServiceEntityRepository
     /**
      * Retourne les organismes prescripteurs rattachés au service.
      */
-    public function getOrganizationsQueryList(int $serviceId): QueryBuilder
+    public function getOrganizationsQueryList(int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('o')->select('PARTIAL o.{id, name}');
 
-        if ($this->countOrganizationsInService($serviceId)) {
+        if ($serviceId && $this->countOrganizationsInService($serviceId)) {
             $query = $query->leftJoin('o.services', 's')->addSelect('PARTIAL s.{id, name}')
                 ->where('s.id = :service')
                 ->setParameter('service', $serviceId);

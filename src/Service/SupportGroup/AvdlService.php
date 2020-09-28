@@ -15,6 +15,10 @@ class AvdlService
     {
         $avdl = $supportGroup->getAvdl();
 
+        if (null === $avdl) {
+            return $supportGroup;
+        }
+
         $supportGroup
             ->setStatus($this->getAvdlStatus($avdl))
             ->setStartDate($this->getAvdlStartDate($avdl))

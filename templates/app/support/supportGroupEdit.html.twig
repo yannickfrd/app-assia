@@ -6,12 +6,14 @@
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 
 {% if support.id %}
-	{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}
 	{% set people = form.vars.value.supportPeople %}
 	{% set title = "Édition du suivi" %}
 {% else %}
 	{% set people = group_people.rolePeople %}
 	{% set title = "Nouveau suivi" %}
+{% endif %}
+{% if formCoeff is defined %}
+	{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}
 {% endif %}
 
 {% block title %}{{ title }} | {{ title_website }}{% endblock %}
@@ -25,7 +27,7 @@
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
 
-	{% if support.id and is_granted("ROLE_ADMIN") %}
+	{% if support.id and is_granted("ROLE_ADMIN") and formCoeff is defined %}
 		<section>
 			<h2 class="h5 my-4">Coefficient du suivi</h2>
 			{{ form_start(formCoeff) }}
@@ -45,14 +47,10 @@
 
 	{{ form_start(form) }}
 
-	{% set serviceId = support.service.id %}
-
 	<div class="form-group">
 		<div class="row">
 			<div class="col-md-6">{{ form_row(form.service) }}</div>
-			{% if form.subService.vars.choices|length > 1 %}
-				<div class="col-md-6">{{ form_row(form.subService) }}</div>
-			{% endif %}
+			<div class="col-md-6 {{ form.subService.vars.choices|length < 2 ? 'd-none' }}">{{ form_row(form.subService) }}</div>
 		</div>
 		<div class="row" data-parent-field="service">
 			<div class="col-md-6">{{ form_row(form.device) }}</div>
@@ -64,10 +62,11 @@
 	</div>
 	
 	<hr>
-
-	{% if serviceId == constant('SERVICE_AVDL_ID', support.service) %}
+	
+	{% set serviceId = support.service ? support.service.id : null %}
+	{% if serviceId == constant("App\\Entity\\Service::SERVICE_AVDL_ID") %}
 		{% include "app/avdl/avdlEdit.html.twig" %}
-	{% elseif serviceId == constant('SERVICE_PASH_ID', support.service) %}
+	{% elseif serviceId == constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
 		{% include "app/hotelSupport/hotelSupportEdit.html.twig" %}
 	{% else %}		
 		{% include "app/support/supportRegular.html.twig" %}

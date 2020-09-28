@@ -126,7 +126,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs.
      */
-    public function getUsersQueryList(Service $service, User $user = null): QueryBuilder
+    public function getUsersQueryList(int $serviceId = null, User $user = null): QueryBuilder
     {
         return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'r')
@@ -134,7 +134,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.status IN (:status)')
             ->setParameter('status', [1, 2, 3])
             ->andWhere('r.service = :services')
-            ->setParameter('services', $service)
+            ->setParameter('services', $serviceId)
             ->orWhere('u.id = :user')
             ->setParameter('user', $user)
 
@@ -150,7 +150,7 @@ class UserRepository extends ServiceEntityRepository
 
             ->where('u.disabledAt IS NULL');
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
@@ -197,7 +197,7 @@ class UserRepository extends ServiceEntityRepository
                     ->setParameter('service', $serviceId);
         }
 
-        if (!$currentUser->isRole('ROLE_SUPER_ADMIN')) {
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
