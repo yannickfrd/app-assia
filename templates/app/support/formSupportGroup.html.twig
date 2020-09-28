@@ -1,0 +1,19 @@
+
+{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+
+{{ form_start(form) }}
+
+{# {{ form_widget(form.service) }} #}
+{{ form_widget(form.subService) }}
+{{ form_widget(form.device) }}
+{{ form_widget(form.referent) }}
+{{ form_widget(form.referent2) }}
+{{ form_widget(form.originRequest.organization) }}
+{{ form_widget(form.accommodation) }}
+{# {% if form.vars.value.accommodationGroups.count > 0 and form.accommodationGroups is defined %}
+    {{ form_widget(form.accommodationGroups[0].accommodation) }}
+{% endif %} #}
+
+<!-- <button type="submit" id="send" name="send">Enregistrer</button> -->
+
+{{ form_end(form, {"render_rest": false}) }}
