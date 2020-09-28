@@ -28,26 +28,26 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les services.
      */
-    public function findAllServicesQuery(ServiceSearch $serviceSearch, User $user = null): Query
+    public function findAllServicesQuery(ServiceSearch $search, User $user = null): Query
     {
         $query = $this->createQueryBuilder('s')->select('s')
-            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id,name}');
+            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
 
         if ($user && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             $query->where('s.disabledAt IS NULL');
         }
 
-        if ($serviceSearch->getName()) {
+        if ($search->getName()) {
             $query->andWhere('s.name LIKE :name')
-                ->setParameter('name', $serviceSearch->getName().'%');
+                ->setParameter('name', $search->getName().'%');
         }
-        if ($serviceSearch->getPhone()) {
+        if ($search->getPhone()) {
             $query->andWhere('s.phone1 = :phone')
-                ->setParameter('phone', $serviceSearch->getPhone());
+                ->setParameter('phone', $search->getPhone());
         }
-        if ($serviceSearch->getPole()) {
-            $query = $query->andWhere('p.id = :pole_id')
-                ->setParameter('pole_id', $serviceSearch->getPole());
+        if ($search->getPole()) {
+            $query = $query->andWhere('p.id = :pole')
+                ->setParameter('pole', $search->getPole());
         }
 
         return $query->orderBy('s.name', 'ASC')->getQuery();

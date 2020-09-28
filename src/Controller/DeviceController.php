@@ -4,16 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Device;
 use App\Entity\Service;
-use App\Form\Device\DeviceType;
-use App\Repository\DeviceRepository;
-use App\Repository\SubServiceRepository;
-use App\Repository\UserRepository;
 use App\Service\Pagination;
+use App\Form\Device\DeviceType;
+use App\Form\Model\DeviceSearch;
+use App\Repository\UserRepository;
+use App\Repository\DeviceRepository;
+use App\Form\Device\DeviceSearchType;
+use App\Repository\SubServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DeviceController extends AbstractController
 {
@@ -33,8 +35,15 @@ class DeviceController extends AbstractController
      */
     public function listDevice(Request $request, Pagination $pagination): Response
     {
+        $search = new DeviceSearch();
+
+        $form = ($this->createForm(DeviceSearchType::class, $search))
+            ->handleRequest($request);
+
         return $this->render('app/device/listDevices.html.twig', [
-            'devices' => $pagination->paginate($this->repo->findAllDevicesQuery(), $request) ?? null,
+            'deviceSearch' => $search,
+            'form' => $form->createView(),
+            'devices' => $pagination->paginate($this->repo->findAllDevicesQuery($search), $request) ?? null,
         ]);
     }
 

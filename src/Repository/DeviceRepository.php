@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Device;
 use App\Entity\Service;
+use App\Form\Model\DeviceSearch;
 use App\Form\Model\SupportsByUserSearch;
+use App\Form\Utils\Choices;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -26,11 +28,32 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les dispositifs.
      */
-    public function findAllDevicesQuery(): Query
+    public function findAllDevicesQuery(DeviceSearch $search): Query
     {
-        return $this->createQueryBuilder('d')
-            ->select('d')
-            ->orderBy('d.name', 'ASC')
+        $query = $this->createQueryBuilder('d')->select('d')
+            ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
+            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
+
+        if ($search->getName()) {
+            $query->andWhere('d.name LIKE :name')
+                ->setParameter('name', $search->getName().'%');
+        }
+        if ($search->getService()) {
+            $query->andWhere('sd.service = :service')
+                ->setParameter('service', $search->getService());
+        }
+        if ($search->getPole()) {
+            $query->andWhere('s.pole = :pole')
+                ->setParameter('pole', $search->getPole());
+        }
+        if ($search->getDisabled() == Choices::YES) {
+            $query->andWhere('d.disabledAt IS NOT NULL');
+        } elseif ($search->getDisabled() == Choices::NO) {
+            $query->andWhere('d.disabledAt IS NULL');
+        }
+
+        return $query->orderBy('d.name', 'ASC')
             ->getQuery();
     }
 
