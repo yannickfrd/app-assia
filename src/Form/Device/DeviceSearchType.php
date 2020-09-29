@@ -41,7 +41,7 @@ class DeviceSearchType extends AbstractType
             ])
             ->add('disabled', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,
             ]);

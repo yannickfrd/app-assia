@@ -54,9 +54,9 @@ class UserSearch
     private $pole;
 
     /**
-     * @var bool|null
+     * @var int|null
      */
-    private $disabled = false;
+    private $disabled;
 
     /**
      * @var bool
@@ -176,12 +176,12 @@ class UserSearch
         return $this;
     }
 
-    public function getDisabled(): ?bool
+    public function getDisabled(): ?int
     {
         return $this->disabled;
     }
 
-    public function setDisabled(bool $disabled): self
+    public function setDisabled(?int $disabled): self
     {
         $this->disabled = $disabled;
 

@@ -7,6 +7,7 @@ use App\Entity\Service;
 use App\Entity\SubService;
 use App\Entity\SupportGroup;
 use App\Form\Model\AccommodationSearch;
+use App\Form\Utils\Choices;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -238,6 +239,12 @@ class AccommodationRepository extends ServiceEntityRepository
         if ($search->getPole()) {
             $query->andWhere('pole.id = :pole_id')
                 ->setParameter('pole_id', $search->getPole());
+        }
+
+        if ($search->getDisabled() == Choices::DISABLED) {
+            $query->andWhere('a.disabledAt IS NOT NULL');
+        } elseif ($search->getDisabled() == Choices::ACTIVE) {
+            $query->andWhere('a.disabledAt IS NULL');
         }
 
         if ($search->getServices()->count()) {

@@ -2,17 +2,17 @@
 
 namespace App\Entity;
 
-use App\Service\Phone;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\ContactEntityTrait;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
+use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -338,6 +338,16 @@ class User implements UserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public function getRolesToString(): ?array
+    {
+        $output = [];
+        foreach ($this->getRoles() as $role) {
+            $output[] = self::ROLES[$role];
+        }
+
+        return $output;
     }
 
     public function setRoles(array $roles): self

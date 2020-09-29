@@ -65,7 +65,7 @@ class AccommodationControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('table tbody tr td', 'Logement 666');
+        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'Logement 666');
     }
 
     public function testExportListAccommodationWithResults()

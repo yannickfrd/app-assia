@@ -3,15 +3,16 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set device = form.vars.value %}
-{% if device.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
+{% set EDIT_MODE = device.id ? true : false %}
+{% set title = EDIT_MODE ? 'Dispositif ' ~ device.name ~ (disabled ? ' (désactivé)') : 'Nouveau dispositif' %}
 
-{% block title %}{% if EDIT_MODE %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{% if EDIT_MODE %}Dispositif {{ device.name }}{% else %}Nouveau dispositif{% endif %}</h1>
+    <h1 class="h2 mb-3">{{ title }}</h1>
     {% if EDIT_MODE %}
         <div class="small text-secondary">
             <p> Créé le {{device.createdAt|date("d/m/Y à H:i") }}{{ device.createdBy ? " par " ~ device.createdBy.fullname }}
@@ -64,14 +65,11 @@
                 <div class="col-md-12">
                     {% if EDIT_MODE and is_granted("ROLE_SUPER_ADMIN") %}
                         <div class="float-left d-flex">
-                            {% if form.vars.value.isDisabled %} 
-                                <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
-                                    title="Réactiver le dispositif" data-toggle="tooltip" data-placement="bottom">Ré-activer</a>
-                            {% else %}
-                                <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
-                                    title="Désactiver le dispositif" data-toggle="tooltip" data-placement="bottom"
-                                    onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce dispositif ?')){return true;}else{return false;}">Désactiver</a>
-                            {% endif %}
+                            {% set disabled = device.isDisabled %}
+                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
+                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le dispositif" data-toggle="tooltip" data-placement="bottom"
+                                {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce dispositif ?')){return true;}else{return false;}"{% endif %}>
+                                {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                         </div>
                     {% endif %}
                     <div class="float-right">

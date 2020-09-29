@@ -3,16 +3,16 @@
 namespace App\Form\Accommodation;
 
 use App\Entity\Pole;
-use App\Form\Utils\Choices;
+use App\Form\Model\AccommodationSearch;
 use App\Form\Model\RdvSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
-use App\Form\Model\AccommodationSearch;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AccommodationSearchType extends AbstractType
 {
@@ -66,6 +66,12 @@ class AccommodationSearchType extends AbstractType
             ])
             ->add('service', ServiceSearchType::class, [
                 'data_class' => RdvSearch::class,
+            ])
+            ->add('disabled', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(Choices::DISABLE),
+                'placeholder' => 'placeholder.disabled',
+                'required' => false,
             ])
             ->add('export');
     }

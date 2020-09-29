@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.25.5 - 28/09/2020
+1.25.6 - 29/09/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,7 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+- Ajout ou modification de la fonctionalité de désactivation d'utilisateur, service, sous-service, dispositif et groupe de places.
 
 ## Version 1.25.4-5 - 28/09/2020
 - Mise en place des formulaires dynamiques via Ajax (SupportGroup) et factorisation. 

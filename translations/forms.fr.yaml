@@ -48,7 +48,7 @@ Old password: Ancien mot de passe
 placeholder:
   comment: Écrire un commentaire...
   device: -- Dispositif --
-  disabled: -- Désactivé --
+  disabled: -- Statut --
   familtyTypology: -- Typologie familiale --
   gender: -- Sexe --
   nbSupports: Nb de suivis

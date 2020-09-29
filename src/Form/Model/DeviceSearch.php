@@ -23,7 +23,7 @@ class DeviceSearch
     private $pole;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $disabled;
 

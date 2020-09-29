@@ -131,10 +131,10 @@ class ServiceController extends AbstractController
 
         if ($service->getDisabledAt()) {
             $service->setDisabledAt(null);
-            $this->addFlash('success', 'Le service est réactivé.');
+            $this->addFlash('success', 'Le service "'.$service->getName().'" est réactivé.');
         } else {
             $service->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le service est désactivé.');
+            $this->addFlash('warning', 'Le service "'.$service->getName().'" désactivé.');
         }
 
         $this->manager->flush();

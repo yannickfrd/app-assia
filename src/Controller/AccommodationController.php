@@ -127,6 +127,28 @@ class AccommodationController extends AbstractController
     }
 
     /**
+     * Désactive ou réactive le accommodation.
+     *
+     * @Route("admin/accommodation/{id}/disable", name="admin_accommodation_disable", methods="GET")
+     */
+    public function disableAccommodation(Accommodation $accommodation): Response
+    {
+        $this->denyAccessUnlessGranted('DISABLE', $accommodation);
+
+        if ($accommodation->getDisabledAt()) {
+            $accommodation->setDisabledAt(null);
+            $this->addFlash('success', 'Le groupe de place "'.$accommodation->getName().'" est réactivé.');
+        } else {
+            $accommodation->setDisabledAt(new \DateTime());
+            $this->addFlash('warning', 'Le groupe de place "'.$accommodation->getName().'" est désactivé.');
+        }
+
+        $this->manager->flush();
+
+        return $this->redirectToRoute('accommodation_edit', ['id' => $accommodation->getId()]);
+    }
+
+    /**
      * Exporte les données.
      */
     protected function exportData(AccommodationSearch $search)

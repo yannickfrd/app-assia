@@ -51,26 +51,26 @@
                 </thead>
                 <tbody>
                     {% for service in services %}
-                    <tr class="{% if service.disabled %}text-secondary{% endif %}">
-                        <td scope="row" class="align-middle">
-                            {% if is_granted("VIEW", service) %}
-                                <a href="{{ path('service_edit', {'id':service.id}) }}" class="btn btn-{{ theme_color }}  btn-sm shadow" 
-                                    data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
-                                </a>
-                            {% else %}
-                                <span class="btn btn-{{ theme_color }} btn-sm shadow cursor-default"><span class="fas fa-ban"></span></span>
+                        <tr class="{% if service.disabled %}text-secondary{% endif %}">
+                            <td scope="row" class="align-middle">
+                                {% if is_granted("VIEW", service) %}
+                                    <a href="{{ path('service_edit', {'id':service.id}) }}" class="btn btn-{{ theme_color }}  btn-sm shadow" 
+                                        data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
+                                    </a>
+                                {% else %}
+                                    <span class="btn btn-{{ theme_color }} btn-sm shadow cursor-default"><span class="fas fa-ban"></span></span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">{% if service.disabled %}<del>{{ service.name }}</del> (désactivé){% else %}{{ service.name }}{% endif %}</td>
+                            <td class="align-middle"><a href="{{ path('pole_edit', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">{{ service.pole.name }}</a></td>
+                            <td class="align-middle">{{ service.phone1}}</td>
+                            <td class="align-middle">{{ service.email }}</td>
+                            <td class="align-middle">{{ service.address }}</td>
+                            <td class="align-middle">{{ service.city }}</td>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <td class="align-middle">{{ service.disabledAt ? "Oui" }}</td>
                             {% endif %}
                         </td>
-                        <td class="align-middle">{% if service.disabled %}<del>{{ service.name }}</del>{% else %}{{ service.name }}{% endif %}</td>
-                        <td class="align-middle"><a href="{{ path('pole_edit', {'id':service.pole.id}) }}" class="text-{{ theme_color }}">{{ service.pole.name }}</a></td>
-                        <td class="align-middle">{{ service.phone1}}</td>
-                        <td class="align-middle">{{ service.email }}</td>
-                        <td class="align-middle">{{ service.address }}</td>
-                        <td class="align-middle">{{ service.city }}</td>
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}
-                            <td class="align-middle">{{ service.disabledAt ? "Oui" }}</td>
-                        {% endif %}
-                    </td>
                     {% endfor %}
                 </tbody>
             </table>

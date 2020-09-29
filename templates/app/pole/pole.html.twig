@@ -3,15 +3,15 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set pole = form.vars.value %}
-{% if pole.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
-
-{% block title %}{% if EDIT_MODE %}{{ pole.name }}{% else %}Nouveau pôle{% endif %} | {{ title_website }}{% endblock %}
+{% set EDIT_MODE = pole.id ? true : false %}
+{% set title =  EDIT_MODE ? pole.name : 'Nouveau pôle' %}
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
 <div class="container">
 
-    <h1 class="h2 mb-3">{{ EDIT_MODE ? pole.name : "Nouveau pôle" }}</h1>
+    <h1 class="h2 mb-3">{{ title }}</h1>
     {% if EDIT_MODE %}
     <div class="small text-secondary">
         <p> Créé le {{pole.createdAt|date("d/m/Y à H:i") }}

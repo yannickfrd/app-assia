@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% if form.vars.value.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
+{% set EDIT_MODE = form.vars.value.id ? true : false %}
 
 {% block title %}Logement/hébergement | {{ title_website }}{% endblock %}
 
@@ -27,7 +27,7 @@
 	</div>
 	<div class="form-group row">
 		<div class="col-md-12">
-			{% if EDIT_MODE == true and is_granted("DELETE", support) %}
+			{% if EDIT_MODE and is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
 				<a href="{{ path('support_group_people_accommodation_delete', {'id':form.vars.value.id}) }}" 
 					class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"

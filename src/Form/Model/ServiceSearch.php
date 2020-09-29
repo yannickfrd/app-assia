@@ -36,6 +36,11 @@ class ServiceSearch
     private $pole;
 
     /**
+     * @var int|null
+     */
+    private $disabled;
+
+    /**
      * @var bool
      */
     private $export;
@@ -100,6 +105,18 @@ class ServiceSearch
     public function setPole(?Pole $pole): self
     {
         $this->pole = $pole;
+
+        return $this;
+    }
+
+    public function getDisabled(): ?int
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(?int $disabled): self
+    {
+        $this->disabled = $disabled;
 
         return $this;
     }

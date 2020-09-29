@@ -4,8 +4,10 @@ namespace App\Form\Service;
 
 use App\Entity\Pole;
 use App\Form\Model\ServiceSearch;
+use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -51,6 +53,12 @@ class ServiceSearchType extends AbstractType
                     'class' => 'sr-only',
                 ],
                 'placeholder' => 'placeholder.pole',
+                'required' => false,
+            ])
+            ->add('disabled', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(Choices::DISABLE),
+                'placeholder' => 'placeholder.disabled',
                 'required' => false,
             ])
             ->add('export');

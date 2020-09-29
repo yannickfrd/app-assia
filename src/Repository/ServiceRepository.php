@@ -6,6 +6,7 @@ use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Form\Model\ServiceSearch;
+use App\Form\Utils\Choices;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -48,6 +49,11 @@ class ServiceRepository extends ServiceEntityRepository
         if ($search->getPole()) {
             $query = $query->andWhere('p.id = :pole')
                 ->setParameter('pole', $search->getPole());
+        }
+        if ($search->getDisabled() == Choices::DISABLED) {
+            $query->andWhere('s.disabledAt IS NOT NULL');
+        } elseif ($search->getDisabled() == Choices::ACTIVE) {
+            $query->andWhere('s.disabledAt IS NULL');
         }
 
         return $query->orderBy('s.name', 'ASC')->getQuery();

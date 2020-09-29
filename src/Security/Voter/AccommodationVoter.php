@@ -20,7 +20,7 @@ class AccommodationVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
+        return in_array($attribute, ['VIEW', 'EDIT', 'DELETE', 'DISABLE'])
             && $subject instanceof \App\Entity\Accommodation;
     }
 
@@ -42,6 +42,9 @@ class AccommodationVoter extends Voter
                 return $this->canEdit();
                 break;
             case 'DELETE':
+                return $this->canDelete();
+                break;
+            case 'DISABLE':
                 return $this->canDelete();
                 break;
         }

@@ -57,42 +57,50 @@
                             {{ knp_pagination_sortable(accommodations, "Code postal", "a.zipcode") }}
                         </th>
                         <th scope="col" class="align-middle th-w-150">Occupation actuelle (Nb de personnes)</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <th scope="col" class="align-middle th-w-60">
+                                {{ knp_pagination_sortable(accommodations, "Désactivé", "a.disabledAt") }}
+                            </th>
+                        {% endif %}
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for accommodation in accommodations %}
-                    <tr>
-                        <th scope="row">
-                            <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir le groupe de places"><span class="fas fa-eye"></span>
-                            </a>
-                        </th>
-                        <td>{{ accommodation.name }}</td>
-                        <td><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
-                        <td>{{ accommodation.device ? accommodation.device.name }}</td>
-                        <td>{{ accommodation.nbPlaces }}</td>
-                        <td>{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
-                        <td>{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
-                        <td>{{ accommodation.address }}</td>
-                        <td>{{ accommodation.city }}</td>
-                        <td>{{ accommodation.zipcode }}</td>
-                        <td>{% set nbPeople = 0 %}
-                            {% if accommodation.accommodationType != 3 %}
-                                {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
-                                    {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
-                                    {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
-                                    {% set nbPeople = nbPeople + nbAccommodationPeople %}
-                                {% endfor %}
-                                {% if nbPeople == 0 %}
-                                    <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
-                                {% elseif accommodation.nbPlaces != nbPeople %}
-                                    <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes ne correspond pas au nombre de places"></span>
+                        <tr class="{% if accommodation.disabled %}text-secondary{% endif %}">
+                            <td scope="row" class="align-middle" >
+                                <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                    title="Voir le groupe de places"><span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td class="align-middle">{% if accommodation.disabled %}<del>{{ accommodation.name }}</del> (désactivé){% else %}{{ accommodation.name }}{% endif %}</td>
+                            <td class="align-middle"><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
+                            <td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
+                            <td class="align-middle">{{ accommodation.nbPlaces }}</td>
+                            <td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ accommodation.address }}</td>
+                            <td class="align-middle">{{ accommodation.city }}</td>
+                            <td class="align-middle">{{ accommodation.zipcode }}</td>
+                            <td class="align-middle">{% set nbPeople = 0 %}
+                                {% if accommodation.accommodationType != 3 %}
+                                    {% for accommodationGroup in accommodation.accommodationGroups|filter(a => a.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
+                                        {% set nbAccommodationPeople = accommodationGroup.accommodationPeople|length %}
+                                        {% if not loop.first %} + {% endif %}{{ nbAccommodationPeople }}
+                                        {% set nbPeople = nbPeople + nbAccommodationPeople %}
+                                    {% endfor %}
+                                    {% if nbPeople == 0 %}
+                                        <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
+                                    {% elseif accommodation.nbPlaces != nbPeople %}
+                                        <span class="fas fa-exclamation-triangle text-warning" title="Le nombre de personnes ne correspond pas au nombre de places"></span>
+                                    {% endif %}
                                 {% endif %}
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td class="align-middle">{{ accommodation.disabledAt ? "Oui" }}</td>
                             {% endif %}
-                        </td>
-                    </tr>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

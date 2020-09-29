@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Form\Model\UserSearch;
+use App\Form\Utils\Choices;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -94,7 +95,9 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere('p.id = :pole_id')
                 ->setParameter('pole_id', $search->getPole());
         }
-        if (!$search->getDisabled()) {
+        if ($search->getDisabled() == Choices::DISABLED) {
+            $query->andWhere('u.disabledAt IS NOT NULL');
+        } elseif ($search->getDisabled() == Choices::ACTIVE) {
             $query->andWhere('u.disabledAt IS NULL');
         }
         if ($search->getServices()->count()) {

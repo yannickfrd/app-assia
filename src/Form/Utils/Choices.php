@@ -54,6 +54,14 @@ class Choices
         99 => 'Non renseigné',
     ];
 
+    public const DISABLE = [
+        1 => 'Actif',
+        2 => 'Désactivé',
+    ];
+
+    public const ACTIVE = 1;
+    public const DISABLED = 2;
+
     public static function getchoices($const): array
     {
         $output = [];

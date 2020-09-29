@@ -3,10 +3,12 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set service = form.vars.value %}
+{% set disabled = service.isDisabled %}
+{% set EDIT_MODE = service.id ? true : false %}
 {% set YES = 1 %}
-{% if service.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
+{% set title = EDIT_MODE ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
 
-{% block title %}{% if EDIT_MODE %}{{ service.name }}{% else %}Nouveau service{% endif %} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -16,17 +18,15 @@
     
     <section>
 
-    <h1 class="h2 mb-3">{{ EDIT_MODE ? service.name : "Nouveau service" }}</h1>
+    <h1 class="h2 mb-3">{{ title }}</h1>
     {% if EDIT_MODE %}
-    <div class="small text-secondary">
-        <p> Créé le {{service.createdAt|date("d/m/Y à H:i") }}
-            {{ service.createdBy ? " par " ~ service.createdBy.fullname }}
-            {% if service.updatedAt %}(modifié le {{ service.updatedAt|date("d/m/Y à H:i") }}
-            {{ service.updatedBy ? " par " ~ service.updatedBy.fullname }}{% endif %})
-        </p>
-    </div>
+        <div class="small text-secondary">
+            <p> Créé le {{service.createdAt|date("d/m/Y à H:i") }}{{ service.createdBy ? " par " ~ service.createdBy.fullname }}
+                {% if service.updatedAt %}(modifié le {{ service.updatedAt|date("d/m/Y à H:i") }}{{ service.updatedBy ? " par " ~ service.updatedBy.fullname }}{% endif %})
+            </p>
+        </div>
     {% else %}
-    <div class="mb-4"></div>
+        <div class="mb-4"></div>
     {% endif %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -38,7 +38,6 @@
 
     {% include "model/msgFlash.html.twig" %}
     <div id="js-msg-flash-content"></div>
-
 
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.name) }}</div>
@@ -86,14 +85,10 @@
                 <div class="col-md-12">
                     {% if EDIT_MODE and is_granted("DISABLE", service) %}
                         <div class="float-left d-flex">
-                            {% if form.vars.value.isDisabled %} 
-                            <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('service_disable', {'id':form.vars.value.id}) }}"
-                                title="Réactiver le service" data-toggle="tooltip" data-placement="bottom">Ré-activer</a>
-                            {% else %}
-                            <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('service_disable', {'id':form.vars.value.id}) }}"
-                                title="Désactiver le service" data-toggle="tooltip" data-placement="bottom"
-                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce service ?')){return true;}else{return false;}">Désactiver</a>
-                            {% endif %}
+                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('service_disable', {'id':form.vars.value.id}) }}"
+                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le service" data-toggle="tooltip" data-placement="bottom"
+                                {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce service ?')){return true;}else{return false;}"{% endif %}>
+                                {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                         </div>
                     {% endif %}
                     <div class="float-right">
@@ -125,7 +120,7 @@
                         </thead>
                         <tbody>
                             {% for subService in subServices %}
-                                <tr>
+                                <tr class="{% if subService.disabled %}text-secondary{% endif %}">
                                     <td class="align-middle" scope="row">
                                         {% if is_granted("EDIT", service) %}
                                         <a href="{{ path('sub_service_edit', {'id':subService.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
@@ -133,7 +128,7 @@
                                         </a>                    
                                         {% endif %}
                                     </td>
-                                    <td class="align-middle">{{ subService.name }}</td>
+                                    <td class="align-middle">{% if subService.disabled %}<del>{{ subService.name  }}</del> (désactivé){% else %}{{ subService.name }}{% endif %}</td>
                                     <td class="align-middle">{{ subService.chief ? subService.chief.fullname }}</td>
                                     <td class="align-middle">{{ subService.phone1}}</td>
                                     <td class="align-middle">{{ subService.email }}</td>
@@ -267,11 +262,11 @@
 
     <hr>
 
-    {% if service.accommodation == YES %}
+    {# {% if service.accommodation == YES %} #}
     <section>
         <h2 class="h4 my-4">Groupes de places rattachés</h2>
         <p class="align-middle">{{ accommodations|length }} groupe{% if accommodations|length > 0 %}s{% endif %}<!--
-            --> ({{ nbPlaces }} places).</p>
+            -->{{ nbPlaces > 0 ? ' (' ~ nbPlaces ~ ' places)' }}.</p>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>
@@ -289,23 +284,23 @@
                 </thead>
                 <tbody>
                     {% for accommodation in accommodations %}
-                    <tr>
-                        <td scope="row">
-                            <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                data-placement="bottom" title="Voir le groupe de places">
-                                <span class="fas fa-eye"></span>
-                            </a>
-                        </td>
-                        <td class="align-middle">{{ accommodation.name }}</td>
-                        <td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
-                        <td class="align-middle">{{ accommodation.nbPlaces }}</td>
-                        <td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
-                        <td class="align-middle">{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
-                        <td class="align-middle">{{ accommodation.city|capitalize }}</td>
-                        <td class="align-middle">{{ accommodation.zipcode }}</td>
-                        <td class="align-middle">{{ accommodation.address }}</td>
-                    </tr>
+                        <tr class="{% if accommodation.disabled %}text-secondary{% endif %}">
+                            <td scope="row" class="align-middle">
+                                <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+                                    data-placement="bottom" title="Voir le groupe de places">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td class="align-middle">{% if accommodation.disabled %}<del>{{ accommodation.name }}</del> (désactivé){% else %}{{ accommodation.name }}{% endif %}</td>
+                            <td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
+                            <td class="align-middle">{{ accommodation.nbPlaces }}</td>
+                            <td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ accommodation.city|capitalize }}</td>
+                            <td class="align-middle">{{ accommodation.zipcode }}</td>
+                            <td class="align-middle">{{ accommodation.address }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -320,11 +315,11 @@
         {% endif %}
     </section>
     <hr>
-    {% endif %}
+    {# {% endif %} #}
 
     <section>
         <h2 class="h4 my-4">Utilisateurs rattachés</h2>
-            <p class="align-middle">{{ users|length }} utilisateur{% if users|length > 0 %}s{% endif %}.</p>
+            <p class="align-middle">{{ users|length }} utilisateur{{ users|length > 1 ? 's' }}.</p>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                 <thead>

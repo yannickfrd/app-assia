@@ -35,7 +35,7 @@ class SubServiceRepository extends ServiceEntityRepository
             ->leftJoin('ss.chief', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('ss.service', 's')->addSelect('s')
 
-            ->where('ss.disabledAt IS NULL')
+            // ->where('ss.disabledAt IS NULL')
             ->andWhere('ss.service = :service')
             ->setParameter('service', $service)
 
@@ -66,6 +66,7 @@ class SubServiceRepository extends ServiceEntityRepository
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
 
             ->where('ss.disabledAt IS NULL')
+            ->andWhere('s.disabledAt IS NULL')
             ->andWhere('ss.service = :service')
             ->setParameter('service', $service)
 
@@ -73,14 +74,15 @@ class SubServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne la liste des services de l'utilisateur.
+     * Donne la liste des sous-services de l'utilisateur.
      */
     public function getSubServicesFromUserQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
 
-        ->where('ss.disabledAt IS NULL');
+        ->where('ss.disabledAt IS NULL')
+        ->andWhere('s.disabledAt IS NULL');
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')

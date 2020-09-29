@@ -197,31 +197,17 @@ class SecurityController extends AbstractController
 
         if ($user->getDisabledAt()) {
             $user->setDisabledAt(null);
-            $this->addFlash('success', 'L\'utilisateur est réactivé.');
+            $this->addFlash('success', 'Ce compte utilisateur est ré-activé.');
         } else {
-            $user->setPassword('xxx')
+            $user->setUsername('xxx')
+                ->setPassword('xxx')
+                ->setRoles([])
+                ->setEmail('xxx')
                 ->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'L\'utilisateur est désactivé.');
+            $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
         }
 
         $this->manager->flush();
-
-        return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
-    }
-
-    /**
-     * Active l'utilisateur.
-     *
-     * @Route("/admin/user/{id}/enable", name="security_user_enable", methods="GET")
-     */
-    public function enableUser(User $user): Response
-    {
-        $this->denyAccessUnlessGranted('DISABLE', $user);
-
-        $user->setDisabledAt(null);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Ce compte utilisateur est ré-activé.');
 
         return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
     }

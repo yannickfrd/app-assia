@@ -1,11 +1,12 @@
 {% extends "base.html.twig" %}
 
 {% set person = form.vars.value %}
-{% if person.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
+{% set EDIT_MODE = person.id ? true : false %}
+{% set title = EDIT_MODE ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") : 'Création d\'une personne' %}
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}{% if EDIT_MODE %}{{ person.fullname }}{% else %}Création d'une personne{% endif %} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -13,13 +14,7 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">
-        {% if EDIT_MODE %}
-            {{ person.fullname }}{{ person.usename ? " (" ~ person.usename ~ ")" }}
-        {% else %}
-            Création d'une personne
-        {% endif %}
-    </h1>
+    <h1 class="h2 mb-3">{{ title }}</h1>
     {% if EDIT_MODE %}
     <div class="small text-secondary">
         <p> Créé le {{person.createdAt|date("d/m/Y à H:i") }}

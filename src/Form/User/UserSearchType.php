@@ -3,17 +3,16 @@
 namespace App\Form\User;
 
 use App\Entity\Pole;
-use App\Entity\User;
 use App\Entity\ServiceUser;
-use App\Form\Utils\Choices;
+use App\Entity\User;
 use App\Form\Model\UserSearch;
 use App\Form\Type\ServiceSearchType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserSearchType extends AbstractType
 {
@@ -81,15 +80,12 @@ class UserSearchType extends AbstractType
                 ],
                 'placeholder' => 'placeholder.pole',
                 'required' => false,
-            ])
-            ->add('disabled', CheckBoxType::class, [
+                ])
+            ->add('disabled', ChoiceType::class, [
+                'label_attr' => ['class' => 'sr-only'],
+                'choices' => Choices::getChoices(Choices::DISABLE),
+                'placeholder' => 'placeholder.disabled',
                 'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
             ])
             ->add('export');
     }

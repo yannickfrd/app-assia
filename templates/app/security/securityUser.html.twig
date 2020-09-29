@@ -2,7 +2,11 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Compte utilisateur | {{ title_website }}{% endblock %}
+{% set disabled = form.vars.value.isDisabled %}
+{% set title = 'Compte utilisateur : ' ~ form.vars.value.fullname ~ (disabled ? ' (désactivé)') %}
+
+
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
@@ -12,7 +16,7 @@
     
     <section>
         {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3">Compte utilisateur : {{ form.vars.value.fullname }}</h1>
+        <h1 class="h2 mb-3">{{ title }}</h1>
         <hr>
         <div class="row">
             <div class="col-md-6">{{ form_row(form.firstname) }}</div>
@@ -27,15 +31,10 @@
         <div class="form-group row mb-4">
             <div class="col-md-12">
                 <div class="float-left d-flex">
-                    {% if form.vars.value.isDisabled %} 
-                    <a id="modal-btn-enable" class="mr-3 btn btn-success d-block" href="{{ path('security_user_enable', {'id':form.vars.value.id}) }}"
-                        title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"><span class="fas fa-user-plus mr-2"></span>Ré-activer</a>
-                    {% else %}
-                    <a id="modal-btn-disable" class="mr-3 btn btn-danger d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
-                        title="Désactiver l'utilisateur" data-toggle="tooltip" data-placement="bottom"
-                        onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"><span
-                            class="fas fa-user-slash mr-2"></span>Désactiver</a>
-                    {% endif %}
+                    <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
+                        title="{{ disabled ? 'Réactiver' : 'Désactiver' }} cet utilisateur" data-toggle="tooltip" data-placement="bottom"
+                        {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"{% endif %}>
+                        {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                 </div>
                 <div class="float-right">
                     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }}">Enregistrer</button>
