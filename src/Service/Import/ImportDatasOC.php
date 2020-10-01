@@ -865,11 +865,15 @@ class ImportDatasOC
 
     protected function getStatus(): int
     {
-        if ($this->field['Date diagnostic']) {
+        if ($this->field['Date sortie']) {
             return SupportGroup::STATUS_ENDED;
         }
 
-        if ($this->field['Date sortie']) {
+        if ($this->field['TS accompagnement']) {
+            return SupportGroup::STATUS_IN_PROGRESS;
+        }
+
+        if ($this->field['Date diagnostic']) {
             return SupportGroup::STATUS_ENDED;
         }
 

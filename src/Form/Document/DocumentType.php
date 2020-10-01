@@ -18,9 +18,7 @@ class DocumentType extends AbstractType
         $builder
             ->add('name', null, [
                 'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'placeholder' => 'document.name.placeholder',
-                ],
+                'attr' => ['placeholder' => 'document.name.placeholder'],
             ])
             ->add('content', null, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -54,9 +52,7 @@ class DocumentType extends AbstractType
                         'mimeTypesMessage' => 'document.file.mimeMessage',
                     ]),
                 ],
-                'attr' => [
-                    'class' => 'cursor-pointer',
-                ],
+                'attr' => ['class' => 'cursor-pointer'],
                 'help' => 'document.file.help',
             ]);
     }

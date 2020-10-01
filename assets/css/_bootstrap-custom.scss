@@ -27,7 +27,13 @@ $theme-colors: map-merge(( //
 
 $theme-colors: map-remove($theme-colors, "info");
 
+// Taille de la police.
 $font-size-base: .95rem;
+
+// Traduit le 'File browser' Input.
+$custom-file-text: (fr: 'Dossier',
+    en: "Browse",
+);
 
 @import "../../node_modules/bootstrap/scss/root";
 @import "../../node_modules/bootstrap/scss/reboot";

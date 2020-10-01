@@ -57,7 +57,7 @@ class AppControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('supports_by_user'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Synthèse des suivis en cours');
+        $this->assertSelectorTextContains('h1', 'Répartition des suivis en cours');
     }
 
     public function testPageOccupancyByDeviceIsUp()

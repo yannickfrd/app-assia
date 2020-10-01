@@ -131,7 +131,7 @@ document:
   file:
     mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, pdf, png, rar, xls, xlsx, zip)
     help: "5Mo maximum. Formats acceptés : doc, docx, jpg, pdf, png, rar, xls, xlsx, zip."
-
+    placeholder: Choisir un fichier...
 Agreement: Consentement de la personne
 
 ### Referent

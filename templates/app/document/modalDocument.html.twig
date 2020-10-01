@@ -8,7 +8,7 @@
                 {{ form_row(form.name) }}
                 {{ form_row(form.type) }}
                 {{ form_row(form.content) }}
-                <div class="form-group row js-document-block-file">
+                <div class="form-group row js-document-block-file" data-placeholder="{{ 'document.file.placeholder'|trans({}, 'forms') }}">
                     <div class="col-sm-12 sr-only">{{ form_label(form.file) }}</div>
                     <div class="col-sm-12">{{ form_widget(form.file) }}</div>
                     <div class="col-sm-12">{{ form_help(form.file) }}</div>

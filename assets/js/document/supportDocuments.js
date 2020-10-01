@@ -10,11 +10,12 @@ export default class SupportDocuments {
         this.documentNameInput = this.modalDocumentElt.querySelector('#document_name')
         this.documentTypeInput = this.modalDocumentElt.querySelector('#document_type')
         this.documentContentInput = this.modalDocumentElt.querySelector('#document_content')
+        this.documentBlockFile = this.modalDocumentElt.querySelector('.js-document-block-file')
         this.documentFileInput = this.modalDocumentElt.querySelector('#document_file')
         this.documentFileLabelElt = this.modalDocumentElt.querySelector('.custom-file-label')
+        this.filePlaceholder = this.documentBlockFile.getAttribute('data-placeholder')
         this.btnSaveElt = this.modalDocumentElt.querySelector('#js-btn-save')
         this.btnDeleteElt = this.modalDocumentElt.querySelector('#modal-btn-delete')
-
         this.modalConfirmElt = document.getElementById('modal-confirm')
 
         this.themeColor = document.getElementById('header').getAttribute('data-color')
@@ -66,14 +67,16 @@ export default class SupportDocuments {
         this.documentNameInput.value = ''
         this.selectType.setOption(this.documentTypeInput, null)
         this.documentContentInput.value = ''
-        this.modalDocumentElt.querySelector('.js-document-block-file').classList.remove('d-none')
+        this.documentBlockFile.classList.remove('d-none')
         this.documentFileInput.value = null
-        this.documentFileLabelElt.textContent = 'Choisir un fichier...'
+        this.documentFileLabelElt.textContent = this.filePlaceholder
         this.documentFileLabelElt.classList.remove('small')
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
         this.btnSaveElt.setAttribute('data-action', 'new')
         this.btnSaveElt.textContent = 'Enregistrer'
     }
+
+
 
     // Donne le document sélectionné dans le formulaire modal
     getDocument(documentElt) {
@@ -92,7 +95,7 @@ export default class SupportDocuments {
         this.contentDocumentElt = documentElt.querySelector('.js-document-content')
         this.documentContentInput.value = this.contentDocumentElt.textContent
 
-        this.modalDocumentElt.querySelector('.js-document-block-file').classList.add('d-none')
+        this.documentBlockFile.classList.add('d-none')
 
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
         this.btnDeleteElt.href = '/document/' + this.documentId + '/delete'
@@ -129,7 +132,7 @@ export default class SupportDocuments {
             // Sinon, retire le fichier de l'input
         } else {
             this.documentFileInput.value = null
-            this.documentFileLabelElt.textContent = 'Choisir un fichier...'
+            this.documentFileLabelElt.textContent = this.filePlaceholder
             this.documentFileLabelElt.classList.remove('small')
         }
     }
