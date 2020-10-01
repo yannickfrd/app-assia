@@ -85,38 +85,39 @@ export default class SwitchServiceSupport {
      */
     responseAjax(data) {
         const html = new DOMParser().parseFromString(data, "text/xml")
-        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation'] // 'accommodationGroups_0_accommodation'
+        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation']
 
         fields.forEach(field => {
-            let oldElt = document.querySelector('#support_' + field)
+            let selectElt = document.querySelector('#support_' + field)
             let newElt = html.querySelector('#support_' + field)
 
             if (field === 'accommodation') {
-                oldElt = document.querySelector('#support_accommodationGroups_0_accommodation')
+                selectElt = document.querySelector('#support_accommodationGroups_0_accommodation')
             }
 
-            if (oldElt && newElt) {
-                this.updateField(oldElt, newElt)
+            if (selectElt && newElt) {
+                this.updateField(selectElt, newElt)
             }
         })
         this.loader.off()
     }
 
     /**
-     * Met à jour les items d 'un select.
-     * @param {HTMLElement} oldElt 
+     * Met à jour les items d'un select.
+     * @param {HTMLElement} selectElt 
      * @param {HTMLElement} newElt 
      */
-    updateField(oldElt, newElt) {
-        const option = this.selectType.getOption(oldElt)
-        this.selectType.setOption(oldElt, option)
+    updateField(selectElt, newElt) {
+        const previousOption = this.selectType.getOption(selectElt)
 
         this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.selectType.getOption(this.serviceSelectElt) ? true : false)
         this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
 
-        oldElt.innerHTML = newElt.innerHTML
+        selectElt.innerHTML = newElt.innerHTML
 
-        const optionElts = oldElt.querySelectorAll('option')
+        this.selectType.setOption(selectElt, previousOption)
+
+        const optionElts = selectElt.querySelectorAll('option')
         if (optionElts.length <= 2) {
             optionElts.forEach(optionElt => {
                 if (optionElt != null) {

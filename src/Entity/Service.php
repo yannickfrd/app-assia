@@ -226,6 +226,20 @@ class Service
         return $this;
     }
 
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): ?Collection
+    {
+        $users = new ArrayCollection();
+
+        foreach ($this->serviceUser as $serviceUser) {
+            $users->add($serviceUser->getUser());
+        }
+
+        return $users;
+    }
+
     public function getPole(): ?Pole
     {
         return $this->pole;
@@ -431,6 +445,20 @@ class Service
         return $this->serviceDevices;
     }
 
+    /**
+     * @return Collection|Device[]
+     */
+    public function getDevices(): ?Collection
+    {
+        $devices = new ArrayCollection();
+
+        foreach ($this->serviceDevices as $serviceDevice) {
+            $devices->add($serviceDevice->getDevice());
+        }
+
+        return $devices;
+    }
+
     public function addServiceDevice(ServiceDevice $serviceDevice): self
     {
         if (!$this->serviceDevices->contains($serviceDevice)) {
@@ -526,7 +554,7 @@ class Service
     /**
      * @return Collection|SubService[]
      */
-    public function getSubServices(): Collection
+    public function getSubServices(): ?Collection
     {
         return $this->subServices;
     }

@@ -79,7 +79,7 @@ class ServiceRepository extends ServiceEntityRepository
         ->where('s.disabledAt IS NULL');
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('s.id IN (:services)')
+            $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 

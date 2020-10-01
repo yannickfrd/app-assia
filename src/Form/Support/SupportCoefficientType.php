@@ -13,9 +13,7 @@ class SupportCoefficientType extends AbstractType
     {
         $builder
             ->add('coefficient', null, [
-                'attr' => [
-                    'class' => 'w-max-100',
-                ],
+                'attr' => ['class' => 'w-max-100'],
             ]);
     }
 
@@ -24,12 +22,6 @@ class SupportCoefficientType extends AbstractType
         $resolver->setDefaults([
             'data_class' => SupportGroup::class,
             'translation_domain' => 'forms',
-            'allow_extra_fields' => true,
         ]);
     }
-
-    // public function getBlockPrefix()
-    // {
-    //     return 'support';
-    // }
 }

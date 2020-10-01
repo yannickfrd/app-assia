@@ -22,6 +22,7 @@ export default class ValidationHotelSupport {
         this.orientationDateElt = document.getElementById('support_originRequest_orientationDate')
         this.startDateElt = document.getElementById(this.prefix + 'startDate')
         this.evaluationDateElt = document.getElementById(this.prefix + 'hotelSupport_evaluationDate')
+        this.agreementDateElt = document.getElementById(this.prefix + 'hotelSupport_agreementDate')
         this.endDateElt = document.getElementById(this.prefix + 'endDate')
 
         this.AseMab = 15
@@ -39,26 +40,45 @@ export default class ValidationHotelSupport {
 
         this.displayFields()
 
-        this.evaluationDateElt.addEventListener('focusout', () => {
-            this.validationForm.checkIntervalBeetweenDates(
-                this.orientationDateElt,
-                this.evaluationDateElt,
-                'La date ne peut pas être antérieure à la date de la demande.')
-        })
+        let dateElts = [this.orientationDateElt, this.startDateElt]
+        dateElts.forEach(dateElt => {
+            dateElt.addEventListener('focusout', () => {
+                this.validationForm.checkIntervalBeetweenDates(
+                    this.orientationDateElt,
+                    this.startDateElt,
+                    'La date ne peut pas être antérieure à la date de la demande.')
+            })
+        });
 
-        this.startDateElt.addEventListener('focusout', () => {
-            this.validationForm.checkIntervalBeetweenDates(
-                this.orientationDateElt,
-                this.startDateElt,
-                'La date ne peut pas être antérieure à la date de la demande.')
-        })
+        dateElts = [this.startDateElt, this.evaluationDateElt]
+        dateElts.forEach(dateElt => {
+            dateElt.addEventListener('focusout', () => {
+                this.validationForm.checkIntervalBeetweenDates(
+                    this.startDateElt,
+                    this.evaluationDateElt,
+                    'La date ne peut pas être antérieure au début de l\'accompagnement.')
+            })
+        });
 
-        this.endDateElt.addEventListener('focusout', () => {
-            this.validationForm.checkIntervalBeetweenDates(
-                this.startDateElt,
-                this.endDateElt,
-                'La date ne peut pas être antérieure au début de l\'accompagnement.')
-        })
+        dateElts = [this.startDateElt, this.agreementDateElt]
+        dateElts.forEach(dateElt => {
+            dateElt.addEventListener('focusout', () => {
+                this.validationForm.checkIntervalBeetweenDates(
+                    this.startDateElt,
+                    this.agreementDateElt,
+                    'La date ne peut pas être antérieure au début de l\'accompagnement.')
+            })
+        });
+
+        dateElts = [this.startDateElt, this.endDateElt]
+        dateElts.forEach(dateElt => {
+            dateElt.addEventListener('focusout', () => {
+                this.validationForm.checkIntervalBeetweenDates(
+                    this.startDateElt,
+                    this.endDateElt,
+                    'La date ne peut pas être antérieure au début de l\'accompagnement.')
+            })
+        });
 
         this.btnSubmitElts.forEach(btnElt => {
             btnElt.addEventListener('click', e => {

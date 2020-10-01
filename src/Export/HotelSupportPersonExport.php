@@ -80,7 +80,7 @@ class HotelSupportPersonExport
             'Date de début de l\'accompagnement' => $this->formatDate($supportGroup->getStartDate()),
             'Date de l\'évaluation' => $this->formatDate($hotelSupport->getEvaluationDate()),
             'Date de signature convention' => $this->formatDate($hotelSupport->getAgreementDate()),
-            'Ancrage départementale' => $hotelSupport->getDepartmentAnchorToString(),
+            'Département d\'ancrage' => $hotelSupport->getDepartmentAnchorToString(),
             'Préconisation d\'accompagnement' => $hotelSupport->getRecommendationToString(),
             'Date de fin de l\'accompagnement' => $this->formatDate($supportGroup->getEndDate()),
             'Niveau d\'intervention' => $hotelSupport->getLevelSupportToString(),

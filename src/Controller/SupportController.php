@@ -13,8 +13,6 @@ use App\Form\Model\SupportGroupSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
 use App\Form\Support\SupportCoefficientType;
-use App\Form\Support\SupportGroupAvdlType;
-use App\Form\Support\SupportGroupHotelType;
 use App\Form\Support\SupportGroupSearchType;
 use App\Form\Support\SupportGroupType;
 use App\Form\Support\SupportsInMonthSearchType;
@@ -86,11 +84,9 @@ class SupportController extends AbstractController
      */
     public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupService $supportGroupService): Response
     {
-        $serviceId = $request->request->get('support')['service'] ?? $_POST['support']['service'];
+        $supportGroup = $supportGroupService->getNewSupportGroup($groupPeople, $request);
 
-        $supportGroup = $supportGroupService->getNewSupportGroup($this->getUser(), $groupPeople, $request);
-
-        $form = ($this->createForm($this->getFormType($serviceId), $supportGroup))
+        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
@@ -121,9 +117,7 @@ class SupportController extends AbstractController
      */
     public function newSupportGroupAjax(GroupPeople $groupPeople)
     {
-        $supportGroup = (new SupportGroup())
-            ->setStatus(2)
-            ->setReferent($this->getUser());
+        $supportGroup = (new SupportGroup())->setReferent($this->getUser());
 
         $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
             'action' => $this->generateUrl('support_new', ['id' => $groupPeople->getId()]),
@@ -146,8 +140,7 @@ class SupportController extends AbstractController
      */
     public function getSupportGroupType(Request $request)
     {
-        $supportGroup = new SupportGroup();
-        $form = $this->createForm(SupportGroupType::class, $supportGroup)
+        $form = $this->createForm(NewSupportGroupType::class, new SupportGroup())
             ->handleRequest($request);
 
         return $this->render('app/support/formSupportGroup.html.twig', [
@@ -166,7 +159,7 @@ class SupportController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = ($this->createForm($this->getFormType($supportGroup->getService()->getId()), $supportGroup))
+        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -268,7 +261,7 @@ class SupportController extends AbstractController
             if ($supportPerson->getHead()) {
                 return $this->json([
                     'code' => 200,
-                    'action' => 'nothing',
+                    'action' => null,
                     'alert' => 'danger',
                     'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
                     'data' => null,
@@ -378,30 +371,6 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Change le service d'un suivi.
-     *
-     * @Route("/support/{id}/switch_service/{service_id}", name="support_switch_service", methods="GET")
-     * @ParamConverter("service", options={"id" = "service_id"})
-     */
-    public function switchService(SupportGroup $supportGroup, Service $service)
-    {
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
-        $supportGroup
-            ->setService($service)
-            ->setDevice(null);
-
-        $this->manager->flush();
-
-        return $this->json([
-            'code' => 200,
-            'action' => 'reload',
-            'alert' => 'warning',
-            'msg' => 'La page va se recharger...',
-        ], 200);
-    }
-
-    /**
      * Exporte les données.
      */
     protected function exportData(SupportGroupSearch $search)
@@ -415,20 +384,5 @@ class SupportController extends AbstractController
         }
 
         return (new SupportPersonExport())->exportData($supports);
-    }
-
-    /**
-     * Donne le formType en fonction du service choisi.
-     */
-    protected function getFormType(int $serviceId = null)
-    {
-        if ($serviceId == Service::SERVICE_AVDL_ID) {
-            return SupportGroupAvdlType::class;
-        }
-        if ($serviceId == Service::SERVICE_PASH_ID) {
-            return SupportGroupHotelType::class;
-        }
-
-        return SupportGroupType::class;
     }
 }

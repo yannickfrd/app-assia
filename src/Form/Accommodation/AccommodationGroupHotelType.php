@@ -38,7 +38,7 @@ class AccommodationGroupHotelType extends AbstractType
                     'class' => Accommodation::class,
                     'choice_label' => 'name',
                     'query_builder' => function (AccommodationRepository $repo) use ($serviceId, $subServiceId) {
-                        return $repo->getAccommodationsQueryList($serviceId, $subServiceId);
+                        return $repo->getAccommodationsQueryList($serviceId);
                     },
                     'label' => $serviceId == Service::SERVICE_PASH_ID ? 'hotelName' : 'accommodation.name',
                     'placeholder' => 'placeholder.select',

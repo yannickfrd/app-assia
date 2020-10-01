@@ -1,6 +1,8 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Synthèse des suivis en cours | {{ title_website }}{% endblock %}
+{% set title = "Répartition des suivis en cours" %}
+
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -15,8 +17,8 @@
 
 <div class="container{{ datas and devices|length > 8 ? '-fluid mt-4' }}">
 
-    <h1 class="h2 mb-3">Synthèse des suivis en cours</h1>
-    <p>Nombre de suivis en cours par référent en fonction du dispositif d'accompagnement.</p>
+    <h1 class="h2 mb-3">{{ title }}</h1>
+    <p>Nombre de suivis en cours par travailleur social en fonction du dispositif d'accompagnement.</p>
 
 </div>
 

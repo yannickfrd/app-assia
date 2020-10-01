@@ -43,6 +43,8 @@ export default class ValidationSupport {
             this.checkFormBeforeSubmit()
         }
         this.displayFields()
+
+        this.visibleElt(this.subServiceSelectElt.parentNode.parentNode, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
     }
 
     /**
@@ -96,7 +98,7 @@ export default class ValidationSupport {
             return this.validationForm.invalidField(this.startDateInputElt, 'Date invalide.')
         }
         if (intervalWithNow < -30) {
-            return this.validationForm.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieur de 30 jours par rapport à la date du jour.')
+            return this.validationForm.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieure de 30 jours par rapport à la date du jour.')
         }
 
         if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) { // Statut = En cours, Supsendu, Terminé
@@ -151,25 +153,17 @@ export default class ValidationSupport {
      */
     changeService() {
         if (this.selectType.getOption(this.serviceSelectElt)) {
-            this.sendAjaxRequest()
+            this.loader.on()
+
+            $.ajax({
+                url: '/support/change_service',
+                type: 'POST',
+                data: this.getData(),
+                success: data => {
+                    this.responseAjax(data)
+                }
+            })
         }
-    }
-
-    /**
-     * Envoie requête Ajax.
-     * @param {Object} data 
-     */
-    sendAjaxRequest() {
-        this.loader.on()
-
-        $.ajax({
-            url: '/support/change_service',
-            type: 'POST',
-            data: this.getData(),
-            success: data => {
-                this.responseAjax(data)
-            }
-        })
     }
 
     /**
@@ -192,18 +186,18 @@ export default class ValidationSupport {
      */
     responseAjax(data) {
         const html = new DOMParser().parseFromString(data, "text/xml")
-        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation'] // 'accommodationGroups_0_accommodation'
+        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation']
 
         fields.forEach(field => {
-            let oldElt = document.querySelector('#support_' + field)
-            let newElt = html.querySelector('#support_' + field)
+            let selectElt = document.querySelector('#support_' + field)
+            let newSelectElt = html.querySelector('#support_' + field)
 
             if (field === 'accommodation') {
-                oldElt = document.querySelector('#support_accommodationGroups_0_accommodation')
+                selectElt = document.querySelector('#support_accommodationGroups_0_accommodation')
             }
 
-            if (oldElt && newElt) {
-                this.updateField(oldElt, newElt)
+            if (selectElt && newSelectElt) {
+                this.updateField(selectElt, newSelectElt)
             }
         })
         this.loader.off()
@@ -211,22 +205,42 @@ export default class ValidationSupport {
 
     /**
      * Met à jour les items d'un select.
-     * @param {HTMLElement} oldElt 
-     * @param {HTMLElement} newElt 
+     * @param {HTMLElement} selectElt 
+     * @param {HTMLElement} newSelectElt 
      */
-    updateField(oldElt, newElt) {
-        const option = this.selectType.getOption(oldElt)
-        this.selectType.setOption(oldElt, option)
+    updateField(selectElt, newSelectElt) {
+        const previousOption = this.selectType.getOption(selectElt)
 
-        oldElt.innerHTML = newElt.innerHTML
+        selectElt.innerHTML = newSelectElt.innerHTML
 
-        const optionElts = oldElt.querySelectorAll('option')
+        this.selectType.setOption(selectElt, previousOption)
+
+        const optionElts = selectElt.querySelectorAll('option')
         if (optionElts.length <= 2) {
             optionElts.forEach(optionElt => {
                 if (optionElt != null) {
                     optionElt.selected = true
                 }
             })
+        }
+        this.visibleElt(selectElt.parentNode.parentNode, selectElt.querySelectorAll('option').length > 1 ? true : false)
+    }
+
+    /**
+     * Rend visible ou non un élément HTML.
+     * @param {HTMLElement} elt 
+     * @param {Boolean} visibility 
+     */
+    visibleElt(elt, visibility) {
+        if (visibility === true) {
+            elt.classList.remove('d-none')
+            setTimeout(() => {
+                elt.classList.add('fade-in')
+                elt.classList.remove('fade-out')
+            }, 10)
+        } else {
+            elt.classList.add('d-none', 'fade-out')
+            elt.classList.remove('fade-in')
         }
     }
 }

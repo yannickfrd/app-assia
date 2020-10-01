@@ -1,5 +1,5 @@
 /**
- * Permet d'obtenir ou de définir l'option d'un élément <select>
+ * Permet d'obtenir ou de définir l'option d'un élément <select>.
  */
 export default class SelectType {
 
@@ -24,7 +24,7 @@ export default class SelectType {
     }
 
     /**
-     * Définie l'option sélectionnée
+     * Définie l'option sélectionnée.
      * @param {HTMLSelectElement} selectElt 
      * @param {String} value 
      */
@@ -36,5 +36,4 @@ export default class SelectType {
             return optionElt.selected = false
         })
     }
-
 }

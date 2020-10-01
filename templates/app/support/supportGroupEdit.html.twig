@@ -1,20 +1,12 @@
 {% extends "base.html.twig" %}
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
+{% if formCoeff is defined %}{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}{% endif %}
 
 {% set support = form.vars.value %}
+{% set people = support.id ? form.vars.value.supportPeople : group_people.rolePeople %}
+{% set title =  (support.id  ? "Édition du" : "Nouveau") ~ " suivi" %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
-
-{% if support.id %}
-	{% set people = form.vars.value.supportPeople %}
-	{% set title = "Édition du suivi" %}
-{% else %}
-	{% set people = group_people.rolePeople %}
-	{% set title = "Nouveau suivi" %}
-{% endif %}
-{% if formCoeff is defined %}
-	{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}
-{% endif %}
 
 {% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
@@ -27,7 +19,7 @@
 	{% include "model/msgFlash.html.twig" %}
 	<div id="js-msg-flash-content"></div>
 
-	{% if support.id and is_granted("ROLE_ADMIN") and formCoeff is defined %}
+	{% if formCoeff is defined and is_granted("ROLE_ADMIN")  %}
 		<section>
 			<h2 class="h5 my-4">Coefficient du suivi</h2>
 			{{ form_start(formCoeff) }}
@@ -40,7 +32,7 @@
 					</div>
 				</div>
 				{{ form_row(formCoeff._token) }}
-			{{ form_end(formCoeff, {"render_rest": false}) }}
+			{{ form_end(formCoeff) }}
 		</section>
 		<hr>
 	{% endif %}
@@ -50,7 +42,7 @@
 	<div class="form-group">
 		<div class="row">
 			<div class="col-md-6">{{ form_row(form.service) }}</div>
-			<div class="col-md-6 {{ form.subService.vars.choices|length < 2 ? 'd-none' }}">{{ form_row(form.subService) }}</div>
+			<div class="col-md-6">{{ form_row(form.subService) }}</div>
 		</div>
 		<div class="row" data-parent-field="service">
 			<div class="col-md-6">{{ form_row(form.device) }}</div>
@@ -62,8 +54,9 @@
 	</div>
 	
 	<hr>
-	
+
 	{% set serviceId = support.service ? support.service.id : null %}
+	
 	{% if serviceId == constant("App\\Entity\\Service::SERVICE_AVDL_ID") %}
 		{% include "app/avdl/avdlEdit.html.twig" %}
 	{% elseif serviceId == constant("App\\Entity\\Service::SERVICE_PASH_ID") %}

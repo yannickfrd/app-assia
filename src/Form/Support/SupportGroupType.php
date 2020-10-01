@@ -3,12 +3,15 @@
 namespace App\Form\Support;
 
 use App\Entity\Accommodation;
+use App\Entity\AccommodationGroup;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\SubService;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Accommodation\AccommodationGroupHotelType;
+use App\Form\Avdl\AvdlType;
+use App\Form\HotelSupport\HotelSupportType;
 use App\Form\OriginRequest\OriginRequestType;
 use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
@@ -108,11 +111,23 @@ class SupportGroupType extends AbstractType
         $formModifier = $this->formModifier();
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($formModifier) {
+            $form = $event->getForm();
             $supportGroup = $event->getData();
             $service = $supportGroup->getService();
             $subService = $supportGroup->getSubService();
 
-            $formModifier($event->getForm(), $service, $subService);
+            $formModifier($form, $service, $subService);
+
+            switch ($service->getId()) {
+                case Service::SERVICE_AVDL_ID:
+                    $this->addAvdlFields($form);
+                    break;
+                case Service::SERVICE_PASH_ID:
+                    $this->addHotelFields($form);
+                    break;
+                default:
+                    break;
+            }
         });
 
         $builder->get('service')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($formModifier) {
@@ -172,6 +187,50 @@ class SupportGroupType extends AbstractType
                     'attr' => ['serviceId' => $serviceId],
                 ]);
         };
+    }
+
+    protected function addAvdlFields(FormInterface $form)
+    {
+        $form
+            ->remove('status')
+            ->remove('startDate')
+            ->remove('endDate')
+            ->remove('endStatusComment')
+            ->add('avdl', AvdlType::class);
+    }
+
+    protected function addHotelFields(FormInterface $form)
+    {
+        $form
+            ->remove('location')
+            ->remove('status')
+            ->add('hotelSupport', HotelSupportType::class);
+
+        $supportGroup = $form->getConfig()->getData();
+
+        if ($supportGroup->getAccommodationGroups()->count() == 0) {
+            $this->addAccommodationGroup($supportGroup);
+        }
+
+        $form->add('accommodationGroups', CollectionType::class, [
+                'entry_type' => AccommodationGroupHotelType::class,
+                'label' => null,
+                'allow_add' => false,
+                'allow_delete' => false,
+                'delete_empty' => true,
+                'attr' => [
+                    'serviceId' => $supportGroup->getService() ? $supportGroup->getService()->getId() : null,
+                    'subServiceId' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null,
+                ],
+            ]);
+    }
+
+    protected function addAccommodationGroup(SupportGroup $supportGroup)
+    {
+        $accommodationGroup = (new AccommodationGroup())->setGroupPeople($supportGroup->getGroupPeople());
+        $supportGroup->addAccommodationGroup($accommodationGroup);
+
+        return $supportGroup;
     }
 
     /**

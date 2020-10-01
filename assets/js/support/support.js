@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         new RemoveTableRow('.js-tr-support_pers')
     }
 
-    new ValidationSupport()
+        new ValidationSupport()
     // new SwitchServiceSupport()
 
     if (document.getElementById('avdl_support')) {

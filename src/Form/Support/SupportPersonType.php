@@ -20,12 +20,8 @@ class SupportPersonType extends AbstractType
         $builder
             ->add('head', CheckBoxType::class, [
                 'label' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox'],
                 'help' => 'Demandeur principal',
                 'help_attr' => ['class' => 'sr-only'],
                 'required' => false,
@@ -39,41 +35,24 @@ class SupportPersonType extends AbstractType
             ->add('startDate', DateType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                ],
+                'attr' => ['class' => 'w-max-165'],
                 'required' => true,
             ])
             ->add('endDate', DateType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                ],
+                'attr' => ['class' => 'w-max-165'],
                 'required' => false,
             ])
-            // ->add('status', ChoiceType::class, [
-            //     'label_attr' => ['class' => 'sr-only'],
-            //     'choices' => Choices::getChoices(SupportGroup::STATUS),
-            //     'attr' => [
-            //         'class' => 'w-min-150',
-            //     ],
-            //     'placeholder' => 'placeholder.select',
-            //     'required' => true,
-            // ])
             ->add('endStatus', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(SupportGroup::END_STATUS),
-                'attr' => [
-                    'class' => 'w-min-180',
-                ],
+                'attr' => ['class' => 'w-min-180'],
                 'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('endStatusComment', null, [
-                'attr' => [
-                    'class' => 'w-min-160',
-                ],
+                'attr' => ['class' => 'w-min-160'],
             ]);
     }
 

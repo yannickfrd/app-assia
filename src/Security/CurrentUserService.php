@@ -4,6 +4,7 @@ namespace App\Security;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class CurrentUserService
 {
@@ -16,12 +17,12 @@ class CurrentUserService
         $this->session = $session;
     }
 
-    public function getUser()
+    public function getUser(): UserInterface
     {
         return $this->user;
     }
 
-    public function getServices()
+    public function getServices(): array
     {
         $services = [];
 
@@ -32,7 +33,7 @@ class CurrentUserService
         return $services;
     }
 
-    public function hasRole($role)
+    public function hasRole(string $role): bool
     {
         return in_array($role, $this->user->getRoles()) ? true : false;
     }

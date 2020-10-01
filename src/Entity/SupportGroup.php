@@ -125,7 +125,7 @@ class SupportGroup
      * @ORM\Column(type="integer")
      * @Assert\NotNull(message="Le statut doit être renseigné.")
      */
-    private $status;
+    private $status = 2;
 
     /**
      * @Groups("export")
@@ -360,9 +360,7 @@ class SupportGroup
 
     public function setTheoreticalEndDate(?\DateTimeInterface $theoreticalEndDate): self
     {
-        if ($theoreticalEndDate) {
-            $this->theoreticalEndDate = $theoreticalEndDate;
-        }
+        $this->theoreticalEndDate = $theoreticalEndDate;
 
         return $this;
     }

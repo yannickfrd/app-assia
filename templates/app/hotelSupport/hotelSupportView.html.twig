@@ -33,24 +33,32 @@
         {{ utils.view(hotelSupport.gipId, "Gip id") }}
         {{ originRequest ? utils.view(originRequest.comment, "Comment") }}
     </div>
-{% endif %}
 
-{% if support.accommodationGroups|length %}
-    <div class="row my-2">
-        {{ utils.view(support.accommodationGroups[0].accommodation ? support.accommodationGroups[0].accommodation.name  
-            ~ " (" ~ support.address ~ ", " ~ support.city ~ ")", "Hotel") }}
-        {{ utils.view(support.accommodationGroups[0].comment, "Comment") }}
-    </div>
-{% endif %}
+    {% if support.accommodationGroups|length %}
+        <div class="row my-2">
+            {{ utils.view(support.accommodationGroups[0].accommodation ? support.accommodationGroups[0].accommodation.name  
+                ~ " (" ~ support.address ~ ", " ~ support.city ~ ")", "Hotel") }}
+            {{ utils.view(support.accommodationGroups[0].comment, "Comment") }}
+        </div>
+    {% endif %}
 
-{% if hotelSupport %}
-    <div class="row my-2">
-        {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
-            ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "support.dates") }}
-        {{ utils.view(hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") : "", "hotelSupport.evaluation") }}
-        {{ utils.view(hotelSupport.levelSupportToString, "hotelSupport.levelSupport") }}
-        {{ utils.view(hotelSupport.endSupportReasonToString, "hotelSupport.endSupportReason") }}
-        {{ utils.view(support.comment, "Comment") }}
+    <div class="my-2">
+        <div class="row">
+            {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+                ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "support.dates") }}
+            {{ utils.view(hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") : "", "hotelSupport.evaluation") }}
+        </div>
+        <div class="row">
+            {{ utils.view(hotelSupport.levelSupportToString, "hotelSupport.levelSupport") }}
+            {{ utils.view(hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y"), "hotelSupport.agreementDate") }}
+        </div>
+        <div class="row">
+            {{ utils.view(hotelSupport.departmentAnchorToString, "hotelSupport.departmentAnchor") }}
+            {{ utils.view(hotelSupport.recommendationToString, "hotelSupport.recommendation") }}
+        </div>
+        <div class="row">
+            {{ utils.view(support.comment, "Comment") }}
+        </div>
     </div>
 {% endif %}
 

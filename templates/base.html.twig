@@ -11,7 +11,6 @@
 		integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
 	{{ encore_entry_link_tags("app") }}
 	{% block stylesheets %}{% endblock %}
-
 	<link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}" />
 	<meta property="og:title" content="AppE95" />
 	<meta property="og:type" content="application" />
@@ -42,82 +41,82 @@
 					aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="collapse navbar-collapse" id="navbar">
-					{% if is_granted("ROLE_USER") %}
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path("home") }}">
-								<span class="fas fa-home mr-1"></span>Mon espace</a>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuSupports"
-								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suivis</a>
-							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuSupports">
-								<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
-								<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
+				{% if is_granted("ROLE_USER") %}
+					<div class="collapse navbar-collapse" id="navbar">
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item">
+								<a class="nav-link text-light" href="{{ path("home") }}">
+									<span class="fas fa-home mr-1"></span>Mon espace</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuSupports"
+									role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suivis</a>
+								<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuSupports">
+									<a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
+									<a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
+								</div>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuCalendar"
+									role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Agenda
+								</a>
+								<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
+									<a class="dropdown-item" href="{{ path("calendar") }}">Mon agenda</a>
+									<a class="dropdown-item" href="{{ path("rdvs", {'date[start]': 'now'|date('Y-m-d') }) }}">
+										Voir tous les rendez-vous</a>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-light" href="{{ path("notes") }}">Notes</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
+									role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Répertoire
+								</a>
+								<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
+									<a class="dropdown-item" href="{{ path("users") }}">Utilisateurs</a>
+									<a class="dropdown-item" href="{{ path("services") }}">Services</a>
+									<a class="dropdown-item" href="{{ path("poles") }}">Pôles</a>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-light" href="{{ path("managing") }}">Gestion</a>
+							</li>
+							{% if is_granted("ROLE_ADMIN") %}
+								<li class="nav-item">
+									<a class="nav-link text-light" href="{{ path("admin") }}">Admin</a>
+								</li>
+							{% endif %}
+						</ul>
+						<form action="{{ path("people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
+							<div class="position-relative">
+								<label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
+								<input name="search-person" id="search-person" class="form-control mr-sm-2" type="text"
+									placeholder="Recherche personne" autocomplete="off" 
+									title="Recherche instantanée à partir des 3 premières lettres saisies">
+								<div id="results_search" class="w-100 list-group pr-sm-2 d-block fade-in"></div>
 							</div>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuCalendar"
-								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Agenda
-							</a>
-							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
-								<a class="dropdown-item" href="{{ path("calendar") }}">Mon agenda</a>
-								<a class="dropdown-item" href="{{ path("rdvs", {'date[start]': 'now'|date('Y-m-d') }) }}">Voir tous les rendez-vous</a>
-							</div>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path("notes") }}">Notes</a>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
-								role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Répertoire
-							</a>
-							<div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
-								<a class="dropdown-item" href="{{ path("users") }}">Utilisateurs</a>
-								<a class="dropdown-item" href="{{ path("services") }}">Services</a>
-								<a class="dropdown-item" href="{{ path("poles") }}">Pôles</a>
-							</div>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path("managing") }}">Gestion</a>
-						</li>
-						{% if is_granted("ROLE_ADMIN") %}
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path("admin") }}">Admin</a>
-						</li>
-						{% endif %}
-					</ul>
-					<form action="{{ path("people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
-						<div class="position-relative">
-							<label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
-							<input name="search-person" id="search-person" class="form-control mr-sm-2" type="text"
-								placeholder="Recherche personne" autocomplete="off" 
-								title="Recherche instantanée à partir des 3 premières lettres saisies">
-							<div id="results_search" class="w-100 list-group pr-sm-2 d-block fade-in"></div>
+							<button class="btn btn-{{ theme_color }} border-light my-2 my-sm-0" 
+								data-toggle="tooltip" data-placement="bottom" title="Rechercher" type="submit">
+								<span class="fas fa-search"><span class="sr-only">Rechercher</span></span>
+							</button>
+						</form>
+						<div class="text-light">
+							{% if app.user %}
+								<a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
+									data-trigger="hover" data-placement="bottom" data-html="true"
+									title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date(" d/m/Y H:i") }}
+									<br />Fonction : {{ app.user.statusToString }}<br />Services rattachés :<br />- {{ app.session.get("userServices")|join("<br />- ") }}">
+									<span class="fas fa-user mr-2"></span>{{ app.user.firstname }} {{ app.user.lastname|first }}.
+								</a>
+								<br />
+								<a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
+							{% else %}
+								<a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
+							{% endif %}
 						</div>
-						<button class="btn btn-{{ theme_color }} border-light my-2 my-sm-0" 
-							data-toggle="tooltip" data-placement="bottom" title="Rechercher" type="submit">
-							<span class="fas fa-search"><span class="sr-only">Rechercher</span></span>
-						</button>
-					</form>
-					<div class="text-light">
-						{% if app.user %}
-						{% set user = app.user %}
-						<a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
-							data-trigger="hover" data-placement="bottom" data-html="true"
-							title="{{ user.firstname }} {{ user.lastname }}" data-content="Dernière connexion : {{ user.lastLogin|date(" d/m/Y H:i") }}
-							<br />Fonction : {{ user.statusToString }}<br />Services rattachés :<br />- {{ app.session.get("userServices")|join("<br />- ") }}">
-							<span class="fas fa-user mr-2"></span>{{ user.firstname }} {{ user.lastname|first }}.
-						</a>
-						<br />
-						<a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
-						{% else %}
-						<a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
-						{% endif %}
 					</div>
-					{% endif %}
-				</div>
+				{% endif %}
 			</nav>
 		</header>
 
@@ -142,7 +141,7 @@
 				<a href="www.esperer-95.org" class="text-white">www.esperer-95.org</a><br>
 				<span class="small">Association loi 1901 n°06385 déclarée le 9 février 1979. J.O. du 16 février 1979.</span>
 			</p>
-			<p>Version 1.25.6 - 29/09/2020</p>
+			<p>Version 1.25.7 - 01/10/2020</p>
 		</div>
 	</footer>
 

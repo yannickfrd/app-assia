@@ -1,25 +1,38 @@
 <div class="row">
     <div class="col-md-12 mb-3">
         <h2 class="h5">Suivi d'activité</h2>
-        <ul>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("supports_by_user") }}">Synthèse des suivis en cours</a>
-            </li>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
-            </li>
-            {% set userServices = app.session.get("userServices") %}
-            {% if is_granted("ROLE_SUPER_ADMIN") or 5 in userServices|keys %}
-                <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("avdl_supports") }}">Tableau de suivi AVDL</a>
-                </li>
-            {% endif %}   
-            {% if is_granted("ROLE_SUPER_ADMIN") or 10 in userServices|keys %}
-                <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("hotel_supports") }}">Tableau de suivi PASH</a>
-                </li>
-            {% endif %}   
-        </ul>
+        <div class="row">
+            <div class="col-md-6">
+                <ul>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("supports_by_user") }}">Répartition des suivis en cours par TS</a>
+                    </li>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path("occupancy_services") }}">Taux d'occupation</a>
+                    </li>
+                    {% set userServices = app.session.get("userServices") %}
+                    {% if is_granted("ROLE_SUPER_ADMIN") or 5 in userServices|keys %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("avdl_supports") }}">Tableau de suivi AVDL</a>
+                        </li>
+                    {% endif %}   
+                    {% if is_granted("ROLE_SUPER_ADMIN") or 10 in userServices|keys %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("hotel_supports") }}">Tableau de suivi PASH</a>
+                        </li>
+                    {% endif %}   
+                </ul>
+            </div>
+            <div class="col-md-6">
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <ul>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("admin_users") }}">Liste des utilisateurs</a>
+                        </li>
+                    </ul>
+                {% endif %}   
+            </div>
+        </div>
         <hr class="my-3">
     </div>
 </div>

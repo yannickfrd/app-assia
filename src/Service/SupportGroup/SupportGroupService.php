@@ -56,21 +56,14 @@ class SupportGroupService
     /**
      * Donne un nouveau suivi paramétré.
      */
-    public function getNewSupportGroup(User $user, GroupPeople $groupPeople, Request $request = null)
+    public function getNewSupportGroup(GroupPeople $groupPeople, Request $request)
     {
-        $supportGroup = (new SupportGroup())
-            ->setGroupPeople($groupPeople)
-            ->setStatus(2)
-            ->setReferent($user);
+        $supportGroup = (new SupportGroup())->setGroupPeople($groupPeople);
 
-        $serviceId = $request->request->get('support')['service'];
-        $subServiceId = $request->request->get('support')['subService'];
+        $serviceId = $request->request->get('support')['service'] ?? $_POST['support']['service'];
 
         if ((int) $serviceId) {
             $supportGroup->setService($this->repoService->find($serviceId));
-        }
-        if ((int) $subServiceId) {
-            $supportGroup->setSubService($this->repoSubService->find($subServiceId));
         }
 
         return $supportGroup;

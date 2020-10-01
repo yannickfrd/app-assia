@@ -232,7 +232,7 @@ avdl:
   endSupportComment.placeholder: Écrire un commentaire concernant la fin d'accompagnement ou la proposition logement
 
 ### Suivi hôtel
-Department anchor : Ancrage départementale
+Department anchor: Département d'ancrage
 Agreement date: Date de signature de la convention
 Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
 Evaluation date : Date de l'évaluation / diagnostic
@@ -243,13 +243,16 @@ Recommendation : Préconisation
 hotelSupport:
   startDate: Date d'arrivée
   evaluation: Date de l'évaluation / diagnostic
+  agreementDate: Date de signature de la convention
+  departmentAnchor: Département d'ancrage
   endSupportReason: Motif de fin d'accompagnement
+  recommendation: Préconisation
   orientationDate: Date d'orientation
   subService.help: Secteur géographique 
   support: Suivi
   levelSupport: Niveau d'intervention
   search:
-    departmentAnchor: -- Ancrage départementale --
+    departmentAnchor: -- Département d'ancrage --
   ssd:
     search: Recherche du SSD orienteur
     search.placeholder: Saisir une ville
