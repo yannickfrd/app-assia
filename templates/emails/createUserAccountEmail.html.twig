@@ -1,0 +1,19 @@
+{% extends "emails/baseEmail.html.twig" %}
+
+{% block hello %}
+    <p class="mb-4">Bonjour {{ user.firstname }}, </p>
+{% endblock %}
+
+{% block body %}
+
+    <p>Un compte utilisateur a été créé pour vous sur l'application <b><a href="{{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}">{{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}</a></b></p>
+
+    <p>Votre login : <b>{{ user.username }}</b><p>
+    <p>Votre email : <b>{{ user.email }}</b><p>
+
+    <p>Veuillez cliquer sur <a href="{{ url('security_create_password', {'token':user.token}) }}">ce lien</a> 
+    pour définir votre mot de passe.</p>
+    <br/>
+    <p>Ce lien est valide 7 jours.</p>
+
+{% endblock %}

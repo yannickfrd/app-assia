@@ -84,6 +84,30 @@ class MailNotification
     }
 
     /**
+     * Mail d'initialisation du mot de psasse.
+     */
+    public function createUserAccount(User $user)
+    {
+        $to = [
+            'email' => $user->getEmail(),
+            'name' => $user->getFullname(),
+        ];
+
+        $subject = 'Esperer95.app : Création de compte | '.$user->getFullname();
+
+        $htmlBody = $this->renderer->render(
+            'emails/createUserAccountEmail.html.twig',
+            ['user' => $user]   
+        );
+        $txtBody = $this->renderer->render(
+            'emails/createUserAccountEmail.txt.twig',
+            ['user' => $user]
+        );
+
+        $this->send($to, $subject, $htmlBody, $txtBody);
+    }
+
+    /**
      * Mail de réinitialisation du mot de psasse.
      */
     public function reinitPassword(User $user)

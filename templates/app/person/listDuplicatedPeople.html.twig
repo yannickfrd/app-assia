@@ -41,7 +41,7 @@
                     {% for person in people %}
                     <tr>
                         <th scope="row"> 
-                            <a href="{{ path('supports', { 
+                            <a href="{{ path('people', { 
                                 'lastname':search.lastname ? person.lastname,
                                 'firstname':search.firstname ? person.firstname,
                                 'birthdate':search.birthdate ? person.birthdate|date('Y-m-d') }) }}"

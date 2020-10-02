@@ -25,10 +25,11 @@ use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 
 class ImportDatasOC
 {
+    use ImportTrait;
+
     public const YES_NO = [
         'OUI' => 1,
         'NON' => 2,
@@ -313,14 +314,14 @@ class ImportDatasOC
         // 'Solution personnelle' => 1,
     ];
 
-    protected $user;
     protected $manager;
     protected $repoPerson;
 
     protected $datas;
     protected $row;
 
-    protected $device;
+    protected $deviceHotelOC;
+    protected $deviceHotelSupport;
     protected $person;
     protected $personExists;
 
@@ -334,38 +335,12 @@ class ImportDatasOC
     protected $head;
     protected $role;
 
-    public function __construct(Security $security, EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
+    public function __construct(EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
     {
-        $this->user = $security->getUser();
         $this->manager = $manager;
-        $this->device = $repoDevice->find(17); // Opération ciblée
+        $this->deviceHotelOC = $repoDevice->find(Device::HOTEL_OC); // Opération ciblée
+        $this->deviceHotelSupport = $repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
         $this->repoPerson = $repoPerson;
-    }
-
-    public function getDatas(string $fileName)
-    {
-        $this->datas = [];
-
-        $row = 1;
-        if (($handle = fopen($fileName, 'r')) !== false) {
-            while (($data = fgetcsv($handle, 2000, ';')) !== false) {
-                $num = count($data);
-                ++$row;
-                $row = [];
-                for ($col = 0; $col < $num; ++$col) {
-                    $cel = iconv('CP1252', 'UTF-8', $data[$col]);
-                    $date = \DateTime::createFromFormat('d/m/Y', $cel, new \DateTimeZone(('UTC')));
-                    if ($date) {
-                        $cel = $date->format('Y-m-d');
-                    }
-                    isset($this->datas[0]) ? $row[$this->datas[0][$col]] = $cel : $row[] = $cel;
-                }
-                $this->datas[] = $row;
-            }
-            fclose($handle);
-        }
-
-        return $this->datas;
     }
 
     public function importInDatabase(string $fileName, Service $service): array
@@ -383,7 +358,7 @@ class ImportDatasOC
                 $this->person = $this->getPerson();
                 $this->personExists = $this->personExistsInDatabase($this->person);
 
-                $this->checkGroupExists($typology, $service, $this->device);
+                $this->checkGroupExists($typology, $service);
 
                 $this->person = $this->createPerson($this->items[$this->field['ID_GIP']]['groupPeople']);
 
@@ -399,7 +374,7 @@ class ImportDatasOC
 
         // dump($this->existPeople);
         // dump($this->duplicatedPeople);
-        // dd($this->items);
+        dd($this->items);
         $this->manager->flush();
 
         return $this->items;
@@ -416,10 +391,10 @@ class ImportDatasOC
                 ->setUpdatedBy($this->user);
     }
 
-    protected function checkGroupExists(int $typology, Service $service, Device $device)
+    protected function checkGroupExists(int $typology, Service $service)
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
-        if (false == $this->groupExists($service, $device)) {
+        if (false == $this->groupExists($service)) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
                 $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
@@ -428,7 +403,7 @@ class ImportDatasOC
                 $groupPeople = $this->createGroupPeople($typology);
             }
 
-            $supportGroup = $this->createSupportGroup($groupPeople, $service, $device);
+            $supportGroup = $this->createSupportGroup($groupPeople, $service);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
@@ -444,28 +419,33 @@ class ImportDatasOC
         }
     }
 
-    protected function groupExists(Service $service, Device $device)
+    protected function groupExists(Service $service)
     {
         $groupExists = false;
         // Vérifie si le groupe de la personne existe déjà.
         foreach ($this->items as $key => $value) {
             // Si déjà créé, on vérifie le suivi social.
-            if ($key == $this->field['ID_GIP']) {
+            if ($key === $this->field['ID_GIP']) {
                 $groupExists = true;
-
+                // if (!isset($this->items[$this->field['ID_GIP']])) {
+                //     dd($key.' don\'t find');
+                // }
+                // if ($key === '20200921_1') {
+                //     dd($this->items);
+                // }
                 $supports = $this->items[$this->field['ID_GIP']]['supports'];
 
                 $supportExists = false;
                 // Vérifie si le suivi du groupe de la personne a déjà été créé.
                 foreach ($supports as $key => $value) {
-                    if ($key == $this->field['ID_Support']) {
+                    if ($key === $this->field['ID_Support']) {
                         $supportExists = true;
                     }
                 }
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
-                if (false == $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['groupPeople'], $service, $device);
+                if (false === $supportExists) {
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['groupPeople'], $service);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
                     $this->items[$this->field['ID_GIP']]['supports'][$this->field['ID_Support']] = [
@@ -496,7 +476,7 @@ class ImportDatasOC
         return $groupPeople;
     }
 
-    protected function createSupportGroup(GroupPeople $groupPeople, Service $service, Device $device): SupportGroup
+    protected function createSupportGroup(GroupPeople $groupPeople, Service $service): SupportGroup
     {
         $supportGroup = (new SupportGroup())
                     ->setStatus($this->getStatus($this->field))
@@ -507,7 +487,7 @@ class ImportDatasOC
                     ->setNbPeople($this->findInArray($this->field['Compo'], self::NB_PEOPLE) ?? null)
                     ->setGroupPeople($groupPeople)
                     ->setService($service)
-                    ->setDevice($device)
+                    ->setDevice($this->deviceHotelOC)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -605,7 +585,7 @@ class ImportDatasOC
                     $this->person = $person2;
                 }
             }
-            if (false == $duplicatedPerson) {
+            if (false === $duplicatedPerson) {
                 $this->manager->persist($this->person);
                 $this->person->addRolesPerson($this->createRolePerson($groupPeople));
                 $this->people[] = $this->person;
@@ -662,7 +642,7 @@ class ImportDatasOC
         $hotelSupport = (new HotelSupport())
             ->setGipId($this->field['ID_GIP'])
             ->setEvaluationDate($this->field['Date diagnostic'] ? new \Datetime($this->field['Date diagnostic']) : null)
-            ->setDepartmentAnchor(['Ancrage 95'] == 'OUI' ? 95 : null)
+            ->setDepartmentAnchor($this->field['Ancrage 95'] == 'OUI' ? 95 : null)
             ->setRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
             ->setSupportGroup($supportGroup);
 
@@ -824,17 +804,6 @@ class ImportDatasOC
         }
     }
 
-    protected function findInArray($needle, array $haystack): ?int
-    {
-        foreach ($haystack as $key => $value) {
-            if ($key == $needle) {
-                return $value;
-            }
-        }
-
-        return false;
-    }
-
     protected function getRole(int $typology)
     {
         $this->gender = 99;
@@ -889,6 +858,10 @@ class ImportDatasOC
     {
         if ($this->field['Date sortie']) {
             return new \Datetime($this->field['Date sortie']);
+        }
+
+        if ($this->field['TS accompagnement']) {
+            return null;
         }
 
         if ($this->field['Date diagnostic']) {

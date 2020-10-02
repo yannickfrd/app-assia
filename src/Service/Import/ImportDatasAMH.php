@@ -30,6 +30,8 @@ use Symfony\Component\Security\Core\Security;
 
 class ImportDatasAMH
 {
+    use ImportTrait;
+
     public const YES_NO = [
         'Oui' => 1,
         'Non' => 2,
@@ -400,38 +402,6 @@ class ImportDatasAMH
         $this->manager = $manager;
         $this->device = $repoDevice->find(16); // Opération ciblée
         $this->repoPerson = $repoPerson;
-    }
-
-    public function getDatas(string $fileName)
-    {
-        $this->datas = [];
-
-        $row = 1;
-        if (($handle = fopen($fileName, 'r')) !== false) {
-            while (($data = fgetcsv($handle, 2000, ';')) !== false) {
-                $num = count($data);
-                ++$row;
-                $row = [];
-                for ($col = 0; $col < $num; ++$col) {
-                    $cel = iconv('CP1252', 'UTF-8', $data[$col]);
-                    $date = \DateTime::createFromFormat('d/m/Y', $cel, new \DateTimeZone(('UTC')));
-                    if ($date) {
-                        $cel = $date->format('Y-m-d');
-                    }
-                    if (isset($this->datas[0])) {
-                        if (isset($this->datas[0][$col])) {
-                            $row[$this->datas[0][$col]] = $cel;
-                        }
-                    } else {
-                        $row[] = $cel;
-                    }
-                }
-                $this->datas[] = $row;
-            }
-            fclose($handle);
-        }
-
-        return $this->datas;
     }
 
     public function importInDatabase(string $fileName, Service $service): array
@@ -872,17 +842,6 @@ class ImportDatasAMH
 
             $this->manager->persist($evalBudgetPerson);
         }
-    }
-
-    protected function findInArray($needle, array $haystack): ?int
-    {
-        foreach ($haystack as $key => $value) {
-            if ($key == $needle) {
-                return $value;
-            }
-        }
-
-        return false;
     }
 
     protected function getRole(int $typology)

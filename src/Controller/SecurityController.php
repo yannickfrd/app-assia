@@ -95,7 +95,7 @@ class SecurityController extends AbstractController
     {
         $this->addFlash('success', 'Bonjour '.$this->getUser()->getFirstname().' !');
 
-        if (1 == $this->getUser()->getLoginCount()) {
+        if (1 == $this->getUser()->getLoginCount() && $this->getUser()->getTokenCreatedAt()) {
             return $this->redirectToRoute('security_init_password');
         }
 
@@ -243,14 +243,50 @@ class SecurityController extends AbstractController
      *
      * @Route("/login/reinit_password", name="security_reinit_password", methods="GET|POST")
      */
-    public function reinitPassword(Request $request, UserResetPassword $user = null): Response
+    public function reinitPassword(Request $request): Response
     {
         $userResetPassword = new UserResetPassword();
 
         $form = ($this->createForm(ReinitPasswordType::class, $userResetPassword))
             ->handleRequest($request);
 
-        // Vérifie si l'utilisateur existe avec le même token
+        // Vérifie si l'utilisateur existe avec le même token.
+        $user = $this->userWithTokenExists($userResetPassword, $request->get('token'));
+        if ($form->isSubmitted()) {
+            if ($user) {
+                if ($form->isValid()) {
+                    return $this->updatePasswordWithToken($user, $userResetPassword);
+                }
+            } else {
+                $this->addFlash('danger', "Le login ou l'adresse email sont incorrects.");
+            }
+        }
+
+        return $this->render('app/security/reinitPassword.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Réinitialise le mot de passe de l'utilisateur.
+     *
+     * @Route("/login/create_password", name="security_create_password", methods="GET|POST")
+     */
+    public function createPassword(Request $request): Response
+    {
+        $userResetPassword = new UserResetPassword();
+
+        $form = ($this->createForm(ReinitPasswordType::class, $userResetPassword))
+            ->handleRequest($request);
+
+        // Vérifie si le token existe en base de données.
+        if (!$this->repo->findOneBy(['token' => $request->get('token')])) {
+            $this->addFlash('danger', 'Le lien est expiré ou invalide.');
+
+            return $this->redirectToRoute('security_login');
+        }
+
+        // Vérifie si l'utilisateur existe avec le même token.
         $user = $this->userWithTokenExists($userResetPassword, $request->get('token'));
         if ($form->isSubmitted()) {
             if ($user) {
@@ -378,23 +414,22 @@ class SecurityController extends AbstractController
      */
     protected function updatePasswordWithToken(User $user, userResetPassword $userResetPassword)
     {
-        $interval = date_timestamp_get(new \DateTime()) - date_timestamp_get($user->getTokenCreatedAt()); // Calcule l'intervalle entre le moment de demande de réinitialisation et maintenant
-        $delay = 5 * 60; // 5 minutes x 60 secondes
+        $interval = date_timestamp_get(new \DateTime()) - date_timestamp_get($user->getTokenCreatedAt() ?? new \DateTime()); // Calcule l'intervalle entre le moment de demande de réinitialisation et maintenant
+        $delay = $user->getLastLogin() ? (5 * 60) : (7 * 24 * 60 * 60); // 5 minutes x 60 secondes
         // Si le lien de réinitialisaiton est toujours valide
         if ($interval < $delay) {
             $hashPassword = $this->encoder->encodePassword($user, $userResetPassword->getPassword());
             // Met à jour le nouveau mot de passe
             $user->setPassword($hashPassword)
-                ->setToken(null)
-                ->setTokenCreatedAt(null);
+                ->setToken(null);
 
             $this->manager->flush();
 
-            $this->addFlash('success', 'Votre mot de passe est réinitialisé !');
+            $this->addFlash('success', 'Votre mot de passe est '.($user->getLastLogin() ? 'réinitialisé' : 'créé').' !');
 
             return $this->redirectToRoute('security_login');
         }
-        $this->addFlash('danger', 'Le lien de réinitialisation est périmé.');
+        $this->addFlash('danger', 'Le lien de '.($user->getLastLogin() ? 'réinitialisation' : 'création').' est périmé.');
 
         return $this->redirectToRoute('security_reinit_password');
     }

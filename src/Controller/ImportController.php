@@ -8,6 +8,7 @@ use App\Service\Import\ImportDatasAMH;
 use App\Service\Import\ImportDatasHebergement;
 use App\Service\Import\ImportDatasHotel;
 use App\Service\Import\ImportDatasOC;
+use App\Service\Import\ImportDatasUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,6 +66,17 @@ class ImportController extends AbstractController
     public function importHotel(Request $request, ImportDatasHotel $importDatas): Response
     {
         return $this->import($request, $importDatas, 'import_hotels.csv');
+    }
+
+    /**
+     * Import des utilisateurs.
+     *
+     * @Route("import_users", name="import_users", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function importUser(Request $request, ImportDatasUser $importDatas): Response
+    {
+        return $this->import($request, $importDatas, 'import_users.csv');
     }
 
     /**

@@ -10,16 +10,21 @@
 
 <body style="font-size: 0.9rem;">
 
-    <p class="mb-4">Bonjour{% if app.user %} {{ app.user.firstname }}{% endif %}, </p>
+	{% block hello %}
+    	<p class="mb-4">Bonjour{{ app.user ? app.user.firstname }}, </p>
+	{% endblock %}
 
 	{% block body %}{% endblock %}
 
-	<footer class="p-2">
-		<hr>
-		<p class="text-secondary small">Ceci est un message automatique, merci de ne pas y répondre.</p>
-		<img class="d-block mb-2" src="{{ absolute_url(asset('images/logo_e95_mail.png')) }}" alt="Esperer 95">
-		<p class="text-secondary small">Esperer 95</p>
-	</footer>
+
+	{% block footer %}
+		<footer class="p-2">
+			<hr>
+			<p class="text-secondary small">Ceci est un message automatique, merci de ne pas y répondre.</p>
+			<img class="d-block mb-2" src="{{ absolute_url(asset('images/logo_e95_mail.png')) }}" alt="Esperer 95">
+			<p class="text-secondary small">Esperer 95</p>
+		</footer>
+	{% endblock %}
 
 </body>
 </html>

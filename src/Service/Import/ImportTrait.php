@@ -39,4 +39,15 @@ trait ImportTrait
 
         return $this->datas;
     }
+
+    protected function findInArray($needle, array $haystack): ?int
+    {
+        foreach ($haystack as $key => $value) {
+            if ($key === $needle) {
+                return $value;
+            }
+        }
+
+        return false;
+    }
 }
