@@ -96,11 +96,13 @@ class ImportController extends AbstractController
             $nbItems = count($items);
             if ($nbItems > 0) {
                 $this->addFlash('success', $nbItems.' entrées ont été importées !');
+
+                return $this->redirectToRoute('home');
             } else {
                 $this->addFlash('warning', 'Aucune entrée n\'a été importée.');
             }
         } else {
-            dump($datas);
+            // dump($datas);
         }
 
         return $this->render('app/import.html.twig', [

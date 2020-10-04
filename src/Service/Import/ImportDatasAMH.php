@@ -6,9 +6,11 @@ use App\Entity\Device;
 use App\Entity\EvalAdmPerson;
 use App\Entity\EvalBudgetGroup;
 use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalFamilyGroup;
 use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
 use App\Entity\EvalProfPerson;
+use App\Entity\EvalSocialGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
@@ -16,8 +18,8 @@ use App\Entity\GroupPeople;
 use App\Entity\HotelSupport;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
-use App\Entity\Note;
 use App\Entity\Person;
+use App\Entity\Referent;
 use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
@@ -25,6 +27,7 @@ use App\Entity\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
+use App\Service\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -209,12 +212,41 @@ class ImportDatasAMH
     ];
 
     public const RIGHT_SOCIAL_SECURITY = [
-        // 'Oui' => 1,
-        // '' => 2,
-        // 'SANS' => 2,
+        'Sans' => 2,
+        'En cours' => 3,
+        'Non' => 2,
+        'CMU' => 1,
+        'CMU C' => 1,
+        'CMU-C' => 1,
+        'CMUC' => 1,
+        'PUMA' => 1,
+        'AME' => 1,
+        'Régime Général' => 1,
+        'Régime général' => 1,
+        'Mutuelle' => 1,
+        'mutuelle' => 1,
+        'ACS' => 1,
+        'CSS' => 1,
+        'CSC' => 1,
+        'Autre' => 1,
+        'NR' => 99,
     ];
 
     public const SOCIAL_SECURITY = [
+        'Régime Général' => 1,
+        'Régime général' => 1,
+        'Mutuelle' => 2,
+        'mutuelle' => 2,
+        'CMU' => 4,
+        'CMU C' => 4,
+        'CMU-C' => 4,
+        'CMUC' => 4,
+        'PUMA' => 4,
+        'AME' => 5,
+        'ACS' => 6,
+        'CSS' => 4,
+        'CSC' => 4,
+        'Autre' => 97,
     ];
 
     public const PROF_STATUS = [
@@ -244,6 +276,14 @@ class ImportDatasAMH
     ];
 
     public const RESOURCES = [
+        'Oui' => 1,
+        'Non' => 2,
+        'Ouverture de droit en cours' => 3,
+        'Droits suspendus' => 4,
+        'NR' => 99,
+    ];
+
+    public const RESOURCES_TYPE = [
         'RSA' => 1,
         'Assedic' => 1,
         'ARE' => 1,
@@ -277,6 +317,30 @@ class ImportDatasAMH
         'Autre' => 1,
     ];
 
+    public const OVER_INDEBT_RECORD = [
+        'Non' => 2,
+        'Dossier à déposer' => 2,
+        'Dossier déposé' => 3,
+        'Dossier recevable' => 1,
+        'Dossier refusé' => 2,
+        'Moratoire en cours' => 1,
+        'Plan apurement' => 1,
+        'Autre' => 99,
+        'NR' => 99,
+    ];
+
+    public const SETTLEMENT_PLAN = [
+        'Non' => null,
+        'Dossier à déposer' => null,
+        'Dossier déposé' => null,
+        'Dossier recevable' => null,
+        'Dossier refusé' => null,
+        'Moratoire en cours' => null,
+        'Plan apurement' => 2,
+        'Autre' => 99,
+        'NR' => 99,
+    ];
+
     public const DLS = [
         'OUI' => 1,
         'OUI - PROPO EN COURS' => 1,
@@ -290,7 +354,7 @@ class ImportDatasAMH
         'NON' => 2,
     ];
 
-    public const DEPARTMENTS = [
+    public const SIAO_DEPARTMENTS = [
         'SIAO 75' => 75,
         'SIAO 77' => 77,
         'SIAO 78' => 78,
@@ -299,6 +363,15 @@ class ImportDatasAMH
         'SIAO 94' => 94,
         'SIAO 95' => 95,
     ];
+    public const DEPARTMENTS = [
+        '75' => 75,
+        '77' => 77,
+        '78' => 78,
+        '92' => 92,
+        '93' => 93,
+        '94' => 94,
+        '95' => 95,
+    ];
 
     public const RECOMMENDATION = [
     'Hébergement' => 10,
@@ -306,6 +379,24 @@ class ImportDatasAMH
     // 'Sorti d\'hôtel' => 10,
     'Logement' => 30,
     'Logement ' => 30,
+    ];
+
+    public const RECOMMENDATION_TYPE = [
+        'CHU' => 10,
+        'CHS' => 10,
+        'CHRS' => 10,
+        'ALTHO' => 20,
+        'HUAS' => 10,
+        'Résidence Sociale' => 20,
+        'FJT' => 20,
+        'RJA' => 20,
+        'FTM' => 20,
+        'Solibail' => 20,
+        'Pension de famille' => 20,
+        'ALT' => 20,
+        'Logement droit commun' => 30,
+        'RHVS' => 20,
+        'Autre' => 10,
     ];
 
     public const DALO_COMMISSION = [
@@ -375,14 +466,29 @@ class ImportDatasAMH
         'Plaine de France' => 1,
     ];
 
+    public const CHILD_TO_HOST = [
+        'Présence permanente' => 1,
+        'Garde alterné' => 2,
+        'Garde partagée' => 2,
+        'Autre' => 97,
+    ];
+
     protected $user;
     protected $manager;
     protected $repoPerson;
 
     protected $datas;
     protected $row;
+    protected $field;
 
-    protected $device;
+    protected $service;
+
+    protected $deviceAMH;
+    protected $deviceASEMab;
+    protected $deviceASEHeb;
+    protected $deviceINJ;
+    protected $deviceHotelSupport;
+
     protected $person;
     protected $personExists;
 
@@ -400,13 +506,19 @@ class ImportDatasAMH
     {
         $this->user = $security->getUser();
         $this->manager = $manager;
-        $this->device = $repoDevice->find(16); // Opération ciblée
+        $this->deviceAMH = $repoDevice->find(Device::HOTEL_AMH); // Famille AMH
+        $this->deviceASEMab = $repoDevice->find(Device::HOTEL_AMH); // ASE Mise à l'abri
+        $this->deviceASEHeb = $repoDevice->find(Device::ASE_HEB); // ASE Hébergement
+        $this->deviceINJ = $repoDevice->find(Device::HOTEL_INJ); // Injonctions
+        $this->deviceHotelSupport = $repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
+
         $this->repoPerson = $repoPerson;
     }
 
     public function importInDatabase(string $fileName, Service $service): array
     {
         $this->fields = $this->getDatas($fileName);
+        $this->service = $service;
 
         $i = 0;
         foreach ($this->fields as $field) {
@@ -418,7 +530,7 @@ class ImportDatasAMH
                 $this->person = $this->getPerson();
                 $this->personExists = $this->personExistsInDatabase($this->person);
 
-                $this->checkGroupExists($typology, $service, $this->device);
+                $this->checkGroupExists($typology);
 
                 $this->person = $this->createPerson($this->items[$this->field['ID_ménage']]['groupPeople']);
 
@@ -428,6 +540,10 @@ class ImportDatasAMH
 
                 $supportPerson = $this->createSupportPerson($supportGroup);
                 $this->createEvaluationPerson($evaluationGroup, $supportPerson);
+
+                if ($this->field['DP'] == 'Oui') {
+                    $this->createNote($supportGroup, 'Notes ACCESS', $this->field['Notes']);
+                }
             }
             ++$i;
         }
@@ -447,14 +563,16 @@ class ImportDatasAMH
                 ->setFirstname($this->field['Prénom'])
                 ->setBirthdate($this->field['Date naissance'] ? new \Datetime($this->field['Date naissance']) : null)
                 ->setGender($this->findInArray($this->field['Sexe'], self::GENDER) ?? null)
+                ->setSiSiaoId((int) $this->field['Id Personne'])
+                ->setPhone1(strlen($this->field['Téléphone']) <= 15 ? Phone::formatPhone($this->field['Téléphone']) : null)
                 ->setCreatedBy($this->user)
                 ->setUpdatedBy($this->user);
     }
 
-    protected function checkGroupExists(int $typology, Service $service, Device $device)
+    protected function checkGroupExists(int $typology)
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
-        if (false == $this->groupExists($service, $device)) {
+        if (false == $this->groupExists()) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
                 $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
@@ -463,7 +581,8 @@ class ImportDatasAMH
                 $groupPeople = $this->createGroupPeople($typology);
             }
 
-            $supportGroup = $this->createSupportGroup($groupPeople, $service, $device);
+            $supportGroup = $this->createSupportGroup($groupPeople);
+            $this->createReferent($groupPeople);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
@@ -479,7 +598,7 @@ class ImportDatasAMH
         }
     }
 
-    protected function groupExists(Service $service, Device $device)
+    protected function groupExists()
     {
         $groupExists = false;
         // Vérifie si le groupe de la personne existe déjà.
@@ -500,7 +619,7 @@ class ImportDatasAMH
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
                 if (false == $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_ménage']]['groupPeople'], $service, $device);
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_ménage']]['groupPeople']);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
                     $this->items[$this->field['ID_ménage']]['supports'][$this->field['ID_AMH']] = [
@@ -516,13 +635,15 @@ class ImportDatasAMH
 
     protected function createGroupPeople(int $typology): GroupPeople
     {
-        if ($this->field['Rôle'] == 'CHEF DE FAMILLE') {
+        if ($this->field['DP'] == 'Oui') {
             $this->personExistsInDatabase();
         }
 
         $groupPeople = (new GroupPeople())
                     ->setFamilyTypology($typology)
                     ->setNbPeople((int) $this->field['Nb personnes'])
+                    ->setSiSiaoId((int) $this->field['Id Groupe'])
+                    ->setComment($this->field['Téléphone'])
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -531,7 +652,7 @@ class ImportDatasAMH
         return $groupPeople;
     }
 
-    protected function createSupportGroup(GroupPeople $groupPeople, Service $service, Device $device): SupportGroup
+    protected function createSupportGroup(GroupPeople $groupPeople): SupportGroup
     {
         $supportGroup = (new SupportGroup())
                     ->setStatus($this->getStatus($this->field))
@@ -541,8 +662,9 @@ class ImportDatasAMH
                     ->setEndStatusComment($this->field['Type sortie AMH'])
                     ->setNbPeople((int) $this->field['Nb personnes'])
                     ->setGroupPeople($groupPeople)
-                    ->setService($service)
-                    ->setDevice($device)
+                    ->setService($this->service)
+                    ->setDevice($this->getDevice())
+                    ->setComment($this->field['TS AMH'])
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -553,6 +675,24 @@ class ImportDatasAMH
         }
 
         return $supportGroup;
+    }
+
+    protected function getDevice(): Device
+    {
+        switch ($this->field['Dispositif']) {
+            case 'ASE mise à l\'abri':
+                return $this->deviceASEMab;
+                break;
+            case 'ASE hébergement':
+                return $this->deviceASEHeb;
+                break;
+            case 'Injonctions Réfugiés':
+                return $this->deviceINJ;
+                break;
+            default:
+               return $this->deviceAMH;
+                break;
+        }
     }
 
     protected function createEvaluationGroup($supportGroup): EvaluationGroup
@@ -568,6 +708,8 @@ class ImportDatasAMH
 
         $this->manager->persist($evaluationGroup);
 
+        $this->createEvalSocialGroup($evaluationGroup);
+        $this->createEvalFamilyGroup($evaluationGroup);
         $this->createEvalBudgetGroup($evaluationGroup);
         $this->createEvalHousingGroup($evaluationGroup);
 
@@ -589,14 +731,43 @@ class ImportDatasAMH
         return $initEvalGroup;
     }
 
+    protected function createEvalFamilyGroup(EvaluationGroup $evaluationGroup): ?EvalFamilyGroup
+    {
+        if ($this->field['Commentaire garde enfants']) {
+            $evalFamilyGroup = (new EvalFamilyGroup())
+            ->setCommentEvalFamilyGroup($this->field['Commentaire garde enfants'])
+            ->setEvaluationGroup($evaluationGroup);
+
+            return $evalFamilyGroup;
+        }
+
+        return null;
+    }
+
+    protected function createEvalSocialGroup(EvaluationGroup $evaluationGroup): ?EvalSocialGroup
+    {
+        if ($this->field['Couverture sociale']) {
+            $evalSocialGroup = (new EvalSocialGroup())
+            ->setCommentEvalSocialGroup($this->field['Couverture sociale'])
+            ->setEvaluationGroup($evaluationGroup);
+
+            $this->manager->persist($evalSocialGroup);
+
+            return $evalSocialGroup;
+        }
+
+        return null;
+    }
+
     protected function createEvalBudgetGroup(EvaluationGroup $evaluationGroup): EvalBudgetGroup
     {
         $evalBudgetGroup = (new EvalBudgetGroup())
-            ->setEvaluationGroup($evaluationGroup)
-            ->setResourcesGroupAmt((float) $this->field['Montant ressources'])
-            ->setChargesGroupAmt((float) $this->field['Montant charges'])
-            ->setDebtsGroupAmt((float) $this->field['Montant dettes']);
+        ->setResourcesGroupAmt((float) $this->field['Montant ressources'])
+        ->setChargesGroupAmt((float) $this->field['Montant charges'])
+        ->setDebtsGroupAmt((float) $this->field['Montant dettes'])
+        ->setContributionAmt((float) $this->field['Montant PAF'])
         // ->setBudgetBalanceAmt((float) ($this->field['Montant ressources'] - $this->field['Montant charges']));
+        ->setEvaluationGroup($evaluationGroup);
 
         $this->manager->persist($evalBudgetGroup);
 
@@ -610,17 +781,44 @@ class ImportDatasAMH
         ->setSiaoRequest(!empty($this->field['Date demande initiale']) ? Choices::YES : Choices::NO)
         ->setSiaoRequestDate($this->field['Date demande initiale'] ? new \Datetime($this->field['Date demande initiale']) : null)
         ->setSiaoUpdatedRequestDate($this->field['Date réactu'] ? new \Datetime($this->field['Date réactu']) : null)
-        // ->setSiaoRequestDept($this->findInArray($this->field['SIAO prescripteur'], self::DEPARTMENTS) ?? null)
-        // ->setSiaoRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
+        ->setSiaoRequestDept($this->field['Date réactu'] ? 95 : null)
+        ->setSiaoRecommendation($this->getSiaoRecomendation())
         ->setSocialHousingRequest($this->findInArray($this->field['DLS'], self::YES_NO) ?? null)
-        // ->setSocialHousingRequestId($this->field['NUR'])
+        ->setSocialHousingRequestId($this->field['NUR'])
+        ->setSyplo($this->field['N°SYPLO'] || $this->field['Date SYPLO'] ? Choices::YES : null)
+        ->setSyploDate($this->field['Date SYPLO'] ? new \Datetime($this->field['Date SYPLO']) : null)
+        ->setSyploId($this->field['N°SYPLO'])
         // ->setDaloCommission($this->findInArray($this->field['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
         // ->setDaloRequalifiedDaho($this->findInArray($this->field['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
+        ->setDomiciliation($this->field['Commune domiciliation'] ? Choices::YES : Choices::NO)
+        ->setDomiciliationCity($this->field['Commune domiciliation'])
         ->setEvaluationGroup($evaluationGroup);
 
         $this->manager->persist($evalHousingGroup);
 
         return $evalHousingGroup;
+    }
+
+    protected function getSiaoRecomendation(): ?int
+    {
+        $recommendation = $this->field['Préconisation'];
+
+        if (strstr($recommendation, 'Logement droit commun')) {
+            return 30;
+        }
+
+        foreach (self::RECOMMENDATION_TYPE as $key => $value) {
+            if (strstr($recommendation, $key) && $value == 20) {
+                return $value;
+            }
+        }
+        foreach (self::RECOMMENDATION_TYPE as $key => $value) {
+            if (strstr($recommendation, $key) && $value == 10) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 
     protected function createPerson(GroupPeople $groupPeople): Person
@@ -677,9 +875,9 @@ class ImportDatasAMH
         $rolePerson = $this->person->getRolesPerson()->first();
 
         $supportPerson = (new SupportPerson())
-                    ->setStatus($this->getStatus($this->field))
-                    ->setStartDate($this->getStartDate($this->field))
-                    ->setEndDate($this->getEndDate($this->field))
+                    ->setStatus($this->getStatus())
+                    ->setStartDate($this->getStartDate())
+                    ->setEndDate($this->getEndDate())
                     ->setSupportGroup($supportGroup)
                     ->setPerson($this->person)
                     ->setHead($rolePerson->getHead())
@@ -695,7 +893,11 @@ class ImportDatasAMH
     protected function createHotelSupport(SupportGroup $supportGroup): HotelSupport
     {
         $hotelSupport = (new HotelSupport())
+            ->setOriginDept($this->findInArray($this->field['115 origine'], self::DEPARTMENTS))
+            ->setSsd($this->field['SSD'])
+            ->setAgreementDate($this->field['Contrat AMH'] ? (new \Datetime($this->field['Date entrée AMH']))->modify('+7 days') : null)
             ->setEvaluationDate($this->field['Date diagnostic'] ? new \Datetime($this->field['Date diagnostic']) : null)
+            ->setAccessId((int) $this->field['ID_ménage'])
             // ->setRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
             ->setSupportGroup($supportGroup);
 
@@ -762,22 +964,58 @@ class ImportDatasAMH
     {
         if ($this->field['Rôle'] != 'Enfant') {
             $evalSocialPerson = (new EvalSocialPerson())
-                ->setRightSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-                ->setSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::SOCIAL_SECURITY) ?? null)
-                // ->setEndRightsSocialSecurityDate($this->field['Date fin validité Sécurité sociale'] ? new \Datetime($this->field['Date fin validité Sécurité sociale']) : null)
-                // ->setCommentEvalSocialPerson($this->field['Suivi social'] ? 'Suivi social : Oui' : null)
+                ->setRightSocialSecurity($this->getRightSocialSecurity())
+                ->setSocialSecurity($this->getSocialSecurity())
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalSocialPerson);
         }
     }
 
+    protected function getRightSocialSecurity(): ?int
+    {
+        $socialSecurity = $this->field['Couverture sociale'];
+
+        foreach (self::RIGHT_SOCIAL_SECURITY as $key => $value) {
+            if (strstr($socialSecurity, $key)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getSocialSecurity(): ?int
+    {
+        $socialSecurity = $this->field['Couverture sociale'];
+
+        foreach (self::SOCIAL_SECURITY as $key => $value) {
+            if (strstr($socialSecurity, $key)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
     protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson)
     {
         if ($this->field['Rôle'] != 'Enfant' && (!empty($this->field['Situation matrimoniale']))) {
             $evalFamilyPerson = (new EvalFamilyPerson())
-                ->setMaritalStatus($this->findInArray($this->field['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
-                // ->setUnbornChild($this->findInArray($this->field['Enfant à naître'], self::YES_NO) ?? null)
+            ->setMaritalStatus($this->findInArray($this->field['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
+            ->setEvaluationPerson($evaluationPerson);
+
+            if ($this->field['Sexe'] == 'Femme') {
+                $evalFamilyPerson->setUnbornChild($this->findInArray($this->field['Enfant à naître'], self::YES_NO));
+            }
+
+            $this->manager->persist($evalFamilyPerson);
+        }
+
+        if ($this->field['Rôle'] == 'Enfant') {
+            $evalFamilyPerson = (new EvalFamilyPerson())
+                ->setChildToHost($this->findInArray($this->field['Type garde enfant(s)'], self::CHILD_TO_HOST) ?? null)
+                ->setChildcareSchoolLocation($this->field['Ecole'])
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalFamilyPerson);
@@ -806,6 +1044,9 @@ class ImportDatasAMH
             $evalProfPerson = (new EvalProfPerson())
                 ->setProfStatus($this->findInArray($this->field['Type contrat'], self::PROF_STATUS) ?? null)
                 ->setContractType($this->findInArray($this->field['Type contrat'], self::CONTRACT_TYPE) ?? null)
+                ->setWorkPlace($this->field['lieu travail'])
+
+                ->setCommentEvalProf($this->field['Type contrat'])
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalProfPerson);
@@ -814,30 +1055,48 @@ class ImportDatasAMH
 
     protected function createEvalBudgetPerson(EvaluationPerson $evaluationPerson)
     {
-        $resourceType = $this->field['Type ressources'];
+        $resourceType = (string) $this->field['Type ressources'];
 
         if ((float) $this->field['Age'] >= 16 && (!empty($resourceType) || !empty($this->field['Montant ressources']) || !empty($this->field['Dettes']))) {
-            $resourceOther = null;
+            $resourceOther = '';
+
+            if (strstr($resourceType, 'Bourse d\'étude')) {
+                $resourceOther = $resourceOther.'Bourses d\'études, ';
+            }
+            if (strstr($resourceType, 'Indemnités journalières')) {
+                $resourceOther = $resourceOther.'Indemnités journalières, ';
+            }
 
             $evalBudgetPerson = (new EvalBudgetPerson())
-                ->setCharges((float) $this->field['Montant charges'] > 0 ? Choices::YES : Choices::NO)
+                ->setCharges((float) $this->field['Montant charges'] > 0 || $this->field['Type charges'] ? Choices::YES : Choices::NO)
                 ->setChargesAmt((float) $this->field['Montant charges'])
                 ->setDebts($this->findInArray($this->field['Dettes'], self::YES_NO) ?? null)
-                // ->setIncomeTax($this->findInArray($this->field['AVIS D\'IMPOSITION'], self::YES_NO) ?? null)
                 ->setDebtsAmt((float) $this->field['Montant dettes'])
-                // ->setOverIndebtRecord($this->findInArray($this->field['Plan apurement'], self::OVER_INDEBT_RECORD) ?? null)
-                // ->setSettlementPlan($this->findInArray($this->field['Plan apurement'], self::SETTLEMENT_PLAN) ?? null)
+                ->setSettlementPlan($this->field['Démarches endettement'] == 'Plan d\'appurement' ? 2 : null)
+                ->setMoratorium($this->field['Démarches endettement'] == 'Moratoire en cours' ? Choices::YES : null)
+                ->setOverIndebtRecord($this->findInArray($this->field['Démarches endettement'], self::OVER_INDEBT_RECORD) ?? null)
+                ->setOverIndebtRecordDate($this->field['Date dépôt dossier'] ? new \Datetime($this->field['Date dépôt dossier']) : null)
+                ->setResources($this->findInArray($this->field['Ressources'], self::RESOURCES))
+                ->setResourcesAmt((float) $this->field['Montant ressources'])
                 ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
+                ->setDisChildAllowance(strstr($resourceType, 'AAEH') ? Choices::YES : 0)
                 ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
                 ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
+                ->setTempWaitingAllowance(strstr($resourceType, 'ATA') ? Choices::YES : 0)
                 ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
-                ->setFamilyAllowance(strstr($resourceType, 'PF') ? Choices::YES : 0)
+                ->setFamilyAllowance(strstr($resourceType, 'AF') ? Choices::YES : 0)
+                ->setPensionBenefit(strstr($resourceType, 'Pension de retraite') ? Choices::YES : 0)
                 ->setSalary(strstr($resourceType, 'Salaire') ? Choices::YES : 0)
                 ->setMaintenance(strstr($resourceType, 'Pension alimentaire') ? Choices::YES : 0)
+                ->setAsf(strstr($resourceType, 'ASF') ? Choices::YES : 0)
+                ->setSolidarityAllowance(strstr($resourceType, 'ASS') ? Choices::YES : 0)
+                ->setPaidTraining(strstr($resourceType, 'Formation') ? Choices::YES : 0)
+                ->setYouthGuarantee(strstr($resourceType, 'Garantie jeunes') ? Choices::YES : 0)
+                ->setDisabilityPension(strstr($resourceType, 'Pension d\'invalidité') ? Choices::YES : 0)
+                ->setPaje(strstr($resourceType, 'PAJE') ? Choices::YES : 0)
+                ->setActivityBonus(strstr($resourceType, 'Prime d\'activité') ? Choices::YES : 0)
                 ->setRessourceOther($resourceOther ? Choices::YES : 0)
                 ->setRessourceOtherPrecision($resourceOther)
-                ->setResources($this->findInArray($resourceType, self::RESOURCES) ?? null)
-                ->setResourcesAmt((float) $this->field['Montant ressources'])
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->manager->persist($evalBudgetPerson);
@@ -850,7 +1109,7 @@ class ImportDatasAMH
         $this->head = false;
         $this->role = 97;
 
-        if ($this->field['Rôle'] == 'CHEF DE FAMILLE') {
+        if ($this->field['DP'] == 'Oui') {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
                 $this->gender = Person::GENDER_FEMALE;
@@ -888,7 +1147,7 @@ class ImportDatasAMH
     protected function getStartDate(): ?\DateTime
     {
         if ($this->field['Date entrée AMH']) {
-            return new \Datetime($this->field['Date sortie AMH']);
+            return new \Datetime($this->field['Date entrée AMH']);
         }
 
         if ($this->field['Date diagnostic']) {
@@ -907,17 +1166,15 @@ class ImportDatasAMH
         return null;
     }
 
-    protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
+    protected function createReferent(GroupPeople $groupPeople): ?Referent
     {
-        $note = (new Note())
-        ->setTitle($title)
-        ->setContent($content)
-        ->setSupportGroup($supportGroup)
-        ->setCreatedBy($this->user)
-        ->setUpdatedBy($this->user);
+        $referent = (new Referent())
+            ->setName($this->field['Service social référent'])
+            // ->setType()
+            ->setSocialWorker($this->field['Référent social'])
+            ->setComment($this->field['Coordonnées référent'])
+            ->setGroupPeople($groupPeople);
 
-        $this->manager->persist($note);
-
-        return $note;
+        return $referent;
     }
 }

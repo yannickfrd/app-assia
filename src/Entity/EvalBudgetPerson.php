@@ -14,6 +14,14 @@ class EvalBudgetPerson
 {
     use ResourcesEntityTrait;
 
+    public const RESOURCES = [
+        1 => 'Oui',
+        2 => 'Non',
+        3 => 'Démarches en cours',
+        4 => 'Droits supendus',
+        99 => 'Non renseigné',
+    ];
+
     public const RESOURCES_TYPE = [
         'disAdultAllowance' => 'Allocation adulte handicapé (AAH)',
         'disChildAllowance' => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',

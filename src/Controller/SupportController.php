@@ -205,7 +205,7 @@ class SupportController extends AbstractController
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
             'nbRdvs' => $nbRdvs,
-            'nbNotes' => $repoRdv->count(['supportGroup' => $supportGroup->getId()]),
+            'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
             'nbContributions' => $supportGroup->getAccommodationGroups() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
             'evaluation' => $supportGroupService->getEvaluation($supportGroup),

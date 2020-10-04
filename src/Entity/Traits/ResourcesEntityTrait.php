@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\EvalBudgetPerson;
 use App\Form\Utils\Choices;
 
 trait ResourcesEntityTrait
@@ -231,7 +232,7 @@ trait ResourcesEntityTrait
      */
     public function getResourcesToString(): ?string
     {
-        return $this->resources ? Choices::YES_NO_IN_PROGRESS[$this->resources] : null;
+        return $this->resources ? EvalBudgetPerson::RESOURCES[$this->resources] : null;
     }
 
     public function setResources(?int $resources): self

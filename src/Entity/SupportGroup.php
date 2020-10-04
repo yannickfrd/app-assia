@@ -281,6 +281,11 @@ class SupportGroup
      */
     private $hotelSupport;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $siSiaoId;
+
     public function __construct()
     {
         $this->supportPeople = new ArrayCollection();
@@ -846,6 +851,18 @@ class SupportGroup
         if ($hotelSupport->getSupportGroup() !== $this) {
             $hotelSupport->setSupportGroup($this);
         }
+
+        return $this;
+    }
+
+    public function getSiSiaoId(): ?int
+    {
+        return $this->siSiaoId;
+    }
+
+    public function setSiSiaoId(?int $siSiaoId): self
+    {
+        $this->siSiaoId = $siSiaoId;
 
         return $this;
     }

@@ -135,6 +135,11 @@ class Person
      */
     private $accommodationPeople;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $siSiaoId;
+
     public function __construct()
     {
         $this->rolesPerson = new ArrayCollection();
@@ -366,6 +371,18 @@ class Person
                 $accommodationPerson->setPerson(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSiSiaoId(): ?int
+    {
+        return $this->siSiaoId;
+    }
+
+    public function setSiSiaoId(?int $siSiaoId): self
+    {
+        $this->siSiaoId = $siSiaoId;
 
         return $this;
     }

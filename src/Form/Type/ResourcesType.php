@@ -5,11 +5,11 @@ namespace App\Form\Type;
 use App\Entity\EvalBudgetPerson;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResourcesType extends AbstractType
 {
@@ -17,7 +17,7 @@ class ResourcesType extends AbstractType
     {
         $builder
         ->add('resources', ChoiceType::class, [
-            'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+            'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
             'attr' => [
                 'class' => 'js-initEval',
                 'data-id' => 'resources',

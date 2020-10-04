@@ -2,6 +2,8 @@
 
 namespace App\Service\Import;
 
+use App\Entity\Note;
+use App\Entity\SupportGroup;
 use Symfony\Component\Security\Core\Security;
 
 trait ImportTrait
@@ -49,5 +51,22 @@ trait ImportTrait
         }
 
         return false;
+    }
+
+    protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
+    {
+        $contentArray = explode("\n", $content);
+        $content = '<p>'.join($contentArray, '</p><p>').'</p>';
+
+        $note = (new Note())
+        ->setTitle($title)
+        ->setContent($content)
+        ->setSupportGroup($supportGroup)
+        ->setCreatedBy($this->user)
+        ->setUpdatedBy($this->user);
+
+        $this->manager->persist($note);
+
+        return $note;
     }
 }

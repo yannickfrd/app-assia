@@ -278,6 +278,10 @@ class RdvRepository extends ServiceEntityRepository
                     $query = $query->andWhere('rdv.createdBy = :user')
                         ->setParameter('user', $value);
                 }
+                if ('supportGroup' == $key) {
+                    $query = $query->andWhere('rdv.supportGroup = :supportGroup')
+                        ->setParameter('supportGroup', $value);
+                }
                 if ('status' == $key) {
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);

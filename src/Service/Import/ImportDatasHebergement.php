@@ -20,7 +20,6 @@ use App\Entity\EvaluationPerson;
 use App\Entity\GroupPeople;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
-use App\Entity\Note;
 use App\Entity\OriginRequest;
 use App\Entity\Person;
 use App\Entity\RolePerson;
@@ -954,19 +953,5 @@ class ImportDatasHebergement
     protected function getEndDate(): ?DateTime
     {
         return $this->field['Date sortie'] ? new \Datetime($this->field['Date sortie']) : null;
-    }
-
-    protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
-    {
-        $note = (new Note())
-        ->setTitle($title)
-        ->setContent($content)
-        ->setSupportGroup($supportGroup)
-        ->setCreatedBy($this->user)
-        ->setUpdatedBy($this->user);
-
-        $this->manager->persist($note);
-
-        return $note;
     }
 }
