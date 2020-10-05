@@ -20,7 +20,7 @@ class HotelSupport
 
     public const END_SUPPORT_REASON = [
         1 => 'Accès à une solution d\'hébgt/logt',
-        2 => 'Non respect de la convention AMH',
+        2 => 'Non respect de la convention d\'acc.',
         3 => 'Fin de prise en charge ASE',
         4 => 'Départ vers un autre département',
         97 => 'Autre',
@@ -99,6 +99,11 @@ class HotelSupport
      * @ORM\Column(type="integer", nullable=true)
      */
     private $accessId;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $AmhId;
 
     public function getId(): ?int
     {
@@ -282,6 +287,18 @@ class HotelSupport
     public function setAccessId(?int $accessId): self
     {
         $this->accessId = $accessId;
+
+        return $this;
+    }
+
+    public function getAmhId(): ?int
+    {
+        return $this->AmhId;
+    }
+
+    public function setAmhId(?int $AmhId): self
+    {
+        $this->AmhId = $AmhId;
 
         return $this;
     }

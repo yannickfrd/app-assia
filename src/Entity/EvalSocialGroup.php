@@ -38,7 +38,7 @@ class EvalSocialGroup
         24 => "Sortie d'hébergement",
         25 => 'Sortie dispositif asile',
         26 => 'Traite humaine',
-        27 => 'Violences familiales-conjugales',
+        27 => 'Violences familiales ou conjugales',
         97 => 'Autre',
         99 => 'Non renseigné',
     ];

@@ -8,6 +8,8 @@ use App\Service\Import\ImportDatasAMH;
 use App\Service\Import\ImportDatasHebergement;
 use App\Service\Import\ImportDatasHotel;
 use App\Service\Import\ImportDatasOC;
+use App\Service\Import\ImportDatasPAF;
+use App\Service\Import\ImportDatasRdv;
 use App\Service\Import\ImportDatasUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,6 +79,28 @@ class ImportController extends AbstractController
     public function importUser(Request $request, ImportDatasUser $importDatas): Response
     {
         return $this->import($request, $importDatas, 'import_users.csv');
+    }
+
+    /**
+     * Import des RDVs.
+     *
+     * @Route("import_rdvs", name="import_rdvs", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function importRdv(Request $request, ImportDatasRdv $importDatas): Response
+    {
+        return $this->import($request, $importDatas, 'import_rdvs.csv');
+    }
+
+    /**
+     * Import des PAFs.
+     *
+     * @Route("import_paf", name="import_paf", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function importPAF(Request $request, ImportDatasPAF $importDatas): Response
+    {
+        return $this->import($request, $importDatas, 'import_paf.csv');
     }
 
     /**

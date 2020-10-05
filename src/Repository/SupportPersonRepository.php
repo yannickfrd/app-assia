@@ -45,12 +45,12 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les suivis d'un service pour l'export.
      */
-    public function findSupportsFromServiceToExport($search = null, Service $service)
+    public function findSupportsFromServiceToExport($search = null, int $serviceId)
     {
         $query = $this->getSupportsFromServiceQuery()
 
             ->where('sg.service = :service')
-            ->setParameter('service', $service);
+            ->setParameter('service', $serviceId);
 
         if ($search) {
             $query = $this->filter($query, $search);

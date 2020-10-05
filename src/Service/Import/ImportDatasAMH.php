@@ -2,6 +2,8 @@
 
 namespace App\Service\Import;
 
+use App\Entity\Accommodation;
+use App\Entity\AccommodationGroup;
 use App\Entity\Device;
 use App\Entity\EvalAdmPerson;
 use App\Entity\EvalBudgetGroup;
@@ -24,9 +26,12 @@ use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use App\Entity\User;
 use App\Form\Utils\Choices;
+use App\Repository\AccommodationRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
+use App\Repository\SubServiceRepository;
 use App\Service\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -49,24 +54,24 @@ class ImportDatasAMH
     ];
 
     public const SOCIAL_WORKER = [
-        'Marie-Laure PEBORDE' => 1,
-        'Camille RAVEZ' => 1,
-        'Typhaine PECHE' => 1,
-        'Cécile BAZIN' => 1,
-        'Nathalie POULIQUEN' => 1,
-        'Marina DJORDJEVIC' => 1,
-        'Melody ROMET' => 1,
-        'Marion LE PEZRON' => 1,
-        'Gaëlle PRINCET' => 1,
-        'Marion FRANCOIS' => 1,
-        'Margot COURAUDON' => 1,
-        'Marilyse TOURNIER' => 1,
-        'Rozenn DOUELE ZAHAR' => 1,
-        'Laurine VIALLE' => 1,
-        'Ophélie QUENEL' => 1,
-        'Camille GALAN' => 1,
-        'Christine VESTUR' => 1,
-        'Julie MARTIN' => 1,
+        'Marie-Laure PEBORDE',
+        'Camille RAVEZ',
+        'Typhaine PECHE',
+        'Cécile BAZIN',
+        'Nathalie POULIQUEN',
+        'Marina DJORDJEVIC',
+        'Melody ROMET',
+        // 'Marion LE PEZRON',
+        'Gaëlle PRINCET', // ???
+        'Marion FRANCOIS',
+        'Margot COURAUDON',
+        'Marilyse TOURNIER',
+        'Rozenn DOUELE ZAHAR',
+        'Laurine VIALLE',
+        'Ophélie QUENEL',
+        'Camille GALAN',
+        'Christine VESTUR',
+        'Julie MARTIN',
     ];
 
     public const HEAD = [
@@ -114,6 +119,27 @@ class ImportDatasAMH
         'Vie maritale' => 8,
         'Pacsé' => 5,
         'NR' => 99,
+    ];
+
+    public const REASON_REQUEST = [
+        'Absence de ressources' => 1,
+        'Arrivée en France' => 4,
+        'Départ du département initial' => 1,
+        'Dort dans la rue' => 3,
+        'Expulsion locative' => 9,
+        'Fin de prise en charge ASE' => 10,
+        'Fin d\'hébergement chez des tiers' => 11,
+        'Fin d\'hospitalisation' => 12,
+        'Fin prise en charge Conseil général' => 13,
+        'Inadaptation du logement' => 15,
+        'Logement insalubre' => 16,
+        'Regroupement familial' => 19,
+        'Risque d\'expulsion locative' => 20,
+        'Séparation ou rupture des liens familiaux' => 21,
+        'Sortie d\'hébergement' => 24,
+        'Sortie dispositif asile' => 5,
+        'Violences familiales-conjugales' => 27,
+        'Autre' => 97,
     ];
 
     public const NATIONALITY = [
@@ -400,37 +426,30 @@ class ImportDatasAMH
     ];
 
     public const DALO_COMMISSION = [
-        'DAHO' => 1,
-        'DALO' => 1,
-        'NON' => 2,
+        'DAHO - Prioritaire' => 1,
+        'DAHO - TA' => 1,
+        'DAHO - Caduc' => 2,
+        'DALO - Prioritaire' => 1,
+        'DALO - TA' => 1,
+        'DALO - Caduc' => 2,
     ];
 
     public const DALO_REQUALIFIED_DAHO = [
-        'DAHO' => 1,
-        'DALO' => 2,
+        'DAHO - Prioritaire' => 1,
+        'DAHO - TA' => 1,
+        'DAHO - Caduc' => null,
+        'DALO - Prioritaire' => 2,
+        'DALO - TA' => 2,
+        'DALO - Caduc' => null,
     ];
 
-    public const END_SUPPORT_REASON = [
-        'Non respect de la convention AMH' => 2,
-        'Fin de prise en charge ASE' => 3,
-        'HU en CHU' => 1,
-        'HU en CHRS' => 1,
-        'Stab en CHU' => 1,
-        'Stab en CHRS' => 1,
-        'Insertion en CHRS' => 1,
-        'Résidence sociale' => 1,
-        'Logement intermédiaire' => 1,
-        'ALTHO' => 1,
-        'Solibail' => 1,
-        'Logement parc public' => 1,
-        'Logement parc privé' => 1,
-        'ALT' => 1,
-        'HUDA' => 1,
-        'CADA' => 1,
-        'Hébergé par famille/tiers' => 1,
-        'Prise en charge ASE' => 97,
-        'FTM' => 1,
-        'Autre' => 97,
+    public const DALO_TRIBUNAL_ACTION = [
+        'DAHO - Prioritaire' => 2,
+        'DAHO - TA' => 1,
+        'DAHO - Caduc' => null,
+        'DALO - Prioritaire' => 2,
+        'DALO - TA' => 1,
+        'DALO - Caduc' => 2,
     ];
 
     public const END_STATUS = [
@@ -456,6 +475,29 @@ class ImportDatasAMH
         'Autre' => 97,
     ];
 
+    public const END_SUPPORT_REASON = [
+        'Non respect de la convention AMH' => 2,
+        'Fin de prise en charge ASE' => 3,
+        'HU en CHU' => 1,
+        'HU en CHRS' => 1,
+        'Stab en CHU' => 1,
+        'Stab en CHRS' => 1,
+        'Insertion en CHRS' => 1,
+        'Résidence sociale' => 1,
+        'Logement intermédiaire' => 1,
+        'ALTHO' => 1,
+        'Solibail' => 1,
+        'Logement parc public' => 1,
+        'Logement parc privé' => 1,
+        'ALT' => 1,
+        'HUDA' => 1,
+        'CADA' => 1,
+        'Hébergé par famille/tiers' => 1,
+        'Prise en charge ASE' => 3,
+        'FTM' => 1,
+        'Autre' => 97,
+    ];
+
     public const SECTEUR = [
         'Cergy-Pontoise' => 1,
         'Plaine de France' => 1,
@@ -475,6 +517,9 @@ class ImportDatasAMH
 
     protected $user;
     protected $manager;
+    protected $repoSubService;
+    protected $repoDevice;
+    protected $repoAccommodation;
     protected $repoPerson;
 
     protected $datas;
@@ -489,6 +534,9 @@ class ImportDatasAMH
     protected $deviceINJ;
     protected $deviceHotelSupport;
 
+    protected $localities;
+    protected $hotels = [];
+
     protected $person;
     protected $personExists;
 
@@ -502,16 +550,18 @@ class ImportDatasAMH
     protected $head;
     protected $role;
 
-    public function __construct(Security $security, EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
+    public function __construct(Security $security,
+        EntityManagerInterface $manager,
+        SubServiceRepository $repoSubService,
+        DeviceRepository $repoDevice,
+        AccommodationRepository $repoAccommodation,
+        PersonRepository $repoPerson)
     {
         $this->user = $security->getUser();
         $this->manager = $manager;
-        $this->deviceAMH = $repoDevice->find(Device::HOTEL_AMH); // Famille AMH
-        $this->deviceASEMab = $repoDevice->find(Device::HOTEL_AMH); // ASE Mise à l'abri
-        $this->deviceASEHeb = $repoDevice->find(Device::ASE_HEB); // ASE Hébergement
-        $this->deviceINJ = $repoDevice->find(Device::HOTEL_INJ); // Injonctions
-        $this->deviceHotelSupport = $repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
-
+        $this->repoSubService = $repoSubService;
+        $this->repoDevice = $repoDevice;
+        $this->repoAccommodation = $repoAccommodation;
         $this->repoPerson = $repoPerson;
     }
 
@@ -519,6 +569,14 @@ class ImportDatasAMH
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
+        $this->deviceAMH = $this->repoDevice->find(Device::HOTEL_AMH); // Famille AMH
+        $this->deviceASEMab = $this->repoDevice->find(Device::HOTEL_AMH); // ASE Mise à l'abri
+        $this->deviceASEHeb = $this->repoDevice->find(Device::ASE_HEB); // ASE Hébergement
+        $this->deviceINJ = $this->repoDevice->find(Device::HOTEL_INJ); // Injonctions
+        $this->deviceHotelSupport = $this->repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
+        $this->localities = $this->getLocalities();
+        $this->hotels = $this->getHotels();
+        $this->users = $this->getUsers();
 
         $i = 0;
         foreach ($this->fields as $field) {
@@ -582,6 +640,7 @@ class ImportDatasAMH
             }
 
             $supportGroup = $this->createSupportGroup($groupPeople);
+            $this->createAccommodationGroup($groupPeople, $supportGroup);
             $this->createReferent($groupPeople);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
@@ -654,17 +713,31 @@ class ImportDatasAMH
 
     protected function createSupportGroup(GroupPeople $groupPeople): SupportGroup
     {
+        $comment = '';
+
+        $userReferent = $this->getUserReferent();
+
+        if ($this->field['Date premier appel 115']) {
+            $comment = 'Date premier appel 115 : '.(new \Datetime($this->field['Date premier appel 115']))->format('d/m/Y');
+        }
+
+        if (!$userReferent && $this->field['TS AMH']) {
+            $comment = $comment."\nTS : ".$this->field['TS AMH'];
+        }
+
         $supportGroup = (new SupportGroup())
+                    ->setService($this->service)
+                    ->setSubService($this->field['Secteur'] ? $this->localities[$this->field['Secteur']] : null)
+                    ->setDevice($this->getDevice())
+                    ->setReferent($userReferent)
                     ->setStatus($this->getStatus($this->field))
                     ->setStartDate($this->getStartDate($this->field))
                     ->setEndDate($this->getEndDate($this->field))
-                    ->setEndStatus(null)
-                    ->setEndStatusComment($this->field['Type sortie AMH'])
+                    ->setEndStatus($this->findInArray($this->field['Type sortie AMH'], self::END_STATUS) ?? null)
+                    ->setEndStatusComment($this->field['Précision motif sortie'])
                     ->setNbPeople((int) $this->field['Nb personnes'])
                     ->setGroupPeople($groupPeople)
-                    ->setService($this->service)
-                    ->setDevice($this->getDevice())
-                    ->setComment($this->field['TS AMH'])
+                    ->setComment($comment)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -693,6 +766,17 @@ class ImportDatasAMH
                return $this->deviceAMH;
                 break;
         }
+    }
+
+    protected function getUserReferent(): ?User
+    {
+        foreach ($this->users as $key => $user) {
+            if ($key == $this->field['TS AMH']) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 
     protected function createEvaluationGroup($supportGroup): EvaluationGroup
@@ -746,10 +830,12 @@ class ImportDatasAMH
 
     protected function createEvalSocialGroup(EvaluationGroup $evaluationGroup): ?EvalSocialGroup
     {
-        if ($this->field['Couverture sociale']) {
+        if ($this->field['Motif demande'] || $this->field['Couverture sociale'] || $this->field['Spécificités']) {
             $evalSocialGroup = (new EvalSocialGroup())
-            ->setCommentEvalSocialGroup($this->field['Couverture sociale'])
-            ->setEvaluationGroup($evaluationGroup);
+                ->setReasonRequest($this->findInArray($this->field['Motif demande'], self::REASON_REQUEST) ?? 99)
+                ->setCommentEvalSocialGroup($this->field['Couverture sociale'])
+                ->setAnimal(strstr($this->field['Spécificités'], 'Présence animal') ? Choices::YES : null)
+                ->setEvaluationGroup($evaluationGroup);
 
             $this->manager->persist($evalSocialGroup);
 
@@ -788,8 +874,10 @@ class ImportDatasAMH
         ->setSyplo($this->field['N°SYPLO'] || $this->field['Date SYPLO'] ? Choices::YES : null)
         ->setSyploDate($this->field['Date SYPLO'] ? new \Datetime($this->field['Date SYPLO']) : null)
         ->setSyploId($this->field['N°SYPLO'])
-        // ->setDaloCommission($this->findInArray($this->field['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
-        // ->setDaloRequalifiedDaho($this->findInArray($this->field['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
+        ->setDaloCommission($this->findInArray($this->field['DALO DAHO'], self::DALO_COMMISSION) ?? null)
+        ->setDaloRequalifiedDaho($this->findInArray($this->field['DALO DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
+        ->setDaloTribunalAction($this->findInArray($this->field['DALO DAHO'], self::DALO_TRIBUNAL_ACTION) ?? null)
+        ->setDaloDecisionDate($this->field['Date DALO'] ? new \Datetime($this->field['Date DALO']) : null)
         ->setDomiciliation($this->field['Commune domiciliation'] ? Choices::YES : Choices::NO)
         ->setDomiciliationCity($this->field['Commune domiciliation'])
         ->setEvaluationGroup($evaluationGroup);
@@ -861,7 +949,7 @@ class ImportDatasAMH
     {
         $rolePerson = (new RolePerson())
                  ->setHead($this->head)
-                 ->setRole($this->findInArray($this->field['Rôle'], self::ROLE) ?? null)
+                 ->setRole($this->findInArray($this->field['Rôle'], self::ROLE) ?? 99)
                  ->setPerson($this->person)
                  ->setGroupPeople($groupPeople);
 
@@ -880,8 +968,8 @@ class ImportDatasAMH
                     ->setEndDate($this->getEndDate())
                     ->setSupportGroup($supportGroup)
                     ->setPerson($this->person)
-                    ->setHead($rolePerson->getHead())
-                    ->setRole($rolePerson->getRole())
+                    ->setHead($rolePerson->getHead() ?? false)
+                    ->setRole($rolePerson->getRole() ?? 99)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -893,12 +981,13 @@ class ImportDatasAMH
     protected function createHotelSupport(SupportGroup $supportGroup): HotelSupport
     {
         $hotelSupport = (new HotelSupport())
-            ->setOriginDept($this->findInArray($this->field['115 origine'], self::DEPARTMENTS))
+            ->setOriginDept($this->findInArray($this->field['115 origine'], self::DEPARTMENTS) ?? null)
             ->setSsd($this->field['SSD'])
             ->setAgreementDate($this->field['Contrat AMH'] ? (new \Datetime($this->field['Date entrée AMH']))->modify('+7 days') : null)
             ->setEvaluationDate($this->field['Date diagnostic'] ? new \Datetime($this->field['Date diagnostic']) : null)
             ->setAccessId((int) $this->field['ID_ménage'])
-            // ->setRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
+            ->setAmhId((int) $this->field['ID_AMH'])
+            ->setEndSupportReason($this->findInArray($this->field['Type sortie AMH'], self::END_SUPPORT_REASON) ?? null)
             ->setSupportGroup($supportGroup);
 
         $this->manager->persist($hotelSupport);
@@ -931,28 +1020,48 @@ class ImportDatasAMH
         if ($this->field['Rôle'] == 'Enfant') {
             return null;
         }
-        $resourceType = $this->field['Type ressources'];
-        $resourceOther = null;
+
+        $resourceType = (string) $this->field['Entrée Type ressources'];
+        $resourceOther = '';
+
+        if (strstr($resourceType, 'Bourse d\'étude')) {
+            $resourceOther = $resourceOther.'Bourses d\'études, ';
+        }
+        if (strstr($resourceType, 'Indemnités journalières')) {
+            $resourceOther = $resourceOther.'Indemnités journalières, ';
+        }
 
         $initEvalPerson = (new InitEvalPerson())
-            ->setPaperType($this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) ?? null)
-            ->setRightSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::RIGHT_SOCIAL_SECURITY) ?? null)
-            ->setSocialSecurity($this->findInArray($this->field['Couverture sociale'], self::SOCIAL_SECURITY) ?? null)
+            ->setPaperType($this->findInArray($this->field['Entrée Situation administrative'], self::PAPER_TYPE) ?? null)
+            ->setRightSocialSecurity($this->getRightSocialSecurity())
+            ->setSocialSecurity($this->getSocialSecurity())
+            ->setFamilyBreakdown(99)
+            ->setFriendshipBreakdown(99)
             ->setProfStatus($this->findInArray($this->field['Type contrat'], self::PROF_STATUS) ?? null)
             ->setContractType($this->findInArray($this->field['Type contrat'], self::CONTRACT_TYPE) ?? null)
-            ->setResources($this->findInArray($resourceType, self::RESOURCES) ?? null)
-            ->setResourcesAmt((float) $this->field['Montant ressources'])
-            ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
-            ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
-            ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
-            ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
-            ->setFamilyAllowance(strstr($resourceType, 'PF') ? Choices::YES : 0)
-            ->setSalary(strstr($resourceType, 'SALAIRE') ? Choices::YES : 0)
-            ->setMaintenance(strstr($resourceType, 'PENSION ALIMENTAIRE') ? Choices::YES : 0)
-            ->setRessourceOther($resourceOther ? Choices::YES : 0)
-            ->setRessourceOtherPrecision($resourceOther)
             ->setDebts($this->findInArray($this->field['Dettes'], self::YES_NO) ?? null)
             ->setDebtsAmt((float) $this->field['Montant dettes'])
+            ->setResources($this->findInArray($this->field['Entrée Ressources'], self::RESOURCES))
+            ->setResourcesAmt((float) $this->field['Entrée Montant ressources'])
+            ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
+            ->setDisChildAllowance(strstr($resourceType, 'AAEH') ? Choices::YES : 0)
+            ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
+            ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
+            ->setTempWaitingAllowance(strstr($resourceType, 'ATA') ? Choices::YES : 0)
+            ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
+            ->setFamilyAllowance(strstr($resourceType, 'AF') ? Choices::YES : 0)
+            ->setPensionBenefit(strstr($resourceType, 'Pension de retraite') ? Choices::YES : 0)
+            ->setSalary(strstr($resourceType, 'Salaire') ? Choices::YES : 0)
+            ->setMaintenance(strstr($resourceType, 'Pension alimentaire') ? Choices::YES : 0)
+            ->setAsf(strstr($resourceType, 'ASF') ? Choices::YES : 0)
+            ->setSolidarityAllowance(strstr($resourceType, 'ASS') ? Choices::YES : 0)
+            ->setPaidTraining(strstr($resourceType, 'Formation') ? Choices::YES : 0)
+            ->setYouthGuarantee(strstr($resourceType, 'Garantie jeunes') ? Choices::YES : 0)
+            ->setDisabilityPension(strstr($resourceType, 'Pension d\'invalidité') ? Choices::YES : 0)
+            ->setPaje(strstr($resourceType, 'PAJE') ? Choices::YES : 0)
+            ->setActivityBonus(strstr($resourceType, 'Prime d\'activité') ? Choices::YES : 0)
+            ->setRessourceOther($resourceOther ? Choices::YES : 0)
+            ->setRessourceOtherPrecision($resourceOther)
             ->setSupportPerson($supportPerson);
 
         $this->manager->persist($initEvalPerson);
@@ -964,6 +1073,11 @@ class ImportDatasAMH
     {
         if ($this->field['Rôle'] != 'Enfant') {
             $evalSocialPerson = (new EvalSocialPerson())
+                ->setViolenceVictim(strstr($this->field['Spécificités'], 'PVV') ? Choices::YES : null)
+                ->setDomViolenceVictim(strstr($this->field['Spécificités'], 'FVVC') ? Choices::YES : null)
+                ->setHealthProblem(strstr($this->field['Spécificités'], 'Pb santé') ? Choices::YES : null)
+                ->setReducedMobility(strstr($this->field['Spécificités'], 'PMR') ? Choices::YES : null)
+                ->setChildWelfareBackground(strstr($this->field['Spécificités'], 'PMR') ? Choices::YES : null)
                 ->setRightSocialSecurity($this->getRightSocialSecurity())
                 ->setSocialSecurity($this->getSocialSecurity())
                 ->setEvaluationPerson($evaluationPerson);
@@ -1067,11 +1181,19 @@ class ImportDatasAMH
                 $resourceOther = $resourceOther.'Indemnités journalières, ';
             }
 
+            $debtType = $this->field['Type dettes'];
+
             $evalBudgetPerson = (new EvalBudgetPerson())
                 ->setCharges((float) $this->field['Montant charges'] > 0 || $this->field['Type charges'] ? Choices::YES : Choices::NO)
                 ->setChargesAmt((float) $this->field['Montant charges'])
                 ->setDebts($this->findInArray($this->field['Dettes'], self::YES_NO) ?? null)
                 ->setDebtsAmt((float) $this->field['Montant dettes'])
+                ->setDebtRental(strstr($resourceType, 'Dettes locatives') ? Choices::YES : 0)
+                ->setDebtConsrCredit(strstr($resourceType, 'Dette conso') ? Choices::YES : 0)
+                ->setDebtFines(strstr($resourceType, 'Amendes') ? Choices::YES : 0)
+                ->setDebtTaxDelays(strstr($resourceType, 'Retards impôts') ? Choices::YES : 0)
+                ->setDebtRental(strstr($resourceType, 'Dettes locatives') ? Choices::YES : 0)
+                ->setDebtOther(strstr($resourceType, 'Autre') ? Choices::YES : 0)
                 ->setSettlementPlan($this->field['Démarches endettement'] == 'Plan d\'appurement' ? 2 : null)
                 ->setMoratorium($this->field['Démarches endettement'] == 'Moratoire en cours' ? Choices::YES : null)
                 ->setOverIndebtRecord($this->findInArray($this->field['Démarches endettement'], self::OVER_INDEBT_RECORD) ?? null)
@@ -1098,6 +1220,21 @@ class ImportDatasAMH
                 ->setRessourceOther($resourceOther ? Choices::YES : 0)
                 ->setRessourceOtherPrecision($resourceOther)
                 ->setEvaluationPerson($evaluationPerson);
+
+            if (strstr($debtType, 'Santé')
+                || strstr($debtType, 'hopital')
+                || strstr($debtType, 'Hospitalière')
+                || strstr($debtType, 'Hôspitalière')
+                || strstr($debtType, 'Hôpital')) {
+                $evalBudgetPerson->setDebtHealth(Choices::YES);
+            } else {
+                $evalBudgetPerson->setDebtHealth(0);
+            }
+
+            if (strstr($debtType, 'Cantine')
+                || strstr($debtType, 'cantine')) {
+                $evalBudgetPerson->setDebtOtherPrecision('Cantine');
+            }
 
             $this->manager->persist($evalBudgetPerson);
         }
@@ -1126,7 +1263,7 @@ class ImportDatasAMH
             }
         } elseif ($this->field['Rôle'] == 'Enfant') {
             $this->role = RolePerson::ROLE_CHILD;
-        } elseif ($this->field['Rôle'] == 'CONJOINT( E )') {
+        } elseif ($this->field['Rôle'] == 'Concubin(e)') {
             $this->role = 1;
         }
     }
@@ -1170,11 +1307,99 @@ class ImportDatasAMH
     {
         $referent = (new Referent())
             ->setName($this->field['Service social référent'])
-            // ->setType()
+            ->setType($this->getTypeReferent())
             ->setSocialWorker($this->field['Référent social'])
             ->setComment($this->field['Coordonnées référent'])
             ->setGroupPeople($groupPeople);
 
+        $this->manager->persist($referent);
+
         return $referent;
+    }
+
+    protected function getTypeReferent()
+    {
+        $referent = $this->field['Service social référent'];
+
+        if (strstr($referent, 'SSD')
+        || strstr($referent, 'antenne')
+        || strstr($referent, 'Antenne')
+        || strstr($referent, 'Conseil Départmental')) {
+            return 6;
+        }
+        if (strstr($referent, 'CCAS')) {
+            return 4;
+        }
+
+        return 99;
+    }
+
+    protected function getLocalities()
+    {
+        return [
+            'Cergy-Pontoise' => $this->repoSubService->find(1),
+            'Pays de France' => $this->repoSubService->find(1),
+            'Plaine de France' => $this->repoSubService->find(2),
+            'Rives de Seine' => $this->repoSubService->find(3),
+            'Vallée de Montmorency' => $this->repoSubService->find(3),
+        ];
+    }
+
+    protected function createAccommodationGroup(GroupPeople $groupPeople, SupportGroup $supportGroup): ?AccommodatioNGroup
+    {
+        $hotelName = str_replace('HOTEL - ', '', ($this->field['Nom hôtel'] ?? $this->field['Précision lieu hébgt']));
+
+        if (!$hotelName) {
+            return null;
+        }
+
+        $hotel = $this->getHotel($hotelName);
+
+        $accommodationGroup = (new AccommodationGroup())
+            ->setAccommodation($hotel)
+            ->setComment($hotel == null ? $hotelName : null)
+            ->setSupportGroup($supportGroup)
+            ->setGroupPeople($groupPeople);
+
+        $this->manager->persist($accommodationGroup);
+
+        return $accommodationGroup;
+    }
+
+    protected function getHotels(): array
+    {
+        $hotels = [];
+
+        foreach ($this->repoAccommodation->findBy(['service' => $this->service]) as $accommodation) {
+            $hotels[$accommodation->getName()] = $accommodation;
+        }
+
+        return $hotels;
+    }
+
+    protected function getHotel(string $hotelName): ?Accommodation
+    {
+        foreach ($this->hotels as $key => $hotel) {
+            if ($hotelName == $key) {
+                return $hotel;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getUsers(): array
+    {
+        $users = [];
+
+        foreach ($this->service->getUsers() as $user) {
+            foreach (self::SOCIAL_WORKER as $name) {
+                if (strstr($name, $user->getLastname())) {
+                    $users[$name] = $user;
+                }
+            }
+        }
+
+        return $users;
     }
 }

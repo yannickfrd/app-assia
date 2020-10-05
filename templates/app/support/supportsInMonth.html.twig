@@ -65,7 +65,8 @@
                                 title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                             </a>
                         </th>
-                        <td class="align-middle">{{ (support.supportPeople|filter(s => s.head == true)|first).person.fullname }}</td>
+                        {% set supportPerson = (support.supportPeople|filter(s => s.head == true)|first) %}
+                        <td class="align-middle">{{ supportPerson ? supportPerson.person.fullname }}</td>
                         <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
                         <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
                         <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>

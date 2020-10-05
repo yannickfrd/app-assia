@@ -73,7 +73,7 @@
 									</span>								
 								</td>
 								<td class="align-middle js-monthContrib">{{ contribution.monthContrib ? contribution.monthContrib|date("m/Y") }}</td>
-								<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
+								<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt >= 0 ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
 								<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt ? contribution.paidAmt|number_format(2, ",", " ") ~ " €" }}</td>
 								<td class="align-middle text-right js-stillToPayAmt">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
 								<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}

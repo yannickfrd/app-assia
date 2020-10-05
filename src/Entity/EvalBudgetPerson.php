@@ -64,6 +64,7 @@ class EvalBudgetPerson
         'debtConsrCredit' => 'Dette de crédits à la consommation',
         'debtMortgage' => 'Dettes de crédits immobiliers',
         'debtFines' => 'Amendes',
+        'debtHealth' => 'Dettes de santé (hôpital)',
         'debtTaxDelays' => 'Retards d\'impôts',
         'debtBankOverdrafts' => 'Découverts bancaires',
         'debtOther' => 'Autres dettes',
@@ -288,6 +289,11 @@ class EvalBudgetPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $debtBankOverdrafts;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $debtHealth;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -983,6 +989,23 @@ class EvalBudgetPerson
     public function setDebtBankOverdrafts(?int $debtBankOverdrafts): self
     {
         $this->debtBankOverdrafts = $debtBankOverdrafts;
+
+        return $this;
+    }
+
+    public function getDebtHealth(): ?int
+    {
+        return $this->debtHealth;
+    }
+
+    public function getDebtHealthToString(): ?string
+        {
+        return $this->debtHealth ? Choices::YES_NO_BOOLEAN[$this->debtHealth] : null;
+    }
+
+    public function setDebtHealth(?int $debtHealth): self
+    {
+        $this->debtHealth = $debtHealth;
 
         return $this;
     }

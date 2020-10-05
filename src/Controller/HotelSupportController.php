@@ -53,7 +53,9 @@ class HotelSupportController extends AbstractController
         return $this->render('app/hotelSupport/listHotelSupports.html.twig', [
             'supportGroupSearch' => $search,
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->repoSupportGroup->findAllHotelSupportsQuery($search, $this->serviceId), $request),
+            'supports' => $pagination->paginate(
+                $this->repoSupportGroup->findAllHotelSupportsQuery($search, $this->serviceId),
+                $request),
         ]);
     }
 

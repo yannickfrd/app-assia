@@ -40,6 +40,7 @@ class Contribution
         1 => 'Virement',
         3 => 'Chèque',
         4 => 'Espèce',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -149,6 +150,11 @@ class Contribution
      * @ORM\JoinColumn(nullable=false)
      */
     private $supportGroup;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $checkAt;
 
     public function getId(): ?int
     {
@@ -341,6 +347,18 @@ class Contribution
     public function setSupportGroup(?SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
+
+        return $this;
+    }
+
+    public function getCheckAt(): ?\DateTimeInterface
+    {
+        return $this->checkAt;
+    }
+
+    public function setCheckAt(?\DateTimeInterface $checkAt): self
+    {
+        $this->checkAt = $checkAt;
 
         return $this;
     }

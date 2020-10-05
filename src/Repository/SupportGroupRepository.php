@@ -70,7 +70,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         // }
 
         // if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
-            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, startDate, endDate, endReason, accommodation}')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('ag')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('ap')
             ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2');

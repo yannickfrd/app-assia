@@ -17,7 +17,6 @@ class Referent
     use ContactEntityTrait;
 
     public const TYPE = [
-        1 => '115/AMH',
         2 => 'Accueil de jour',
         3 => 'AVDL',
         4 => 'CCAS',
@@ -26,6 +25,7 @@ class Referent
         7 => 'Dispositif asile',
         8 => 'Dispositif logement adapté',
         9 => 'ESPERER 95',
+        1 => 'PASH (ex-AMH)',
         10 => 'Service de tutelle',
         11 => 'Service hospitalier',
         12 => 'Service Justice',
@@ -103,7 +103,7 @@ class Referent
         return $this->type;
     }
 
-    public function setType(int $type): self
+    public function setType(?int $type): self
     {
         $this->type = $type;
 

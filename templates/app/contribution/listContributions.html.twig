@@ -78,7 +78,7 @@
                                 </span>
                             </td>
                             <td class="align-middle">{{ contribution.monthContrib ? contribution.monthContrib|date("m/Y") }}</td>
-                            <td class="align-middle text-right">{{ contribution.toPayAmt ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
+                            <td class="align-middle text-right">{{ contribution.toPayAmt >= 0 ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
                             <td class="align-middle text-right">{{ contribution.paidAmt ? contribution.paidAmt|number_format(2, ",", " ") ~ " €" }}</td>
                             <td class="align-middle text-right">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
                             <td class="align-middle text-center">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
