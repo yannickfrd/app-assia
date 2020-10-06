@@ -11,10 +11,13 @@ use Twig\Environment;
 class MailNotification
 {
     protected $mail;
+    protected $appVersion;
     protected $renderer;
 
-    public function __construct(Environment $renderer, $host = 'localhost', $username = null, $password = null, $port = 25)
+    public function __construct(Environment $renderer, $appVersion = 'prod', $host = 'localhost', $username = null, $password = null, $port = 25)
     {
+        $this->appVersion = $appVersion;
+
         $this->mail = new PHPMailer(true);
 
         $this->mail->isSMTP(); // Send using SMTP
@@ -93,15 +96,20 @@ class MailNotification
             'name' => $user->getFullname(),
         ];
 
-        $subject = 'Esperer95.app : Création de compte | '.$user->getFullname();
+        $subject = 'Esperer95.app'.($this->appVersion == 'test' ? ' version TEST' : null).' : Création de compte | '.$user->getFullname();
+
+        $context = [
+            'user' => $user,
+            'app_version' => $this->appVersion,
+        ];
 
         $htmlBody = $this->renderer->render(
             'emails/createUserAccountEmail.html.twig',
-            ['user' => $user]   
+            $context,
         );
         $txtBody = $this->renderer->render(
             'emails/createUserAccountEmail.txt.twig',
-            ['user' => $user]
+            $context,
         );
 
         $this->send($to, $subject, $htmlBody, $txtBody);

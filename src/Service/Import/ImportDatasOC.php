@@ -21,6 +21,7 @@ use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
@@ -29,6 +30,16 @@ use Doctrine\ORM\EntityManagerInterface;
 class ImportDatasOC
 {
     use ImportTrait;
+
+    public const SOCIAL_WORKER = [
+        'Mylena ESPENAN',
+        'Laurine VIALLE',
+        'Marylise TOURNIER',
+        'Michaël ORPHELIN',
+        'Rozenn DOUELE ZAHAR',
+        'Floriane BRICARD',
+        'Camille RAVEZ',
+    ];
 
     public const YES_NO = [
         'OUI' => 1,
@@ -40,16 +51,6 @@ class ImportDatasOC
     public const YES_NO_BOOLEAN = [
         'NON' => 0,
         'OUI' => 1,
-    ];
-
-    public const SOCIAL_WORKER = [
-        'LAURIE P' => 1,
-        'MYLENA E' => 1,
-        'FLORIANE B' => 1,
-        'MICHAEL O' => 1,
-        'ELLEN H' => 1,
-        'ROZENN D-Z' => 1,
-        'MARILYSE T' => 1,
     ];
 
     public const HEAD = [
@@ -315,10 +316,13 @@ class ImportDatasOC
     ];
 
     protected $manager;
+    protected $repoDevice;
     protected $repoPerson;
 
     protected $datas;
     protected $row;
+
+    protected $service;
 
     protected $deviceHotelOC;
     protected $deviceHotelSupport;
@@ -338,17 +342,21 @@ class ImportDatasOC
     public function __construct(EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
     {
         $this->manager = $manager;
-        $this->deviceHotelOC = $repoDevice->find(Device::HOTEL_OC); // Opération ciblée
-        $this->deviceHotelSupport = $repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
         $this->repoPerson = $repoPerson;
+        $this->repoDevice = $repoDevice;
     }
 
     public function importInDatabase(string $fileName, Service $service): array
     {
         $this->fields = $this->getDatas($fileName);
+        $this->service = $service;
+
+        $this->deviceHotelOC = $this->repoDevice->find(Device::HOTEL_OC); // Opération ciblée
+        $this->deviceHotelSupport = $this->repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
+
+        $this->users = $this->getUsers();
 
         $i = 0;
-
         foreach ($this->fields as $field) {
             $this->field = $field;
             if ($i > 0) {
@@ -358,7 +366,7 @@ class ImportDatasOC
                 $this->person = $this->getPerson();
                 $this->personExists = $this->personExistsInDatabase($this->person);
 
-                $this->checkGroupExists($typology, $service);
+                $this->checkGroupExists($typology);
 
                 $this->person = $this->createPerson($this->items[$this->field['ID_GIP']]['groupPeople']);
 
@@ -391,10 +399,10 @@ class ImportDatasOC
                 ->setUpdatedBy($this->user);
     }
 
-    protected function checkGroupExists(int $typology, Service $service)
+    protected function checkGroupExists(int $typology)
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
-        if (false == $this->groupExists($service)) {
+        if (false == $this->groupExists()) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
                 $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
@@ -403,7 +411,7 @@ class ImportDatasOC
                 $groupPeople = $this->createGroupPeople($typology);
             }
 
-            $supportGroup = $this->createSupportGroup($groupPeople, $service);
+            $supportGroup = $this->createSupportGroup($groupPeople);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
@@ -419,7 +427,7 @@ class ImportDatasOC
         }
     }
 
-    protected function groupExists(Service $service)
+    protected function groupExists()
     {
         $groupExists = false;
         // Vérifie si le groupe de la personne existe déjà.
@@ -445,7 +453,7 @@ class ImportDatasOC
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
                 if (false === $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['groupPeople'], $service);
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['groupPeople']);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
                     $this->items[$this->field['ID_GIP']]['supports'][$this->field['ID_Support']] = [
@@ -476,28 +484,42 @@ class ImportDatasOC
         return $groupPeople;
     }
 
-    protected function createSupportGroup(GroupPeople $groupPeople, Service $service): SupportGroup
+    protected function createSupportGroup(GroupPeople $groupPeople): SupportGroup
     {
+        $userReferent = $this->getUserReferent();
+
         $supportGroup = (new SupportGroup())
+                    ->setGroupPeople($groupPeople)
+                    ->setService($this->service)
+                    ->setDevice($this->deviceHotelOC)
+                    ->setReferent($userReferent)
                     ->setStatus($this->getStatus($this->field))
                     ->setStartDate($this->getStartDate($this->field))
                     ->setEndDate($this->getEndDate($this->field))
                     ->setEndStatus(null)
                     ->setEndStatusComment($this->field['Motif sortie'])
                     ->setNbPeople($this->findInArray($this->field['Compo'], self::NB_PEOPLE) ?? null)
-                    ->setGroupPeople($groupPeople)
-                    ->setService($service)
-                    ->setDevice($this->deviceHotelOC)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
         $this->manager->persist($supportGroup);
 
         if ($this->field['Date diagnostic']) {
-            $this->createHotelSupport($supportGroup);
+            $this->createHotelSupport($supportGroup, $userReferent);
         }
 
         return $supportGroup;
+    }
+
+    protected function getUserReferent(): ?User
+    {
+        foreach ($this->users as $key => $user) {
+            if ($key == $this->field['TS accompagnement']) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 
     protected function createEvaluationGroup($supportGroup): EvaluationGroup
@@ -637,7 +659,7 @@ class ImportDatasOC
         return $supportPerson;
     }
 
-    protected function createHotelSupport(SupportGroup $supportGroup): HotelSupport
+    protected function createHotelSupport(SupportGroup $supportGroup, ?User $user): HotelSupport
     {
         $hotelSupport = (new HotelSupport())
             ->setGipId($this->field['ID_GIP'])
@@ -869,5 +891,20 @@ class ImportDatasOC
         }
 
         return null;
+    }
+
+    protected function getUsers(): array
+    {
+        $users = [];
+
+        foreach ($this->service->getUsers() as $user) {
+            foreach (self::SOCIAL_WORKER as $name) {
+                if (strstr($name, strtoupper($user->getLastname()))) {
+                    $users[$name] = $user;
+                }
+            }
+        }
+
+        return $users;
     }
 }

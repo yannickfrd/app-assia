@@ -64,6 +64,7 @@ services:
 
     App\Notification\MailNotification:
         arguments:
+            $appVersion: '%env(APP_VERSION)%'
             $host: '%env(MAILER_HOST)%'
             $username: '%env(MAILER_USERNAME)%'
             $password: '%env(MAILER_PASSWORD)%'

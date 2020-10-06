@@ -1,14 +1,13 @@
 {% extends "emails/baseEmail.html.twig" %}
 
-
 {% block hello %}
-    Bonjour {{ user.firstname }},<br>
-    <br>
+    Bonjour {{ user.firstname }},<br><br>
 {% endblock %}
 
 {% block body %}
 
-    Un compte utilisateur a été créé pour vous sur l'application {{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}</b><br>
+    Un compte utilisateur a été créé pour vous sur l'application {% if app_version == "test" %}de TEST {% endif %} : 
+    {{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}</b><br>
     <br>
     Votre login : {{ user.username }}<br>
     Votre email : {{ user.email }}<br>

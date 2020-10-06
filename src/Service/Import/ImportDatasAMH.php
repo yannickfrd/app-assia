@@ -40,6 +40,26 @@ class ImportDatasAMH
 {
     use ImportTrait;
 
+    public const SOCIAL_WORKER = [
+        'Marie-Laure PEBORDE',
+        'Camille RAVEZ',
+        'Typhaine PECHE',
+        'Cécile BAZIN',
+        'Nathalie POULIQUEN',
+        'Marina DJORDJEVIC',
+        'Melody ROMET',
+        'Gaëlle PRINCET',
+        'Marion FRANCOIS',
+        'Margot COURAUDON',
+        'Marilyse TOURNIER',
+        'Rozenn DOUELE ZAHAR',
+        'Laurine VIALLE',
+        'Ophélie QUENEL',
+        'Camille GALAN',
+        'Christine VESTUR',
+        'Julie MARTIN',
+    ];
+
     public const YES_NO = [
         'Oui' => 1,
         'Non' => 2,
@@ -51,27 +71,6 @@ class ImportDatasAMH
         'Non' => 0,
         'Oui' => 1,
         '' => 0,
-    ];
-
-    public const SOCIAL_WORKER = [
-        'Marie-Laure PEBORDE',
-        'Camille RAVEZ',
-        'Typhaine PECHE',
-        'Cécile BAZIN',
-        'Nathalie POULIQUEN',
-        'Marina DJORDJEVIC',
-        'Melody ROMET',
-        // 'Marion LE PEZRON',
-        'Gaëlle PRINCET', // ???
-        'Marion FRANCOIS',
-        'Margot COURAUDON',
-        'Marilyse TOURNIER',
-        'Rozenn DOUELE ZAHAR',
-        'Laurine VIALLE',
-        'Ophélie QUENEL',
-        'Camille GALAN',
-        'Christine VESTUR',
-        'Julie MARTIN',
     ];
 
     public const HEAD = [
@@ -569,6 +568,7 @@ class ImportDatasAMH
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
+
         $this->deviceAMH = $this->repoDevice->find(Device::HOTEL_AMH); // Famille AMH
         $this->deviceASEMab = $this->repoDevice->find(Device::HOTEL_AMH); // ASE Mise à l'abri
         $this->deviceASEHeb = $this->repoDevice->find(Device::ASE_HEB); // ASE Hébergement
