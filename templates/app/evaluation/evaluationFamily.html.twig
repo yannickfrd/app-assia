@@ -6,91 +6,91 @@
 
 {% block card_body %}
 
-<div class="row mb-3">
-    <div class="col-md-12 accordion" id="accordion-eval_family">
-        <div class="mb-4">
+    <div class="row mb-3">
+        <div class="col-md-12 accordion" id="accordion-eval_family">
+            <div class="mb-4">
+                {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
+                    {% set person = evalPerson.vars.value.supportPerson.person %}
+                    <button type="button" id="heading-eval_family-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
+                        data-toggle="collapse" data-target="#collapse-eval_family-{{ key }}" aria-expanded="false"
+                        aria-controls="collapse-eval_family-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
+                {% endfor %}
+            </div>
+
             {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
-			{% set person = evalPerson.vars.value.supportPerson.person %}
-            <button type="button" id="heading-eval_family-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %} mb-2 js-person"
-                data-toggle="collapse" data-target="#collapse-eval_family-{{ key }}" aria-expanded="false"
-                aria-controls="collapse-eval_family-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
+                <div id="collapse-eval_family-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+                    aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+                    <div class="form-group row">
+                        <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_maritalStatus">{{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
+                    </div>
+                    <div class="form-group row">
+                        {% if evalPerson.vars.value.supportPerson.person.gender == constant("App\\Entity\\Person::GENDER_FEMALE") %}
+                        <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasure) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_protectiveMeasure">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">{{ form_label(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+                        <div class="col-md-12">{{ form_widget(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
+    </div>
 
-        {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
-        <div id="collapse-eval_family-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-            aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-            <div class="form-group row">
-                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
-                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_maritalStatus">{{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
-            </div>
-            <div class="form-group row">
-                {% if evalPerson.vars.value.supportPerson.person.gender == constant("App\\Entity\\Person::GENDER_FEMALE") %}
-                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
-                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
-                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group row">
-                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasure) }}</div>
-                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_protectiveMeasure">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
-            </div>
-            <div class="form-group row">
-                <div class="col-md-12">{{ form_label(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
-                <div class="col-md-12">{{ form_widget(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+    {% if typo in [4, 5, 6, 8] %}
+        <div class="form-group row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-hover text-dark shadow-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                                <th scope="col" class="align-middle th-w-80">Nom et prénom</th>
+                                <th scope="col" class="align-middle th-w-100">Garde ou scolarité</th>
+                                <th scope="col" class="align-middle th-w-100">Lieu de garde/scolarité</th>
+                                <th scope="col" class="align-middle th-w-100">Hébergement</th>
+                                <th scope="col" class="align-middle th-w-100">À charge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evalPerson in form.evaluationPeople|filter(e => e.vars.value.supportPerson.role == ROLE_CHILD) %}
+                                {% set person = evalPerson.vars.value.supportPerson.person %}
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td class="px-1 align-middle">{{ person.fullname }}</td>
+                                    <td class="px-1 w-min-150">{{ form_widget(evalPerson.evalFamilyPerson.childcareSchool) }}</td>
+                                    <td class="px-1 w-min-150">
+                                        {{ form_widget(evalPerson.evalFamilyPerson.childcareSchoolLocation) }}</td>
+                                    <td class="px-1 w-min-200">{{ form_widget(evalPerson.evalFamilyPerson.childToHost) }}</td>
+                                    <td class="px-1 w-min-200">{{ form_widget(evalPerson.evalFamilyPerson.childDependance) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        {% endfor %}
+    {% endif %}
+
+    <div class="form-group row">
+        <div class="col-md-6" data-parent-field="0_evalAdmPerson_nationality">
+            {{ form_row(form.evalFamilyGroup.childrenBehind) }}</div>
+        <div class="col-md-6" data-parent-field="0_evalAdmPerson_nationality">
+            {{ form_row(form.evalFamilyGroup.famlReunification) }}</div>
+        <div class="col-md-6" data-parent-field="famlReunification">{{ form_row(form.evalFamilyGroup.nbPeopleReunification) }}</div>
+        <div class="col-md-6">{{ form_row(form.evalFamilyGroup.cafId) }}</div>
     </div>
-</div>
 
-{% if typo in [4, 5, 6, 8] %}
-<div class="form-group row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-sm table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-80">Nom et prénom</th>
-                        <th scope="col" class="align-middle th-w-100">Garde ou scolarité</th>
-                        <th scope="col" class="align-middle th-w-100">Lieu de garde/scolarité</th>
-                        <th scope="col" class="align-middle th-w-100">Hébergement</th>
-                        <th scope="col" class="align-middle th-w-100">À charge</th>
-                    </tr>
-                </thead>
-                <tbody>
-                	{% for evalPerson in form.evaluationPeople|filter(e => e.vars.value.supportPerson.role == ROLE_CHILD) %}
-					{% set person = evalPerson.vars.value.supportPerson.person %}
-                    <tr>
-                        <th scope="row"></th>
-                        <td class="px-1 align-middle">{{ person.fullname }}</td>
-                        <td class="px-1 w-min-150">{{ form_widget(evalPerson.evalFamilyPerson.childcareSchool) }}</td>
-                        <td class="px-1 w-min-150">
-                            {{ form_widget(evalPerson.evalFamilyPerson.childcareSchoolLocation) }}</td>
-                        <td class="px-1 w-min-200">{{ form_widget(evalPerson.evalFamilyPerson.childToHost) }}</td>
-                        <td class="px-1 w-min-200">{{ form_widget(evalPerson.evalFamilyPerson.childDependance) }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="form-group row">
+        <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
+        <div class="col-md-12">{{ form_widget(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
     </div>
-</div>
-{% endif %}
-
-<div class="form-group row">
-    <div class="col-md-6" data-parent-field="0_evalAdmPerson_nationality">
-        {{ form_row(form.evalFamilyGroup.childrenBehind) }}</div>
-    <div class="col-md-6" data-parent-field="0_evalAdmPerson_nationality">
-        {{ form_row(form.evalFamilyGroup.famlReunification) }}</div>
-    <div class="col-md-6" data-parent-field="famlReunification">{{ form_row(form.evalFamilyGroup.nbPeopleReunification) }}</div>
-    <div class="col-md-6">{{ form_row(form.evalFamilyGroup.cafId) }}</div>
-</div>
-
-<div class="form-group row">
-    <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
-    <div class="col-md-12">{{ form_widget(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
-</div>
 
 {% endblock %}

@@ -103,7 +103,7 @@ class HotelSupport
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $AmhId;
+    private $amhId;
 
     public function getId(): ?int
     {
@@ -293,12 +293,12 @@ class HotelSupport
 
     public function getAmhId(): ?int
     {
-        return $this->AmhId;
+        return $this->amhId;
     }
 
-    public function setAmhId(?int $AmhId): self
+    public function setAmhId(?int $amhId): self
     {
-        $this->AmhId = $AmhId;
+        $this->amhId = $amhId;
 
         return $this;
     }

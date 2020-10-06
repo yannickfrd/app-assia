@@ -47,7 +47,7 @@ class ImportDatasRdv
         }
 
         foreach ($this->items as $key => $item) {
-            $hotelSupport = $this->repoHotelSupport->findOneBy(['AmhId' => $key]);
+            $hotelSupport = $this->repoHotelSupport->findOneBy(['amhId' => $key]);
             if ($hotelSupport) {
                 $this->items[$key]['groupPeople'] = $hotelSupport;
                 foreach ($item['rdvs'] as $rdv) {

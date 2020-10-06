@@ -104,10 +104,11 @@
 		<div class="col-md-12">
 			{% if support.id and is_granted("DELETE", support) %}
 			<div class="float-left d-flex">
+				{% set textAlert = "'Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...)." ~ 
+					" Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?'" %}
 				<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
 					title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom"
-					onclick="if(window.confirm('Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...). 
-					Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?')){return true;}else{return false;}"><span
+					onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><span
 					class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
 			</div>
 			{% endif %}

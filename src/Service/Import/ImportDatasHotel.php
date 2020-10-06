@@ -69,7 +69,7 @@ class ImportDatasHotel
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        // $this->updateLocation($accommodation);
+        $this->updateLocation($accommodation);
 
         $this->manager->persist($accommodation);
 

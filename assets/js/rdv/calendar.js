@@ -75,7 +75,9 @@ export default class Calendar {
         })
     }
 
-    // Réinialise le formulaire modal de rdv
+    /**
+     * Réinialise le formulaire modal de rdv.
+     */
     resetData() {
         if (this.supportElt) {
             this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.getAttribute('data-support') + '/rdv/new'
@@ -103,12 +105,16 @@ export default class Calendar {
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
     }
 
-    // Vérifie si la date est valide
+    /**
+     * Vérifie si la date est valide.
+     */
     checkDate() {
         this.updateDatetimes()
     }
 
-    // Vérifie si l'heure de début est valide
+    /**
+     * Vérifie si l 'heure de début est valide.
+     */
     checkStart() {
         if (isNaN(this.startInput.value)) {
             let endHour = parseInt(this.startInput.value.substr(0, 2)) + 1
@@ -118,12 +124,16 @@ export default class Calendar {
         }
     }
 
-    // Vérifie si l'heure de fin est valide
+    /**
+     * Vérifie si l 'heure de fin est valide.
+     */
     checkEnd() {
         this.updateDatetimes()
     }
 
-    // Met à jour les dates de début et de fin
+    /**
+     * Met à jour les dates de début et de fin.
+     */
     updateDatetimes() {
         if (isNaN(this.dateInput.value) && isNaN(this.startInput.value)) {
             this.rdvStartInput.value = this.dateInput.value + 'T' + this.startInput.value
@@ -133,7 +143,10 @@ export default class Calendar {
         }
     }
 
-    // Requête pour obtenir le RDV sélectionné dans le formulaire modal
+    /**
+     * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
+     * @param {HTMLElement} rdvElt 
+     */
     requestGetRdv(rdvElt) {
         this.loader.on()
         this.rdvElt = rdvElt
@@ -141,7 +154,9 @@ export default class Calendar {
         this.ajaxRequest.init('GET', '/rdv/' + this.rdvId + '/get', this.responseAjax.bind(this), true)
     }
 
-    // Requête pour sauvegarder le RDV
+    /**
+     * Requête pour sauvegarder le RDV.
+     */
     requestSaveRdv() {
         if (this.modalRdvElt.querySelector('#rdv_title').value != '') {
             this.updateDatetimes()
@@ -154,7 +169,9 @@ export default class Calendar {
         }
     }
 
-    // Requête pour supprimer le RDV
+    /**
+     * Requête pour supprimer le RDV.
+     */
     requestDeleteRdv() {
         if (window.confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
             this.loader.on(true)
@@ -184,7 +201,10 @@ export default class Calendar {
         this.loader.off()
     }
 
-    // Affiche le RDV dans le formulaire modal
+    /**
+     * Affiche le RDV dans le formulaire modal.
+     * @param {Object} data 
+     */
     showRdv(data) {
         this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
         this.modalRdvElt.querySelector('#rdv_title').value = data.title
@@ -196,7 +216,7 @@ export default class Calendar {
         this.endInput.value = data.end.substr(11, 5)
 
         this.rdvLocationInput.value = data.location
-        this.modalRdvElt.querySelector('#rdv_content').value = data.content
+        this.modalRdvElt.querySelector('#rdv_content').value = data.content ? data.content : ''
 
         this.rdvCreatedByElt.textContent = data.createdBy
         this.supportFullNameElt.textContent = data.supportFullname
@@ -205,7 +225,10 @@ export default class Calendar {
         this.btnDeleteElt.href = '/rdv/' + this.rdvId + '/delete'
     }
 
-    // Crée le RDV dans le container du jour de l'agenda
+    /**
+     * Crée le RDV dans le container du jour de l 'agenda.
+     * @param {Object} data 
+     */
     createRdv(data) {
         let rdvElt = document.createElement('div')
         rdvElt.className = 'calendar-event bg-' + this.themeColor + ' text-light js-rdv'
@@ -229,13 +252,18 @@ export default class Calendar {
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
     }
 
-    // Met à jour le RDV dans l'agenda
+    /**
+     * Met à jour le RDV dans l 'agenda.
+     * @param {Object} data 
+     */
     updateRdv(data) {
         this.rdvElt.querySelector('.rdv-start').textContent = data.start
         this.rdvElt.querySelector('.rdv-title').textContent = this.modalRdvElt.querySelector('#rdv_title').value
     }
 
-    // Supprime le RDV dans l'agenda
+    /**
+     * Supprime le RDV dans l 'agenda.
+     */
     deleteRdv() {
         let rdvElt = document.getElementById('rdv-' + this.rdvId)
         let dayElt = rdvElt.parentNode
@@ -243,7 +271,10 @@ export default class Calendar {
         this.hideRdvElts(dayElt)
     }
 
-    // Tri les événements du jour
+    /**
+     * Tri les événements du jour.
+     * @param {HTMLElement} dayElt 
+     */
     sortDayBlock(dayElt) {
 
         let rdvArr = []
@@ -255,7 +286,10 @@ export default class Calendar {
             .map(node => dayElt.appendChild(node))
     }
 
-    // Cache les RDV en fonction de la hauteur du container
+    /**
+     * Cache les RDV en fonction de la hauteur du container.
+     * @param {HTMLElement} dayElt 
+     */
     hideRdvElts(dayElt) {
 
         let rdvElts = dayElt.querySelectorAll('.calendar-event')

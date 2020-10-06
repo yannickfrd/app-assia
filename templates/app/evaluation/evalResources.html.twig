@@ -1,5 +1,6 @@
 {# Resources #}
 {% set ressources = constant("App\\Entity\\EvalBudgetPerson::RESOURCES_TYPE") %}
+
 <div class="col-md-6">
     <div class="form-group row">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.resources.resources) }}</div>
@@ -12,7 +13,7 @@
                         data-id="resourcesType" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
                         <option class="default" value="">-- Ajouter --</option>
                         {% for ressKey, ressValue in ressources %}
-                        <option value="{{ ressKey }}">{{ ressValue }}</option>
+                            <option value="{{ ressKey }}">{{ ressValue }}</option>
                         {% endfor %}
                     </select>
                 </div>

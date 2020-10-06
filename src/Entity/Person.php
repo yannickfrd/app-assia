@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 use App\Entity\Traits\ContactEntityTrait;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
@@ -100,7 +100,6 @@ class Person
     /**
      * @ORM\Column(type="smallint", nullable=false)
      * @Assert\NotNull(message="Le sexe doit être renseigné.")
-     * @Assert\Range(min = 1, max = 3, minMessage="Le sexe doit être renseigné.",  maxMessage="Le sexe doit être renseigné.")
      */
     private $gender;
 

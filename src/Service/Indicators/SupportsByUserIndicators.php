@@ -6,7 +6,6 @@ use App\Form\Model\SupportsByUserSearch;
 use App\Repository\DeviceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
-use App\Security\CurrentUserService;
 
 class SupportsByUserIndicators
 {
@@ -16,7 +15,7 @@ class SupportsByUserIndicators
     protected $repoSupport;
 
     public function __construct(
-        CurrentUserService $currentUser,
+        CurrentUser $currentUser,
         DeviceRepository $repoDevice,
         UserRepository $repoUser,
         SupportGroupRepository $repoSupport)

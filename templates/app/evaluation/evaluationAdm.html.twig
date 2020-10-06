@@ -17,7 +17,7 @@
 						aria-controls="collapse-eval_adm-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
 				{% endfor %}
 			</div>
-				{% for key, evalPerson in form.evaluationPeople %}
+			{% for key, evalPerson in form.evaluationPeople %}
 				<div id="collapse-eval_adm-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
 					aria-labelledby="heading-eval_adm-{{ key }}" data-parent="#accordion-eval_adm" 
 					data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
@@ -56,4 +56,5 @@
 			{% endfor %}
 		</div>
 	</div>
+
 {% endblock %}
