@@ -6,14 +6,25 @@ use App\Entity\Pole;
 use App\Entity\Service;
 use App\Form\Model\DeviceSearch;
 use App\Form\Utils\Choices;
+use App\Repository\ServiceRepository;
+use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DeviceSearchType extends AbstractType
 {
+    private $currentUser;
+
+    public function __construct(CurrentUserService $currentUser)
+    {
+        $this->currentUser = $currentUser;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -28,15 +39,11 @@ class DeviceSearchType extends AbstractType
             ->add('service', EntityType::class, [
                 'class' => Service::class,
                 'choice_label' => 'name',
+                'query_builder' => function (ServiceRepository $repo) {
+                    return $repo->getServicesFromUserQueryList($this->currentUser);
+                },
                 'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.service',
-                'required' => false,
-            ])
-            ->add('pole', EntityType::class, [
-                'class' => Pole::class,
-                'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
-                'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])
             ->add('disabled', ChoiceType::class, [
@@ -45,6 +52,21 @@ class DeviceSearchType extends AbstractType
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,
             ]);
+
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+                $form
+                    ->add('pole', EntityType::class, [
+                        'class' => Pole::class,
+                        'choice_label' => 'name',
+                        'label_attr' => ['class' => 'sr-only'],
+                        'placeholder' => 'placeholder.pole',
+                        'required' => false,
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

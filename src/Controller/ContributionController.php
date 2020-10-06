@@ -47,7 +47,7 @@ class ContributionController extends AbstractController
      *
      * @Route("contributions", name="contributions", methods="GET|POST")
      */
-    public function listContributions(ContributionSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listContributions(Request $request, Pagination $pagination): Response
     {
         $search = new ContributionSearch();
         if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
@@ -79,7 +79,7 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportContributions(int $id, SupportGroupService $supportGroupService, SupportContributionSearch $search = null, Request $request, Pagination $pagination): Response
+    public function showSupportContributions(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $supportGroupService->getSupportGroup($id);
 

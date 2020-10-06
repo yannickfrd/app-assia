@@ -6,151 +6,152 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="h2 mb-3">Export des données</h1>
+        <h1 class="h2 mb-3">Export des données</h1>
 
-    <hr>
+        <hr>
 
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
+        <section>
+            {% include "model/msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
+            
+            <div id="form-search">
+                {{ form_start(form) }}
+                <div class="form-group row">
+                    <div class="col-md-6">{{ form_row(form.services) }}</div>
+                    <div class="col-md-6">{{ form_row(form.subServices) }}</div>
+                    <div class="col-md-6">{{ form_row(form.devices) }}</div>
+                    <div class="col-md-6">{{ form_row(form.referents) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">{{ form_row(form.status) }}</div>
+                    <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
+                    <div class="col-md-6">{{ form_row(form.start) }}</div>
+                    <div class="col-md-6">{{ form_row(form.end) }}</div>
+                </div>
+                {# <div class="form-group row">
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalSocial) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalAdm) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalFamily) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalProf) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalBudget) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalHousing) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
+                            {{ form_widget(form.evalJustice) }}
+                        </div>
+                    </div>
+                </div> #}
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="float-left d-flex">
+                            <p id="results"></p>
+                        </div>
+                        <div class="mb-4 float-right">
+                            <button type="reset" id="reset" name="reset" class="btn btn-secondary ml-2 shadow" data-toggle="tooltip" data-placement="bottom"
+                                title="Effacer les filtres"><span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
+                            </button>
+                            <button type="submit" id="count" name="count" data-url="{{ path('export_count_results') }}" 
+                                class="btn btn-{{ theme_color }} shadow">Calculer</button>
+                            <button type="submit" id="export" name="export" data-url="{{ path('export') }}" 
+                                class="btn btn-{{ theme_color }} shadow">Exporter</button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form, {"render_rest": false}) }}
+            </div>
+
+        <hr>
         
-        <div id="form-search">
-            {{ form_start(form) }}
-            <div class="form-group row">
-                <div class="col-md-6">{{ form_row(form.status) }}</div>
-                <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
-                <div class="col-md-6">{{ form_row(form.start) }}</div>
-                <div class="col-md-6">{{ form_row(form.end) }}</div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="h3 mb-3">Mes exports</h1>
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ exports.getTotalItemCount|number_format(0,'', ' ')  }}<!--
+                    --> export{% if exports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(exports) }}</div>
+                </div>
             </div>
-            <div class="form-group row">
-                <div class="col-md-6">{{ form_row(form.services) }}</div>
-                <div class="col-md-6">{{ form_row(form.subServices) }}</div>
-                <div class="col-md-6">{{ form_row(form.devices) }}</div>
-                <div class="col-md-6">{{ form_row(form.referents) }}</div>
-            </div>
-            {# <div class="form-group row">
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalSocial) }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalAdm) }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalFamily) }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalProf) }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalBudget) }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalHousing) }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                        {{ form_widget(form.evalJustice) }}
-                    </div>
-                </div>
-            </div> #}
-            <div class="form-group row">
+
+            <div class="row">
                 <div class="col-md-12">
-			        <div class="float-left d-flex">
-                        <p id="results"></p>
-                    </div>
-                    <div class="mb-4 float-right">
-                        <button type="reset" id="reset" name="reset" class="btn btn-secondary ml-2 shadow" data-toggle="tooltip" data-placement="bottom"
-                            title="Effacer les filtres"><span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
-                        </button>
-                        <button type="submit" id="count" name="count" data-url="{{ path('export_count_results') }}" 
-                            class="btn btn-{{ theme_color }} shadow">Calculer</button>
-                        <button type="submit" id="export" name="export" data-url="{{ path('export') }}" 
-                            class="btn btn-{{ theme_color }} shadow">Exporter</button>
-                    </div>
-                </div>
-            </div>
-            {{ form_end(form, {"render_rest": false}) }}
-        </div>
-
-    <hr>
-    
-    </section>
-
-    <section class="mb-5">
-        <h2 class="h3 mb-3">Mes exports</h1>
-
-        <div class="row align-items-baseline">
-            <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ exports.getTotalItemCount|number_format(0,'', ' ')  }}<!--
-                --> export{% if exports.getTotalItemCount > 1 %}s{% endif %}.</span>
-            </div>
-            <div class="col-md-8">
-                <div class="navigation">{{ knp_pagination_render(exports) }}</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                        <thead>
-                            <tr>
-                                <th scope="row" class="align-middle th-w-20"></th>
-                                <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(exports, "Nom de l'export", "e.title") }}</th>
-                                <th scope="col" class="align-middle">{{ knp_pagination_sortable(exports, "Description", "e.comment") }}</th>
-                                <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Nb de résultats", "e.nbResults") }}</th>
-                                <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Taille", "e.size") }}</th>
-                                <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(exports, "Créé le", "e.createdAt") }}</th>
-                                <th scope="col" class="align-middle th-w-20"></th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="container-exports">
-                            {% for export in exports %}
-                                <tr id="export-{{ export.id }}" class="js-export">
-                                    <th scope="row" class="align-middle text-center">
-                                        <a href="{{ path('export_get', {'id': export.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-                                            data-toggle="tooltip" data-placement="bottom" title="Télécharger l'export"><span class="fas fa-file-download"></span>
-                                        </a>
-                                    </th>
-                                    <td class="js-export-title">{{ export.title }}</td>
-                                    <td class="js-export-comment">{{ export.comment|raw }}</td>
-                                    <td class="js-export-nbResults text-right">{{ export.nbResults|number_format(0, ",", " ") }}</td>
-                                    <td class="js-export-size text-right">{{ (export.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
-                                    <td class="js-export-createdAt">{{ export.createdAt|date("d/m/Y H:i") }}</td>
-                                    <td class="align-middle text-center">
-                                        <a href="{{ path('export_delete', {'id':export.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
-                                            onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cet export ?')){return true;}else{return false;}">
-                                            <span class="fas fa-trash-alt"></span>
-                                        </a>
-                                    </td>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="row" class="align-middle th-w-20"></th>
+                                    <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(exports, "Nom de l'export", "e.title") }}</th>
+                                    <th scope="col" class="align-middle">{{ knp_pagination_sortable(exports, "Description", "e.comment") }}</th>
+                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Nb de résultats", "e.nbResults") }}</th>
+                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Taille", "e.size") }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(exports, "Créé le", "e.createdAt") }}</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+
+                            <tbody id="container-exports">
+                                {% for export in exports %}
+                                    <tr id="export-{{ export.id }}" class="js-export">
+                                        <th scope="row" class="align-middle text-center">
+                                            <a href="{{ path('export_get', {'id': export.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                                data-toggle="tooltip" data-placement="bottom" title="Télécharger l'export"><span class="fas fa-file-download"></span>
+                                            </a>
+                                        </th>
+                                        <td class="js-export-title">{{ export.title }}</td>
+                                        <td class="js-export-comment">{{ export.comment|raw }}</td>
+                                        <td class="js-export-nbResults text-right">{{ export.nbResults|number_format(0, ",", " ") }}</td>
+                                        <td class="js-export-size text-right">{{ (export.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
+                                        <td class="js-export-createdAt">{{ export.createdAt|date("d/m/Y H:i") }}</td>
+                                        <td class="align-middle text-center">
+                                            <a href="{{ path('export_delete', {'id':export.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
+                                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cet export ?')){return true;}else{return false;}">
+                                                <span class="fas fa-trash-alt"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="navigation">{{ knp_pagination_render(exports) }}</div>
+            <div class="navigation">{{ knp_pagination_render(exports) }}</div>
 
-    </section>
+        </section>
 
-</div>
+    </div>
+    
 {% endblock %}
 
 {% block javascripts %}

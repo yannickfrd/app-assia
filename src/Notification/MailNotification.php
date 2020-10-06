@@ -10,62 +10,69 @@ use Twig\Environment;
 
 class MailNotification
 {
-    protected $mail;
-    protected $appVersion;
     protected $renderer;
+    protected $appVersion;
+    protected $host;
+    protected $username;
+    protected $password;
+    protected $port;
 
-    public function __construct(Environment $renderer, $appVersion = 'prod', $host = 'localhost', $username = null, $password = null, $port = 25)
+    public function __construct(Environment $renderer, $appVersion = 'prod',
+        $host = 'localhost', $username = null, $password = null, $port = 25)
     {
-        $this->appVersion = $appVersion;
-
-        $this->mail = new PHPMailer(true);
-
-        $this->mail->isSMTP(); // Send using SMTP
-
-        if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '127.0.0.1:8000') {
-            $this->mail->SMTPAuth = true; // Enable SMTP authentication
-            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
-        } else {
-            $this->mail->SMTPAuth = false;
-            $this->mail->SMTPAutoTLS = false;
-        }
-
-        $this->mail->Host = $host;
-        $this->mail->Username = $username;
-        $this->mail->Password = $password;
-        $this->mail->Port = $port;
-
-        $this->mail->CharSet = 'UTF-8';
-        $this->mail->isHTML(true); // Set email format to HTML
-
         $this->renderer = $renderer;
+        $this->appVersion = $appVersion;
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
+        $this->port = $port;
     }
 
     public function send($to, $subject, $htmlBody, $txtBody = null)
     {
+        $mail = new PHPMailer(true);
+
+        $mail->isSMTP(); // Send using SMTP
+
+        if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '127.0.0.1:8000') {
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPDebug = SMTP::DEBUG_OFF;
+        } else {
+            $mail->SMTPAuth = false;
+            $mail->SMTPAutoTLS = false;
+        }
+
+        $mail->Host = $this->host;
+        $mail->Username = $this->username;
+        $mail->Password = $this->password;
+        $mail->Port = $this->port;
+
+        $mail->CharSet = 'UTF-8';
+        $mail->isHTML(true); // Set email format to HTML
+
         try {
-            $this->mail->setFrom('noreply@romain-mad.fr', 'Esperer95.app');
-            $this->mail->addAddress($to['email'], $to['name']); // Add a recipient
-            // $this->mail->addAddress("ellen@example.com"); // Name is optional
-            // $this->mail->addReplyTo("info@example.com", "Information");
-            // $this->mail->addCC("cc@example.com");
-            // $this->mail->addBCC("bcc@example.com");
+            $mail->setFrom('noreply@romain-mad.fr', 'Esperer95.app');
+            $mail->addAddress($to['email'], $to['name']); // Add a recipient
+            // $mail->addAddress("ellen@example.com"); // Name is optional
+            // $mail->addReplyTo("info@example.com", "Information");
+            // $mail->addCC("cc@example.com");
+            // $mail->addBCC("bcc@example.com");
 
             // Attachments
-            // $this->mail->addAttachment("/var/tmp/file.tar.gz"); // Add attachments
-            // $this->mail->addAttachment("/tmp/image.jpg", "new.jpg"); // Optional name
+            // $mail->addAttachment("/var/tmp/file.tar.gz"); // Add attachments
+            // $mail->addAttachment("/tmp/image.jpg", "new.jpg"); // Optional name
 
             // Content
-            $this->mail->Subject = $subject;
-            $this->mail->Body = $htmlBody;
-            $this->mail->AltBody = $txtBody ?? null;
+            $mail->Subject = $subject;
+            $mail->Body = $htmlBody;
+            $mail->AltBody = $txtBody ?? null;
 
-            $this->mail->send();
+            $mail->send();
 
             return true;
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             // dd($e);
 
             return false;

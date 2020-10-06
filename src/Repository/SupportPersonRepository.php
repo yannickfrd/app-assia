@@ -37,7 +37,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return $query->orderBy('sp.startDate', 'DESC')
+        return $query->orderBy('sg.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -56,7 +56,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return $query->orderBy('sp.startDate', 'DESC')
+        return $query->orderBy('sg.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -124,14 +124,14 @@ class SupportPersonRepository extends ServiceEntityRepository
         //         ->setParameter("nbPeople", $search->getNbPeople());
         // }
         // if ($search->getStatus()) {
-        //     $query->andWhere("sp.status = :status")
+        //     $query->andWhere("sg.status = :status")
         //         ->setParameter("status", $search->getStatus());
         // }
         if ($search->getStatus()) {
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getStatus() as $status) {
-                $orX->add($expr->eq('sp.status', $status));
+                $orX->add($expr->eq('sg.status', $status));
             }
             $query->andWhere($orX);
         }
@@ -140,33 +140,33 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         if (1 == $supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sp.startDate >= :start')
+                $query->andWhere('sg.startDate >= :start')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('sp.startDate <= :end')
+                $query->andWhere('sg.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
         if (2 == $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
-                    $query->andWhere('sp.endDate >= :start')
+                    $query->andWhere('sg.endDate >= :start')
                         ->setParameter('start', $search->getStart());
                 }
                 if ($search->getEnd()) {
-                    $query->andWhere('sp.endDate <= :end')
+                    $query->andWhere('sg.endDate <= :end')
                         ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 == $supportDates || !$supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
+                $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('sp.startDate <= :end')
+                $query->andWhere('sg.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
@@ -242,59 +242,6 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     protected function filtersExport($query, $search)
     {
-        if ($search->getStatus()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getStatus() as $status) {
-                $orX->add($expr->eq('sp.status', $status));
-            }
-            $query->andWhere($orX);
-        }
-
-        $supportDates = $search->getSupportDates();
-
-        if (1 == $supportDates) {
-            if ($search->getStart()) {
-                $query->andWhere('sp.startDate >= :start')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $query->andWhere('sp.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
-        }
-        if (2 == $supportDates) {
-            if ($search->getStart()) {
-                if ($search->getStart()) {
-                    $query->andWhere('sp.endDate >= :start')
-                        ->setParameter('start', $search->getStart());
-                }
-                if ($search->getEnd()) {
-                    $query->andWhere('sp.endDate <= :end')
-                        ->setParameter('end', $search->getEnd());
-                }
-            }
-        }
-        if (3 == $supportDates || !$supportDates) {
-            if ($search->getStart()) {
-                $query->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $query->andWhere('sp.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
-        }
-
-        if ($search->getReferents() && $search->getReferents()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
-            }
-            $query->andWhere($orX);
-        }
-
         if ($search->getServices() && $search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -311,6 +258,59 @@ class SupportPersonRepository extends ServiceEntityRepository
                 $orX->add($expr->eq('sg.device', $device));
             }
             $query->andWhere($orX);
+        }
+
+        if ($search->getReferents() && $search->getReferents()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getStatus()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getStatus() as $status) {
+                $orX->add($expr->eq('sg.status', $status));
+            }
+            $query->andWhere($orX);
+        }
+
+        $supportDates = $search->getSupportDates();
+
+        if (1 == $supportDates) {
+            if ($search->getStart()) {
+                $query->andWhere('sg.startDate >= :start')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $query->andWhere('sg.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
+        }
+        if (2 == $supportDates) {
+            if ($search->getStart()) {
+                if ($search->getStart()) {
+                    $query->andWhere('sg.endDate >= :start')
+                        ->setParameter('start', $search->getStart());
+                }
+                if ($search->getEnd()) {
+                    $query->andWhere('sg.endDate <= :end')
+                        ->setParameter('end', $search->getEnd());
+                }
+            }
+        }
+        if (3 == $supportDates || !$supportDates) {
+            if ($search->getStart()) {
+                $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $query->andWhere('sg.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
         }
 
         return $query;

@@ -46,7 +46,7 @@ class NoteController extends AbstractController
      *
      * @Route("notes", name="notes", methods="GET|POST")
      */
-    public function listNotes(NoteSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listNotes(Request $request, Pagination $pagination): Response
     {
         $search = new NoteSearch();
         if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
@@ -71,7 +71,7 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportGroupService $supportGroupService, SupportNoteSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $supportGroupService->getSupportGroup($id);
 

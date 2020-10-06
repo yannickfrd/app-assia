@@ -36,11 +36,9 @@ class ExportController extends AbstractController
      * @Route("export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function export(Request $request, ExportSearch $search = null, Pagination $pagination): Response
+    public function export(Request $request, Pagination $pagination): Response
     {
-        $search = new ExportSearch();
-
-        $form = ($this->createForm(ExportSearchType::class, $search))
+        $form = ($this->createForm(ExportSearchType::class, new ExportSearch()))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,7 +61,7 @@ class ExportController extends AbstractController
      *
      * @Route("export/count_results", name="export_count_results", methods="POST")
      */
-    public function countNbResults(Request $request, ExportSearch $search = null, SupportPersonRepository $repo): Response
+    public function countNbResults(Request $request, SupportPersonRepository $repo): Response
     {
         $search = new ExportSearch();
 

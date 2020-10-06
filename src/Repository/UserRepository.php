@@ -6,6 +6,7 @@ use App\Entity\Service;
 use App\Entity\User;
 use App\Form\Model\UserSearch;
 use App\Form\Utils\Choices;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -143,7 +144,7 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.lastname', 'ASC');
     }
 
-    public function findAllUsersFromServices(CurrentUser $currentUser)
+    public function findAllUsersFromServices(CurrentUserService $currentUser)
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
@@ -186,7 +187,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getAllUsersFromServicesQueryList(CurrentUser $currentUser, int $serviceId = null): QueryBuilder
+    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')

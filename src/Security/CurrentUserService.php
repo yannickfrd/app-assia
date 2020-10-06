@@ -26,8 +26,8 @@ class CurrentUserService
     {
         $services = [];
 
-        foreach ($this->session->get('userServices') as $key => $value) {
-            $services[] = $key;
+        foreach ($this->user->getServiceUser() as $role) {
+            $services[] = $role->getService()->getId();
         }
 
         return $services;

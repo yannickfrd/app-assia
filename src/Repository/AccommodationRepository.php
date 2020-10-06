@@ -8,6 +8,7 @@ use App\Entity\SubService;
 use App\Entity\SupportGroup;
 use App\Form\Model\AccommodationSearch;
 use App\Form\Utils\Choices;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -29,9 +30,14 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places.
      */
-    public function findAllAccommodationsQuery(AccommodationSearch $search = null): Query
+    public function findAllAccommodationsQuery(CurrentUserService $currentUser, AccommodationSearch $search = null): Query
     {
         $query = $this->getAccommodations();
+
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('a.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
 
         if ($search) {
             $query = $this->filter($query, $search);

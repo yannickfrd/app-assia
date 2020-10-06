@@ -59,7 +59,7 @@ class SupportController extends AbstractController
      *
      * @Route("/supports", name="supports", methods="GET|POST")
      */
-    public function viewListSupports(Request $request, SupportGroupSearch $search = null, Pagination $pagination): Response
+    public function viewListSupports(Request $request, Pagination $pagination): Response
     {
         $search = (new SupportGroupSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 

@@ -476,6 +476,7 @@ class User implements UserInterface
         return $this;
     }
 
+    
     /**
      * @return Collection|UserConnection[]
      */

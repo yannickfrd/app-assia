@@ -1,6 +1,8 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Mon espace personnel | {{ title_website }}{% endblock %}
+{% set title = app.user.status == 1 ? "Mon espace personnel" : "Tableau de bord" %}
+
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
@@ -8,7 +10,7 @@
 
 <div class="container">
 
-    <h1 class="h2 mb-3">Mon espace personnel</h1>
+    <h1 class="h2 mb-3">{{ title }}</h1>
     <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date("d/m/Y à H:i") }}</p>
 
     {% include "model/msgFlash.html.twig" %}

@@ -3,22 +3,35 @@
 namespace App\Form\Accommodation;
 
 use App\Entity\Pole;
-use App\Form\Model\AccommodationSearch;
+use App\Form\Utils\Choices;
 use App\Form\Model\RdvSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
-use App\Form\Utils\Choices;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Security\CurrentUserService;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use App\Form\Model\AccommodationSearch;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AccommodationSearchType extends AbstractType
 {
+    private $currentUser;
+
+    public function __construct(CurrentUserService $currentUser)
+    {
+        $this->currentUser = $currentUser;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('service', ServiceSearchType::class, [
+                'data_class' => RdvSearch::class,
+            ])
             ->add('name', null, [
                 'label_attr' => [
                     'class' => 'sr-only',
@@ -52,19 +65,7 @@ class AccommodationSearchType extends AbstractType
                     'placeholder' => 'City',
                 ],
             ])
-            ->add('pole', EntityType::class, [
-                'class' => Pole::class,
-                'choice_label' => 'name',
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'placeholder' => 'placeholder.pole',
-                'required' => false,
-            ])
             ->add('date', DateSearchType::class, [
-                'data_class' => RdvSearch::class,
-            ])
-            ->add('service', ServiceSearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
             ->add('disabled', ChoiceType::class, [
@@ -74,6 +75,21 @@ class AccommodationSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('export');
+
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+                $form
+                    ->add('pole', EntityType::class, [
+                        'class' => Pole::class,
+                        'choice_label' => 'name',
+                        'label_attr' => ['class' => 'sr-only'],
+                        'placeholder' => 'placeholder.pole',
+                        'required' => false,
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -2,10 +2,11 @@
 
 namespace App\Service\Indicators;
 
-use App\Form\Model\SupportsByUserSearch;
-use App\Repository\DeviceRepository;
-use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
+use App\Repository\DeviceRepository;
+use App\Security\CurrentUserService;
+use App\Form\Model\SupportsByUserSearch;
+use App\Repository\SupportGroupRepository;
 
 class SupportsByUserIndicators
 {
@@ -15,7 +16,7 @@ class SupportsByUserIndicators
     protected $repoSupport;
 
     public function __construct(
-        CurrentUser $currentUser,
+        CurrentUserService $currentUser,
         DeviceRepository $repoDevice,
         UserRepository $repoUser,
         SupportGroupRepository $repoSupport)

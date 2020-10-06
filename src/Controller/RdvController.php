@@ -2,27 +2,27 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Rdv;
+use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Export\RdvExport;
+use App\Form\Model\RdvSearch;
+use App\Form\Model\SupportRdvSearch;
+use App\Form\Rdv\RdvSearchType;
 use App\Form\Rdv\RdvType;
+use App\Form\Rdv\SupportRdvSearchType;
+use App\Repository\RdvRepository;
 use App\Service\Calendar;
 use App\Service\Pagination;
-use App\Entity\SupportGroup;
-use App\Form\Model\RdvSearch;
-use App\Form\Rdv\RdvSearchType;
-use App\Repository\RdvRepository;
-use App\Form\Model\SupportRdvSearch;
-use App\Form\Rdv\SupportRdvSearchType;
+use App\Service\SupportGroup\SupportGroupService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Controller\Traits\ErrorMessageTrait;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\Service\SupportGroup\SupportGroupService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
 {
@@ -42,7 +42,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
      */
-    public function viewListRdvs(Request $request, RdvSearch $search = null, Pagination $pagination): Response
+    public function viewListRdvs(Request $request, Pagination $pagination): Response
     {
         $search = new RdvSearch();
         if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
@@ -72,7 +72,7 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportGroupService $supportGroupService, SupportRdvSearch $search = null, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $supportGroupService->getSupportGroup($id);
 
@@ -80,8 +80,8 @@ class RdvController extends AbstractController
 
         $search = new SupportRdvSearch();
 
-        $formSearch = $this->createForm(SupportRdvSearchType::class, $search);
-        $formSearch->handleRequest($request);
+        $formSearch = ($this->createForm(SupportRdvSearchType::class, $search))
+            ->handleRequest($request);
 
         return $this->render('app/rdv/supportRdvs.html.twig', [
             'support' => $supportGroup,
@@ -169,8 +169,6 @@ class RdvController extends AbstractController
      *
      * @Route("support/{id}/rdv/new", name="support_rdv_new", methods="POST")
      * @Route("rdv/new", name="rdv_new", methods="POST")
-     *
-     * @param int $id // SupportGroup
      */
     public function newRdv(SupportGroup $supportGroup = null, Rdv $rdv = null, Request $request): Response
     {

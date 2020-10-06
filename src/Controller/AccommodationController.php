@@ -10,6 +10,7 @@ use App\Form\Accommodation\AccommodationType;
 use App\Form\Model\AccommodationSearch;
 use App\Repository\AccommodationGroupRepository;
 use App\Repository\AccommodationRepository;
+use App\Security\CurrentUserService;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -34,7 +35,7 @@ class AccommodationController extends AbstractController
      *
      * @Route("/accommodations", name="accommodations", methods="GET|POST")
      */
-    public function listAccommodations(AccommodationSearch $search, Request $request, Pagination $pagination): Response
+    public function listAccommodations(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $search = new AccommodationSearch();
 
@@ -48,7 +49,7 @@ class AccommodationController extends AbstractController
         return $this->render('app/accommodation/listAccommodations.html.twig', [
             'accommodationSearch' => $search,
             'form' => $form->createView(),
-            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($search), $request) ?? null,
+            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($currentUser, $search), $request) ?? null,
         ]);
     }
 
@@ -91,7 +92,7 @@ class AccommodationController extends AbstractController
      */
     public function editAccommodation(Accommodation $accommodation, Request $request, AccommodationGroupRepository $repo): Response
     {
-        $this->denyAccessUnlessGranted('VIEW', $accommodation->getService());
+        $this->denyAccessUnlessGranted('VIEW', $accommodation);
 
         $form = ($this->createForm(AccommodationType::class, $accommodation))
             ->handleRequest($request);

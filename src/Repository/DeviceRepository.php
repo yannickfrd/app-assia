@@ -28,12 +28,17 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les dispositifs.
      */
-    public function findAllDevicesQuery(DeviceSearch $search): Query
+    public function findAllDevicesQuery(CurrentUserService $currentUser, DeviceSearch $search): Query
     {
         $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
+
+        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('sd.service IN (:services)')
+                ->setParameter('services', $currentUser->getServices());
+        }
 
         if ($search->getName()) {
             $query->andWhere('d.name LIKE :name')

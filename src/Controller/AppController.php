@@ -20,7 +20,6 @@ use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
 use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -64,7 +63,7 @@ class AppController extends AbstractController
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
-    public function home(EntityManagerInterface $manager): Response
+    public function home(): Response
     {
         $cache = new FilesystemAdapter();
 
@@ -126,32 +125,32 @@ class AppController extends AbstractController
 
         $usersIndicators = $cache->getItem('stats.users_indicators');
 
-        if (!$usersIndicators->isHit()) {
-            $users = [];
+        // if (!$usersIndicators->isHit()) {
+        //     $users = [];
 
-            /** @var User $user */
-            foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
-                $users[] = [
-                    'id' => $user->getId(),
-                    'name' => $user->getFullname(),
-                    'activeSupports' => (int) $this->repoSupport->count([
-                        'referent' => $user,
-                        'status' => 2,
-                    ]),
-                    'notes' => (int) $this->repoNote->count(['createdBy' => $user]),
-                    'rdvs' => (int) $this->repoRdv->count(['createdBy' => $user]),
-                    'documents' => (int) $this->repoDocument->count(['createdBy' => $user]),
-                    'contributions' => (int) $this->repoContribution->count(['createdBy' => $user]),
-                ];
-            }
-            $usersIndicators->set($users);
-            $usersIndicators->expiresAfter(5 * 60); // 5mn
-            $cache->save($usersIndicators);
-        }
+        //     /** @var User $user */
+        //     foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
+        //         $users[] = [
+        //             'id' => $user->getId(),
+        //             'name' => $user->getFullname(),
+        //             'activeSupports' => (int) $this->repoSupport->count([
+        //                 'referent' => $user,
+        //                 'status' => 2,
+        //             ]),
+        //             'notes' => (int) $this->repoNote->count(['createdBy' => $user]),
+        //             'rdvs' => (int) $this->repoRdv->count(['createdBy' => $user]),
+        //             'documents' => (int) $this->repoDocument->count(['createdBy' => $user]),
+        //             'contributions' => (int) $this->repoContribution->count(['createdBy' => $user]),
+        //         ];
+        //     }
+        //     $usersIndicators->set($users);
+        //     $usersIndicators->expiresAfter(5 * 60); // 5mn
+        //     $cache->save($usersIndicators);
+        // }
 
         return $this->render('app/home/dashboardAdmin.html.twig', [
             'datas' => $indicators->get(),
-            'users' => $usersIndicators->get(),
+            // 'users' => $usersIndicators->get(),
         ]);
     }
 

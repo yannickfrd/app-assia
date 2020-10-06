@@ -30,7 +30,7 @@ class UserController extends AbstractController
      *
      * @Route("directory/users", name="users", methods="GET|POST")
      */
-    public function listUsers(Request $request, UserSearch $search = null, Pagination $pagination): Response
+    public function listUsers(Request $request, Pagination $pagination): Response
     {
         // $users = $this->repo->findAll();
 
@@ -62,7 +62,7 @@ class UserController extends AbstractController
      * @Route("admin/users", name="admin_users", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function adminListUsers(Request $request, UserSearch $search = null, Pagination $pagination): Response
+    public function adminListUsers(Request $request, Pagination $pagination): Response
     {
         $search = new UserSearch();
 

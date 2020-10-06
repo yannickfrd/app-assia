@@ -2,25 +2,25 @@
 
 namespace App\Form\Export;
 
-use App\Entity\User;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\SubService;
-use App\Form\Utils\Choices;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Form\Model\ExportSearch;
-use App\Repository\UserRepository;
-use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
-use App\Repository\ServiceRepository;
 use App\Form\Model\SupportGroupSearch;
+use App\Form\Utils\Choices;
+use App\Repository\DeviceRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Repository\UserRepository;
+use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExportSearchType extends AbstractType
 {

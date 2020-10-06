@@ -33,8 +33,8 @@ class AccommodationRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $datafixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
+        $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/dataFixturesTest/AccommodationFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -46,7 +46,7 @@ class AccommodationRepositoryTest extends WebTestCase
         /* @var AccommodationRepository */
         $this->repo = $this->entityManager->getRepository(Accommodation::class);
 
-        $this->service = $datafixtures['service'];
+        $this->service = $dataFixtures['service'];
         $this->search = (new AccommodationSearch())
             ->setName('Logement')
             ->setNbPlaces(6)

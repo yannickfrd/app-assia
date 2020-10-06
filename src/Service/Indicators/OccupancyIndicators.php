@@ -10,6 +10,7 @@ use App\Repository\AccommodationRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
+use App\Security\CurrentUserService;
 
 class OccupancyIndicators
 {
@@ -28,7 +29,7 @@ class OccupancyIndicators
     protected $occupancyDays = 0;
 
     public function __construct(
-        CurrentUser $currentUser,
+        CurrentUserService $currentUser,
         AccommodationRepository $repoAccommodation,
         AccommodationPersonRepository $repoAccommodatioPerson,
         ServiceRepository $repoService,

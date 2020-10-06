@@ -23,6 +23,8 @@ https://demo.esperer95.app
 - Correction erreur export Excel PASH.
 - Correction balises non femrantes HTML/Twig.
 - Correction bugs erreur JS page 'Person' et 'RDV'.
+- Modif affichage des groupes de places et des dispositifs pour les Administrateurs en fonction de leur services rattachés.
+- Correction du bug d'envoi à tous les utilisateurs le lien de création du mot de passe.
 
 ## Version 1.27.0 - 05/10/2020
 - Créé fonctionnalité d'import des RDV et des participations financières.

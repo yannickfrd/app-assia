@@ -45,42 +45,6 @@ class NoteRepository extends ServiceEntityRepository
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        if ($search->getContent()) {
-            $query->andWhere('n.title LIKE :content OR n.content LIKE :content')
-                ->setParameter('content', '%'.$search->getContent().'%');
-        }
-        if ($search->getStatus()) {
-            $query->andWhere('n.status = :status')
-                ->setParameter('status', $search->getStatus());
-        }
-        if ($search->getType()) {
-            $query->andWhere('n.type = :type')
-                ->setParameter('type', $search->getType());
-        }
-
-        if ($search->getFullname()) {
-            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                ->setParameter('fullname', '%'.$search->getFullname().'%');
-        }
-
-        if ($search->getStart()) {
-            $query->andWhere('n.createdAt >= :start')
-                ->setParameter('start', $search->getStart());
-        }
-        if ($search->getEnd()) {
-            $query->andWhere('n.createdAt <= :end')
-                ->setParameter('end', $search->getEnd());
-        }
-
-        if ($search->getReferents() && count($search->getReferents())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
-            }
-            $query->andWhere($orX);
-        }
-
         if ($search->getServices() && count($search->getServices())) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -106,6 +70,42 @@ class NoteRepository extends ServiceEntityRepository
                 $orX->add($expr->eq('sg.device', $device));
             }
             $query->andWhere($orX);
+        }
+
+        if ($search->getReferents() && count($search->getReferents())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getContent()) {
+            $query->andWhere('n.title LIKE :content OR n.content LIKE :content')
+                ->setParameter('content', '%'.$search->getContent().'%');
+        }
+        if ($search->getStatus()) {
+            $query->andWhere('n.status = :status')
+                ->setParameter('status', $search->getStatus());
+        }
+        if ($search->getType()) {
+            $query->andWhere('n.type = :type')
+                ->setParameter('type', $search->getType());
+        }
+
+        if ($search->getFullname()) {
+            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+                ->setParameter('fullname', '%'.$search->getFullname().'%');
+        }
+
+        if ($search->getStart()) {
+            $query->andWhere('n.createdAt >= :start')
+                ->setParameter('start', $search->getStart());
+        }
+        if ($search->getEnd()) {
+            $query->andWhere('n.createdAt <= :end')
+                ->setParameter('end', $search->getEnd());
         }
 
         return  $query->orderBy('n.updatedAt', 'DESC')

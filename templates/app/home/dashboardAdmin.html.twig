@@ -9,7 +9,7 @@
   <div class="container">
 
     <h1 class="h2 mb-3">Tableau de bord </h1>
-    <p class="small text-secondary"> Dernière connexion le {{ app.user.lastLogin|date("d/m/Y à H:i") }}</p>
+    <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date("d/m/Y à H:i") }}</p>
 
     {% include "model/msgFlash.html.twig" %}
 
@@ -18,7 +18,7 @@
     <div class="my-5">
       {% include "app/managing/managingServices.html.twig" %}
       {% include "app/home/indicators.html.twig" %}
-      {% include "app/home/listUsers.html.twig" %}
+      {# {% include "app/home/listUsers.html.twig" %} #}
     </div>
     
   </div>
