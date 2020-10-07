@@ -210,7 +210,7 @@ class RdvController extends AbstractController
         return $this->json([
             'code' => 200,
             'action' => 'show',
-            'data' => [
+            'rdv' => [
                 'title' => $rdv->getTitle(),
                 'supportFullname' => $supportFullname ?? null,
                 'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
@@ -219,6 +219,9 @@ class RdvController extends AbstractController
                 'status' => $rdv->getStatus(),
                 'content' => $rdv->getContent(),
                 'createdBy' => $rdv->getCreatedBy()->getFullname(),
+                'createdAt' => $rdv->getCreatedAt()->format('d/m/Y à H:i'),
+                'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
+                'updatedAt' => $rdv->getUpdatedAt()->format('d/m/Y à H:i'),
             ],
         ], 200);
     }
@@ -280,8 +283,8 @@ class RdvController extends AbstractController
             'action' => 'create',
             'alert' => 'success',
             'msg' => 'Le RDV est enregistré.',
-            'data' => [
-                'rdvId' => $rdv->getId(),
+            'rdv' => [
+                'id' => $rdv->getId(),
                 'title' => $rdv->getTitle(),
                 'day' => $rdv->getStart()->format('Y-m-d'),
                 'start' => $rdv->getStart()->format('H:i'),
@@ -301,8 +304,8 @@ class RdvController extends AbstractController
             'action' => $typeSave,
             'alert' => 'success',
             'msg' => 'Le RDV est modifié.',
-            'data' => [
-                'rdvId' => $rdv->getId(),
+            'rdv' => [
+                'id' => $rdv->getId(),
                 'title' => $rdv->getTitle(),
                 'day' => $rdv->getStart()->format('Y-m-d'),
                 'start' => $rdv->getStart()->format('H:i'),

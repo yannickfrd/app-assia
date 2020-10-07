@@ -35,7 +35,11 @@ class EvalHotelLifeGroup
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $otherCommentHotelLife;
+    private $otherHotelLife;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentHotelLife;
 
     /**
      * @ORM\OneToOne(targetEntity=EvaluationGroup::class, inversedBy="evalHotelLifeGroup", cascade={"persist", "remove"})
@@ -84,14 +88,26 @@ class EvalHotelLifeGroup
         return $this;
     }
 
-    public function getOtherCommentHotelLife(): ?string
+    public function getOtherHotelLife(): ?string
     {
-        return $this->otherCommentHotelLife;
+        return $this->otherHotelLife;
     }
 
-    public function setOtherCommentHotelLife(?string $otherCommentHotelLife): self
+    public function setOtherHotelLife(?string $otherHotelLife): self
     {
-        $this->otherCommentHotelLife = $otherCommentHotelLife;
+        $this->otherHotelLife = $otherHotelLife;
+
+        return $this;
+    }
+
+    public function getCommentHotelLife(): ?string
+    {
+        return $this->commentHotelLife;
+    }
+
+    public function setCommentHotelLife(?string $commentHotelLife): self
+    {
+        $this->commentHotelLife = $commentHotelLife;
 
         return $this;
     }

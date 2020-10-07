@@ -16,6 +16,15 @@ https://demo.esperer95.app
 
 # Mise à jour
 
+## Version 1.27.3 - 07/10/2020
+- Suppression du champ 'Salaire' dans la fiche 'Paiement'.
+- Ajout du champ 'Statut' dans la fiche 'RDV'.
+- Modification de la fiche RDV (informations sur la création et modification du RDV).
+- Ajout du champ 'Observations durant l'entretien' dans la fiche d'évaluations sociale.
+- Modification de l'encart 'Situation initiale' en Situation à l'entrée'.
+- Modif/correction import DatasAMH.
+- Amélioration import DatasRDV et DatasPAF.
+
 ## Version 1.27.1-2 - 06/10/2020
 - Ajout variable d'environnement APP_VERSION (test/prod).
 - Modif mail lors de la création de compte.

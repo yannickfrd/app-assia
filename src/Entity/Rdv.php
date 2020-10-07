@@ -14,11 +14,12 @@ class Rdv
     use CreatedUpdatedEntityTrait;
 
     public const STATUS = [
-        0 => 'Public',
-        1 => 'Privé',
+        1 => 'Présent',
+        2 => 'Absent',
+        3 => 'Annulé',
+        99 => 'Non renseigné',
     ];
 
-    public const STATUS_DEFAULT = 0;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -45,9 +46,9 @@ class Rdv
     private $end;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true, options={"default":Rdv::STATUS_DEFAULT})
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $status = self::STATUS_DEFAULT;
+    private $status;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -118,18 +119,14 @@ class Rdv
 
     public function setStatus(?int $status): self
     {
-        if (null == $status) {
-            $this->status = 0;
-        } else {
-            $this->status = $status;
-        }
+        $this->status = $status;
 
         return $this;
     }
 
     public function getStatusToString(): ?string
     {
-        return self::STATUS[$this->status];
+        return $this->status ? self::STATUS[$this->status] : null;
     }
 
     public function getLocation(): ?string

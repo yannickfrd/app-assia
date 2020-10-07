@@ -2,11 +2,14 @@ import AjaxRequest from '../utils/ajaxRequest'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import DateFormat from '../utils/dateFormat'
+import SelectType from '../utils/selectType'
 
 export default class Calendar {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest()
+        this.loader = new Loader('#modal-rdv')
+        this.selectType = new SelectType()
 
         this.newRdvBtn = document.getElementById('js-new-rdv')
         this.dayElts = document.querySelectorAll('.calendar-day-block')
@@ -14,20 +17,19 @@ export default class Calendar {
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
-        this.supportFullNameElt = this.modalRdvElt.querySelector('#js-support-fullname')
+        this.rdvTitleElt = this.modalRdvElt.querySelector('#js-rdv-title')
+        this.infoRdvElt = document.getElementById('js-rdv-info')
         this.rdvStartInput = this.modalRdvElt.querySelector('#rdv_start')
         this.rdvEndInput = this.modalRdvElt.querySelector('#rdv_end')
         this.dateInput = this.modalRdvElt.querySelector('#date')
         this.startInput = this.modalRdvElt.querySelector('#start')
         this.endInput = this.modalRdvElt.querySelector('#end')
         this.rdvLocationInput = this.modalRdvElt.querySelector('#rdv_location')
+        this.rdvStatusInput = this.modalRdvElt.querySelector('#rdv_status')
         this.rdvContentElt = this.modalRdvElt.querySelector('#rdv_content')
-        this.rdvCreatedByElt = this.modalRdvElt.querySelector('#js-created-by')
         this.btnSaveElt = this.modalRdvElt.querySelector('#js-btn-save')
         this.btnCancelElt = this.modalRdvElt.querySelector('#js-btn-cancel')
         this.btnDeleteElt = this.modalRdvElt.querySelector('#modal-btn-delete')
-
-        this.loader = new Loader('#modal-rdv')
 
         this.themeColor = document.getElementById('header').getAttribute('data-color')
         this.supportElt = document.getElementById('support')
@@ -83,12 +85,11 @@ export default class Calendar {
             this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.getAttribute('data-support') + '/rdv/new'
             let fullname = this.supportPeopleElt.querySelector('.btn').textContent
             this.modalRdvElt.querySelector('#rdv_title').value = fullname
-            this.supportFullNameElt.textContent = fullname
         } else {
             this.modalRdvElt.querySelector('form').action = '/rdv/new'
             this.modalRdvElt.querySelector('#rdv_title').value = ''
-            this.supportFullNameElt.textContent = ''
         }
+        this.rdvTitleElt.textContent = 'Rendez-vous'
 
         let dateFormat = new DateFormat()
         this.dateInput.value = dateFormat.getDateNow()
@@ -96,9 +97,11 @@ export default class Calendar {
         let end = parseInt(this.startInput.value.substr(0, 2)) + 1
         this.endInput.value = end + ':00'
 
+        this.infoRdvElt.innerHTML = ''
         this.rdvStartInput.value = ''
         this.rdvEndInput.value = ''
         this.rdvLocationInput.value = ''
+        this.selectType.setOption(this.rdvStatusInput)
 
         // this.modalRdvElt.querySelector('#rdv_status').value = 0
         this.modalRdvElt.querySelector('#rdv_content').value = ''
@@ -183,16 +186,16 @@ export default class Calendar {
         let dataJSON = JSON.parse(data)
         if (dataJSON.code === 200) {
             if (dataJSON.action === 'show') {
-                this.showRdv(dataJSON.data)
+                this.showRdv(dataJSON.rdv)
             }
             if (dataJSON.action === 'create') {
-                this.createRdv(dataJSON.data)
+                this.createRdv(dataJSON.rdv)
             }
             if (dataJSON.action === 'update') {
-                this.updateRdv(dataJSON.data)
+                this.updateRdv(dataJSON.rdv)
             }
             if (dataJSON.action === 'delete') {
-                this.deleteRdv(dataJSON.data)
+                this.deleteRdv(dataJSON.rdv)
             }
         }
         if (dataJSON.msg) {
@@ -203,36 +206,49 @@ export default class Calendar {
 
     /**
      * Affiche le RDV dans le formulaire modal.
-     * @param {Object} data 
+     * @param {Object} rdv 
      */
-    showRdv(data) {
+    showRdv(rdv) {
         this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
-        this.modalRdvElt.querySelector('#rdv_title').value = data.title
-        this.rdvStartInput.value = data.start
-        this.rdvEndInput.value = data.end
+        this.modalRdvElt.querySelector('#rdv_title').value = rdv.title
+        this.rdvStartInput.value = rdv.start
+        this.rdvEndInput.value = rdv.end
 
-        this.dateInput.value = data.start.substr(0, 10)
-        this.startInput.value = data.start.substr(11, 5)
-        this.endInput.value = data.end.substr(11, 5)
+        this.dateInput.value = rdv.start.substr(0, 10)
+        this.startInput.value = rdv.start.substr(11, 5)
+        this.endInput.value = rdv.end.substr(11, 5)
 
-        this.rdvLocationInput.value = data.location
-        this.modalRdvElt.querySelector('#rdv_content').value = data.content ? data.content : ''
+        this.rdvLocationInput.value = rdv.location
+        this.selectType.setOption(this.rdvStatusInput, rdv.status)
+        this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
-        this.rdvCreatedByElt.textContent = data.createdBy
-        this.supportFullNameElt.textContent = data.supportFullname
+        this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
+        this.rdvTitleElt.textContent = 'RDV | ' + rdv.supportFullname
 
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
         this.btnDeleteElt.href = '/rdv/' + this.rdvId + '/delete'
     }
 
+    /**  
+     * Donnes les informations sur l'enregistrement (date de création, créateur...).
+     * @param {Object} rdv
+     */
+    getInfoRdvElt(rdv) {
+        let htmlContent = `Créé le ${rdv.createdAt} par ${rdv.createdBy}`
+        if (rdv.createdAt != rdv.updatedAt) {
+            htmlContent = htmlContent + `<br/> (modifié le ${rdv.updatedAt} par ${rdv.updatedBy})`
+        }
+        return htmlContent
+    }
+
     /**
      * Crée le RDV dans le container du jour de l 'agenda.
-     * @param {Object} data 
+     * @param {Object} rdv 
      */
-    createRdv(data) {
+    createRdv(rdv) {
         let rdvElt = document.createElement('div')
         rdvElt.className = 'calendar-event bg-' + this.themeColor + ' text-light js-rdv'
-        rdvElt.id = 'rdv-' + data.rdvId
+        rdvElt.id = 'rdv-' + rdv.id
         rdvElt.setAttribute('data-toggle', 'modal')
         rdvElt.setAttribute('data-target', '#modal-rdv')
         rdvElt.setAttribute('title', 'Voir le rendez-vous')
@@ -240,10 +256,10 @@ export default class Calendar {
         let title = this.modalRdvElt.querySelector('#rdv_title').value
 
         rdvElt.innerHTML =
-            ` <span class='rdv-start'>${data.start}</span> 
+            ` <span class='rdv-start'>${rdv.start}</span> 
                 <span class='rdv-title'>${title}</span> `
 
-        let dayElt = document.getElementById(data.day)
+        let dayElt = document.getElementById(rdv.day)
         dayElt.insertBefore(rdvElt, dayElt.lastChild)
 
         this.sortDayBlock(dayElt)
@@ -254,10 +270,10 @@ export default class Calendar {
 
     /**
      * Met à jour le RDV dans l 'agenda.
-     * @param {Object} data 
+     * @param {Object} rdv 
      */
-    updateRdv(data) {
-        this.rdvElt.querySelector('.rdv-start').textContent = data.start
+    updateRdv(rdv) {
+        this.rdvElt.querySelector('.rdv-start').textContent = rdv.start
         this.rdvElt.querySelector('.rdv-title').textContent = this.modalRdvElt.querySelector('#rdv_title').value
     }
 

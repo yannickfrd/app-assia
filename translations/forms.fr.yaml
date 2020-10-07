@@ -55,6 +55,7 @@ placeholder:
   pole: -- Pôle --
   select: -- Sélectionner --
   service: -- Service --
+  status: -- Statut --
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1

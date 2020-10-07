@@ -73,7 +73,7 @@ class HotelSupportPersonExport
             'Date entrée à l\'hôtel' => $this->formatDate($hotelSupport->getEntryHotelDate()),
             'Département d\'origine' => $hotelSupport->getOriginDeptToString(),
             'Identifiant GIP' => $hotelSupport->getGipId(),
-            'Hôtel' => $accommodationGroup ? $accommodationGroup->getAccommodation()->getName() : null,
+            'Hôtel' => $accommodationGroup && $accommodationGroup->getAccommodation() ? $accommodationGroup->getAccommodation()->getName() : null,
             'Adresse' => $supportGroup->getAddress(),
             'Commune' => $supportGroup->getCity(),
             'Commentaire sur la demande' => $originRequest->getOrganizationComment(),

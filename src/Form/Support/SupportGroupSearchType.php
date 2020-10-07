@@ -50,7 +50,7 @@ class SupportGroupSearchType extends AbstractType
                     'class' => 'multi-select',
                     'data-select2-id' => 'status',
                 ],
-                'placeholder' => '-- Status --',
+                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('supportDates', ChoiceType::class, [

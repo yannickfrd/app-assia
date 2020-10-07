@@ -616,15 +616,20 @@ class ImportDatasAMH
 
     protected function getPerson()
     {
-        return (new Person())
+        $person = (new Person())
                 ->setLastname($this->field['Nom'])
                 ->setFirstname($this->field['Prénom'])
                 ->setBirthdate($this->field['Date naissance'] ? new \Datetime($this->field['Date naissance']) : null)
-                ->setGender($this->findInArray($this->field['Sexe'], self::GENDER) ?? null)
+                ->setGender($this->findInArray($this->field['Sexe'], self::GENDER) ?? 99)
                 ->setSiSiaoId((int) $this->field['Id Personne'])
-                ->setPhone1(strlen($this->field['Téléphone']) <= 15 ? Phone::formatPhone($this->field['Téléphone']) : null)
                 ->setCreatedBy($this->user)
                 ->setUpdatedBy($this->user);
+
+        if ($this->field['DP'] == 'Oui') {
+            $person->setPhone1(strlen($this->field['Téléphone']) <= 15 ? Phone::formatPhone($this->field['Téléphone']) : null);
+        }
+
+        return $person;
     }
 
     protected function checkGroupExists(int $typology)
@@ -743,9 +748,7 @@ class ImportDatasAMH
 
         $this->manager->persist($supportGroup);
 
-        if ($this->field['Date diagnostic']) {
-            $this->createHotelSupport($supportGroup);
-        }
+        $this->createHotelSupport($supportGroup);
 
         return $supportGroup;
     }

@@ -2,9 +2,13 @@
 
 {% set id = "init_eval" %}
 
-{% block card_title %}Situation initiale{% endblock %}
+{% block card_title %}<span class="{{ EDIT_MODE ? 'text-secondary' }}">Situation à l'entrée</span>{% endblock %}
 
 {% block card_body %}
+
+	<p class="mb-4 text-danger"><span class="fas fa-exclamation-triangle text-danger mr-1"></span><!--
+		-->Attention, cet encart ne doit être compléter qu'au début du suivi. <!--
+		-->Il ne doit pas être mise à jour par la suite (sauf information manquante ou erronée).</p>
 
 	<div class="js-evalGroup" data-support-id="g-{{form.vars.value.supportGroup.id}}">
 		<div class="form-group row">

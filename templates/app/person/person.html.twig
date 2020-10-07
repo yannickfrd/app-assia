@@ -101,11 +101,11 @@
                     {% endif %}
                     <div class="mb-4 float-right">
                         {% if EDIT_MODE == true %}
-                        <button type="submit" id="updatePerson" name="updatePerson"
-                            class="btn btn-{{ theme_color }} shadow"
-                            data-url="{{ path('person_edit_ajax', {'id':person.id}) }}"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                            <button type="submit" id="updatePerson" name="updatePerson"
+                                class="btn btn-{{ theme_color }} shadow"
+                                data-url="{{ path('person_edit_ajax', {'id':person.id}) }}"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
                         {% else %}
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
                         {% endif %}
                     </div>
                 </div>

@@ -3,14 +3,45 @@
 namespace App\Service\Import;
 
 use App\Entity\Rdv;
+use App\Entity\Service;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Repository\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class ImportDatasRdv
 {
     use ImportTrait;
 
+    public const STATUS = [
+        'Présent' => 1,
+        'Absent' => 2,
+        'Annulé' => 3,
+        'Non renseigné' => 99,
+    ];
+
+    public const SOCIAL_WORKER = [
+        'Marie-Laure PEBORDE',
+        'Camille RAVEZ',
+        'Typhaine PECHE',
+        'Cécile BAZIN',
+        'Nathalie POULIQUEN',
+        'Marina DJORDJEVIC',
+        'Melody ROMET',
+        'Gaëlle PRINCET',
+        'Marion FRANCOIS',
+        'Margot COURAUDON',
+        'Marilyse TOURNIER',
+        'Rozenn DOUELE ZAHAR',
+        'Laurine VIALLE',
+        'Ophélie QUENEL',
+        'Camille GALAN',
+        'Christine VESTUR',
+        'Julie MARTIN',
+    ];
+
+    protected $user;
     protected $manager;
 
     protected $items = [];
@@ -18,16 +49,24 @@ class ImportDatasRdv
     protected $hotelSupports;
     protected $field;
 
-    public function __construct(EntityManagerInterface $manager, HotelSupportRepository $repoHotelSupport)
+    protected $service;
+
+    public function __construct(Security $security,
+        EntityManagerInterface $manager,
+        HotelSupportRepository $repoHotelSupport)
     {
+        $this->user = $security->getUser();
         $this->manager = $manager;
         $this->repoHotelSupport = $repoHotelSupport;
         $this->hotelSupports = $repoHotelSupport->findAll();
     }
 
-    public function importInDatabase(string $fileName): array
+    public function importInDatabase(string $fileName, Service $service): array
     {
         $this->fields = $this->getDatas($fileName);
+        $this->service = $service;
+
+        $this->users = $this->getUsers();
 
         $i = 0;
         foreach ($this->fields as $field) {
@@ -41,13 +80,14 @@ class ImportDatasRdv
                     'TS' => $this->field['Travailleur social'],
                     'Notes' => $this->field['Notes'],
                     'Etat RDV' => $this->field['Etat RDV'],
+                    'Date saisie' => $this->field['Date saisie'],
                 ];
             }
             ++$i;
         }
 
         foreach ($this->items as $key => $item) {
-            $hotelSupport = $this->repoHotelSupport->findOneBy(['amhId' => $key]);
+            $hotelSupport = $this->repoHotelSupport->findOneBy(['accessId' => $key]);
             if ($hotelSupport) {
                 $this->items[$key]['groupPeople'] = $hotelSupport;
                 foreach ($item['rdvs'] as $rdv) {
@@ -68,19 +108,55 @@ class ImportDatasRdv
             return null;
         }
 
+        $userReferent = $this->getUserReferent($rdv['TS']);
+
         $start = new \Datetime($rdv['Date RDV'].' '.($rdv['Heure RDV'] ?? '00:00'));
         $end = (clone $start)->modify('+1 hour');
-        $content = ($rdv['Notes'] ? $rdv['Notes']."\n" : '').'TS : '.$rdv['TS']."\nStatut RDV : ".$rdv['Etat RDV'];
+        $createdAt = new \Datetime($rdv['Date saisie']);
+        $content = ($rdv['Notes'] ? $rdv['Notes']."\n" : '').
+            (!$userReferent ? 'TS : '.$rdv['TS'] : '').
+            ($rdv['Etat RDV'] == 'Point téléphonique' ? "\n".$rdv['Etat RDV'] : null);
 
         $rdv = (new Rdv())
             ->setTitle('RDV '.$rdv['Nom'])
             ->setStart($start)
             ->setEnd($end)
             ->setContent($content)
+            ->setStatus($this->findInArray($rdv['Etat RDV'], self::STATUS) ?? null)
+            ->setCreatedBy($userReferent ?? $this->user)
+            ->setCreatedAt($createdAt)
+            ->setUpdatedBy($userReferent ?? $this->user)
+            ->setUpdatedAt($createdAt)
             ->setSupportGroup($supportGroup);
 
         $this->manager->persist($rdv);
 
         return $rdv;
+    }
+
+    protected function getUserReferent(string $ts): ?User
+    {
+        foreach ($this->users as $key => $user) {
+            if ($key == $ts) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getUsers(): array
+    {
+        $users = [];
+
+        foreach ($this->service->getUsers() as $user) {
+            foreach (self::SOCIAL_WORKER as $name) {
+                if (strstr($name, $user->getLastname())) {
+                    $users[$name] = $user;
+                }
+            }
+        }
+
+        return $users;
     }
 }

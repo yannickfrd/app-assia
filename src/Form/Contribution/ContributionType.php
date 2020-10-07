@@ -2,14 +2,14 @@
 
 namespace App\Form\Contribution;
 
-use App\Form\Utils\Choices;
 use App\Entity\Contribution;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContributionType extends AbstractType
 {
@@ -28,34 +28,24 @@ class ContributionType extends AbstractType
                 'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
                 'placeholder' => 'placeholder.select',
             ])
-            ->add('salaryAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
-                'required' => false,
-            ])
+            // ->add('salaryAmt', MoneyType::class, [
+            //     'attr' => ['class' => 'js-money text-right'],
+            //     'required' => false,
+            // ])
             ->add('resourcesAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
+                'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
             ->add('aplAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
+                'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
             ->add('rentAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
+                'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
             ->add('toPayAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
+                'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
             ->add('paymentDate', DateType::class, [
@@ -69,9 +59,7 @@ class ContributionType extends AbstractType
                 'required' => false,
             ])
             ->add('paidAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
+                'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
             ->add('stillToPayAmt', MoneyType::class, [
@@ -82,9 +70,7 @@ class ContributionType extends AbstractType
                 'required' => false,
             ])
             ->add('returnAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'js-money text-right',
-                ],
+                'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
             ->add('comment', null, [

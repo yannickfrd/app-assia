@@ -50,7 +50,7 @@ class NoteSearchType extends AbstractType
                 'attr' => [
                     'class' => 'w-max-160',
                 ],
-                'placeholder' => '-- Statut --',
+                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [

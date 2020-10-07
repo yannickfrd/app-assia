@@ -8,16 +8,10 @@
         
             <div class="modal-header">
                 <h2 class="mb-0">Paiement</h2>
-                    {# {% set theme_color = "dark" %}
-                    {% if app.session.get("themeColor") %}{% set theme_color = app.session.get("themeColor") %}{% endif %} #}
-                    <div class="small text-secondary">
-                        <p class="mb-0 ml-3 text-right" id="js-info-contrib">
-                            {# {% if contribution.id %}
-                                Créé le {{contribution.createdAt|date("d/m/Y à H:i") }}{% if contribution.createdBy %} par {{ contribution.createdBy.fullname}}{% endif %}<br/>
-                                <span id="js-updatedSupport">(modifié le {{ contribution.updatedAt|date("d/m/Y à H:i") }} par {{ contribution.updatedBy.fullname }})</span>
-                            {% endif %} #}
-                        </p>
-                    </div>
+                <div class="small text-secondary">
+                    <p class="mb-0 ml-3 text-right" id="js-info-contrib">
+                    </p>
+                </div>
             </div>
 
             {{ form_start(form) }}
@@ -37,7 +31,7 @@
                 <hr class="mt-0">
                 <div class="row js-contrib js-contribution d-none">
                     <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
-                    <div class="col-lg-4">{{ form_row(form.salaryAmt) }}</div>
+                    {# <div class="col-lg-4">{{ form_row(form.salaryAmt) }}</div> #}
 				    <div class="col-lg-4">
 					    <button id="btn-update-contribution" class="btn btn-secondary mb-2" title="Calculer le montant à régler">
                             <span class="fas fa-sync mr-2"></span>Calculer</button>

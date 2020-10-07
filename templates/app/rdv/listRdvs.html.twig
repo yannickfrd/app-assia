@@ -56,12 +56,12 @@
                         </td>                        
                         <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
                         <td class="align-middle">{{ rdv.location }}</td>
-                        <td class="align-middle">{{ rdv.supportGroup.referent ? rdv.supportGroup.referent.fullname }}</td>
+                        <td class="align-middle">{{ rdv.supportGroup and rdv.supportGroup.referent ? rdv.supportGroup.referent.fullname }}</td>
                         <td class="align-middle">
                             {% if rdv.supportGroup %}
-                            {% for supportPerson in rdv.supportGroup.supportPeople|filter(s => s.head == true) %}
-                            {{ supportPerson.person.fullname }}<br>
-                            {% endfor %}
+                                {% for supportPerson in rdv.supportGroup.supportPeople|filter(s => s.head == true) %}
+                                    {{ supportPerson.person.fullname }}<br>
+                                {% endfor %}
                             {% endif %} 
                         </td>
                     </tr>

@@ -43,7 +43,7 @@ class SupportNoteSearchType extends AbstractType
                 'attr' => [
                     'class' => 'w-max-150',
                 ],
-                'placeholder' => '-- Statut --',
+                'placeholder' => 'placeholder.status',
                 'required' => false,
             ]);
     }

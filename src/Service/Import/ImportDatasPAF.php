@@ -3,9 +3,12 @@
 namespace App\Service\Import;
 
 use App\Entity\Contribution;
+use App\Entity\Service;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Repository\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class ImportDatasPAF
 {
@@ -20,6 +23,27 @@ class ImportDatasPAF
         'Espèce' => 4,
     ];
 
+    public const SOCIAL_WORKER = [
+        'Marie-Laure PEBORDE',
+        'Camille RAVEZ',
+        'Typhaine PECHE',
+        'Cécile BAZIN',
+        'Nathalie POULIQUEN',
+        'Marina DJORDJEVIC',
+        'Melody ROMET',
+        'Gaëlle PRINCET',
+        'Marion FRANCOIS',
+        'Margot COURAUDON',
+        'Marilyse TOURNIER',
+        'Rozenn DOUELE ZAHAR',
+        'Laurine VIALLE',
+        'Ophélie QUENEL',
+        'Camille GALAN',
+        'Christine VESTUR',
+        'Julie MARTIN',
+    ];
+
+    protected $user;
     protected $manager;
 
     protected $items = [];
@@ -27,16 +51,23 @@ class ImportDatasPAF
     protected $hotelSupports;
     protected $field;
 
-    public function __construct(EntityManagerInterface $manager, HotelSupportRepository $repoHotelSupport)
+    protected $service;
+
+    public function __construct(Security $security,
+        EntityManagerInterface $manager,
+        HotelSupportRepository $repoHotelSupport)
     {
         $this->manager = $manager;
         $this->repoHotelSupport = $repoHotelSupport;
         $this->hotelSupports = $repoHotelSupport->findAll();
     }
 
-    public function importInDatabase(string $fileName): array
+    public function importInDatabase(string $fileName, Service $service): array
     {
         $this->fields = $this->getDatas($fileName);
+        $this->service = $service;
+
+        $this->users = $this->getUsers();
 
         $i = 0;
         foreach ($this->fields as $field) {
@@ -63,16 +94,19 @@ class ImportDatasPAF
             ++$i;
         }
 
+        // $j = 0;
         foreach ($this->items as $key => $item) {
-            $hotelSupport = $this->repoHotelSupport->findOneBy(['amhId' => $key]);
+            $hotelSupport = $this->repoHotelSupport->findOneBy(['accessId' => $key]);
             if ($hotelSupport) {
                 $this->items[$key]['groupPeople'] = $hotelSupport;
                 foreach ($item['pafs'] as $paf) {
                     $this->createPAF($hotelSupport->getSupportGroup(), $paf);
+                    // ++$j;
                 }
             }
         }
 
+        // dd($j);
         // dd($this->items);
         $this->manager->flush();
 
@@ -81,11 +115,11 @@ class ImportDatasPAF
 
     protected function createPAF(SupportGroup $supportGroup, array $paf)
     {
-        if (!$paf['Date PAF'] || !$paf['Montant à payer']) {
-            return null;
-        }
+        $userReferent = $this->getUserReferent($paf['TS']);
 
-        $comment = ($paf['Banque'] ? $paf['Banque']."\n" : null).($paf['TS'] ? 'TS : '.$paf['TS']."\n" : null).($paf['Commentaire'] ?? null);
+        $comment = ($paf['Banque'] ? $paf['Banque']."\n" : null).
+            (!$userReferent && $paf['TS'] ? 'TS : '.$paf['TS']."\n" : null).
+            ($paf['Commentaire'] ?? null);
 
         $contribution = (new Contribution())
             ->setMonthContrib($paf['Date PAF'] ? new \Datetime($paf['Date PAF']) : null)
@@ -98,12 +132,40 @@ class ImportDatasPAF
             ->setPaymentType($this->findInArray($paf['Type paiement'], self::PAYMENT_TYPE) ?? 99)
             ->setComment($comment)
             ->setCheckAt(new \Datetime($paf['Date vérification']))
+            ->setCreatedBy($userReferent ?? $this->user)
             ->setCreatedAt(new \Datetime($paf['Date création']))
-            // ->setUpdatedAt(new \Datetime($paf['Date mise à jour']))
+            ->setUpdatedBy($userReferent ?? $this->user)
+            ->setUpdatedAt(new \Datetime($paf['Date mise à jour']))
             ->setSupportGroup($supportGroup);
 
         $this->manager->persist($contribution);
 
         return $contribution;
+    }
+
+    protected function getUserReferent(string $ts): ?User
+    {
+        foreach ($this->users as $key => $user) {
+            if ($key == $ts) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getUsers(): array
+    {
+        $users = [];
+
+        foreach ($this->service->getUsers() as $user) {
+            foreach (self::SOCIAL_WORKER as $name) {
+                if (strstr($name, $user->getLastname())) {
+                    $users[$name] = $user;
+                }
+            }
+        }
+
+        return $users;
     }
 }

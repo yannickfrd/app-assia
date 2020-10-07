@@ -31,7 +31,7 @@ class NoteType extends AbstractType
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getchoices(Note::STATUS),
-                'placeholder' => '-- Statut --',
+                'placeholder' => 'placeholder.status',
             ]);
     }
 

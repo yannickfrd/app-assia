@@ -46,7 +46,7 @@ export default class SupportContributions {
         this.monthContribYearSelect = document.getElementById('contribution_monthContrib_year')
         this.monthContribMonthSelect = document.getElementById('contribution_monthContrib_month')
         this.monthContribDaySelect = document.getElementById('contribution_monthContrib_day')
-        this.salaryAmtInput = document.getElementById('contribution_salaryAmt')
+        // this.salaryAmtInput = document.getElementById('contribution_salaryAmt')
         this.resourcesAmtInput = document.getElementById('contribution_resourcesAmt')
         this.rentAmtInput = document.getElementById('contribution_rentAmt')
         this.aplAmtInput = document.getElementById('contribution_aplAmt')
@@ -558,7 +558,7 @@ export default class SupportContributions {
         }
 
         this.resourcesAmtInput.value === '' ? this.resourcesAmtInput.value = this.resourcesAmt : null
-        this.salaryAmtInput.value === '' ? this.salaryAmtInput.value = this.salaryAmt : null
+        // this.salaryAmtInput.value === '' ? this.salaryAmtInput.value = this.salaryAmt : null
         // this.contributionAmt = this.contributionAmt
         this.toPayAmtInput.value = this.toPayAmt
         this.rentAmtInput.value = this.rentAmt
@@ -581,7 +581,7 @@ export default class SupportContributions {
             this.selectOption(this.monthContribYearSelect, parseInt(contribution.monthContrib.substring(0, 4)))
             this.selectOption(this.monthContribMonthSelect, parseInt(contribution.monthContrib.substring(5, 7)))
         }
-        this.salaryAmtInput.value = contribution.salaryAmt
+        // this.salaryAmtInput.value = contribution.salaryAmt
         this.resourcesAmtInput.value = contribution.resourcesAmt
         this.rentAmtInput.value = contribution.rentAmt
         this.toPayAmtInput.value = contribution.toPayAmt
