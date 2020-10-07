@@ -116,8 +116,7 @@ class ImportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $items = $importDatas->importInDatabase($file, $this->import->getService());
-            $nbItems = count($items);
+            $nbItems = $importDatas->importInDatabase($file, $this->import->getService());
             if ($nbItems > 0) {
                 $this->addFlash('success', $nbItems.' entrées ont été importées !');
 

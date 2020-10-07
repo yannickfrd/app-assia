@@ -39,9 +39,9 @@ class AppController extends AbstractController
     protected $repoContribution;
 
     public function __construct(
+        UserRepository $repoUser,
         PersonRepository $repoPerson,
         GroupPeopleRepository $repoGroupPeople,
-        UserRepository $repoUser,
         SupportGroupRepository $repoSupport,
         NoteRepository $repoNote,
         RdvRepository $repoRdv,
@@ -67,9 +67,6 @@ class AppController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
-        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
-            return $this->dashboardSocialWorker($cache);
-        }
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->dashboardAdmin($cache);
         }
@@ -94,63 +91,20 @@ class AppController extends AbstractController
         return $this->render('app/managing/managing.html.twig');
     }
 
-    protected function dashboardSocialWorker(FilesystemAdapter $cache)
+    protected function dashboardSocialWorker()
     {
-        return $this->render('app/home/home.html.twig', [
+        return $this->render('app/home/home.h   tml.twig', [
             'supports' => $this->repoSupport->findAllSupportsFromUser($this->getUser()),
             'notes' => $this->repoNote->findAllNotesFromUser($this->getUser(), 10),
             'rdvs' => $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10),
         ]);
     }
 
-    protected function dashboardAdmin($cache)
+    protected function dashboardAdmin(FilesystemAdapter $cache)
     {
-        $indicators = $cache->getItem('stats.indicators');
-
-        if (!$indicators->isHit()) {
-            $datas = [];
-            $datas['Nombre de personnes'] = (int) $this->repoPerson->count([]);
-            $datas['Nombre de groupes'] = (int) $this->repoGroupPeople->count([]);
-            $datas['Nombre de suivis'] = (int) $this->repoSupport->count([]);
-            $datas['Nombre de suivis en cours'] = (int) $this->repoSupport->count(['status' => 2]);
-            $datas['Nombre de notes'] = (int) $this->repoNote->count([]);
-            $datas['Nombre de RDVs'] = (int) $this->repoRdv->count([]);
-            $datas['Nombre de documents'] = $this->repoDocument->count([]).' ('.round($this->repoDocument->sumSizeAllDocuments() / 1024 / 1024).' Mo.)';
-            $datas['Nombre de paiements'] = (int) $this->repoContribution->count([]);
-
-            $indicators->set($datas);
-            $indicators->expiresAfter(5 * 60); // 5mn
-            $cache->save($indicators);
-        }
-
-        $usersIndicators = $cache->getItem('stats.users_indicators');
-
-        // if (!$usersIndicators->isHit()) {
-        //     $users = [];
-
-        //     /** @var User $user */
-        //     foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
-        //         $users[] = [
-        //             'id' => $user->getId(),
-        //             'name' => $user->getFullname(),
-        //             'activeSupports' => (int) $this->repoSupport->count([
-        //                 'referent' => $user,
-        //                 'status' => 2,
-        //             ]),
-        //             'notes' => (int) $this->repoNote->count(['createdBy' => $user]),
-        //             'rdvs' => (int) $this->repoRdv->count(['createdBy' => $user]),
-        //             'documents' => (int) $this->repoDocument->count(['createdBy' => $user]),
-        //             'contributions' => (int) $this->repoContribution->count(['createdBy' => $user]),
-        //         ];
-        //     }
-        //     $usersIndicators->set($users);
-        //     $usersIndicators->expiresAfter(5 * 60); // 5mn
-        //     $cache->save($usersIndicators);
-        // }
-
         return $this->render('app/home/dashboardAdmin.html.twig', [
-            'datas' => $indicators->get(),
-            // 'users' => $usersIndicators->get(),
+            'datas' => $this->getIndicators($cache),
+            // 'users' => $this->getUsersIndicators($cache),
         ]);
     }
 
@@ -328,5 +282,58 @@ class AppController extends AbstractController
         $string = str_replace(' ', '+', $string);
 
         return $string;
+    }
+
+    protected function getIndicators(FilesystemAdapter $cache)
+    {
+        $indicators = $cache->getItem('stats.indicators');
+
+        if (!$indicators->isHit()) {
+            $datas = [];
+            $datas['Nombre de personnes'] = (int) $this->repoPerson->count([]);
+            $datas['Nombre de groupes'] = (int) $this->repoGroupPeople->count([]);
+            $datas['Nombre de suivis'] = (int) $this->repoSupport->count([]);
+            $datas['Nombre de suivis en cours'] = (int) $this->repoSupport->count(['status' => 2]);
+            $datas['Nombre de notes'] = (int) $this->repoNote->count([]);
+            $datas['Nombre de RDVs'] = (int) $this->repoRdv->count([]);
+            $datas['Nombre de documents'] = $this->repoDocument->count([]).' ('.round($this->repoDocument->sumSizeAllDocuments() / 1024 / 1024).' Mo.)';
+            $datas['Nombre de paiements'] = (int) $this->repoContribution->count([]);
+
+            $indicators->set($datas);
+            $indicators->expiresAfter(5 * 60); // 5mn
+            $cache->save($indicators);
+        }
+
+        return $indicators->get();
+    }
+
+    protected function getUsersIndicators(FilesystemAdapter $cache)
+    {
+        $usersIndicators = $cache->getItem('stats.users_indicators');
+
+        if (!$usersIndicators->isHit()) {
+            $users = [];
+
+            /** @var User $user */
+            foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
+                $users[] = [
+                    'id' => $user->getId(),
+                    'name' => $user->getFullname(),
+                    'activeSupports' => (int) $this->repoSupport->count([
+                        'referent' => $user,
+                        'status' => 2,
+                    ]),
+                    'notes' => (int) $this->repoNote->count(['createdBy' => $user]),
+                    'rdvs' => (int) $this->repoRdv->count(['createdBy' => $user]),
+                    'documents' => (int) $this->repoDocument->count(['createdBy' => $user]),
+                    'contributions' => (int) $this->repoContribution->count(['createdBy' => $user]),
+                ];
+            }
+            $usersIndicators->set($users);
+            $usersIndicators->expiresAfter(5 * 60); // 5mn
+            $cache->save($usersIndicators);
+        }
+
+        return $usersIndicators->get();
     }
 }

@@ -8,7 +8,6 @@ use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Repository\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 
 class ImportDatasPAF
 {
@@ -43,7 +42,6 @@ class ImportDatasPAF
         'Julie MARTIN',
     ];
 
-    protected $user;
     protected $manager;
 
     protected $items = [];
@@ -53,16 +51,14 @@ class ImportDatasPAF
 
     protected $service;
 
-    public function __construct(Security $security,
-        EntityManagerInterface $manager,
-        HotelSupportRepository $repoHotelSupport)
+    public function __construct(EntityManagerInterface $manager, HotelSupportRepository $repoHotelSupport)
     {
         $this->manager = $manager;
         $this->repoHotelSupport = $repoHotelSupport;
         $this->hotelSupports = $repoHotelSupport->findAll();
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
@@ -94,23 +90,22 @@ class ImportDatasPAF
             ++$i;
         }
 
-        // $j = 0;
+        $nbPafs = 0;
         foreach ($this->items as $key => $item) {
             $hotelSupport = $this->repoHotelSupport->findOneBy(['accessId' => $key]);
             if ($hotelSupport) {
                 $this->items[$key]['groupPeople'] = $hotelSupport;
                 foreach ($item['pafs'] as $paf) {
                     $this->createPAF($hotelSupport->getSupportGroup(), $paf);
-                    // ++$j;
+                    ++$nbPafs;
                 }
             }
         }
 
-        // dd($j);
         // dd($this->items);
         $this->manager->flush();
 
-        return $this->items;
+        return $nbPafs;
     }
 
     protected function createPAF(SupportGroup $supportGroup, array $paf)

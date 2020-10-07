@@ -514,7 +514,6 @@ class ImportDatasAMH
         'Autre' => 97,
     ];
 
-    protected $user;
     protected $manager;
     protected $repoSubService;
     protected $repoDevice;
@@ -549,14 +548,13 @@ class ImportDatasAMH
     protected $head;
     protected $role;
 
-    public function __construct(Security $security,
+    public function __construct(
         EntityManagerInterface $manager,
         SubServiceRepository $repoSubService,
         DeviceRepository $repoDevice,
         AccommodationRepository $repoAccommodation,
         PersonRepository $repoPerson)
     {
-        $this->user = $security->getUser();
         $this->manager = $manager;
         $this->repoSubService = $repoSubService;
         $this->repoDevice = $repoDevice;
@@ -564,13 +562,13 @@ class ImportDatasAMH
         $this->repoPerson = $repoPerson;
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
 
         $this->deviceAMH = $this->repoDevice->find(Device::HOTEL_AMH); // Famille AMH
-        $this->deviceASEMab = $this->repoDevice->find(Device::HOTEL_AMH); // ASE Mise à l'abri
+        $this->deviceASEMab = $this->repoDevice->find(Device::ASE_MAB); // ASE Mise à l'abri
         $this->deviceASEHeb = $this->repoDevice->find(Device::ASE_HEB); // ASE Hébergement
         $this->deviceINJ = $this->repoDevice->find(Device::HOTEL_INJ); // Injonctions
         $this->deviceHotelSupport = $this->repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
@@ -611,7 +609,7 @@ class ImportDatasAMH
         // dd($this->items);
         $this->manager->flush();
 
-        return $this->items;
+        return count($this->items);
     }
 
     protected function getPerson()
@@ -730,10 +728,12 @@ class ImportDatasAMH
             $comment = $comment."\nTS : ".$this->field['TS AMH'];
         }
 
+        $device = $this->getDevice();
+
         $supportGroup = (new SupportGroup())
                     ->setService($this->service)
                     ->setSubService($this->field['Secteur'] ? $this->localities[$this->field['Secteur']] : null)
-                    ->setDevice($this->getDevice())
+                    ->setDevice($device)
                     ->setReferent($userReferent)
                     ->setStatus($this->getStatus($this->field))
                     ->setStartDate($this->getStartDate($this->field))
@@ -741,8 +741,9 @@ class ImportDatasAMH
                     ->setEndStatus($this->findInArray($this->field['Type sortie AMH'], self::END_STATUS) ?? null)
                     ->setEndStatusComment($this->field['Précision motif sortie'])
                     ->setNbPeople((int) $this->field['Nb personnes'])
-                    ->setGroupPeople($groupPeople)
+                    ->setCoefficient($device->getCoefficient())
                     ->setComment($comment)
+                    ->setGroupPeople($groupPeople)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -755,8 +756,12 @@ class ImportDatasAMH
 
     protected function getDevice(): Device
     {
+        if ($this->field['Etat suivi AMH'] == 'En cours' && $this->field['Dispositif'] == 'Familles avec AMH') {
+            return $this->deviceHotelSupport;
+        }
+
         switch ($this->field['Dispositif']) {
-            case 'ASE mise à l\'abri':
+            case "ASE mise à l'abri":
                 return $this->deviceASEMab;
                 break;
             case 'ASE hébergement':

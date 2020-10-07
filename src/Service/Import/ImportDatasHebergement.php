@@ -366,14 +366,17 @@ class ImportDatasHebergement
     protected $head;
     protected $role;
 
-    public function __construct(EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
+    public function __construct(
+        EntityManagerInterface $manager, 
+        DeviceRepository $repoDevice, 
+        PersonRepository $repoPerson)
     {
         $this->manager = $manager;
         $this->repoDevice = $repoDevice;
         $this->repoPerson = $repoPerson;
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
 
@@ -407,7 +410,7 @@ class ImportDatasHebergement
         dd($this->items);
         $this->manager->flush();
 
-        return $this->items;
+        return count($this->items);
     }
 
     protected function getDevice(): Device

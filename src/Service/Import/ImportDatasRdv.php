@@ -8,7 +8,6 @@ use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Repository\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 
 class ImportDatasRdv
 {
@@ -41,7 +40,6 @@ class ImportDatasRdv
         'Julie MARTIN',
     ];
 
-    protected $user;
     protected $manager;
 
     protected $items = [];
@@ -51,17 +49,14 @@ class ImportDatasRdv
 
     protected $service;
 
-    public function __construct(Security $security,
-        EntityManagerInterface $manager,
-        HotelSupportRepository $repoHotelSupport)
+    public function __construct(EntityManagerInterface $manager, HotelSupportRepository $repoHotelSupport)
     {
-        $this->user = $security->getUser();
         $this->manager = $manager;
         $this->repoHotelSupport = $repoHotelSupport;
         $this->hotelSupports = $repoHotelSupport->findAll();
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
@@ -86,12 +81,14 @@ class ImportDatasRdv
             ++$i;
         }
 
+        $nbRdvs = 0;
         foreach ($this->items as $key => $item) {
             $hotelSupport = $this->repoHotelSupport->findOneBy(['accessId' => $key]);
             if ($hotelSupport) {
                 $this->items[$key]['groupPeople'] = $hotelSupport;
                 foreach ($item['rdvs'] as $rdv) {
                     $this->createRdv($hotelSupport->getSupportGroup(), $rdv);
+                    ++$nbRdvs;
                 }
             }
         }
@@ -99,7 +96,7 @@ class ImportDatasRdv
         // dd($this->items);
         $this->manager->flush();
 
-        return $this->items;
+        return $nbRdvs;
     }
 
     protected function createRdv(SupportGroup $supportGroup, array $rdv)

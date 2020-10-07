@@ -41,7 +41,7 @@ class ImportDatasUser
         $this->notification = $notification;
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
 
@@ -61,7 +61,7 @@ class ImportDatasUser
         // dd($this->items);
         $this->manager->flush();
 
-        return $this->items;
+        return count($this->items);
     }
 
     /**

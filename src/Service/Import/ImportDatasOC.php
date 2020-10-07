@@ -33,8 +33,8 @@ class ImportDatasOC
 
     public const SOCIAL_WORKER = [
         'Mylena ESPENAN',
-        'Laurine VIALLE',
-        'Marylise TOURNIER',
+        'Laurie PRIEUR',
+        'Marilyse TOURNIER',
         'Michaël ORPHELIN',
         'Rozenn DOUELE ZAHAR',
         'Floriane BRICARD',
@@ -323,7 +323,6 @@ class ImportDatasOC
     protected $row;
 
     protected $service;
-
     protected $deviceHotelOC;
     protected $deviceHotelSupport;
     protected $person;
@@ -339,18 +338,20 @@ class ImportDatasOC
     protected $head;
     protected $role;
 
-    public function __construct(EntityManagerInterface $manager, DeviceRepository $repoDevice, PersonRepository $repoPerson)
+    public function __construct(
+        EntityManagerInterface $manager,
+        DeviceRepository $repoDevice,
+        PersonRepository $repoPerson)
     {
         $this->manager = $manager;
         $this->repoPerson = $repoPerson;
         $this->repoDevice = $repoDevice;
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
-
         $this->deviceHotelOC = $this->repoDevice->find(Device::HOTEL_OC); // Opération ciblée
         $this->deviceHotelSupport = $this->repoDevice->find(Device::HOTEL_SUPPORT); // Accompagnement hôtel
 
@@ -385,7 +386,7 @@ class ImportDatasOC
         // dd($this->items);
         $this->manager->flush();
 
-        return $this->items;
+        return count($this->items);
     }
 
     protected function getPerson()
@@ -488,17 +489,21 @@ class ImportDatasOC
     {
         $userReferent = $this->getUserReferent();
 
+        $status = $this->getStatus();
+        $device = $this->getDevice($status);
+
         $supportGroup = (new SupportGroup())
                     ->setGroupPeople($groupPeople)
                     ->setService($this->service)
-                    ->setDevice($this->deviceHotelOC)
+                    ->setDevice($device)
                     ->setReferent($userReferent)
-                    ->setStatus($this->getStatus($this->field))
-                    ->setStartDate($this->getStartDate($this->field))
-                    ->setEndDate($this->getEndDate($this->field))
+                    ->setStatus($status)
+                    ->setStartDate($this->getStartDate())
+                    ->setEndDate($this->getEndDate())
                     ->setEndStatus(null)
                     ->setEndStatusComment($this->field['Motif sortie'])
                     ->setNbPeople($this->findInArray($this->field['Compo'], self::NB_PEOPLE) ?? null)
+                    ->setCoefficient($device->getCoefficient())
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -520,6 +525,15 @@ class ImportDatasOC
         }
 
         return null;
+    }
+
+    protected function getDevice(int $status): Device
+    {
+        if ($status == SupportGroup::STATUS_IN_PROGRESS) {
+            return $this->deviceHotelSupport;
+        }
+
+        return $this->deviceHotelOC;
     }
 
     protected function createEvaluationGroup($supportGroup): EvaluationGroup
@@ -644,9 +658,9 @@ class ImportDatasOC
         $rolePerson = $this->person->getRolesPerson()->first();
 
         $supportPerson = (new SupportPerson())
-                    ->setStatus($this->getStatus($this->field))
-                    ->setStartDate($this->getStartDate($this->field))
-                    ->setEndDate($this->getEndDate($this->field))
+                    ->setStatus($this->getStatus())
+                    ->setStartDate($this->getStartDate())
+                    ->setEndDate($this->getEndDate())
                     ->setSupportGroup($supportGroup)
                     ->setPerson($this->person)
                     ->setHead($rolePerson->getHead())
