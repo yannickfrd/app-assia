@@ -19,19 +19,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NoteRepository extends ServiceEntityRepository
 {
-    private $currentUser;
-
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Note::class);
-
-        $this->currentUser = $currentUser;
     }
 
     /**
      * Return all notes of group support.
      */
-    public function findAllNotesQuery(NoteSearch $search): Query
+    public function findAllNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
     {
         $query = $this->createQueryBuilder('n')->select('n')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -40,9 +36,9 @@ class NoteRepository extends ServiceEntityRepository
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $currentUser->getServices());
         }
 
         if ($search->getServices() && count($search->getServices())) {

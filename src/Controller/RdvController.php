@@ -13,6 +13,7 @@ use App\Form\Rdv\RdvSearchType;
 use App\Form\Rdv\RdvType;
 use App\Form\Rdv\SupportRdvSearchType;
 use App\Repository\RdvRepository;
+use App\Security\CurrentUserService;
 use App\Service\Calendar;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportGroupService;
@@ -42,7 +43,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
      */
-    public function viewListRdvs(Request $request, Pagination $pagination): Response
+    public function viewListRdvs(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $search = new RdvSearch();
         if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
@@ -61,7 +62,7 @@ class RdvController extends AbstractController
         return $this->render('app/rdv/listRdvs.html.twig', [
             'rdvSearch' => $search,
             'form' => $form->createView(),
-            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search), $request, 10) ?? null,
+            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search, $currentUser), $request, 10) ?? null,
         ]);
     }
 

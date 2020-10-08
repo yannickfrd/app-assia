@@ -30,11 +30,11 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places.
      */
-    public function findAllAccommodationsQuery(CurrentUserService $currentUser, AccommodationSearch $search = null): Query
+    public function findAllAccommodationsQuery(AccommodationSearch $search = null, CurrentUserService $currentUser = null): Query
     {
         $query = $this->getAccommodations();
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('a.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }

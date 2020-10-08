@@ -49,7 +49,7 @@ class AccommodationController extends AbstractController
         return $this->render('app/accommodation/listAccommodations.html.twig', [
             'accommodationSearch' => $search,
             'form' => $form->createView(),
-            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($currentUser, $search), $request) ?? null,
+            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($search, $currentUser), $request) ?? null,
         ]);
     }
 

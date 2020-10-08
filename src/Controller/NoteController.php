@@ -15,6 +15,7 @@ use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
+use App\Security\CurrentUserService;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
@@ -46,7 +47,7 @@ class NoteController extends AbstractController
      *
      * @Route("notes", name="notes", methods="GET|POST")
      */
-    public function listNotes(Request $request, Pagination $pagination): Response
+    public function listNotes(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $search = new NoteSearch();
         if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
@@ -60,7 +61,7 @@ class NoteController extends AbstractController
 
         return $this->render('app/note/listNotes.html.twig', [
             'form' => $form->createView(),
-            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($search), $request, 10) ?? null,
+            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($search, $currentUser), $request, 10) ?? null,
         ]);
     }
 

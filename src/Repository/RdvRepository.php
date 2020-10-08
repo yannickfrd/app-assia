@@ -20,23 +20,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RdvRepository extends ServiceEntityRepository
 {
-    private $currentUser;
-
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Rdv::class);
-
-        $this->currentUser = $currentUser;
     }
 
     /**
      * Return all rdvs of group support.
      */
-    public function findAllRdvsQuery(RdvSearch $search): Query
+    public function findAllRdvsQuery(RdvSearch $search, ?CurrentUserService $currentUser = null): Query
     {
         $query = $this->getRdvsQuery();
 
-        $query = $this->filter($query, $search);
+        $query = $this->filter($query, $search, $currentUser);
 
         return  $query->orderBy('r.start', 'ASC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -69,11 +65,11 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
     }
 
-    protected function filter($query, RdvSearch $search)
+    protected function filter($query, RdvSearch $search, $currentUser)
     {
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $currentUser->getServices());
         }
 
         if ($search->getTitle()) {
