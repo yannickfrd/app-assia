@@ -30,12 +30,13 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUserByUsernameOrEmail(string $username): ?User
     {
-        return $this->createQueryBuilder('u')
-            ->select('u')
+        return $this->createQueryBuilder('u')->select('u')
+
             ->andWhere('u.username = :username')
             ->setParameter('username', $username)
             ->orWhere('u.email = :email')
             ->setParameter('email', $username)
+
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -45,8 +46,7 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUserById(int $id): ?User
     {
-        return $this->createQueryBuilder('u')
-            ->select('u')
+        return $this->createQueryBuilder('u')->select('u')
             ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
@@ -66,10 +66,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Retourne tous les utilisateurs.
      */
-    public function findAllUsersQuery(UserSearch $search): Query
+    public function findAllUsersQuery(UserSearch $search, ?User $user = null): Query
     {
-        $query = $this->createQueryBuilder('u')
-            ->select('u')
+        $query = $this->createQueryBuilder('u')->select('u')
             ->leftJoin('u.createdBy', 'creatorUser')->addSelect('creatorUser')
             ->leftJoin('u.serviceUser', 'su')->addSelect('su')
             ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id,name}')
@@ -109,7 +108,11 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        $query = $query->orderBy('u.lastname', 'DESC');
+        if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $query = $query->orderBy('u.lastActivityAt', 'DESC');
+        } else {
+            $query = $query->orderBy('u.lastname', 'ASC');
+        }
 
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }

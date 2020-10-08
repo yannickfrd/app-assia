@@ -3,6 +3,7 @@
 namespace App\Form\Model;
 
 use App\Entity\Pole;
+use App\Form\Utils\Choices;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -56,7 +57,7 @@ class UserSearch
     /**
      * @var int|null
      */
-    private $disabled;
+    private $disabled = Choices::ACTIVE;
 
     /**
      * @var bool

@@ -76,7 +76,7 @@ class UserController extends AbstractController
         return $this->render('app/user/adminListUsers.html.twig', [
             'userSearch' => $search,
             'form' => $form->createView(),
-            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search), $request),
+            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search, $this->getUser()), $request),
         ]);
     }
 
