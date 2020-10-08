@@ -19,12 +19,14 @@
 
     <div class="container">
 
+    {% if is_granted("ROLE_ADMIN") %}
         <div class="row mb-3">
             <div class="col-md-12">
                 <a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow"><!--
                 --><span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
             </div>
         </div>
+    {% endif %}
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
@@ -83,8 +85,7 @@
                             {% for role in user.serviceUser %}
                                 {% if role.service.pole.id not in poles %}
                                     {% set poles = poles|merge([role.service.pole.id]) %}
-                                    <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
-                                        class="text-{{ theme_color }}">{{ role.service.pole.name }}</a><br>
+                                    {{ role.service.pole.name }}<br>
                                 {% endif %}
                             {% endfor %}
                         </td>

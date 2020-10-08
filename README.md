@@ -18,6 +18,7 @@ https://demo.esperer95.app
 
 ## Version 1.27.4 - 08/10/2020
 - Modif du tableau des utilisateurs : affiche par défaut uniquement les utilisateurs actifs, et modif tri tableau admin.
+- Modif affichage : masque lien pages d'admin aux utilisateurs classiques.
 
 ## Version 1.27.3 - 07/10/2020
 - Suppression du champ 'Salaire' dans la fiche 'Paiement'.
