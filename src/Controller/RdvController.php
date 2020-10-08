@@ -109,7 +109,11 @@ class RdvController extends AbstractController
         return $this->render('app/rdv/calendar.html.twig', [
             'calendar' => $calendar,
             'form' => $form->createView(),
-            'rdvs' => $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), null),
+            'rdvs' => $this->repo->findRdvsBetweenByDay(
+                $calendar->getFirstMonday(),
+                $calendar->getLastday(),
+                null,
+                $this->getUser()),
         ]);
     }
 
@@ -138,7 +142,10 @@ class RdvController extends AbstractController
             'support' => $supportGroup,
             'calendar' => $calendar,
             'form' => $form->createView(),
-            'rdvs' => $this->repo->findRdvsBetweenByDay($calendar->getFirstMonday(), $calendar->getLastday(), $supportGroup),
+            'rdvs' => $this->repo->findRdvsBetweenByDay(
+                $calendar->getFirstMonday(),
+                $calendar->getLastday(),
+                $supportGroup),
         ]);
     }
 
@@ -161,7 +168,7 @@ class RdvController extends AbstractController
 
         return $this->render('app/rdv/day.html.twig', [
             'form' => $form->createView(),
-            'rdvs' => $this->repo->findRdvsBetween($startDay, $endDay, null),
+            'rdvs' => $this->repo->findRdvsBetween($startDay, $endDay, null, $this->getUser()),
         ]);
     }
 

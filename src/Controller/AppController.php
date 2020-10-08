@@ -93,7 +93,7 @@ class AppController extends AbstractController
 
     protected function dashboardSocialWorker()
     {
-        return $this->render('app/home/home.h   tml.twig', [
+        return $this->render('app/home/home.html.twig', [
             'supports' => $this->repoSupport->findAllSupportsFromUser($this->getUser()),
             'notes' => $this->repoNote->findAllNotesFromUser($this->getUser(), 10),
             'rdvs' => $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10),

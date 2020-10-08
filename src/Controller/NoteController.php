@@ -61,7 +61,9 @@ class NoteController extends AbstractController
 
         return $this->render('app/note/listNotes.html.twig', [
             'form' => $form->createView(),
-            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($search, $currentUser), $request, 10) ?? null,
+            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($search, $currentUser),
+                $request,
+                10) ?? null,
         ]);
     }
 

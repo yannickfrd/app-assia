@@ -49,6 +49,7 @@ class NoteControllerTest extends WebTestCase
 
     public function testSearchNotesIsSuccessful()
     {
+            
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('notes'));
 
