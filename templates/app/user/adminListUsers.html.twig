@@ -73,18 +73,18 @@
                             <td class="align-middle">{{ user.phone1 }}</td>
                             <td class="align-middle">{{ user.email }}</td>
                             <td class="align-middle">
-                                {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
-                                    <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
-                                        class="text-{{ theme_color }}">{{ role.service.name }}</a>{% if not loop.last %}, {% endif %}
+                                {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
+                                    <a href="{{ path('service_edit', {'id': service.id}) }}" 
+                                        class="text-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             </td>
                             {% set poles = [] %}
                             <td class="align-middle">
-                                {% for role in user.serviceUser %}
-                                    {% if role.service.pole.id not in poles %}
-                                        {% set poles = poles|merge([role.service.pole.id]) %}
-                                        <a href="{{ path('pole_edit', {'id': role.service.pole.id}) }}" 
-                                            class="text-{{ theme_color }}">{{ role.service.pole.name }}</a><br>
+                                {% for service in user.services %}
+                                    {% if service.pole.id not in poles %}
+                                        {% set poles = poles|merge([service.pole.id]) %}
+                                        <a href="{{ path('pole_edit', {'id': service.pole.id}) }}" 
+                                            class="text-{{ theme_color }}">{{ service.pole.name }}</a><br>
                                     {% endif %}
                                 {% endfor %}
                             </td>

@@ -74,18 +74,18 @@
                         <td class="align-middle">{{ user.email }}</td>
                         <td class="position-relative overflow-auto">
                             <div class="position-absolute h-100">
-                                {% for role in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name) %}
-                                    <a href="{{ path('service_edit', {'id': role.service.id}) }}" 
-                                        class="text-{{ theme_color }}">{{ role.service.name }}</a>{% if not loop.last %}, {% endif %}
+                                {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
+                                    <a href="{{ path('service_edit', {'id': service.id}) }}" 
+                                        class="text-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             </div>
                         </td>
                         <td class="align-middle">
                             {% set poles = [] %}
-                            {% for role in user.serviceUser %}
-                                {% if role.service.pole.id not in poles %}
-                                    {% set poles = poles|merge([role.service.pole.id]) %}
-                                    {{ role.service.pole.name }}<br>
+                            {% for service in user.services %}
+                                {% if service.pole.id not in poles %}
+                                    {% set poles = poles|merge([service.pole.id]) %}
+                                    {{ service.pole.name }}<br>
                                 {% endif %}
                             {% endfor %}
                         </td>
