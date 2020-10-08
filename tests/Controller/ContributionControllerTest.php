@@ -33,7 +33,7 @@ class ContributionControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/ContributionFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup'];
         $this->contribution = $this->dataFixtures['contribution1'];

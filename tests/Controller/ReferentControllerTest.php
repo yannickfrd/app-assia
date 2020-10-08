@@ -29,7 +29,7 @@ class ReferentControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/ReferentFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->referent = $this->dataFixtures['referent1'];
     }

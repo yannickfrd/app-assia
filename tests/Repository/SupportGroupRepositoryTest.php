@@ -51,7 +51,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
         $this->supportGroup = $dataFixtures['supportGroup1'];
         $this->service = $dataFixtures['service'];
-        $this->user = $dataFixtures['userSuperAdmin'];
+        $this->user = $dataFixtures['userRoleUser'];
         $this->search = $this->getSupportGroupSearch();
     }
 

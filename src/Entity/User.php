@@ -476,7 +476,20 @@ class User implements UserInterface
         return $this;
     }
 
-    
+    /**
+     * @return Collection|Service[]
+     */
+    public function getServices(): ?Collection
+    {
+        $services = new ArrayCollection();
+
+        foreach ($this->getServiceUser() as $serviceUser) {
+            $services->add($serviceUser->getService());
+        }
+
+        return $services;
+    }
+
     /**
      * @return Collection|UserConnection[]
      */

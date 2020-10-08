@@ -11,8 +11,8 @@ App\Entity\Referent:
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
     groupPeople: "@groupPeople"
 
   referent{2..5}:
@@ -34,11 +34,11 @@ App\Entity\Referent:
 
     
 App\Entity\User:
-  userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+  userRoleUser:
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*

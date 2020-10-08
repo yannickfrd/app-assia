@@ -11,8 +11,8 @@ App\Entity\Referent:
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin*"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser*"
     groupPeople: "@groupPeople1"
 
   referent{2}:

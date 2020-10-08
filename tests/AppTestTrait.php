@@ -31,8 +31,8 @@ trait AppTestTrait
         $this->client->getCookieJar()->set($cookie);
 
         $this->client->request('POST', $this->generateUri('security_login'), [
-            '_username' => 'r.madelaine',
-            '_password' => 'Test123*',
+            '_username' => $user->getUsername(),
+            '_password' => $user->getPlainPassword(),
             '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),
         ]);
     }
@@ -48,7 +48,7 @@ trait AppTestTrait
         $this->debug('try to login');
 
         $form = $crawler->selectButton('send')->form([
-            '_username' => 'r.madelaine',
+            '_username' => 'r.super_admin',
             '_password' => 'Test123*',
         ]);
 

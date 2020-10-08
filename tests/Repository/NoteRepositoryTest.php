@@ -3,8 +3,8 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Note;
-use App\Entity\User;
 use App\Entity\SupportGroup;
+use App\Entity\User;
 use App\Form\Model\NoteSearch;
 use App\Form\Model\SupportNoteSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -44,7 +44,7 @@ class NoteRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Note::class);
 
         $this->supportGroup = $dataFixtures['supportGroup'];
-        $this->user = $dataFixtures['userSuperAdmin'];
+        $this->user = $dataFixtures['userRoleUser'];
         $this->search = (new SupportNoteSearch())
             ->setContent('Contenu de la note')
             ->setType(1)

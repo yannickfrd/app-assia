@@ -30,7 +30,7 @@ class OrganizationControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/OrganizationFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->organization = $this->dataFixtures['organization1'];
     }

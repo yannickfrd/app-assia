@@ -6,21 +6,21 @@ use App\Entity\User;
 use App\Form\Service\ServiceUserType;
 use App\Form\User\UserDeviceType;
 use App\Form\Utils\Choices;
-use App\Security\CurrentUserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class SecurityUserType extends AbstractType
 {
-    private $currentUser;
+    private $security;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(Security $security)
     {
-        $this->currentUser = $currentUser;
+        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -125,7 +125,7 @@ class SecurityUserType extends AbstractType
 
     public function getRoles()
     {
-        if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return Choices::getChoices(User::ROLES);
         }
 

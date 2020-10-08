@@ -5,8 +5,8 @@ App\Entity\AccommodationGroup:
     endReason: <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
     accommodation: "@accommodation1"
     groupPeople: "@groupPeople"
     supportGroup: "@supportGroup1"
@@ -64,8 +64,8 @@ App\Entity\Accommodation:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service"
     device: "@device"
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
 
 
 App\Entity\SupportGroup:
@@ -74,7 +74,7 @@ App\Entity\SupportGroup:
     endDate: null
     status: 2
     agreement: true
-    referent: "@userSuperAdmin"
+    referent: "@userRoleUser"
     service: "@service"
     device: "@device"
     groupPeople: "@groupPeople"
@@ -88,7 +88,7 @@ App\Entity\SupportGroup:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
     status: <numberBetween(1, 4)>
-    referent: "@userSuperAdmin"
+    referent: "@userRoleUser"
     service: "@service"
     device: "@device"
     groupPeople: "@groupPeople"
@@ -112,11 +112,11 @@ App\Entity\SupportPerson:
 
     
 App\Entity\User:
-  userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+  userRoleUser:
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*

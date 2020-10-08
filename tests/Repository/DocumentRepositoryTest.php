@@ -44,7 +44,7 @@ class DocumentRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Document::class);
 
         $this->supportGroup = $dataFixtures['supportGroup'];
-        $this->user = $dataFixtures['userSuperAdmin'];
+        $this->user = $dataFixtures['userRoleUser'];
         $this->search = (new DocumentSearch())
             ->setName('Document 666')
             ->setType(1);

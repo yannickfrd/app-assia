@@ -31,7 +31,7 @@ class EvaluationControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/EvaluationFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
     }

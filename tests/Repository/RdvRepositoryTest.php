@@ -49,7 +49,7 @@ class RdvRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(Rdv::class);
 
         $this->supportGroup = $dataFixtures['supportGroup'];
-        $this->user = $dataFixtures['userSuperAdmin'];
+        $this->user = $dataFixtures['userRoleUser'];
 
         $referents = new ArrayCollection();
         $referents->add($this->user);

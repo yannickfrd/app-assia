@@ -39,7 +39,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testListDevicesIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('admin_devices'));
 
@@ -49,7 +49,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testNewDeviceIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('admin_device_new'));
 
@@ -59,7 +59,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testFailToCreateDevice()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('admin_device_new'));
@@ -76,7 +76,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testCreateDeviceThatExists()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('admin_device_new', [
@@ -95,7 +95,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testSuccessToCreateNewDevice()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('admin_device_new', [
@@ -115,7 +115,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testEditDeviceisUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('admin_device_edit', [
             'id' => $this->device->getId(),
@@ -127,7 +127,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testSuccessToEditDevice()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('admin_device_edit', [

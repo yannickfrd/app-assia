@@ -1,10 +1,10 @@
 App\Entity\User:
   userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
+    firstname: ROLE
+    lastname: SUPER_ADMIN
+    username: r.super_admin
     plainPassword: Test123*
-    email: romain.madelaine@esperer-95.org
+    email: $username@esperer-95.org
     status: 6
     roles: ["ROLE_SUPER_ADMIN"]
     phone1: "01 00 00 00 00"
@@ -14,11 +14,11 @@ App\Entity\User:
     lastlogin: <dateTimeBetween($updatedAt, "now")>
 
   userRoleAdmin:
-    firstname: Laetitia
-    lastname: CHANIAL
-    username: l.chanial
+    firstname: Role
+    lastname: ADMIN
+    username: r.admin
     plainPassword: Test123*
-    email: l.chanial@esperer-95.org
+    email: $username@esperer-95.org
     status: 6
     roles: ["ROLE_ADMIN"]
     phone1: "01 00 00 00 00"
@@ -28,9 +28,9 @@ App\Entity\User:
     lastlogin: <dateTimeBetween($updatedAt, "now")>
 
   userRoleUser:
-    firstname: Lucie
-    lastname: LALOU
-    username: <mb_strtolower($firstname.$lastname)>
+    firstname: Role
+    lastname: USER
+    username: r.user
     plainPassword: Test123*
     email: $username@esperer-95.org
     status: 1
@@ -66,9 +66,15 @@ App\Entity\Service:
     updatedAt: <date_create()>
 
 App\Entity\ServiceUser:
-  servuserSuperAdmin:
+  serviceUser1:
     service: "@service"
     user: "@userSuperAdmin"
+  serviceUser2:
+    service: "@service"
+    user: "@userRoleAdmin"
+  serviceUser3:
+    service: "@service"
+    user: "@userRoleUser"
 
 
 App\Entity\Pole:

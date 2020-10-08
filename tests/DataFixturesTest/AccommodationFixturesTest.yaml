@@ -14,8 +14,8 @@ App\Entity\Accommodation:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service"
     device: "@device"
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleAdmin"
+    updatedBy: "@userRoleAdmin"
 
   accommodation{2..5}:
     name: <word()> <numberBetween(1, 1000)>
@@ -31,16 +31,16 @@ App\Entity\Accommodation:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service"
     device: "@device"
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleAdmin"
+    updatedBy: "@userRoleAdmin"
 
     
 App\Entity\User:
-  userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+  userRoleAdmin:
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*

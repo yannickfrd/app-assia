@@ -21,6 +21,8 @@ class PersonControllerTest extends WebTestCase
     /** @var array */
     protected $dataFixtures;
 
+    protected $userAdmin;
+
     /** @var Person */
     protected $person;
 
@@ -31,7 +33,8 @@ class PersonControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->user = $this->dataFixtures['userSuperAdmin'];
+        $this->userAdmin = $this->dataFixtures['userRoleAdmin'];
+        $this->user = $this->dataFixtures['userRoleUser'];
         $this->person = $this->dataFixtures['person1'];
     }
 
@@ -282,9 +285,20 @@ class PersonControllerTest extends WebTestCase
         $this->assertSame(1, $data['nb_results']);
     }
 
-    public function testDeletePerson()
+    public function testDeletePersonWithRoleUser()
     {
         $this->createLogin($this->user);
+
+        $this->client->request('GET', $this->generateUri('person_delete', [
+            'id' => $this->person->getId(),
+        ]));
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testDeletePersonWithRoleAdmin()
+    {
+        $this->createLogin($this->userAdmin);
 
         $this->client->request('GET', $this->generateUri('person_delete', [
             'id' => $this->person->getId(),

@@ -33,7 +33,7 @@ class RdvControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup'];
         $this->rdv = $this->dataFixtures['rdv1'];

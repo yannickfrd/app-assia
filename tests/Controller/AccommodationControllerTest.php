@@ -39,7 +39,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testListAccommodationsIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('accommodations'));
 
@@ -49,7 +49,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testListAccommodationPageWithReasearch()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('accommodations'));
@@ -70,7 +70,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testExportListAccommodationWithResults()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $crawler = $this->client->request('GET', $this->generateUri('accommodations'));
 
@@ -83,7 +83,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testExportListAccommodationWithoutResults()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $crawler = $this->client->request('GET', $this->generateUri('accommodations'));
 
@@ -98,7 +98,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testNewAccommodationIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('service_accommodation_new', [
             'id' => $this->service->getId(),
@@ -110,7 +110,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testFailToCreateAccommodation()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('service_accommodation_new', [
@@ -129,7 +129,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testCreateAccommodationThatExists()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('service_accommodation_new', [
@@ -151,7 +151,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testSuccessToCreateNewAccommodation()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('service_accommodation_new', [
@@ -177,7 +177,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testEditAccommodationisUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('accommodation_edit', [
             'id' => $this->accommodation->getId(),
@@ -189,7 +189,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testSuccessToEditAccommodation()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('accommodation_edit', [
@@ -206,7 +206,7 @@ class AccommodationControllerTest extends WebTestCase
 
     public function testDeleteAccommodation()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('admin_accommodation_delete', [
             'id' => $this->accommodation->getId(),

@@ -4,8 +4,8 @@ App\Entity\Device:
     coefficient: 1
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleAdmin"
+    updatedBy: "@userRoleAdmin"
 
   device{2..5}:
     name: <sentence(3, true)>
@@ -25,11 +25,11 @@ App\Entity\ServiceDevice:
     service: "@service*"
 
 App\Entity\User:
-  userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+  userRoleAdmin:
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*

@@ -33,7 +33,7 @@ class AccommodationGroupControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/AccommodationGroupFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
         $this->accommodationGroup = $this->dataFixtures['accomGroup1'];

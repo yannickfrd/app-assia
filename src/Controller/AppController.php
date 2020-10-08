@@ -67,6 +67,7 @@ class AppController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
+
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->dashboardAdmin($cache);
         }

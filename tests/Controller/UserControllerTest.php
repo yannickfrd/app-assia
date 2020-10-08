@@ -49,8 +49,8 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->generateUri('users'));
 
         $form = $crawler->selectButton('search')->form([
-            'lastname' => 'MADELAINE',
-            'firstname' => 'Romain',
+            'lastname' => 'SUPER_ADMIN',
+            'firstname' => 'Role',
             'status' => 6,
             'phone' => '01 00 00 00 00',
         ]);
@@ -58,7 +58,7 @@ class UserControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'MADELAINE');
+        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'SUPER_ADMIN');
     }
 
     public function testExportPeopleIsSuccessful()
@@ -84,7 +84,7 @@ class UserControllerTest extends WebTestCase
     public function testUsernameExistsIsTrue()
     {
         $this->client->request('GET', $this->generateUri('username_exists', [
-            'value' => 'r.madelaine',
+            'value' => 'r.super_admin',
         ]));
 
         $result = json_decode($this->client->getResponse()->getContent(), true);

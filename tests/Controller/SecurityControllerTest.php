@@ -145,7 +145,7 @@ class SecurityController extends WebTestCase
         $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
 
         $this->client->request('POST', $this->generateUri('security_login'), [
-            '_username' => 'r.madelaine',
+            '_username' => 'r.super_admin',
             '_password' => 'Test123*',
             '_csrf_token' => $csrfToken,
         ]);

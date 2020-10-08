@@ -5,8 +5,8 @@ App\Entity\Organization:
     comment: <sentence(6, true)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
 
   organization{2..5}:
     name: <sentence(3, true)>

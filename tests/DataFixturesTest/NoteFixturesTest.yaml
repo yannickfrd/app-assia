@@ -6,8 +6,8 @@ App\Entity\Note:
     status: 1
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
     supportGroup: "@supportGroup"
 
   note{2..5}:
@@ -17,16 +17,16 @@ App\Entity\Note:
     status: <numberBetween(1, 4)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
     supportGroup: "@supportGroup"
 
 App\Entity\User:
-  userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+  userRoleUser:
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
@@ -41,13 +41,13 @@ App\Entity\SupportGroup:
   supportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
-    referent: "@userSuperAdmin"
+    referent: "@userRoleUser"
     groupPeople: "@groupPeople"
     service: "@service"
     createdAt: <date_create()>
     updatedAt: <date_create()>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
 
 
 App\Entity\SupportPerson:

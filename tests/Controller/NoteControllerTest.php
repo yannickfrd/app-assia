@@ -33,7 +33,7 @@ class NoteControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/NoteFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup'];
         $this->note = $this->dataFixtures['note1'];
@@ -49,7 +49,6 @@ class NoteControllerTest extends WebTestCase
 
     public function testSearchNotesIsSuccessful()
     {
-            
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('notes'));
 
@@ -131,7 +130,7 @@ class NoteControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('note_export', [
             'id' => $this->note->getId(),
         ]));
-       
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 

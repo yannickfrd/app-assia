@@ -26,7 +26,7 @@ class SupportGroupTest extends WebTestCase
             ->setStartDate(new \DateTime('2020-01-01'))
             ->setStatus(2)
             ->setAgreement(true)
-            ->setReferent($dataFixutres['userSuperAdmin'])
+            ->setReferent($dataFixutres['userRoleUser'])
             ->setService($dataFixutres['service'])
             ->setDevice($dataFixutres['device']);
     }

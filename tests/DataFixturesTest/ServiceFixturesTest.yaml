@@ -29,7 +29,7 @@ App\Entity\Service:
 
 
 App\Entity\ServiceUser:
-  servuserSuperAdmin:
+  serviceUser:
     service: "@service1"
     user: "@userSuperAdmin"
 
@@ -40,10 +40,10 @@ App\Entity\ServiceUser:
     
 App\Entity\User:
   userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*

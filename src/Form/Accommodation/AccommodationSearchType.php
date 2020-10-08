@@ -3,27 +3,27 @@
 namespace App\Form\Accommodation;
 
 use App\Entity\Pole;
-use App\Form\Utils\Choices;
+use App\Form\Model\AccommodationSearch;
 use App\Form\Model\RdvSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceSearchType;
-use App\Security\CurrentUserService;
+use App\Form\Utils\Choices;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use App\Form\Model\AccommodationSearch;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Security\Core\Security;
 
 class AccommodationSearchType extends AbstractType
 {
-    private $currentUser;
+    private $security;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(Security $security)
     {
-        $this->currentUser = $currentUser;
+        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -79,7 +79,7 @@ class AccommodationSearchType extends AbstractType
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
 
-            if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                 $form
                     ->add('pole', EntityType::class, [
                         'class' => Pole::class,

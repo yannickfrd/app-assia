@@ -29,7 +29,7 @@ class E2eTest extends PantherTestCase
     //         dirname(__DIR__) . "/DataFixturesTest/UserFixturesTest.yaml",
     //     ]);
 
-    //     $user = $dataFixtures["userSuperAdmin"];
+    //     $user = $dataFixtures["userRoleAdmin"];
 
     //     $this->client = static::createPantherClient();
 
@@ -43,7 +43,7 @@ class E2eTest extends PantherTestCase
     //     $crawler = $this->client->request("GET", "/");
 
     //     $form = $crawler->selectButton("send")->form([
-    //         "_username" => "r.madelaine",
+    //         "_username" => "r.super_admin",
     //         "_password" => "Test123*",
     //     ]);
 

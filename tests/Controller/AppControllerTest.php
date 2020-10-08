@@ -36,23 +36,45 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Merci de vous connecter');
     }
 
-    public function testAccessHomePage()
+    public function testAccessHomePageWithRoleSuperAdmin()
     {
         $this->client = static::createClient();
         $this->client->followRedirects(true);
 
+        $user = $this->dataFixtures['userSuperAdmin'];
+
         $this->client->request('POST', $this->generateUri('security_login'), [
-            '_username' => 'r.madelaine',
-            '_password' => 'Test123*',
+            '_username' => $user->getUsername(),
+            '_password' => $user->getPlainPassword(),
             '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),
         ]);
 
         $this->assertSelectorExists('.alert.alert-success');
     }
 
+    public function testAccessHomePageWithRoleAdmin()
+    {
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+
+        $this->client->request('GET', $this->generateUri('home'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Tableau de bord');
+    }
+
+    public function testAccessHomePageWithRoleUser()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $this->client->request('GET', $this->generateUri('home'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Mon espace personnel');
+    }
+
     public function testPageServiceDashboardIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->client->request('GET', $this->generateUri('supports_by_user'));
 
@@ -62,7 +84,7 @@ class AppControllerTest extends WebTestCase
 
     public function testPageOccupancyByDeviceIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->client->request('GET', $this->generateUri('occupancy_devices'));
 
@@ -75,7 +97,7 @@ class AppControllerTest extends WebTestCase
         $this->dataFixtures = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->client->request('GET', $this->generateUri('occupancy_services'));
 
@@ -85,7 +107,7 @@ class AppControllerTest extends WebTestCase
 
     public function testPageOccupancyByAccommodationsIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->client->request('GET', $this->generateUri('occupancy_accommodations'));
 
@@ -95,7 +117,7 @@ class AppControllerTest extends WebTestCase
 
     public function testPageAdminIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('admin'));
 
@@ -105,7 +127,7 @@ class AppControllerTest extends WebTestCase
 
     public function testPageManagingIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->client->request('GET', $this->generateUri('managing'));
 

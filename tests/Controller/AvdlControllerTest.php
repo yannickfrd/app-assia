@@ -3,10 +3,10 @@
 namespace App\Tests\Controller;
 
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class AvdlControllerTest extends WebTestCase
 {
@@ -28,7 +28,7 @@ class AvdlControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
     }

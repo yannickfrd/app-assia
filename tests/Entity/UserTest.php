@@ -94,7 +94,7 @@ class UserTest extends WebTestCase
 
     public function testUsernameExists()
     {
-        $user = $this->user->setUsername('r.madelaine');
+        $user = $this->user->setUsername('r.super_admin');
         $this->assertHasErrors($user, 1);
     }
 

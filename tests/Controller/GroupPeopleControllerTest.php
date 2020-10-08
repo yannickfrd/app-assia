@@ -31,13 +31,13 @@ class GroupPeopleControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
-
         $this->groupPeople = $this->dataFixtures['groupPeople1'];
     }
 
     public function testListGroupsPeopleIsUp()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('groups_people'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -46,6 +46,8 @@ class GroupPeopleControllerTest extends WebTestCase
 
     public function testSearchGroupsPeopleIsSucessful()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('groups_people'));
 
@@ -59,6 +61,8 @@ class GroupPeopleControllerTest extends WebTestCase
 
     public function testEditGroupPeopleIsUp()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('group_people_show', [
             'id' => $this->groupPeople->getId(),
         ]));
@@ -69,6 +73,8 @@ class GroupPeopleControllerTest extends WebTestCase
 
     public function testEditGroupPeopleIsSuccessful()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('group_people_show', [
             'id' => $this->groupPeople->getId(),
@@ -88,18 +94,32 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Groupe');
     }
 
-    public function testDeleteGroupPeopleInSuperAdmin()
+    public function testDeleteGroupPeopleWithRoleUser()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('group_people_delete', [
             'id' => $this->groupPeople->getId(),
         ]));
-        // $this->client->followRedirect();
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteGroupPeopleWithRoleAdmin()
+    {
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+
+        $this->client->request('GET', $this->generateUri('group_people_delete', [
+            'id' => $this->groupPeople->getId(),
+        ]));
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Tableau de bord');
     }
 
     public function testTryAddPersonInGroupIsUp()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('POST', $this->generateUri('group_add_person', [
             'id' => $this->groupPeople->getId(),
             'person_id' => $this->dataFixtures['person1']->getId(),
@@ -111,6 +131,8 @@ class GroupPeopleControllerTest extends WebTestCase
 
     public function testFailToRemovePersonInGroup()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('role_person_remove', [
             'id' => $this->dataFixtures['rolePerson']->getId(),
             '_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('remove'.$this->dataFixtures['rolePerson']->getId()),

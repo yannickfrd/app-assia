@@ -7,8 +7,8 @@ App\Entity\Person:
     phone1: 01 00 00 00 00
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
 
   person{2..5}: 
     gender: <numberBetween(1, 2)>
@@ -19,8 +19,8 @@ App\Entity\Person:
     phone1: 06 00 00 00 00
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
 
 
 App\Entity\GroupPeople:
@@ -38,11 +38,11 @@ App\Entity\RolePerson:
 
 
 App\Entity\User:
-  userSuperAdmin:
-    firstname: Romain
-    lastname: Madelaine
-    username: r.madelaine
-    email: romain.madelaine@esperer-95.org
+  userRoleUser:
+    firstname: Role
+    lastname: SUPER_ADMIN
+    username: r.super_admin
+    email: r.super_admin@esperer-95.org
     status: 1
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*

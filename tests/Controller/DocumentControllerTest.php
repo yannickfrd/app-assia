@@ -33,7 +33,7 @@ class DocumentControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/DocumentFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup'];
         $this->document = $this->dataFixtures['document1'];
