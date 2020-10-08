@@ -2,10 +2,9 @@
 
 namespace App\Tests\Repository;
 
+use App\Entity\Accommodation;
 use App\Entity\Pole;
 use App\Entity\Service;
-use App\Entity\Accommodation;
-use App\Security\CurrentUserService;
 use App\Form\Model\AccommodationSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -35,7 +34,7 @@ class AccommodationRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/dataFixturesTest/AccommodationFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
         ]);
 
         $kernel = self::bootKernel();
