@@ -87,12 +87,12 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testCountAllNotesWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes());
+        $this->assertGreaterThanOrEqual(5, $this->repo->countNotes());
     }
 
     public function testCountAllNotesWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllNotes(['user' => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countNotes(['user' => $this->user]));
     }
 
     protected function tearDown(): void

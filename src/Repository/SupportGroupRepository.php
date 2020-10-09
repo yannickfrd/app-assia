@@ -461,12 +461,24 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $query;
     }
 
-    public function countAllSupports(array $criteria = null)
+    public function countSupports(array $criteria = null)
     {
         $query = $this->createQueryBuilder('sg')->select('COUNT(sg.id)');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query = $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query = $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
+                if ('device' == $key) {
+                    $query = $query->andWhere('sg.device = :device')
+                        ->setParameter('device', $value);
+                }
                 if ('user' == $key) {
                     $query = $query->andWhere('sg.referent = :user')
                         ->setParameter('user', $value);
@@ -475,18 +487,96 @@ class SupportGroupRepository extends ServiceEntityRepository
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
-                if ('service' == $key) {
-                    $query = $query->andWhere('sg.service = :service')
-                        ->setParameter('service', $value);
+                if ('siaoRequest' == $key) {
+                    $query = $query->leftJoin('sg.evaluationsGroup', 'e')
+                        ->leftJoin('e.evalHousingGroup', 'ehg')
+
+                        ->andWhere('ehg.siaoRequest = :siaoRequest')
+                        ->setParameter('siaoRequest', $value);
                 }
-                if ('device' == $key) {
-                    $query = $query->andWhere('sg.device = :device')
-                        ->setParameter('device', $value);
+                if ('socialHousingRequest' == $key) {
+                    $query = $query->leftJoin('sg.evaluationsGroup', 'e')
+                        ->leftJoin('e.evalHousingGroup', 'ehg')
+
+                        ->andWhere('ehg.socialHousingRequest = :socialHousingRequest')
+                        ->setParameter('socialHousingRequest', $value);
                 }
             }
         }
 
         return $query->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function avgTimeSupport(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder('sg');
+
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
+                if ('status' == $key) {
+                    $query->andWhere('sg.status = :status')
+                        ->setParameter('status', $value);
+                }
+            }
+        }
+
+        $today = (new \DateTime())->format('Y-m-d');
+        // $expr = $query->expr();
+        // $diff = $expr->diff('sg.startDate', $today);
+        // $avg = $expr->avg($diff);
+        // $query = $query->select($avg);
+        $query->select('avg(date_diff(:today, sg.startDate)) as avgTimeSupport')
+            ->setParameter(':today', $today);
+
+        $result = $query->getQuery()
+            ->getSingleScalarResult();
+
+        return round($result);
+    }
+
+    public function avgSupportsByUser(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder('sg')->select('count(sg.referent)')
+            ->where('sg.referent IS NOT NULL');
+
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
+                if ('status' == $key) {
+                    $query->andWhere('sg.status = :status')
+                        ->setParameter('status', $value);
+                }
+            }
+        }
+
+        $query = $query->addGroupBy('sg.referent')
+            ->getQuery();
+
+        $result = $query->getScalarResult();
+
+        $sum = 0;
+        $i = 0;
+        foreach ($result as $value) {
+            $sum = $sum + (int) $value['1'];
+            ++$i;
+        }
+
+        return  $i > 0 ? round($sum / $i, 1) : null;
     }
 }

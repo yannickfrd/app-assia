@@ -114,7 +114,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     public function testCountAllSupportsWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllSupports());
+        $this->assertGreaterThanOrEqual(5, $this->repo->countSupports());
     }
 
     protected function tearDown(): void

@@ -136,6 +136,30 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne tous les services de l'utilisateur.
+     *
+     * @return mixed
+     */
+    public function findServicesAndSubServicesOfUser(User $user)
+    {
+        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
+            ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
+            ->leftJoin('s.serviceUser', 'su')->addSelect('su')
+
+            ->where('s.disabledAt IS NULL');
+
+        if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $query->andWhere('su.user = :user')
+                ->setParameter('user', $user);
+        }
+
+        return $query->orderBy('s.name', 'ASC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
      * Donne un service.
      *
      * @param int $id from Service

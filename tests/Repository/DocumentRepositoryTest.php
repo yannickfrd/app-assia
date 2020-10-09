@@ -75,12 +75,12 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testCountAllDocumentsWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllDocuments());
+        $this->assertGreaterThanOrEqual(5, $this->repo->countDocuments());
     }
 
     public function testCountAllDocumentsWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllDocuments(['user' => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countDocuments(['user' => $this->user]));
     }
 
     public function testSumSizeAllDocuments()

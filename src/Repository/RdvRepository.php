@@ -65,7 +65,7 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
     }
 
-    protected function filter($query, RdvSearch $search, $currentUser)
+    protected function filter($query, RdvSearch $search, CurrentUserService $currentUser = null)
     {
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')
@@ -263,33 +263,33 @@ class RdvRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countAllRdvs(array $criteria = null)
+    public function countRdvs(array $criteria = null)
     {
         $query = $this->createQueryBuilder('rdv')->select('COUNT(rdv.id)');
 
         if ($criteria) {
-            // $query = $query->leftJoin("rdv.supportGroup", "sg")->addSelect("PARTIAL sg.{id, referent, status, service, device}");
+            $query = $query->leftJoin('rdv.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
-                if ('user' == $key) {
-                    $query = $query->andWhere('rdv.createdBy = :user')
-                        ->setParameter('user', $value);
-                }
-                if ('supportGroup' == $key) {
-                    $query = $query->andWhere('rdv.supportGroup = :supportGroup')
-                        ->setParameter('supportGroup', $value);
-                }
-                if ('status' == $key) {
-                    $query = $query->andWhere('sg.status = :status')
-                        ->setParameter('status', $value);
-                }
                 if ('service' == $key) {
                     $query = $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
+                if ('subService' == $key) {
+                    $query = $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
                 if ('device' == $key) {
                     $query = $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
+                }
+                if ('user' == $key) {
+                    $query = $query->andWhere('rdv.createdBy = :user')
+                        ->setParameter('user', $value);
+                }
+                if ('status' == $key) {
+                    $query = $query->andWhere('sg.status = :status')
+                        ->setParameter('status', $value);
                 }
             }
         }

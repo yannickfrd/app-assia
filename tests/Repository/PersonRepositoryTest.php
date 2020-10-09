@@ -93,7 +93,7 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testCountAllPeople()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllPeople());
+        $this->assertGreaterThanOrEqual(5, $this->repo->countPeople());
     }
 
     protected function tearDown(): void

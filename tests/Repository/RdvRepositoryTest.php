@@ -110,12 +110,12 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testCountAllRdvsWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllRdvs());
+        $this->assertGreaterThanOrEqual(5, $this->repo->countRdvs());
     }
 
     public function testCountAllRdvsWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countAllRdvs(['user' => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->repo->countRdvs(['user' => $this->user]));
     }
 
     protected function tearDown(): void

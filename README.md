@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-1.27.4 - 08/10/2020
+2.0.0 - 09/10/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,12 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 2.0.0 - 09/10/2020
+- Migration des données de la PASH dans l'application.
+
+## Version 1.28.0 - 09/10/2020
+- Créé page d'indicateurs stats par services.
 
 ## Version 1.27.4 - 08/10/2020
 - Modif du tableau des utilisateurs : affiche par défaut uniquement les utilisateurs actifs, et modif tri tableau admin.

@@ -230,19 +230,33 @@ class ContributionRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function countAllContributions(array $criteria = null)
+    public function countContributions(array $criteria = null)
     {
         $query = $this->createQueryBuilder('c')->select('COUNT(c.id)');
 
         if ($criteria) {
+            $query = $query->leftJoin('c.supportGroup', 'sg');
+
             foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query = $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query = $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
+                if ('device' == $key) {
+                    $query = $query->andWhere('sg.device = :device')
+                        ->setParameter('device', $value);
+                }
                 if ('user' == $key) {
                     $query = $query->andWhere('c.createdBy = :user')
                         ->setParameter('user', $value);
                 }
-                if ('service' == $key) {
-                    $query = $query->andWhere('sg.service = :service')
-                        ->setParameter('service', $value);
+                if ('status' == $key) {
+                    $query = $query->andWhere('sg.status = :status')
+                        ->setParameter('status', $value);
                 }
             }
         }

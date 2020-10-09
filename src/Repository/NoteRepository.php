@@ -172,14 +172,26 @@ class NoteRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function countAllNotes(array $criteria = null)
+    public function countNotes(array $criteria = null)
     {
         $query = $this->createQueryBuilder('n')->select('COUNT(n.id)');
 
         if ($criteria) {
-            // $query = $query->leftJoin("n.supportGroup", "sg")->addSelect("PARTIAL sg.{id, referent, status, service, device}");
+            $query = $query->leftJoin('n.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query = $query->andWhere('sg.service = :service')
+                    ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query = $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
+                if ('device' == $key) {
+                    $query = $query->andWhere('sg.device = :device')
+                    ->setParameter('device', $value);
+                }
                 if ('user' == $key) {
                     $query = $query->andWhere('n.createdBy = :user')
                         ->setParameter('user', $value);
@@ -187,14 +199,6 @@ class NoteRepository extends ServiceEntityRepository
                 if ('status' == $key) {
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
-                }
-                if ('service' == $key) {
-                    $query = $query->andWhere('sg.service = :service')
-                        ->setParameter('service', $value);
-                }
-                if ('device' == $key) {
-                    $query = $query->andWhere('sg.device = :device')
-                        ->setParameter('device', $value);
                 }
             }
         }

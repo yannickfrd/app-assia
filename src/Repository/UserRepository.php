@@ -255,6 +255,30 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function countUsers(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder('u')->select('COUNT(u.id)')
+            ->where('u.disabledAt IS NULL');
+
+        if ($criteria) {
+            $query = $query->leftJoin('u.serviceUser', 'su');
+
+            foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query = $query->andWhere('su.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('status' == $key) {
+                    $query = $query->andWhere('u.status = :status')
+                        ->setParameter('status', $value);
+                }
+            }
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function countActiveUsers()
     {
         return $this->createQueryBuilder('u')->select('COUNT(u.id)')

@@ -315,4 +315,22 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         return $query;
     }
+
+    public function countSupportPeople(array $criteria = null): int
+    {
+        $query = $this->createQueryBuilder('sp')->select('COUNT(sp.id)')
+            ->leftJoin('sp.supportGroup', 'sg');
+
+        if ($criteria) {
+            $i = 0;
+            foreach ($criteria as $key => $value) {
+                $query = $query->andWhere($key.' = :value'.$i)
+                    ->setParameter('value'.$i, $value);
+                ++$i;
+            }
+        }
+
+        return (int) $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

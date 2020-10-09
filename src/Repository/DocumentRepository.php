@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Document;
-use App\Entity\SupportGroup;
 use App\Form\Model\DocumentSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -44,14 +43,26 @@ class DocumentRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    public function countAllDocuments(array $criteria = null)
+    public function countDocuments(array $criteria = null)
     {
         $query = $this->createQueryBuilder('d')->select('COUNT(d.id)');
 
         if ($criteria) {
-            // $query = $query->leftJoin("d.supportGroup", "sg")->addSelect("PARTIAL sg.{id, referent, status, service, device}");
+            $query = $query->leftJoin('d.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
+                if ('service' == $key) {
+                    $query = $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query = $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }                
+                if ('device' == $key) {
+                    $query = $query->andWhere('sg.device = :device')
+                        ->setParameter('device', $value);
+                }
                 if ('user' == $key) {
                     $query = $query->andWhere('d.createdBy = :user')
                         ->setParameter('user', $value);
@@ -59,14 +70,6 @@ class DocumentRepository extends ServiceEntityRepository
                 if ('status' == $key) {
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
-                }
-                if ('service' == $key) {
-                    $query = $query->andWhere('sg.service = :service')
-                        ->setParameter('service', $value);
-                }
-                if ('device' == $key) {
-                    $query = $query->andWhere('sg.device = :device')
-                        ->setParameter('device', $value);
                 }
             }
         }
