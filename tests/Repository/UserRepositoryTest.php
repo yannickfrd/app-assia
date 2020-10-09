@@ -53,8 +53,8 @@ class UserRepositoryTest extends WebTestCase
     protected function getUserSearch(Pole $pole)
     {
         return (new UserSearch())
-            ->setFirstname('Rom')
-            ->setLastname('mad')
+            ->setFirstname('Role')
+            ->setLastname('ADMIN')
             ->setPhone('01 00 00 00 00')
             ->setStatus(6)
             ->setPole($pole);
