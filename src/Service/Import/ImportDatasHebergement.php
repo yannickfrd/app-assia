@@ -2,40 +2,39 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Accommodation;
-use App\Entity\AccommodationGroup;
-use App\Entity\AccommodationPerson;
+use DateTime;
 use App\Entity\Device;
+use App\Entity\Person;
+use App\Entity\Service;
+use App\Entity\RolePerson;
+use App\Entity\GroupPeople;
+use App\Form\Utils\Choices;
+use App\Entity\SupportGroup;
+use App\Entity\Accommodation;
 use App\Entity\EvalAdmPerson;
+use App\Entity\InitEvalGroup;
+use App\Entity\OriginRequest;
+use App\Entity\SupportPerson;
+use App\Entity\EvalProfPerson;
+use App\Entity\InitEvalPerson;
 use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvalSocialGroup;
 use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
-use App\Entity\OriginRequest;
-use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Entity\Service;
-use App\Entity\SupportGroup;
-use App\Entity\SupportPerson;
-use App\Form\Utils\Choices;
+use App\Entity\AccommodationGroup;
+use App\Entity\AccommodationPerson;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
-use DateTime;
+use App\Notification\MailNotification;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ImportDatasHebergement
+class ImportDatasHebergement extends ImportDatas
 {
-    use ImportTrait;
-
     public const FAMILY_TYPOLOGY = [
         'Femme isolée' => 1,
         'Homme isolé' => 2,
@@ -353,6 +352,8 @@ class ImportDatasHebergement
     ];
 
     protected $manager;
+    protected $notification;
+
     protected $repoDevice;
     protected $repoPerson;
 
@@ -367,11 +368,13 @@ class ImportDatasHebergement
     protected $role;
 
     public function __construct(
-        EntityManagerInterface $manager, 
-        DeviceRepository $repoDevice, 
+        EntityManagerInterface $manager,
+        MailNotification $notification,
+        DeviceRepository $repoDevice,
         PersonRepository $repoPerson)
     {
         $this->manager = $manager;
+        $this->notification = $notification;
         $this->repoDevice = $repoDevice;
         $this->repoPerson = $repoPerson;
     }

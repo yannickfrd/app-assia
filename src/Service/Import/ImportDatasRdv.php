@@ -9,10 +9,8 @@ use App\Entity\User;
 use App\Repository\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ImportDatasRdv
+class ImportDatasRdv extends ImportDatas
 {
-    use ImportTrait;
-
     public const STATUS = [
         'Présent' => 1,
         'Absent' => 2,
@@ -49,7 +47,9 @@ class ImportDatasRdv
 
     protected $service;
 
-    public function __construct(EntityManagerInterface $manager, HotelSupportRepository $repoHotelSupport)
+    public function __construct(
+        EntityManagerInterface $manager,
+        HotelSupportRepository $repoHotelSupport)
     {
         $this->manager = $manager;
         $this->repoHotelSupport = $repoHotelSupport;

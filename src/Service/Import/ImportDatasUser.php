@@ -9,36 +9,28 @@ use App\Notification\MailNotification;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
 
-class ImportDatasUser
+class ImportDatasUser extends ImportDatas
 {
-    use ImportTrait;
-
-    protected $user;
     protected $manager;
-    protected $repoUser;
-    protected $passwordEncoder;
     protected $notification;
 
-    protected $datas;
-    protected $row;
+    protected $repoUser;
+    protected $passwordEncoder;
 
     protected $items = [];
     protected $existUsers = [];
 
     public function __construct(
-        Security $security,
         EntityManagerInterface $manager,
+        MailNotification $notification,
         UserRepository $repoUser,
-        UserPasswordEncoderInterface $passwordEncoder,
-        MailNotification $notification)
+        UserPasswordEncoderInterface $passwordEncoder)
     {
-        $this->user = $security->getUser();
         $this->manager = $manager;
+        $this->notification = $notification;
         $this->repoUser = $repoUser;
         $this->passwordEncoder = $passwordEncoder;
-        $this->notification = $notification;
     }
 
     public function importInDatabase(string $fileName, Service $service): int

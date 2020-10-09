@@ -9,10 +9,8 @@ use App\Entity\User;
 use App\Repository\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ImportDatasPAF
+class ImportDatasPAF extends ImportDatas
 {
-    use ImportTrait;
-
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
 
     public const PAYMENT_TYPE = [
@@ -51,8 +49,10 @@ class ImportDatasPAF
 
     protected $service;
 
-    public function __construct(EntityManagerInterface $manager, HotelSupportRepository $repoHotelSupport)
-    {
+    public function __construct(
+        EntityManagerInterface $manager,
+        HotelSupportRepository $repoHotelSupport
+        ) {
         $this->manager = $manager;
         $this->repoHotelSupport = $repoHotelSupport;
         $this->hotelSupports = $repoHotelSupport->findAll();

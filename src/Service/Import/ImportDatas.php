@@ -4,16 +4,26 @@ namespace App\Service\Import;
 
 use App\Entity\Note;
 use App\Entity\SupportGroup;
+use App\Notification\MailNotification;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
-trait ImportTrait
+class ImportDatas
 {
+    protected $manager;
     protected $user;
+    protected $notification;
+
     protected $datas;
 
-    public function __construct(Security $security)
+    public function __construct(
+        EntityManagerInterface $manager,
+        Security $security,
+        MailNotification $notification)
     {
+        $this->manager = $manager;
         $this->user = $security->getUser();
+        $this->notification = $notification;
     }
 
     public function getDatas(string $fileName)
@@ -68,5 +78,22 @@ trait ImportTrait
         $this->manager->persist($note);
 
         return $note;
+    }
+
+    protected function sendDuplicatedPeople(array $people)
+    {
+        $content = count($people).' doublons de personnes : <br/>';
+        foreach ($people as $person) {
+            $content = $content.$person->getLastname()."\t".$person->getFirstname()."\t".$person->getBirthdate()->format('d/m/Y').'<br/>';
+        }
+
+        $this->notification->send(
+            [
+                'email' => 'romain.madelaine@esperer-95.org',
+                'name' => 'Romain',
+            ],
+            'Doublons personnes',
+            $content,
+        );
     }
 }

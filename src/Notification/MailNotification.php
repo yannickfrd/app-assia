@@ -28,7 +28,7 @@ class MailNotification
         $this->port = $port;
     }
 
-    public function send($to, $subject, $htmlBody, $txtBody = null)
+    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null)
     {
         $mail = new PHPMailer(true);
 

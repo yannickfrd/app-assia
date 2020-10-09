@@ -28,18 +28,16 @@ use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
 use App\Form\Utils\Choices;
+use App\Notification\MailNotification;
 use App\Repository\AccommodationRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
 use App\Repository\SubServiceRepository;
 use App\Service\Phone;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 
-class ImportDatasAMH
+class ImportDatasAMH extends ImportDatas
 {
-    use ImportTrait;
-
     public const SOCIAL_WORKER = [
         'Marie-Laure PEBORDE',
         'Camille RAVEZ',
@@ -515,6 +513,8 @@ class ImportDatasAMH
     ];
 
     protected $manager;
+    protected $notification;
+
     protected $repoSubService;
     protected $repoDevice;
     protected $repoAccommodation;
@@ -550,12 +550,14 @@ class ImportDatasAMH
 
     public function __construct(
         EntityManagerInterface $manager,
+        MailNotification $notification,
         SubServiceRepository $repoSubService,
         DeviceRepository $repoDevice,
         AccommodationRepository $repoAccommodation,
         PersonRepository $repoPerson)
     {
         $this->manager = $manager;
+        $this->notification = $notification;
         $this->repoSubService = $repoSubService;
         $this->repoDevice = $repoDevice;
         $this->repoAccommodation = $repoAccommodation;
@@ -602,6 +604,13 @@ class ImportDatasAMH
                 }
             }
             ++$i;
+        }
+
+        if (count($this->existPeople) > 0) {
+            $this->sendDuplicatedPeople($this->existPeople);
+        }
+        if (count($this->duplicatedPeople) > 0) {
+            $this->sendDuplicatedPeople($this->duplicatedPeople);
         }
 
         // dump($this->existPeople);

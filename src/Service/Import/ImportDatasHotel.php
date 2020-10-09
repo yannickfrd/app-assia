@@ -8,10 +8,8 @@ use App\Repository\AccommodationRepository;
 use App\Repository\SubServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ImportDatasHotel
+class ImportDatasHotel extends ImportDatas
 {
-    use ImportTrait;
-
     protected $manager;
 
     protected $items = [];
@@ -44,7 +42,6 @@ class ImportDatasHotel
             ++$i;
         }
 
-        // dd($this->items);
         $this->manager->flush();
 
         return count($this->items);

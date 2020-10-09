@@ -23,14 +23,13 @@ use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
 use App\Form\Utils\Choices;
+use App\Notification\MailNotification;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ImportDatasOC
+class ImportDatasOC extends ImportDatas
 {
-    use ImportTrait;
-
     public const SOCIAL_WORKER = [
         'Mylena ESPENAN',
         'Laurie PRIEUR',
@@ -316,10 +315,11 @@ class ImportDatasOC
     ];
 
     protected $manager;
+    protected $notification;
+
     protected $repoDevice;
     protected $repoPerson;
 
-    protected $datas;
     protected $row;
 
     protected $service;
@@ -340,10 +340,13 @@ class ImportDatasOC
 
     public function __construct(
         EntityManagerInterface $manager,
+        MailNotification $notification,
         DeviceRepository $repoDevice,
         PersonRepository $repoPerson)
     {
         $this->manager = $manager;
+        $this->notification = $notification;
+
         $this->repoPerson = $repoPerson;
         $this->repoDevice = $repoDevice;
     }
@@ -379,6 +382,13 @@ class ImportDatasOC
                 $this->createEvaluationPerson($evaluationGroup, $supportPerson);
             }
             ++$i;
+        }
+
+        if (count($this->existPeople) > 0) {
+            $this->sendDuplicatedPeople($this->existPeople);
+        }
+        if (count($this->duplicatedPeople) > 0) {
+            $this->sendDuplicatedPeople($this->duplicatedPeople);
         }
 
         // dump($this->existPeople);
