@@ -60,7 +60,7 @@ class SupportGroupService
     {
         $supportGroup = (new SupportGroup())->setGroupPeople($groupPeople);
 
-        $serviceId = $request->request->get('support')['service'] ?? $_POST['support']['service'];
+        $serviceId = $request->request->get('support')['service'];
 
         if ((int) $serviceId) {
             $supportGroup->setService($this->repoService->find($serviceId));

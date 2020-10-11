@@ -6,6 +6,7 @@ use App\Entity\User;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 class MailNotification
@@ -28,13 +29,15 @@ class MailNotification
         $this->port = $port;
     }
 
-    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null)
+    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null, string $cc = null, string $bcc = null)
     {
         $mail = new PHPMailer(true);
 
         $mail->isSMTP(); // Send using SMTP
 
-        if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '127.0.0.1:8000') {
+        $request = Request::createFromGlobals();
+
+        if ($request->server->get('SERVER_NAME') != '127.0.0.1:8000') {
             $mail->SMTPAuth = true; // Enable SMTP authentication
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->SMTPDebug = SMTP::DEBUG_OFF;
@@ -54,10 +57,14 @@ class MailNotification
         try {
             $mail->setFrom('noreply@romain-mad.fr', 'Esperer95.app');
             $mail->addAddress($to['email'], $to['name']); // Add a recipient
+            if ($cc) { // Copie
+                $mail->addCC($cc);
+            }
+            if ($bcc) { // Copie cachée
+                $mail->addBCC($bcc);
+            }
             // $mail->addAddress("ellen@example.com"); // Name is optional
             // $mail->addReplyTo("info@example.com", "Information");
-            // $mail->addCC("cc@example.com");
-            // $mail->addBCC("bcc@example.com");
 
             // Attachments
             // $mail->addAttachment("/var/tmp/file.tar.gz"); // Add attachments

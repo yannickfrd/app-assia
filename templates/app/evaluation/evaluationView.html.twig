@@ -1,5 +1,9 @@
 {% import "macros/view.html.twig" as utils %}
 
+{% set nbSupportPeople = support.supportPeople|length %}
+{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
+{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
+
 {% apply spaceless %}
 
     {% set nbSupportPeople = support.supportPeople|length %}

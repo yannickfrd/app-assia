@@ -6,6 +6,9 @@
 
 {% apply spaceless %}
 
+    <h1 class="h3"><b>Rapport social</b></h3>
+    <br/>
+
     {{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y"), "rdv.last") }}
     {{ utils.view(nextRdv ? nextRdv.start|date("d/m/Y"), "rdv.next") }}
 
