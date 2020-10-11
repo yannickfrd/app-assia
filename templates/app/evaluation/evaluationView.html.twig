@@ -702,8 +702,14 @@
         {% endif %}
         {% if evalHotelLife.otherHotelLife %}
             <div class="row mb-3">
-                <div class="col-md-12 text-secondary">{{ "Other comment hotel life"|trans({}, "evaluation") }}</div>
+                <div class="col-md-12 text-secondary">{{ "Other hotel life"|trans({}, "evaluation") }}</div>
                 <div class="col-md-12 justify">{{ evalHotelLife.otherHotelLife }}</div>
+            </div>
+        {% endif %}
+        {% if evalHotelLife.commentHotelLife %}
+            <div class="row mb-3">
+                <div class="col-md-12 text-secondary">{{ "Comment hotel life"|trans({}, "evaluation") }}</div>
+                <div class="col-md-12 justify">{{ evalHotelLife.commentHotelLife }}</div>
             </div>
         {% endif %}
     </section>
