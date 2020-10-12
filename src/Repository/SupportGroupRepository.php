@@ -487,6 +487,14 @@ class SupportGroupRepository extends ServiceEntityRepository
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('sg.createdAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('sg.createdAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
                 if ('siaoRequest' == $key) {
                     $query = $query->leftJoin('sg.evaluationsGroup', 'e')
                         ->leftJoin('e.evalHousingGroup', 'ehg')
@@ -521,6 +529,10 @@ class SupportGroupRepository extends ServiceEntityRepository
                 if ('subService' == $key) {
                     $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
+                }
+                if ('device' == $key) {
+                    $query->andWhere('sg.device = :device')
+                        ->setParameter('device', $value);
                 }
                 if ('status' == $key) {
                     $query->andWhere('sg.status = :status')
@@ -557,6 +569,10 @@ class SupportGroupRepository extends ServiceEntityRepository
                 if ('subService' == $key) {
                     $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
+                }
+                if ('device' == $key) {
+                    $query->andWhere('sg.device = :device')
+                        ->setParameter('device', $value);
                 }
                 if ('status' == $key) {
                     $query->andWhere('sg.status = :status')

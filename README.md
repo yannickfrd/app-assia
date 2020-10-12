@@ -23,6 +23,7 @@ https://demo.esperer95.app
 - Modif des fixtures.
 - Créer classe pour les indicateurs du dashboard.
 - Modif du tableau de bord pour les profil Admin.
+- Modif indicateurs tableau de bord (ajout indicateurs par dispositif).
 
 ## Version 2.0.0 - 09/10/2020
 - Migration des données de la PASH dans l'application.

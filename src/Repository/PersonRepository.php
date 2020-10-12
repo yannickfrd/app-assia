@@ -123,6 +123,23 @@ class PersonRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('p')->select('COUNT(p.id)');
 
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('p.createdAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('p.createdAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
+                if ('createdBy' == $key) {
+                    $query = $query->andWhere('p.createdBy = :createdBy')
+                        ->setParameter('createdBy', $value);
+                }
+            }
+        }
+
         return $query->getQuery()
             ->getSingleScalarResult();
     }

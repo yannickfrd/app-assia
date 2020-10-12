@@ -144,6 +144,8 @@ class ServiceRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
+            ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
+            ->leftJoin('sd.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('s.serviceUser', 'su')->addSelect('su')
 
             ->where('s.disabledAt IS NULL');

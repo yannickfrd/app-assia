@@ -58,14 +58,22 @@ class DocumentRepository extends ServiceEntityRepository
                 if ('subService' == $key) {
                     $query = $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
-                }                
+                }
                 if ('device' == $key) {
                     $query = $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('user' == $key) {
-                    $query = $query->andWhere('d.createdBy = :user')
-                        ->setParameter('user', $value);
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('d.createdAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('d.createdAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
+                if ('createdBy' == $key) {
+                    $query = $query->andWhere('d.createdBy = :createdBy')
+                        ->setParameter('createdBy', $value);
                 }
                 if ('status' == $key) {
                     $query = $query->andWhere('sg.status = :status')

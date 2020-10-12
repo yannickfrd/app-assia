@@ -283,9 +283,17 @@ class RdvRepository extends ServiceEntityRepository
                     $query = $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('user' == $key) {
-                    $query = $query->andWhere('rdv.createdBy = :user')
-                        ->setParameter('user', $value);
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('rdv.createdAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('rdv.createdAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
+                if ('createdBy' == $key) {
+                    $query = $query->andWhere('rdv.createdBy = :createdBy')
+                        ->setParameter('createdBy', $value);
                 }
                 if ('status' == $key) {
                     $query = $query->andWhere('sg.status = :status')

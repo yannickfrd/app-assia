@@ -192,9 +192,17 @@ class NoteRepository extends ServiceEntityRepository
                     $query = $query->andWhere('sg.device = :device')
                     ->setParameter('device', $value);
                 }
-                if ('user' == $key) {
-                    $query = $query->andWhere('n.createdBy = :user')
-                        ->setParameter('user', $value);
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('n.createdAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('n.createdAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
+                if ('createdBy' == $key) {
+                    $query = $query->andWhere('n.createdBy = :createdBy')
+                        ->setParameter('createdBy', $value);
                 }
                 if ('status' == $key) {
                     $query = $query->andWhere('sg.status = :status')
