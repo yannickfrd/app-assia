@@ -49,7 +49,7 @@ App\Entity\User:
 
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
@@ -64,5 +64,5 @@ App\Entity\Pole:
 
 
 App\Entity\Device:
-  device:
+  device1:
     name: AVDL

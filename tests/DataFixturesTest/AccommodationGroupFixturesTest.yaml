@@ -62,8 +62,8 @@ App\Entity\Accommodation:
     individualCollective:  <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
@@ -75,8 +75,8 @@ App\Entity\SupportGroup:
     status: 2
     agreement: true
     referent: "@userRoleUser"
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     groupPeople: "@groupPeople"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
@@ -89,8 +89,8 @@ App\Entity\SupportGroup:
     endDate: <dateTimeBetween($startDate, "now")>
     status: <numberBetween(1, 4)>
     referent: "@userRoleUser"
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     groupPeople: "@groupPeople"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
@@ -145,7 +145,7 @@ App\Entity\RolePerson:
 
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
@@ -160,10 +160,10 @@ App\Entity\Pole:
 
 
 App\Entity\Device:
-  device:
+  device1:
     name: AVDL
 
 # App\Entity\ServiceDevice:
 #   servDevice:
-#     device: "@device"
-#     service: "@service"
+#     device: "@device1"
+#     service: "@service1"

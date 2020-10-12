@@ -12,8 +12,8 @@ App\Entity\Accommodation:
     individualCollective:  <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     createdBy: "@userRoleAdmin"
     updatedBy: "@userRoleAdmin"
 
@@ -29,8 +29,8 @@ App\Entity\Accommodation:
     individualCollective:  <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     createdBy: "@userRoleAdmin"
     updatedBy: "@userRoleAdmin"
 
@@ -69,7 +69,7 @@ App\Entity\RolePerson:
 
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
@@ -84,5 +84,5 @@ App\Entity\Pole:
 
 
 App\Entity\Device:
-  device:
+  device1:
     name: AVDL

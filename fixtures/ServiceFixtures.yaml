@@ -28,10 +28,16 @@ App\Entity\Service:
     updatedBy: "@user*"
 
 App\Entity\ServiceUser:
-  serviceUser:
+  servUser1:
     service: "@service1"
     user: "@userSuperAdmin"
+  servUser2:
+    service: "@service1"
+    user: "@userRoleAdmin"
+  servUser3:
+    service: "@service1"
+    user: "@userRoleUser"
 
-  servUser{2..10}:
+  servUser{4..10}:
     service: "@service*"
     user: "@user*"

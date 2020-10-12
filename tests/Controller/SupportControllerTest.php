@@ -80,7 +80,7 @@ class SupportControllerTest extends WebTestCase
             'POST',
             $this->generateUri('support_new', [
                 'id' => $this->dataFixtures['groupPeople']->getId(),
-            ]), 
+            ]),
             [
                 'support' => ['service' => 1],
             ]);
@@ -92,9 +92,15 @@ class SupportControllerTest extends WebTestCase
     public function testCreateNewSupportGroupIsSuccessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('support_new', [
-            'id' => ($this->dataFixtures['groupPeople'])->getId(),
-        ]));
+        $crawler = $this->client->request(
+            'POST',
+            $this->generateUri('support_new', [
+                'id' => ($this->dataFixtures['groupPeople'])->getId(),
+            ]),
+            [
+                'support' => ['service' => 1],
+            ],
+        );
 
         $now = new \DateTime();
         $faker = \Faker\Factory::create('fr_FR');

@@ -67,7 +67,7 @@ App\Entity\RolePerson:
 
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>

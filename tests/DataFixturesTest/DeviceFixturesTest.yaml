@@ -18,7 +18,7 @@ App\Entity\Device:
 App\Entity\ServiceDevice:
   servDevice1:
     device: "@device1"
-    service: "@service"
+    service: "@service1"
 
   servDevice{2..5}:
     device: "@device*"
@@ -35,7 +35,7 @@ App\Entity\User:
     plainPassword: Test123*
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>

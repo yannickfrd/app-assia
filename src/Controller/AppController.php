@@ -5,67 +5,36 @@ namespace App\Controller;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\SubService;
-use App\Entity\SupportGroup;
-use App\Entity\User;
 use App\Form\Model\OccupancySearch;
 use App\Form\Model\SupportsByUserSearch;
 use App\Form\OccupancySearchType;
 use App\Form\SupportsByUserSearchType;
-use App\Form\Utils\Choices;
-use App\Repository\ContributionRepository;
-use App\Repository\DocumentRepository;
-use App\Repository\GroupPeopleRepository;
 use App\Repository\NoteRepository;
-use App\Repository\PersonRepository;
 use App\Repository\RdvRepository;
-use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
-use App\Repository\SupportPersonRepository;
-use App\Repository\UserRepository;
+use App\Service\Indicators\Indicators;
 use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
-    protected $repoUser;
-    protected $repoService;
-    protected $repoPerson;
-    protected $repoGroupPeople;
     protected $repoSupportGroup;
-    protected $repoSupportPerson;
     protected $repoNote;
     protected $repoRdv;
-    protected $repoDocument;
-    protected $repoContribution;
 
     public function __construct(
-        UserRepository $repoUser,
-        ServiceRepository $repoService,
-        PersonRepository $repoPerson,
-        GroupPeopleRepository $repoGroupPeople,
         SupportGroupRepository $repoSupportGroup,
-        SupportPersonRepository $repoSupportPerson,
         NoteRepository $repoNote,
-        RdvRepository $repoRdv,
-        DocumentRepository $repoDocument,
-        ContributionRepository $repoContribution)
+        RdvRepository $repoRdv)
     {
-        $this->repoUser = $repoUser;
-        $this->repoService = $repoService;
-        $this->repoPerson = $repoPerson;
-        $this->repoGroupPeople = $repoGroupPeople;
         $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoSupportPerson = $repoSupportPerson;
         $this->repoNote = $repoNote;
         $this->repoRdv = $repoRdv;
-        $this->repoDocument = $repoDocument;
-        $this->repoContribution = $repoContribution;
     }
 
     /**
@@ -73,15 +42,13 @@ class AppController extends AbstractController
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
-    public function home(): Response
+    public function home(Indicators $indicators): Response
     {
-        $cache = new FilesystemAdapter();
-
-        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->dashboardAdmin($cache);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->dashboardAdmin($indicators);
         }
 
-        return $this->dashboardSocialWorker($cache);
+        return $this->dashboardSocialWorker();
     }
 
     /**
@@ -110,12 +77,12 @@ class AppController extends AbstractController
         ]);
     }
 
-    protected function dashboardAdmin(FilesystemAdapter $cache)
+    protected function dashboardAdmin($indicators)
     {
         return $this->render('app/home/dashboardAdmin.html.twig', [
-            'datas' => $this->getIndicators($cache),
-            'servicesIndicators' => $this->getServicesIndicators($cache),
-            // 'users' => $this->getUsersIndicators($cache),
+            'datas' => $indicators->getIndicators(),
+            'servicesIndicators' => $indicators->getServicesIndicators(),
+            // 'users' => $this->getUsersIndicators(),
         ]);
     }
 
@@ -141,7 +108,7 @@ class AppController extends AbstractController
      * @Route("/occupancy/devices", name="occupancy_devices", methods="GET|POST")
      * @Route("/occupancy/service/{id}/devices", name="occupancy_service_devices", methods="GET|POST")
      */
-    public function showOccupancyByDevice(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancyByDevice(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
@@ -154,7 +121,7 @@ class AppController extends AbstractController
         $end = $search->getEnd() ?? $today;
 
         return $this->render('app/dashboard/occupancyByDevice.html.twig', [
-            'service' => $service ?? null,
+            'service' => $service,
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
@@ -168,7 +135,7 @@ class AppController extends AbstractController
      * @Route("/occupancy/services", name="occupancy_services", methods="GET|POST")
      * @Route("/occupancy/device/{id}/services", name="occupancy_device_services", methods="GET|POST")
      */
-    public function showOccupancyByService(Device $device = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancyByService(Device $device = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
@@ -181,7 +148,7 @@ class AppController extends AbstractController
         $end = $search->getEnd() ?? $today;
 
         return $this->render('app/dashboard/occupancyByService.html.twig', [
-            'device' => $device ?? null,
+            'device' => $device,
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
@@ -194,7 +161,7 @@ class AppController extends AbstractController
      *
      * @Route("/occupancy/service/{id}/sub_services", name="occupancy_sub_services", methods="GET|POST")
      */
-    public function showOccupancyBySubService(Service $service, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancyBySubService(Service $service, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
         $search = (new OccupancySearch())
@@ -221,17 +188,11 @@ class AppController extends AbstractController
      * @Route("/occupancy/service/{id}/accommodations", name="occupancy_service_accommodations", methods="GET|POST")
      * @Route("/occupancy/accommodations", name="occupancy_accommodations", methods="GET|POST")
      */
-    public function showOccupancyServiceByAccommodation(Service $service = null, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancyServiceByAccommodation(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
-        $search = new OccupancySearch();
 
-        if ($request->query->get('start') && $request->query->get('end')) {
-            $search->setStart(new \DateTime($request->query->get('start')))
-                ->setEnd(new \DateTime($request->query->get('end')));
-        } else {
-            $search->setStart((new \DateTime('midnight'))->modify('-1 day'));
-        }
+        $search = $this->getOccupancySearch($request);
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -240,7 +201,7 @@ class AppController extends AbstractController
         $end = $search->getEnd() ?? $today;
 
         return $this->render('app/dashboard/occupancyByAccommodation.html.twig', [
-            'service' => $service ?? null,
+            'service' => $service,
             'start' => $start,
             'end' => $end,
             'form' => $form->createView(),
@@ -253,17 +214,11 @@ class AppController extends AbstractController
      *
      * @Route("/occupancy/sub_services/{id}/accommodations", name="occupancy_sub_service_accommodations", methods="GET|POST")
      */
-    public function showOccupancySubServiceByAccommodation(SubService $subService, Request $request, OccupancySearch $search = null, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancySubServiceByAccommodation(SubService $subService, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $today = new \DateTime('midnight');
-        $search = new OccupancySearch();
 
-        if ($request->query->get('start') && $request->query->get('end')) {
-            $search->setStart(new \DateTime($request->query->get('start')))
-                ->setEnd(new \DateTime($request->query->get('end')));
-        } else {
-            $search->setStart((new \DateTime('midnight'))->modify('-1 day'));
-        }
+        $search = $this->getOccupancySearch($request);
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -280,186 +235,17 @@ class AppController extends AbstractController
         ]);
     }
 
-    public function cleanString(string $string)
+    protected function getOccupancySearch(Request $request)
     {
-        $string = strtr($string, [
-            'à' => 'a',
-            'ç' => 'c',
-            'è' => 'e',
-            'é' => 'e',
-            'ê' => 'e',
-        ]);
-        $string = strtolower($string);
-        $string = str_replace(' ', '+', $string);
+        $search = new OccupancySearch();
 
-        return $string;
-    }
-
-    protected function getIndicators(FilesystemAdapter $cache)
-    {
-        $indicators = $cache->getItem('stats.indicators');
-
-        if (!$indicators->isHit()) {
-            $datas = [];
-            $datas['Nombre de personnes'] = $this->repoPerson->count([]);
-            $datas['Nombre de groupes'] = $this->repoGroupPeople->count([]);
-            $datas['Nombre de suivis'] = $this->repoSupportGroup->count([]);
-            $datas['Nombre de suivis en cours'] = $this->repoSupportGroup->count(['status' => SupportGroup::STATUS_IN_PROGRESS]);
-            $datas['Nombre de notes'] = $this->repoNote->count([]);
-            $datas['Nombre de RDVs'] = $this->repoRdv->count([]);
-            $datas['Nombre de documents'] = $this->repoDocument->count([]).' ('.round($this->repoDocument->sumSizeAllDocuments() / 1024 / 1024).' Mo.)';
-            $datas['Nombre de paiements'] = $this->repoContribution->count([]);
-
-            $indicators->set($datas);
-            $indicators->expiresAfter(10 * 60); // 5mn
-            $cache->save($indicators);
+        if ($request->query->get('start') && $request->query->get('end')) {
+            $search->setStart(new \DateTime($request->query->get('start')))
+                ->setEnd(new \DateTime($request->query->get('end')));
+        } else {
+            $search->setStart((new \DateTime('midnight'))->modify('-1 day'));
         }
 
-        return $indicators->get();
-    }
-
-    protected function getServicesIndicators(FilesystemAdapter $cache)
-    {
-        $services = [];
-
-        foreach ($this->repoService->findServicesAndSubServicesOfUser($this->getUser()) as $service) {
-            $indicatorsService = $cache->getItem('indicators_service_'.$service->getId());
-
-            if (!$indicatorsService->isHit()) {
-                $nbActiveSupportsGroups = $this->repoSupportGroup->count([
-                'service' => $service,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
-                ]);
-
-                $criteria = [
-                    'service' => $service,
-                    'status' => SupportGroup::STATUS_IN_PROGRESS,
-                ];
-
-                $serviceDatas = [
-                    'id' => $service->getId(),
-                    'name' => $service->getName(),
-                    'activeSupportsGroups' => $nbActiveSupportsGroups,
-                    'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople([
-                        'sg.service' => $service,
-                        'sp.status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport([
-                        'service' => $service,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser([
-                        'service' => $service,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'siaoRequest' => $this->repoSupportGroup->countSupports([
-                        'service' => $service,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                        'siaoRequest' => Choices::YES,
-                    ]),
-                    'socialHousingRequest' => $this->repoSupportGroup->countSupports([
-                        'service' => $service,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                        'socialHousingRequest' => Choices::YES,
-                    ]),
-                    'notes' => $this->repoNote->countNotes($criteria),
-                    'rdvs' => $this->repoRdv->countRdvs($criteria),
-                    'documents' => $this->repoDocument->countDocuments($criteria),
-                    'contributions' => $this->repoContribution->countContributions($criteria),
-                    'subServices' => $this->getSubServicesIndicators($service),
-                ];
-                $indicatorsService->set($serviceDatas);
-                $indicatorsService->expiresAfter(10 * 60); // 10mn
-                $cache->save($indicatorsService);
-            }
-            $services[$service->getId()] = $indicatorsService->get();
-        }
-
-        return $services;
-    }
-
-    protected function getSubServicesIndicators(Service $service)
-    {
-        if (0 == $service->getSubServices()->count()) {
-            return null;
-        }
-        $subServices = [];
-
-        foreach ($service->getSubServices() as $subService) {
-            $criteria = [
-                'subService' => $subService,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
-            ];
-
-            $nbActiveSupportsGroups = $this->repoSupportGroup->count([
-                'subService' => $subService,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
-            ]);
-
-            if ((int) $nbActiveSupportsGroups > 0) {
-                $subServices[] = [
-                    'name' => $subService->getName(),
-                    'activeSupportsGroups' => $nbActiveSupportsGroups,
-                    'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople([
-                        'sg.subService' => $subService,
-                        'sp.status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport([
-                        'subService' => $subService,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser([
-                        'subService' => $subService,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'siaoRequest' => $this->repoSupportGroup->countSupports([
-                        'subService' => $subService,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                        'siaoRequest' => Choices::YES,
-                    ]),
-                    'socialHousingRequest' => $this->repoSupportGroup->countSupports([
-                        'subService' => $subService,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                        'socialHousingRequest' => Choices::YES,
-                    ]),
-                    'notes' => $this->repoNote->countNotes($criteria),
-                    'rdvs' => $this->repoRdv->countRdvs($criteria),
-                    'documents' => $this->repoDocument->countDocuments($criteria),
-                    'contributions' => $this->repoContribution->countContributions($criteria),
-                ];
-            }
-        }
-
-        return $subServices;
-    }
-
-    protected function getUsersIndicators(FilesystemAdapter $cache)
-    {
-        $usersIndicators = $cache->getItem('stats.users_indicators');
-
-        if (!$usersIndicators->isHit()) {
-            $users = [];
-
-            /** @var User $user */
-            foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
-                $users[] = [
-                    'id' => $user->getId(),
-                    'name' => $user->getFullname(),
-                    'activeSupports' => $this->repoSupportGroup->count([
-                        'referent' => $user,
-                        'status' => SupportGroup::STATUS_IN_PROGRESS,
-                    ]),
-                    'notes' => $this->repoNote->count(['createdBy' => $user]),
-                    'rdvs' => $this->repoRdv->count(['createdBy' => $user]),
-                    'documents' => $this->repoDocument->count(['createdBy' => $user]),
-                    'contributions' => $this->repoContribution->count(['createdBy' => $user]),
-                ];
-            }
-            $usersIndicators->set($users);
-            $usersIndicators->expiresAfter(5 * 60); // 5mn
-            $cache->save($usersIndicators);
-        }
-
-        return $usersIndicators->get();
+        return $search;
     }
 }

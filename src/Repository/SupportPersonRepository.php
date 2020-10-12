@@ -322,11 +322,19 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.supportGroup', 'sg');
 
         if ($criteria) {
-            $i = 0;
             foreach ($criteria as $key => $value) {
-                $query = $query->andWhere($key.' = :value'.$i)
-                    ->setParameter('value'.$i, $value);
-                ++$i;
+                if ('service' == $key) {
+                    $query->andWhere('sg.service = :service')
+                        ->setParameter('service', $value);
+                }
+                if ('subService' == $key) {
+                    $query->andWhere('sg.subService = :subService')
+                        ->setParameter('subService', $value);
+                }
+                if ('status' == $key) {
+                    $query->andWhere('sg.status = :status')
+                        ->setParameter('status', $value);
+                }
             }
         }
 

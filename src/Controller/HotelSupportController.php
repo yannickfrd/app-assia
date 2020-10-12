@@ -39,7 +39,7 @@ class HotelSupportController extends AbstractController
      *
      * @Route("/hotel-supports", name="hotel_supports", methods="GET|POST")
      */
-    public function viewListHotelSupports(Request $request, HotelSupportSearch $search = null, Pagination $pagination): Response
+    public function viewListHotelSupports(Request $request, Pagination $pagination): Response
     {
         $search = (new HotelSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 

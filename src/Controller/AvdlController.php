@@ -39,7 +39,7 @@ class AvdlController extends AbstractController
      *
      * @Route("/avdl-supports", name="avdl_supports", methods="GET|POST")
      */
-    public function viewListAvdlSupports(Request $request, AvdlSupportSearch $search = null, Pagination $pagination): Response
+    public function viewListAvdlSupports(Request $request, Pagination $pagination): Response
     {
         $search = (new AvdlSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 

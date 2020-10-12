@@ -5,8 +5,8 @@ App\Entity\SupportGroup:
     status: 2
     agreement: true
     referent: "@userRoleUser"
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     groupPeople: "@groupPeople1"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>

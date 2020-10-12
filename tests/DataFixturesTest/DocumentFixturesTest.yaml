@@ -52,7 +52,7 @@ App\Entity\SupportGroup:
     status: 2
     referent: "@userRoleUser"
     groupPeople: "@groupPeople"
-    service: "@service"
+    service: "@service1"
     createdAt: <date_create()>
     updatedAt: <date_create()>
     createdBy: "@userRoleUser"
@@ -60,7 +60,7 @@ App\Entity\SupportGroup:
 
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>

@@ -33,7 +33,7 @@ class AccommodationControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
         ]);
 
-        $this->service = $this->dataFixtures['service'];
+        $this->service = $this->dataFixtures['service1'];
         $this->accommodation = $this->dataFixtures['accommodation1'];
     }
 

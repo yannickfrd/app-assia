@@ -50,7 +50,7 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(SupportGroup::class);
 
         $this->supportGroup = $dataFixtures['supportGroup1'];
-        $this->service = $dataFixtures['service'];
+        $this->service = $dataFixtures['service1'];
         $this->user = $dataFixtures['userRoleUser'];
         $this->search = $this->getSupportGroupSearch();
     }

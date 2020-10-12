@@ -46,7 +46,7 @@ class AccommodationRepositoryTest extends WebTestCase
         /* @var AccommodationRepository */
         $this->repo = $this->entityManager->getRepository(Accommodation::class);
 
-        $this->service = $dataFixtures['service'];
+        $this->service = $dataFixtures['service1'];
         $this->search = (new AccommodationSearch())
             ->setName('Logement')
             ->setNbPlaces(6)

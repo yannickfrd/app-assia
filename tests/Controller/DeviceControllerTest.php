@@ -33,7 +33,7 @@ class DeviceControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/DeviceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->dataFixtures['service'];
+        $this->service = $this->dataFixtures['service1'];
         $this->device = $this->dataFixtures['device1'];
     }
 

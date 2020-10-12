@@ -5,8 +5,8 @@ App\Entity\SupportGroup:
     status: 2
     agreement: true
     referent: "@userRoleUser"
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     groupPeople: "@groupPeople"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
@@ -19,8 +19,8 @@ App\Entity\SupportGroup:
     endDate: <dateTimeBetween($startDate, "now")>
     status: <numberBetween(1, 4)>
     referent: "@userRoleUser"
-    service: "@service"
-    device: "@device"
+    service: "@service1"
+    device: "@device1"
     groupPeople: "@groupPeople"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
@@ -75,7 +75,7 @@ App\Entity\RolePerson:
 
 
 App\Entity\Service:
-  service:
+  service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
@@ -89,13 +89,13 @@ App\Entity\Pole:
     updatedAt: <date_create()>
 
 App\Entity\Device:
-  device:
+  device1:
     name: AVDL
 
 App\Entity\ServiceDevice:
   servcieDevice:
-    device: "@device"
-    service: "@service"
+    device: "@device1"
+    service: "@service1"
 
 App\Entity\Organization:
   organization1:

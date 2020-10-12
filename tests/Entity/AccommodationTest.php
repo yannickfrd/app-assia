@@ -35,7 +35,7 @@ class AccommodationTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->service = $dataFixtures['service'];
+        $this->service = $dataFixtures['service1'];
     }
 
     protected function getAccommodation()

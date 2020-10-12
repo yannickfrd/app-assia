@@ -20,6 +20,6 @@ App\Entity\ServiceDevice:
     device: "@device1"
     service: "@service1"
 
-  servDevice{2..20}:
+  servDevice{2..10}:
     device: "@device*"
     service: "@service*"

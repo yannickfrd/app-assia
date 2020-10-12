@@ -27,8 +27,8 @@ class SupportGroupTest extends WebTestCase
             ->setStatus(2)
             ->setAgreement(true)
             ->setReferent($dataFixutres['userRoleUser'])
-            ->setService($dataFixutres['service'])
-            ->setDevice($dataFixutres['device']);
+            ->setService($dataFixutres['service1'])
+            ->setDevice($dataFixutres['device1']);
     }
 
     public function testValidSupportGroup()

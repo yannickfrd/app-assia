@@ -46,7 +46,7 @@ class UserRepositoryTest extends WebTestCase
         $this->repo = $this->entityManager->getRepository(User::class);
 
         $this->user = $dataFixtures['userSuperAdmin'];
-        $this->service = $dataFixtures['service'];
+        $this->service = $dataFixtures['service1'];
         $this->search = $this->getUserSearch($dataFixtures['pole']);
     }
 
