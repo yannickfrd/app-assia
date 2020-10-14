@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12 accordion" id="accordion-eval_social">
             <div class="mb-4">
-                {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
+				{% for key, evalPerson in form.evaluationPeople %}
                     {% set person = evalPerson.vars.value.supportPerson.person %}
                     <button type="button" id="heading-eval_social-{{ key }}" class="btn btn-outline-{{ theme_color }} 
                         {% if loop.first %}active{% endif %} mb-2 js-person"
@@ -18,22 +18,24 @@
                 {% endfor %}
             </div>
 
-            {% for key, evalPerson in form_evaluationPeople_filteredByRole %}
+			{% for key, evalPerson in form.evaluationPeople %}
                 <div id="collapse-eval_social-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
                     aria-labelledby="heading-eval_social-{{ key }}" data-parent="#accordion-eval_social" 
                     data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.rightSocialSecurity) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
-                            {{ form_row(evalPerson.evalSocialPerson.socialSecurity) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
-                            {{ form_row(evalPerson.evalSocialPerson.endRightsSocialSecurityDate) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
-                            {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
-                    </div>
+                    {% if evalPerson.vars.value.supportPerson.role != ROLE_CHILD %} 
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.rightSocialSecurity) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
+                                {{ form_row(evalPerson.evalSocialPerson.socialSecurity) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
+                                {{ form_row(evalPerson.evalSocialPerson.endRightsSocialSecurityDate) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_rightSocialSecurity">
+                                {{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
+                        </div>
+                    {% endif %}
 
                     {% set healthProblemsType = constant("App\\Entity\\EvalSocialPerson::HEALTH_PROBLEMS_TYPE") %}
-
+                    
                     <div class="form-group row">
                         <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>
                         <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
@@ -70,31 +72,32 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
-                            {{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_careSupport">
-                            {{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.childWelfareBackground) }}</div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.familyBreakdown) }}</div>
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.friendshipBreakdown) }}</div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_violenceVictim">
-                            {{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
-                    </div>
-                    <div class="form-group row">
-                        {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
-                        <div class="col-md-12">
-                            {{ form_widget(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                    {% if evalPerson.vars.value.supportPerson.role != ROLE_CHILD %} 
+                        <div class="form-group row">
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
+                                {{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_careSupport">
+                                {{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
                         </div>
-                    </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.childWelfareBackground) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.familyBreakdown) }}</div>
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.friendshipBreakdown) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_violenceVictim">
+                                {{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
+                        </div>
+                    {% endif %}
+                        <div class="form-group row">
+                            {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                            <div class="col-md-12">
+                                {{ form_widget(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                            </div>
+                        </div>
                 </div>
             {% endfor %}
         </div>
