@@ -48,8 +48,7 @@ class PersonRepositoryTest extends WebTestCase
         return (new PersonSearch())
             ->setFirstname('John')
             ->setLastname('DOE')
-            ->setBirthdate(new \DateTime('1980-01-01'))
-            ->setPhone('01 00 00 00 00');
+            ->setBirthdate(new \DateTime('1980-01-01'));
     }
 
     public function testCount()

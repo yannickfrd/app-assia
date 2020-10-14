@@ -102,7 +102,7 @@
                     class="btn btn-{{ theme_color }} btn-sm my-2">
                     <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
                 <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
-                    class="btn btn-secondary btn-sm my-2">
+                    data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom" class="btn btn-secondary btn-sm my-2">
                     <span class="fas fa-plus-square mr-2"></span>Naissance</a>
             </div>
         </div>

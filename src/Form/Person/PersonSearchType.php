@@ -2,11 +2,8 @@
 
 namespace App\Form\Person;
 
-use App\Entity\Person;
 use App\Form\Model\PersonSearch;
-use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,9 +14,7 @@ class PersonSearchType extends AbstractType
     {
         $builder
             ->add('lastname', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Nom',
@@ -27,9 +22,7 @@ class PersonSearchType extends AbstractType
                 ],
             ])
             ->add('firstname', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',
                     'placeholder' => 'Prénom',
@@ -37,9 +30,7 @@ class PersonSearchType extends AbstractType
                 ],
             ])
             ->add('birthdate', DateType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
                 // "html5" => false,
                 // "format" => "dd/MM/yyyy",
@@ -48,16 +39,6 @@ class PersonSearchType extends AbstractType
                     'autocomplete' => 'off',
                 ],
                 'required' => false,
-            ])
-            ->add('phone', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'placeholder' => 'Phone',
-                    'class' => 'js-phone w-max-140',
-                    'autocomplete' => 'off',
-                ],
             ]);
     }
 
@@ -65,10 +46,11 @@ class PersonSearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PersonSearch::class,
-            'method' => 'get',
             'translation_domain' => 'forms',
-            'allow_extra_fields' => true,
             'csrf_protection' => false,
+            'attr' => ['id' => 'people_search'],
+            // 'method' => 'post',
+            // 'allow_extra_fields' => true,
         ]);
     }
 

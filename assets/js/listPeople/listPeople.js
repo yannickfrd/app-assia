@@ -1,5 +1,4 @@
-import AjaxRequest from '../utils/ajaxRequest'
-import AddPerson from './addPerson'
+import SearchPerson from './searchPerson'
 
-let ajaxRequest = new AjaxRequest()
-let addPerson = new AddPerson()
+// Recherche instannée d'une personne via Ajax
+new SearchPerson() // lengthSearch, time

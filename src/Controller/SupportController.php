@@ -289,7 +289,7 @@ class SupportController extends AbstractController
     /**
      * @Route("/indicators/social", name="indicators_social", methods="GET|POST")
      */
-    public function showSocialIndicators(Request $request, SupportGroupSearch $search = null, SocialIndicators $socialIndicators): Response
+    public function showSocialIndicators(Request $request,SocialIndicators $socialIndicators): Response
     {
         $search = new SupportGroupSearch();
 
@@ -316,7 +316,7 @@ class SupportController extends AbstractController
      * "month" : "0?[1-9]|1[0-2]",
      * })
      */
-    public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, SupportsInMonthSearch $search = null, ContributionRepository $repoContribution, Pagination $pagination): Response
+    public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, ContributionRepository $repoContribution, Pagination $pagination): Response
     {
         $search = new SupportsInMonthSearch();
         if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {

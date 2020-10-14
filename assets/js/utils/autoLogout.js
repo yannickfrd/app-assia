@@ -1,13 +1,17 @@
-// Système de déconnexion automatique après un laps de temps
+import AjaxRequest from './ajaxRequest'
+
+/**
+ * Système de déconnexion automatique après un laps de temps
+ */
 export default class AutoLogout {
 
-    constructor(ajaxRequest, timeout = 30, timeAlert = 5) {
-        this.ajaxRequest = ajaxRequest
+    constructor(timeout = 30, timeAlert = 5) {
+        this.ajaxRequest = new AjaxRequest()
         this.userNameElt = document.getElementById('user-name')
         this.modalElt = $('#modal-autoLogout')
         this.timerElt = document.getElementById('timer-logout')
         this.time = timeout * 60
-        this.timeAlert = timeout * 60
+        this.timeAlert = timeAlert * 60
         this.initTime = this.time
         this.intervalID = null
         this.init()
@@ -19,7 +23,9 @@ export default class AutoLogout {
         }
     }
 
-    // Compte le temps restant
+    /**
+     * Compte le temps restant.
+     */
     count() {
         this.time--
         if (this.time === this.timeAlert) {
@@ -35,7 +41,9 @@ export default class AutoLogout {
         }
     }
 
-    // Donne le temps
+    /**
+     * Donne le temps.
+     */
     getFullTime() {
         let minutes = Math.round((this.time / 60) - 0.5)
         let seconds = this.time - (minutes * 60)
@@ -43,18 +51,24 @@ export default class AutoLogout {
         return minutes.toString().padStart(2, '0') + 'mn ' + seconds.toString().padStart(2, '0') + 's'
     }
 
-    // Remet à zéro le timer
+    /**
+     * Remet à zéro le timer.
+     */
     clearTimer() {
         this.time = this.initTime
     }
 
-    // Déconnection via requête Ajax
+    /**
+     * Déconnection via requête Ajax.
+     */
     deconnection() {
         clearInterval(this.intervalID)
         this.ajaxRequest.init('GET', '/deconnexion', this.reloadPage.bind(this), true)
     }
 
-    // Recharge la page
+    /**
+     * Recharge la page.
+     */
     reloadPage() {
         document.location.assign('/login')
     }

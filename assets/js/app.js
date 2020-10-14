@@ -30,8 +30,8 @@ window.onload = () => {
     document.getElementById('loader').classList.add('d-none')
 
     // Recherche instannée d'une personne via Ajax
-    new SearchPerson(ajaxRequest, 3, 500) // lengthSearch, time
+    new SearchPerson() // lengthSearch, time
 
     // Déconnexion automatique de l'utilisateur
-    new autoLogout(ajaxRequest, 40, 10) // minutes
+    new autoLogout(40, 10) // minutes
 }

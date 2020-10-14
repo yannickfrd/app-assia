@@ -41,7 +41,7 @@ class GroupPeopleController extends AbstractController
      *
      * @Route("/groups_people", name="groups_people", methods="GET|POST")
      */
-    public function listGroupsPeople(GroupPeopleSearch $search = null, Request $request, Pagination $pagination): Response
+    public function listGroupsPeople(Request $request, Pagination $pagination): Response
     {
         $search = new GroupPeopleSearch();
 

@@ -10,7 +10,7 @@ export default class UpdatePerson {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest()
-        this.personElt = document.querySelector('form[name=person]')
+        this.personFormElt = document.querySelector('form[name=person]')
         this.updatePersonBtnElt = document.getElementById('updatePerson')
         this.loader = new Loader()
         this.init()
@@ -30,7 +30,7 @@ export default class UpdatePerson {
                 e.preventDefault()
                 if (validationPerson.getNbErrors() === 0) {
                     this.loader.on()
-                    const formData = new FormData(this.personElt)
+                    const formData = new FormData(this.personFormElt)
                     const formToString = new URLSearchParams(formData).toString()
                     const url = this.updatePersonBtnElt.getAttribute('data-url')
                     this.ajaxRequest.init('POST', url, this.response.bind(this), true, formToString)

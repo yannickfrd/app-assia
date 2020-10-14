@@ -36,7 +36,7 @@ class DatabaseBackupController extends AbstractController
      * @Route("admin/database-backups", name="database_backups", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function listBackups(Request $request, BackupSearch $search = null, Pagination $pagination): Response
+    public function listBackups(Request $request, Pagination $pagination): Response
     {
         $search = new BackupSearch();
 

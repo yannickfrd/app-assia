@@ -244,7 +244,7 @@ class ContributionController extends AbstractController
      *
      * @Route("contribution/indicators", name="contribution_indicators", methods="GET|POST")
      */
-    public function showContributionIndicators(ContributionSearch $search = null, Request $request, ContributionIndicators $indicators): Response
+    public function showContributionIndicators(Request $request, ContributionIndicators $indicators): Response
     {
         $search = $this->getContributionSearch();
 

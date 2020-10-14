@@ -50,14 +50,15 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les personnes.
      */
-    public function findAllPeopleQuery(PersonSearch $personSearch, string $search = null): Query
+    public function findAllPeopleQuery(PersonSearch $personSearch, string $searchQuery = null, int $maxResult = 20): Query
     {
-        $query = $this->createQueryBuilder('p')
-            ->select('p');
-        if ($search) {
+        $query = $this->createQueryBuilder('p')->select('p');
+
+        if ($searchQuery) {
             $query->Where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
-                ->setParameter('search', '%'.$search.'%');
+                ->setParameter('search', '%'.$searchQuery.'%');
         }
+
         if ($personSearch->getFirstname()) {
             $query->andWhere('p.firstname LIKE :firstname')
                 ->setParameter('firstname', $personSearch->getFirstname().'%');
@@ -71,12 +72,13 @@ class PersonRepository extends ServiceEntityRepository
             $query->andWhere('p.birthdate = :birthdate')
                 ->setParameter('birthdate', $personSearch->getBirthdate());
         }
-        if ($personSearch->getPhone()) {
-            $query->andWhere('p.phone1 = :phone OR p.phone2 = :phone')
-                ->setParameter('phone', $personSearch->getPhone());
+
+        if ($maxResult) {
+            $query->setMaxResults($maxResult);
         }
 
-        return $query->orderBy('p.lastname', 'ASC')
+        return $query->addOrderBy('p.lastname', 'ASC')
+            ->addOrderBy('p.firstname', 'ASC')
             ->getQuery();
     }
 

@@ -47,7 +47,7 @@ class PersonController extends AbstractController
      * @Route("/people", name="people", methods="GET|POST")
      * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
      */
-    public function listPeople(Request $request, PersonSearch $search = null, Pagination $pagination): Response
+    public function listPeople(Request $request, Pagination $pagination): Response
     {
         $search = new PersonSearch();
 
@@ -57,8 +57,41 @@ class PersonController extends AbstractController
         return $this->render('app/person/listPeople.html.twig', [
             'personSearch' => $search,
             'form' => $form->createView(),
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search, $request->query->get('search-person')), $request) : null,
+            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search, $request->query->get('search-person'), 20), $request) : null,
         ]);
+    }
+
+    /**
+     * Permet de trouver les personnes par le mode de recherche instannée AJAX.
+     *
+     * @Route("/people/search", name="people_search", methods="POST")
+     */
+    public function searchPeople(Request $request): Response
+    {
+        $search = new PersonSearch();
+
+        $this->createForm(PersonSearchType::class, $search)
+            ->handleRequest($request);
+
+        $people = [];
+
+        foreach ($this->repo->findAllPeopleQuery($search, null, 20)->getResult() as $person) {
+            $people[] = [
+                'id' => $person->getId(),
+                'lastname' => $person->getLastname(),
+                'usename' => $person->getUsename(),
+                'firstname' => $person->getFirstname(),
+                'birthdate' => $person->getBirthdate()->format('d/m/Y'),
+                'age' => $person->getAge(),
+                'gender' => $person->getGender(),
+            ];
+        }
+
+        return $this->json([
+                'search' => $search,
+                // 'count' => $count,
+                'people' => $people,
+        ], 200);
     }
 
     /**
@@ -66,7 +99,7 @@ class PersonController extends AbstractController
      *
      * @Route("/group/{id}/search_person", name="group_search_person", methods="GET|POST")
      */
-    public function addPersonInGroup(GroupPeople $groupPeople, PersonSearch $search = null, Request $request, Pagination $pagination): Response
+    public function addPersonInGroup(GroupPeople $groupPeople, Request $request, Pagination $pagination): Response
     {
         $search = new PersonSearch();
 
@@ -258,30 +291,18 @@ class PersonController extends AbstractController
      */
     public function searchPerson(Request $request): Response
     {
-        $search = $request->query->get('search') ?? null;
+        $people = [];
 
-        $people = $this->repo->findPeopleByResearch($search);
-        $nbResults = count($people);
-
-        $results = [];
-        if ($nbResults) {
-            foreach ($people as $person) {
-                $results[] = [
-                    'id' => $person->getId(),
-                    'fullname' => $person->getFullname(),
-                ];
-            }
-
-            return $this->json([
-                'nb_results' => $nbResults,
-                'results' => $results,
-            ], 200);
+        foreach ($this->repo->findPeopleByResearch($request->query->get('search')) as $person) {
+            $people[] = [
+                'id' => $person->getId(),
+                'fullname' => $person->getFullname(),
+            ];
         }
 
         return $this->json([
-            'nb_results' => $nbResults,
-            'results' => 'Aucun résultat.',
-        ], 200);
+                'people' => $people,
+            ], 200);
     }
 
     /**
@@ -290,7 +311,7 @@ class PersonController extends AbstractController
      * @Route("/duplicated_people", name="duplicated_people", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function listDuplicatedPeople(Request $request, DuplicatedPeopleSearch $search = null): Response
+    public function listDuplicatedPeople(Request $request): Response
     {
         $search = new DuplicatedPeopleSearch();
 

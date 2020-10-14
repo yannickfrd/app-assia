@@ -1,32 +1,40 @@
 import Loader from './utils/loader'
-// Recherche instannée Ajax
+import AjaxRequest from './utils/ajaxRequest'
+
+/**
+ * Recherche instannée Ajax.
+ */
 export default class SearchPerson {
 
-    constructor(ajaxRequest, lengthSearch, time) {
-        this.ajaxRequest = ajaxRequest
+    constructor(lengthSearch = 3, time = 500) {
+        this.ajaxRequest = new AjaxRequest()
+        this.loader = new Loader()
         this.searchElt = document.getElementById('search-person')
         this.resultsSearchElt = document.getElementById('results_search')
         this.lengthSearch = lengthSearch
         this.time = time
         this.countdownID = null
-        this.loader = new Loader()
         this.init()
     }
-
+    
     init() {
         if (this.searchElt) {
             this.searchElt.addEventListener('keyup', this.timer.bind(this))
         }
     }
 
-    // Timer avant de lancer la requête Ajax
+    /**
+     * Timer avant de lancer la requête Ajax.
+     */
     timer() {
         this.searchElt.value = this.searchElt.value.replace("	", " ").replace("  ", " ")
         clearInterval(this.countdownID)
         this.countdownID = setTimeout(this.count.bind(this), this.time)
     }
 
-    // Compte le nombre de caratères saisis et lance la requête Ajax<
+    /**
+     * Compte le nombre de caratères saisis et lance la requête Ajax<.
+     */
     count() {
         let valueSearch = this.searchElt.value
         if (valueSearch.length >= this.lengthSearch) {
@@ -36,11 +44,14 @@ export default class SearchPerson {
         }
     }
 
-    // Affiche les résultats de la rêquête
+    /**
+     * Affiche les résultats de la rêquête.
+     * @param {*} data 
+     */
     response(data) {
         let dataJSON = JSON.parse(data)
         this.resultsSearchElt.innerHTML = ''
-        if (dataJSON.nb_results > 0) {
+        if (dataJSON.people.length > 0) {
             this.addItem(dataJSON)
         } else {
             this.noResult()
@@ -56,11 +67,14 @@ export default class SearchPerson {
         })
     }
 
-    // Ajoute un élément à la liste des résultats
-    addItem(dataJSON) {
-        dataJSON.results.forEach(person => {
+    /**
+     * Ajoute un élément à la liste des résultats.
+     * @param {Object} data 
+     */
+    addItem(data) {
+        data.people.forEach(person => {
             let aElt = document.createElement('a')
-            aElt.innerHTML = '<span class="text-capitalize text-secondary small">' + person.fullname + '</span>'
+            aElt.innerHTML = `<span class="text-capitalize text-secondary small">${person.fullname}</span>`
             aElt.href = '/person/' + person.id
             aElt.className = 'list-group-item list-group-item-action pl-3 pr-1 py-1'
             this.resultsSearchElt.appendChild(aElt)
@@ -70,7 +84,9 @@ export default class SearchPerson {
         })
     }
 
-    // Affiche 'Aucun résultat.'
+    /**
+     * Affiche 'Aucun résultat.'.
+     */
     noResult() {
         let spanElt = document.createElement('p')
         spanElt.textContent = 'Aucun résultat.'
@@ -78,7 +94,9 @@ export default class SearchPerson {
         this.resultsSearchElt.appendChild(spanElt)
     }
 
-    // Supprime la liste des résultats au click
+    /**
+     * Supprime la liste des résultats au clic.
+     */
     hideListResults() {
         this.resultsSearchElt.classList.replace('fade-in', 'fade-out')
         this.resultsSearchElt.classList.replace('d-block', 'd-none')
