@@ -1,0 +1,61 @@
+{% extends "base.html.twig" %}
+
+{% set title = "Indicateurs journaliers d'activité" %}
+
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+    <h1 class="h2 m-3">{{ title }}</h1>
+
+    <div class="navigation">{{ knp_pagination_render(indicators) }}</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(indicators, "Date", "i.date") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de personnes créées", "i.nbPeople") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de groupes créés", "i.nbGroups") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de suivis créés", "i.nbSupportsGroup") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb d'évaluations créés", "i.nbEvaluations") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de notes créées", "i.nbNotes") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de RDVs créés", "i.nbRdvs") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de paiements créés", "i.nbContributions") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, "Nb de connexions", "i.nbConnections") }}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="container-indicators">
+                        {% for indicator in indicators %}
+                            <tr>
+                                <td class="align-midle">{{ indicator.date|date('d/m/Y') }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbPeople|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbGroups|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbSupportsGroup|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbEvaluations|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbNotes|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbRdvs|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbContributions|number_format(0, ",", " ") }}</td>
+                                <td class="align-midle text-right">{{ indicator.nbConnections|number_format(0, ",", " ") }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">{{ knp_pagination_render(indicators) }}</div>
+
+    </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

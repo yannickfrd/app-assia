@@ -18,4 +18,30 @@ class UserConnectionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, UserConnection::class);
     }
+
+    /**
+     * Compte le nombre de connections.
+     *
+     * @return mixed
+     */
+    public function countConnections(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder('c')->select('COUNT(c.id)');
+
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('c.connectionAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('c.connectionAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
+            }
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

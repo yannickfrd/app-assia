@@ -105,4 +105,30 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
+
+    /**
+     * Compte le nombre d'évaluations.
+     *
+     * @return mixed
+     */
+    public function countEvaluations(array $criteria = null)
+    {
+        $query = $this->createQueryBuilder('e')->select('COUNT(e.id)');
+
+        if ($criteria) {
+            foreach ($criteria as $key => $value) {
+                if ('startDate' == $key) {
+                    $query = $query->andWhere('e.createdAt >= :startDate')
+                            ->setParameter('startDate', $value);
+                }
+                if ('endDate' == $key) {
+                    $query = $query->andWhere('e.createdAt <= :endDate')
+                            ->setParameter('endDate', $value);
+                }
+            }
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
 }

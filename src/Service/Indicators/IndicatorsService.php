@@ -2,64 +2,77 @@
 
 namespace App\Service\Indicators;
 
+use App\Entity\Indicator;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Form\Utils\Choices;
 use App\Repository\ContributionRepository;
 use App\Repository\DocumentRepository;
+use App\Repository\EvaluationGroupRepository;
 use App\Repository\GroupPeopleRepository;
+use App\Repository\IndicatorRepository;
 use App\Repository\NoteRepository;
 use App\Repository\PersonRepository;
 use App\Repository\RdvRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
+use App\Repository\UserConnectionRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Security\Core\Security;
 
-class Indicators
+class IndicatorsService
 {
     protected $security;
 
+    protected $repoIndicator;
     protected $repoUser;
     protected $repoService;
     protected $repoPerson;
     protected $repoGroupPeople;
     protected $repoSupportGroup;
     protected $repoSupportPerson;
+    protected $repoEvaluation;
     protected $repoNote;
     protected $repoRdv;
     protected $repoDocument;
     protected $repoContribution;
+    protected $repoConnection;
 
     protected $cache;
 
     public function __construct(
         Security $security,
+        IndicatorRepository $repoIndicator,
         UserRepository $repoUser,
         ServiceRepository $repoService,
         PersonRepository $repoPerson,
         GroupPeopleRepository $repoGroupPeople,
         SupportGroupRepository $repoSupportGroup,
         SupportPersonRepository $repoSupportPerson,
+        EvaluationGroupRepository $repoEvaluation,
         NoteRepository $repoNote,
         RdvRepository $repoRdv,
         DocumentRepository $repoDocument,
-        ContributionRepository $repoContribution)
+        ContributionRepository $repoContribution,
+        UserConnectionRepository $repoConnection)
     {
         $this->security = $security;
 
+        $this->repoIndicator = $repoIndicator;
         $this->repoUser = $repoUser;
         $this->repoService = $repoService;
         $this->repoPerson = $repoPerson;
         $this->repoGroupPeople = $repoGroupPeople;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoSupportPerson = $repoSupportPerson;
+        $this->repoEvaluation = $repoEvaluation;
         $this->repoNote = $repoNote;
         $this->repoRdv = $repoRdv;
         $this->repoDocument = $repoDocument;
         $this->repoContribution = $repoContribution;
+        $this->repoConnection = $repoConnection;
 
         $this->cache = new FilesystemAdapter();
     }
@@ -274,5 +287,30 @@ class Indicators
         }
 
         return $usersIndicators->get();
+    }
+
+    public function createIndicator(\DateTime $date): Indicator
+    {
+        $startDate = (clone $date);
+
+        $criteria = [
+            'startDate' => $startDate,
+            'endDate' => (clone $startDate)->modify('+1 day'),
+        ];
+
+        $indicator = (new Indicator())
+            ->setNbPeople($this->repoPerson->countPeople($criteria))
+            ->setNbGroups($this->repoGroupPeople->countGroups($criteria))
+            ->setNbSupportsGroup($this->repoSupportGroup->countSupports($criteria))
+            ->setNbSupportsPeople($this->repoSupportPerson->countSupportPeople($criteria))
+            ->setNbEvaluations($this->repoEvaluation->countEvaluations($criteria))
+            ->setNbNotes($this->repoNote->countNotes($criteria))
+            ->setNbRdvs($this->repoRdv->countRdvs($criteria))
+            ->setNbDocuments($this->repoDocument->countDocuments($criteria))
+            ->setNbContributions($this->repoContribution->countContributions($criteria))
+            ->setNbConnections($this->repoConnection->countConnections($criteria))
+            ->setDate($startDate);
+
+        return $indicator;
     }
 }

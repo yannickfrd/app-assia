@@ -226,7 +226,7 @@ class ContributionRepository extends ServiceEntityRepository
     }
 
     /**
-     * Compte le nombre de participations.
+     * Compte le nombre de contributions financières.
      *
      * @return mixed
      */

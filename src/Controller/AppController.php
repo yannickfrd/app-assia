@@ -12,7 +12,7 @@ use App\Form\SupportsByUserSearchType;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\Indicators\Indicators;
+use App\Service\Indicators\IndicatorsService;
 use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -42,7 +42,7 @@ class AppController extends AbstractController
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
-    public function home(Indicators $indicators): Response
+    public function home(IndicatorsService $indicators): Response
     {
         if ($this->isGranted('ROLE_ADMIN')) {
             return $this->dashboardAdmin($indicators);
@@ -77,7 +77,7 @@ class AppController extends AbstractController
         ]);
     }
 
-        protected function dashboardAdmin($indicators)
+    protected function dashboardAdmin($indicators)
     {
         return $this->render('app/home/dashboardAdmin.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
