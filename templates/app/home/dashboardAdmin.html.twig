@@ -1,14 +1,14 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Tableau de bord | {{ title_website }}{% endblock %}
+{% set title = "Tableau de bord" %}
 
-{% block stylesheets %}{% endblock %}
+{% block title %}{{ title }} | {{ title_website }}{% endblock %}
 
 {% block body %}
 
   <div class="container">
 
-    <h1 class="h2 mb-3">Tableau de bord </h1>
+    <h1 class="h2 mb-3">{{ title }}</h1>
     <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date("d/m/Y à H:i") }}</p>
 
     {% include "model/msgFlash.html.twig" %}
@@ -20,14 +20,17 @@
       {% if is_granted("ROLE_SUPER_ADMIN") %}
         {% include "app/home/indicators.html.twig" %}
       {% endif %}
-      {% include "app/home/servicesIndicators.html.twig" %}
-      {# {% include "app/home/listUsers.html.twig" %} #}
+        {% include "app/home/servicesIndicators.html.twig" %}
+      {% if is_granted("ROLE_SUPER_ADMIN") == false %}
+          {% include "app/home/listNotes.html.twig" %}
+          {% include "app/home/listRdvs.html.twig" %}
+      {% endif %}
     </div>
-    
+
   </div>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("home") }}
+  {{ encore_entry_script_tags("home") }}
 {% endblock javascripts %}

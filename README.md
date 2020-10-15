@@ -20,6 +20,8 @@ https://demo.esperer95.app
 - Créé nouvelle fonctionnalité : indicateurs quotidiens d'activité.
 - Ajout indicateurs de la veille sur le tableau de bord admin.
 - Factorisation de la classe IndicatorsService.
+- Modif/Correction affichage Contribution financière quand 'Montant à payer' égal à 0.
+- Modif affichage tableau de bord administrateur.
 
 ## Version 2.1.1 - 14/10/2020
 - Nouveau système dynamique de recherche/ajout des personnes (en ajax).

@@ -766,7 +766,7 @@ export default class SupportContributions {
         if (!isNaN(sum)) {
             return sum
         }
-        return 'Erreur'
+        return 'Err.'
     }
 
     /**
@@ -775,7 +775,7 @@ export default class SupportContributions {
      * @param {String} locale 
      */
     formatMoney(number, locale = 'fr') {
-        return number ? number.toFixed(2).replace('.', ',') + ' €' : ''
+        return number || number === 0 ? number.toFixed(2).replace('.', ',') + ' €' : ''
     }
 
     /**

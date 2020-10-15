@@ -4,11 +4,12 @@ namespace App\EventListener;
 
 use App\Entity\User;
 use App\Entity\UserConnection;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Utils\Choices;
 use App\Repository\UserConnectionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class LoginListener
 {
@@ -16,7 +17,7 @@ class LoginListener
     private $session;
     private $repo;
 
-        public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
+    public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
     {
         $this->session = $session;
         $this->repo = $repo;
@@ -52,11 +53,16 @@ class LoginListener
 
         // Récupère en session les services rattachés à l'utilisateur
         $userServices = [];
+        $haveServiceWithAccommodation = false;
         foreach ($user->getServiceUser() as $serviceUser) {
             $service = $serviceUser->getService();
             $userServices[$service->getId()] = $service->getName();
+            if ($service->getAccommodation() == Choices::YES) {
+                $haveServiceWithAccommodation = true;
+            }
         }
         $this->session->set('userServices', $userServices);
+        $this->session->set('haveServiceWithAccommodation', $haveServiceWithAccommodation);
     }
 
     public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)
