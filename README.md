@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.2.0 - 15/10/2020
+2.2.1 - 15/10/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,8 +16,10 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 2.2.0 - 15/10/2020
+## Version 2.2.1 - 15/10/2020
 - Créé nouvelle fonctinnalité : indicateurs journaliers d'activité.
+- Ajout indicateurs de la veille sur le tableau de bord admin.
+- Factorisation de la classe IndicatorsService.
 
 ## Version 2.1.1 - 14/10/2020
 - Nouveau système dynamique de recherche/ajout des personnes (en ajax).

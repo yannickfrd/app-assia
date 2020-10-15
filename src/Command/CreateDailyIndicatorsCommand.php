@@ -45,7 +45,7 @@ class CreateDailyIndicatorsCommand extends Command
     {
         $indicator = $this->indicators->createIndicator($date);
 
-        if (!$this->repoIndicator->findBy(['date' => $date])) {
+        if (!$this->repoIndicator->findOneBy(['date' => $date])) {
             $this->manager->persist($indicator);
             $this->manager->flush();
 

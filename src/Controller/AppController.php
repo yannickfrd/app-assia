@@ -77,7 +77,7 @@ class AppController extends AbstractController
         ]);
     }
 
-    protected function dashboardAdmin($indicators)
+    protected function dashboardAdmin(IndicatorsService $indicators)
     {
         return $this->render('app/home/dashboardAdmin.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,

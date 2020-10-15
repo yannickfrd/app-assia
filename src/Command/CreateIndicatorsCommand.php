@@ -53,7 +53,7 @@ class CreateIndicatorsCommand extends Command
         for ($i = 0; $i < $diff; ++$i) {
             file_put_contents('php://stdout', "\e[36m".$date->format('Y-m-d')."\e[0m \n");
             $indicator = $this->indicators->createIndicator($date);
-            if (!$this->repoIndicator->findBy(['date' => $date])) {
+            if (!$this->repoIndicator->findOneBy(['date' => $date])) {
                 $this->manager->persist($indicator);
                 ++$count;
             }
