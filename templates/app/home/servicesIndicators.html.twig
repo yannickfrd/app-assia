@@ -12,16 +12,18 @@
                 <thead>
                     <tr>
                         <th scope="row" class="align-middle th-w-150">Service</th>
-                        <th class="align-middle text-right th-w-100">Nb de suivis en cours</th>
-                        <th class="align-middle text-right th-w-100">Nb de personnes</th>
-                        <th class="align-middle text-right th-w-100">Moyenne suivis par TS</th>
-                        <th class="align-middle text-right th-w-100">Durée moyenne accompagnement</th>
-                        <th class="align-middle text-right th-w-100">Nb de demandes SIAO</th>
-                        <th class="align-middle text-right th-w-100">Nb de DLS</th>
-                        {# <th class="align-middle text-right th-w-100">Nb de notes</th>
-                        <th class="align-middle text-right th-w-100">Nb de rendez-vous</th>
-                        <th class="align-middle text-right th-w-100">Nb de documents</th>
-                        <th class="align-middle text-right th-w-100">Nb de paiements</th> #}
+                        {% set items = [
+                            "Nb de suivis en cours",
+                            "Nb de personnes",
+                            "Moyenne suivis par TS",
+                            "Durée moyenne accompagnement",
+                            "Nb de demandes SIAO",
+                            "Nb de DLS",
+                        ] %}
+                            {# "Nb de notes", "Nb de rendez-vous", "Nb de documents", "Nb de paiements", #}
+                        {% for item in items %}
+                            <th class="align-middle text-right th-w-100">{{ item }}</th>
+                        {% endfor %}
                     </tr>
                 </thead>
                 <tbody>

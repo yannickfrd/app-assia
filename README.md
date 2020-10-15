@@ -17,7 +17,7 @@ https://demo.esperer95.app
 # Mise à jour
 
 ## Version 2.2.1 - 15/10/2020
-- Créé nouvelle fonctinnalité : indicateurs journaliers d'activité.
+- Créé nouvelle fonctionnalité : indicateurs quotidiens d'activité.
 - Ajout indicateurs de la veille sur le tableau de bord admin.
 - Factorisation de la classe IndicatorsService.
 
