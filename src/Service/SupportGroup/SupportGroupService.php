@@ -375,7 +375,7 @@ class SupportGroupService
 
             // Vérifie si la date de suivi n'est pas antérieure à la date de naissance
             $person = $supportPerson->getPerson();
-            if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
+            if ($supportPerson->getStartDate() && $person && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 // Si c'est le cas, on prend en compte la date de naissance
                 $supportPerson->setStartDate($person->getBirthdate());
                 $this->addFlash('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');

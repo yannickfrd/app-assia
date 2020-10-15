@@ -32,7 +32,7 @@ class CreateDailyIndicatorsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->createDailyIndicators((new DateTime('midnight'))->modify('-1 day'));
+        $message = $this->createDailyIndicators((new DateTime('today'))->modify('-1 day'));
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;

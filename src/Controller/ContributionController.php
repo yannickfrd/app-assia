@@ -350,7 +350,7 @@ class ContributionController extends AbstractController
 
     protected function getContributionSearch()
     {
-        $today = new \DateTime('midnight');
+        $today = new \DateTime('today');
         $search = (new ContributionSearch())
             ->setType([1])
             ->setStart(new \DateTime($today->format('Y').'-01-01'))

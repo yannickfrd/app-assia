@@ -204,8 +204,10 @@ class IndicatorsService
 
     protected function getDatasIndicators()
     {
-        $criteria = ['startDate' => new \DateTime('today')];
-        $yesterdayIndicator = $this->repoIndicator->findOneBy(['date' => new \DateTime('yesterday')]);
+        $totay = new \DateTime('today');
+        $criteria = ['startDate' => $totay];
+        $indicator = $this->repoIndicator->findOneBy(['date' => new \DateTime('yesterday')]);
+        $yesterdayIndicator = $indicator ?? $this->createIndicator($totay);
 
         return [
             'Nombre de personnes' => [

@@ -110,9 +110,9 @@ class AppController extends AbstractController
      */
     public function showOccupancyByDevice(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $today = new \DateTime('midnight');
+        $today = new \DateTime('today');
         $search = (new OccupancySearch())
-            ->setStart((new \DateTime('midnight'))->modify('-1 day'));
+            ->setStart((new \DateTime('today'))->modify('-1 day'));
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -137,9 +137,9 @@ class AppController extends AbstractController
      */
     public function showOccupancyByService(Device $device = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $today = new \DateTime('midnight');
+        $today = new \DateTime('today');
         $search = (new OccupancySearch())
-            ->setStart((new \DateTime('midnight'))->modify('-1 day'));
+            ->setStart((new \DateTime('today'))->modify('-1 day'));
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -163,9 +163,9 @@ class AppController extends AbstractController
      */
     public function showOccupancyBySubService(Service $service, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $today = new \DateTime('midnight');
+        $today = new \DateTime('today');
         $search = (new OccupancySearch())
-            ->setStart((new \DateTime('midnight'))->modify('-1 day'));
+            ->setStart((new \DateTime('today'))->modify('-1 day'));
 
         $form = ($this->createForm(OccupancySearchType::class, $search))
             ->handleRequest($request);
@@ -190,7 +190,7 @@ class AppController extends AbstractController
      */
     public function showOccupancyServiceByAccommodation(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $today = new \DateTime('midnight');
+        $today = new \DateTime('today');
 
         $search = $this->getOccupancySearch($request);
 
@@ -216,7 +216,7 @@ class AppController extends AbstractController
      */
     public function showOccupancySubServiceByAccommodation(SubService $subService, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $today = new \DateTime('midnight');
+        $today = new \DateTime('today');
 
         $search = $this->getOccupancySearch($request);
 
@@ -243,7 +243,7 @@ class AppController extends AbstractController
             $search->setStart(new \DateTime($request->query->get('start')))
                 ->setEnd(new \DateTime($request->query->get('end')));
         } else {
-            $search->setStart((new \DateTime('midnight'))->modify('-1 day'));
+            $search->setStart((new \DateTime('today'))->modify('-1 day'));
         }
 
         return $search;
