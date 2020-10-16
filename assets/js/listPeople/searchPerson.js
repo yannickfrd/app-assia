@@ -25,21 +25,18 @@ export default class SearchPerson {
         this.lengthSearch = lengthSearch
         this.time = time
         this.countdownID = null
+        this.paramsToString = null
+        this.helperSearch = this.helperSearchElt.textContent
         this.valueSearch = ''
 
         this.init()
     }
     
     init() {
-        this.lastnameInputElt.addEventListener('keyup', this.timer.bind(this))
-        this.firstnameInputElt.addEventListener('keyup', this.timer.bind(this))
+        this.lastnameInputElt.addEventListener('keyup', () => this.timer())
+        this.firstnameInputElt.addEventListener('keyup', () => this.timer())
         this.birthdateInputElt.addEventListener('change', () => this.checkDate(this.birthdateInputElt))
-        this.searchBtnElt.addEventListener('click', e => {
-            e.preventDefault()
-            if (!this.loader.isInLoading()) {
-                this.sendRequest()
-            }
-        })
+        this.searchBtnElt.addEventListener('click', e => this.onClickBtnElt(e))
     }
 
     /**
@@ -62,6 +59,31 @@ export default class SearchPerson {
     }
 
     /**
+     * Au clic sur le bouton 'Search'.
+     * @param {Event} e 
+     */
+    onClickBtnElt(e) {
+        e.preventDefault()
+        if (this.checkParamsInForm() === false) {
+            return this.noParams()
+        }
+        if (!this.loader.isInLoading()) {
+            this.sendRequest()
+        }
+    }
+
+    checkParamsInForm() {
+        let data = false
+        this.formElt.querySelectorAll('input').forEach(inputElt => {
+            if (inputElt.value) {
+                data = true
+            }
+        })
+        return data
+    }
+
+
+    /**
      * Vérifie la validité de la date saisie.
      * @param {HTMLInputElement} inputElt 
      */
@@ -76,10 +98,13 @@ export default class SearchPerson {
      * Envoie la requête Ajax.
      */
     sendRequest() {
-        this.loader.on()
         const formData = new FormData(this.formElt)
-        const formToString = new URLSearchParams(formData).toString()
-        this.ajaxRequest.init('POST', '/people/search', this.response.bind(this), true, formToString)
+        const paramsToString = new URLSearchParams(formData).toString()
+        if (paramsToString != this.paramsToString) {
+            this.ajaxRequest.init('POST', '/people/search', this.response.bind(this), true, paramsToString)
+            this.loader.on()
+            this.paramsToString = paramsToString
+        }
     }
 
     /**
@@ -98,6 +123,16 @@ export default class SearchPerson {
         this.loader.off()
     }
 
+    noResults() {
+        this.helperSearchElt.textContent = 'Aucun résultat.'
+        this.tableElt.classList.add('d-none')
+    }
+
+    noParams() {
+        this.helperSearchElt.textContent = this.helperSearch
+        this.tableElt.classList.add('d-none')
+    }
+
     /**
      * Affiche les résultats.
      * @param {Array} people 
@@ -108,11 +143,6 @@ export default class SearchPerson {
         people.forEach(person => {
             this.addItem(person)
         })
-    }
-
-    noResults() {
-        this.helperSearchElt.textContent = 'Aucun résultat.'
-        this.tableElt.classList.add('d-none')
     }
 
     /**
