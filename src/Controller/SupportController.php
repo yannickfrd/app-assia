@@ -22,6 +22,7 @@ use App\Repository\DocumentRepository;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
+use App\Repository\ReferentRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Calendar;
@@ -194,7 +195,7 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
      */
-    public function viewSupportGroup(int $id, SupportGroupService $supportGroupService, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
+    public function viewSupportGroup(int $id, SupportGroupService $supportGroupService, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
     {
         $supportGroup = $supportGroupService->getFullSupportGroup($id);
 
@@ -204,6 +205,7 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
+            'referent' => $repoReferent->findLastReferent($supportGroup->getGroupPeople()),
             'nbRdvs' => $nbRdvs,
             'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
@@ -289,7 +291,7 @@ class SupportController extends AbstractController
     /**
      * @Route("/indicators/social", name="indicators_social", methods="GET|POST")
      */
-    public function showSocialIndicators(Request $request,SocialIndicators $socialIndicators): Response
+    public function showSocialIndicators(Request $request, SocialIndicators $socialIndicators): Response
     {
         $search = new SupportGroupSearch();
 

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\GroupPeople;
 use App\Entity\Referent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -44,5 +45,15 @@ class ReferentRepository extends ServiceEntityRepository
         $query = $query->orderBy('ref.createdAt', 'DESC');
 
         return $query->getQuery();
+    }
+
+    public function findLastReferent(GroupPeople $groupPeople): ?Referent
+    {
+        return $this->createQueryBuilder('r')->select('PARTIAL r.{id, name, type, socialWorker, socialWorker2, email, email2, phone1, phone2, address, city}')
+            ->where('r.groupPeople = :groupPeople')
+            ->setParameter('groupPeople', $groupPeople)
+            ->orderBy('r.id', 'DESC')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

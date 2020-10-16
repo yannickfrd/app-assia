@@ -140,8 +140,9 @@ Social worker: Travailleur social
 Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
 referent:
-  socialWorker.placeholder: Nom du travailleur social
-  socialWorker2.placeholder: Travailleur social suppléant
+  name: Nom du service
+  socialWorker: Nom du travailleur social
+  socialWorker2: Travailleur social suppléant
   comment.plaholder: Écrire un commentaire concernant le service social référent...
 
 ### Service

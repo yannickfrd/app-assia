@@ -3,12 +3,12 @@
 namespace App\Form\Referent;
 
 use App\Entity\Referent;
-use App\Form\Utils\Choices;
 use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ReferentType extends AbstractType
 {
@@ -27,12 +27,12 @@ class ReferentType extends AbstractType
             ])
             ->add('socialWorker', null, [
                 'attr' => [
-                    'placeholder' => 'referent.socialWorker.placeholder',
+                    'placeholder' => 'referent.socialWorker',
                 ],
             ])
             ->add('socialWorker2', null, [
                 'attr' => [
-                    'placeholder' => 'referent.socialWorker2.placeholder',
+                    'placeholder' => 'referent.socialWorker2',
                 ],
             ])
             ->add('email', null, [

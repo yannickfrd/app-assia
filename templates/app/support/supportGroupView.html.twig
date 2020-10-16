@@ -116,10 +116,36 @@
 
 	{% if nbRdvs %}
 		<hr>
-		<h2 class="h4 mb-4">Rendez-vous</h2>
+        <div class="d-flex mb-3">
+			<h2 class="h4">Rendez-vous</h2>
+			{% set rdv = nextRdv ? nextRdv : lastRdv %}
+			<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id':support.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" 
+				class="text-{{ theme_color }} ml-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
+			</span>
+		</div>	
 		<div class="row mb-2">
 			{{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
 			{{ utils.view(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
+		</div>
+	{% endif %}
+
+	{% if referent %}
+		<hr>
+        <div class="d-flex mb-3">
+			<h2 class="h4">Référent social</h2>
+			<span class="align-content-center"><a href="{{ path('referent_edit', {'id': referent.id }) }}" 
+				class="text-{{ theme_color }} ml-2" title="Voir la fiche du réferent social"><span class="fas fa-edit"></span></a>
+			</span>
+		</div>	
+		<div class="row mb-2">
+			{{ utils.view(referent.socialWorker ~ (referent.socialWorker2 ? ' (suppl. : ' ~ referent.socialWorker2 ~ ')' ), "referent.socialWorker") }}
+			{{ utils.view(referent.name ~ (referent.type ? ' (' ~ referent.typeToString ~ ''), "referent.name") }}
+			{{ utils.view(referent.email, "Email") }}
+			{{ utils.view(referent.email, "Email2") }}
+			{{ utils.view(referent.phone1, "Phone1") }}
+			{{ utils.view(referent.phone1, "Phone2") }}
+			{{ utils.view(referent.address ~ (referent.city ? ' - ' ~ referent.city), "Address") }}
+			{{ utils.view(referent.comment) }}
 		</div>
 	{% endif %}
 
