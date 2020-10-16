@@ -101,10 +101,9 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findPeopleByResearch(string $search = null)
     {
-        $query = $this->createQueryBuilder('p')
-            ->select('p');
+        $query = $this->createQueryBuilder('p')->select('p');
 
-        $date = \DateTime::createFromFormat('d/m/Y', $search) ?? false;
+        $date = \DateTime::createFromFormat('d/m/Yq', $search) ?? false;
 
         if ($date) {
             $query->where('p.birthdate = :birthdate')

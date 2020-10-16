@@ -57,8 +57,8 @@
         {% if EDIT_MODE %} {% set form_person = form %} {% else %} {% set form_person = form.person %} {% endif %}
 
         <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form_person.firstname) }}</div>
             <div class="col-md-6">{{ form_row(form_person.lastname) }}</div>
+            <div class="col-md-6">{{ form_row(form_person.firstname) }}</div>
             <div class="col-md-6">{{ form_row(form_person.usename) }}</div>
         </div>
 

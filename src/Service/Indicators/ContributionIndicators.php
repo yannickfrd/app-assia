@@ -90,8 +90,8 @@ class ContributionIndicators
     /**
      * Retourne si la participation financière est à l'intérieur du mois.
      */
-    public function withinMonth(\datetime $date, \datetime $month): bool
+    public function withinMonth(?\datetime $date = null, \datetime $month): bool
     {
-        return $month->format('Y-m') == $date->format('Y-m');
+        return $date ? $date->format('Y-m') == $month->format('Y-m') : false;
     }
 }
