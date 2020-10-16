@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                     {% set example = "" %}
-                        {% for serviceId, service in datas.services %}
+                        {% for service_id, service in datas.services %}
                             {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100)|round(1, "common") %}
                             {% if loop.first %}
                             {% set example %}
@@ -61,7 +61,7 @@
                             <tr>
                                 <td scope="row" class="align-middle text-center">
                                     {% if service.nbSubServices > 1 %}
-                                        <a href="{{ path('occupancy_sub_services', {'id': serviceId, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
+                                        <a href="{{ path('occupancy_sub_services', {'id': service_id, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
                                             class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                             title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                         </a>
@@ -96,7 +96,7 @@
                             <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
                             {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") : null %}
                             <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
-                            <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                             </td>
                         </tr>
                     </tfoot>

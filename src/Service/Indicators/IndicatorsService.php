@@ -127,7 +127,7 @@ class IndicatorsService
             $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
 
             if ((int) $nbActiveSupportsGroups > 0) {
-                $subServices[] = $this->getSubServiceDatas($subService, $criteria, $nbActiveSupportsGroups);
+                $subServices[$subService->getId()] = $this->getSubServiceDatas($subService, $criteria, $nbActiveSupportsGroups);
             }
         }
 
@@ -151,7 +151,7 @@ class IndicatorsService
             $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
 
             if ((int) $nbActiveSupportsGroups > 0) {
-                $devices[] = $this->getDeviceDatas($device, $criteria, $nbActiveSupportsGroups);
+                $devices[$device->getId()] = $this->getDeviceDatas($device, $criteria, $nbActiveSupportsGroups);
             }
         }
 
@@ -266,7 +266,6 @@ class IndicatorsService
         $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
 
         return [
-            'id' => $service->getId(),
             'name' => $service->getName(),
             'activeSupportsGroups' => $nbActiveSupportsGroups,
             'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),

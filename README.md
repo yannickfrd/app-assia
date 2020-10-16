@@ -19,6 +19,7 @@ https://demo.esperer95.app
 ## Version 2.2.2 - 16/10/2020
 - Correction erreur dans indicateurs contributions.
 - Ajout des informations relatives au référent social sur la page de vue du suivi.
+- Modif Indicateurs par service : ajout d'un lien vers le détail des suivis.
 
 ## Version 2.2.1 - 15/10/2020
 - Créé nouvelle fonctionnalité : indicateurs quotidiens d'activité.
