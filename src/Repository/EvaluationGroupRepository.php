@@ -63,6 +63,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
             ->addOrderBy('sp.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC')
+
+            // ->groupBy('eg.id')
             // ->setMaxResults(1)
 
             ->getQuery()

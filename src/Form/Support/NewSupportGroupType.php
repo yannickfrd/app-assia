@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,7 +45,14 @@ class NewSupportGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
             ])
             ->add('subService', ChoiceType::class)
-            ->add('device', ChoiceType::class)
+            ->add('device', ChoiceType::class, ['placeholder' => 'placeholder.select'])
+            ->add('cloneSupport', CheckboxType::class, [
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox'],
+                'required' => false,
+                'mapped' => false,
+            ])
+            ->add('status', HiddenType::class)
             ->add('referent', HiddenType::class);
 
         $builder->get('service')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
@@ -72,7 +80,6 @@ class NewSupportGroupType extends AbstractType
                 'choices' => $service->getSubServices(),
                 'choice_label' => 'name',
                 'placeholder' => 'placeholder.select',
-                'required' => false,
             ])
             ->add('device', EntityType::class, [
                 'class' => Device::class,
@@ -81,7 +88,6 @@ class NewSupportGroupType extends AbstractType
                     return $repo->getDevicesFromUserQueryList($this->currentUser, $service->getId());
                 },
                 'placeholder' => 'placeholder.select',
-                'required' => false,
             ])
             ->add('referent', EntityType::class, $optionsReferent)
             ->add('referent2', EntityType::class, $optionsReferent);

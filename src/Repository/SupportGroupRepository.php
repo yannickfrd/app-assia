@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Service;
+use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\AvdlSupportSearch;
@@ -10,7 +10,6 @@ use App\Form\Model\HotelSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Model\SupportsByUserSearch;
 use App\Form\Model\SupportsInMonthSearch;
-use App\Form\Utils\Choices;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -461,7 +460,55 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $query;
     }
 
-    public function countSupports(array $criteria = null)
+    /**
+     * Donne le dernier suivi social auquel l'utilisateur peur avoir accès.
+     */
+    public function countSupportOfGroupPeople(GroupPeople $groupPeople): int
+    {
+        $query = $this->createQueryBuilder('sg')->select('count(sg.id)')
+
+            ->where('sg.groupPeople = :groupPeople')
+            ->setParameter('groupPeople', $groupPeople);
+
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('sg.service IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Donne le dernier suivi social auquel l'utilisateur peur avoir accès.
+     */
+    public function findLastSupport(SupportGroup $supportGroup): ?SupportGroup
+    {
+        $query = $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('eg')
+            ->leftJoin('sg.notes', 'n')->addSelect('n')
+            ->leftJoin('sg.documents', 'd')->addSelect('d')
+
+            ->where('sg.groupPeople = :groupPeople')
+            ->setParameter('groupPeople', $supportGroup->getGroupPeople());
+
+        if ($supportGroup->getId()) {
+            $query->andWhere('sg.id != :id')
+            ->setParameter('id', $supportGroup->getId());
+        }
+
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('sg.service IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        return $query->orderBy('sg.updatedAt', 'DESC')
+
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function countSupports(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('sg')->select('COUNT(sg.id)');
 

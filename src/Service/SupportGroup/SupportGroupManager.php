@@ -11,23 +11,24 @@ use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Service\Grammar;
+use App\Service\hydrateObjectWithArray;
 use Doctrine\ORM\EntityManagerInterface;
-use Svg\Tag\Group;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class SupportGroupService
+class SupportGroupManager
 {
+    use hydrateObjectWithArray;
+
     private $container;
     private $repoSupportGroup;
     private $repoService;
@@ -129,15 +130,19 @@ class SupportGroupService
     /**
      * Créé un nouveau suivi.
      */
-    public function create(GroupPeople $groupPeople, SupportGroup $supportGroup)
+    public function create(GroupPeople $groupPeople, SupportGroup $supportGroup, bool $cloneSupport = false)
     {
         if ($this->activeSupportExists($groupPeople, $supportGroup)) {
             return false;
         }
 
-        $supportGroup
-            ->setGroupPeople($groupPeople)
+        $supportGroup->setGroupPeople($groupPeople)
             ->setCoefficient($supportGroup->getDevice()->getCoefficient());
+
+        // Si l'utilisateur vuet récuper les éléments du dernier suivi, alors clone l'évaluation sociale et les documents existants.
+        if (true === $cloneSupport) {
+            $this->cloneSupport($supportGroup);
+        }
 
         $serviceId = $supportGroup->getService()->getId();
 
@@ -215,90 +220,86 @@ class SupportGroupService
     /**
      * Crée une copie d'un suivi social.
      */
-    public function cloneSupport(SupportGroup $supportGroup, User $user, NormalizerInterface $normalizer): SupportGroup
+    public function cloneSupport(SupportGroup $supportGroup): ?SupportGroup
     {
-        $newSupportGroup = clone $supportGroup;
+        $oldSupport = $this->repoSupportGroup->findLastSupport($supportGroup);
 
-        $newSupportGroup
-            ->setReferent($user)
-            ->setReferent2(null)
-            ->setStatus(2)
-            ->setStartDate(null)
-            ->setEndDate(null)
-            ->setTheoreticalEndDate(null)
-            ->setEndStatus(null)
-            ->setEndStatusComment(null)
-            ->setCreatedBy($user)
-            ->setUpdatedBy($user);
-
-        $this->manager->persist($newSupportGroup);
-
-        /** @var EvaluationGroup */
-        $evaluationGroup = $newSupportGroup->getEvaluationsGroup()->last();
-
-        if ($evaluationGroup) {
-            $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
-            $evalHousingGroup = $evaluationGroup->getEvalHousingGroup();
-
-            $initEvalGroup = $evaluationGroup->getInitEvalGroup();
-
-            if ($evalBudgetGroup) {
-                $initEvalGroup
-            ->setResourcesGroupAmt($evalBudgetGroup->getResourcesGroupAmt())
-            ->setDebtsGroupAmt($evalBudgetGroup->getDebtsGroupAmt());
-            }
-            if ($evalHousingGroup) {
-                $initEvalGroup
-            ->setHousingStatus($evalHousingGroup->getHousingStatus())
-            ->setSiaoRequest($evalHousingGroup->getSiaoRequest())
-            ->setSocialHousingRequest($evalHousingGroup->getSocialHousingRequest());
-            }
-
-            foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
-                /** @var EvaluationPerson */
-                $evaluationPerson = $evaluationPerson;
-                $evalAdminPerson = $evaluationPerson->getEvalAdmPerson();
-                $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
-                $evalProfPerson = $evaluationPerson->getEvalProfPerson();
-                $evalSocialPerson = $evaluationPerson->getEvalSocialPerson();
-
-                $initEvalPerson = $evaluationPerson->getInitEvalPerson();
-
-                $initEvalPerson->setPaperType($evalAdminPerson ? $evalAdminPerson->getPaperType() : null);
-
-                if ($evalSocialPerson) {
-                    $arrayEvalSocialPerson = $normalizer->normalize($evalSocialPerson, null, [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
-                ]);
-                    $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalSocialPerson);
-                }
-                if ($evalProfPerson) {
-                    $initEvalPerson
-                    ->setProfStatus($evalProfPerson->getProfStatus())
-                    ->setContractType($evalProfPerson->getContractType());
-                }
-                if ($evalBudgetPerson) {
-                    $arrayEvalBudgetPerson = $normalizer->normalize($evalBudgetPerson, null, [
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
-                ]);
-                    $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalBudgetPerson);
-                }
-            }
+        if (null === $oldSupport) {
+            return null;
         }
 
-        return $newSupportGroup;
+        foreach ($oldSupport->getDocuments() as $document) {
+            $newDocument = (clone $document)->setSupportGroup($supportGroup);
+            $supportGroup->getDocuments()->add($newDocument);
+        }
+
+        $lastNote = $oldSupport->getNotes()->last();
+        $lastEvaluation = $oldSupport->getEvaluationsGroup()->last();
+
+        if ($lastNote) {
+            $note = (clone $lastNote)->setSupportGroup($supportGroup);
+            $supportGroup->getNotes()->add($note);
+        }
+        if (0 === $supportGroup->getEvaluationsGroup()->count() && $lastEvaluation) {
+            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($supportGroup);
+            $supportGroup->getEvaluationsGroup()->add($evaluationGroup);
+        }
+
+        return $supportGroup;
     }
 
-    protected function hydrateObjectWithArray($object, $array)
+    /**
+     * Initialise l'évaluation sociale.
+     */
+    protected function initEvaluation(EvaluationGroup $evaluationGroup, NormalizerInterface $normalizer)
     {
-        foreach ($array as $key => $value) {
-            $method = 'set'.ucfirst($key);
-            if (method_exists($object, $method)) {
-                $object->$method($value);
-            }
+        $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
+        $evalHousingGroup = $evaluationGroup->getEvalHousingGroup();
+
+        $initEvalGroup = $evaluationGroup->getInitEvalGroup();
+
+        if ($evalBudgetGroup) {
+            $initEvalGroup
+                    ->setResourcesGroupAmt($evalBudgetGroup->getResourcesGroupAmt())
+                    ->setDebtsGroupAmt($evalBudgetGroup->getDebtsGroupAmt());
+        }
+        if ($evalHousingGroup) {
+            $initEvalGroup
+                    ->setHousingStatus($evalHousingGroup->getHousingStatus())
+                    ->setSiaoRequest($evalHousingGroup->getSiaoRequest())
+                    ->setSocialHousingRequest($evalHousingGroup->getSocialHousingRequest());
         }
 
-        return $object;
+        foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
+            /** @var EvaluationPerson */
+            $evaluationPerson = $evaluationPerson;
+            $evalAdminPerson = $evaluationPerson->getEvalAdmPerson();
+            $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
+            $evalProfPerson = $evaluationPerson->getEvalProfPerson();
+            $evalSocialPerson = $evaluationPerson->getEvalSocialPerson();
+
+            $initEvalPerson = $evaluationPerson->getInitEvalPerson();
+
+            $initEvalPerson->setPaperType($evalAdminPerson ? $evalAdminPerson->getPaperType() : null);
+
+            if ($evalSocialPerson) {
+                $arrayEvalSocialPerson = $normalizer->normalize($evalSocialPerson, null, [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
+                ]);
+                $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalSocialPerson);
+            }
+            if ($evalProfPerson) {
+                $initEvalPerson
+                    ->setProfStatus($evalProfPerson->getProfStatus())
+                    ->setContractType($evalProfPerson->getContractType());
+            }
+            if ($evalBudgetPerson) {
+                $arrayEvalBudgetPerson = $normalizer->normalize($evalBudgetPerson, null, [
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
+                ]);
+                $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalBudgetPerson);
+            }
+        }
     }
 
     /**

@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -106,6 +107,9 @@ class SupportGroupType extends AbstractType
                     'rows' => 5,
                     'placeholder' => 'comment.placeholder',
                 ],
+            ])
+            ->add('cloneSupport', HiddenType::class, [
+                'mapped' => false,
             ]);
 
         $formModifier = $this->formModifier();

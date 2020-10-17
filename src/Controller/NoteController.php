@@ -19,7 +19,7 @@ use App\Security\CurrentUserService;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupService;
+use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -74,9 +74,9 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupService->getSupportGroup($id);
+        $supportGroup = $supportGroupManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

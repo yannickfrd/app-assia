@@ -29,7 +29,7 @@ use App\Service\Calendar;
 use App\Service\Grammar;
 use App\Service\Indicators\SocialIndicators;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupService;
+use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -38,7 +38,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SupportController extends AbstractController
 {
@@ -83,16 +82,16 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupService $supportGroupService): Response
+    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupManager $supportGroupManager): Response
     {
-        $supportGroup = $supportGroupService->getNewSupportGroup($groupPeople, $request);
+        $supportGroup = $supportGroupManager->getNewSupportGroup($groupPeople, $request);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportGroupService->create($groupPeople, $supportGroup)) {
+            if ($supportGroupManager->create($groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() ? true : false)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation() == Choices::YES
@@ -120,6 +119,8 @@ class SupportController extends AbstractController
     {
         $supportGroup = (new SupportGroup())->setReferent($this->getUser());
 
+        $nbSupports = $this->repoSupportGroup->countSupportOfGroupPeople($groupPeople);
+
         $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
             'action' => $this->generateUrl('support_new', ['id' => $groupPeople->getId()]),
         ]);
@@ -129,6 +130,7 @@ class SupportController extends AbstractController
             'data' => [
                 'form' => $this->render('app/support/formNewSupport.html.twig', [
                     'form' => $form->createView(),
+                    'nbSupports' => $nbSupports,
                 ]),
             ],
         ], 200);
@@ -154,9 +156,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request, SupportGroupService $supportGroupService): Response
+    public function editSupportGroup(int $id, Request $request, SupportGroupManager $supportGroupManager): Response
     {
-        $supportGroup = $supportGroupService->getFullSupportGroup($id);
+        $supportGroup = $supportGroupManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -164,7 +166,7 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportGroupService->update($supportGroup);
+            $supportGroupManager->update($supportGroup);
 
             $this->manager->flush();
 
@@ -195,9 +197,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
      */
-    public function viewSupportGroup(int $id, SupportGroupService $supportGroupService, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
+    public function viewSupportGroup(int $id, SupportGroupManager $supportGroupManager, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
     {
-        $supportGroup = $supportGroupService->getFullSupportGroup($id);
+        $supportGroup = $supportGroupManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -210,7 +212,7 @@ class SupportController extends AbstractController
             'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
             'nbContributions' => $supportGroup->getAccommodationGroups() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
-            'evaluation' => $supportGroupService->getEvaluation($supportGroup),
+            'evaluation' => $supportGroupManager->getEvaluation($supportGroup),
             'nextRdv' => $nbRdvs ? $repoRdv->findNextRdvFromSupport($supportGroup->getId()) : null,
             'lastRdv' => $nbRdvs ? $repoRdv->findLastRdvFromSupport($supportGroup->getId()) : null,
         ]);
@@ -238,9 +240,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupService $supportGroupService): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupManager $supportGroupManager): Response
     {
-        if (!$supportGroupService->addPeopleInSupport($supportGroup, $repo)) {
+        if (!$supportGroupManager->addPeopleInSupport($supportGroup, $repo)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
@@ -357,18 +359,20 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, SupportGroupService $supportGroupService, NormalizerInterface $normalizer): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportGroupManager $supportGroupManager): Response
     {
-        // $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $newSupportGroup = $supportGroupService->cloneSupport($supportGroup, $this->getUser(), $normalizer);
+        if ($supportGroupManager->cloneSupport($supportGroup)) {
+            $this->manager->flush();
 
-        $this->manager->flush();
+            $this->addFlash('success', 'Les éléments du dernier suivi ont été ajoutés (évaluation sociale, documents...)');
+        } else {
+            $this->addFlash('warning', 'Aucun autre suivi n\'a été trouvé.');
+        }
 
-        $this->addFlash('success', 'Le suivi social a été dupliqué.');
-
-        return $this->redirectToRoute('support_edit', [
-            'id' => $newSupportGroup->getId(),
+        return $this->redirectToRoute('support_view', [
+            'id' => $supportGroup->getId(),
         ]);
     }
 

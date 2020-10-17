@@ -8,7 +8,7 @@ use App\Entity\AccommodationPerson;
 use App\Entity\SupportGroup;
 use App\Form\Accommodation\AccommodationGroupType;
 use App\Repository\AccommodationGroupRepository;
-use App\Service\SupportGroup\SupportGroupService;
+use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -35,9 +35,9 @@ class AccommodationGroupController extends AbstractController
      *
      * @Route("support/{id}/accommodations", name="support_accommodations", methods="GET")
      */
-    public function supportAccommodationsGroup(int $id, SupportGroupService $supportGroupService): Response
+    public function supportAccommodationsGroup(int $id, SupportGroupManager $supportGroupManager): Response
     {
-        $supportGroup = $supportGroupService->getFullSupportGroup($id);
+        $supportGroup = $supportGroupManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -99,11 +99,11 @@ class AccommodationGroupController extends AbstractController
      *
      * @param int $id // AccommodationGroup
      */
-    public function editAccommodationGroup(int $id, SupportGroupService $supportGroupService, Request $request): Response
+    public function editAccommodationGroup(int $id, SupportGroupManager $supportGroupManager, Request $request): Response
     {
         $accommodationGroup = $this->repo->findAccommodationGroupById($id);
         // $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup()->getId());
-        $supportGroup = $supportGroupService->getSupportGroup($accommodationGroup->getSupportGroup()->getId());
+        $supportGroup = $supportGroupManager->getSupportGroup($accommodationGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 

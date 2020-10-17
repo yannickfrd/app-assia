@@ -16,7 +16,7 @@ use App\Repository\RdvRepository;
 use App\Security\CurrentUserService;
 use App\Service\Calendar;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupService;
+use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -73,9 +73,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupService->getSupportGroup($id);
+        $supportGroup = $supportGroupManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -128,9 +128,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportGroupService $supportGroupService, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, SupportGroupManager $supportGroupManager, $year = null, $month = null): Response
     {
-        $supportGroup = $supportGroupService->getSupportGroup($id);
+        $supportGroup = $supportGroupManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

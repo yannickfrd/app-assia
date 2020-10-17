@@ -302,40 +302,6 @@ class SupportGroup
         return $this->id;
     }
 
-    public function __clone()
-    {
-        $now = new \DateTime();
-        $this->setCreatedAt($now);
-        $this->setUpdatedAt($now);
-
-        $newSupportPeople = new ArrayCollection();
-
-        foreach ($this->supportPeople as $supportPerson) {
-            $newSupportPerson = clone $supportPerson;
-            $newSupportPerson->setSupportGroup($this);
-            $newSupportPeople->add($newSupportPerson);
-        }
-        $this->supportPeople = $newSupportPeople;
-
-        $newEvaluationsGroup = new ArrayCollection();
-
-        foreach ($this->evaluationsGroup as $evaluationGroup) {
-            $newEvaluationGroup = clone $evaluationGroup;
-            $newEvaluationGroup->setSupportGroup($this);
-            $newEvaluationsGroup->add($newEvaluationGroup);
-        }
-        $this->evaluationsGroup = $newEvaluationsGroup;
-
-        $newDocuments = new ArrayCollection();
-
-        foreach ($this->documents as $document) {
-            $newDocument = clone $document;
-            $newDocument->setSupportGroup($this);
-            $newDocuments->add($newDocument);
-        }
-        $this->documents = $newDocuments;
-    }
-
     public function getId(): ?int
     {
         return $this->id;

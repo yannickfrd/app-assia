@@ -2,23 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\SupportGroup;
-use App\Entity\InitEvalGroup;
-use App\Entity\SupportPerson;
-use App\Entity\InitEvalPerson;
-use App\Service\Normalisation;
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
-use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
+use App\Entity\SupportGroup;
+use App\Entity\SupportPerson;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\SupportGroupRepository;
+use App\Service\Normalisation;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
 {

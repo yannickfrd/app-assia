@@ -2,23 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Document;
-use App\Service\Pagination;
-use App\Entity\SupportGroup;
-use App\Service\FileUploader;
-use App\Form\Model\DocumentSearch;
-use App\Form\Document\DocumentType;
-use App\Repository\DocumentRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Document\DocumentSearchType;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Document;
+use App\Entity\SupportGroup;
+use App\Form\Document\DocumentSearchType;
+use App\Form\Document\DocumentType;
+use App\Form\Model\DocumentSearch;
+use App\Repository\DocumentRepository;
 use App\Service\Download;
-use App\Service\SupportGroup\SupportGroupService;
+use App\Service\FileUploader;
+use App\Service\Pagination;
+use App\Service\SupportGroup\SupportGroupManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DocumentController extends AbstractController
 {
@@ -38,9 +38,9 @@ class DocumentController extends AbstractController
      *
      * @Route("support/{id}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listDocuments(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupService->getSupportGroup($id);
+        $supportGroup = $supportGroupManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

@@ -19,7 +19,7 @@ use App\Repository\EvaluationGroupRepository;
 use App\Service\Indicators\ContributionIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupService;
+use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -79,9 +79,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportContributions(int $id, SupportGroupService $supportGroupService, Request $request, Pagination $pagination): Response
+    public function showSupportContributions(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupService->getSupportGroup($id);
+        $supportGroup = $supportGroupManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -115,9 +115,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function getResources(int $id, SupportGroupService $supportGroupService, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
+    public function getResources(int $id, SupportGroupManager $supportGroupManager, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
     {
-        $supportGroup = $supportGroupService->getSupportGroup($id);
+        $supportGroup = $supportGroupManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

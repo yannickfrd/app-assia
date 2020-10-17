@@ -2,23 +2,23 @@
 
 namespace App\Export;
 
-use App\Service\ExportExcel;
 use App\Entity\EvalAdmPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\SupportPerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\InitEvalPerson;
-use App\Service\Normalisation;
 use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalFamilyGroup;
-use App\Entity\EvalSocialGroup;
-use App\Entity\EvaluationGroup;
 use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalFamilyGroup;
 use App\Entity\EvalFamilyPerson;
 use App\Entity\EvalHousingGroup;
-use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationPerson;
 use App\Entity\EvalJusticePerson;
+use App\Entity\EvalProfPerson;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvalSocialPerson;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvaluationPerson;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
+use App\Entity\SupportPerson;
+use App\Service\ExportExcel;
+use App\Service\Normalisation;
 
 class SupportPersonFullExport
 {
@@ -88,8 +88,7 @@ class SupportPersonFullExport
     {
         $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
 
-        $evaluations = $supportPerson->getEvaluationsPerson();
-        $this->evaluationPerson = $evaluations[count($evaluations) - 1] ?? new EvaluationPerson();
+        $this->evaluationPerson = $supportPerson->getEvaluationsPerson()->last() ?? new EvaluationPerson();
         $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
 
         $this->datas = array_merge($this->datas, [
