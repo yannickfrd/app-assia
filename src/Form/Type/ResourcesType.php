@@ -19,7 +19,7 @@ class ResourcesType extends AbstractType
         ->add('resources', ChoiceType::class, [
             'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
             'attr' => [
-                'class' => 'js-initEval',
+                'class' => 'js-initEval important',
                 'data-id' => 'resources',
             ],
             'placeholder' => 'placeholder.select',
@@ -27,7 +27,7 @@ class ResourcesType extends AbstractType
         ])
         ->add('resourcesAmt', MoneyType::class, [
             'attr' => [
-                'class' => 'js-money js-resourcesAmt js-initEval text-right',
+                'class' => 'js-money js-resourcesAmt js-initEval important text-right',
                 'data-id' => 'resourcesAmt',
             ],
             'required' => false,

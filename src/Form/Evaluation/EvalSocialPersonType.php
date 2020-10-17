@@ -18,7 +18,7 @@ class EvalSocialPersonType extends AbstractType
             ->add('rightSocialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'rightSocialSecurity',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -27,7 +27,7 @@ class EvalSocialPersonType extends AbstractType
             ->add('socialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'socialSecurity',
                 ],
                 'placeholder' => 'placeholder.select',

@@ -64,8 +64,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->addOrderBy('sp.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC')
 
-            // ->groupBy('eg.id')
-            // ->setMaxResults(1)
+            ->groupBy('eg.id')
+            ->setMaxResults(1)
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)

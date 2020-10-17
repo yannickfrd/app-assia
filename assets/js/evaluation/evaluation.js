@@ -1,13 +1,18 @@
 import DisplayFields from "../utils/displayFields"
 import ValidationForm from "../utils/validationForm"
+import SelectType from '../utils/selectType'
 
-// Evaluation sociale
+/**
+ * Evaluation sociale.
+ */
 export default class evaluation {
 
     constructor() {
         this.evalBudgetElt = document.getElementById("accordion-parent-eval_budget")
         this.prefix = "evaluation_"
         this.editMode = document.querySelector("div[data-edit-mode]").getAttribute("data-edit-mode")
+
+        this.accordionElts = document.querySelectorAll('section.accordion')
 
         this.resourcesGroupAmtElt = document.getElementById("resourcesGroupAmt")
         this.chargesGroupAmtElt = document.getElementById("chargesGroupAmt")
@@ -33,6 +38,7 @@ export default class evaluation {
         this.dateElts = document.querySelectorAll("input[type='date']")
 
         this.validationForm = new ValidationForm()
+        this.selectType = new SelectType()
         this.init()
     }
 
@@ -42,7 +48,7 @@ export default class evaluation {
         this.evalBudgetGroup()
         this.evalHousingGroup()
 
-        let prefix = this.prefix + "evaluationPeople_"
+        const prefix = this.prefix + "evaluationPeople_"
         this.initEvalPerson(prefix)
         this.evalSocialPerson(prefix)
         this.evalFamily(prefix)
@@ -51,7 +57,7 @@ export default class evaluation {
         this.evalAdmPerson(prefix)
 
         document.getElementsByClassName("card").forEach(cardElt => {
-            let btnPersonElts = cardElt.querySelectorAll("button.js-person")
+            const btnPersonElts = cardElt.querySelectorAll("button.js-person")
             btnPersonElts.forEach(btnElt => {
                 btnElt.addEventListener("click", this.activeBtn.bind(this, btnPersonElts, btnElt))
             })
@@ -85,20 +91,27 @@ export default class evaluation {
                 this.calculationMethodElt.textContent = ""
             })
         }
+
+        this.countEmptyImportantElts()
     }
 
-
-    // Evaluation sociale du groupe
+    /**
+     * Evaluation sociale du groupe.
+     */
     evalSocialGroup() {
         new DisplayFields(this.prefix + "evalSocialGroup_", "animal", [1])
     }
 
-    // Evaluation familiale du groupe
+    /**
+     * Evaluation familiale du groupe.
+     */
     evalFamilyGroup() {
         new DisplayFields(this.prefix + "evalFamilyGroup_", "famlReunification", [1, 3, 4, 5])
     }
 
-    // Evaluation budgétaire
+    /**
+     * Evaluation budgétaire.
+     */
     evalBudgetGroup() {
         this.editAmtPers("resources")
         this.editAmtPers("charges")
@@ -106,9 +119,11 @@ export default class evaluation {
         this.editAmtPers("repayment")
     }
 
-    // Evaluation liée au logement
+    /**
+     * Evaluation liée au logement.
+     */
     evalHousingGroup() {
-        let prefix = this.prefix + "evalHousingGroup_"
+        const prefix = this.prefix + "evalHousingGroup_"
         // new DisplayFields(prefix, "housingAccessType", [1, 2, 3, 4, 5, 6, 7, 8, 9])
         new DisplayFields(prefix, "housingStatus", [200, 201, 202, 203, 204, 205, 206, 207, 300, 301, 302, 303, 304])
         new DisplayFields(prefix, "siaoRequest", [1])
@@ -125,10 +140,13 @@ export default class evaluation {
         this.selectTrElts("eval_housing", "evalHousingGroup", "", "hsgHelps")
     }
 
-    // Evaluation situation initiale individuelle
+    /**
+     * Evaluation situation initiale individuelle.
+     * @param {String} prefix 
+     */
     initEvalPerson(prefix) {
         document.getElementById("accordion-init_eval").querySelectorAll("button.js-person").forEach(personElt => {
-            let i = personElt.getAttribute("data-key")
+            const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_initEvalPerson_rightSocialSecurity", [1, 3])
             new DisplayFields(prefix, i + "_initEvalPerson_profStatus", [3, 5, 8])
             new DisplayFields(prefix, i + "_initEvalPerson_resources_resources", [1, 3])
@@ -140,10 +158,13 @@ export default class evaluation {
         })
     }
 
-    // Evaluation sociale individuelle
+    /**
+     * Evaluation sociale individuelle.
+     * @param {String} prefix 
+     */
     evalSocialPerson(prefix) {
         document.getElementById("accordion-eval_social").querySelectorAll("button.js-person").forEach(personElt => {
-            let i = personElt.getAttribute("data-key")
+            const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_evalSocialPerson_rightSocialSecurity", [1, 3])
             new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_careSupport", [1])
@@ -153,10 +174,13 @@ export default class evaluation {
         })
     }
 
-    // Evaluation administrative individuelle
+    /**
+     * Evaluation administrative individuelle.
+     * @param {String} prefix 
+     */
     evalAdmPerson(prefix) {
         document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
-            let i = personElt.getAttribute("data-key")
+            const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_evalAdmPerson_nationality", [2, 3, 4])
             new DisplayFields(prefix, i + "_evalAdmPerson_paper", [1, 3])
             new DisplayFields(prefix, i + "_evalAdmPerson_paperType", [20, 21, 22, 30, 31, 97])
@@ -164,10 +188,13 @@ export default class evaluation {
         })
     }
 
-    // Evaluation familiale individuelle
+    /**
+     * Evaluation familiale individuelle.
+     * @param {String} prefix 
+     */
     evalFamily(prefix) {
         document.getElementById("accordion-eval_family").querySelectorAll("button.js-person").forEach(personElt => {
-            let i = personElt.getAttribute("data-key")
+            const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_evalFamilyPerson_maritalStatus", [6])
             new DisplayFields(prefix, i + "_evalFamilyPerson_unbornChild", [1])
             new DisplayFields(prefix, i + "_evalFamilyPerson_protectiveMeasure", [1, 3])
@@ -175,21 +202,27 @@ export default class evaluation {
         })
     }
 
-    // Evaluation professionnelle individuelle
+    /**
+     * Evaluation professionnelle individuelle.
+     * @param {String} prefix 
+     */
     evalProfPerson(prefix) {
         document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").forEach(personElt => {
-            let i = personElt.getAttribute("data-key")
+            const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_evalProfPerson_profStatus", [3, 5, 8])
             new DisplayFields(prefix, i + "_evalProfPerson_transportMeansType", [1, 2, 3])
             new DisplayFields(prefix, i + "_evalProfPerson_rqth", [1])
         })
     }
 
-    // Evaluation budgétaire individuelle
+    /**
+     * Evaluation budgétaire individuelle.
+     * @param {String} prefix 
+     */
     evalBudgetPerson(prefix) {
-        let entity = "evalBudgetPerson"
+        const entity = "evalBudgetPerson"
         document.getElementById("accordion-eval_budget").querySelectorAll("button.js-person").forEach(personElt => {
-            let i = personElt.getAttribute("data-key")
+            const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_evalBudgetPerson_resources_resources", [1, 3])
             new DisplayFields(prefix, i + "_evalBudgetPerson_charges", [1])
             new DisplayFields(prefix, i + "_evalBudgetPerson_debts", [1])
@@ -207,11 +240,34 @@ export default class evaluation {
         })
     }
 
-    // Si changement des ressources à "Non", alors efface tous les types de ressources saisies de la personne
+    countEmptyImportantElts() {
+        this.accordionElts.forEach(accordionElt => {
+            let count = 0
+            accordionElt.querySelectorAll('.important.border-warning').forEach(elt => {
+                ++count
+            })
+            const badge = accordionElt.querySelector('.badge')
+            if (badge) {
+                badge.textContent = count
+                if (count === 0) {
+                    return badge.classList.add('d-none')
+                } 
+                return badge.classList.remove('d-none')
+            }
+        })
+    }
+
+    /**
+     * Si changement des ressources à "Non", alors efface tous les types de ressources saisies de la personne.
+     * @param {String} collapseId 
+     * @param {String} prefix 
+     * @param {Number} i 
+     * @param {String} entity 
+     */
     changeResources(collapseId, prefix, i, entity) {
-        let resourceInput = document.getElementById(prefix + i + "_" + entity + "_resources_resources")
+        const resourceInput = document.getElementById(prefix + i + "_" + entity + "_resources_resources")
         resourceInput.addEventListener("change", e => {
-            if (this.getOption(resourceInput) === "2") {
+            if (this.selectType.getOption(resourceInput) === "2") {
                 document.querySelectorAll(".js-" + i + "_" + entity + "_resources_type").forEach(trElt => {
                     this.removeTr(collapseId, entity, i, trElt)
                 })
@@ -220,7 +276,10 @@ export default class evaluation {
         })
     }
 
-    // Initialise les Inputs pour les éléments de la situations initiale
+    /**
+     * Initialise les Inputs pour les éléments de la situations initiale.
+     * @param {HTMLElement} elt 
+     */
     initInputs(elt) {
         elt.querySelectorAll("input.js-initEval").forEach(inputElt => {
             inputElt.setAttribute("data-support-id", elt.getAttribute("data-support-id"))
@@ -231,22 +290,28 @@ export default class evaluation {
         })
     }
 
-    // Initialise les Selects pour les éléments de la situations initiale
+    /**
+     * Initialise les Selects pour les éléments de la situations initiale.
+     * @param {HTMLElement} elt 
+     */
     initSelects(elt) {
         elt.querySelectorAll("select.js-initEval").forEach(selectElt => {
             selectElt.setAttribute("data-support-id", elt.getAttribute("data-support-id"))
-            if (!this.getOption(selectElt)) {
+            if (!this.selectType.getOption(selectElt)) {
                 selectElt.classList.add("border-warning")
             }
             selectElt.addEventListener("change", this.changeSelect.bind(this, selectElt))
         })
     }
 
-    // Si modification d'un Input, met à jour l'autre champ semblable si vide
+    /**
+     * Si modification d'un Input, met à jour l'autre champ semblable si vide.
+     * @param {HTMLElement} elt 
+     */
     changeInput(elt) {
         if (elt.value) {
-            let dataId = elt.getAttribute("data-id")
-            let supportPersonId = elt.getAttribute("data-support-id")
+            const dataId = elt.getAttribute("data-id")
+            const supportPersonId = elt.getAttribute("data-support-id")
             document.querySelectorAll("input[data-id='" + dataId + "'][data-support-id='" + supportPersonId + "']").forEach(inputElt => {
                 if (!inputElt.value && this.editMode === "false") {
                     inputElt.value = elt.value
@@ -257,15 +322,19 @@ export default class evaluation {
         } else {
             elt.classList.add("border-warning")
         }
+        this.countEmptyImportantElts()
     }
 
-    // Si modification d'un Select, met à jour l'autre champ semblable si vide
+    /**
+     * Si modification d'un Select, met à jour l'autre champ semblable si vide.
+     * @param {HTMLElement} elt 
+     */
     changeSelect(elt) {
-        let optionSelected = this.getOption(elt)
+        const optionSelected = this.selectType.getOption(elt)
         if (optionSelected) {
             document.querySelectorAll("select[data-id='" + elt.getAttribute("data-id") + "'][data-support-id='" + elt.getAttribute("data-support-id") + "']").forEach(selectElt => {
                 if (!selectElt.querySelector("option[selected]")) {
-                    this.setOption(selectElt, optionSelected)
+                    this.selectType.setOption(selectElt, optionSelected)
                     selectElt.classList.remove("border-warning")
                     selectElt.click()
                 }
@@ -274,33 +343,18 @@ export default class evaluation {
         } else {
             elt.classList.add("border-warning")
         }
+        this.countEmptyImportantElts()
     }
 
-    // Donne l'option sélectionné d'un Select
-    getOption(selectElt) {
-        let value = null
-        selectElt.querySelectorAll("option").forEach(optionElt => {
-            optionElt.selected ? value = optionElt.value : null
-        })
-        return value
-    }
-
-    // Modifie l'option d'un Select
-    setOption(selectElt, value) {
-        selectElt.querySelectorAll("option").forEach(option => {
-            if (option.value === value) {
-                option.setAttribute("selected", "selected")
-            } else {
-                option.removeAttribute("selected")
-                option.selected = ""
-            }
-        })
-    }
-
-    // Masque ou affiche un élement
+    /**
+     * Masque ou affiche un élement.
+     * @param {Number} i 
+     * @param {String} eltId 
+     * @param {String} display 
+     */
     editElt(i, eltId, display) {
-        let selectElt = document.getElementById("js-" + i + eltId)
-        let inputElts = document.querySelectorAll(".js-" + i + eltId)
+        const selectElt = document.getElementById("js-" + i + eltId)
+        const inputElts = document.querySelectorAll(".js-" + i + eltId)
         selectElt.addEventListener("change", this.addOption.bind(this, selectElt, i, eltId, display))
         inputElts.forEach(inputElt => {
             inputElt.addEventListener("click", e => {
@@ -310,36 +364,50 @@ export default class evaluation {
         })
     }
 
-    // Masque l'affichage de l'input
+    /**
+     * Masque l'affichage de l'input.
+     * @param {HTMLElement} inputElt 
+     * @param {String} display 
+     */
     displayNone(inputElt, display) {
         if (inputElt.querySelector("input").value != 1) {
             inputElt.classList.replace(display, "d-none")
         }
     }
 
-    // Active/Désactive le bouton d'une personne au clic
-    activeBtn(btnElts, selectedBtn) {
+    /**
+     * Active/Désactive le bouton d'une personne au clic.
+     * @param {HTMLElement} btnElts 
+     * @param {HTMLButtonElement} selectedBtnElt 
+     */
+    activeBtn(btnElts, selectedBtnElt) {
         let active = false
-        if (selectedBtn.classList.contains("active")) {
+        if (selectedBtnElt.classList.contains("active")) {
             active = true
         }
         btnElts.forEach(btn => {
             btn.classList.remove("active")
         })
         if (!active) {
-            selectedBtn.classList.add("active")
+            selectedBtnElt.classList.add("active")
         }
     }
 
-    // Ajoute l'option sélectionnée de la liste déroulante
+    /**
+     * Ajoute l'option sélectionnée de la liste déroulante.
+     * @param {HTMLElement} selectElt 
+     * @param {Number} i 
+     * @param {String} eltId 
+     * @param {String} display 
+     */
     addOption(selectElt, i, eltId, display) {
-        let optionElts = selectElt.querySelectorAll("option")
+        const optionElts = selectElt.querySelectorAll("option")
         optionElts.forEach(option => {
             if (option.selected) {
                 this.trElt = document.getElementById("js-" + i + eltId + "-" + option.value)
-                let dataId = this.trElt.getAttribute("data-id")
-                let supportPersonId = this.trElt.getAttribute("data-support-id")
-                let trElts = document.querySelectorAll("tr[data-id='" + dataId + "'][data-support-id='" + supportPersonId + "']")
+                const dataId = this.trElt.getAttribute("data-id")
+                const supportPersonId = this.trElt.getAttribute("data-support-id")
+                const trElts = document.querySelectorAll("tr[data-id='" + dataId + "'][data-support-id='" + supportPersonId + "']")
                 if (selectElt.getAttribute("data-id") === "resourcesType" && this.editMode === "false") {
                     trElts.forEach(trElt => {
                         trElt.querySelector("input[type='number']").value = 1
@@ -352,7 +420,7 @@ export default class evaluation {
             }
             // Met tous les autres inputs du tableau à 0 si vide
             document.querySelectorAll(".js-" + i + eltId).forEach(trElt => {
-                let inputElt = trElt.querySelector("input[type='number']")
+                const inputElt = trElt.querySelector("input[type='number']")
                 if (!inputElt.value) {
                     inputElt.value = 0
                 }
@@ -361,16 +429,22 @@ export default class evaluation {
         // Remplace le select sur l'option par défaut
         window.setTimeout(e => {
             selectElt.querySelector("option").selected = "selected"
-            let inputTextElt = this.trElt.querySelector("input[type='text']")
+            const inputTextElt = this.trElt.querySelector("input[type='text']")
             if (inputTextElt) {
                 inputTextElt.focus()
             }
         }, 200)
     }
 
-    // Sélectionne toutes les lignes d'un tableau
+    /**
+     * Sélectionne toutes les lignes d'un tableau.
+     * @param {String} collapseId 
+     * @param {String} entity 
+     * @param {Number} i 
+     * @param {String} type 
+     */
     selectTrElts(collapseId, entity, i, type) {
-        let trElts = document.querySelectorAll(".js-" + i + "_" + entity + "_" + type)
+        const trElts = document.querySelectorAll(".js-" + i + "_" + entity + "_" + type)
         trElts.forEach(trElt => {
             trElt.querySelector("button.js-remove").addEventListener("click", e => {
                 e.preventDefault()
@@ -379,7 +453,13 @@ export default class evaluation {
         })
     }
 
-    // Retire la ligne correspondante dans le tableau
+    /**
+     * Retire la ligne correspondante dans le tableau.
+     * @param {String} collapseId 
+     * @param {String} entity 
+     * @param {Number} i 
+     * @param {HTMLElement} trElt 
+     */
     removeTr(collapseId, entity, i, trElt) {
         trElt.querySelectorAll("input").forEach(inputElt => {
             inputElt.getAttribute("type") === "number" ? inputElt.value = 0 : inputElt.value = null
@@ -393,13 +473,21 @@ export default class evaluation {
         }
     }
 
-    // Met à jour la somme des montants après la saisie d'un input
+    /**
+     * Met à jour la somme des montants après la saisie d'un input.
+     * @param {String} prefix 
+     * @param {String} collapseId 
+     * @param {String} entity 
+     * @param {Numbert} i 
+     * @param {String} type 
+     */
     editAmt(prefix, collapseId, entity, i, type) {
-        let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type)
-        let amtElt = document.getElementById(prefix + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt")
+        const inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type)
+        const amtElt = document.getElementById(prefix + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt")
         inputElts.forEach(inputElt => {
             inputElt.addEventListener("input", e => {
                 amtElt.value = this.getSumAmts(inputElts)
+                amtElt.classList.remove('border-warning')
                 this.updateAmtGroup(type)
             })
         })
@@ -414,7 +502,7 @@ export default class evaluation {
 
         if (amtElt) {
             amtElt.addEventListener("click", e => {
-                let sumAlts = this.getSumAmts(inputElts)
+                const sumAlts = this.getSumAmts(inputElts)
                 if (sumAlts != 0) {
                     amtElt.value = sumAlts
                     this.updateAmtGroup(type)
@@ -423,16 +511,19 @@ export default class evaluation {
         }
     }
 
-    // Retourne la somme des montants
+    /**
+     * Retourne la somme des montants.
+     * @param {Array} inputElts 
+     */
     getSumAmts(inputElts) {
-        let array = []
+        const array = []
         inputElts.forEach(inputElt => {
             if (inputElt.value) {
                 array.push(parseFloat(inputElt.value))
             }
         })
 
-        let sumAmts = array.reduce((a, b) => a + b, 0)
+        const sumAmts = array.reduce((a, b) => a + b, 0)
 
         if (!isNaN(sumAmts)) {
             return sumAmts
@@ -440,23 +531,35 @@ export default class evaluation {
         return "Erreur"
     }
 
-    // Met à jour la somme des montants de la personne
+    /**
+     * Met à jour la somme des montants de la personne.
+     * @param {String} collapseId 
+     * @param {String} entity 
+     * @param {Number} i 
+     * @param {String} type 
+     */
     updateSumAmt(collapseId, entity, i, type) {
-        let inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type)
+        const inputElts = document.getElementById("collapse-" + collapseId + "-" + i).querySelectorAll("input.js-" + type)
         document.getElementById("evaluation_evaluationPeople_" + i + "_" + entity + (type === "resources" ? "_resources_" : "_") + type + "Amt").value = this.getSumAmts(inputElts)
         this.updateAmtGroup(type)
     }
 
-    // Met à jour le montant total du groupe lors d'une modification des montants individuels
+    /**
+     * Met à jour le montant total du groupe lors d'une modification des montants individuels.
+     * @param {String} type 
+     */
     editAmtPers(type) {
         this.amtElts(type).forEach(amountElt => {
             amountElt.addEventListener("input", this.updateAmtGroup.bind(this, type))
         })
     }
 
-    // Met à jour le montant total du groupe (resources, charges ou dettes)
+    /**
+     * Met à jour le montant total du groupe (resources, charges ou dettes).
+     * @param {String} type 
+     */
     updateAmtGroup(type) {
-        let array = []
+        const array = []
         this.amtElts(type).forEach(amountElt => {
             if (amountElt.value) {
                 array.push(parseFloat(amountElt.value))
@@ -468,44 +571,52 @@ export default class evaluation {
         this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent)
     }
 
+    /**
+     * 
+     * @param {String} type 
+     */
     groupAmtElt(type) {
-        let groupAmtElt
         switch (type) {
             case "resources":
-                groupAmtElt = this.resourcesGroupAmtElt
+                return this.resourcesGroupAmtElt
                 break
             case "charges":
-                groupAmtElt = this.chargesGroupAmtElt
+                return this.chargesGroupAmtElt
                 break
             case "debts":
-                groupAmtElt = this.debtsGroupAmtElt
+                return this.debtsGroupAmtElt
                 break
             case "repayment":
-                groupAmtElt = this.repaymentGroupAmtElt
+                return this.repaymentGroupAmtElt
                 break
         }
-        return groupAmtElt
     }
 
+    /**
+     * 
+     * @param {String} type 
+     */
     amtElts(type) {
-        let amtElts
         switch (type) {
             case "resources":
-                amtElts = this.evalBudgetResourcesAmtElts
+                return this.evalBudgetResourcesAmtElts
                 break
             case "charges":
-                amtElts = this.evalBudgetChargesAmtElts
+                return this.evalBudgetChargesAmtElts
                 break
             case "debts":
-                amtElts = this.evalBudgetDebtsAmtElts
+                return this.evalBudgetDebtsAmtElts
                 break
             case "repayment":
-                amtElts = this.evalBudgetRepaymentAmtElts
+                return this.evalBudgetRepaymentAmtElts
                 break
         }
-        return amtElts
     }
 
+    /**
+     * Vérifie la validité des montants.
+     * @param {HTMLElement} type 
+     */
     checkMoney(moneyElt) {
         moneyElt.value = moneyElt.value.replace(" ", "")
         moneyElt.value = moneyElt.value.replace(",", ".")
@@ -515,18 +626,25 @@ export default class evaluation {
         return this.validationForm.invalidField(moneyElt, "Montant invalide.")
     }
 
+    /**
+     * Vérifie la la validité de la date.
+     * @param {HTMLInputElement} dateElt 
+     */
     checkDate(dateElt) {
-        let interval = Math.round((this.now - new Date(dateElt.value)) / (24 * 3600 * 1000))
+        const interval = Math.round((this.now - new Date(dateElt.value)) / (24 * 3600 * 1000))
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
             return this.validationForm.invalidField(dateElt, "Date invalide.")
         }
         return this.validationForm.validField(dateElt)
     }
 
+    /**
+     * Met à jour la contribution financière.
+     */
     updateContribution() {
-        let contributionType = parseFloat(this.updateContributionBtnElt.getAttribute("data-contribution-type"))
-        let resourcesGroupAmt = parseFloat(this.resourcesGroupAmtElt.textContent.replace(" ", ""))
-        let contributionRate = this.updateContributionBtnElt.getAttribute("data-contribution-rate")
+        const contributionType = parseFloat(this.updateContributionBtnElt.getAttribute("data-contribution-type"))
+        const resourcesGroupAmt = parseFloat(this.resourcesGroupAmtElt.textContent.replace(" ", ""))
+        const contributionRate = this.updateContributionBtnElt.getAttribute("data-contribution-rate")
 
         if ([1, 3].indexOf(contributionType) != -1 && !isNaN(resourcesGroupAmt) && !isNaN(contributionRate)) {
             this.contributionAmtInput.value = Math.round(resourcesGroupAmt * contributionRate * 100) / 100

@@ -18,7 +18,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('housingStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'housingStatus',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -27,7 +27,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('siaoRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'siaoRequest',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -54,7 +54,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('socialHousingRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'socialHousingRequest',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -112,15 +112,15 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('collectiveAgreementHousing', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('collectiveAgreementHousingDate', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
+            // ->add('collectiveAgreementHousing', ChoiceType::class, [
+            //     'choices' => Choices::getChoices(Choices::YES_NO),
+            //     'placeholder' => 'placeholder.select',
+            //     'required' => false,
+            // ])
+            // ->add('collectiveAgreementHousingDate', DateType::class, [
+            //     'widget' => 'single_text',
+            //     'required' => false,
+            // ])
             ->add('hsgActionEligibility', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',

@@ -43,6 +43,10 @@
 		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
 
 		<div class="mb-4" data-edit-mode="{% if EDIT_MODE %}true{% else %}false{% endif %}">
+			{% set badgeTitle %}
+				<span class="badge badge-pill badge-warning d-none ml-2" data-toggle="tooltip" data-placement="bottom" 
+					title="Nombre d'informations importantes manquantes dans le bloc"></span>
+			{% endset %}
 			{% include "app/evaluation/initEvaluation.html.twig" %}
 			{% if support.service.justice == YES %}
 				{% include "app/evaluation/evaluationJustice.html.twig" %}

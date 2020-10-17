@@ -2,15 +2,15 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
 use App\Entity\EvalBudgetPerson;
 use App\Form\Type\ResourcesType;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EvalBudgetPersonType extends AbstractType
 {
@@ -57,7 +57,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add('debts', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'debts',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -65,7 +65,7 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-debtsAmt js-initEval text-right',
+                    'class' => 'js-money js-debtsAmt js-initEval important text-right',
                     'data-id' => 'debtsAmt',
                 ],
                 'required' => false,

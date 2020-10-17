@@ -27,6 +27,9 @@ class EvalAdmPersonType extends AbstractType
             ->add('country')
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'attr' => [
+                    'class' => 'js-initEval important',
+                ],
                 'placeholder' => 'placeholder.select',
                 'help' => "Carte d'identité, passport, titre de séjour, récépissé...",
                 'required' => false,
@@ -34,7 +37,7 @@ class EvalAdmPersonType extends AbstractType
             ->add('paperType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 'attr' => [
-                    'class' => 'js-initEval',
+                    'class' => 'js-initEval important',
                     'data-id' => 'paperType',
                 ],
                 'placeholder' => 'placeholder.select',
