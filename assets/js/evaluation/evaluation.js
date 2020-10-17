@@ -244,7 +244,16 @@ export default class evaluation {
         this.accordionElts.forEach(accordionElt => {
             let count = 0
             accordionElt.querySelectorAll('.important.border-warning').forEach(elt => {
-                ++count
+                const isResourcesAmtElt = elt.getAttribute('data-id') === 'resourcesAmt' ? true : false;
+                const parent3xElt = elt.parentElement.parentElement.parentElement
+                if (window.getComputedStyle(parent3xElt).display != 'none' && !isResourcesAmtElt) {
+                    ++count
+                } else if (isResourcesAmtElt) {
+                    const resourceElt = accordionElt.querySelector('select[data-id=resources][data-support-id='+elt.getAttribute('data-support-id')+']');
+                    if (this.selectType.getOption(resourceElt) === 1) {
+                        ++count  
+                    }
+                }
             })
             const badge = accordionElt.querySelector('.badge')
             if (badge) {
@@ -493,7 +502,7 @@ export default class evaluation {
         })
 
         inputElts.forEach(inputElt => {
-            inputElt.addEventListener("focusout", e => {
+            inputElt.addEventListener("focusout", () => {
                 this.resourcesAmtElts.forEach(ressourcesAmtElt => {
                     ressourcesAmtElt.click()
                 })

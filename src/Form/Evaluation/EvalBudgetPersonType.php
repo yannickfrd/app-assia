@@ -65,7 +65,7 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-debtsAmt js-initEval important text-right',
+                    'class' => 'js-money js-debtsAmt js-initEval text-right',
                     'data-id' => 'debtsAmt',
                 ],
                 'required' => false,

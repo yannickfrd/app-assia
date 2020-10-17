@@ -49,7 +49,7 @@ class InitEvalPersonType extends AbstractType
             ->add('familyBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
                 'attr' => [
-                    'class' => 'js-initEval important',
+                    'class' => 'js-initEval',
                     'data-id' => 'familyBreakdown',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -58,7 +58,7 @@ class InitEvalPersonType extends AbstractType
             ->add('friendshipBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
                 'attr' => [
-                    'class' => 'js-initEval important',
+                    'class' => 'js-initEval',
                     'data-id' => 'friendshipBreakdown',
                 ],
                 'placeholder' => 'placeholder.select',
@@ -96,7 +96,7 @@ class InitEvalPersonType extends AbstractType
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-debtsAmt js-initEval important text-right',
+                    'class' => 'js-money js-debtsAmt js-initEval text-right',
                     'data-id' => 'debtsAmt',
                 ],
                 'required' => false,
