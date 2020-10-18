@@ -6,7 +6,7 @@
 {% set SERVICE_AVDL_ID = constant("App\\Entity\\Service::SERVICE_AVDL_ID") %}
 {% set SERVICE_PASH_ID = constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
 
-{% block title %}Suivi social | {{ title_website }}{% endblock %}
+{% block title %}Suivi social{{ parent() }}{% endblock %}
 
 {% block body %}
 

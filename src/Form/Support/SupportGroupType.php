@@ -103,10 +103,7 @@ class SupportGroupType extends AbstractType
                 ],
             ])
             ->add('comment', null, [
-                'attr' => [
-                    'rows' => 5,
-                    'placeholder' => 'comment.placeholder',
-                ],
+                'attr' => ['placeholder' => 'comment.placeholder'],
             ])
             ->add('cloneSupport', HiddenType::class, [
                 'mapped' => false,

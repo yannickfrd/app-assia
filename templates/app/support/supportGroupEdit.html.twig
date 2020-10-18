@@ -8,7 +8,7 @@
 {% set title =  (support.id  ? "Édition du" : "Nouveau") ~ " suivi" %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 

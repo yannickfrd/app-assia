@@ -6,7 +6,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 

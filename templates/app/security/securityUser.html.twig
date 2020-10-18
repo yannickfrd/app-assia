@@ -6,7 +6,7 @@
 {% set title = 'Compte utilisateur : ' ~ form.vars.value.fullname ~ (disabled ? ' (désactivé)') %}
 
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 

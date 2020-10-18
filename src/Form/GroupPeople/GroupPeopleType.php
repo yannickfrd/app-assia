@@ -30,7 +30,7 @@ class GroupPeopleType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 4,
-                    'placeholder' => 'Write a comment about the group',
+                    'placeholder' => 'groupPeople.comment',
                 ],
             ]);
     }

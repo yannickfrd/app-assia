@@ -55,7 +55,7 @@ class OriginRequestType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 2,
-                    'placeholder' => 'Write a comment about the origin request',
+                    'placeholder' => 'originRequest.comment',
                 ],
                 'required' => false,
             ]);

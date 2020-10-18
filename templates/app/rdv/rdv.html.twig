@@ -4,7 +4,7 @@
 
 {% if EDIT_MODE %}{% set support = form.vars.value.supportGroup %}{% endif %}
 
-{% block title %}{% if EDIT_MODE %}Édition RDV{% else %}Rendez-vous{% endif %} | {{ title_website }}{% endblock %}
+{% block title %}{% if EDIT_MODE %}Édition RDV{% else %}Rendez-vous{% endif %}{{ parent() }}{% endblock %}
 
 {% block body %}
 

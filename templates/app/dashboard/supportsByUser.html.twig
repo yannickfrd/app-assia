@@ -2,7 +2,7 @@
 
 {% set title = "Répartition des suivis en cours" %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 

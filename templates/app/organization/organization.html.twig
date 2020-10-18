@@ -6,7 +6,7 @@
 {% set EDIT_MODE = organization.id ? true : false %}
 {% set title = EDIT_MODE ? 'Organisme ' ~ organization.name : 'Nouvel organisme' %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 

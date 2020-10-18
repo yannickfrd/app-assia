@@ -65,7 +65,7 @@ class PersonType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Write a comment about the person',
+                    'placeholder' => 'person.comment',
                 ],
             ]);
     }

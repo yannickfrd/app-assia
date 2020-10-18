@@ -11,7 +11,7 @@
 {% set title = "Nouveau service social référent" %}
 {% endif %}
 
-{% block title %} | {{ title_website }}{% endblock %}
+{% block title %}{{ parent() }}{% endblock %}
 
 {% block body %}
 

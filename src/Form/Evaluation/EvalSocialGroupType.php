@@ -34,7 +34,7 @@ class EvalSocialGroupType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Write a comment about the social situation of the group',
+                    'placeholder' => 'evalSocialGroup.comment',
                 ],
             ]);
     }

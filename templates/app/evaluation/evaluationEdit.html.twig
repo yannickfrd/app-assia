@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% block title %}Évaluation sociale | {{ title_website }}{% endblock %}
+{% block title %}Évaluation sociale{{ parent() }}{% endblock %}
 
 {% block body %}
 
@@ -44,7 +44,7 @@
 
 		<div class="mb-4" data-edit-mode="{% if EDIT_MODE %}true{% else %}false{% endif %}">
 			{% set badgeTitle %}
-				<span class="badge badge-pill badge-warning d-none ml-2" data-toggle="tooltip" data-placement="bottom" 
+				<span class="badge badge-pill badge-warning fade-out ml-2" data-toggle="tooltip" data-placement="bottom" 
 					title="Nombre d'informations importantes manquantes dans le bloc"></span>
 			{% endset %}
 			{% include "app/evaluation/initEvaluation.html.twig" %}

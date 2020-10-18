@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <title>{% block title %} | Esperer95.app{% endblock %}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
+		    integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+        {{ encore_entry_link_tags("app") }}
+        <link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}"/>
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar fixed-top bg-dark shadow">
+                <img id="logo-site" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95.app">
+            </nav>
+        </header>
+        {% block body %}{% endblock %}
+    </body>
+
+</html>
+
+{% block javascripts %}{% endblock %}

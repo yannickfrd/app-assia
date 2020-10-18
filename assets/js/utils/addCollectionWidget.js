@@ -1,4 +1,6 @@
-// Permet d'ajouter des éléments dans une collection
+/**
+ * Permet d'ajouter des éléments dans une collection.
+ */
 export default class AddCollectionWidget {
 
     constructor() {
@@ -17,7 +19,10 @@ export default class AddCollectionWidget {
         })
     }
 
-    // Ajoute un élément prototypé dans la liste
+    /**
+     * Ajoute un élément prototypé dans la liste.
+     * @param {HTMLButtonElement} btnElt 
+     */
     addElt(btnElt) {
         this.list = document.querySelector(btnElt.getAttribute('data-list-selector'))
         this.counter = this.list.getAttribute('data-widget-counter') || this.list.children().length // Try to find the counter of the list or use the length of the list
@@ -35,7 +40,10 @@ export default class AddCollectionWidget {
         newElt.appendTo(this.list)
     }
 
-    // Ajoute un lien de suppression d'une catégorie
+    /**
+     * Ajoute un lien de suppression d'une catégorie.
+     * @param {HTMLElement} newElt 
+     */
     addDeleteBtn(newElt) {
         let deleteBtnElt = $('<td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>')
         newElt.append(deleteBtnElt)

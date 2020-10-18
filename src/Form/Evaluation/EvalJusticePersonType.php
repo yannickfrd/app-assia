@@ -29,7 +29,7 @@ class EvalJusticePersonType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
-                    'placeholder' => 'Write a comment about the justice situation of the person',
+                    'placeholder' => 'evalJusticePerson.comment',
                 ],
             ]);
     }

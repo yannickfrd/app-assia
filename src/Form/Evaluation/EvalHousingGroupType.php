@@ -229,7 +229,7 @@ class EvalHousingGroupType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Write a comment about the housing situation',
+                    'placeholder' => 'evalHousingGroup.comment',
                 ],
             ]);
     }

@@ -2,7 +2,7 @@
 
 {% set title = app.user.status == 1 ? "Mon espace personnel" : "Tableau de bord" %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 

@@ -13,7 +13,7 @@ export default class DisplayFields {
     constructor(prefix, inputId, optionValues = []) {
         this.selectType = new SelectType()
         this.inputElt = document.getElementById(prefix + inputId)
-        this.childrenElts = document.querySelectorAll(`div[data-parent-field='${inputId}'`)
+        this.childrenElts = document.querySelectorAll(`div[data-parent-field='${inputId}'], td[data-parent-field='${inputId}']`)
         this.optionValues = optionValues
         this.init()
     }

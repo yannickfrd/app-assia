@@ -96,7 +96,7 @@ class EvalSocialPersonType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
-                    'placeholder' => 'Write a comment about the social situation of the person',
+                    'placeholder' => 'evalSocialPerson.comment',
                 ],
             ]);
     }

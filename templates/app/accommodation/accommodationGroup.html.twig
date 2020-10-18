@@ -4,7 +4,7 @@
 
 {% set EDIT_MODE = form.vars.value.id ? true : false %}
 
-{% block title %}Logement/hébergement | {{ title_website }}{% endblock %}
+{% block title %}Logement/hébergement{{ parent() }}{% endblock %}
 
 {% block body %}
 

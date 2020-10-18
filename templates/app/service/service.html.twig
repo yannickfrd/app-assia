@@ -8,7 +8,7 @@
 {% set YES = 1 %}
 {% set title = EDIT_MODE ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 

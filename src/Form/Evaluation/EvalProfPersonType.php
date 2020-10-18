@@ -76,7 +76,7 @@ class EvalProfPersonType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'Write a comment about the professional situation',
+                    'placeholder' => 'evalProfPerson.comment',
                 ],
             ]);
     }

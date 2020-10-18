@@ -63,14 +63,7 @@ export default class evaluation {
             })
         })
 
-        document.querySelectorAll(".js-evalGroup[data-support-id]").forEach(elt => {
-            this.initSelects(elt)
-            this.initInputs(elt)
-        })
-        document.querySelectorAll(".collapse[data-support-id]").forEach(elt => {
-            this.initSelects(elt)
-            this.initInputs(elt)
-        })
+        document.querySelectorAll(".js-evalGroup[data-support-id], .collapse[data-support-id]").forEach(elt => this.initFields(elt))
 
         this.moneyElts.forEach(moneyElt => {
             moneyElt.addEventListener("change", this.checkMoney.bind(this, moneyElt))
@@ -94,7 +87,7 @@ export default class evaluation {
 
         this.countEmptyImportantElts()
     }
-
+    
     /**
      * Evaluation sociale du groupe.
      */
@@ -124,7 +117,6 @@ export default class evaluation {
      */
     evalHousingGroup() {
         const prefix = this.prefix + "evalHousingGroup_"
-        // new DisplayFields(prefix, "housingAccessType", [1, 2, 3, 4, 5, 6, 7, 8, 9])
         new DisplayFields(prefix, "housingStatus", [200, 201, 202, 203, 204, 205, 206, 207, 300, 301, 302, 303, 304])
         new DisplayFields(prefix, "siaoRequest", [1])
         new DisplayFields(prefix, "socialHousingRequest", [1])
@@ -243,25 +235,17 @@ export default class evaluation {
     countEmptyImportantElts() {
         this.accordionElts.forEach(accordionElt => {
             let count = 0
-            accordionElt.querySelectorAll('.important.border-warning').forEach(elt => {
-                const isResourcesAmtElt = elt.getAttribute('data-id') === 'resourcesAmt' ? true : false;
-                const parent3xElt = elt.parentElement.parentElement.parentElement
-                if (window.getComputedStyle(parent3xElt).display != 'none' && !isResourcesAmtElt) {
+            accordionElt.querySelectorAll('select.important.border-warning, input.important.border-warning').forEach(elt => {
+                const parent2xElt = elt.parentElement.parentElement
+                if (window.getComputedStyle(parent2xElt).display != 'none'
+                 && window.getComputedStyle(parent2xElt.parentElement).display != 'none') {
                     ++count
-                } else if (isResourcesAmtElt) {
-                    const resourceElt = accordionElt.querySelector('select[data-id=resources][data-support-id='+elt.getAttribute('data-support-id')+']');
-                    if (this.selectType.getOption(resourceElt) === 1) {
-                        ++count  
-                    }
                 }
             })
-            const badge = accordionElt.querySelector('.badge')
+            const badge = accordionElt.querySelector('span.badge')
             if (badge) {
+                count > 0 ? badge.classList.replace('fade-out', 'fade-in') : badge.classList.replace('fade-in', 'fade-out')
                 badge.textContent = count
-                if (count === 0) {
-                    return badge.classList.add('d-none')
-                } 
-                return badge.classList.remove('d-none')
             }
         })
     }
@@ -286,71 +270,36 @@ export default class evaluation {
     }
 
     /**
-     * Initialise les Inputs pour les éléments de la situations initiale.
-     * @param {HTMLElement} elt 
+     * Initialise les inputs et les selects pour les éléments de la situations initiale.
+     * @param {HTMLElement} htmlElt 
      */
-    initInputs(elt) {
-        elt.querySelectorAll("input.js-initEval").forEach(inputElt => {
-            inputElt.setAttribute("data-support-id", elt.getAttribute("data-support-id"))
-            if (!inputElt.value) {
-                inputElt.classList.add("border-warning")
+    initFields(htmlElt) {
+        htmlElt.querySelectorAll('input.js-initEval, select.js-initEval').forEach(fieldElt => {
+            fieldElt.setAttribute('data-support-id', htmlElt.getAttribute('data-support-id'))
+            if (fieldElt.classList.contains('important') && ((fieldElt.nodeName === 'SELECT' && !this.selectType.getOption(fieldElt)) || !fieldElt.value)) {
+                fieldElt.classList.add('border-warning')
             }
-            inputElt.addEventListener("change", this.changeInput.bind(this, inputElt))
+            fieldElt.addEventListener('change', () => this.changeField(fieldElt))
         })
     }
 
     /**
-     * Initialise les Selects pour les éléments de la situations initiale.
-     * @param {HTMLElement} elt 
+     * Si modification d'un input ou d'un select, met à jour l'autre champ semblable si ce dernier est vide.
+     * @param {HTMLElement} fieldElt 
      */
-    initSelects(elt) {
-        elt.querySelectorAll("select.js-initEval").forEach(selectElt => {
-            selectElt.setAttribute("data-support-id", elt.getAttribute("data-support-id"))
-            if (!this.selectType.getOption(selectElt)) {
-                selectElt.classList.add("border-warning")
-            }
-            selectElt.addEventListener("change", this.changeSelect.bind(this, selectElt))
-        })
-    }
-
-    /**
-     * Si modification d'un Input, met à jour l'autre champ semblable si vide.
-     * @param {HTMLElement} elt 
-     */
-    changeInput(elt) {
-        if (elt.value) {
-            const dataId = elt.getAttribute("data-id")
-            const supportPersonId = elt.getAttribute("data-support-id")
-            document.querySelectorAll("input[data-id='" + dataId + "'][data-support-id='" + supportPersonId + "']").forEach(inputElt => {
-                if (!inputElt.value && this.editMode === "false") {
-                    inputElt.value = elt.value
-                    inputElt.classList.remove("border-warning")
+    changeField(fieldElt) {
+        if (fieldElt.value || (fieldElt.nodeName === 'SELECT' && this.selectType.getOption(fieldElt))) {
+            fieldElt.classList.remove("border-warning")
+            document.querySelectorAll(`[data-id=${fieldElt.getAttribute("data-id")}][data-support-id=${fieldElt.getAttribute("data-support-id")}]`).forEach(twinElt => {
+                if ((!twinElt.value && this.editMode === "false") || (fieldElt.nodeName === 'SELECT' && !this.selectType.getOption(twinElt))) {
+                    twinElt.classList.remove("border-warning")
+                    twinElt.value = fieldElt.value // si input Elt 
+                    this.selectType.setOption(twinElt, this.selectType.getOption(fieldElt)) // si select Elt 
+                    twinElt.click()
                 }
             })
-            elt.classList.remove("border-warning")
-        } else {
-            elt.classList.add("border-warning")
-        }
-        this.countEmptyImportantElts()
-    }
-
-    /**
-     * Si modification d'un Select, met à jour l'autre champ semblable si vide.
-     * @param {HTMLElement} elt 
-     */
-    changeSelect(elt) {
-        const optionSelected = this.selectType.getOption(elt)
-        if (optionSelected) {
-            document.querySelectorAll("select[data-id='" + elt.getAttribute("data-id") + "'][data-support-id='" + elt.getAttribute("data-support-id") + "']").forEach(selectElt => {
-                if (!selectElt.querySelector("option[selected]")) {
-                    this.selectType.setOption(selectElt, optionSelected)
-                    selectElt.classList.remove("border-warning")
-                    selectElt.click()
-                }
-            })
-            elt.classList.remove("border-warning")
-        } else {
-            elt.classList.add("border-warning")
+        } else if (fieldElt.classList.contains('important')) {
+            fieldElt.classList.add("border-warning")
         }
         this.countEmptyImportantElts()
     }
@@ -386,7 +335,7 @@ export default class evaluation {
 
     /**
      * Active/Désactive le bouton d'une personne au clic.
-     * @param {HTMLElement} btnElts 
+     * @param {Array} btnElts 
      * @param {HTMLButtonElement} selectedBtnElt 
      */
     activeBtn(btnElts, selectedBtnElt) {

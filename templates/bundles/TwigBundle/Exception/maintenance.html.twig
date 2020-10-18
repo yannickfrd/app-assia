@@ -1,27 +1,20 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-	<title>Maintenance | Esperer95.app</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	{{ encore_entry_link_tags("app") }}
-	<link rel="icon" href="{{ asset("images/logo_e95_blanc.ico") }}"/>
-</head>
-<body>
-    <header>
-        <nav class="navbar fixed-top bg-dark shadow">
-            <img id="logo-site" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95.app">
-        </nav>
-    </header>
+{% extends "baseLight.html.twig" %}
+
+{% set title = "Maintenance" %}
+
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
+
+{% block body %}
+
     <div class="container">
         <section class="row min-vh-80">
             <div class="m-auto text-center">
-                <h1 class="h2 mb-4">Maintenance</h1>
+                <h1 class="h2 mb-4">{{ title }}</h1>
                 <p class="mb-3">Le site est actuellement en maintenance.</p>
                 <p class="mb-3">Nous sommes désolés pour le désagrément.</p>
                 <p class="mb-3">Merci de patienter et de réessayer ultérieurement.</p>
             </div>
         </section>
     </div>
-</body>
-</html>
+
+{% endblock %}

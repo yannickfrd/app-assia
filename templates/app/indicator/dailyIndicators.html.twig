@@ -2,7 +2,7 @@
 
 {% set title = "Indicateurs quotidiens d'activité" %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 

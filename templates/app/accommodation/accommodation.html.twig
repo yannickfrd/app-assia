@@ -7,7 +7,7 @@
 {% set disabled = accommodation.isDisabled %}
 {% set title = EDIT_MODE ? accommodation.name ~ (disabled ? ' (désactivé)') : 'Nouveau groupe de places' %}
 
-{% block title %}{{ title }} | {{ title_website }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 
