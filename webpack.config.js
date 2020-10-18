@@ -25,6 +25,7 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('accommodation', './assets/js/accommodation/accommodation.js')
+    .addEntry('calendar', './assets/css/calendar.scss')
     .addEntry('contribution', './assets/js/contribution/contribution.js')
     .addEntry('directory', './assets/js/directory/directory.js')
     .addEntry('device', './assets/js/device/device.js')
@@ -35,6 +36,7 @@ Encore
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
     .addEntry('login', './assets/js/security/login.js')
+    .addEntry('multiSelect', './assets/js/multiSelect.js')
     .addEntry('note', './assets/js/note/note.js')
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/accommodation/accommodation.js')

@@ -8,145 +8,145 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <section>
-        <h1 class="h2 mb-3">Groupe</h1>
-        <div class="small text-secondary">
-            <p>Créé le {{ group_people.createdAt|date("d/m/Y à H:i") }}
-                {{ group_people.createdBy ? " par " ~ group_people.createdBy.fullname }}
-                {% if group_people.updatedAt != group_people.createdAt %}
-                    (modifié le {{ group_people.updatedAt|date("d/m/Y à H:i") }}
-                    {{ group_people.updatedBy ? " par " ~ group_people.updatedBy.fullname }})
-                {% endif %}
-            </p>
+        <section>
+            <h1 class="h2 mb-3">Groupe</h1>
+            <div class="small text-secondary">
+                <p>Créé le {{ group_people.createdAt|date("d/m/Y à H:i") }}
+                    {{ group_people.createdBy ? " par " ~ group_people.createdBy.fullname }}
+                    {% if group_people.updatedAt != group_people.createdAt %}
+                        (modifié le {{ group_people.updatedAt|date("d/m/Y à H:i") }}
+                        {{ group_people.updatedBy ? " par " ~ group_people.updatedBy.fullname }})
+                    {% endif %}
+                </p>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users mr-2"></span>Groupe</li>
+                </ol>
+            </nav>
+        </section>
+
+        {{ form_start(form) }}
+
+        <div>
+
+            {% include "model/msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="float-right">
+                        <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="table-people" class="table table-striped table-hover text-dark">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="th-w-20 align-middle"></th>
+                                    <th scope="col" class="th-w-20" data-toggle="tooltip" 
+                                        data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
+                                    <th scope="col" class="th-w-150 align-middle">Nom</th>
+                                    <th scope="col" class="th-w-150 align-middle">Prénom</th>
+                                    <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
+                                    <th scope="col" class="th-w-50 align-middle">Âge</th>
+                                    <th scope="col" class="th-w-100 align-middle">Sexe</th>
+                                    <th scope="col" class="th-w-150 align-middle">Rôle</th>
+                                    <th scope="col" class="th-w-50 align-middle"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for form_person in form.rolePeople.children %}
+                                {% set person = form_person.vars.value.person %}
+                                <tr id="js-person-{{ person.id }}" class="js-tr-person">
+                                    <th scope="row" class="align-middle">
+                                        <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
+                                            class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
+                                            title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
+                                        </a>
+                                    </th>
+                                    <td class="px-1 align-middle">
+                                        <div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
+                                            {{ form_widget(form_person.head) }}
+                                        </div>
+                                    </td>
+                                    <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
+                                    <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
+                                    {% set age = person.age %}
+                                    <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
+                                    <td class="text-center px-1 align-middle">{{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
+                                    <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
+                                    <td class="px-1">{{ form_widget(form_person.role) }}</td>
+                                    <td class="px-1 align-middle">
+                                        <button class="js-remove btn btn-danger shadow"
+                                            data-url="{{ path('role_person_remove', {'id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                            data-toggle="modal" data-target="#modal-remove-person" data-toggle="tooltip" data-placement="bottom"
+                                            title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{ path("group_search_person", {"id":group_people.id}) }}"
+                        class="btn btn-{{ theme_color }} btn-sm my-2">
+                        <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
+                    <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
+                        data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom" class="btn btn-secondary btn-sm my-2">
+                        <span class="fas fa-plus-square mr-2"></span>Naissance</a>
+                </div>
+            </div>
+
         </div>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users mr-2"></span>Groupe</li>
-            </ol>
-        </nav>
-    </section>
 
-    {{ form_start(form) }}
+        <div class="mt-3 mb-4">
 
-    <div>
-
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
-
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <div class="float-right">
-                    <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.familyTypology) }}</div>
+                <div class="col-md-6">{{ form_row(form.nbPeople) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    {% if is_granted("ROLE_ADMIN") %}
+                    <div class="float-left d-flex">
+                        <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('group_people_delete', {'id':group_people.id}) }}"
+                            data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
+                            onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
+                            class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+                    </div>
+                    {% endif %}
+                    <div class="float-right">
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table id="table-people" class="table table-striped table-hover text-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="th-w-20 align-middle"></th>
-                                <th scope="col" class="th-w-20" data-toggle="tooltip" 
-                                    data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
-                                <th scope="col" class="th-w-150 align-middle">Nom</th>
-                                <th scope="col" class="th-w-150 align-middle">Prénom</th>
-                                <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
-                                <th scope="col" class="th-w-50 align-middle">Âge</th>
-                                <th scope="col" class="th-w-100 align-middle">Sexe</th>
-                                <th scope="col" class="th-w-150 align-middle">Rôle</th>
-                                <th scope="col" class="th-w-50 align-middle"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for form_person in form.rolePeople.children %}
-                            {% set person = form_person.vars.value.person %}
-                            <tr id="js-person-{{ person.id }}" class="js-tr-person">
-                                <th scope="row" class="align-middle">
-                                    <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
-                                        class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
-                                        title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
-                                    </a>
-                                </th>
-                                <td class="px-1 align-middle">
-                                    <div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
-                                        {{ form_widget(form_person.head) }}
-                                    </div>
-                                </td>
-                                <td class="px-1">{{ form_widget(form_person.person.lastname) }}</td>
-                                <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
-                                {% set age = person.age %}
-                                <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
-                                <td class="text-center px-1 align-middle">{{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
-                                <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
-                                <td class="px-1">{{ form_widget(form_person.role) }}</td>
-                                <td class="px-1 align-middle">
-                                    <button class="js-remove btn btn-danger shadow"
-                                        data-url="{{ path('role_person_remove', {'id':form_person.vars.value.id, '_token':csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                        data-toggle="modal" data-target="#modal-remove-person" data-toggle="tooltip" data-placement="bottom"
-                                        title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <a href="{{ path("group_search_person", {"id":group_people.id}) }}"
-                    class="btn btn-{{ theme_color }} btn-sm my-2">
-                    <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
-                <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
-                    data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom" class="btn btn-secondary btn-sm my-2">
-                    <span class="fas fa-plus-square mr-2"></span>Naissance</a>
-            </div>
-        </div>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
+
+        <hr>
+
+        {% include "app/support/historySupportsGroup.html.twig" %}
+
+        <hr>
+
+        {% include "app/referent/historyReferents.html.twig" %}
 
     </div>
-
-    <div class="mt-3 mb-4">
-
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.familyTypology) }}</div>
-            <div class="col-md-6">{{ form_row(form.nbPeople) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-12">
-                {% if is_granted("ROLE_ADMIN") %}
-                <div class="float-left d-flex">
-                    <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('group_people_delete', {'id':group_people.id}) }}"
-                        data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
-                        onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
-                        class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
-                </div>
-                {% endif %}
-                <div class="float-right">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{ form_row(form._token) }}
-    {{ form_end(form, {"render_rest": false}) }}
-
-    <hr>
-
-    {% include "app/support/historySupportsGroup.html.twig" %}
-
-    <hr>
-
-    {% include "app/referent/historyReferents.html.twig" %}
-
-</div>
 
 {% include "app/groupPeople/removePerson.html.twig" %}
 
@@ -155,5 +155,5 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("groupPeople") }}
+    {{ encore_entry_script_tags("groupPeople") }}
 {% endblock %}

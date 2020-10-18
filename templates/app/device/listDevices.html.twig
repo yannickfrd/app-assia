@@ -4,95 +4,94 @@
 
 {% block body %}
 
-<section class="mt-0 mb-4">
-    <div class="container">
-        {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3">Dispositifs</h1>
-    </div>
+    <section class="mt-0 mb-4">
+        <div class="container">
+            {% include "model/msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">Dispositifs</h1>
+        </div>
 
-        {% include "app/device/searchDevices.html.twig" %}
+            {% include "app/device/searchDevices.html.twig" %}
 
-    <div class="container">
-        <div class="row align-items-baseline">
-            <div class="col-md-4 count align-middle">
-                <p class="align-middle">{{ devices.getTotalItemCount|number_format(0,'', ' ')}}
-                    dispositifs.</p>
+        <div class="container">
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">{{ devices.getTotalItemCount|number_format(0,'', ' ')}}
+                        dispositifs.</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(devices) }}</div>
+                </div>
             </div>
-            <div class="col-md-8">
-                <div class="navigation">{{ knp_pagination_render(devices) }}</div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(devices, "Nom du dispositif", "d.name") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(devices, "Coefficient", "d.coefficient") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(devices, "Hébergement", "d.accommodation") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-150">
+                                {{ knp_pagination_sortable(devices, "Description", "d.comment") }}  
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(devices, "Date de création", "d.createdAt") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(devices, "Créé par", "d.createdBy") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(devices, "Date de mise à jour", "d.updatedAt") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(devices, "Modifié par", "d.updatedBy") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-60">
+                                {{ knp_pagination_sortable(devices, "Désactivé", "d.disabledAt") }}
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for device in devices %}
+                        <tr class="{% if device.disabled %}text-secondary{% endif %}">
+                            <td  class="align-middle" scope="row">
+                                <a href="{{ path('admin_device_edit', {'id':device.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
+                                    data-placement="bottom" title="Voir la fiche du dispositif">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td class="align-middle">{% if device.disabled %}<del>{{ device.name }}</del> (désactivé){% else %}{{ device.name }}{% endif %}</td>
+                            <td class="align-middle">{{ device.coefficient }}</td>
+                            <td class="align-middle">{{ device.accommodationToString }}</td>
+                            <td class="align-middle">{{ device.comment }}</td>
+                            <td class="align-middle">{{ device.createdAt|date("d/m/Y H:i") }}</td>
+                            <td class="align-middle">{{ device.createdBy ? device.createdBy.fullname }}</td>
+                            <td class="align-middle">{{ device.updatedAt|date("d/m/Y H:i") }}</td>
+                            <td class="align-middle">{{ device.updatedBy ? device.updatedBy.fullname }}</td>
+                            <td class="align-middle">{{ device.disabledAt ? "Oui" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(devices, "Nom du dispositif", "d.name") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(devices, "Coefficient", "d.coefficient") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(devices, "Hébergement", "d.accommodation") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(devices, "Description", "d.comment") }}  
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(devices, "Date de création", "d.createdAt") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(devices, "Créé par", "d.createdBy") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(devices, "Date de mise à jour", "d.updatedAt") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(devices, "Modifié par", "d.updatedBy") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-60">
-                            {{ knp_pagination_sortable(devices, "Désactivé", "d.disabledAt") }}
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for device in devices %}
-                    <tr class="{% if device.disabled %}text-secondary{% endif %}">
-                        <td  class="align-middle" scope="row">
-                            <a href="{{ path('admin_device_edit', {'id':device.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                data-placement="bottom" title="Voir la fiche du dispositif">
-                                <span class="fas fa-eye"></span>
-                            </a>
-                        </td>
-                        <td class="align-middle">{% if device.disabled %}<del>{{ device.name }}</del> (désactivé){% else %}{{ device.name }}{% endif %}</td>
-                        <td class="align-middle">{{ device.coefficient }}</td>
-                        <td class="align-middle">{{ device.accommodationToString }}</td>
-                        <td class="align-middle">{{ device.comment }}</td>
-                        <td class="align-middle">{{ device.createdAt|date("d/m/Y H:i") }}</td>
-                        <td class="align-middle">{{ device.createdBy ? device.createdBy.fullname }}</td>
-                        <td class="align-middle">{{ device.updatedAt|date("d/m/Y H:i") }}</td>
-                        <td class="align-middle">{{ device.updatedBy ? device.updatedBy.fullname }}</td>
-                        <td class="align-middle">{{ device.disabledAt ? "Oui" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="navigation">
-            {{ knp_pagination_render(devices) }}
-        </div>
-        <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
-                <span class="fas fa-plus-square mr-2"></span>Créer un nouveau dispositif</a>
-        </p>
-</section>
+            <div class="navigation">
+                {{ knp_pagination_render(devices) }}
+            </div>
+            <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
+                    <span class="fas fa-plus-square mr-2"></span>Créer un nouveau dispositif</a>
+            </p>
+    </section>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("directory") }}
-{{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

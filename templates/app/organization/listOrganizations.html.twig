@@ -4,82 +4,82 @@
 
 {% block body %}
 
-<section class="mt-0 mb-4">
-    <div class="container">
-        {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3">Organismes prescripteurs</h1>
+    <section class="mt-0 mb-4">
+        <div class="container">
+            {% include "model/msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">Organismes prescripteurs</h1>
 
-        <div class="row align-items-baseline">
-            <div class="col-md-4 count align-middle">
-                <p class="align-middle">{{ organizations.getTotalItemCount|number_format(0,'', ' ')}}<!--
-                --> organismes.</p>
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">{{ organizations.getTotalItemCount|number_format(0,'', ' ')}}<!--
+                    --> organismes.</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(organizations) }}</div>
+                </div>
             </div>
-            <div class="col-md-8">
-                <div class="navigation">{{ knp_pagination_render(organizations) }}</div>
+
+            {% if is_granted("ROLE_ADMIN") %}
+            <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow js-create-organization">
+                <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+            {% endif %}
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(organizations, "Organisme orienteur ou prescripteur", "d.name") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-150">
+                                {{ knp_pagination_sortable(organizations, "Description", "d.comment") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(organizations, "Date de création", "d.createdAt") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(organizations, "Créé par", "d.createdBy") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(organizations, "Date de mise à jour", "d.updatedAt") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(organizations, "Modifié par", "d.updatedBy") }}
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for organization in organizations %}
+                        <tr>
+                            <th scope="row">
+                                {% if is_granted("ROLE_ADMIN") %}
+                                <a href="{{ path('admin_organization_edit', {'id': organization.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
+                                    data-placement="bottom" title="Voir la fiche du organisme">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                                {% endif %}
+                            </th>
+                            <td>{{ organization.name }}</td>
+                            <td>{{ organization.comment }}</td>
+                            <td>{{ organization.createdAt|date("d/m/Y") }}</td>
+                            <td>{{ organization.createdBy ? organization.createdBy.fullname }}</td>
+                            <td>{{ organization.updatedAt|date("d/m/Y") }}</td>
+                            <td>{{ organization.updatedBy ? organization.updatedBy.fullname }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        {% if is_granted("ROLE_ADMIN") %}
-        <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow js-create-organization">
-            <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
-        {% endif %}
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-120">
-                            {{ knp_pagination_sortable(organizations, "Organisme orienteur ou prescripteur", "d.name") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-150">
-                            {{ knp_pagination_sortable(organizations, "Description", "d.comment") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(organizations, "Date de création", "d.createdAt") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(organizations, "Créé par", "d.createdBy") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(organizations, "Date de mise à jour", "d.updatedAt") }}
-                        </th>
-                        <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(organizations, "Modifié par", "d.updatedBy") }}
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for organization in organizations %}
-                    <tr>
-                        <th scope="row">
-                            {% if is_granted("ROLE_ADMIN") %}
-                            <a href="{{ path('admin_organization_edit', {'id': organization.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                 data-placement="bottom" title="Voir la fiche du organisme">
-                                <span class="fas fa-eye"></span>
-                            </a>
-                            {% endif %}
-                        </th>
-                        <td>{{ organization.name }}</td>
-                        <td>{{ organization.comment }}</td>
-                        <td>{{ organization.createdAt|date("d/m/Y") }}</td>
-                        <td>{{ organization.createdBy ? organization.createdBy.fullname }}</td>
-                        <td>{{ organization.updatedAt|date("d/m/Y") }}</td>
-                        <td>{{ organization.updatedBy ? organization.updatedBy.fullname }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="navigation">
-            {{ knp_pagination_render(organizations) }}
-        </div>
-        {% if is_granted("ROLE_ADMIN") %}
-        <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow js-create-organization">
-            <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
-        {% endif %}
-</section>
+            <div class="navigation">
+                {{ knp_pagination_render(organizations) }}
+            </div>
+            {% if is_granted("ROLE_ADMIN") %}
+            <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow js-create-organization">
+                <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+            {% endif %}
+    </section>
 
 {% endblock %}

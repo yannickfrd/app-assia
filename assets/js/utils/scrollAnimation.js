@@ -14,6 +14,10 @@ export default class ScrollAnimation {
         }
     }
 
+    /**
+     * @param {String} classOff 
+     * @param {String} classOn 
+     */
     init(classOff = 'reveal', classOn = 'reveal-on') {
         const callback = (entries, observer) => {
             entries.forEach(entry => {
@@ -21,12 +25,6 @@ export default class ScrollAnimation {
                     entry.target.classList.add(classOn)
                     observer.unobserve(entry.target)
                 }
-                //   entry.boundingClientRect
-                //   entry.intersectionRect
-                //   entry.isIntersecting
-                //   entry.rootBounds
-                //   entry.target
-                //   entry.time
             })
         }
 

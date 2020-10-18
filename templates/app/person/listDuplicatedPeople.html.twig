@@ -4,75 +4,75 @@
 
 {% block body %}
 
-<section class="my-0">
+    <section class="my-0">
 
-    <div class="container">
-        {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3">Doublons | Personnes</h1>
-    </div>
+        <div class="container">
+            {% include "model/msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">Doublons | Personnes</h1>
+        </div>
 
-    {% include "app/person/searchDuplicatedPeople.html.twig" %}
+        {% include "app/person/searchDuplicatedPeople.html.twig" %}
 
-    <div class="container">
+        <div class="container">
 
-        <div class="row align-items-baseline">
-            <div class="col-md-4 count align-middle">
-                <p class="align-middle">Résultat : {{ people|length|number_format(0,'', ' ')}} <!--
-                -->personne{% if people|length > 1 %}s{% endif %}.</p>
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">Résultat : {{ people|length|number_format(0,'', ' ')}} <!--
+                    -->personne{% if people|length > 1 %}s{% endif %}.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">Nom </th>
+                            <th scope="col" class="align-middle th-w-120">Prénom</th>
+                            <th scope="col" class="align-middle th-date">Date de naissance</th>
+                            <th scope="col" class="align-middle th-w-80">Sexe</th>
+                            <th scope="col" class="align-middle th-date">Date de création</th>
+                            <th scope="col" class="align-middle th-date">Date de mise à jour</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% set search = form.vars.value %}
+                        {% for person in people %}
+                        <tr>
+                            <th scope="row"> 
+                                <a href="{{ path('people', { 
+                                    'lastname':search.lastname ? person.lastname,
+                                    'firstname':search.firstname ? person.firstname,
+                                    'birthdate':search.birthdate ? person.birthdate|date('Y-m-d') }) }}"
+                                    class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir les doublons">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                            </th>
+                            <td>{{ person.lastname }} {{ person.usename ? " (" ~ person.usename ~ ")" }}
+                            </td>
+                            <td class="text-capitalize">{{ person.firstname }}</td>
+                            <td>{% if person.birthdate %} {{person.birthdate|date("d/m/Y") }}<br />
+                                ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
+                                an{% endif %}){% endif %}</td>
+                            <td>{% if person.gender == constant("GENDER_FEMALE", person) %}
+                                <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
+                                {% elseif person.gender == constant("GENDER_MALE", person) %}
+                                <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
+                                {% endif %} </td>
+                            <td>{{ person.createdAt|date("d/m/Y H:i") }}</td>
+                            <td>{{ person.updatedAt|date("d/m/Y H:i") }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-150">Nom </th>
-                        <th scope="col" class="align-middle th-w-120">Prénom</th>
-                        <th scope="col" class="align-middle th-date">Date de naissance</th>
-                        <th scope="col" class="align-middle th-w-80">Sexe</th>
-                        <th scope="col" class="align-middle th-date">Date de création</th>
-                        <th scope="col" class="align-middle th-date">Date de mise à jour</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% set search = form.vars.value %}
-                    {% for person in people %}
-                    <tr>
-                        <th scope="row"> 
-                            <a href="{{ path('people', { 
-                                'lastname':search.lastname ? person.lastname,
-                                'firstname':search.firstname ? person.firstname,
-                                'birthdate':search.birthdate ? person.birthdate|date('Y-m-d') }) }}"
-                                class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir les doublons">
-                                <span class="fas fa-eye"></span>
-                            </a>
-                        </th>
-                        <td>{{ person.lastname }} {{ person.usename ? " (" ~ person.usename ~ ")" }}
-                        </td>
-                        <td class="text-capitalize">{{ person.firstname }}</td>
-                        <td>{% if person.birthdate %} {{person.birthdate|date("d/m/Y") }}<br />
-                            ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
-                            an{% endif %}){% endif %}</td>
-                        <td>{% if person.gender == constant("GENDER_FEMALE", person) %}
-                            <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
-                            {% elseif person.gender == constant("GENDER_MALE", person) %}
-                            <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
-                            {% endif %} </td>
-                        <td>{{ person.createdAt|date("d/m/Y H:i") }}</td>
-                        <td>{{ person.updatedAt|date("d/m/Y H:i") }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</section>
+    </section>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

@@ -5,107 +5,107 @@
 
 {% block body %}
 
-<div class="container">
-    {% include "model/msgFlash.html.twig" %}
-    <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span><!--
-    -->{{ service ? service.name : " Sous-services" }}</h1>
-</div>
-
-{% include "app/dashboard/searchOccupancy.html.twig" %}
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <p><a href="{{ path('occupancy_services') }}" class="text-{{ theme_color }}"><!--
-                --><span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
-            </p>
-            {% set interval = date(start).diff(date(end)) %}
-            <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
-            --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>
-        </div>
+    <div class="container">
+        {% include "model/msgFlash.html.twig" %}
+        <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span><!--
+        -->{{ service ? service.name : " Sous-services" }}</h1>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive-sm">
-                <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
-                    <thead>
-                        <tr>
-                            <th scope="row" class="align-middle th-w-20"></th>
-                            <th class="align-middle th-w-150">Sous-service</th>
-                            <th class="align-middle th-w-100 text-right">Nombre de groupes de places</th>
-                            <th class="align-middle th-w-100 text-right">Nombre de places</th>
-                            <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
-                            <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
-                            <th class="align-middle th-w-100 text-right">Nb moyen de places/jour</th>
-                            <th class="align-middle th-w-100 text-right">Nb moyen de personnes/jour</th>
-                            <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% set example = "" %}
-                        {% for subServiceId, subService in datas.subServices %}
-                            {% set ocupancyRate = ((subService.occupancyDays / subService.capacityDays) * 100)|round(1, "common") %}
-                            {% if loop.first %}
-                            {% set example %}
-                                {% apply spaceless %}
-                                    Le subService {{ subService.name }} dispose de {{ subService.nbAccommodations }} groupes de places
-                                    (soit {{ subService.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} jours), 
-                                    sa capacité d'accueil maximale représente {{ subService.capacityDays|number_format(0, ",", " ") }} 
-                                    nuitées (soit une moyenne de {{ subService.averageCapacity|round(1, "common") }} places par jour).
-                                    Sur ces places, {{ subService.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
-                                    soit une occupation moyenne de {{ subService.averageOccupancy|round(1, "common") }} personnes par jour. 
-                                    Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
-                                {% endapply %}
-                            {% endset %}
-                        {% endif %}
+
+    {% include "app/dashboard/searchOccupancy.html.twig" %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="{{ path('occupancy_services') }}" class="text-{{ theme_color }}"><!--
+                    --><span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
+                </p>
+                {% set interval = date(start).diff(date(end)) %}
+                <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
+                --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive-sm">
+                    <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
+                        <thead>
                             <tr>
-                                <td scope="row" class="align-middle text-center">
-                                    <a href="{{ path('occupancy_sub_service_accommodations', {'id': subServiceId, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
-                                        title="Voir le détail des groupes de places du subService"><span class="fas fa-eye fa-sm"></span>
-                                    </a>
-                                </td>
-                                <td class="align-middle">{{ subService.name }}</td>
-                                <td class="align-middle text-right">{{ subService.nbAccommodations }}</td>
-                                <td class="align-middle text-right">{{ subService.nbPlaces }}</td>
-                                <td class="align-middle text-right">{{ subService.capacityDays|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ subService.occupancyDays|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ subService.averageCapacity|round(1, "common") }}</td>
-                                <td class="align-middle text-right">{{ subService.averageOccupancy|round(1, "common") }}</td>
-                                <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
+                                <th scope="row" class="align-middle th-w-20"></th>
+                                <th class="align-middle th-w-150">Sous-service</th>
+                                <th class="align-middle th-w-100 text-right">Nombre de groupes de places</th>
+                                <th class="align-middle th-w-100 text-right">Nombre de places</th>
+                                <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
+                                <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de places/jour</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/jour</th>
+                                <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% set example = "" %}
+                            {% for subServiceId, subService in datas.subServices %}
+                                {% set ocupancyRate = ((subService.occupancyDays / subService.capacityDays) * 100)|round(1, "common") %}
+                                {% if loop.first %}
+                                {% set example %}
+                                    {% apply spaceless %}
+                                        Le subService {{ subService.name }} dispose de {{ subService.nbAccommodations }} groupes de places
+                                        (soit {{ subService.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} jours), 
+                                        sa capacité d'accueil maximale représente {{ subService.capacityDays|number_format(0, ",", " ") }} 
+                                        nuitées (soit une moyenne de {{ subService.averageCapacity|round(1, "common") }} places par jour).
+                                        Sur ces places, {{ subService.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
+                                        soit une occupation moyenne de {{ subService.averageOccupancy|round(1, "common") }} personnes par jour. 
+                                        Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
+                                    {% endapply %}
+                                {% endset %}
+                            {% endif %}
+                                <tr>
+                                    <td scope="row" class="align-middle text-center">
+                                        <a href="{{ path('occupancy_sub_service_accommodations', {'id': subServiceId, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
+                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                            title="Voir le détail des groupes de places du subService"><span class="fas fa-eye fa-sm"></span>
+                                        </a>
+                                    </td>
+                                    <td class="align-middle">{{ subService.name }}</td>
+                                    <td class="align-middle text-right">{{ subService.nbAccommodations }}</td>
+                                    <td class="align-middle text-right">{{ subService.nbPlaces }}</td>
+                                    <td class="align-middle text-right">{{ subService.capacityDays|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ subService.occupancyDays|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ subService.averageCapacity|round(1, "common") }}</td>
+                                    <td class="align-middle text-right">{{ subService.averageOccupancy|round(1, "common") }}</td>
+                                    <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
+                                    <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="font-weight-bold">
+                                <td scope="row" colspan="2" class="align-middle text-center">Total</td>
+                                <td class="align-middle text-right">{{ datas.nbAccommodations|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
+                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
+                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") : null %}
+                                <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
                                 <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                                 </td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr class="font-weight-bold">
-                            <td scope="row" colspan="2" class="align-middle text-center">Total</td>
-                            <td class="align-middle text-right">{{ datas.nbAccommodations|number_format(0, ",", " ") }}</td>
-                            <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
-                            <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
-                            <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
-                            <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
-                            <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
-                            {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") : null %}
-                            <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
-                            <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="justify small text-secondary"><span class="font-weight-bold">Note de lecture : </span>{{ example }}</p>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <p class="justify small text-secondary"><span class="font-weight-bold">Note de lecture : </span>{{ example }}</p>
-        </div>
-    </div>
-</div>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

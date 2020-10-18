@@ -3,79 +3,77 @@
 {% form_theme form_search "bootstrap_4_layout.html.twig" %}
 {% form_theme form "bootstrap_4_layout.html.twig" %}
 
-{% block title %}
-Documents{{ parent() }}
-{% endblock %}
+{% block title %}Documents{{ parent() }}{% endblock %}
 
 {% block body %}
 
-<div class="container">
+	<div class="container">
 
-	{% set title = "Documents" %}
-	{% include "app/support/navSuppport.html.twig" %}
+		{% set title = "Documents" %}
+		{% include "app/support/navSuppport.html.twig" %}
 
-	<div class="row">
-		<div class="col-md-6 mb-1">
-			<button id="js-new-document" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-document" 
-				data-toggle="tooltip" data-placement="bottom" title="Ajouter un nouveau document"><span class="fas fa-plus-square mr-2"></span>Nouveau document</button>
-			<div class="d-inline align-middle">Total :
-				<span id="count-documents">{{ documents.getTotalItemCount|number_format(0,'', ' ')}}</span>
+		<div class="row">
+			<div class="col-md-6 mb-1">
+				<button id="js-new-document" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="modal" data-target="#modal-document" 
+					data-toggle="tooltip" data-placement="bottom" title="Ajouter un nouveau document"><span class="fas fa-plus-square mr-2"></span>Nouveau document</button>
+				<div class="d-inline align-middle">Total :
+					<span id="count-documents">{{ documents.getTotalItemCount|number_format(0,'', ' ')}}</span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="navigation">{{ knp_pagination_render(documents) }}</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="navigation">{{ knp_pagination_render(documents) }}</div>
-		</div>
-	</div>
 
-	{% include "app/document/searchSupportDocuments.html.twig" %}
+		{% include "app/document/searchSupportDocuments.html.twig" %}
 
-	<div class="table-responsive">
-		<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-			<thead>
-				<tr>
-					<th scope="row" class="align-middle th-w-20"></th>
-					<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
-					<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
-					<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
-					<th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
-					<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Date d'ajout", "d.createdAt") }}</th>
-					<th scope="col" class="align-middle th-w-20"></th>
-				</tr>
-			</thead>
-
-			<tbody id="container-documents" data-support="{{ support.id }}">
-				{% for document in documents %}
-					<tr id="document-{{ document.id }}" class="js-document">
-						<th scope="row" class="align-middle text-center">
-							<a href="{{ path('document_read', {'id': document.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-								data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
-							</a>
-						</th>
-						<td class="align-middle js-document-name" data-toggle="modal" data-target="#modal-document">{{ document.name }}</td>
-						<td class="align-middle js-document-type" data-toggle="modal" data-target="#modal-document" data-value="{{ document.type }}">{{ document.typeToString }}</td>
-						<td class="align-middle js-document-content" data-toggle="modal" data-target="#modal-document">{{ document.content }}</td>
-						<td class="align-middle js-document-size text-right" data-toggle="modal" data-target="#modal-document">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
-						<td class="align-middle js-document-createdAt" data-toggle="modal" data-target="#modal-document">{{ document.createdAt|date("d/m/Y H:i") }}</td>
-						<td class="align-middle text-center">
-							<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
-								data-placement="bottom" title="Supprimer le document" data-toggle="modal" data-target="#modal-block">
-								<span class="fas fa-trash-alt"></span>
-							</button>
-						</td>
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+				<thead>
+					<tr>
+						<th scope="row" class="align-middle th-w-20"></th>
+						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
+						<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
+						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
+						<th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
+						<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Date d'ajout", "d.createdAt") }}</th>
+						<th scope="col" class="align-middle th-w-20"></th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+
+				<tbody id="container-documents" data-support="{{ support.id }}">
+					{% for document in documents %}
+						<tr id="document-{{ document.id }}" class="js-document">
+							<th scope="row" class="align-middle text-center">
+								<a href="{{ path('document_read', {'id': document.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+									data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
+								</a>
+							</th>
+							<td class="align-middle js-document-name" data-toggle="modal" data-target="#modal-document">{{ document.name }}</td>
+							<td class="align-middle js-document-type" data-toggle="modal" data-target="#modal-document" data-value="{{ document.type }}">{{ document.typeToString }}</td>
+							<td class="align-middle js-document-content" data-toggle="modal" data-target="#modal-document">{{ document.content }}</td>
+							<td class="align-middle js-document-size text-right" data-toggle="modal" data-target="#modal-document">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
+							<td class="align-middle js-document-createdAt" data-toggle="modal" data-target="#modal-document">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+							<td class="align-middle text-center">
+								<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
+									data-placement="bottom" title="Supprimer le document" data-toggle="modal" data-target="#modal-block">
+									<span class="fas fa-trash-alt"></span>
+								</button>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="navigation">{{ knp_pagination_render(documents) }}</div>
+
+		{% include "app/document/modalDocument.html.twig" %}
+		{% include "app/document/modalDeleteDocument.html.twig" %}
+
 	</div>
-
-	<div class="navigation">{{ knp_pagination_render(documents) }}</div>
-
-	{% include "app/document/modalDocument.html.twig" %}
-	{% include "app/document/modalDeleteDocument.html.twig" %}
-
-</div>
 
 {% endblock %}{% block javascripts %}
-{{ encore_entry_script_tags("search") }}
-{{ encore_entry_script_tags("document") }}
+    {{ encore_entry_script_tags("search") }}
+	{{ encore_entry_script_tags("document") }}
 {% endblock javascripts %}

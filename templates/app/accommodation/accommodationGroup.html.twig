@@ -8,100 +8,100 @@
 
 {% block body %}
 
-<div class="container">
+	<div class="container">
 
-	{% set title = "Logement/hébergement" %}
-	{% include "app/support/navSuppport.html.twig" %}
+		{% set title = "Logement/hébergement" %}
+		{% include "app/support/navSuppport.html.twig" %}
 
-	{{ form_start(form) }}
+		{{ form_start(form) }}
 
-	{% include "model/msgFlash.html.twig" %}
-	<div id="js-msg-flash-content"></div>
+		{% include "model/msgFlash.html.twig" %}
+		<div id="js-msg-flash-content"></div>
 
-	<div class="form-group row">
-		<div class="col-md-6">{{ form_row(form.accommodation) }}</div>
-		<div class="col-md-6">{{ form_row(form.startDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.endDate) }}</div>
-		<div class="col-md-6">{{ form_row(form.endReason) }}</div>
-		<div class="col-md-6">{{ form_row(form.commentEndReason) }}</div>
-	</div>
-	<div class="form-group row">
-		<div class="col-md-12">
-			{% if EDIT_MODE and is_granted("DELETE", support) %}
-			<div class="float-left d-flex">
-				<a href="{{ path('support_group_people_accommodation_delete', {'id':form.vars.value.id}) }}" 
-					class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
-					onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
-					<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
-			</div>
-			{% endif %}
-			<div class="mb-4 float-right">
-			     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.accommodation) }}</div>
+			<div class="col-md-6">{{ form_row(form.startDate) }}</div>
+			<div class="col-md-6">{{ form_row(form.endDate) }}</div>
+			<div class="col-md-6">{{ form_row(form.endReason) }}</div>
+			<div class="col-md-6">{{ form_row(form.commentEndReason) }}</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-12">
+				{% if EDIT_MODE and is_granted("DELETE", support) %}
+				<div class="float-left d-flex">
+					<a href="{{ path('support_group_people_accommodation_delete', {'id':form.vars.value.id}) }}" 
+						class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
+						onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
+						<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+				</div>
+				{% endif %}
+				<div class="mb-4 float-right">
+					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	{% if EDIT_MODE %}
-	
-		<hr>
+		{% if EDIT_MODE %}
+		
+			<hr>
 
-		<section>
-			<h2 class="h5 my-4">Personnes logées/hébergées</h2>
-			<div class="table-responsive">
-				<table class="table table-sm table-striped table-hover text-dark shadow-sm">
-					<thead>
-						<tr>
-							<th scope="col" class="align-middle th-w-20"></th>
-							<th scope="col" class="align-middle th-w-150">Nom et prénom</th>
-							<th scope="col" class="align-middle th-date">Date de début</th>
-							<th scope="col" class="align-middle th-date">Date de fin</th>
-							<th scope="col" class="align-middle th-w-150">Motif de fin</th>
-							<th scope="col" class="align-middle th-w-150">Commentaire</th>
-							<th scope="col" class="align-middle th-w-20"></th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for form_person_accommodation in form.accommodationPeople.children %}
-							{% set person = form_person_accommodation.vars.data.person %}
-							<tr class="js-tr-person-place">
-								<th scope="row"></th>
-								<td class="px-1 align-middle">{{ person.fullname }}</td>
-								<td class="px-1">{{ form_widget(form_person_accommodation.startDate) }}</td>
-								<td class="px-1">{{ form_widget(form_person_accommodation.endDate) }}</td>
-								<td class="px-1">{{ form_widget(form_person_accommodation.endReason) }}</td>
-								<td class="px-1">{{ form_widget(form_person_accommodation.commentEndReason) }}</td>
-								<td class="align-middle text-center">
-									<a href="{{ path('support_person_accommodation_delete', {'id':form_person_accommodation.vars.value.id}) }}" 
-										class="btn btn-danger btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne de la prise en charge" 
-										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne de la prise en charge ?')){return true;}else{return false;}">
-										<span class="fas fa-trash-alt"><span class="sr-only">Supprimer</span></span>
-									</a>
-								</td>
+			<section>
+				<h2 class="h5 my-4">Personnes logées/hébergées</h2>
+				<div class="table-responsive">
+					<table class="table table-sm table-striped table-hover text-dark shadow-sm">
+						<thead>
+							<tr>
+								<th scope="col" class="align-middle th-w-20"></th>
+								<th scope="col" class="align-middle th-w-150">Nom et prénom</th>
+								<th scope="col" class="align-middle th-date">Date de début</th>
+								<th scope="col" class="align-middle th-date">Date de fin</th>
+								<th scope="col" class="align-middle th-w-150">Motif de fin</th>
+								<th scope="col" class="align-middle th-w-150">Commentaire</th>
+								<th scope="col" class="align-middle th-w-20"></th>
 							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-			<div class="form-group row">
-				<div class="col-md-12">
-					<a href="{{ path('support_group_people_accommodation_add_people', {'id':form.vars.value.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
-						<span class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe à la prise en charge</a>
+						</thead>
+						<tbody>
+							{% for form_person_accommodation in form.accommodationPeople.children %}
+								{% set person = form_person_accommodation.vars.data.person %}
+								<tr class="js-tr-person-place">
+									<th scope="row"></th>
+									<td class="px-1 align-middle">{{ person.fullname }}</td>
+									<td class="px-1">{{ form_widget(form_person_accommodation.startDate) }}</td>
+									<td class="px-1">{{ form_widget(form_person_accommodation.endDate) }}</td>
+									<td class="px-1">{{ form_widget(form_person_accommodation.endReason) }}</td>
+									<td class="px-1">{{ form_widget(form_person_accommodation.commentEndReason) }}</td>
+									<td class="align-middle text-center">
+										<a href="{{ path('support_person_accommodation_delete', {'id':form_person_accommodation.vars.value.id}) }}" 
+											class="btn btn-danger btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne de la prise en charge" 
+											onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir retirer cette personne de la prise en charge ?')){return true;}else{return false;}">
+											<span class="fas fa-trash-alt"><span class="sr-only">Supprimer</span></span>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
-			</div>
-			<div class="form-group row">
-				<div class="col-md-12">
-					<div class="float-right">
-						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+				<div class="form-group row">
+					<div class="col-md-12">
+						<a href="{{ path('support_group_people_accommodation_add_people', {'id':form.vars.value.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
+							<span class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe à la prise en charge</a>
 					</div>
 				</div>
-			</div>
-		</section>
-	{% endif %}
+				<div class="form-group row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+						</div>
+					</div>
+				</div>
+			</section>
+		{% endif %}
 
-	{{ form_row(form._token) }}
-	{{ form_end(form, {"render_rest": false}) }}
+		{{ form_row(form._token) }}
+		{{ form_end(form, {"render_rest": false}) }}
 
-</div>
+	</div>
 
 {% endblock %}
 

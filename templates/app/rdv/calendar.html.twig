@@ -2,7 +2,9 @@
 
 {% block title %}Agenda{{ parent() }}{% endblock %}
 
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+	{{ encore_entry_link_tags("calendar") }}
+{% endblock %}
 
 {% block body %}
 

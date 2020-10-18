@@ -10,141 +10,141 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    {{ form_start(form)}}
-    
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3">{{ title }}</h1>
+        {{ form_start(form)}}
+        
+        <section>
+            {% include "model/msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.firstname) }}</div>
+                <div class="col-md-6">{{ form_row(form.lastname) }}</div>
+                <div class="col-md-6">{{ form_row(form.email) }}</div>
+                <div class="col-md-6">{{ form_row(form.phone1) }}</div>
+                <div class="col-md-6">{{ form_row(form.status) }}</div>
+                <div class="col-md-6">{{ form_row(form.roles) }}</div>
+                <div class="col-md-6">{{ form_row(form.username) }}</div>
+            </div>
+
+            <div class="form-group row mb-4">
+                <div class="col-md-12">
+                    <div class="float-left d-flex">
+                        <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
+                            title="{{ disabled ? 'Réactiver' : 'Désactiver' }} cet utilisateur" data-toggle="tooltip" data-placement="bottom"
+                            {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"{% endif %}>
+                            {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                    </div>
+                    <div class="float-right">
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
         <hr>
-        <div class="row">
-            <div class="col-md-6">{{ form_row(form.firstname) }}</div>
-            <div class="col-md-6">{{ form_row(form.lastname) }}</div>
-            <div class="col-md-6">{{ form_row(form.email) }}</div>
-            <div class="col-md-6">{{ form_row(form.phone1) }}</div>
-            <div class="col-md-6">{{ form_row(form.status) }}</div>
-            <div class="col-md-6">{{ form_row(form.roles) }}</div>
-            <div class="col-md-6">{{ form_row(form.username) }}</div>
-        </div>
-
-        <div class="form-group row mb-4">
-            <div class="col-md-12">
-                <div class="float-left d-flex">
-                    <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('security_user_disable', {'id':form.vars.value.id}) }}"
-                        title="{{ disabled ? 'Réactiver' : 'Désactiver' }} cet utilisateur" data-toggle="tooltip" data-placement="bottom"
-                        {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"{% endif %}>
-                        {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
-                </div>
-                <div class="float-right">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }}">Enregistrer</button>
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-    <hr>
-    
-    <section id="user-services">
-        <h2 class="h4 mb-4">Services rattachés</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="table-responsive table-sm">
-                    <table id="function-table" class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="align-middle th-w-150">Service</th>
-                                <th scope="col" class="align-middle th-w-20"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="serviceUser-fields-list" 
-                            data-prototype="<td class='align-middle'>{{ form_widget(form.serviceUser.vars.prototype.service)|e }}"
-                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceUser|length }}">
-                            {% for role in form.serviceUser %}
-                            <tr id="{{ role.vars.id }}">
-                                <td>{{ form_widget(role.service) }}</td>
-                                <td class="align-middle">
-                                    <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mb-4">
-            <div class="col-md-12">
-                <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                    data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
-                    service</button>
-                <div class="float-right">
-                    <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }}">Enregistrer</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {% if form.vars.value.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
-    <hr>
-    <section id="supports-by-device">
-        <h2 class="h4 mb-4">Nombre théorique de suivis par dispositif</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="table-responsive table-sm">
-                    <table id="function-table" class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="align-middle th-w-150">Dispositif</th>
-                                <th scope="col" class="align-middle th-w-120">Nombre de suivis</th>
-                                <th scope="col" class="align-middle th-w-20"></th>
-                            </tr>
-                        </thead>
-
-                        {% set prototype %}
-                            {% apply spaceless %}
-                                <td class="align-middle">{{ form_widget(form.userDevices.vars.prototype.device) }}</td>
-                                <td class="align-middle">{{ form_widget(form.userDevices.vars.prototype.nbSupports) }}</td>
-                            {% endapply %}
-                        {% endset %}
-
-                        <tbody  id="userDevices-fields-list" data-prototype="{{ prototype|e }}"
-                            data-widget-tags="<tr></tr>" data-widget-counter="{{ form.userDevices|length }}">
-                            {% for userDevice in form.userDevices %}
-                                <tr id="{{ userDevice.vars.id }}">
-                                    <td class="align-middle">{{ form_widget(userDevice.device) }}</td>
-                                    <td class="align-middle">{{ form_widget(userDevice.nbSupports) }}</td>
+        
+        <section id="user-services">
+            <h2 class="h4 mb-4">Services rattachés</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="table-responsive table-sm">
+                        <table id="function-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="align-middle th-w-150">Service</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="serviceUser-fields-list" 
+                                data-prototype="<td class='align-middle'>{{ form_widget(form.serviceUser.vars.prototype.service)|e }}"
+                                data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceUser|length }}">
+                                {% for role in form.serviceUser %}
+                                <tr id="{{ role.vars.id }}">
+                                    <td>{{ form_widget(role.service) }}</td>
                                     <td class="align-middle">
                                         <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
                                     </td>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group row mb-4">
-            <div class="col-md-12">
-                <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                    data-list-selector="#userDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
-                <div class="float-right">
-                    <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }}">Enregistrer</button>
+            <div class="form-group row mb-4">
+                <div class="col-md-12">
+                    <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                        data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
+                        service</button>
+                    <div class="float-right">
+                        <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    {% endif %}
+        </section>
+
+        {% if form.vars.value.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
+        <hr>
+        <section id="supports-by-device">
+            <h2 class="h4 mb-4">Nombre théorique de suivis par dispositif</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="table-responsive table-sm">
+                        <table id="function-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="align-middle th-w-150">Dispositif</th>
+                                    <th scope="col" class="align-middle th-w-120">Nombre de suivis</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                </tr>
+                            </thead>
+
+                            {% set prototype %}
+                                {% apply spaceless %}
+                                    <td class="align-middle">{{ form_widget(form.userDevices.vars.prototype.device) }}</td>
+                                    <td class="align-middle">{{ form_widget(form.userDevices.vars.prototype.nbSupports) }}</td>
+                                {% endapply %}
+                            {% endset %}
+
+                            <tbody  id="userDevices-fields-list" data-prototype="{{ prototype|e }}"
+                                data-widget-tags="<tr></tr>" data-widget-counter="{{ form.userDevices|length }}">
+                                {% for userDevice in form.userDevices %}
+                                    <tr id="{{ userDevice.vars.id }}">
+                                        <td class="align-middle">{{ form_widget(userDevice.device) }}</td>
+                                        <td class="align-middle">{{ form_widget(userDevice.nbSupports) }}</td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-4">
+                <div class="col-md-12">
+                    <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
+                        data-list-selector="#userDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
+                    <div class="float-right">
+                        <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }}">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
 
 
-    {{ form_row(form._token) }}
-    {{ form_end(form, {"render_rest": false}) }}
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
 
-</div>
+    </div>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("securityUser") }}
+    {{ encore_entry_script_tags("securityUser") }}
 {% endblock %}

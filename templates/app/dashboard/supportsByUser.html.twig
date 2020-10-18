@@ -4,7 +4,9 @@
 
 {% block title %}{{ title }}{{ parent() }}{% endblock %}
 
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+	{{ encore_entry_link_tags("multiSelect") }}
+{% endblock %}
 
 {% block body %}
 
@@ -139,5 +141,5 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

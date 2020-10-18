@@ -12,128 +12,129 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="h2 mb-3">{{ title }}</h1>
-    {% if EDIT_MODE %}
-        <div class="small text-secondary">
-            <p> Créé le {{subService.createdAt|date("d/m/Y à H:i") }}{{ subService.createdBy ? " par " ~ subService.createdBy.fullname }}
-                (modifié le {{ subService.updatedAt|date("d/m/Y à H:i") }}{{subService.updatedBy ? " par " ~ subService.updatedBy.fullname }})
-            </p>
-        </div>
-    {% else %}
-        <div class="mb-4"></div>
-    {% endif %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                href="{{ path('service_edit', {'id':service.id}) }}">{{ service.name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Sous-service</li>
-        </ol>
-    </nav>
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        {% if EDIT_MODE %}
+            <div class="small text-secondary">
+                <p> Créé le {{subService.createdAt|date("d/m/Y à H:i") }}{{ subService.createdBy ? " par " ~ subService.createdBy.fullname }}
+                    (modifié le {{ subService.updatedAt|date("d/m/Y à H:i") }}{{subService.updatedBy ? " par " ~ subService.updatedBy.fullname }})
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                    href="{{ path('service_edit', {'id':service.id}) }}">{{ service.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Sous-service</li>
+            </ol>
+        </nav>
 
-    <hr>
+        <hr>
 
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
+        <section>
+            {% include "model/msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
 
-        {{ form_start(form) }}
+            {{ form_start(form) }}
 
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.name) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.phone1) }}</div>
-            <div class="col-md-6">{{ form_row(form.email) }}</div>
-        </div>
-        {# <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.chief) }}</div>
-        </div> #}
-        <div class="form-group row">
-            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
-        </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.name) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.phone1) }}</div>
+                <div class="col-md-6">{{ form_row(form.email) }}</div>
+            </div>
+            {# <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.chief) }}</div>
+            </div> #}
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+            </div>
 
-        {{ form_row(form._token) }}
-        
-        <div class="form-group row">
-            <div class="col-md-12"> 
-                {% if EDIT_MODE and is_granted("DISABLE", subService.service) %}
-                    <div class="float-left d-flex">
-                        <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id':subService.id}) }}"
-                            title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-toggle="tooltip" data-placement="bottom"
-                            {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce sous-service ?')){return true;}else{return false;}"{% endif %}>
-                            {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+            {{ form_row(form._token) }}
+            
+            <div class="form-group row">
+                <div class="col-md-12"> 
+                    {% if EDIT_MODE and is_granted("DISABLE", subService.service) %}
+                        <div class="float-left d-flex">
+                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id':subService.id}) }}"
+                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-toggle="tooltip" data-placement="bottom"
+                                {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce sous-service ?')){return true;}else{return false;}"{% endif %}>
+                                {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                        </div>
+                    {% endif %}
+                    <div class="mb-4 float-right">
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
-                {% endif %}
-                <div class="mb-4 float-right">
-                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                 </div>
             </div>
-        </div>
-        {{ form_end(form, {"render_rest": false}) }}
-    </section>
+            {{ form_end(form, {"render_rest": false}) }}
+        </section>
 
-    {% if EDIT_MODE == true and service.accommodation == YES %}
-    <section>
-        <h2 class="h4 my-4">Groupes de places rattachés</h2>
-        <p class="align-middle">{{ accommodations|length }} groupe{% if accommodations|length > 0 %}s{% endif %}<!--
-            --> ({{ nbPlaces }} places).</p>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
-                        <th scope="col" class="align-middle th-w-100">Dispositif</th>
-                        <th scope="col" class="align-middle th-w-80">Nombre de places</th>
-                        <th scope="col" class="align-middle th-date">Date d'ouverture</th>
-                        <th scope="col" class="align-middle th-date">Date de fermeture</th>
-                        <th scope="col" class="align-middle th-w-100">Ville</th>
-                        <th scope="col" class="align-middle th-w-60">Code postal</th>
-                        <th scope="col" class="align-middle th-w-150">Adresse</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for accommodation in accommodations %}
-                    <tr>
-                        <td scope="row" class="align-middle">
-                            <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                data-placement="bottom" title="Voir le groupe de places">
-                                <span class="fas fa-eye"></span>
-                            </a>
-                        </td>
-                        <td class="align-middle">{{ accommodation.name }}</td>
-                        <td class="align-middle">{{ accommodation.device.name }}</td>
-                        <td class="align-middle">{{ accommodation.nbPlaces }}</td>
-                        <td class="align-middle">{{ accommodation.startDate|date("d/m/Y") }}</td>
-                        <td class="align-middle">{% if accommodation.endDate %}{{ accommodation.endDate|date("d/m/Y") }}{% endif %}
-                        </td>
-                        <td class="align-middle">{{ accommodation.city|capitalize }}</td>
-                        <td class="align-middle">{{ accommodation.zipcode }}</td>
-                        <td class="align-middle">{{ accommodation.address }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% if is_granted("EDIT", service) %}
-        <div class="row my-3">
-            <div class="col-md-12">
-                <a href="{{ path('service_accommodation_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+        {% if EDIT_MODE == true and service.accommodation == YES %}
+        <section>
+            <h2 class="h4 my-4">Groupes de places rattachés</h2>
+            <p class="align-middle">{{ accommodations|length }} groupe{% if accommodations|length > 0 %}s{% endif %}<!--
+                --> ({{ nbPlaces }} places).</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
+                            <th scope="col" class="align-middle th-w-100">Dispositif</th>
+                            <th scope="col" class="align-middle th-w-80">Nombre de places</th>
+                            <th scope="col" class="align-middle th-date">Date d'ouverture</th>
+                            <th scope="col" class="align-middle th-date">Date de fermeture</th>
+                            <th scope="col" class="align-middle th-w-100">Ville</th>
+                            <th scope="col" class="align-middle th-w-60">Code postal</th>
+                            <th scope="col" class="align-middle th-w-150">Adresse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for accommodation in accommodations %}
+                        <tr>
+                            <td scope="row" class="align-middle">
+                                <a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+                                    data-placement="bottom" title="Voir le groupe de places">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td class="align-middle">{{ accommodation.name }}</td>
+                            <td class="align-middle">{{ accommodation.device.name }}</td>
+                            <td class="align-middle">{{ accommodation.nbPlaces }}</td>
+                            <td class="align-middle">{{ accommodation.startDate|date("d/m/Y") }}</td>
+                            <td class="align-middle">{% if accommodation.endDate %}{{ accommodation.endDate|date("d/m/Y") }}{% endif %}
+                            </td>
+                            <td class="align-middle">{{ accommodation.city|capitalize }}</td>
+                            <td class="align-middle">{{ accommodation.zipcode }}</td>
+                            <td class="align-middle">{{ accommodation.address }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </div>
+            {% if is_granted("EDIT", service) %}
+            <div class="row my-3">
+                <div class="col-md-12">
+                    <a href="{{ path('service_accommodation_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                    <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+                </div>
+            </div>
+            {% endif %}
+        </section>
+        <hr>
         {% endif %}
-    </section>
-    <hr>
-    {% endif %}
 
 
-</div>
+    </div>
+    
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("directory") }}
+    {{ encore_entry_script_tags("directory") }}
 {% endblock javascripts %}

@@ -41,6 +41,10 @@ section {
     cursor: pointer;
 }
 
+.bg-light-gray {
+    background-color: $light-gray;
+}
+
 .bg-header {
     opacity: .5;
 }
@@ -124,7 +128,7 @@ section {
 label.required:after,
 th.required:after {
     content: " *";
-    color: #dc3545;
+    color: var(--red);
 }
 
 /* Affichage de l'oeil pour voir le mot de passe */
@@ -211,7 +215,6 @@ th.required:after {
 
 // Bouton case à cocher
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-    /* background-color: #00aeef; */
     border-radius: 4px;
 }
 
@@ -241,12 +244,8 @@ th.required:after {
     text-align: justify;
 }
 
-.font-size-9 {
-    font-size: .9rem;
-}
-
-.font-size-10 {
-    font-size: 1rem;
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--light) !important;
 }
 
 #results_search {

@@ -4,45 +4,45 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="h2 mb-3">Gestion</h1>
+        <h1 class="h2 mb-3">Gestion</h1>
 
-    {% include "model/msgFlash.html.twig" %}
+        {% include "model/msgFlash.html.twig" %}
 
-    <hr>
+        <hr>
 
-    <div class="my-4">
+        <div class="my-4">
 
-        {% include "app/managing/managingServices.html.twig" %}
+            {% include "app/managing/managingServices.html.twig" %}
 
-        <h2 class="h5">Paiements</h2>
-        <ul>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("supports_current_month") }}">Récapitulatif mensuel des redevances</a>
-            </li>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("contributions") }}">Paiements (redevances, participations financières)</a>
-            </li class="mb-2">
-            <li class="mb-2 text-{{ theme_color }}">
-                 <a class="text-dark" href="{{ path("contribution_indicators") }}">Indicateurs des paiements</a>
-        </ul>
+            <h2 class="h5">Paiements</h2>
+            <ul>
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("supports_current_month") }}">Récapitulatif mensuel des redevances</a>
+                </li>
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("contributions") }}">Paiements (redevances, participations financières)</a>
+                </li class="mb-2">
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("contribution_indicators") }}">Indicateurs des paiements</a>
+            </ul>
 
-        <hr class="my-3">
+            <hr class="my-3">
 
-        <h2 class="h5">Listes</h2>
-        <ul>
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("accommodations") }}">Groupes de places</a>
-            </li> 
-            <li class="mb-2 text-{{ theme_color }}">
-                <a class="text-dark" href="{{ path("organizations") }}">Organismes prescripteurs</a>
-            </li>
-        </ul>
+            <h2 class="h5">Listes</h2>
+            <ul>
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("accommodations") }}">Groupes de places</a>
+                </li> 
+                <li class="mb-2 text-{{ theme_color }}">
+                    <a class="text-dark" href="{{ path("organizations") }}">Organismes prescripteurs</a>
+                </li>
+            </ul>
+
+        </div>
 
     </div>
-
-</div>
 
 {% endblock %}
 

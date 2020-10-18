@@ -2,82 +2,84 @@
 
 {% block title %}Rendez-vous{{ parent() }}{% endblock %}
 
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+	{{ encore_entry_link_tags("multiSelect") }}
+{% endblock %}
 
 {% block body %}
 
-<section class="mt-0">
+    <section class="mt-0">
 
-    <div class="container">
-        {% include "model/msgFlash.html.twig" %}
-        <h1 class="h2 mb-3"><a class="fas fa-calendar-alt mr-2 text-{{ theme_color }}" href="{{ path("calendar") }}" title="Passer en vue agenda"></a>Rendez-vous</h1>
-    </div>
-
-    {% include "app/rdv/searchRdvs.html.twig" %}
-
-    <div class="container mt-4">
-
-        <div class="row align-items-baseline">
-            <div class="col-md-4 count align-middle mb-2">
-                <span class="align-middle">Résultat : {{ rdvs.getTotalItemCount|number_format(0,'', ' ')  }} <!--
-                -->RDV{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.</span>
-            </div>
-            <div class="col-md-8">
-                <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
-            </div>
+        <div class="container">
+            {% include "model/msgFlash.html.twig" %}
+            <h1 class="h2 mb-3"><a class="fas fa-calendar-alt mr-2 text-{{ theme_color }}" href="{{ path("calendar") }}" title="Passer en vue agenda"></a>Rendez-vous</h1>
         </div>
 
-        <div class="table-responsive">
-            <table id="table-rdvs" class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Rendez-vous", "r.title") }}</th>
-                        <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(rdvs, "Date", "r.start") }}</th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Lieu", "r.location") }}</th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Référent·e", "ref.lastname") }}</th>
-                        <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Suivi", "p.lastname") }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rdv in rdvs %}
-                    <tr id="rdv-{{ rdv.id }}">
-                        <th scope="row" class="align-middle">
-                        {% if rdv.supportGroup %}
-                             <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                title="Voir le rendez-vous"><span class="fas fa-eye"></span>
-                            </a>
-                        </th>
-                        {% endif %}
-                        <td class="align-middle justify"><span class="font-weight-bold">
-                            {{ rdv.title }}{% if rdv.content %} : {% endif %}</span>
-                            <span class="">{{ rdv.content|slice(0,200) |striptags('<b>')|raw }}</span> 
-                            {% if rdv.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
-                        </td>                        
-                        <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
-                        <td class="align-middle">{{ rdv.location }}</td>
-                        <td class="align-middle">{{ rdv.supportGroup and rdv.supportGroup.referent ? rdv.supportGroup.referent.fullname }}</td>
-                        <td class="align-middle">
+        {% include "app/rdv/searchRdvs.html.twig" %}
+
+        <div class="container mt-4">
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ rdvs.getTotalItemCount|number_format(0,'', ' ')  }} <!--
+                    -->RDV{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="table-rdvs" class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Rendez-vous", "r.title") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(rdvs, "Date", "r.start") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Lieu", "r.location") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Référent·e", "ref.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Suivi", "p.lastname") }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rdv in rdvs %}
+                        <tr id="rdv-{{ rdv.id }}">
+                            <th scope="row" class="align-middle">
                             {% if rdv.supportGroup %}
-                                {% for supportPerson in rdv.supportGroup.supportPeople|filter(s => s.head == true) %}
-                                    {{ supportPerson.person.fullname }}<br>
-                                {% endfor %}
-                            {% endif %} 
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                                <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                    title="Voir le rendez-vous"><span class="fas fa-eye"></span>
+                                </a>
+                            </th>
+                            {% endif %}
+                            <td class="align-middle justify"><span class="font-weight-bold">
+                                {{ rdv.title }}{% if rdv.content %} : {% endif %}</span>
+                                <span class="">{{ rdv.content|slice(0,200) |striptags('<b>')|raw }}</span> 
+                                {% if rdv.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
+                            </td>                        
+                            <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
+                            <td class="align-middle">{{ rdv.location }}</td>
+                            <td class="align-middle">{{ rdv.supportGroup and rdv.supportGroup.referent ? rdv.supportGroup.referent.fullname }}</td>
+                            <td class="align-middle">
+                                {% if rdv.supportGroup %}
+                                    {% for supportPerson in rdv.supportGroup.supportPeople|filter(s => s.head == true) %}
+                                        {{ supportPerson.person.fullname }}<br>
+                                    {% endfor %}
+                                {% endif %} 
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
+
         </div>
-        
-        <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
 
-    </div>
-
-</section>
+    </section>
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("search") }}
 {% endblock javascripts %}

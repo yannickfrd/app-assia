@@ -11,156 +11,156 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="h2 mb-3">{{ accommodation.service.name }}<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
-    {% if EDIT_MODE %}
-        <div class="small text-secondary">
-            <p> Créé le {{accommodation.createdAt|date("d/m/Y à H:i") }}
-                {% if accommodation.createdBy %}par {{ accommodation.createdBy.fullname }}{% endif %}
-                {% if accommodation.updatedAt %}(modifié le {{ accommodation.updatedAt|date("d/m/Y à H:i") }}){% endif %}
-            </p>
-        </div>
-    {% else %}
-        <div class="mb-4"></div>
-    {% endif %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des
-                    services</a></li>
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                    href="{{ path('service_edit', {'id':accommodation.service.id}) }}">{{ accommodation.service.name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
-        </ol>
-    </nav>
-
-    <hr>
-
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
-
-        {{ form_start(form) }}
-
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.name) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.service) }}</div>
-            <div class="col-md-6">{{ form_row(form.subService) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.device) }}</div>
-            <div class="col-md-6">{{ form_row(form.nbPlaces) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.startDate) }}</div>
-            <div class="col-md-6">{{ form_row(form.endDate) }}</div>
-        </div>
-        <div class="form-group row" id="accommodation_location">
-            <div class="col-md-6">{{ form_row(form.location.search) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.address) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.city) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
-            {{ form_row(form.location.locationId) }}
-            {{ form_row(form.location.lat) }}
-            {{ form_row(form.location.lon) }}
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.accommodationType) }}</div>
-            <div class="col-md-6">{{ form_row(form.configuration) }}</div>
-            <div class="col-md-6">{{ form_row(form.individualCollective) }}</div>
-        </div>
-        {% if accommodation.service.contributionType in [2, 3] %}
-            <div class="form-group row">
-                <div class="col-md-6">{{ form_row(form.rentAmt) }}</div>
+        <h1 class="h2 mb-3">{{ accommodation.service.name }}<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
+        {% if EDIT_MODE %}
+            <div class="small text-secondary">
+                <p> Créé le {{accommodation.createdAt|date("d/m/Y à H:i") }}
+                    {% if accommodation.createdBy %}par {{ accommodation.createdBy.fullname }}{% endif %}
+                    {% if accommodation.updatedAt %}(modifié le {{ accommodation.updatedAt|date("d/m/Y à H:i") }}){% endif %}
+                </p>
             </div>
+        {% else %}
+            <div class="mb-4"></div>
         {% endif %}
-        <div class="form-group row">
-            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
-        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des
+                        services</a></li>
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                        href="{{ path('service_edit', {'id':accommodation.service.id}) }}">{{ accommodation.service.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
+            </ol>
+        </nav>
 
-        {% if is_granted("EDIT", accommodation.service) %}
+        <hr>
+
+        <section>
+            {% include "model/msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
+
+            {{ form_start(form) }}
+
             <div class="form-group row">
-                <div class="col-md-12">
-                    {% if EDIT_MODE and is_granted("DELETE", accommodation) %}
-                        <div class="float-left d-flex">
-                            <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('admin_accommodation_delete', {'id':accommodation.id}) }}"
-                                data-toggle="tooltip" title="Supprimer le groupe de places" data-placement="bottom"
-                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?')){return true;}else{return false;}"><span
-                                    class="fas fa-trash-alt mr-2"></span>Supprimer</a>
-                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_accommodation_disable', {'id':form.vars.value.id}) }}"
-                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" data-toggle="tooltip" data-placement="bottom"
-                                {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce groupe de place ?')){return true;}else{return false;}"{% endif %}>
-                                {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                <div class="col-md-6">{{ form_row(form.name) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.service) }}</div>
+                <div class="col-md-6">{{ form_row(form.subService) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.device) }}</div>
+                <div class="col-md-6">{{ form_row(form.nbPlaces) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.startDate) }}</div>
+                <div class="col-md-6">{{ form_row(form.endDate) }}</div>
+            </div>
+            <div class="form-group row" id="accommodation_location">
+                <div class="col-md-6">{{ form_row(form.location.search) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.address) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.city) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
+                {{ form_row(form.location.locationId) }}
+                {{ form_row(form.location.lat) }}
+                {{ form_row(form.location.lon) }}
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.accommodationType) }}</div>
+                <div class="col-md-6">{{ form_row(form.configuration) }}</div>
+                <div class="col-md-6">{{ form_row(form.individualCollective) }}</div>
+            </div>
+            {% if accommodation.service.contributionType in [2, 3] %}
+                <div class="form-group row">
+                    <div class="col-md-6">{{ form_row(form.rentAmt) }}</div>
+                </div>
+            {% endif %}
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+            </div>
+
+            {% if is_granted("EDIT", accommodation.service) %}
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        {% if EDIT_MODE and is_granted("DELETE", accommodation) %}
+                            <div class="float-left d-flex">
+                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('admin_accommodation_delete', {'id':accommodation.id}) }}"
+                                    data-toggle="tooltip" title="Supprimer le groupe de places" data-placement="bottom"
+                                    onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?')){return true;}else{return false;}"><span
+                                        class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                                <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_accommodation_disable', {'id':form.vars.value.id}) }}"
+                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" data-toggle="tooltip" data-placement="bottom"
+                                    {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce groupe de place ?')){return true;}else{return false;}"{% endif %}>
+                                    {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                            </div>
+                        {% endif %}
+                        <div class="mb-4 float-right">
+                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
                         </div>
-                    {% endif %}
-                    <div class="mb-4 float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
                     </div>
                 </div>
+            {% endif %}
+
+            {{ form_row(form._token) }}
+            {{ form_end(form, {"render_rest": false}) }}
+
+        </section>
+
+        {% if accommodation.id is not null %}
+        
+        <hr>
+    
+        <section id="accommodation_groups">
+            <h2 class="h4 my-4">Prises en charge</h2>
+            <p class="text-secondary">Affiche les 10 dernières prises en charge.</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
+                            <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
+                            <th scope="col" class="align-middle th-w-100">Nb de personnes prises en charge</th>
+                            <th scope="col" class="align-middle th-date">Date d'entrée</th>
+                            <th scope="col" class="align-middle th-date">Date de sortie</th>
+                            <th scope="col" class="align-middle th-w-100">Motif de fin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for accommodation_group in accommodations_group %}
+                        <tr>
+                            <th scope="row">
+                                <a href="{{ path('support_accommodation_edit', {'id':accommodation_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                    data-toggle="tooltip" data-placement="bottom" title="Voir le détail de la prise en charge"><span class="fas fa-eye"></span>
+                                </a>
+                            </th>
+                            <td>
+                                {% for supportPerson in accommodation_group.supportGroup.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
+                                {{ supportPerson.person.fullname }}<br />
+                                {% endfor %}                        
+                            </td>
+                            <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>
+                            <td>{{ accommodation_group.accommodationPeople|length ? accommodation_group.accommodationPeople|length }}</td>
+                            <td>{{ accommodation_group.startDate ? accommodation_group.startDate|date("d/m/Y") }}</td>                    
+                            <td>{{ accommodation_group.endDate ? accommodation_group.endDate|date("d/m/Y") }}</td>                    
+                            <td>{{ accommodation_group.endReasonToString }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+
+        </section>
         {% endif %}
 
-        {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
-
-    </section>
-
-    {% if accommodation.id is not null %}
-    
-    <hr>
- 
-    <section id="accommodation_groups">
-        <h2 class="h4 my-4">Prises en charge</h2>
-        <p class="text-secondary">Affiche les 10 dernières prises en charge.</p>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
-                        <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
-                        <th scope="col" class="align-middle th-w-100">Nb de personnes prises en charge</th>
-                        <th scope="col" class="align-middle th-date">Date d'entrée</th>
-                        <th scope="col" class="align-middle th-date">Date de sortie</th>
-                        <th scope="col" class="align-middle th-w-100">Motif de fin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for accommodation_group in accommodations_group %}
-                    <tr>
-                        <th scope="row">
-                            <a href="{{ path('support_accommodation_edit', {'id':accommodation_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                data-toggle="tooltip" data-placement="bottom" title="Voir le détail de la prise en charge"><span class="fas fa-eye"></span>
-                            </a>
-                        </th>
-                        <td>
-                            {% for supportPerson in accommodation_group.supportGroup.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
-                            {{ supportPerson.person.fullname }}<br />
-                            {% endfor %}                        
-                        </td>
-                        <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>
-                        <td>{{ accommodation_group.accommodationPeople|length ? accommodation_group.accommodationPeople|length }}</td>
-                        <td>{{ accommodation_group.startDate ? accommodation_group.startDate|date("d/m/Y") }}</td>                    
-                        <td>{{ accommodation_group.endDate ? accommodation_group.endDate|date("d/m/Y") }}</td>                    
-                        <td>{{ accommodation_group.endReasonToString }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-    </section>
-    {% endif %}
-
-</div>
+    </div>
 
 {% include "app/accommodation/deleteAccommodation.html.twig" %}
 
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("accommodation") }}
+    {{ encore_entry_script_tags("accommodation") }}
 {% endblock javascripts %}

@@ -10,54 +10,56 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="h2 mb-3">{{ title }}</h1>
-    {% if EDIT_MODE %}
-    <div class="small text-secondary">
-        <p> Créé le {{organization.createdAt|date("d/m/Y à H:i") }}
-            {{ organization.createdBy ? " par " ~ organization.createdBy.fullname }}
-            (modifié le {{ organization.updatedAt|date("d/m/Y à H:i") }}
-            {{ organization.createdBy ? " par " ~ organization.updatedBy.fullname }})
-        </p>
-    </div>
-    {% else %}
-    <div class="mb-4"></div>
-    {% endif %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                href="{{ path('organizations') }}">Liste des organismes</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Fiche organisme</li>
-        </ol>
-    </nav>
-
-    <hr>
-
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
-
-        {{ form_start(form) }}
-
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.name) }}</div>
-            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        {% if EDIT_MODE %}
+        <div class="small text-secondary">
+            <p> Créé le {{organization.createdAt|date("d/m/Y à H:i") }}
+                {{ organization.createdBy ? " par " ~ organization.createdBy.fullname }}
+                (modifié le {{ organization.updatedAt|date("d/m/Y à H:i") }}
+                {{ organization.createdBy ? " par " ~ organization.updatedBy.fullname }})
+            </p>
         </div>
+        {% else %}
+        <div class="mb-4"></div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                    href="{{ path('organizations') }}">Liste des organismes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Fiche organisme</li>
+            </ol>
+        </nav>
 
-        {{ form_row(form._token) }}
-        <div class="form-group row">
-            <div class="col-md-12"> 
-                <div class="mb-4 float-right">
-                	<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+        <hr>
+
+        <section>
+            {% include "model/msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
+
+            {{ form_start(form) }}
+
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.name) }}</div>
+                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+            </div>
+
+            {{ form_row(form._token) }}
+            <div class="form-group row">
+                <div class="col-md-12"> 
+                    <div class="mb-4 float-right">
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        {{ form_end(form, {"render_rest": false}) }}
-    </section>
+            {{ form_end(form, {"render_rest": false}) }}
+        </section>
 
-</div>
+    </div>
+    
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("directory") }}{% endblock javascripts %}
+    {{ encore_entry_script_tags("directory") }}
+{% endblock javascripts %}

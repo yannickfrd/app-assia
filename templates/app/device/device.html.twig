@@ -11,119 +11,120 @@
 
 {% block body %}
 
-<div class="container">
+    <div class="container">
 
-    <h1 class="h2 mb-3">{{ title }}</h1>
-    {% if EDIT_MODE %}
-        <div class="small text-secondary">
-            <p> Créé le {{device.createdAt|date("d/m/Y à H:i") }}{{ device.createdBy ? " par " ~ device.createdBy.fullname }}
-                (modifié le {{ device.updatedAt|date("d/m/Y à H:i") }}{{device.updatedBy ? " par " ~ device.updatedBy.fullname }})
-            </p>
-        </div>
-    {% else %}
-        <div class="mb-4"></div>
-    {% endif %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                href="{{ path('admin_devices') }}">Liste des dispositifs</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Fiche dispositif</li>
-        </ol>
-    </nav>
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        {% if EDIT_MODE %}
+            <div class="small text-secondary">
+                <p> Créé le {{device.createdAt|date("d/m/Y à H:i") }}{{ device.createdBy ? " par " ~ device.createdBy.fullname }}
+                    (modifié le {{ device.updatedAt|date("d/m/Y à H:i") }}{{device.updatedBy ? " par " ~ device.updatedBy.fullname }})
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                    href="{{ path('admin_devices') }}">Liste des dispositifs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Fiche dispositif</li>
+            </ol>
+        </nav>
 
-    <hr>
+        <hr>
 
-    <section>
-        {% include "model/msgFlash.html.twig" %}
-        <div id="js-msg-flash-content"></div>
+        <section>
+            {% include "model/msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
 
-        {{ form_start(form) }}
+            {{ form_start(form) }}
 
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.name) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.coefficient) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.preAdmission) }}</div>
-            <div class="col-md-6">{{ form_row(form.justice) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.accommodation) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6">{{ form_row(form.contribution) }}</div>
-            <div class="col-md-6" data-parent-field="contribution">{{ form_row(form.contributionType) }}</div>
-            <div class="col-md-6" data-parent-field="contributionType">{{ form_row(form.contributionRate) }}</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-12">{{ form_widget(form.comment) }}</div>
-        </div>
-        {{ form_row(form._token) }}
-        {% if is_granted("ROLE_ADMIN") %}
             <div class="form-group row">
-                <div class="col-md-12">
-                    {% if EDIT_MODE and is_granted("ROLE_SUPER_ADMIN") %}
-                        <div class="float-left d-flex">
-                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
-                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le dispositif" data-toggle="tooltip" data-placement="bottom"
-                                {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce dispositif ?')){return true;}else{return false;}"{% endif %}>
-                                {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                <div class="col-md-6">{{ form_row(form.name) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.coefficient) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.preAdmission) }}</div>
+                <div class="col-md-6">{{ form_row(form.justice) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.accommodation) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.contribution) }}</div>
+                <div class="col-md-6" data-parent-field="contribution">{{ form_row(form.contributionType) }}</div>
+                <div class="col-md-6" data-parent-field="contributionType">{{ form_row(form.contributionRate) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+            </div>
+            {{ form_row(form._token) }}
+            {% if is_granted("ROLE_ADMIN") %}
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        {% if EDIT_MODE and is_granted("ROLE_SUPER_ADMIN") %}
+                            <div class="float-left d-flex">
+                                <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
+                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le dispositif" data-toggle="tooltip" data-placement="bottom"
+                                    {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce dispositif ?')){return true;}else{return false;}"{% endif %}>
+                                    {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                            </div>
+                        {% endif %}
+                        <div class="float-right">
+                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                         </div>
-                    {% endif %}
-                    <div class="float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
-            </div>
-        {% endif %}
-        {{ form_end(form, {"render_rest": false}) }}
-    </section>
+            {% endif %}
+            {{ form_end(form, {"render_rest": false}) }}
+        </section>
 
-    {% if EDIT_MODE %}
-    <hr>
-    <section>
-        <h2 class="h4 my-4">Services rattachés</h2>
-        {% if device.serviceDevices %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                <thead>
-                    <tr>
-                        <th scope="col" class="align-middle th-w-20"></th>
-                        <th scope="col" class="align-middle th-w-150">Nom</th>
-                        <th scope="col" class="align-middle th-w-140">Téléphone</th>
-                        <th scope="col" class="align-middle th-w-140">Email</th>
-                        <th scope="col" class="align-middle th-w-140">Adresse</th>
-                        <th scope="col" class="align-middle th-w-140">Ville</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for serviceDevice in device.serviceDevices %}
-                    <tr>
-                        <th scope="row">
-                            <a href="{{ path('service_edit', {'id':serviceDevice.service.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                data-placement="bottom" title="Voir la fiche du service">
-                                <span class="fas fa-eye"></span>
-                            </a>
-                        </th>
-                        <td>{{ serviceDevice.service.name }}</td>
-                        <td>{{ serviceDevice.service.phone1}}</td>
-                        <td>{{ serviceDevice.service.email }}</td>
-                        <td>{{ serviceDevice.service.address }}</td>
-                        <td>{{ serviceDevice.service.city }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        {% if EDIT_MODE %}
+        <hr>
+        <section>
+            <h2 class="h4 my-4">Services rattachés</h2>
+            {% if device.serviceDevices %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">Nom</th>
+                            <th scope="col" class="align-middle th-w-140">Téléphone</th>
+                            <th scope="col" class="align-middle th-w-140">Email</th>
+                            <th scope="col" class="align-middle th-w-140">Adresse</th>
+                            <th scope="col" class="align-middle th-w-140">Ville</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for serviceDevice in device.serviceDevices %}
+                        <tr>
+                            <th scope="row">
+                                <a href="{{ path('service_edit', {'id':serviceDevice.service.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+                                    data-placement="bottom" title="Voir la fiche du service">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                            </th>
+                            <td>{{ serviceDevice.service.name }}</td>
+                            <td>{{ serviceDevice.service.phone1}}</td>
+                            <td>{{ serviceDevice.service.email }}</td>
+                            <td>{{ serviceDevice.service.address }}</td>
+                            <td>{{ serviceDevice.service.city }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </section>
         {% endif %}
-    </section>
-    {% endif %}
-</div>
+    </div>
+    
 {% endblock %}
 
 {% block javascripts %}
-{{ encore_entry_script_tags("device") }}
+    {{ encore_entry_script_tags("device") }}
 {% endblock javascripts %}
