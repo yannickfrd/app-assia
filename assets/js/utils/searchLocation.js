@@ -77,21 +77,21 @@ export default class SearchLocation {
                 url = 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
             }
 
-            this.ajaxRequest.init('GET', url, this.responseAjax.bind(this), true)
+            this.ajaxRequest.send('GET', url, this.responseAjax.bind(this), true)
         }
     }
 
     /**
      * Donne la réponse Ajax.
-     * @param {JSON} response 
+     * @param {Object} data 
      */
-    responseAjax(response) {
+    responseAjax(data) {
 
         if (this.locationType === 'address') {
-            this.results = JSON.parse(response).features
+            this.results = data.features
         }
         if (this.locationType === 'city') {
-            this.results = JSON.parse(response)
+            this.results = data
         }
 
         this.resultsSearchElt.innerHTML = ''

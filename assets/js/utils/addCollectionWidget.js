@@ -32,24 +32,37 @@ export default class AddCollectionWidget {
         newWidget = newWidget.replace(/__name__/g, this.counter)
         // Increase the counter and store it, the length cannot be used if deleting widgets is allowed
         this.list.setAttribute('data-widget-counter', this.counter + 1)
-        // create a new list element and add it to the list
-        let newElt = $(this.list.getAttribute('data-widget-tags')).html(newWidget)
+        
+        // create a new list element
+        const trElt = document.createElement('tr')
+        trElt.innerHTML = newWidget
+
         // Add the delete link
-        this.addDeleteBtn(newElt)
-        // Add the element
-        newElt.appendTo(this.list)
+        trElt.appendChild(this.getBtnElt())
+        // Add item to the list
+        this.list.appendChild(trElt)
     }
 
     /**
      * Ajoute un lien de suppression d'une catégorie.
      * @param {HTMLElement} newElt 
      */
-    addDeleteBtn(newElt) {
-        let deleteBtnElt = $('<td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>')
-        newElt.append(deleteBtnElt)
-        deleteBtnElt.click(e => {
+    getBtnElt()
+    {
+        const tdElt = document.createElement('td')
+        tdElt.className = 'align-middle'
+
+        const btnElt = document.createElement('boutton')
+        btnElt.className = 'btn btn-danger js-remove'
+        btnElt.innerHTML = '<span class="fas fa-trash-alt"></span>'
+
+        btnElt.addEventListener('click', e => {
             e.preventDefault()
             newElt.remove()
         })
+
+        tdElt.appendChild(btnElt)
+        
+        return tdElt
     }
 }

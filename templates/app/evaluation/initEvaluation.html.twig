@@ -1,5 +1,7 @@
 {% extends "model/collapseCard.html.twig" %}
 
+{% import "macros/loopSupportPeople.html.twig" as utils %}
+
 {% set id = "init_eval" %}
 
 {% block card_title %}<span class="{{ EDIT_MODE ? 'text-secondary' }}">Situation à l'entrée</span>{{ badgeTitle }}{% endblock %}
@@ -20,24 +22,13 @@
 		</div>
 	</div>
 
-	{% if form.supportPerson is defined %}
-		{% set form_evaluation_people = form.supportPerson|filter(a => a.vars.value.person.age >= 16) %}
-	{% else %}
-		{% set form_evaluation_people = form_evaluationPeople_filteredByAge %}
-	{% endif %}
+	{# {% set form_evaluation_people = form.supportPerson is defined ? form.supportPerson|filter(e => e.vars.value.person.age >= 16) : people_filtered_by_age %} #}
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-init_eval">
-			<div class="mb-4">
-				{% for key, evalPerson in form_evaluation_people %}
-					{% set person = form.supportPerson is defined ? evalPerson.vars.value.person : evalPerson.vars.value.supportPerson.person %}
-					<button type="button" id="heading-init_eval-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
-						data-toggle="collapse" data-target="#collapse-init_eval-{{ key }}" aria-expanded="false"
-						aria-controls="collapse-init_eval-{{ key }}" data-key="{{ key }}">{{ person.fullname }}</button>
-				{% endfor %}
-			</div>
+			{{ utils.loopSupportPeople(id, people_filtered_by_age, theme_color) }}
 
-			{% for key, evalPerson in form_evaluation_people %}
+			{% for key, evalPerson in people_filtered_by_age %}
 				{% set evalBudgetPerson = evalPerson.initEvalPerson %}
 				{% set entity = "initEvalPerson" %}
 				<div id="collapse-init_eval-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"

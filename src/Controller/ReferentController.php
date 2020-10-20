@@ -6,7 +6,6 @@ use App\Entity\GroupPeople;
 use App\Entity\Referent;
 use App\Form\Referent\ReferentType;
 use App\Repository\GroupPeopleRepository;
-use App\Repository\ReferentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,14 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReferentController extends AbstractController
 {
     private $manager;
-    private $repo;
-    private $repoGroupPeople;
 
-    public function __construct(EntityManagerInterface $manager, ReferentRepository $repo, GroupPeopleRepository $repoGroupPeople)
+    public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
-        $this->repoGroupPeople = $repoGroupPeople;
     }
 
     /**
@@ -33,9 +28,9 @@ class ReferentController extends AbstractController
      *
      * @param int $id //GroupPeople
      */
-    public function newReferent(int $id, Referent $referent = null, Request $request): Response
+    public function newReferent(int $id, Request $request, GroupPeopleRepository $repoGroupPeople): Response
     {
-        $groupPeople = $this->repoGroupPeople->findGroupPeopleById($id);
+        $groupPeople = $repoGroupPeople->findGroupPeopleById($id);
 
         $referent = new Referent();
 

@@ -1,5 +1,7 @@
 {% extends "model/collapseCard.html.twig" %}
 
+{% import "macros/loopSupportPeople.html.twig" as utils %}
+
 {% set id = "eval_budget" %}
 
 {% block card_title %}Budget{{ badgeTitle }}{% endblock %}
@@ -81,108 +83,100 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-eval_budget">
-			<div class="mb-4">
-				{% for key, evalPerson in form_evaluationPeople_filteredByAge %}
-					{% set person = evalPerson.vars.value.supportPerson.person %}
-				<button type="button" id="heading-eval_budget-{{ key }}" class="btn btn-outline-{{ theme_color }} {% if loop.first %}active{% endif %}  mb-2 js-person"
-					data-toggle="collapse" data-target="#collapse-eval_budget-{{ key }}" aria-expanded="false"
-					aria-controls="collapse-eval_budget-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
-				{% endfor %}
-			</div>
+			{{ utils.loopSupportPeople(id, people_filtered_by_age, theme_color) }}
 
-			{% for key, evalPerson in form_evaluationPeople_filteredByAge %}
-			{% set evalBudgetPerson = evalPerson.evalBudgetPerson %}
-			{% set entity = "evalBudgetPerson" %}
+			{% for key, evalPerson in people_filtered_by_age %}
+				{% set evalBudgetPerson = evalPerson.evalBudgetPerson %}
+				{% set entity = "evalBudgetPerson" %}
 
-			<div id="collapse-eval_budget-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-				aria-labelledby="heading-eval_budget-{{ key }}" data-parent="#accordion-eval_budget" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-				<div class="row">
-					{% include "app/evaluation/evalResources.html.twig" %}
-					{% include "app/evaluation/evalCharges.html.twig" %}
-				</div>
-				<div class="form-group row">
-					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources_resources">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
-				</div>
-				<div class="form-group">
+				<div id="collapse-eval_budget-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+					aria-labelledby="heading-eval_budget-{{ key }}" data-parent="#accordion-eval_budget" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
 					<div class="row">
-						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources_resources">{{ form_row(evalBudgetPerson.incomeTax) }}</div>
+						{% include "app/evaluation/evalResources.html.twig" %}
+						{% include "app/evaluation/evalCharges.html.twig" %}
 					</div>
-					<div class="row">
-						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_incomeTax">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
-						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_incomeTax">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
+					<div class="form-group row">
+						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources_resources">{{ form_row(evalBudgetPerson.endRightsDate) }}</div>
 					</div>
-				</div>
-
-				<hr>
-
-				<div class="form-group row">
-					<div class="col-md-6">{{ form_row(evalBudgetPerson.debts) }}</div>
-					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_debts">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
-					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_debts">
+					<div class="form-group">
 						<div class="row">
-							<div class="col-form-label col-sm-4">Type de dettes</div>
-							
-							{% set debts = constant("App\\Entity\\EvalBudgetPerson::DEBTS_TYPE") %}
+							<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_resources_resources">{{ form_row(evalBudgetPerson.incomeTax) }}</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_incomeTax">{{ form_row(evalBudgetPerson.incomeN1Amt) }}</div>
+							<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_incomeTax">{{ form_row(evalBudgetPerson.incomeN2Amt) }}</div>
+						</div>
+					</div>
 
-							<div class="col-sm-8">
-								<select id="js-{{ key }}_evalBudgetPerson_debts_type"
-									name="js-{{ key }}_evalBudgetPerson_debts_type" class="form-control">
-									<option class="default" value="">-- Ajouter --</option>
-									{% for debtKey, debtValue in debts %}
-										<option value="{{ debtKey }}">{{ debtValue }}</option>
-									{% endfor %}
-								</select>
-							</div>
-							<div class="col-md-12 mt-3">
-								<div class="table-responsive" data-parent-field="{{ key }}_evalBudgetPerson_debts">
-									<table class="table table-sm table-hover text-dark">
-										<thead>
-											<tr>
-												<th scope="col" class="align-middle th-w-20"></th>
-												<th scope="col" class="align-middle th-w-180">Type de dettes</th>
-												<th scope="col" class="align-middle th-w-20"></th>
-											</tr>
-										</thead>
-										<tbody>
-											{% for debtKey, debtValue in debts %}
-											<tr id="js-{{ key }}_evalBudgetPerson_debts_type-{{ debtKey }}" class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
-												<th scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, debtKey)) }}</div></th>
-												<td class="align-middle">{% if not loop.last %}{{ debtValue }}<!--
-												-->{% else %}{{ form_widget(evalBudgetPerson.debtOtherPrecision) }}{% endif %}</td>
-												<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-											</tr>
-											{% endfor %}
-										</tbody>
-									</table>
+					<hr>
+
+					<div class="form-group row">
+						<div class="col-md-6">{{ form_row(evalBudgetPerson.debts) }}</div>
+						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_debts">{{ form_row(evalBudgetPerson.debtsAmt) }}</div>
+						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_debts">
+							<div class="row">
+								<div class="col-form-label col-sm-4">Type de dettes</div>
+								
+								{% set debts = constant("App\\Entity\\EvalBudgetPerson::DEBTS_TYPE") %}
+
+								<div class="col-sm-8">
+									<select id="js-{{ key }}_evalBudgetPerson_debts_type"
+										name="js-{{ key }}_evalBudgetPerson_debts_type" class="form-control">
+										<option class="default" value="">-- Ajouter --</option>
+										{% for debtKey, debtValue in debts %}
+											<option value="{{ debtKey }}">{{ debtValue }}</option>
+										{% endfor %}
+									</select>
 								</div>
-							</div>		
+								<div class="col-md-12 mt-3">
+									<div class="table-responsive" data-parent-field="{{ key }}_evalBudgetPerson_debts">
+										<table class="table table-sm table-hover text-dark">
+											<thead>
+												<tr>
+													<th scope="col" class="align-middle th-w-20"></th>
+													<th scope="col" class="align-middle th-w-180">Type de dettes</th>
+													<th scope="col" class="align-middle th-w-20"></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for debtKey, debtValue in debts %}
+												<tr id="js-{{ key }}_evalBudgetPerson_debts_type-{{ debtKey }}" class="js-{{ key }}_evalBudgetPerson_debts_type d-table-row">
+													<th scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, debtKey)) }}</div></th>
+													<td class="align-middle">{% if not loop.last %}{{ debtValue }}<!--
+													-->{% else %}{{ form_widget(evalBudgetPerson.debtOtherPrecision) }}{% endif %}</td>
+													<td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>		
+							</div>
+						</div>
+						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_debts">
+							<div class="row">
+								<div class="col-md-12">{{ form_row(evalBudgetPerson.monthlyRepaymentAmt) }}</div>
+								<div class="col-md-12">{{ form_row(evalBudgetPerson.debtComment) }}</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_debts">
-						<div class="row">
-							<div class="col-md-12">{{ form_row(evalBudgetPerson.monthlyRepaymentAmt) }}</div>
-							<div class="col-md-12">{{ form_row(evalBudgetPerson.debtComment) }}</div>
+					<div data-parent-field="{{ key }}_evalBudgetPerson_debts">
+						<div class="form-group row">
+							<div class="col-md-6">{{ form_row(evalBudgetPerson.overIndebtRecord) }}</div>
+							<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_overIndebtRecord">{{ form_row(evalBudgetPerson.overIndebtRecordDate) }}</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-6">{{ form_row(evalBudgetPerson.settlementPlan) }}</div>
+							<div class="col-md-6">{{ form_row(evalBudgetPerson.moratorium) }}</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-12">
+							{{ form_label(evalBudgetPerson.commentEvalBudget) }}
+							{{ form_widget(evalBudgetPerson.commentEvalBudget) }}
 						</div>
 					</div>
 				</div>
-				<div data-parent-field="{{ key }}_evalBudgetPerson_debts">
-					<div class="form-group row">
-						<div class="col-md-6">{{ form_row(evalBudgetPerson.overIndebtRecord) }}</div>
-						<div class="col-md-6" data-parent-field="{{ key }}_evalBudgetPerson_overIndebtRecord">{{ form_row(evalBudgetPerson.overIndebtRecordDate) }}</div>
-					</div>
-					<div class="form-group row">
-						<div class="col-md-6">{{ form_row(evalBudgetPerson.settlementPlan) }}</div>
-						<div class="col-md-6">{{ form_row(evalBudgetPerson.moratorium) }}</div>
-					</div>
-				</div>
-				<div class="form-group row">
-					<div class="col-md-12">
-						{{ form_label(evalBudgetPerson.commentEvalBudget) }}
-						{{ form_widget(evalBudgetPerson.commentEvalBudget) }}
-					</div>
-				</div>
-			</div>
-
 			{% endfor %}
 		</div>
 	</div>

@@ -37,22 +37,21 @@ export default class RemoveTableRow {
     sendRequest(btnElt, trElt) {
         this.loader.on()
         this.trElt = trElt
-        this.ajaxRequest.init('GET', btnElt.getAttribute('data-url'), this.response.bind(this), true), {
+        this.ajaxRequest.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this), true), {
             once: true
         }
     }
 
     /**
-     * Récupère les données envoyés par le serveur.
-     * @param {JSON} data 
+     * Récupère les données envoyées par le serveur.
+     * @param {Object} data 
      */
     response(data) {
-        let dataJSON = JSON.parse(data)
-        if (dataJSON.action === 'delete') {
+        if (data.action === 'delete') {
             this.deleteTr(this.trElt)
-            this.updatedField ? this.updatedField.value = dataJSON.data : null
+            this.updatedField ? this.updatedField.value = data.data : null
         }
-        new MessageFlash(dataJSON.alert, dataJSON.msg)
+        new MessageFlash(data.alert, data.msg)
         this.loader.off()
     }
 

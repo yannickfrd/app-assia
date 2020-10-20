@@ -4,15 +4,17 @@ import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
 import ValidationForm from '../utils/validationForm'
 import ParametersUrl from '../utils/parametersUrl'
+import { Modal } from 'bootstrap'
 
 export default class SupportContributions {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest()
-        this.loader = new Loader('#modal-contribution')
+        this.loader = new Loader('modal-contribution')
         this.selectType = new SelectType()
         this.validationForm = new ValidationForm()
         this.parametersUrl = new ParametersUrl()
+        this.modalElt = new Modal(document.getElementById('modal-contribution'))
 
         this.resourcesChecked = false // Ressources vérifiées dans la base de données
         this.salaryAmt = null
@@ -63,7 +65,6 @@ export default class SupportContributions {
         this.btnDeleteElt = document.getElementById('modal-btn-delete')
         this.btnSaveElt = document.getElementById('js-btn-save')
 
-        this.modalElt = $('#modal-contribution')
         this.now = new Date()
         this.error = false
 
@@ -72,7 +73,7 @@ export default class SupportContributions {
 
     init() {
         this.btnNewElt.addEventListener('click', () => {
-            if (this.loader.isInLoading() === false) {
+            if (this.loader.isActive() === false) {
                 this.newContribution()
             }
         })
@@ -80,7 +81,7 @@ export default class SupportContributions {
         document.querySelectorAll('tr.contribution').forEach(trElt => {
             let btnGetElt = trElt.querySelector('button.js-get')
             btnGetElt.addEventListener('click', () => {
-                if (this.loader.isInLoading() === false) {
+                if (this.loader.isActive() === false) {
                     this.trElt = trElt
                     this.getContribution(Number(btnGetElt.getAttribute('data-id')))
                 }
@@ -95,21 +96,21 @@ export default class SupportContributions {
 
         this.btnSaveElt.addEventListener('click', e => {
             e.preventDefault()
-            if (this.loader.isInLoading() === false) {
+            if (this.loader.isActive() === false) {
                 this.tryToSave()
             }
         })
 
         this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
-            if (this.loader.isInLoading() === false) {
+            if (this.loader.isActive() === false) {
                 this.deleteContribution(this.btnDeleteElt.href)
             }
         })
 
         this.modalConfirmElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajaxRequest.init('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this), true)
+            this.ajaxRequest.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this), true)
         })
 
         this.typeSelect.addEventListener('input', () => {
@@ -128,7 +129,7 @@ export default class SupportContributions {
             e.preventDefault()
             this.loader.on()
             if (this.resourcesChecked === false) {
-                this.ajaxRequest.init('GET', this.btnNewElt.getAttribute('data-url'), this.responseAjax.bind(this), true)
+                this.ajaxRequest.send('GET', this.btnNewElt.getAttribute('data-url'), this.responseAjax.bind(this), true)
             } else {
                 this.getResources()
             }
@@ -415,7 +416,7 @@ export default class SupportContributions {
      */
     newContribution() {
         this.contributionId = null
-        this.modalElt.modal('show')
+        this.modalElt.show()
         this.selectType.setOption(this.typeSelect, '')
         this.initForm()
         this.checkType()
@@ -445,7 +446,7 @@ export default class SupportContributions {
         this.initForm()
         this.checkType()
 
-        this.ajaxRequest.init('GET', '/contribution/' + id + '/get', this.responseAjax.bind(this), true)
+        this.ajaxRequest.send('GET', '/contribution/' + id + '/get', this.responseAjax.bind(this), true)
     }
 
     /**
@@ -487,7 +488,7 @@ export default class SupportContributions {
         if (this.isValidForm()) {
             let formData = new FormData(this.formContributionElt)
             let formToString = new URLSearchParams(formData).toString()
-            this.ajaxRequest.init('POST', this.formContributionElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
+            this.ajaxRequest.send('POST', this.formContributionElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
         } else {
             new MessageFlash('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
             this.loader.off()
@@ -501,41 +502,41 @@ export default class SupportContributions {
     deleteContribution(url) {
         this.loader.on()
         if (window.confirm('Voulez-vous vraiment supprimer cette enregistrement ?')) {
-            this.ajaxRequest.init('GET', url, this.responseAjax.bind(this), true)
+            this.ajaxRequest.send('GET', url, this.responseAjax.bind(this), true)
         }
     }
 
     /**
      * Réponse du serveur.
-     * @param {JSON} response 
+     * @param {Object} response 
      */
     responseAjax(response) {
-        let data = JSON.parse(response)
-        if (data.code === 200) {
-            switch (data.action) {
+        if (response.code === 200) {
+            switch (response.action) {
                 case 'getResources':
-                    this.getResources(data.data)
+                    this.getResources(response.data)
                     break
                 case 'show':
-                    this.showContribution(data.data)
+                    this.showContribution(response.data)
                     break
                 case 'create':
-                    this.createContribution(data.data.contribution)
-                    new MessageFlash(data.alert, data.msg)
+                    this.createContribution(response.response.contribution)
+                    new MessageFlash(response.alert, response.msg)
                     break
                 case 'update':
-                    this.updateContribution(data.data.contribution)
-                    new MessageFlash(data.alert, data.msg)
+                    this.updateContribution(response.data.contribution)
+                    new MessageFlash(response.alert, response.msg)
                     break
                 case 'delete':
                     this.trElt.remove()
                     this.updateCounts(-1)
-                    this.loader.off(true)
-                    new MessageFlash(data.alert, data.msg)
+                    this.loader.off()
+                    this.modalElt.hide()
+                    new MessageFlash(response.alert, response.msg)
                     break
                 default:
-                    this.loader.off(false)
-                    new MessageFlash(data.alert, data.msg)
+                    this.loader.off()
+                    new MessageFlash(response.alert, response.msg)
                     break
             }
         }
@@ -574,8 +575,8 @@ export default class SupportContributions {
     showContribution(data) {
         // let modalContentElt = document.querySelector('.modal-content')
         // modalContentElt.innerHTML = contribution.content
-        const contribution = data.contribution;
-        this.modalElt.modal('show')
+        const contribution = data.contribution
+        this.modalElt.show()
         this.selectOption(this.typeSelect, contribution.type)
         if (contribution.monthContrib) {
             this.selectOption(this.monthContribYearSelect, parseInt(contribution.monthContrib.substring(0, 4)))
@@ -595,7 +596,7 @@ export default class SupportContributions {
         this.infoContribElt.innerHTML = this.getInfoContribElt(data)
 
         this.checkType()
-        this.loader.off(false)
+        this.loader.off()
     }
 
     /**  
@@ -603,7 +604,7 @@ export default class SupportContributions {
      * @param {data} data
      */
     getInfoContribElt(data) {
-        const contribution = data.contribution;
+        const contribution = data.contribution
         let htmlContent = `Créé le ${this.formatDatetime(contribution.createdAt)} par ${data.createdBy}`
         if (contribution.createdAt != contribution.updatedAt) {
             htmlContent = htmlContent + `<br/> (modifié le ${this.formatDatetime(contribution.updatedAt)} par ${data.updatedBy})`
@@ -629,7 +630,7 @@ export default class SupportContributions {
 
         let btnGetElt = contributionElt.querySelector('button.js-get')
         btnGetElt.addEventListener('click', () => {
-            if (this.loader.isInLoading() === false) {
+            if (this.loader.isActive() === false) {
                 this.trElt = contributionElt
                 this.getContribution(Number(btnGetElt.getAttribute('data-id')))
             }
@@ -640,7 +641,8 @@ export default class SupportContributions {
             this.trElt = contributionElt
             this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
         })
-        this.loader.off(true)
+        this.loader.off()
+        this.modalElt.hide()
     }
 
     /**
@@ -657,7 +659,8 @@ export default class SupportContributions {
         this.trElt.querySelector('td.js-paymentType').textContent = contribution.paymentTypeToString
         this.trElt.querySelector('td.js-comment').textContent = this.sliceComment(contribution.comment)
         this.calculateSumAmts()
-        this.loader.off(true)
+        this.loader.off()
+        this.modalElt.hide()
     }
 
     /**

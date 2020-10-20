@@ -1,4 +1,5 @@
 import AjaxRequest from './ajaxRequest'
+import { Modal } from 'bootstrap'
 
 /**
  * Système de déconnexion automatique après un laps de temps
@@ -8,7 +9,7 @@ export default class AutoLogout {
     constructor(timeout = 30, timeAlert = 5) {
         this.ajaxRequest = new AjaxRequest()
         this.userNameElt = document.getElementById('user-name')
-        this.modalElt = $('#modal-autoLogout')
+        this.modalElt = new Modal(document.getElementById('modal-autoLogout'))
         this.timerElt = document.getElementById('timer-logout')
         this.time = timeout * 60
         this.timeAlert = timeAlert * 60
@@ -29,7 +30,7 @@ export default class AutoLogout {
     count() {
         this.time--
         if (this.time === this.timeAlert) {
-            this.modalElt.modal('show')
+            this.modalElt.show()
             document.addEventListener('click', this.clearTimer.bind(this))
             document.addEventListener('keydown', this.clearTimer.bind(this))
         }
@@ -63,7 +64,7 @@ export default class AutoLogout {
      */
     deconnection() {
         clearInterval(this.intervalID)
-        this.ajaxRequest.init('GET', '/deconnexion', this.reloadPage.bind(this), true)
+        this.ajaxRequest.send('GET', '/deconnexion', this.reloadPage.bind(this), true)
     }
 
     /**

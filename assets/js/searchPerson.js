@@ -40,19 +40,18 @@ export default class SearchPerson {
         if (valueSearch.length >= this.lengthSearch) {
             this.loader.on()
             let url = '/search/person?search=' + valueSearch
-            this.ajaxRequest.init('GET', url, this.response.bind(this), true)
+            this.ajaxRequest.send('GET', url, this.response.bind(this), true)
         }
     }
 
     /**
      * Affiche les résultats de la rêquête.
-     * @param {*} data 
+     * @param {Object} data 
      */
     response(data) {
-        let dataJSON = JSON.parse(data)
         this.resultsSearchElt.innerHTML = ''
-        if (dataJSON.people.length > 0) {
-            this.addItem(dataJSON)
+        if (data.people.length > 0) {
+            this.addItem(data)
         } else {
             this.noResult()
         }

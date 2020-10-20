@@ -19,7 +19,7 @@ export default class ExportData {
                 e.preventDefault()
 
                 let formToString = new URLSearchParams(new FormData(this.formElt)).toString()
-                this.ajaxRequest.init('POST', btnElt.getAttribute('data-url'), this.response.bind(this), true, formToString)
+                this.ajaxRequest.send('POST', btnElt.getAttribute('data-url'), this.response.bind(this), true, formToString)
 
                 if (btnElt.id === 'export') {
                     this.loader.off()
@@ -29,9 +29,11 @@ export default class ExportData {
         })
     }
 
-    response(response) {
-        let data = JSON.parse(response)
-
+    /**
+     * Réponse du serveur.
+     * @param {Object} data 
+     */
+    response(data) {
         if (data.type === 'count') {
             this.resultsElt.textContent = data.count + ' résultat' + (data.count > 0 ? 's' : '') + '.'
         }

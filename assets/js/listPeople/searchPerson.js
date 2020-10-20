@@ -67,7 +67,7 @@ export default class SearchPerson {
         if (this.checkParamsInForm() === false) {
             return this.noParams()
         }
-        if (!this.loader.isInLoading()) {
+        if (!this.loader.isActive()) {
             this.sendRequest()
         }
     }
@@ -101,7 +101,7 @@ export default class SearchPerson {
         const formData = new FormData(this.formElt)
         const paramsToString = new URLSearchParams(formData).toString()
         if (paramsToString != this.paramsToString) {
-            this.ajaxRequest.init('POST', '/people/search', this.response.bind(this), true, paramsToString)
+            this.ajaxRequest.send('POST', '/people/search', this.response.bind(this), true, paramsToString)
             this.loader.on()
             this.paramsToString = paramsToString
         }
@@ -109,13 +109,12 @@ export default class SearchPerson {
 
     /**
      * Donne la réponse à la requête Ajax.
-     * @param {JSON} data 
+     * @param {Object} data 
      */
     response(data) {
-        const dataJSON = JSON.parse(data)
         this.listResultElt.innerHTML = ''
-        if (dataJSON.people.length > 0) {
-            this.showResults(dataJSON.people)
+        if (data.people.length > 0) {
+            this.showResults(data.people)
         } else {
             this.noResults()
         }

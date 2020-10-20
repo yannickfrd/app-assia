@@ -1,5 +1,7 @@
 {% extends "model/collapseCard.html.twig" %}
 
+{% import "macros/loopSupportPeople.html.twig" as utils %}
+
 {% set id = "eval_adm" %}
 
 {% block card_title %}Identité - Papier{{ badgeTitle }}{% endblock %}
@@ -8,15 +10,8 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-eval_adm">
-			<div class="mb-4">
-				{% for key, evalPerson in form.evaluationPeople %}
-					{% set person = evalPerson.vars.value.supportPerson.person %}
-					<button type="button" id="heading-eval_adm-{{ key }}" class="btn btn-outline-{{ theme_color }} 
-						{% if loop.first %}active{% endif %} mb-2 js-person"
-						data-toggle="collapse" data-target="#collapse-eval_adm-{{ key }}" aria-expanded="false"
-						aria-controls="collapse-eval_adm-{{ key }}" data-key="{{ key }}">{{ person.fullname}}</button>
-				{% endfor %}
-			</div>
+			{{ utils.loopSupportPeople(id, form.evaluationPeople, theme_color) }}
+
 			{% for key, evalPerson in form.evaluationPeople %}
 				<div id="collapse-eval_adm-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
 					aria-labelledby="heading-eval_adm-{{ key }}" data-parent="#accordion-eval_adm" 

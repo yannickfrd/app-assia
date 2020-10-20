@@ -27,7 +27,7 @@ export default class SwitchServiceSupport {
 
         if (this.formElt) {
             this.btnSubmitElt.addEventListener('click', e => {
-                if (this.loader.isInLoading()) {
+                if (this.loader.isActive()) {
                     e.preventDefault()
                 }
             })
@@ -47,20 +47,22 @@ export default class SwitchServiceSupport {
     }
 
     /**
-     * Envoie requête Ajax.
-     * @param {Object} data 
+     * Envoie la requête Ajax.
      */
-    sendAjaxRequest() {
-        this.loader.on()
-
-        $.ajax({
-            url: '/support/change_service',
-            type: 'POST',
-            data: this.getData(),
-            success: data => {
-                this.responseAjax(data)
-            }
-        })
+    async sendAjaxRequest() {
+        if (this.selectType.getOption(this.serviceSelectElt)) {
+            this.loader.on()
+            await fetch('/support/change_service', {
+                method: 'POST',
+                body: new URLSearchParams(this.getData())
+            }).then(response => {
+                response.text().then((data) => {
+                    return this.responseAjax(data)
+                })
+            }).catch(error => {
+            console.error('Error : ' + error)
+            })
+        }
     }
 
     /**
@@ -144,26 +146,4 @@ export default class SwitchServiceSupport {
             elt.classList.remove('fade-in')
         }
     }
-
-    // $serviceElt.change(function () {
-    //     // ... retrieve the corresponding form.
-    //     const $form = $(this).closest('form')
-    //     // Simulate form data, but only include the selected sport value.
-    //     let data = {}
-    //     data[$serviceElt.attr('name')] = $serviceElt.val()
-    //     // Submit data via AJAX to the form's action path.
-    //     $.ajax({
-    //         url: $form.attr('action'),
-    //         type: $form.attr('method'),
-    //         data: data,
-    //         success: function (html) {
-    //             // Replace current position field ...
-    //             $('#support_device').replaceWith(
-    //                 // ... with the returned one from the AJAX response.
-    //                 $(html).find('#support_device')
-    //             )
-    //             // Position field now displays the appropriate positions.
-    //         }
-    //     })
-    // })
 }

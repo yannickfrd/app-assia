@@ -4,15 +4,17 @@ import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import ParametersUrl from '../utils/parametersUrl'
-import language from '@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js'
+import { Modal } from 'bootstrap'
+// import language from '@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js'
 
 export default class SupportNotes {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest()
-        this.loader = new Loader('#modal-note')
         this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
+        this.modalElt = new Modal(document.getElementById('modal-note'))
+        this.loader = new Loader()
 
         this.newNoteBtn = document.getElementById('js-new-note')
         this.noteElts = document.querySelectorAll('.js-note')
@@ -26,7 +28,6 @@ export default class SupportNotes {
         this.btnExportElt = this.modalNoteElt.querySelector('#js-btn-export')
         this.btnDeleteElt = this.modalNoteElt.querySelector('#modal-btn-delete')
 
-        this.modalElt = $('#modal-note')
         this.themeColor = document.getElementById('header').getAttribute('data-color')
         this.autoSaveElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
@@ -49,36 +50,47 @@ export default class SupportNotes {
         })
 
         this.btnSaveElt.addEventListener('click', e => {
-            e.preventDefault()
-            if (this.loader.isInLoading() === false) {
-                this.clearTimer()
+            this.clearTimer(e)
+            if (this.loader.isActive() === false) {
                 this.saveNote()
             }
         })
 
-        this.btnCancelElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.clearTimer()
-        })
+        this.btnCancelElt.addEventListener('click', e => this.clearTimer(e))
 
         this.btnDeleteElt.addEventListener('click', e => {
-            e.preventDefault()
-            if (this.loader.isInLoading() === false) {
-                this.clearTimer()
+            this.clearTimer(e)
+            if (this.loader.isActive() === false) {
                 this.deleteNote()
             }
         })
 
-        let noteElt = document.getElementById('note-' + Number(this.parametersUrl.get('noteId')))
+        const noteElt = document.getElementById('note-' + Number(this.parametersUrl.get('noteId')))
         if (noteElt) {
-            this.modalElt.modal('show')
-            setTimeout(e => {
+            this.modalElt.show()
+            setTimeout(() => {
                 this.getNote(noteElt)
             }, 200)
         }
+
+        this.modalNoteElt.addEventListener('click', e => this.goOutModal(e))
+    }
+    
+    /**
+     * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
+     * @param {Event} e 
+     */
+    goOutModal(e) {
+        if (e.target === this.modalNoteElt && this.count > 0) {
+            if (window.confirm("Attention, vous n'avez pas enregistrer les modifications.\n Voulez-vous les enregistrer ?")) {
+                this.saveNote()
+            }
+        }
     }
 
-    // Initialise CKEditor
+    /**
+     * Initialise CKEditor.
+     */
     ckEditor() {
         DecoupledEditor
             .create(document.querySelector('#editor'), {
@@ -98,8 +110,12 @@ export default class SupportNotes {
             })
     }
 
-    // Affiche un formulaire modal vierge
+    /**
+     * Affiche un formulaire modal vierge.
+     */
     newNote() {
+        this.modalElt.show()
+
         this.modalNoteElt.querySelector('form').action = '/support/' + this.supportId + '/note/new'
         this.modalNoteElt.querySelector('#note_title').value = ''
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_type'), 1)
@@ -111,8 +127,14 @@ export default class SupportNotes {
         this.timerAutoSave()
     }
 
-    // Donne la note sélectionnée dans le formulaire modal
+
+    /**
+     * Donne la note sélectionnée dans le formulaire modal.
+     * @param {HTMLElement} noteElt 
+     */
     getNote(noteElt) {
+        this.modalElt.show();
+
         this.noteElt = noteElt
         this.contentNoteElt = noteElt.querySelector('.card-text')
 
@@ -122,10 +144,10 @@ export default class SupportNotes {
         this.titleNoteElt = noteElt.querySelector('.card-title')
         this.modalNoteElt.querySelector('#note_title').value = this.titleNoteElt.textContent
 
-        let typeValue = noteElt.querySelector('.js-note-type').getAttribute('data-value')
+        const typeValue = noteElt.querySelector('.js-note-type').getAttribute('data-value')
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_type'), typeValue)
 
-        let statusValue = noteElt.querySelector('.js-note-status').getAttribute('data-value')
+        const statusValue = noteElt.querySelector('.js-note-status').getAttribute('data-value')
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), statusValue)
 
         if (this.autoSave === false) {
@@ -143,12 +165,16 @@ export default class SupportNotes {
         this.timerAutoSave()
     }
 
-    // Compte le nombre de saisie dans l'éditeur de texte
+    /**
+     * Compte le nombre de saisie dans l'éditeur de texte.
+     */
     countKeyDown() {
         this.count++
     }
 
-    // Timer pour la sauvegarde automatique
+    /**
+     * Timer pour la sauvegarde automatique.
+     */
     timerAutoSave() {
         clearInterval(this.countdownID)
         this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000) // toutes les 2 minutes
@@ -163,79 +189,91 @@ export default class SupportNotes {
         }
     }
 
-    // Remet à zéro le timer
-    clearTimer() {
+    /**
+     * Remet à zéro le timer.
+     * @param {Event} e 
+     */
+    clearTimer(e) {
+        e.preventDefault()
         this.autoSave = false
         this.count = 0
         clearInterval(this.countdownID)
     }
 
-    // Envoie la requête ajax pour sauvegarder la note
+    /**
+     * Envoie la requête ajax pour sauvegarder la note.
+     */
     saveNote() {
-        if (this.editor.getData() != '') {
-            this.noteContentElt.textContent = this.editor.getData()
-            let formData = new FormData(this.formNoteElt)
-            let formToString = new URLSearchParams(formData).toString()
-
-            if (!this.autoSave) {
-                this.loader.on(false)
-            }
-
-            this.ajaxRequest.init('POST', this.formNoteElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
-        } else {
-            new MessageFlash('danger', 'La note est vide.')
+        if (this.editor.getData() === '') {
+            return new MessageFlash('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
+
+        this.noteContentElt.textContent = this.editor.getData()
+        const formData = new FormData(this.formNoteElt)
+
+        if (!this.autoSave) {
+            this.loader.on()
+        }
+
+        this.ajaxRequest.send('POST', this.formNoteElt.getAttribute('action'), this.responseAjax.bind(this), true, new URLSearchParams(formData))
     }
 
-    // Envoie la requête ajax pour supprimer la note
+    /**
+     * Envoie la requête ajax pour supprimer la note.
+     */
     deleteNote() {
         if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
-            this.loader.on(true)
-            this.ajaxRequest.init('GET', this.btnDeleteElt.href, this.responseAjax.bind(this), true, null)
+            this.loader.on()
+            this.ajaxRequest.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this), true, null)
         }
     }
 
-    // Réponse du serveur
+    /**
+     * Réponse du serveur
+     * @param {Object} response 
+     */
     responseAjax(response) {
 
-        let data = JSON.parse(response)
-
-        if (data.code === 200) {
-            switch (data.action) {
+        if (response.code === 200) {
+            switch (response.action) {
                 case 'create':
-                    this.createNote(data.data)
+                    this.createNote(response.data)
                     break
                 case 'update':
                     if (!this.autoSave) {
-                        this.updateNote(data.data)
+                        this.updateNote(response.data)
                     }
                     break
                 case 'delete':
                     document.getElementById('note-' + this.cardId).remove()
                     this.updateCounts(-1)
+                    this.modalElt.hide();
                     break
             }
 
             if (!this.autoSave) {
-                new MessageFlash(data.alert, data.msg)
-                this.loader.off(true)
+                this.modalElt.hide();
+                new MessageFlash(response.alert, response.msg)
+                this.loader.off()
             }
         }
     }
 
-    // Crée la note dans le container
+    /**
+     * Crée la note dans le container.
+     * @param {Object} data 
+     */
     createNote(data) {
-        let noteElt = document.createElement('div')
+        const noteElt = document.createElement('div')
         noteElt.id = 'note-' + data.noteId
         this.modalNoteElt.querySelector('form').action = '/note/' + data.noteId + '/edit'
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
-        let title = this.modalNoteElt.querySelector('#note_title').value
 
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 js-note reveal'
         noteElt.innerHTML =
             `<div class='card h-100 shadow'>
                 <div class='card-header'>
-                    <h3 class='card-title h5 text-${this.themeColor}'>${title}</h3>
+                    <h3 class='card-title h5 text-${this.themeColor}'>${this.modalNoteElt.querySelector('#note_title').value}</h3>
                     <span class='js-note-type' data-value='1'>${data.type}</span>
                     <span class='js-note-status' data-value='1'>(${data.status})</span>
                     <span class='small text-secondary js-note-created'>${data.editInfo}</span>
@@ -247,7 +285,7 @@ export default class SupportNotes {
                 </div>
             </div>`
 
-        let containerNotesElt = document.getElementById('container-notes')
+        const containerNotesElt = document.getElementById('container-notes')
         containerNotesElt.insertBefore(noteElt, containerNotesElt.firstChild)
         // Met à jour le nombre de notes
         this.updateCounts(1)
@@ -261,23 +299,30 @@ export default class SupportNotes {
         noteElt.addEventListener('click', this.getNote.bind(this, noteElt))
     }
 
-    // Met à jour la note dans le container
+    /**
+     * Met à jour la note dans le container.
+     * @param {Object} data 
+     */
     updateNote(data) {
         this.titleNoteElt.textContent = this.modalNoteElt.querySelector('#note_title').value
         this.contentNoteElt.innerHTML = this.editor.getData()
 
-        let noteTypeElt = this.noteElt.querySelector('.js-note-type')
+        const noteTypeElt = this.noteElt.querySelector('.js-note-type')
         noteTypeElt.textContent = data.type
 
         noteTypeElt.setAttribute('data-value', this.selectType.getOption(this.modalNoteElt.querySelector('#note_type')))
 
-        let noteStatusElt = this.noteElt.querySelector('.js-note-status')
+        const noteStatusElt = this.noteElt.querySelector('.js-note-status')
         noteStatusElt.textContent = '(' + data.status + ')'
         noteStatusElt.setAttribute('data-value', this.selectType.getOption(this.modalNoteElt.querySelector('#note_status')))
 
         this.noteElt.querySelector('.js-note-updated').textContent = data.editInfo
     }
 
+    /**
+     * Met à jour le copteur du nombre de notes.
+     * @param {Number} value 
+     */
     updateCounts(value) {
         this.countNotesElt.textContent = parseInt(this.countNotesElt.textContent) + value
         if (this.nbTotalNotesElt) {

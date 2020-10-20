@@ -60,11 +60,15 @@ export default class Username {
     }
 
     sendAjaxRequest() {
-        this.ajaxRequest.init('GET', '/user/username_exists?value=' + this.usernameInputElt.value, this.response.bind(this), true)
+        this.ajaxRequest.send('GET', '/user/username_exists?value=' + this.usernameInputElt.value, this.response.bind(this), true)
     }
 
+    /**
+     * Réponse du serveur
+     * @param {Object} data 
+     */
     response(data) {
-        if (JSON.parse(data).response === true) {
+        if (data.response === true) {
             return this.validationForm.invalidField(this.usernameInputElt, 'Ce login est déjà pris !')
         }
         return this.validationForm.validField(this.usernameInputElt)

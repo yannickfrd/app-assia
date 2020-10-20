@@ -10,9 +10,10 @@
 	{% set EDIT_MODE = form.vars.value.evalBudgetGroup ? true : false %}
 	{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 	{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
+	{% set people_filtered_by_age = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
+	{% set people_without_children = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
 
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
-
 	<div class="container">
 	
 		{% set support = evaluationGroup.supportGroup %}
@@ -27,8 +28,7 @@
 		<div id="js-msg-flash-content"></div>
 
 		<div class="row my-3 align-items-center">
-			<div class="col-md-8 my-1 small text-secondary">
-				Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y") }}
+			<div class="col-md-8 my-1 small text-secondary">Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y") }}
 				{% if evaluationGroup.updatedAt %} (modifiée le {{ evaluationGroup.updatedAt|date("d/m/Y à H:i") }}){% endif %}
 			</div>
 			<div class="col-md-4 my-1">
@@ -39,13 +39,10 @@
 			</div>
 		</div>
 
-		{% set form_evaluationPeople_filteredByAge = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
-		{% set form_evaluationPeople_filteredByRole = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
-
 		<div class="mb-4" data-edit-mode="{% if EDIT_MODE %}true{% else %}false{% endif %}">
 			{% set badgeTitle %}
-				<span class="badge badge-pill badge-warning fade-out ml-2" data-toggle="tooltip" data-placement="bottom" 
-					title="Nombre d'informations importantes manquantes dans le bloc"></span>
+				<span class="badge badge-pill badge-warning fade-out ml-2 small" data-toggle="tooltip" data-placement="bottom" 
+					title="Nombre d'informations importantes non-renseignées dans le bloc"></span>
 			{% endset %}
 			{% include "app/evaluation/initEvaluation.html.twig" %}
 			{% if support.service.justice == YES %}

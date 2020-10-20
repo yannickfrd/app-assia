@@ -177,6 +177,7 @@ class NoteRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('n')->select('COUNT(n.id)');
 
         if ($criteria) {
+            $dateFilter = $criteria['filterDateBy'] ?? 'createdAt';
             $query = $query->leftJoin('n.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
@@ -193,11 +194,11 @@ class NoteRepository extends ServiceEntityRepository
                     ->setParameter('device', $value);
                 }
                 if ('startDate' == $key) {
-                    $query = $query->andWhere('n.createdAt >= :startDate')
+                    $query = $query->andWhere("n.$dateFilter >= :startDate")
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' == $key) {
-                    $query = $query->andWhere('n.createdAt <= :endDate')
+                    $query = $query->andWhere("n.$dateFilter <= :endDate")
                             ->setParameter('endDate', $value);
                 }
                 if ('createdBy' == $key) {

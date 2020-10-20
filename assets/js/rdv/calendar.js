@@ -3,12 +3,15 @@ import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import DateFormat from '../utils/dateFormat'
 import SelectType from '../utils/selectType'
+import { Modal } from 'bootstrap'
 
 export default class Calendar {
 
     constructor() {
         this.ajaxRequest = new AjaxRequest()
-        this.loader = new Loader('#modal-rdv')
+        this.loader = new Loader()
+        this.modalElt = new Modal(document.getElementById('modal-rdv'))
+
         this.selectType = new SelectType()
 
         this.newRdvBtn = document.getElementById('js-new-rdv')
@@ -39,12 +42,12 @@ export default class Calendar {
     }
 
     init() {
-        this.newRdvBtn.addEventListener('click', this.resetData.bind(this))
+        this.newRdvBtn.addEventListener('click', e => this.resetData(e))
 
         this.dayElts.forEach(dayElt => {
             this.hideRdvElts(dayElt)
-            dayElt.addEventListener('click', () => {
-                this.resetData()
+            dayElt.addEventListener('click', e => {
+                this.resetData(e)
                 this.dateInput.value = dayElt.id
                 this.modalRdvElt.querySelector('#rdv_start').value = dayElt.id + 'T00:00'
                 this.modalRdvElt.querySelector('#rdv_end').value = dayElt.id + 'T00:00'
@@ -52,8 +55,8 @@ export default class Calendar {
         })
 
         this.rdvElts.forEach(rdvElt => {
-            rdvElt.addEventListener('click', () => {
-                this.resetData()
+            rdvElt.addEventListener('click', e => {
+                this.resetData(e)
                 this.requestGetRdv(rdvElt)
             })
         })
@@ -62,10 +65,7 @@ export default class Calendar {
         this.startInput.addEventListener('input', this.checkStart.bind(this))
         this.endInput.addEventListener('focusout', this.checkEnd.bind(this))
 
-        this.btnSaveElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.requestSaveRdv()
-        })
+        this.btnSaveElt.addEventListener('click', e => this.requestSaveRdv(e))
 
         // this.btnCancelElt.addEventListener('click', e => {
         //     e.preventDefault()
@@ -79,8 +79,10 @@ export default class Calendar {
 
     /**
      * Réinialise le formulaire modal de rdv.
+     * @param {Event} e 
      */
-    resetData() {
+    resetData(e) {
+        e.preventDefault()
         if (this.supportElt) {
             this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.getAttribute('data-support') + '/rdv/new'
             let fullname = this.supportPeopleElt.querySelector('.btn').textContent
@@ -106,6 +108,8 @@ export default class Calendar {
         // this.modalRdvElt.querySelector('#rdv_status').value = 0
         this.modalRdvElt.querySelector('#rdv_content').value = ''
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
+
+        this.modalElt.show()
     }
 
     /**
@@ -154,19 +158,22 @@ export default class Calendar {
         this.loader.on()
         this.rdvElt = rdvElt
         this.rdvId = Number(this.rdvElt.id.replace('rdv-', ''))
-        this.ajaxRequest.init('GET', '/rdv/' + this.rdvId + '/get', this.responseAjax.bind(this), true)
+        this.ajaxRequest.send('GET', '/rdv/' + this.rdvId + '/get', this.responseAjax.bind(this), true)
     }
 
     /**
      * Requête pour sauvegarder le RDV.
+     * @param {Event} e 
      */
-    requestSaveRdv() {
+    requestSaveRdv(e) {
+        e.preventDefault()
+
         if (this.modalRdvElt.querySelector('#rdv_title').value != '') {
             this.updateDatetimes()
             let formData = new FormData(this.formRdvElt)
             let formToString = new URLSearchParams(formData).toString()
-            this.loader.on(true)
-            this.ajaxRequest.init('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
+            this.loader.on()
+            this.ajaxRequest.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
         } else {
             new MessageFlash('danger', 'La rdv est vide.')
         }
@@ -177,29 +184,35 @@ export default class Calendar {
      */
     requestDeleteRdv() {
         if (window.confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
-            this.loader.on(true)
-            this.ajaxRequest.init('GET', this.btnDeleteElt.href, this.responseAjax.bind(this), true, null)
+            this.loader.on()
+            this.ajaxRequest.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this), true, null)
         }
     }
 
+    /**
+     * Donne la réponse à la requête Ajax.
+     * @param {Object} data 
+     */
     responseAjax(data) {
-        let dataJSON = JSON.parse(data)
-        if (dataJSON.code === 200) {
-            if (dataJSON.action === 'show') {
-                this.showRdv(dataJSON.rdv)
+        if (data.code === 200) {
+            if (data.action === 'show') {
+                this.showRdv(data.rdv)
+                this.modalElt.show()
             }
-            if (dataJSON.action === 'create') {
-                this.createRdv(dataJSON.rdv)
+            if (data.action === 'create') {
+                this.createRdv(data.rdv)
             }
-            if (dataJSON.action === 'update') {
-                this.updateRdv(dataJSON.rdv)
+            if (data.action === 'update') {
+                this.updateRdv(data.rdv)
             }
-            if (dataJSON.action === 'delete') {
-                this.deleteRdv(dataJSON.rdv)
+            if (data.action === 'delete') {
+                this.deleteRdv(data.rdv)
             }
         }
-        if (dataJSON.msg) {
-            new MessageFlash(dataJSON.alert, dataJSON.msg)
+        if (data.msg) {
+            console.log('hide');
+            this.modalElt.hide();
+            new MessageFlash(data.alert, data.msg)
         }
         this.loader.off()
     }

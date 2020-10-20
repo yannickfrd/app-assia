@@ -33,21 +33,23 @@ export default class UpdatePerson {
                     const formData = new FormData(this.personFormElt)
                     const formToString = new URLSearchParams(formData).toString()
                     const url = this.updatePersonBtnElt.getAttribute('data-url')
-                    this.ajaxRequest.init('POST', url, this.response.bind(this), true, formToString)
+                    this.ajaxRequest.send('POST', url, this.response.bind(this), true, formToString)
                 }
             })
         }
     }
 
+    /**
+     * Donne la réponse à la requête Ajax.
+     * @param {Object} data 
+     */
     response(data) {
-        const dataJSON = JSON.parse(data)
-
-        if (dataJSON.code === 200) {
-            if (dataJSON.alert === 'success') {
-                document.getElementById('js-person-updated').textContent = '(modifié le ' + dataJSON.date + ' par ' + dataJSON.user + ')'
+        if (data.code === 200) {
+            if (data.alert === 'success') {
+                document.getElementById('js-person-updated').textContent = `(modifié le ${data.date} par ${data.user}')`
             }
         }
         this.loader.off()
-        new MessageFlash(dataJSON.alert, dataJSON.msg)
+        new MessageFlash(data.alert, data.msg)
     }
 }

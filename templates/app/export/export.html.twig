@@ -4,6 +4,10 @@
 
 {% block title %}Export des données{{ parent() }}{% endblock %}
 
+{% block stylesheets %}
+	{{ encore_entry_link_tags("multiSelect") }}
+{% endblock %}
+
 {% block body %}
 
     <div class="container">
@@ -156,5 +160,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags("search") }}
-{{ encore_entry_script_tags("export") }}
+    {{ encore_entry_script_tags("export") }}
 {% endblock javascripts %}

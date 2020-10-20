@@ -17,11 +17,11 @@ export default class AjaxRequest {
      * Initialisation de la requête AJAX.
      * @param {String} method 
      * @param {String} url 
-     * @param {*} callback 
+     * @param {CallableFunction} callback 
      * @param {Bool} async 
      * @param {Object} data 
      */
-    init(method = 'POST', url, callback, async = true, data = null) {
+    send(method = 'GET', url, callback, async = true, data = null) {
         this.timeSend = Date.now() // Temp pour test
         this.xhr.open(method, url, async)
 
@@ -39,15 +39,16 @@ export default class AjaxRequest {
 
     /**
      * Retourne le résultat de la requête.
-     * @param {*} callback 
+     * @param {CallableFunction} callback 
      * @param {String} url 
      */
     load(callback, url) {
         if (this.xhr.status >= 200 && this.xhr.status < 400) {
             this.timeResp = Date.now() // Temp pour test
             let time = (this.timeResp - this.timeSend) / 1000 // Temp pour test
-            console.log('Statut: ' + this.xhr.status + ', Time: ' + time + 's')
-            return callback(this.xhr.responseText) // Appelle la fonction callback en lui passant la réponse de la requête
+            console.log(`AJAX time: ${time}s`)
+            // Appelle la fonction callback en lui passant la réponse de la requête
+            return callback(this.parseResponse(this.xhr.responseText))
         }
         console.error('Statut: ' + this.xhr.status + ' ' + this.xhr.statusText + ' ' + url)
         this.loader.off()
@@ -56,6 +57,18 @@ export default class AjaxRequest {
             return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action.')
         }
         return new MessageFlash('danger', `Une erreur s'est produite (${this.xhr.status} ${this.xhr.statusText}).`)
+    }
+
+    /**
+     * Essaie de parser si JSON.
+     * @param {*} response
+     */
+    parseResponse(response) {
+        try {
+            return JSON.parse(response);
+        } catch (e) {
+            return response;
+        }
     }
 
     /**

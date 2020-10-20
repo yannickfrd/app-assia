@@ -1,6 +1,8 @@
 import AjaxRequest from './ajaxRequest'
 import Loader from './loader'
 import SwitchServiceSupport from '../support/switchServiceSupport'
+import { Modal } from 'bootstrap'
+
 /**
  * Requête Ajax pour afficher un nouveau formulaire.
  */
@@ -9,9 +11,9 @@ export default class NewForm {
     constructor(btnId, containerId, modalId) {
         this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader()
+        this.modalElt = new Modal(document.getElementById(modalId))
         this.btnElt = document.getElementById(btnId)
         this.containerElt = document.getElementById(containerId)
-        this.modalElt = $('#' + modalId)
         this.init()
     }
 
@@ -19,7 +21,7 @@ export default class NewForm {
         if (this.btnElt) {
             this.btnElt.addEventListener('click', e => {
                 e.preventDefault()
-                if (this.loader.isInLoading() === false) {
+                if (this.loader.isActive() === false) {
                     this.sendRequest(this.btnElt)
                 }
             })
@@ -32,18 +34,18 @@ export default class NewForm {
      */
     sendRequest(btnElt) {
         this.loader.on()
-        this.ajaxRequest.init('GET', btnElt.getAttribute('data-url'), this.response.bind(this), true), {
+        this.ajaxRequest.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this), true), {
             once: true
         }
     }
 
     /**
      * Récupère les données envoyées par le serveur.
-     * @param {Array} data 
+     * @param {Object} data 
      */
     response(data) {
-        this.containerElt.innerHTML = JSON.parse(data).data.form.content
-        this.modalElt.modal('show')
+        this.containerElt.innerHTML = data.data.form.content
+        this.modalElt.show()
         this.loader.off()
         new SwitchServiceSupport()
     }

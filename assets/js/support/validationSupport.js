@@ -29,17 +29,17 @@ export default class ValidationSupport {
     }
 
     init() {
-        this.serviceSelectElt.addEventListener('change', this.changeService.bind(this))
-        this.subServiceSelectElt.addEventListener('change', this.changeService.bind(this))
+        this.serviceSelectElt.addEventListener('change', () => this.sendAjaxRequest())
+        this.subServiceSelectElt.addEventListener('change', () => this.sendAjaxRequest())
 
         this.dateInputElts.forEach(dateInputElt => {
-            dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
+            dateInputElt.addEventListener('focusout', () => this.checkDate(dateInputElt))
         })
 
         if (this.statusSelectElt) {
-            this.startDateInputElt.addEventListener('focusout', this.checkStartDate.bind(this))
-            this.endDateInputElt.addEventListener('focusout', this.checkEndDate.bind(this))
-            this.endStatusInputElt.addEventListener('change', this.checkEndStatus.bind(this))
+            this.startDateInputElt.addEventListener('focusout', () => this.checkStartDate())
+            this.endDateInputElt.addEventListener('focusout', () => this.checkEndDate())
+            this.endStatusInputElt.addEventListener('change', () => this.checkEndStatus())
             this.checkFormBeforeSubmit()
         }
         this.displayFields()
@@ -147,21 +147,27 @@ export default class ValidationSupport {
         }
         return this.validationForm.validField(this.endStatusInputElt)
     }
-
+    
     /**
-     * Au changement de service dans la liste déroulante.
+     * Envoie la requête Ajax.
      */
-    changeService() {
+    async sendAjaxRequest() {
         if (this.selectType.getOption(this.serviceSelectElt)) {
             this.loader.on()
-
-            $.ajax({
-                url: '/support/change_service',
-                type: 'POST',
-                data: this.getData(),
-                success: data => {
-                    this.responseAjax(data)
-                }
+            await fetch('/support/change_service', {
+                method: 'POST',
+                body: new URLSearchParams(this.getData())
+                // body: JSON.stringify(this.getData()),
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // }
+            }).then(response => {
+                // console.log(response)
+                response.text().then((data) => {
+                    return this.responseAjax(data)
+                })
+            }).catch(error => {
+                console.error('Error : ' + error)
             })
         }
     }
@@ -176,7 +182,6 @@ export default class ValidationSupport {
         selectElts.forEach(selectElt => {
             data[selectElt.getAttribute('name')] = this.selectType.getOption(selectElt)
         })
-
         return data
     }
 

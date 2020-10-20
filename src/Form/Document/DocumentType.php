@@ -38,6 +38,9 @@ class DocumentType extends AbstractType
                     new File([
                         'maxSize' => '5M',
                         'mimeTypes' => [
+                            'text/plain',
+                            'text/csv',
+                            'application/txt',
                             'application/pdf',
                             'application/x-pdf',
                             'image/jpeg',
@@ -48,6 +51,9 @@ class DocumentType extends AbstractType
                             'application/zip',
                             'application/vnd.ms-excel',
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.oasis.opendocument.spreadsheet',
+                            'application/vnd.oasis.opendocument.text',
+                            'application/vnd.oasis.opendocument.presentation',
                         ],
                         'mimeTypesMessage' => 'document.file.mimeMessage',
                     ]),

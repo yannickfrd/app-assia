@@ -19,19 +19,22 @@ export default class UpdateEvaluation {
             btnSubmitElt.addEventListener('click', e => {
                 if (this.editMode === 'true') {
                     e.preventDefault()
-                    if (this.loader.isInLoading() === false) {
+                    if (this.loader.isActive() === false) {
                         this.loader.on()
                         let formToString = new URLSearchParams(new FormData(this.formElt)).toString()
-                        this.ajaxRequest.init('POST', btnSubmitElt.getAttribute('data-url'), this.response.bind(this), true, formToString)
+                        this.ajaxRequest.send('POST', btnSubmitElt.getAttribute('data-url'), this.response.bind(this), true, formToString)
                     }
                 }
             })
         })
     }
 
+    /**
+     * Réponse du serveur.
+     * @param {Object} response 
+     */
     response(response) {
-        let data = JSON.parse(response)
         this.loader.off()
-        new MessageFlash(data.alert, data.msg)
+        new MessageFlash(response.alert, response.msg)
     }
 }

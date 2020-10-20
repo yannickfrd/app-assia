@@ -1,10 +1,19 @@
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
+import { Modal } from 'bootstrap'
 
+/**
+ * Classe de gestion des documents.
+ */
 export default class SupportDocuments {
 
     constructor() {
+        this.loader = new Loader()
+        this.modalElt = new Modal(document.getElementById('modal-document'))
+        this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
+        this.selectType = new SelectType()
+
         this.modalDocumentElt = document.getElementById('modal-document')
         this.formDocumentElt = this.modalDocumentElt.querySelector('form[name=document]')
         this.documentNameInput = this.modalDocumentElt.querySelector('#document_name')
@@ -22,9 +31,6 @@ export default class SupportDocuments {
         this.countDocumentsElt = document.getElementById('count-documents')
         this.supportId = document.getElementById('container-documents').getAttribute('data-support')
 
-        this.loader = new Loader('#modal-document')
-        this.selectType = new SelectType()
-
         this.init()
     }
 
@@ -34,34 +40,30 @@ export default class SupportDocuments {
         this.documentFileInput.addEventListener('input', this.checkFile.bind(this))
 
         document.querySelectorAll('.js-document').forEach(documentElt => {
-            documentElt.addEventListener('click', this.getDocument.bind(this, documentElt))
-            let btnElt = documentElt.querySelector('button.js-delete')
-            btnElt.addEventListener('click', () => {
-                this.modalConfirmElt.setAttribute('data-url', btnElt.getAttribute('data-url'))
+            documentElt.addEventListener('click', e => this.getDocument(e, documentElt))
+            const btnDeleteElt = documentElt.querySelector('button.js-delete')
+            btnDeleteElt.addEventListener('click', () => {
+                this.modalDeleteElt.show();
+                this.documentId = Number(btnDeleteElt.parentElement.parentElement.id.replace('document-', ''))
+                this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
             })
         })
 
-        this.btnSaveElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.saveDocument()
-        })
+        this.btnSaveElt.addEventListener('click', e => this.saveDocument(e))
 
-        document.getElementById('js-btn-cancel').addEventListener('click', e => {
-            e.preventDefault()
-        })
+        document.getElementById('js-btn-cancel').addEventListener('click', e => e.preventDefault())
 
-        this.btnDeleteElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.deleteDocument(this.btnDeleteElt.href)
-        })
+        this.btnDeleteElt.addEventListener('click', e => this.deleteDocument(e, this.btnDeleteElt.href))
 
         this.modalConfirmElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajaxRequest(this.modalConfirmElt.getAttribute('data-url'), 'GET', null, false, false)
+            this.sendRequest('GET', this.modalConfirmElt.getAttribute('data-url'))
         })
     }
 
-    // Affiche un formulaire modal vierge
+    /**
+     * Affiche un formulaire modal vierge.
+     */
     newDocument() {
         this.modalDocumentElt.querySelector('form').action = '/support/' + this.supportId + '/document/new'
         this.documentNameInput.value = ''
@@ -74,12 +76,21 @@ export default class SupportDocuments {
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
         this.btnSaveElt.setAttribute('data-action', 'new')
         this.btnSaveElt.textContent = 'Enregistrer'
+        this.modalElt.show()
     }
 
 
 
-    // Donne le document sélectionné dans le formulaire modal
-    getDocument(documentElt) {
+    /**
+     * Donne le document sélectionné dans le formulaire modal.
+     * @param {Event} e 
+     * @param {HTMLElement} documentElt 
+     */
+    getDocument(e, documentElt) {
+        if (e.target.localName != 'td') {
+            return null
+        }
+
         this.documentElt = documentElt
         this.contentDocumentElt = documentElt.querySelector('.document-content')
 
@@ -89,7 +100,7 @@ export default class SupportDocuments {
         this.nameDocumentElt = documentElt.querySelector('.js-document-name')
         this.documentNameInput.value = this.nameDocumentElt.textContent
 
-        let typeValue = documentElt.querySelector('.js-document-type').getAttribute('data-value')
+        const typeValue = documentElt.querySelector('.js-document-type').getAttribute('data-value')
         this.selectType.setOption(this.documentTypeInput, typeValue)
 
         this.contentDocumentElt = documentElt.querySelector('.js-document-content')
@@ -102,28 +113,31 @@ export default class SupportDocuments {
 
         this.btnSaveElt.setAttribute('data-action', 'edit')
         this.btnSaveElt.textContent = 'Mettre à jour'
+        this.modalElt.show()
     }
 
-    // Vérifie le fichier choisi
+    /**
+     * Vérifie le fichier choisi.
+     */
     checkFile() {
         let error = false
-        let validExtensions = ['doc', 'docx', 'jpg', 'pdf', 'png', 'rar', 'xls', 'xlsx', 'zip']
-        let extensionFile = this.documentFileInput.value.split('.').pop().toLowerCase()
+        const validExtensions = ['csv', 'doc', 'docx', 'jpg', 'odp', 'ods', 'odt', 'pdf', 'png', 'rar', 'txt', 'xls', 'xlsx', 'zip']
+        const extensionFile = this.documentFileInput.value.split('.').pop().toLowerCase()
         // Vérifie si l'extension du fichier est valide
         if ((validExtensions.indexOf(extensionFile) === -1)) {
             error = true
-            new MessageFlash('danger', 'Le format du fichier n\'est pas valide (' + extensionFile + '). Formats acceptés : doc, docx, jpg, pdf, png, rar, xls, xlsx, zip.')
+            new MessageFlash('danger', `Le format du fichier n'est pas valide (${extensionFile}).\n'Formats acceptés : ${validExtensions.join(', ')}.`)
         }
 
-        let sizeFile = Math.round((this.documentFileInput.files[0].size / 1024 / 1024) * 10) / 10
+        const sizeFile = Math.round((this.documentFileInput.files[0].size / 1024 / 1024) * 10) / 10
         // Vérifie si le fichier est supérieur à 5 Mo
         if (sizeFile > 5) {
             error = true
-            new MessageFlash('danger', 'Le fichier est trop volumineux (' + sizeFile + ' Mo). Maximum : 5 Mo.')
+            new MessageFlash('danger', `Le fichier est trop volumineux (${sizeFile} Mo). Maximum : 5 Mo.`)
         }
         // Si le fichier est valide, affiche le nom
         if (error === false) {
-            let fileName = this.documentFileInput.value.split('\\').pop()
+            const fileName = this.documentFileInput.value.split('\\').pop()
             this.documentFileLabelElt.textContent = fileName
             this.documentFileLabelElt.classList.add('small')
             if (!this.documentNameInput.value) {
@@ -137,120 +151,152 @@ export default class SupportDocuments {
         }
     }
 
-    // Enregistre le document
-    saveDocument() {
-        let error = false
+    /**
+     * Enregistre le document.
+     * @param {Event} e
+     */
+    saveDocument(e) {
+        e.preventDefault()
 
         if (!this.documentNameInput.value) {
-            error = true
-            new MessageFlash('danger', 'Le nom du document est vide.')
+            return  new MessageFlash('danger', 'Le nom du document est vide.')
         }
 
         if (!this.selectType.getOption((this.documentTypeInput))) {
-            error = true
-            new MessageFlash('danger', 'Le type de document n\'est pas renseigné.')
+            return new MessageFlash('danger', 'Le type de document n\'est pas renseigné.')
         }
 
         if (this.btnSaveElt.getAttribute('data-action') === 'new' && !this.documentFileInput.value) {
-            error = true
-            new MessageFlash('danger', 'Il n\'y a pas de fichier choisi.')
+            return new MessageFlash('danger', 'Il n\'y a pas de fichier choisi.')
         }
+        
+        this.loader.on()
 
-        if (error === false) {
-            let formData = new FormData(this.formDocumentElt)
-            formData.append('file', $('input[type=file]')[0].files[0])
-            this.ajaxRequest(this.formDocumentElt.getAttribute('action'), 'POST', formData, false, false)
-        }
+        this.uploadFiles(this.formDocumentElt.getAttribute('action'))
     }
 
-    // Envoie une requête ajax pour supprimer le document
-    deleteDocument(url) {
+    /**
+     * 
+     * @param {String} url 
+     */
+    uploadFiles(url) {
+        const formData = new FormData(this.formDocumentElt)
+        formData.append('file', this.documentFileInput.files)
+        
+        this.sendRequest('POST', url, formData)
+    }
+
+    /**
+     * Envoie une requête ajax pour supprimer le document.
+     * @param {Event} e
+     * @param {String} url
+     */
+    deleteDocument(e, url) {
+        e.preventDefault()
+        this.loader.on()
         if (window.confirm('Voulez-vous vraiment supprimer ce document ?')) {
-            this.ajaxRequest(url, 'GET', null, false, false)
+            this.sendRequest('GET', url)
         }
     }
 
-    // Requête Ajax
-    ajaxRequest(url, type, data, processData, contentType) {
-        this.loader.on(true)
-        $.ajax({
-            url: url,
-            type: type,
-            data: data,
-            processData: processData,
-            contentType: contentType,
-            success: function (response) {
-                this.responseAjax(response)
-            }.bind(this),
-            error: function (jqXHR, textStatus, errorMessage) {
-                if (errorMessage === 'Forbidden') {
-                    return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action.')
-                }
-                return new MessageFlash('danger', 'Une erreur s\'est produite. ' + errorMessage + ' (' + textStatus + ')')
-            }.bind(this)
+    /**
+     * Envoie la requête Ajax.
+     * @param {String} url 
+     * @param {String} type 
+     * @param {Object} data 
+     */
+    async sendRequest(type = 'GET', url, data = null) {
+        this.loader.on()
+
+        await fetch(url, {
+            method: type, 
+            body: data
+        }).then(response => {
+            response.json().then((data) => {
+                return this.responseAjax(data)
+            })
+        }).catch(error => {
+            console.error('Error : ' + error)
         })
     }
 
-    // Réponse du serveur
-    responseAjax(data) {
-        if (data.code === 200) {
-            switch (data.action) {
+    /**
+     * Réponse du serveur.
+     * @param {Object} response 
+     */
+    responseAjax(response) {     
+        if (response.code === 200) {
+            switch (response.action) {
                 case 'create':
-                    this.createDocument(data.data)
+                    this.createDocument(response.data)
                     break
                 case 'update':
-                    this.updateDocument(data.data)
+                    this.updateDocument(response.data)
                     break
                 case 'delete':
                     document.getElementById('document-' + this.documentId).remove()
                     this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) - 1
                     break
+                }
             }
-        }
-        new MessageFlash(data.alert, data.msg)
-        this.loader.off()
+            this.modalElt.hide()
+            new MessageFlash(response.alert, response.msg)
+            this.loader.off()
     }
 
-    // Crée la ligne du nouveau document dans le tableau
+    /**
+     * Crée la ligne du nouveau document dans le tableau.
+     * @param {Object} data 
+     */
     createDocument(data) {
-        let documentElt = document.createElement('tr')
+        const documentElt = document.createElement('tr')
         documentElt.id = 'document-' + data.documentId
         documentElt.className = 'js-document'
 
         documentElt.innerHTML = this.getPrototypeDocument(data)
 
-        let containerDocumentsElt = document.getElementById('container-documents')
+        const containerDocumentsElt = document.getElementById('container-documents')
         containerDocumentsElt.insertBefore(documentElt, containerDocumentsElt.firstChild)
         this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + 1
-        documentElt.addEventListener('click', this.getDocument.bind(this, documentElt))
-        let btnElt = documentElt.querySelector('button.js-delete')
-        btnElt.addEventListener('click', () => {
-            this.modalConfirmElt.setAttribute('data-url', btnElt.getAttribute('data-url'))
+        documentElt.addEventListener('click', e => this.getDocument(e, documentElt))
+        const btnDeleteElt = documentElt.querySelector('button.js-delete')
+        btnDeleteElt.addEventListener('click', () => {
+            this.modalDeleteElt.show()
+            this.documentId = Number(btnDeleteElt.parentElement.parentElement.id.replace('document-', ''))
+            this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
         })
     }
 
-    // Met à jour la ligne du tableau correspondant au document
+    /**
+     * Met à jour la ligne du tableau correspondant au document.
+     * @param {Object} data 
+     */
     updateDocument(data) {
         this.nameDocumentElt.textContent = this.documentNameInput.value
-        let documentTypeInput = this.documentElt.querySelector('.js-document-type')
+        const documentTypeInput = this.documentElt.querySelector('.js-document-type')
         documentTypeInput.textContent = data.type
         documentTypeInput.setAttribute('data-value', this.selectType.getOption(this.documentTypeInput))
         this.documentElt.querySelector('.js-document-content').textContent = this.documentContentInput.value
     }
 
     getPrototypeDocument(data) {
-        let size = Math.floor(data.size / 1000) + ' Ko'
+        const size = Math.floor(data.size / 1000) + ' Ko'
 
-        return `<th scope='row' class='align-middle text-center'>
-                    <a href='/document/${data.documentId}/read' class='btn btn-${this.themeColor} btn-sm shadow my-1' title='Télécharger le document'><span class='fas fa-file-download'></span></a>
-                </th>
-                    <td class='align-middle js-document-name' data-toggle='modal' data-target='#modal-document'>${this.documentNameInput.value}</td>
-                    <td class='align-middle js-document-type' data-toggle='modal' data-target='#modal-document' data-value='${this.selectType.getOption(this.documentTypeInput)}'>${data.type}</td>
-                    <td class='align-middle js-document-content' data-toggle='modal' data-target='#modal-document'>${this.documentContentInput.value}</td>
-                    <td class='align-middle js-document-size text-right' data-toggle='modal' data-target='#modal-document'>${size}</td>
-                    <td class='align-middle js-document-createdAt' data-toggle='modal' data-target='#modal-document'>${data.createdAt}</td>
+        return `<td scope='row' class='align-middle text-center'>
+                    <a href='/document/${data.documentId}/read' class='btn btn-${this.themeColor} btn-sm shadow my-1' 
+                        title='Télécharger le document'><span class='fas fa-file-download'></span>
+                    </a>
+                </rd>
+                    <td class='align-middle js-document-name'>${this.documentNameInput.value}</td>
+                    <td class='align-middle js-document-type'
+                        data-value='${this.selectType.getOption(this.documentTypeInput)}'>${data.type}</td>
+                    <td class='align-middle js-document-content'>${this.documentContentInput.value}</td>
+                    <td class='align-middle js-document-size text-right'>${size}</td>
+                    <td class='align-middle js-document-createdAt'>${data.createdAt}</td>
                     <td class='align-middle text-center'>
-                        <button data-url='/document/${data.documentId}/delete' class='js-delete btn btn-danger btn-sm shadow my-1' title='Supprimer le document' data-toggle='modal' data-target='#modal-document'><span class='fas fa-trash-alt'></span></button>
+                        <button data-url='/document/${data.documentId}/delete' class='js-delete btn btn-danger btn-sm shadow my-1' 
+                            title='Supprimer le document'><span class='fas fa-trash-alt'></span>
+                        </button>
                 </td>`
     }
 }
