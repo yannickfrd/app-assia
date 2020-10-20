@@ -228,11 +228,8 @@ class EvaluationController extends AbstractController
 
     protected function discache(EvaluationGroup $evaluationGroup)
     {
-        $id = $evaluationGroup->getSupportGroup()->getId();
-
         return (new CacheService())->discache(
-            SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
-            EvaluationGroup::CACHE_KEY.$id,
+            EvaluationGroup::CACHE_KEY.$evaluationGroup->getSupportGroup()->getId(),
         );
     }
 }

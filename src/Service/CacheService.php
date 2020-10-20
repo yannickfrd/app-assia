@@ -4,21 +4,14 @@ namespace App\Service;
 
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
-class CacheService
+class CacheService extends FilesystemAdapter
 {
-    protected $cache;
-
-    public function __construct()
-    {
-        $this->cache = new FilesystemAdapter();
-    }
-
     /**
      * Cherche un item en cache.
      */
     public function find(string $key)
     {
-        $item = $this->cache->getItem($key);
+        $item = $this->getItem($key);
 
         return $item->isHit() ? $item->get() : null;
     }
@@ -31,11 +24,11 @@ class CacheService
      */
     public function cache(string $key, $value, $time = null)
     {
-        $item = $this->cache->getItem($key);
+        $item = $this->getItem($key);
 
         $item->set($value);
         $item->expiresAfter($time);
-        $this->cache->save($item);
+        $this->save($item);
 
         return $item->get();
     }
@@ -47,6 +40,6 @@ class CacheService
      */
     public function discache($keys): bool
     {
-        return is_array($keys) ? $this->cache->deleteItems($keys) : $this->cache->deleteItem($keys);
+        return is_array($keys) ? $this->deleteItems($keys) : $this->deleteItem($keys);
     }
 }

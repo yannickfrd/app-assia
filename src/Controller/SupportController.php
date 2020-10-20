@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\EvaluationGroup;
 use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
@@ -24,6 +25,7 @@ use App\Repository\RdvRepository;
 use App\Repository\ReferentRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
+use App\Service\CacheService;
 use App\Service\Calendar;
 use App\Service\Grammar;
 use App\Service\Indicators\SocialIndicators;
@@ -245,6 +247,8 @@ class SupportController extends AbstractController
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
+        $this->discache($supportGroup);
+
         return $this->redirectToRoute('support_edit', [
             'id' => $supportGroup->getId(),
         ]);
@@ -271,22 +275,24 @@ class SupportController extends AbstractController
                 ], 200);
             }
 
-            $supportGroup->removeSupportPerson($supportPerson);
+            try {
+                $supportGroup->removeSupportPerson($supportPerson);
+                $supportGroup->setNbPeople($supportGroup->getNbPeople() - 1);
+                $this->manager->flush();
 
-            $supportGroup->setNbPeople($supportGroup->getNbPeople() - 1);
+                $this->discache($supportGroup);
 
-            $this->manager->flush();
-
-            return $this->json([
+                return $this->json([
                 'code' => 200,
                 'action' => 'delete',
                 'alert' => 'warning',
                 'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
                 'data' => null,
             ], 200);
+            } catch (\Throwable $th) {
+                return $this->getErrorMessage();
+            }
         }
-
-        return $this->getErrorMessage();
     }
 
     /**
@@ -389,5 +395,19 @@ class SupportController extends AbstractController
         }
 
         return (new SupportPersonExport())->exportData($supports);
+    }
+
+    /**
+     * Vide le cache du suivi social et de l'évaluation sociale.
+     */
+    public function discache(SupportGroup $supportGroup): bool
+    {
+        $id = $supportGroup->getId();
+
+        return (new CacheService())->discache([
+            SupportGroup::CACHE_KEY.$id,
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
+            EvaluationGroup::CACHE_KEY.$id,
+        ]);
     }
 }

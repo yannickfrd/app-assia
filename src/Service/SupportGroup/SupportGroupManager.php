@@ -74,16 +74,16 @@ class SupportGroupManager
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
     {
-        $cacher = new CacheService();
+        $cacheService = new CacheService();
         $key = SupportGroup::CACHE_FULLSUPPORT_KEY.$id;
-        $supportGroup = $cacher->find($key) ?? $cacher->cache($key,
-        $this->repoSupportGroup->findFullSupportById($id),
-        1); // 1 jour
+
+        $supportGroup = $cacheService->find($key) ?? $cacheService->cache($key,
+            $this->repoSupportGroup->findFullSupportById($id),
+            1 * 24 * 60 * 60); // 1 jour
 
         $this->checkSupportGroup($supportGroup);
 
         return $supportGroup;
-        // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
     }
 
     /**
@@ -91,10 +91,10 @@ class SupportGroupManager
      */
     public function getSupportGroup(int $id): ?SupportGroup
     {
-        $cacher = new CacheService();
+        $cacheService = new CacheService();
         $key = SupportGroup::CACHE_KEY.$id;
 
-        return $cacher->find($key) ?? $cacher->cache($key,
+        return $cacheService->find($key) ?? $cacheService->cache($key,
             $this->repoSupportGroup->findSupportById($id),
             1 * 24 * 60 * 60); // 1 jour
     }
@@ -104,12 +104,12 @@ class SupportGroupManager
      */
     public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacher = new CacheService();
+        $cacheService = new CacheService();
         $key = EvaluationGroup::CACHE_KEY.$supportGroup->getId();
 
-        return $cacher->find($key) ?? $cacher->cache($key,
+        return $cacheService->find($key) ?? $cacheService->cache($key,
             $this->repoEvaluationGroup->findEvaluationById($supportGroup),
-            7 * 24 * 60 * 60); // 7 jours
+            1 * 24 * 60 * 60); // 7 jours
     }
 
     /**

@@ -14,7 +14,7 @@ class EvaluationGroup
 {
     use CreatedUpdatedEntityTrait;
 
-    public const CACHE_KEY = 'evaluation_support_group_';
+    public const CACHE_KEY = 'evaluation.support_group';
 
     /**
      * @ORM\Id()
