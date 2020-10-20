@@ -27,6 +27,8 @@ class Service
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
+    public const CACHE_INDICATORS_KEY = 'service.indicators_';
+
     public const SERVICE_AVDL_ID = 5;
     public const SERVICE_PASH_ID = 10;
 

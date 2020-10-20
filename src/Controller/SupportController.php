@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\GroupPeople;
-use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
@@ -82,16 +81,16 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupManager $supportGroupManager): Response
+    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupManager $supportManager): Response
     {
-        $supportGroup = $supportGroupManager->getNewSupportGroup($groupPeople, $request);
+        $supportGroup = $supportManager->getNewSupportGroup($groupPeople, $request);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportGroupManager->create($groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() ? true : false)) {
+            if ($supportManager->create($groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() ? true : false)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getStartDate() && $supportGroup->getService()->getAccommodation() == Choices::YES
@@ -156,17 +155,17 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request, SupportGroupManager $supportGroupManager): Response
+    public function editSupportGroup(int $id, Request $request, SupportGroupManager $supportManager): Response
     {
-        $supportGroup = $supportGroupManager->getFullSupportGroup($id);
+        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
-            ->handleRequest($request);
+        ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportGroupManager->update($supportGroup);
+            $supportManager->update($supportGroup);
 
             $this->manager->flush();
 
@@ -197,9 +196,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
      */
-    public function viewSupportGroup(int $id, SupportGroupManager $supportGroupManager, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
+    public function viewSupportGroup(int $id, SupportGroupManager $supportManager, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
     {
-        $supportGroup = $supportGroupManager->getFullSupportGroup($id);
+        $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -212,7 +211,7 @@ class SupportController extends AbstractController
             'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
             'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
             'nbContributions' => $supportGroup->getAccommodationGroups() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
-            'evaluation' => $supportGroupManager->getEvaluation($supportGroup),
+            'evaluation' => $supportManager->getEvaluation($supportGroup),
             'nextRdv' => $nbRdvs ? $repoRdv->findNextRdvFromSupport($supportGroup->getId()) : null,
             'lastRdv' => $nbRdvs ? $repoRdv->findLastRdvFromSupport($supportGroup->getId()) : null,
         ]);
@@ -240,9 +239,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupManager $supportGroupManager): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupManager $supportManager): Response
     {
-        if (!$supportGroupManager->addPeopleInSupport($supportGroup, $repo)) {
+        if (!$supportManager->addPeopleInSupport($supportGroup, $repo)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
@@ -359,11 +358,11 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, SupportGroupManager $supportGroupManager): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportGroupManager $supportManager): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($supportGroupManager->cloneSupport($supportGroup)) {
+        if ($supportManager->cloneSupport($supportGroup)) {
             $this->manager->flush();
 
             $this->addFlash('success', 'Les éléments du dernier suivi ont été ajoutés (évaluation sociale, documents...)');

@@ -513,6 +513,8 @@ class SupportGroupRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('sg')->select('COUNT(sg.id)');
 
         if ($criteria) {
+            $dateFilter = $criteria['filterDateBy'] ?? 'createdAt';
+
             foreach ($criteria as $key => $value) {
                 if ('service' == $key) {
                     $query = $query->andWhere('sg.service = :service')
@@ -535,11 +537,11 @@ class SupportGroupRepository extends ServiceEntityRepository
                         ->setParameter('status', $value);
                 }
                 if ('startDate' == $key) {
-                    $query = $query->andWhere('sg.createdAt >= :startDate')
+                    $query = $query->andWhere("sg.$dateFilter >= :startDate")
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' == $key) {
-                    $query = $query->andWhere('sg.createdAt <= :endDate')
+                    $query = $query->andWhere("sg.$dateFilter <= :endDate")
                             ->setParameter('endDate', $value);
                 }
                 if ('siaoRequest' == $key) {

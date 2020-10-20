@@ -12,10 +12,10 @@ use App\Entity\SupportPerson;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\CacheService;
 use App\Service\Normalisation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -152,7 +152,7 @@ class EvaluationController extends AbstractController
         $this->manager->persist($evaluationGroup);
         $this->manager->flush();
 
-        $this->cacheEvaluation($evaluationGroup);
+        $this->discache($evaluationGroup);
 
         $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
@@ -175,7 +175,7 @@ class EvaluationController extends AbstractController
         $this->manager->persist($evaluationGroup);
         $this->manager->flush();
 
-        $this->cacheEvaluation($evaluationGroup);
+        $this->discache($evaluationGroup);
 
         return $this->json([
             'code' => 200,
@@ -226,16 +226,13 @@ class EvaluationController extends AbstractController
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
     }
 
-    protected function cacheEvaluation(EvaluationGroup $evaluationGroup)
+    protected function discache(EvaluationGroup $evaluationGroup)
     {
-        $cache = new FilesystemAdapter();
-        $supportGroup = $evaluationGroup->getSupportGroup();
-        $cacheEvaluation = $cache->getItem('support_group.evaluation.'.$supportGroup->getId());
+        $id = $evaluationGroup->getSupportGroup()->getId();
 
-        $cacheEvaluation->set($evaluationGroup);
-        $cache->save($cacheEvaluation);
-        $cache->deleteItems([
-                $cache->getItem('support_group_full.'.$supportGroup->getId())->getKey(),
-        ]);
+        return (new CacheService())->discache(
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
+            EvaluationGroup::CACHE_KEY.$id,
+        );
     }
 }

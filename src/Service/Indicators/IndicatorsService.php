@@ -22,7 +22,7 @@ use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Repository\UserConnectionRepository;
 use App\Repository\UserRepository;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Service\CacheService;
 use Symfony\Component\Security\Core\Security;
 
 class IndicatorsService
@@ -43,7 +43,7 @@ class IndicatorsService
     protected $repoContribution;
     protected $repoConnection;
 
-    protected $cache;
+    protected $cacheService;
 
     public function __construct(
         Security $security,
@@ -77,20 +77,14 @@ class IndicatorsService
         $this->repoContribution = $repoContribution;
         $this->repoConnection = $repoConnection;
 
-        $this->cache = new FilesystemAdapter();
+        $this->cacheService = new CacheService();
     }
 
     public function getIndicators()
     {
-        $indicators = $this->cache->getItem('indicators');
+        $key = Indicator::CACHE_KEY;
 
-        if (!$indicators->isHit()) {
-            $indicators->set($this->getDatasIndicators());
-            $indicators->expiresAfter(60 * 60); // 60mn
-            $this->cache->save($indicators);
-        }
-
-        return $indicators->get();
+        return $this->cacheService->find($key) ?? $this->cacheService->cache($key, $this->getDatasIndicators(), 60 * 60); // 60 minutes
     }
 
     public function getServicesIndicators()
@@ -98,14 +92,8 @@ class IndicatorsService
         $services = [];
 
         foreach ($this->repoService->findServicesAndSubServicesOfUser($this->security->getUser()) as $service) {
-            $indicatorsService = $this->cache->getItem('indicators_service_'.$service->getId());
-
-            if (!$indicatorsService->isHit()) {
-                $indicatorsService->set($this->getServiceDatas($service));
-                $indicatorsService->expiresAfter(10 * 60); // 10mn
-                $this->cache->save($indicatorsService);
-            }
-            $services[$service->getId()] = $indicatorsService->get();
+            $key = Service::CACHE_INDICATORS_KEY.$service->getId();
+            $services[$service->getId()] = $this->cacheService->find($key) ?? $this->cacheService->cache($key, $this->getServiceDatas($service), 60 * 60); // 60 minutes
         }
 
         return $services;
@@ -158,45 +146,48 @@ class IndicatorsService
         return $devices;
     }
 
-    public function getUsersIndicators(FilesystemAdapter $cache)
+    public function getUsersIndicators()
     {
-        $usersIndicators = $cache->getItem('indicators_users');
+        $key = User::CACHE_INDICATORS_KEY;
 
-        if (!$usersIndicators->isHit()) {
-            $users = [];
+        $item = $this->cacheService->find($key);
 
-            /** @var User $user */
-            foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
-                $users[] = $this->getUserDatas($user);
-            }
-            $usersIndicators->set($users);
-            $usersIndicators->expiresAfter(5 * 60); // 5mn
-            $cache->save($usersIndicators);
+        if ($item) {
+            return $item;
         }
 
-        return $usersIndicators->get();
+        $users = [];
+        foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
+            $users[] = $this->getUserDatas($user);
+        }
+
+        return $this->cacheService->cache($key, $users, 60 * 60); // 60 minutes
     }
 
     public function createIndicator(\DateTime $date): Indicator
     {
-        $startDate = (clone $date);
-
-        $criteria = [
-            'startDate' => $startDate,
+        $criteriaByCreation = [
+            'filterDateBy' => 'createdAt',
+            'startDate' => $startDate = (clone $date),
             'endDate' => (clone $startDate)->modify('+1 day'),
         ];
 
+        $criteriaByUpdate = $criteriaByCreation;
+        $criteriaByUpdate['filterDateBy'] = 'updatedAt';
+
         $indicator = (new Indicator())
-            ->setNbPeople($this->repoPerson->countPeople($criteria))
-            ->setNbGroups($this->repoGroupPeople->countGroups($criteria))
-            ->setNbSupportsGroup($this->repoSupportGroup->countSupports($criteria))
-            ->setNbSupportsPeople($this->repoSupportPerson->countSupportPeople($criteria))
-            ->setNbEvaluations($this->repoEvaluation->countEvaluations($criteria))
-            ->setNbNotes($this->repoNote->countNotes($criteria))
-            ->setNbRdvs($this->repoRdv->countRdvs($criteria))
-            ->setNbDocuments($this->repoDocument->countDocuments($criteria))
-            ->setNbContributions($this->repoContribution->countContributions($criteria))
-            ->setNbConnections($this->repoConnection->countConnections($criteria))
+            ->setNbCreatedPeople($this->repoPerson->countPeople($criteriaByCreation))
+            ->setNbCreatedGroups($this->repoGroupPeople->countGroups($criteriaByCreation))
+            ->setNbCreatedSupportsGroup($this->repoSupportGroup->countSupports($criteriaByCreation))
+            ->setNbUpdatedSupportsGroup($this->repoSupportGroup->countSupports($criteriaByUpdate))
+            ->setNbCreatedSupportsPeople($this->repoSupportPerson->countSupportPeople($criteriaByCreation))
+            ->setNbCreatedEvaluations($this->repoEvaluation->countEvaluations($criteriaByCreation))
+            ->setNbCreatedNotes($this->repoNote->countNotes($criteriaByCreation))
+            ->setNbUpdatedNotes($this->repoNote->countNotes($criteriaByUpdate))
+            ->setNbCreatedRdvs($this->repoRdv->countRdvs($criteriaByCreation))
+            ->setNbCreatedDocuments($this->repoDocument->countDocuments($criteriaByCreation))
+            ->setNbCreatedContributions($this->repoContribution->countContributions($criteriaByCreation))
+            ->setNbConnections($this->repoConnection->countConnections($criteriaByCreation))
             ->setDate($startDate);
 
         return $indicator;
@@ -205,53 +196,69 @@ class IndicatorsService
     protected function getDatasIndicators()
     {
         $totay = new \DateTime('today');
-        $criteria = ['startDate' => $totay];
+        $criteriaByCreation = [
+            'filterDateBy' => 'createdAt',
+            'startDate' => $totay,
+        ];
+        $criteriaByUpdate = $criteriaByCreation;
+        $criteriaByUpdate['filterDateBy'] = 'updatedAt';
+
         $indicator = $this->repoIndicator->findOneBy(['date' => new \DateTime('yesterday')]);
         $yesterdayIndicator = $indicator ?? $this->createIndicator($totay);
 
         return [
-            'Nombre de personnes' => [
+            'Nombre de personnes créées' => [
                 'all' => $this->repoPerson->count([]),
-                'yesterday' => $yesterdayIndicator->getNbPeople(),
-                'today' => $this->repoPerson->countPeople($criteria),
+                'yesterday' => $yesterdayIndicator->getNbCreatedPeople(),
+                'today' => $this->repoPerson->countPeople($criteriaByCreation),
             ],
-            'Nombre de groupes' => [
+            'Nombre de groupes créés' => [
                 'all' => $this->repoGroupPeople->count([]),
-                'yesterday' => $yesterdayIndicator->getNbGroups(),
-                'today' => $this->repoGroupPeople->countGroups($criteria),
+                'yesterday' => $yesterdayIndicator->getNbCreatedGroups(),
+                'today' => $this->repoGroupPeople->countGroups($criteriaByCreation),
             ],
-            'Nombre de suivis' => [
-                'all' => $this->repoSupportGroup->count([]),
-                'yesterday' => $yesterdayIndicator->getNbSupportsGroup(),
-                'today' => $this->repoSupportGroup->countSupports($criteria),
+            'Nombre de suivis créés' => [
+                'all' => $allSupports = $this->repoSupportGroup->count([]),
+                'yesterday' => $yesterdayIndicator->getNbCreatedSupportsGroup(),
+                'today' => $this->repoSupportGroup->countSupports($criteriaByCreation),
+            ],
+            'Nombre de suivis mis à jour' => [
+                'all' => $allSupports,
+                'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
+                'today' => $this->repoSupportGroup->countSupports($criteriaByUpdate),
             ],
             'Nombre de suivis en cours' => $this->repoSupportGroup->count([
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
             ]),
-            'Nombre de notes' => [
-                'all' => $this->repoNote->count([]),
-                'yesterday' => $yesterdayIndicator->getNbNotes(),
-                'today' => $this->repoNote->countNotes($criteria),
+            'Nombre de notes créées' => [
+                'all' => $allNotes = $this->repoNote->count([]),
+                'yesterday' => $yesterdayIndicator->getNbCreatedNotes(),
+                'today' => $this->repoNote->countNotes($criteriaByCreation),
             ],
-            'Nombre de RDVs' => [
+            'Nombre de notes mises à jour' => [
+                'all' => $allNotes,
+                'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
+                'today' => $this->repoNote->countNotes($criteriaByUpdate),
+            ],
+            'Nombre de RDVs créés' => [
                 'all' => $this->repoRdv->count([]),
-                'yesterday' => $yesterdayIndicator->getNbRdvs(),
-                'today' => $this->repoRdv->countRdvs($criteria),
+                'yesterday' => $yesterdayIndicator->getNbCreatedRdvs(),
+                'today' => $this->repoRdv->countRdvs($criteriaByCreation),
             ],
-            'Nombre de documents' => [
+            'Nombre de documents créés' => [
                 'all' => $this->repoDocument->count([]),
-                'yesterday' => $yesterdayIndicator->getNbDocuments(),
-                'today' => $this->repoDocument->countDocuments($criteria),
+                'yesterday' => $yesterdayIndicator->getNbCreatedDocuments(),
+                'today' => $this->repoDocument->countDocuments($criteriaByCreation),
             ],
-            'Nombre de paiements' => [
+            'Nombre de paiements créés' => [
                 'all' => $this->repoContribution->count([]),
-                'yesterday' => $yesterdayIndicator->getNbContributions(),
-                'today' => $this->repoContribution->countContributions($criteria),
+                'yesterday' => $yesterdayIndicator->getNbCreatedContributions(),
+                'today' => $this->repoContribution->countContributions($criteriaByCreation),
             ],
             'Nombre de connexions' => [
                 'all' => $this->repoConnection->count([]),
                 'yesterday' => $yesterdayIndicator->getNbConnections(),
-                'today' => $this->repoConnection->countConnections($criteria),
+                'today' => $this->repoConnection->countConnections($criteriaByCreation),
             ],
         ];
     }

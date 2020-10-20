@@ -16,10 +16,10 @@ use App\Repository\EvaluationGroupRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\CacheService;
 use App\Service\Grammar;
 use App\Service\hydrateObjectWithArray;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -51,7 +51,6 @@ class SupportGroupManager
         $this->repoEvaluationGroup = $repoEvaluationGroup;
 
         $this->manager = $manager;
-        $this->cache = new FilesystemAdapter();
     }
 
     /**
@@ -75,21 +74,16 @@ class SupportGroupManager
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
     {
-        // $cacheSupport = $this->cache->getItem('support_group_full.'.$supportGroup->getId());
-
-        // if (!$cacheSupport->isHit()) {
-        //     $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
-
-        //     $cacheSupport->set($supportGroup);
-        //     $cacheSupport->expiresAfter(30 * 24 * 60 * 60);
-        //     $this->cache->save($cacheSupport);
-        // }
-        // $supportGroup = $cacheSupport->get();
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $cacher = new CacheService();
+        $key = SupportGroup::CACHE_FULLSUPPORT_KEY.$id;
+        $supportGroup = $cacher->find($key) ?? $cacher->cache($key,
+        $this->repoSupportGroup->findFullSupportById($id),
+        1); // 1 jour
 
         $this->checkSupportGroup($supportGroup);
 
         return $supportGroup;
+        // $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
     }
 
     /**
@@ -97,18 +91,12 @@ class SupportGroupManager
      */
     public function getSupportGroup(int $id): ?SupportGroup
     {
-        // return $this->repoSupportGroup->findSupportById($id);
-        $cacheSupport = $this->cache->getItem('support_group_'.$id);
+        $cacher = new CacheService();
+        $key = SupportGroup::CACHE_KEY.$id;
 
-        // if (!$cacheSupport->isHit()) {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
-
-        $cacheSupport->set($supportGroup);
-        $cacheSupport->expiresAfter(30 * 24 * 60 * 60);
-        $this->cache->save($cacheSupport);
-        // }
-
-        return $cacheSupport->get();
+        return $cacher->find($key) ?? $cacher->cache($key,
+            $this->repoSupportGroup->findSupportById($id),
+            1 * 24 * 60 * 60); // 1 jour
     }
 
     /**
@@ -116,15 +104,12 @@ class SupportGroupManager
      */
     public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacheEvaluation = $this->cache->getItem('support_group_'.$supportGroup->getId().'_evaluation');
+        $cacher = new CacheService();
+        $key = EvaluationGroup::CACHE_KEY.$supportGroup->getId();
 
-        // if (!$cacheEvaluation->isHit()) {
-        $cacheEvaluation->set($this->repoEvaluationGroup->findEvaluationById($supportGroup));
-        $cacheEvaluation->expiresAfter(30 * 24 * 60 * 60);
-        $this->cache->save($cacheEvaluation);
-        // }
-
-        return $cacheEvaluation->get();
+        return $cacher->find($key) ?? $cacher->cache($key,
+            $this->repoEvaluationGroup->findEvaluationById($supportGroup),
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     /**
@@ -480,12 +465,14 @@ class SupportGroupManager
     }
 
     /**
-     * Vide l'item du suivi en cache.
+     * Vide le cache du suivi social et des indicateurs du service.
      */
-    public function discache(SupportGroup $supportGroup): void
+    public function discache(SupportGroup $supportGroup): bool
     {
-        $cacheSupport = $this->cache->getItem('support_group_full.'.$supportGroup->getId());
-        $this->cache->deleteItem($cacheSupport->getKey());
+        return (new CacheService())->discache([
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+            Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
+        ]);
     }
 
     /**

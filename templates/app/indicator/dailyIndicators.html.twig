@@ -20,8 +20,10 @@
                                     "Nb de personnes créées" : "i.nbPeople",
                                     "Nb de groupes créés" : "i.nbGroups",
                                     "Nb de suivis créés" : "i.nbSupportsGroup",
+                                    "Nb de suivis mis à jour" : "i.nbSupportsGroup",
                                     "Nb d'évaluations créés" : "i.nbEvaluations",
                                     "Nb de notes créées" : "i.nbNotes",
+                                    "Nb de notes mises à jour" : "i.nbNotes",
                                     "Nb de RDVs créés" : "i.nbRdvs",
                                     "Nb de paiements créés" : "i.nbContributions",
                                     "Nb de connexions" : "i.nbConnections",
@@ -36,13 +38,15 @@
                                 <tr>
                                     <td class="align-midle">{{ indicator.date|date('d/m/Y') }}</td>
                                     {% set items = [
-                                        indicator.nbPeople, 
-                                        indicator.nbGroups, 
-                                        indicator.nbSupportsGroup, 
-                                        indicator.nbEvaluations, 
-                                        indicator.nbNotes, 
-                                        indicator.nbRdvs, 
-                                        indicator.nbContributions,
+                                        indicator.nbCreatedPeople, 
+                                        indicator.nbCreatedGroups, 
+                                        indicator.nbCreatedSupportsGroup, 
+                                        indicator.nbUpdatedSupportsGroup, 
+                                        indicator.nbCreatedEvaluations, 
+                                        indicator.nbCreatedNotes, 
+                                        indicator.nbUpdatedNotes, 
+                                        indicator.nbCreatedRdvs, 
+                                        indicator.nbCreatedContributions,
                                         indicator.nbConnections,
                                     ] %}
                                     {% for item in items %}

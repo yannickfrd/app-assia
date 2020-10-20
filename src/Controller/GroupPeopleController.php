@@ -2,26 +2,28 @@
 
 namespace App\Controller;
 
-use App\Entity\Person;
-use App\Service\Grammar;
-use App\Entity\RolePerson;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\EvaluationGroup;
 use App\Entity\GroupPeople;
-use App\Service\Pagination;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Entity\SupportGroup;
+use App\Form\GroupPeople\GroupPeopleSearchType;
+use App\Form\GroupPeople\GroupPeopleType;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
-use App\Repository\RolePersonRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\GroupPeople\GroupPeopleType;
 use App\Repository\GroupPeopleRepository;
-use App\Controller\Traits\ErrorMessageTrait;
+use App\Repository\RolePersonRepository;
+use App\Service\CacheService;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\GroupPeople\GroupPeopleSearchType;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GroupPeopleController extends AbstractController
 {
@@ -236,13 +238,14 @@ class GroupPeopleController extends AbstractController
      */
     protected function discacheSupport(GroupPeople $groupPeople): void
     {
-        $cache = new FilesystemAdapter();
+        $cacheService = new CacheService();
 
         foreach ($groupPeople->getSupports() as $supportGroup) {
-            $cache->deleteItems([
-                $cache->getItem('support_group_full.'.$supportGroup->getId())->getKey(),
-                $cache->getItem('support_group.'.$supportGroup->getId())->getKey(),
-            ]);
+            $cacheService->discache(
+                SupportGroup::CACHE_KEY.$supportGroup->getId(),
+                SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+                EvaluationGroup::CACHE_KEY.$supportGroup->getId(),
+            );
         }
     }
 }

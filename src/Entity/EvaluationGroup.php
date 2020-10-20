@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvaluationGroupRepository")
@@ -13,6 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class EvaluationGroup
 {
     use CreatedUpdatedEntityTrait;
+
+    public const CACHE_KEY = 'evaluation_support_group_';
 
     /**
      * @ORM\Id()
@@ -280,7 +282,7 @@ class EvaluationGroup
         return $this;
     }
 
-    protected function objectIsEmpty(Object $originRequest)
+    protected function objectIsEmpty(object $originRequest)
     {
         foreach ((array) $originRequest as $value) {
             if ($value) {

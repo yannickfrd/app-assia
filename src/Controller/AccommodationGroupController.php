@@ -8,10 +8,10 @@ use App\Entity\AccommodationPerson;
 use App\Entity\SupportGroup;
 use App\Form\Accommodation\AccommodationGroupType;
 use App\Repository\AccommodationGroupRepository;
+use App\Service\CacheService;
 use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -306,9 +306,8 @@ class AccommodationGroupController extends AbstractController
     /**
      * Vide l'item du suivi en cache.
      */
-    public function discacheSupport(SupportGroup $supportGroup): void
+    public function discacheSupport(SupportGroup $supportGroup): bool
     {
-        $cache = new FilesystemAdapter();
-        $cache->deleteItem($cache->getItem('support_group_full.'.$supportGroup->getId())->getKey());
+        return (new CacheService())->discache(SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId());
     }
 }

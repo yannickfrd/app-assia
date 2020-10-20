@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\EvaluationGroup;
 use App\Entity\GroupPeople;
 use App\Entity\Person;
 use App\Entity\RolePerson;
+use App\Entity\SupportGroup;
 use App\Form\Model\DuplicatedPeopleSearch;
 use App\Form\Model\PersonSearch;
 use App\Form\Person\DuplicatedPeopleType;
@@ -16,13 +18,13 @@ use App\Form\Person\PersonType;
 use App\Form\Person\RolePersonGroupType;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\PersonRepository;
+use App\Service\CacheService;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -452,15 +454,17 @@ class PersonController extends AbstractController
     /**
      * Supprime le cache du suivi.
      */
-    protected function discacheSupport(Person $person)
+    protected function discacheSupport(Person $person): void
     {
-        $cache = new FilesystemAdapter();
+        $cacheService = new CacheService();
 
         foreach ($person->getSupports() as $supportPerson) {
-            $cache->deleteItems([
-                $cache->getItem('support_group_full.'.$supportPerson->getSupportGroup()->getId())->getKey(),
-                $cache->getItem('support_group.'.$supportPerson->getSupportGroup()->getId())->getKey(),
-            ]);
+            $id = $supportPerson->getSupportGroup()->getId();
+            $cacheService->discache(
+                SupportGroup::CACHE_KEY.$id,
+                SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
+                EvaluationGroup::CACHE_KEY.$id,
+            );
         }
     }
 }

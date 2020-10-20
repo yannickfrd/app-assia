@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Indicator
 {
+    public const CACHE_KEY = 'indicators';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -25,47 +27,57 @@ class Indicator
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbPeople;
+    private $nbCreatedPeople;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbGroups;
+    private $nbCreatedGroups;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbSupportsGroup;
+    private $nbCreatedSupportsGroup;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbSupportsPeople;
+    private $nbUpdatedSupportsGroup;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbEvaluations;
+    private $nbCreatedSupportsPeople;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbNotes;
+    private $nbCreatedEvaluations;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbRdvs;
+    private $nbCreatedNotes;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbDocuments;
+    private $nbUpdatedNotes;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbContributions;
+    private $nbCreatedRdvs;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbCreatedDocuments;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbCreatedContributions;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -89,110 +101,134 @@ class Indicator
         return $this;
     }
 
-    public function getNbPeople(): ?int
+    public function getNbCreatedPeople(): ?int
     {
-        return $this->nbPeople;
+        return $this->nbCreatedPeople;
     }
 
-    public function setNbPeople(?int $nbPeople): self
+    public function setNbCreatedPeople(?int $nbCreatedPeople): self
     {
-        $this->nbPeople = $nbPeople;
+        $this->nbCreatedPeople = $nbCreatedPeople;
 
         return $this;
     }
 
-    public function getNbGroups(): ?int
+    public function getNbCreatedGroups(): ?int
     {
-        return $this->nbGroups;
+        return $this->nbCreatedGroups;
     }
 
-    public function setNbGroups(?int $nbGroups): self
+    public function setNbCreatedGroups(?int $nbCreatedGroups): self
     {
-        $this->nbGroups = $nbGroups;
+        $this->nbCreatedGroups = $nbCreatedGroups;
 
         return $this;
     }
 
-    public function getNbSupportsGroup(): ?int
+    public function getNbCreatedSupportsGroup(): ?int
     {
-        return $this->nbSupportsGroup;
+        return $this->nbCreatedSupportsGroup;
     }
 
-    public function setNbSupportsGroup(?int $nbSupportsGroup): self
+    public function setNbCreatedSupportsGroup(?int $nbCreatedSupportsGroup): self
     {
-        $this->nbSupportsGroup = $nbSupportsGroup;
+        $this->nbCreatedSupportsGroup = $nbCreatedSupportsGroup;
 
         return $this;
     }
 
-    public function getNbSupportsPeople(): ?int
+    public function getNbUpdatedSupportsGroup(): ?int
     {
-        return $this->nbSupportsPeople;
+        return $this->nbUpdatedSupportsGroup;
     }
 
-    public function setNbSupportsPeople(?int $nbSupportsPeople): self
+    public function setNbUpdatedSupportsGroup(?int $nbUpdatedSupportsGroup): self
     {
-        $this->nbSupportsPeople = $nbSupportsPeople;
+        $this->nbUpdatedSupportsGroup = $nbUpdatedSupportsGroup;
 
         return $this;
     }
 
-    public function getNbEvaluations(): ?int
+    public function getNbCreatedSupportsPeople(): ?int
     {
-        return $this->nbEvaluations;
+        return $this->nbCreatedSupportsPeople;
     }
 
-    public function setNbEvaluations(?int $nbEvaluations): self
+    public function setNbCreatedSupportsPeople(?int $nbCreatedSupportsPeople): self
     {
-        $this->nbEvaluations = $nbEvaluations;
+        $this->nbCreatedSupportsPeople = $nbCreatedSupportsPeople;
 
         return $this;
     }
 
-    public function getNbNotes(): ?int
+    public function getNbCreatedEvaluations(): ?int
     {
-        return $this->nbNotes;
+        return $this->nbCreatedEvaluations;
     }
 
-    public function setNbNotes(?int $nbNotes): self
+    public function setNbCreatedEvaluations(?int $nbCreatedEvaluations): self
     {
-        $this->nbNotes = $nbNotes;
+        $this->nbCreatedEvaluations = $nbCreatedEvaluations;
 
         return $this;
     }
 
-    public function getNbRdvs(): ?int
+    public function getNbCreatedNotes(): ?int
     {
-        return $this->nbRdvs;
+        return $this->nbCreatedNotes;
     }
 
-    public function setNbRdvs(?int $nbRdvs): self
+    public function setNbCreatedNotes(?int $nbCreatedNotes): self
     {
-        $this->nbRdvs = $nbRdvs;
+        $this->nbCreatedNotes = $nbCreatedNotes;
 
         return $this;
     }
 
-    public function getNbDocuments(): ?int
+    public function getNbUpdatedNotes(): ?int
     {
-        return $this->nbDocuments;
+        return $this->nbUpdatedNotes;
     }
 
-    public function setNbDocuments(?int $nbDocuments): self
+    public function setNbUpdatedNotes(?int $nbUpdatedNotes): self
     {
-        $this->nbDocuments = $nbDocuments;
+        $this->nbUpdatedNotes = $nbUpdatedNotes;
 
         return $this;
     }
 
-    public function getNbContributions(): ?int
+    public function getNbCreatedRdvs(): ?int
     {
-        return $this->nbContributions;
+        return $this->nbCreatedRdvs;
     }
 
-    public function setNbContributions(?int $nbContributions): self
+    public function setNbCreatedRdvs(?int $nbCreatedRdvs): self
     {
-        $this->nbContributions = $nbContributions;
+        $this->nbCreatedRdvs = $nbCreatedRdvs;
+
+        return $this;
+    }
+
+    public function getNbCreatedDocuments(): ?int
+    {
+        return $this->nbCreatedDocuments;
+    }
+
+    public function setNbCreatedDocuments(?int $nbCreatedDocuments): self
+    {
+        $this->nbCreatedDocuments = $nbCreatedDocuments;
+
+        return $this;
+    }
+
+    public function getNbCreatedContributions(): ?int
+    {
+        return $this->nbCreatedContributions;
+    }
+
+    public function setNbCreatedContributions(?int $nbCreatedContributions): self
+    {
+        $this->nbCreatedContributions = $nbCreatedContributions;
 
         return $this;
     }
