@@ -22,7 +22,8 @@ use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Repository\UserConnectionRepository;
 use App\Repository\UserRepository;
-use App\Service\CacheService;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class IndicatorsService
 {
@@ -40,7 +41,7 @@ class IndicatorsService
     protected $repoContribution;
     protected $repoConnection;
 
-    protected $cacheService;
+    protected $cache;
 
     public function __construct(
         IndicatorRepository $repoIndicator,
@@ -71,7 +72,7 @@ class IndicatorsService
         $this->repoContribution = $repoContribution;
         $this->repoConnection = $repoConnection;
 
-        $this->cacheService = new CacheService();
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
@@ -79,9 +80,11 @@ class IndicatorsService
      */
     public function getIndicators()
     {
-        $key = Indicator::CACHE_KEY;
+        return $this->cache->get(Indicator::CACHE_KEY, function (CacheItemInterface $item) {
+            $item->expiresAfter(60 * 60); // 60 minutes
 
-        return $this->cacheService->find($key) ?? $this->cacheService->cache($key, $this->getDatasIndicators(), 60 * 60); // 60 minutes
+            return $this->getDatasIndicators();
+        });
     }
 
     /**
@@ -92,8 +95,11 @@ class IndicatorsService
         $datasServices = [];
 
         foreach ($services as $service) {
-            $key = Service::CACHE_INDICATORS_KEY.$service->getId();
-            $services[$service->getId()] = $this->cacheService->find($key) ?? $this->cacheService->cache($key, $this->getServiceDatas($service), 60 * 60); // 60 minutes
+            $datasServices[$service->getId()] = $this->cache->get(Service::CACHE_INDICATORS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service) {
+                $item->expiresAfter(1 * 60 * 60); // 1 heure
+
+                return $this->getServiceDatas($service);
+            });
         }
 
         return $datasServices;
@@ -157,20 +163,17 @@ class IndicatorsService
      */
     public function getUsersIndicators(): array
     {
-        $key = User::CACHE_INDICATORS_KEY;
+        return $this->cache->get(User::CACHE_INDICATORS_KEY, function (CacheItemInterface $item) {
+            $item->expiresAfter(60 * 60); // 60 minutes
 
-        $item = $this->cacheService->find($key);
+            $users = [];
 
-        if ($item) {
-            return $item;
-        }
+            foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
+                $users[] = $this->getUserDatas($user);
+            }
 
-        $users = [];
-        foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
-            $users[] = $this->getUserDatas($user);
-        }
-
-        return $this->cacheService->cache($key, $users, 60 * 60); // 60 minutes
+            return $users;
+        });
     }
 
     /**

@@ -8,10 +8,10 @@ use App\Entity\AccommodationPerson;
 use App\Entity\SupportGroup;
 use App\Form\Accommodation\AccommodationGroupType;
 use App\Repository\AccommodationGroupRepository;
-use App\Service\CacheService;
 use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -308,6 +308,6 @@ class AccommodationGroupController extends AbstractController
      */
     public function discacheSupport(SupportGroup $supportGroup): bool
     {
-        return (new CacheService())->discache(SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId());
+        return (new FilesystemAdapter())->deleteItem(SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId());
     }
 }

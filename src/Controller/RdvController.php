@@ -14,14 +14,15 @@ use App\Form\Rdv\RdvType;
 use App\Form\Rdv\SupportRdvSearchType;
 use App\Repository\RdvRepository;
 use App\Security\CurrentUserService;
-use App\Service\CacheService;
 use App\Service\Calendar;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -103,13 +104,13 @@ class RdvController extends AbstractController
         }
 
         // Sinon, récupère les rendez-vous en cache.
-        $cacheService = new CacheService();
+        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
+            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
+                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        $key = SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId();
-
-        return $cacheService->find($key) ?? $cacheService->cache($key,
-             $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request),
-            7 * 24 * 60 * 60); // 7 jours
+                return $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
+            }
+        );
     }
 
     /**
@@ -380,12 +381,12 @@ class RdvController extends AbstractController
      */
     protected function discache(?SupportGroup $supportGroup = null): bool
     {
-        $cacheService = new CacheService();
+        $cache = new FilesystemAdapter();
 
         if ($supportGroup) {
-            $cacheService->discache(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
+            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
         }
 
-        return $cacheService->discache(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId());
+        return $cache->deleteItem(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId());
     }
 }

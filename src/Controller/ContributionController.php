@@ -16,14 +16,15 @@ use App\Form\Model\SupportContributionSearch;
 use App\Repository\AccommodationRepository;
 use App\Repository\ContributionRepository;
 use App\Repository\EvaluationGroupRepository;
-use App\Service\CacheService;
 use App\Service\Indicators\ContributionIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -101,11 +102,13 @@ class ContributionController extends AbstractController
         $form = $this->createForm(ContributionType::class, $contribution);
 
         // Récupère les contributions en cache.
-        $cacheService = new CacheService();
-        $key = SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId();
-        $contributions = $cacheService->find($key) ?? $cacheService->cache($key,
-            $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200),
-            7 * 24 * 60 * 60); // 7 jours
+        $contributions = (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
+            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
+                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+
+                return $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200);
+            }
+        );
 
         return $this->render('app/contribution/supportContributions.html.twig', [
             'support' => $supportGroup,
@@ -384,6 +387,6 @@ class ContributionController extends AbstractController
      */
     protected function discache(SupportGroup $supportGroup): bool
     {
-        return (new CacheService())->discache(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId());
+        return (new FilesystemAdapter())->deleteItem(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId());
     }
 }

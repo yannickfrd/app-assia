@@ -12,10 +12,11 @@ use App\Entity\SupportPerson;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\CacheService;
 use App\Service\Normalisation;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -253,12 +254,11 @@ class EvaluationController extends AbstractController
      */
     protected function getSupportGroup(int $id): ?SupportGroup
     {
-        $cacheService = new CacheService();
-        $key = SupportGroup::CACHE_KEY.$id;
+        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
+            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        return $cacheService->find($key) ?? $cacheService->cache($key,
-            $this->repoSupportGroup->findSupportById($id),
-            7 * 24 * 60 * 60); // 7 jours
+            return $this->repoSupportGroup->findSupportById($id);
+        });
     }
 
     /**
@@ -266,18 +266,15 @@ class EvaluationController extends AbstractController
      */
     protected function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacheService = new CacheService();
-        $key = EvaluationGroup::CACHE_KEY.$supportGroup->getId();
+        return (new FilesystemAdapter())->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        return $cacheService->find($key) ?? $cacheService->cache($key,
-            $this->repoEvaluation->findEvaluationById($supportGroup),
-            7 * 24 * 60 * 60); // 7 jours
+            return $this->repoEvaluation->findEvaluationById($supportGroup);
+        });
     }
 
     protected function discache(EvaluationGroup $evaluationGroup)
     {
-        return (new CacheService())->discache(
-            EvaluationGroup::CACHE_KEY.$evaluationGroup->getSupportGroup()->getId(),
-        );
+        return (new FilesystemAdapter())->deleteItem(EvaluationGroup::CACHE_EVALUATION_KEY.$evaluationGroup->getSupportGroup()->getId());
     }
 }

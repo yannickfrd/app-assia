@@ -25,7 +25,7 @@ class SupportGroup
     use LocationEntityTrait;
     use GeoLocationEntityTrait;
 
-    public const CACHE_KEY = 'support_group';
+    public const CACHE_SUPPORT_KEY = 'support_group';
     public const CACHE_FULLSUPPORT_KEY = 'support_group_full';
     public const CACHE_SUPPORT_NOTES_KEY = 'support.notes';
     public const CACHE_SUPPORT_RDVS_KEY = 'support.rdvs';

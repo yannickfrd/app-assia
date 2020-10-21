@@ -18,13 +18,13 @@ use App\Form\Person\PersonType;
 use App\Form\Person\RolePersonGroupType;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\PersonRepository;
-use App\Service\CacheService;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -456,15 +456,15 @@ class PersonController extends AbstractController
      */
     protected function discacheSupport(Person $person): void
     {
-        $cacheService = new CacheService();
+        $cache = new FilesystemAdapter();
 
         foreach ($person->getSupports() as $supportPerson) {
             $id = $supportPerson->getSupportGroup()->getId();
-            $cacheService->discache(
-                SupportGroup::CACHE_KEY.$id,
+            $cache->deleteItems([
+                SupportGroup::CACHE_SUPPORT_KEY.$id,
                 SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
-                EvaluationGroup::CACHE_KEY.$id,
-            );
+                EvaluationGroup::CACHE_EVALUATION_KEY.$id,
+            ]);
         }
     }
 }

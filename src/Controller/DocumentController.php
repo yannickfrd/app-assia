@@ -9,14 +9,15 @@ use App\Form\Document\DocumentSearchType;
 use App\Form\Document\DocumentType;
 use App\Form\Model\DocumentSearch;
 use App\Repository\DocumentRepository;
-use App\Service\CacheService;
 use App\Service\Download;
 use App\Service\FileUploader;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -71,13 +72,13 @@ class DocumentController extends AbstractController
         }
 
         // Sinon, récupère les documents en cache.
-        $cacheService = new CacheService();
+        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
+            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
+                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        $key = SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId();
-
-        return $cacheService->find($key) ?? $cacheService->cache($key,
-             $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request),
-            7 * 24 * 60 * 60); // 7 jours
+                return $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request);
+            }
+        );
     }
 
     /**
@@ -238,8 +239,6 @@ class DocumentController extends AbstractController
      */
     protected function discache(SupportGroup $supportGroup): bool
     {
-        return (new CacheService())->discache(
-            SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
-        );
+        return (new FilesystemAdapter())->deleteItem(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId());
     }
 }

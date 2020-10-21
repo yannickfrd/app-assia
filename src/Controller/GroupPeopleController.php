@@ -14,13 +14,13 @@ use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\GroupPeopleRepository;
 use App\Repository\RolePersonRepository;
-use App\Service\CacheService;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -238,14 +238,14 @@ class GroupPeopleController extends AbstractController
      */
     protected function discacheSupport(GroupPeople $groupPeople): void
     {
-        $cacheService = new CacheService();
+        $cache = new FilesystemAdapter();
 
         foreach ($groupPeople->getSupports() as $supportGroup) {
-            $cacheService->discache(
-                SupportGroup::CACHE_KEY.$supportGroup->getId(),
+            $cache->deleteItems([
+                SupportGroup::CACHE_SUPPORT_KEY.$supportGroup->getId(),
                 SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
-                EvaluationGroup::CACHE_KEY.$supportGroup->getId(),
-            );
+                EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
+            ]);
         }
     }
 }

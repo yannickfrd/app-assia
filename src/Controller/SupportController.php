@@ -25,7 +25,6 @@ use App\Repository\RdvRepository;
 use App\Repository\ReferentRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
-use App\Service\CacheService;
 use App\Service\Calendar;
 use App\Service\Grammar;
 use App\Service\Indicators\SocialIndicators;
@@ -36,6 +35,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -402,18 +402,17 @@ class SupportController extends AbstractController
      */
     public function discache(SupportGroup $supportGroup): bool
     {
+        $cache = new FilesystemAdapter();
         $id = $supportGroup->getId();
 
-        $cacheService = new CacheService();
-
         if ($supportGroup->getReferent()) {
-            $cacheService->discache(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+            $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
         }
 
-        return $cacheService->discache([
-            SupportGroup::CACHE_KEY.$id,
+        return $cache->deleteItems([
+            SupportGroup::CACHE_SUPPORT_KEY.$id,
             SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
-            EvaluationGroup::CACHE_KEY.$id,
+            EvaluationGroup::CACHE_EVALUATION_KEY.$id,
         ]);
     }
 }

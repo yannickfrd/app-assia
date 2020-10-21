@@ -17,10 +17,11 @@ use App\Repository\EvaluationGroupRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\CacheService;
 use App\Service\Grammar;
 use App\Service\hydrateObjectWithArray;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -75,16 +76,11 @@ class SupportGroupManager
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
     {
-        $cacheService = new CacheService();
-        $key = SupportGroup::CACHE_FULLSUPPORT_KEY.$id;
+        return (new FilesystemAdapter())->get(SupportGroup::CACHE_FULLSUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
+            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        $supportGroup = $cacheService->find($key) ?? $cacheService->cache($key,
-            $this->repoSupportGroup->findFullSupportById($id),
-            7 * 24 * 60 * 60); // 7 jours
-
-        $this->checkSupportGroup($supportGroup);
-
-        return $supportGroup;
+            return $this->repoSupportGroup->findFullSupportById($id);
+        });
     }
 
     /**
@@ -92,12 +88,11 @@ class SupportGroupManager
      */
     public function getSupportGroup(int $id): ?SupportGroup
     {
-        $cacheService = new CacheService();
-        $key = SupportGroup::CACHE_KEY.$id;
+        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
+            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        return $cacheService->find($key) ?? $cacheService->cache($key,
-            $this->repoSupportGroup->findSupportById($id),
-            7 * 24 * 60 * 60); // 7 jours
+            return $this->repoSupportGroup->findSupportById($id);
+        });
     }
 
     /**
@@ -105,12 +100,11 @@ class SupportGroupManager
      */
     public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        $cacheService = new CacheService();
-        $key = EvaluationGroup::CACHE_KEY.$supportGroup->getId();
+        return (new FilesystemAdapter())->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
 
-        return $cacheService->find($key) ?? $cacheService->cache($key,
-            $this->repoEvaluationGroup->findEvaluationById($supportGroup),
-            7 * 24 * 60 * 60); // 7 jours
+            return $this->repoEvaluationGroup->findEvaluationById($supportGroup);
+        });
     }
 
     /**
@@ -470,13 +464,13 @@ class SupportGroupManager
      */
     public function discache(SupportGroup $supportGroup): bool
     {
-        $cacheService = new CacheService();
+        $cache = new FilesystemAdapter();
 
         if ($supportGroup->getReferent()) {
-            $cacheService->discache(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+            $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
         }
 
-        return $cacheService->discache([
+        return $cache->deleteItems([
             SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
             Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
         ]);

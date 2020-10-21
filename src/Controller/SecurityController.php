@@ -18,9 +18,9 @@ use App\Notification\MailNotification;
 use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
-use App\Service\CacheService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -463,6 +463,6 @@ class SecurityController extends AbstractController
      */
     protected function discache(): bool
     {
-        return (new CacheService())->discache(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId());
+        return (new FilesystemAdapter())->deleteItem(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId());
     }
 }

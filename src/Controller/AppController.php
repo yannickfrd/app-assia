@@ -14,15 +14,17 @@ use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\CacheService;
 use App\Service\Indicators\IndicatorsService;
 use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class AppController extends AbstractController
 {
@@ -30,7 +32,7 @@ class AppController extends AbstractController
     protected $repoSupportGroup;
     protected $repoNote;
     protected $repoRdv;
-    protected $cacheService;
+    protected $cache;
 
     public function __construct(ServiceRepository $repoService, SupportGroupRepository $repoSupportGroup, NoteRepository $repoNote, RdvRepository $repoRdv)
     {
@@ -39,7 +41,7 @@ class AppController extends AbstractController
         $this->repoNote = $repoNote;
         $this->repoRdv = $repoRdv;
 
-        $this->cacheService = new CacheService();
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
@@ -49,7 +51,7 @@ class AppController extends AbstractController
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
-    public function home(IndicatorsService $indicators): Response
+    public function home(IndicatorsService $indicators, CacheInterface $cache): Response
     {
         return $this->render('app/home/dashboard.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
@@ -90,7 +92,7 @@ class AppController extends AbstractController
      */
     public function clearCache(): Response
     {
-        (new CacheService())->clear();
+        $this->cache->clear();
 
         $this->addFlash('success', 'Le cache est vide.');
 
@@ -265,11 +267,11 @@ class AppController extends AbstractController
      */
     protected function getServices(): ?array
     {
-        $key = User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId();
+        return $this->cache->get(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
+            $item->expiresAfter(30 * 24 * 60 * 60);
 
-        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
-            $this->repoService->findServicesAndSubServicesOfUser($this->getUser()),
-            30 * 24 * 60 * 60); // 30 jours
+            return $this->repoService->findServicesAndSubServicesOfUser($this->getUser());
+        });
     }
 
     /**
@@ -277,11 +279,11 @@ class AppController extends AbstractController
      */
     protected function getSupports(): ?array
     {
-        $key = User::CACHE_USER_SUPPORTS_KEY.$this->getUser()->getId();
+        return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
+            $item->expiresAfter(24 * 60 * 60); // 24 heures
 
-        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
-            $this->repoSupportGroup->findAllSupportsFromUser($this->getUser()),
-            24 * 60 * 60); // 24 heures
+            return $this->repoSupportGroup->findAllSupportsFromUser($this->getUser());
+        });
     }
 
     /**
@@ -289,11 +291,11 @@ class AppController extends AbstractController
      */
     protected function getNotes(): ?array
     {
-        $key = User::CACHE_USER_NOTES_KEY.$this->getUser()->getId();
+        return $this->cache->get(User::CACHE_USER_NOTES_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
+            $item->expiresAfter(24 * 60 * 60); // 24 heures
 
-        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
-            $this->repoNote->findAllNotesFromUser($this->getUser(), 10),
-            24 * 60 * 60); // 24 heures
+            $this->repoNote->findAllNotesFromUser($this->getUser(), 10);
+        });
     }
 
     /**
@@ -301,10 +303,10 @@ class AppController extends AbstractController
      */
     protected function getRdvs(): ?array
     {
-        $key = User::CACHE_USER_RDVS_KEY.$this->getUser()->getId();
+        return $this->cache->get(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
+            $item->expiresAfter(24 * 60 * 60); // 24 heures
 
-        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
-            $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10),
-            24 * 60 * 60); // 24 heures
+            $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10);
+        });
     }
 }
