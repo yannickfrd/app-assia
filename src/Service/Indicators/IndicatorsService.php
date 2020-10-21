@@ -23,12 +23,9 @@ use App\Repository\SupportPersonRepository;
 use App\Repository\UserConnectionRepository;
 use App\Repository\UserRepository;
 use App\Service\CacheService;
-use Symfony\Component\Security\Core\Security;
 
 class IndicatorsService
 {
-    protected $security;
-
     protected $repoIndicator;
     protected $repoUser;
     protected $repoService;
@@ -46,7 +43,6 @@ class IndicatorsService
     protected $cacheService;
 
     public function __construct(
-        Security $security,
         IndicatorRepository $repoIndicator,
         UserRepository $repoUser,
         ServiceRepository $repoService,
@@ -61,8 +57,6 @@ class IndicatorsService
         ContributionRepository $repoContribution,
         UserConnectionRepository $repoConnection)
     {
-        $this->security = $security;
-
         $this->repoIndicator = $repoIndicator;
         $this->repoUser = $repoUser;
         $this->repoService = $repoService;
@@ -80,6 +74,9 @@ class IndicatorsService
         $this->cacheService = new CacheService();
     }
 
+    /**
+     * Donne les indicateurs généraux de l'application.
+     */
     public function getIndicators()
     {
         $key = Indicator::CACHE_KEY;
@@ -87,24 +84,30 @@ class IndicatorsService
         return $this->cacheService->find($key) ?? $this->cacheService->cache($key, $this->getDatasIndicators(), 60 * 60); // 60 minutes
     }
 
-    public function getServicesIndicators()
+    /**
+     * Donne les indicateurs des services.
+     */
+    public function getServicesIndicators(array $services): array
     {
-        $services = [];
+        $datasServices = [];
 
-        foreach ($this->repoService->findServicesAndSubServicesOfUser($this->security->getUser()) as $service) {
+        foreach ($services as $service) {
             $key = Service::CACHE_INDICATORS_KEY.$service->getId();
             $services[$service->getId()] = $this->cacheService->find($key) ?? $this->cacheService->cache($key, $this->getServiceDatas($service), 60 * 60); // 60 minutes
         }
 
-        return $services;
+        return $datasServices;
     }
 
-    protected function getSubServicesIndicators(Service $service)
+    /**
+     * Donne les indicateurs des sous-services du service.
+     */
+    protected function getSubServicesIndicators(Service $service): ?array
     {
         if ($service->getSubServices()->count() <= 1) {
             return null;
         }
-        $subServices = [];
+        $datasSubServices = [];
 
         foreach ($service->getSubServices() as $subService) {
             $criteria = [
@@ -115,20 +118,23 @@ class IndicatorsService
             $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
 
             if ((int) $nbActiveSupportsGroups > 0) {
-                $subServices[$subService->getId()] = $this->getSubServiceDatas($subService, $criteria, $nbActiveSupportsGroups);
+                $datasSubServices[$subService->getId()] = $this->getSubServiceDatas($subService, $criteria, $nbActiveSupportsGroups);
             }
         }
 
-        return $subServices;
+        return $datasSubServices;
     }
 
-    protected function getDevicesIndicators(Service $service)
+    /**
+     * Les indicateurs des dispositifs du service.
+     */
+    protected function getDevicesIndicators(Service $service): ?array
     {
         if ($service->getDevices()->count() <= 1) {
             return null;
         }
 
-        $devices = [];
+        $datasDevices = [];
 
         foreach ($service->getDevices() as $device) {
             $criteria = [
@@ -139,14 +145,17 @@ class IndicatorsService
             $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
 
             if ((int) $nbActiveSupportsGroups > 0) {
-                $devices[$device->getId()] = $this->getDeviceDatas($device, $criteria, $nbActiveSupportsGroups);
+                $datasDevices[$device->getId()] = $this->getDeviceDatas($device, $criteria, $nbActiveSupportsGroups);
             }
         }
 
-        return $devices;
+        return $datasDevices;
     }
 
-    public function getUsersIndicators()
+    /**
+     * Donne les indicateurs de tous les utilisateurs.
+     */
+    public function getUsersIndicators(): array
     {
         $key = User::CACHE_INDICATORS_KEY;
 
@@ -164,6 +173,9 @@ class IndicatorsService
         return $this->cacheService->cache($key, $users, 60 * 60); // 60 minutes
     }
 
+    /**
+     * Enregistre les indicateurs d'activité d'une journée.
+     */
     public function createIndicator(\DateTime $date): Indicator
     {
         $criteriaByCreation = [
@@ -193,7 +205,10 @@ class IndicatorsService
         return $indicator;
     }
 
-    protected function getDatasIndicators()
+    /**
+     * Donne les indicateurs généraux.
+     */
+    protected function getDatasIndicators(): array
     {
         $totay = new \DateTime('today');
         $criteriaByCreation = [
@@ -263,7 +278,10 @@ class IndicatorsService
         ];
     }
 
-    protected function getServiceDatas(Service $service)
+    /**
+     * Donne les indicateurs d'un service.
+     */
+    protected function getServiceDatas(Service $service): array
     {
         $criteria = [
             'service' => $service,
@@ -297,7 +315,10 @@ class IndicatorsService
         ];
     }
 
-    protected function getSubServiceDatas(SubService $subService, array $criteria, int $nbActiveSupportsGroups)
+    /**
+     * Donne les indicateurs d'un sous-service.
+     */
+    protected function getSubServiceDatas(SubService $subService, array $criteria, int $nbActiveSupportsGroups): array
     {
         return [
             'name' => $subService->getName(),
@@ -322,7 +343,10 @@ class IndicatorsService
         ];
     }
 
-    protected function getDeviceDatas(Device $device, array $criteria, int $nbActiveSupportsGroups)
+    /**
+     * Donne les indicateurs d'un dispositif.
+     */
+    protected function getDeviceDatas(Device $device, array $criteria, int $nbActiveSupportsGroups): array
     {
         return [
             'name' => $device->getName(),
@@ -347,7 +371,10 @@ class IndicatorsService
         ];
     }
 
-    protected function getUserDatas(User $user)
+    /**
+     * Donne les indicateurs d'un utilisateur.
+     */
+    protected function getUserDatas(User $user): array
     {
         return [
             'id' => $user->getId(),

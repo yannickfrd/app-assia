@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Indicator
 {
-    public const CACHE_KEY = 'indicators';
+    public const CACHE_KEY = 'stats';
 
     /**
      * @ORM\Id

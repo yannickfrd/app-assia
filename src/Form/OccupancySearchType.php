@@ -3,13 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Pole;
+use App\Form\Model\OccupancySearch;
 use App\Form\Model\RdvSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\ServiceSearchType;
-use App\Form\Model\OccupancySearch;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OccupancySearchType extends AbstractType

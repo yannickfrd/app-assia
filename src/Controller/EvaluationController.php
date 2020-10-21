@@ -26,30 +26,52 @@ class EvaluationController extends AbstractController
 
     private $manager;
     private $repoSupportGroup;
-    private $repo;
+    private $repoEvaluation;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo)
+    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repoEvaluation)
     {
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
-        $this->repo = $repo;
+        $this->repoEvaluation = $repoEvaluation;
     }
 
     /**
      * Voir une évaluation sociale.
      *
-     * @Route("/support/{id}/evaluation", name="support_evaluation_show", methods="GET|POST")
+     * @Route("/support/{id}/evaluation/show", name="support_evaluation_show", methods="GET")
      */
-    public function showEvaluation(int $id, Request $request): Response
+    public function showEvaluation(int $id): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $supportGroup = $this->getSupportGroup($id);
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $evaluationGroup = $this->repo->findEvaluationById($supportGroup);
+        $evaluationGroup = $this->getEvaluation($supportGroup);
 
         if (!$evaluationGroup) {
             return $this->createEvaluationGroup($supportGroup);
         }
+
+        $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup, [
+            'action' => $this->generateUrl('support_evaluation_save', ['id' => $supportGroup->getId()]),
+        ]);
+
+        return $this->render('app/evaluation/evaluationEdit.html.twig', [
+            'support' => $supportGroup,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Sauvegarde une évaluation sociale.
+     *
+     * @Route("/support/{id}/evaluation/save", name="support_evaluation_save", methods="POST")
+     */
+    public function saveEvaluation(int $id, Request $request): Response
+    {
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $evaluationGroup = $this->repoEvaluation->findEvaluationById($supportGroup);
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
@@ -67,14 +89,14 @@ class EvaluationController extends AbstractController
     /**
      * Modification d'une évaluation sociale.
      *
-     * @Route("/support/{id}/evaluation_edit", name="support_evaluation_edit", methods="POST")
+     * @Route("/support/{id}/evaluation/edit", name="support_evaluation_edit", methods="POST")
      */
     public function editEvaluation(int $id, Request $request, Normalisation $normalisation): Response
     {
         $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $evaluationGroup = $this->repo->findEvaluationById($supportGroup);
+        $evaluationGroup = $this->repoEvaluation->findEvaluationById($supportGroup);
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
@@ -224,6 +246,32 @@ class EvaluationController extends AbstractController
         // Ressources et dettes initiales
         $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
+    }
+
+    /**
+     * Donne le suivi social.
+     */
+    protected function getSupportGroup(int $id): ?SupportGroup
+    {
+        $cacheService = new CacheService();
+        $key = SupportGroup::CACHE_KEY.$id;
+
+        return $cacheService->find($key) ?? $cacheService->cache($key,
+            $this->repoSupportGroup->findSupportById($id),
+            7 * 24 * 60 * 60); // 7 jours
+    }
+
+    /**
+     * Donne l'évaluation sociale complète.
+     */
+    protected function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
+    {
+        $cacheService = new CacheService();
+        $key = EvaluationGroup::CACHE_KEY.$supportGroup->getId();
+
+        return $cacheService->find($key) ?? $cacheService->cache($key,
+            $this->repoEvaluation->findEvaluationById($supportGroup),
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     protected function discache(EvaluationGroup $evaluationGroup)

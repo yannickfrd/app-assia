@@ -11,6 +11,7 @@ use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
+use App\Entity\User;
 use App\Form\Utils\Choices;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\ServiceRepository;
@@ -79,7 +80,7 @@ class SupportGroupManager
 
         $supportGroup = $cacheService->find($key) ?? $cacheService->cache($key,
             $this->repoSupportGroup->findFullSupportById($id),
-            1 * 24 * 60 * 60); // 1 jour
+            7 * 24 * 60 * 60); // 7 jours
 
         $this->checkSupportGroup($supportGroup);
 
@@ -96,7 +97,7 @@ class SupportGroupManager
 
         return $cacheService->find($key) ?? $cacheService->cache($key,
             $this->repoSupportGroup->findSupportById($id),
-            1 * 24 * 60 * 60); // 1 jour
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     /**
@@ -109,7 +110,7 @@ class SupportGroupManager
 
         return $cacheService->find($key) ?? $cacheService->cache($key,
             $this->repoEvaluationGroup->findEvaluationById($supportGroup),
-            1 * 24 * 60 * 60); // 7 jours
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     /**
@@ -469,7 +470,13 @@ class SupportGroupManager
      */
     public function discache(SupportGroup $supportGroup): bool
     {
-        return (new CacheService())->discache([
+        $cacheService = new CacheService();
+
+        if ($supportGroup->getReferent()) {
+            $cacheService->discache(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+        }
+
+        return $cacheService->discache([
             SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
             Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
         ]);

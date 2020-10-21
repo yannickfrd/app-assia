@@ -16,6 +16,7 @@ use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
 use App\Security\CurrentUserService;
+use App\Service\CacheService;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
@@ -92,8 +93,28 @@ class NoteController extends AbstractController
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalNotes' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
-            'notes' => $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10) ?? null,
+            'notes' => $this->getNotes($supportGroup, $request, $search, $pagination),
         ]);
+    }
+
+    /**
+     * Donne les notes du suivi.
+     */
+    protected function getNotes(SupportGroup $supportGroup, Request $request, SupportNoteSearch $search, Pagination $pagination)
+    {
+        // Si filtre ou tri utilisé, n'utilise pas le cache.
+        if ($request->query->count() > 0) {
+            return $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
+        }
+
+        // Sinon, récupère les notes en cache.
+        $cacheService = new CacheService();
+
+        $key = SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId();
+
+        return $cacheService->find($key) ?? $cacheService->cache($key,
+           $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10),
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     /**
@@ -146,6 +167,8 @@ class NoteController extends AbstractController
     {
         $this->manager->remove($note);
         $this->manager->flush();
+
+        $this->discache($note->getSupportGroup());
 
         return $this->json([
             'code' => 200,
@@ -211,6 +234,8 @@ class NoteController extends AbstractController
         $this->manager->persist($note);
         $this->manager->flush();
 
+        $this->discache($supportGroup);
+
         return $this->json([
             'code' => 200,
             'action' => 'create',
@@ -232,6 +257,8 @@ class NoteController extends AbstractController
     {
         $this->manager->flush();
 
+        $this->discache($note->getSupportGroup());
+
         return $this->json([
             'code' => 200,
             'action' => $typeSave,
@@ -244,5 +271,16 @@ class NoteController extends AbstractController
                 'editInfo' => '(modifié le '.$note->getUpdatedAt()->format('d/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
             ],
         ], 200);
+    }
+
+    /**
+     * Supprime les notes en cache du suivi et de l'utlisateur.
+     */
+    protected function discache(SupportGroup $supportGroup): bool
+    {
+        return (new CacheService())->discache(
+            SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+            User::CACHE_USER_NOTES_KEY.$this->getUser()->getId(),
+        );
     }
 }

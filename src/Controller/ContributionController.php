@@ -16,6 +16,7 @@ use App\Form\Model\SupportContributionSearch;
 use App\Repository\AccommodationRepository;
 use App\Repository\ContributionRepository;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\CacheService;
 use App\Service\Indicators\ContributionIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
@@ -34,12 +35,12 @@ class ContributionController extends AbstractController
     use ErrorMessageTrait;
 
     private $manager;
-    private $repo;
+    private $repoContribution;
 
-    public function __construct(EntityManagerInterface $manager, ContributionRepository $repo)
+    public function __construct(EntityManagerInterface $manager, ContributionRepository $repoContribution)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->repoContribution = $repoContribution;
     }
 
     /**
@@ -68,7 +69,7 @@ class ContributionController extends AbstractController
 
         return $this->render('app/contribution/listContributions.html.twig', [
             'form' => $form->createView(),
-            'contributions' => $pagination->paginate($this->repo->findAllContributionsQuery($search), $request, 20) ?? null,
+            'contributions' => $pagination->paginate($this->repoContribution->findAllContributionsQuery($search), $request, 20) ?? null,
         ]);
     }
 
@@ -99,12 +100,19 @@ class ContributionController extends AbstractController
 
         $form = $this->createForm(ContributionType::class, $contribution);
 
+        // Récupère les contributions en cache.
+        $cacheService = new CacheService();
+        $key = SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId();
+        $contributions = $cacheService->find($key) ?? $cacheService->cache($key,
+            $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200),
+            7 * 24 * 60 * 60); // 7 jours
+
         return $this->render('app/contribution/supportContributions.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalContributions' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
-            'contributions' => $pagination->paginate($this->repo->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 100),
+            'nbTotalContributions' => $request->query->count() ? $this->repoContribution->count(['supportGroup' => $supportGroup]) : null,
+            'contributions' => $contributions,
         ]);
     }
 
@@ -231,6 +239,8 @@ class ContributionController extends AbstractController
         $this->manager->remove($contribution);
         $this->manager->flush();
 
+        $this->discache($contribution->getSupportGroup());
+
         return $this->json([
             'code' => 200,
             'action' => 'delete',
@@ -256,7 +266,7 @@ class ContributionController extends AbstractController
         }
 
         $datas = $indicators->getIndicators(
-            $this->repo->findAllContributionsForIndicators($search),
+            $this->repoContribution->findAllContributionsForIndicators($search),
             $search,
         );
 
@@ -273,7 +283,7 @@ class ContributionController extends AbstractController
      */
     protected function exportFullData($search, $supportGroup = null, UrlGeneratorInterface $router = null)
     {
-        $supports = $this->repo->findContributionsToExport($search, $supportGroup);
+        $supports = $this->repoContribution->findContributionsToExport($search, $supportGroup);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -289,7 +299,7 @@ class ContributionController extends AbstractController
      */
     protected function exportLightData(ContributionSearch $search, UrlGeneratorInterface $router = null)
     {
-        $supports = $this->repo->findContributionsToExport($search);
+        $supports = $this->repoContribution->findContributionsToExport($search);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -311,6 +321,8 @@ class ContributionController extends AbstractController
 
         $this->manager->persist($contribution);
         $this->manager->flush();
+
+        $this->discache($supportGroup);
 
         return $this->json([
             'code' => 200,
@@ -334,6 +346,8 @@ class ContributionController extends AbstractController
         $contribution->getSupportGroup()->setUpdatedAt(new \DateTime());
 
         $this->manager->flush();
+
+        $this->discache($contribution->getSupportGroup());
 
         return $this->json([
             'code' => 200,
@@ -363,5 +377,13 @@ class ContributionController extends AbstractController
         }
 
         return $search;
+    }
+
+    /**
+     * Supprime les contributions en cache du suivi.
+     */
+    protected function discache(SupportGroup $supportGroup): bool
+    {
+        return (new CacheService())->discache(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId());
     }
 }

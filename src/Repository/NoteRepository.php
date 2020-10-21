@@ -136,7 +136,7 @@ class NoteRepository extends ServiceEntityRepository
             $query->andWhere('n.type = :type')
                 ->setParameter('type', $search->getType());
         }
-        $query = $query->orderBy('n.createdAt', 'DESC');
+        $query = $query->orderBy('n.updatedAt', 'DESC');
 
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }

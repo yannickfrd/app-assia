@@ -6,7 +6,7 @@ use App\Entity\Pole;
 use App\Entity\ServiceUser;
 use App\Entity\User;
 use App\Form\Model\UserSearch;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
 use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -66,7 +66,7 @@ class UserSearchType extends AbstractType
                     'autocomplete' => 'off',
                 ],
             ])
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                 'attr' => [
                     'options' => ['services'],
                 ],

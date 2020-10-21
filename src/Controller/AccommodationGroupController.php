@@ -304,7 +304,7 @@ class AccommodationGroupController extends AbstractController
     }
 
     /**
-     * Vide l'item du suivi en cache.
+     * Supprime l'item en cache du suivi social.
      */
     public function discacheSupport(SupportGroup $supportGroup): bool
     {

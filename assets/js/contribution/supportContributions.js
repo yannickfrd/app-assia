@@ -520,7 +520,7 @@ export default class SupportContributions {
                     this.showContribution(response.data)
                     break
                 case 'create':
-                    this.createContribution(response.response.contribution)
+                    this.createContribution(response.data.contribution)
                     new MessageFlash(response.alert, response.msg)
                     break
                 case 'update':

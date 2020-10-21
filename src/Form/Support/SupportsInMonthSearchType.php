@@ -3,7 +3,7 @@
 namespace App\Form\Support;
 
 use App\Form\Model\SupportsInMonthSearch;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +13,7 @@ class SupportsInMonthSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                 'data_class' => SupportsInMonthSearch::class,
             ]);
     }

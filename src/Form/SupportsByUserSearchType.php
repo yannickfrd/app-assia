@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Form\Model\SupportsByUserSearch;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,7 +14,7 @@ class SupportsByUserSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                 'data_class' => SupportsByUserSearch::class,
                 'attr' => [
                     'options' => ['services', 'subServices', 'devices'],

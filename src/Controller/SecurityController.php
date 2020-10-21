@@ -18,6 +18,7 @@ use App\Notification\MailNotification;
 use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\UserRepository;
+use App\Service\CacheService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -171,6 +172,8 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
+
+            $this->discache();
 
             $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est mis à jour.');
         }
@@ -453,5 +456,13 @@ class SecurityController extends AbstractController
         }
 
         return;
+    }
+
+    /**
+     * Supprime l'item en cache des services de l'utilisateur.
+     */
+    protected function discache(): bool
+    {
+        return (new CacheService())->discache(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId());
     }
 }

@@ -69,7 +69,7 @@ class AppControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('home'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Mon espace personnel');
+        $this->assertSelectorTextContains('h1', 'Tableau de bord');
     }
 
     public function testPageServiceDashboardIsUp()

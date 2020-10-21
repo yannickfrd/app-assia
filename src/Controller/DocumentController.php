@@ -9,6 +9,7 @@ use App\Form\Document\DocumentSearchType;
 use App\Form\Document\DocumentType;
 use App\Form\Model\DocumentSearch;
 use App\Repository\DocumentRepository;
+use App\Service\CacheService;
 use App\Service\Download;
 use App\Service\FileUploader;
 use App\Service\Pagination;
@@ -55,8 +56,28 @@ class DocumentController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'documents' => $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request),
+            'documents' => $this->getDocuments($supportGroup, $request, $search, $pagination),
         ]);
+    }
+
+    /**
+     * Donne les documents du suivi.
+     */
+    protected function getDocuments(SupportGroup $supportGroup, Request $request, DocumentSearch $search, Pagination $pagination)
+    {
+        // Si filtre ou tri utilisé, n'utilise pas le cache.
+        if ($request->query->count() > 0) {
+            return  $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request);
+        }
+
+        // Sinon, récupère les documents en cache.
+        $cacheService = new CacheService();
+
+        $key = SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId();
+
+        return $cacheService->find($key) ?? $cacheService->cache($key,
+             $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request),
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     /**
@@ -140,6 +161,8 @@ class DocumentController extends AbstractController
         $this->manager->remove($document);
         $this->manager->flush();
 
+        $this->discache($document->getSupportGroup());
+
         return $this->json([
             'code' => 200,
             'action' => 'delete',
@@ -173,6 +196,8 @@ class DocumentController extends AbstractController
         $this->manager->persist($document);
         $this->manager->flush();
 
+        $this->discache($supportGroup);
+
         return $this->json([
             'code' => 200,
             'action' => 'create',
@@ -195,6 +220,8 @@ class DocumentController extends AbstractController
     {
         $this->manager->flush();
 
+        $this->discache($document->getSupportGroup());
+
         return $this->json([
             'code' => 200,
             'action' => 'update',
@@ -204,5 +231,15 @@ class DocumentController extends AbstractController
                 'type' => $document->getTypeToString(),
             ],
         ], 200);
+    }
+
+    /**
+     * Supprime les documents en cache du suivi.
+     */
+    protected function discache(SupportGroup $supportGroup): bool
+    {
+        return (new CacheService())->discache(
+            SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
+        );
     }
 }

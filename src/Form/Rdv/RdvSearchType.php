@@ -4,7 +4,7 @@ namespace App\Form\Rdv;
 
 use App\Form\Model\RdvSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,7 +31,7 @@ class RdvSearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
             ->add('export');

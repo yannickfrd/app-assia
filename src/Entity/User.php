@@ -27,7 +27,11 @@ class User implements UserInterface
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
-    public const CACHE_INDICATORS_KEY = 'indicators_users';
+    public const CACHE_INDICATORS_KEY = 'stats.users'; // Indicateurs de tous les utilisateurs
+    public const CACHE_USER_SERVICES_KEY = 'user.services'; // Services de l'utilisateur
+    public const CACHE_USER_SUPPORTS_KEY = 'user.supports'; // Suivis de l'utilisateur
+    public const CACHE_USER_NOTES_KEY = 'user.notes'; // Notes de l'utilisateur
+    public const CACHE_USER_RDVS_KEY = 'user.rdvs'; // Rendez-vous de l'utilisateur
 
     public const STATUS_SOCIAL_WORKER = 1;
     public const STATUS_COORDO = 2;

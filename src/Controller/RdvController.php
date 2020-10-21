@@ -14,6 +14,7 @@ use App\Form\Rdv\RdvType;
 use App\Form\Rdv\SupportRdvSearchType;
 use App\Repository\RdvRepository;
 use App\Security\CurrentUserService;
+use App\Service\CacheService;
 use App\Service\Calendar;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportGroupManager;
@@ -87,8 +88,28 @@ class RdvController extends AbstractController
         return $this->render('app/rdv/supportRdvs.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
-            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request),
+            'rdvs' => $this->getRdvs($supportGroup, $request, $search, $pagination),
         ]);
+    }
+
+    /**
+     * Donne les rendez-vous du suivi.
+     */
+    protected function getRdvs(SupportGroup $supportGroup, Request $request, SupportRdvSearch $search, Pagination $pagination)
+    {
+        // Si filtre ou tri utilisé, n'utilise pas le cache.
+        if ($request->query->count() > 0) {
+            return  $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
+        }
+
+        // Sinon, récupère les rendez-vous en cache.
+        $cacheService = new CacheService();
+
+        $key = SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId();
+
+        return $cacheService->find($key) ?? $cacheService->cache($key,
+             $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request),
+            7 * 24 * 60 * 60); // 7 jours
     }
 
     /**
@@ -286,6 +307,8 @@ class RdvController extends AbstractController
         $this->manager->persist($rdv);
         $this->manager->flush();
 
+        $this->discache($rdv->getSupportGroup());
+
         return $this->json([
             'code' => 200,
             'action' => 'create',
@@ -306,6 +329,8 @@ class RdvController extends AbstractController
     protected function updateRdv(Rdv $rdv, string $typeSave): Response
     {
         $this->manager->flush();
+
+        $this->discache($rdv->getSupportGroup());
 
         return $this->json([
             'code' => 200,
@@ -348,5 +373,19 @@ class RdvController extends AbstractController
             'alert' => 'danger',
             'msg' => "Une erreur s'est produite.",
         ], 200);
+    }
+
+    /**
+     * Supprime les rendez-vous en cache du suivi et de l'utlisateur.
+     */
+    protected function discache(?SupportGroup $supportGroup = null): bool
+    {
+        $cacheService = new CacheService();
+
+        if ($supportGroup) {
+            $cacheService->discache(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
+        }
+
+        return $cacheService->discache(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId());
     }
 }

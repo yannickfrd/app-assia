@@ -9,7 +9,7 @@ use App\Entity\SupportGroup;
 use App\Form\Model\HotelSupportSearch;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
 use App\Form\Utils\Choices;
 use App\Repository\AccommodationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -49,7 +49,7 @@ class HotelSupportSearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => SupportGroupSearch::class,
                 ])
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                     'data_class' => HotelSupportSearch::class,
                     'attr' => [
                         'serviceId' => Service::SERVICE_PASH_ID,

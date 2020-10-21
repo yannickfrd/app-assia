@@ -48,7 +48,7 @@ class LoginListener
 
         // Récupère en session le code couleur du 1er service
         if (count($user->getServiceUser()) > 0) {
-            $this->session->set('themeColor', $user->getServiceUser()[0]->getService()->getPole()->getColor());
+            $this->session->set('theme_color', $user->getServiceUser()[0]->getService()->getPole()->getColor());
         }
 
         // Récupère en session les services rattachés à l'utilisateur

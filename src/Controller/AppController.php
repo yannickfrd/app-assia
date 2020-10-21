@@ -5,13 +5,16 @@ namespace App\Controller;
 use App\Entity\Device;
 use App\Entity\Service;
 use App\Entity\SubService;
+use App\Entity\User;
 use App\Form\Model\OccupancySearch;
 use App\Form\Model\SupportsByUserSearch;
 use App\Form\OccupancySearchType;
 use App\Form\SupportsByUserSearchType;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\CacheService;
 use App\Service\Indicators\IndicatorsService;
 use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
@@ -23,35 +26,43 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
+    protected $repoService;
     protected $repoSupportGroup;
     protected $repoNote;
     protected $repoRdv;
+    protected $cacheService;
 
-    public function __construct(
-        SupportGroupRepository $repoSupportGroup,
-        NoteRepository $repoNote,
-        RdvRepository $repoRdv)
+    public function __construct(ServiceRepository $repoService, SupportGroupRepository $repoSupportGroup, NoteRepository $repoNote, RdvRepository $repoRdv)
     {
+        $this->repoService = $repoService;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoNote = $repoNote;
         $this->repoRdv = $repoRdv;
+
+        $this->cacheService = new CacheService();
     }
 
     /**
+     * Page d'accueil / Tableau de bord.
+     *
      * @Route("/home", name="home", methods="GET")
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
     public function home(IndicatorsService $indicators): Response
     {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            return $this->dashboardAdmin($indicators);
-        }
-
-        return $this->dashboardSocialWorker();
+        return $this->render('app/home/dashboard.html.twig', [
+            'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
+            'servicesIndicators' => $indicators->getServicesIndicators($this->getServices()),
+            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->getSupports() : null,
+            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->getNotes() : null,
+            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->getRdvs() : null,
+        ]);
     }
 
     /**
+     * Page d'administration de l'application.
+     *
      * @Route("/admin", name="admin", methods="GET")
      * @IsGranted("ROLE_ADMIN")
      */
@@ -61,30 +72,29 @@ class AppController extends AbstractController
     }
 
     /**
+     * Page de gestion du ou des services.
+     *
      * @Route("/managing", name="managing", methods="GET")
+     * @IsGranted("ROLE_USER")
      */
     public function managing(): Response
     {
         return $this->render('app/managing/managing.html.twig');
     }
 
-    protected function dashboardSocialWorker()
+    /**
+     * Page de gestion du ou des services.
+     *
+     * @Route("/admin/cache/clear", name="cache_clear", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function clearCache(): Response
     {
-        return $this->render('app/home/home.html.twig', [
-            'supports' => $this->repoSupportGroup->findAllSupportsFromUser($this->getUser()),
-            'notes' => $this->repoNote->findAllNotesFromUser($this->getUser(), 10),
-            'rdvs' => $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10),
-        ]);
-    }
+        (new CacheService())->clear();
 
-    protected function dashboardAdmin(IndicatorsService $indicators)
-    {
-        return $this->render('app/home/dashboardAdmin.html.twig', [
-            'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
-            'servicesIndicators' => $indicators->getServicesIndicators(),
-            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->repoNote->findAllNotesFromUser($this->getUser(), 10) : null,
-            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10) : null,
-        ]);
+        $this->addFlash('success', 'Le cache est vide.');
+
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -248,5 +258,53 @@ class AppController extends AbstractController
         }
 
         return $search;
+    }
+
+    /**
+     * Donne les services de l'utilisateur en cache.
+     */
+    protected function getServices(): ?array
+    {
+        $key = User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId();
+
+        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
+            $this->repoService->findServicesAndSubServicesOfUser($this->getUser()),
+            30 * 24 * 60 * 60); // 30 jours
+    }
+
+    /**
+     * Donne les suivis de l'utilisateur en cache.
+     */
+    protected function getSupports(): ?array
+    {
+        $key = User::CACHE_USER_SUPPORTS_KEY.$this->getUser()->getId();
+
+        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
+            $this->repoSupportGroup->findAllSupportsFromUser($this->getUser()),
+            24 * 60 * 60); // 24 heures
+    }
+
+    /**
+     * Donne les notes de l'utilisateur en cache.
+     */
+    protected function getNotes(): ?array
+    {
+        $key = User::CACHE_USER_NOTES_KEY.$this->getUser()->getId();
+
+        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
+            $this->repoNote->findAllNotesFromUser($this->getUser(), 10),
+            24 * 60 * 60); // 24 heures
+    }
+
+    /**
+     * Donne les rdvs de l'utilisateur en cache.
+     */
+    protected function getRdvs(): ?array
+    {
+        $key = User::CACHE_USER_RDVS_KEY.$this->getUser()->getId();
+
+        return $this->cacheService->find($key) ?? $this->cacheService->cache($key,
+            $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10),
+            24 * 60 * 60); // 24 heures
     }
 }

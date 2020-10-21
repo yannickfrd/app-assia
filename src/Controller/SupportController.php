@@ -398,13 +398,19 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Vide le cache du suivi social et de l'évaluation sociale.
+     * Supprime le cache du suivi social et de l'évaluation sociale.
      */
     public function discache(SupportGroup $supportGroup): bool
     {
         $id = $supportGroup->getId();
 
-        return (new CacheService())->discache([
+        $cacheService = new CacheService();
+
+        if ($supportGroup->getReferent()) {
+            $cacheService->discache(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+        }
+
+        return $cacheService->discache([
             SupportGroup::CACHE_KEY.$id,
             SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
             EvaluationGroup::CACHE_KEY.$id,

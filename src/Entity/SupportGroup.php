@@ -25,8 +25,12 @@ class SupportGroup
     use LocationEntityTrait;
     use GeoLocationEntityTrait;
 
-    public const CACHE_KEY = 'support_group_';
-    public const CACHE_FULLSUPPORT_KEY = 'support_group_full_';
+    public const CACHE_KEY = 'support_group';
+    public const CACHE_FULLSUPPORT_KEY = 'support_group_full';
+    public const CACHE_SUPPORT_NOTES_KEY = 'support.notes';
+    public const CACHE_SUPPORT_RDVS_KEY = 'support.rdvs';
+    public const CACHE_SUPPORT_DOCUMENTS_KEY = 'support.documents';
+    public const CACHE_SUPPORT_CONTRIBUTIONS_KEY = 'support.contributions';
 
     public const STATUS_PRE_ADD_IN_PROGRESS = 1;
     public const STATUS_IN_PROGRESS = 2;
@@ -302,7 +306,7 @@ class SupportGroup
 
     public function __toString()
     {
-        return $this->id;
+        return strval($this->id);
     }
 
     public function getId(): ?int

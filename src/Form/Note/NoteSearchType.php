@@ -3,14 +3,14 @@
 namespace App\Form\Note;
 
 use App\Entity\Note;
-use App\Form\Utils\Choices;
 use App\Form\Model\NoteSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class NoteSearchType extends AbstractType
 {
@@ -56,7 +56,7 @@ class NoteSearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => NoteSearch::class,
             ])
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                 'data_class' => NoteSearch::class,
             ]);
     }

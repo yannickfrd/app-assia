@@ -6,7 +6,7 @@ use App\Entity\Pole;
 use App\Form\Model\AccommodationSearch;
 use App\Form\Model\RdvSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\ServiceSearchType;
+use App\Form\Type\SearchType;
 use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -29,7 +29,7 @@ class AccommodationSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('service', ServiceSearchType::class, [
+            ->add('service', SearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
             ->add('name', null, [

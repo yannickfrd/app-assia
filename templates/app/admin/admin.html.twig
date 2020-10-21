@@ -21,15 +21,15 @@
                                 <a class="text-dark" href="{{ path("security_registration") }}">Utilisateur</a>
                             </li>
                             {% if is_granted("ROLE_SUPER_ADMIN") %}
-                            <li class="mb-2 text-{{ theme_color }}">
-                                <a class="text-dark" href="{{ path("service_new") }}">Service</a>
-                            </li>
-                            <li class="mb-2 text-{{ theme_color }}">
-                                <a class="text-dark" href="{{ path("pole_new") }}">Pôle</a>
-                            </li>
-                            <li class="mb-2 text-{{ theme_color }}">
-                                <a class="text-dark" href="{{ path("admin_device_new") }}">Dispositif</a>
-                            </li class="mb-2">
+                                <li class="mb-2 text-{{ theme_color }}">
+                                    <a class="text-dark" href="{{ path("service_new") }}">Service</a>
+                                </li>
+                                <li class="mb-2 text-{{ theme_color }}">
+                                    <a class="text-dark" href="{{ path("pole_new") }}">Pôle</a>
+                                </li>
+                                <li class="mb-2 text-{{ theme_color }}">
+                                    <a class="text-dark" href="{{ path("admin_device_new") }}">Dispositif</a>
+                                </li class="mb-2">
                             {% endif %}
                             <li class="mb-2 text-{{ theme_color }}">
                                 <a class="text-dark" href="{{ path("admin_organization_new") }}">Organisme prescripteur</a>
@@ -44,11 +44,23 @@
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path("admin_users") }}">Utilisateurs</a>
                         </li>
-                        {% endif %}
+                    {% endif %}
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path("admin_devices") }}">Dispositifs</a>
                         </li>
                 </ul>
+
+                <hr class="my-3">
+
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <h2 class="h5">Cache</h2>
+                    <ul>
+                            <li class="mb-2 text-{{ theme_color }}">
+                                <a class="text-dark" href="{{ path("cache_clear") }}">Vider le cache</a>
+                            </li>
+
+                    </ul>
+                {% endif %}
 
                 <hr class="my-3">
 
