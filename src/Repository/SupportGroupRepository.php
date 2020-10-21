@@ -351,6 +351,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sg.referent = :referent')
             ->setParameter('referent', $user)
             ->andWhere('sg.status ='.SupportGroup::STATUS_IN_PROGRESS)
+            ->andWhere('sp.head = TRUE')
 
             ->orderBy('p.lastname', 'ASC')
 

@@ -65,7 +65,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->assertSelectorTextContains('table tbody tr td', 'Document 666');
+        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'Document 666');
     }
 
     public function testFailToCreateNewDocument()
