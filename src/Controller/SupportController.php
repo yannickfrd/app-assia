@@ -29,7 +29,7 @@ use App\Service\Calendar;
 use App\Service\Grammar;
 use App\Service\Indicators\SocialIndicators;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupManager;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -83,7 +83,7 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportGroupManager $supportManager): Response
+    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportManager $supportManager): Response
     {
         $supportGroup = $supportManager->getNewSupportGroup($groupPeople, $request);
 
@@ -157,7 +157,7 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request, SupportGroupManager $supportManager): Response
+    public function editSupportGroup(int $id, Request $request, SupportManager $supportManager): Response
     {
         $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
 
@@ -168,10 +168,6 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $supportManager->update($supportGroup);
-
-            $this->manager->flush();
-
-            $this->addFlash('success', 'Le suivi social est mis à jour.');
 
             return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
@@ -196,26 +192,24 @@ class SupportController extends AbstractController
     /**
      * Voir un suivi social.
      *
-     * @Route("/support/{id}/view", name="support_view", methods="GET|POST")
+     * @Route("/support/{id}/view", name="support_view", methods="GET")
      */
-    public function viewSupportGroup(int $id, SupportGroupManager $supportManager, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
+    public function viewSupportGroup(int $id, SupportManager $supportManager, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $nbRdvs = $repoRdv->count(['supportGroup' => $supportGroup->getId()]);
-
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'referent' => $repoReferent->findLastReferent($supportGroup->getGroupPeople()),
-            'nbRdvs' => $nbRdvs,
-            'nbNotes' => $repoNote->count(['supportGroup' => $supportGroup->getId()]),
-            'nbDocuments' => $repoDocument->count(['supportGroup' => $supportGroup->getId()]),
-            'nbContributions' => $supportGroup->getAccommodationGroups() ? $repoContribution->count(['supportGroup' => $supportGroup->getId()]) : null,
+            'referent' => $supportManager->getReferent($supportGroup, $repoReferent),
+            'nbNotes' => $supportManager->getNbNotes($supportGroup, $repoNote),
+            'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
+            'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $repoDocument),
+            'nbContributions' => $supportManager->getNbContributions($supportGroup, $repoContribution),
+            'nextRdv' => $nbRdvs ? $supportManager->getLastRdvs($supportGroup, $repoRdv) : null,
+            'lastRdv' => $nbRdvs ? $supportManager->getNextRdvs($supportGroup, $repoRdv) : null,
             'evaluation' => $supportManager->getEvaluation($supportGroup),
-            'nextRdv' => $nbRdvs ? $repoRdv->findNextRdvFromSupport($supportGroup->getId()) : null,
-            'lastRdv' => $nbRdvs ? $repoRdv->findLastRdvFromSupport($supportGroup->getId()) : null,
         ]);
     }
 
@@ -241,7 +235,7 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportGroupManager $supportManager): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportManager $supportManager): Response
     {
         if (!$supportManager->addPeopleInSupport($supportGroup, $repo)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
@@ -364,7 +358,7 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, SupportGroupManager $supportManager): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportManager $supportManager): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 

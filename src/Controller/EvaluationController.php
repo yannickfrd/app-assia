@@ -39,40 +39,18 @@ class EvaluationController extends AbstractController
     /**
      * Voir une évaluation sociale.
      *
-     * @Route("/support/{id}/evaluation/show", name="support_evaluation_show", methods="GET")
+     * @Route("/support/{id}/evaluation/show", name="support_evaluation_show", methods="GET|POST")
      */
-    public function showEvaluation(int $id): Response
+    public function showEvaluation(int $id, Request $request): Response
     {
-        $supportGroup = $this->getSupportGroup($id);
+        $supportGroup = $this->repoSupportGroup->findSupportById($id);
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $evaluationGroup = $this->getEvaluation($supportGroup);
+        $evaluationGroup = $this->repoEvaluation->findEvaluationById($supportGroup);
 
         if (!$evaluationGroup) {
             return $this->createEvaluationGroup($supportGroup);
         }
-
-        $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup, [
-            'action' => $this->generateUrl('support_evaluation_save', ['id' => $supportGroup->getId()]),
-        ]);
-
-        return $this->render('app/evaluation/evaluationEdit.html.twig', [
-            'support' => $supportGroup,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Sauvegarde une évaluation sociale.
-     *
-     * @Route("/support/{id}/evaluation/save", name="support_evaluation_save", methods="POST")
-     */
-    public function saveEvaluation(int $id, Request $request): Response
-    {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
-        $evaluationGroup = $this->repoEvaluation->findEvaluationById($supportGroup);
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
@@ -118,8 +96,7 @@ class EvaluationController extends AbstractController
             ->setSupportGroup($supportGroup)
             ->setDate(new \DateTime());
 
-        $initEvalGroup = (new InitEvalGroup())
-            ->setSupportGroup($supportGroup);
+        $initEvalGroup = (new InitEvalGroup())->setSupportGroup($supportGroup);
 
         $this->manager->persist($initEvalGroup);
 
@@ -255,7 +232,7 @@ class EvaluationController extends AbstractController
     protected function getSupportGroup(int $id): ?SupportGroup
     {
         return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
-            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
             return $this->repoSupportGroup->findSupportById($id);
         });
@@ -267,7 +244,7 @@ class EvaluationController extends AbstractController
     protected function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
         return (new FilesystemAdapter())->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
-            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
             return $this->repoEvaluation->findEvaluationById($supportGroup);
         });

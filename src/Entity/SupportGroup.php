@@ -29,8 +29,15 @@ class SupportGroup
     public const CACHE_FULLSUPPORT_KEY = 'support_group_full';
     public const CACHE_SUPPORT_NOTES_KEY = 'support.notes';
     public const CACHE_SUPPORT_RDVS_KEY = 'support.rdvs';
+    public const CACHE_SUPPORT_REFERENT_KEY = 'support.referent';
     public const CACHE_SUPPORT_DOCUMENTS_KEY = 'support.documents';
     public const CACHE_SUPPORT_CONTRIBUTIONS_KEY = 'support.contributions';
+    public const CACHE_SUPPORT_NB_NOTES_KEY = 'support.notes_count';
+    public const CACHE_SUPPORT_NB_RDVS_KEY = 'support.rdvs_count';
+    public const CACHE_SUPPORT_NB_DOCUMENTS_KEY = 'support.documents_count';
+    public const CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY = 'support.contributions_count';
+    public const CACHE_SUPPORT_LAST_RDV_KEY = 'support.last_rdv';
+    public const CACHE_SUPPORT_NEXT_RDV_KEY = 'support.next_rdv';
 
     public const STATUS_PRE_ADD_IN_PROGRESS = 1;
     public const STATUS_IN_PROGRESS = 2;

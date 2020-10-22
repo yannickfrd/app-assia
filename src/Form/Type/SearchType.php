@@ -43,7 +43,7 @@ class SearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Service --',
                     'attr' => [
-                        'class' => 'multi-select w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-150 w-max-200',
                         'data-select2-id' => 'services',
                     ],
                     'required' => false,
@@ -62,7 +62,7 @@ class SearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Sous-service --',
                     'attr' => [
-                        'class' => 'multi-select w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-160 w-max-200',
                         'data-select2-id' => 'sub-services',
                     ],
                     'required' => false,
@@ -81,7 +81,7 @@ class SearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Device --',
                     'attr' => [
-                        'class' => 'multi-select w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-150 w-max-200',
                         'data-select2-id' => 'devices',
                     ],
                     'required' => false,
@@ -100,7 +100,7 @@ class SearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Référent --',
                     'attr' => [
-                        'class' => 'multi-select w-min-150 w-max-180',
+                        'class' => 'multi-select w-min-150 w-max-200',
                         'data-select2-id' => 'referents',
                     ],
                     'required' => false,

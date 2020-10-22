@@ -50,15 +50,16 @@
                         </li>
                 </ul>
 
-                <hr class="my-3">
 
                 {% if is_granted("ROLE_SUPER_ADMIN") %}
+
+                    <hr class="my-3">
+
                     <h2 class="h5">Cache</h2>
                     <ul>
-                            <li class="mb-2 text-{{ theme_color }}">
-                                <a class="text-dark" href="{{ path("cache_clear") }}">Vider le cache</a>
-                            </li>
-
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("cache_clear") }}">Vider le cache</a>
+                        </li>
                     </ul>
                 {% endif %}
 
@@ -74,10 +75,11 @@
                         <a class="text-dark" href="{{ path("export") }}">Export de données</a>
                     </li>
                 </ul>
+                
+                <hr class="my-3">
 
                 {% if app.user.id == 1 %}
 
-                    <hr class="my-3">
 
                     <h2 class="h5">Base de données</h2>
                     <ul>

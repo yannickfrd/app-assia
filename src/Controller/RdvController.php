@@ -16,7 +16,7 @@ use App\Repository\RdvRepository;
 use App\Security\CurrentUserService;
 use App\Service\Calendar;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupManager;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
@@ -75,9 +75,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupManager->getSupportGroup($id);
+        $supportGroup = $SupportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -106,7 +106,7 @@ class RdvController extends AbstractController
         // Sinon, récupère les rendez-vous en cache.
         return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+                $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
                 return $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
             }
@@ -150,9 +150,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportGroupManager $supportGroupManager, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, SupportManager $SupportManager, $year = null, $month = null): Response
     {
-        $supportGroup = $supportGroupManager->getSupportGroup($id);
+        $supportGroup = $SupportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -331,7 +331,7 @@ class RdvController extends AbstractController
     {
         $this->manager->flush();
 
-        $this->discache($rdv->getSupportGroup());
+        $this->discache($rdv->getSupportGroup(), true);
 
         return $this->json([
             'code' => 200,
@@ -379,7 +379,7 @@ class RdvController extends AbstractController
     /**
      * Supprime les rendez-vous en cache du suivi et de l'utlisateur.
      */
-    protected function discache(?SupportGroup $supportGroup = null): bool
+    protected function discache(?SupportGroup $supportGroup = null, $isUpdate = false): bool
     {
         $cache = new FilesystemAdapter();
 
@@ -387,6 +387,14 @@ class RdvController extends AbstractController
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
         }
 
-        return $cache->deleteItem(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId());
+        if ($isUpdate) {
+            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId());
+        }
+
+        return $cache->deleteItems([
+            User::CACHE_USER_RDVS_KEY.$this->getUser()->getId(),
+            SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(),
+            SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(),
+        ]);
     }
 }

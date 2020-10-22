@@ -268,7 +268,7 @@ class AppController extends AbstractController
     protected function getServices(): ?array
     {
         return $this->cache->get(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(30 * 24 * 60 * 60);
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
 
             return $this->repoService->findServicesAndSubServicesOfUser($this->getUser());
         });
@@ -280,7 +280,7 @@ class AppController extends AbstractController
     protected function getSupports(): ?array
     {
         return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(24 * 60 * 60); // 24 heures
+            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
             return $this->repoSupportGroup->findAllSupportsFromUser($this->getUser());
         });
@@ -292,7 +292,7 @@ class AppController extends AbstractController
     protected function getNotes(): ?array
     {
         return $this->cache->get(User::CACHE_USER_NOTES_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(24 * 60 * 60); // 24 heures
+            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
             $this->repoNote->findAllNotesFromUser($this->getUser(), 10);
         });
@@ -304,7 +304,7 @@ class AppController extends AbstractController
     protected function getRdvs(): ?array
     {
         return $this->cache->get(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(24 * 60 * 60); // 24 heures
+            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
             $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10);
         });

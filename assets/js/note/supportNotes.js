@@ -73,7 +73,7 @@ export default class SupportNotes {
             }, 200)
         }
 
-        this.modalNoteElt.addEventListener('click', e => this.goOutModal(e))
+        this.modalNoteElt.addEventListener('mousedown', e => this.goOutModal(e))
     }
     
     /**

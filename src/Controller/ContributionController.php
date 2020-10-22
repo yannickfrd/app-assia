@@ -19,7 +19,7 @@ use App\Repository\EvaluationGroupRepository;
 use App\Service\Indicators\ContributionIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupManager;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
@@ -81,9 +81,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportContributions(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
+    public function showSupportContributions(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupManager->getSupportGroup($id);
+        $supportGroup = $SupportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -104,7 +104,7 @@ class ContributionController extends AbstractController
         // Récupère les contributions en cache.
         $contributions = (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+                $item->expiresAfter(\DateInterval::createFromDateString('7 hours'));
 
                 return $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200);
             }
@@ -126,9 +126,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function getResources(int $id, SupportGroupManager $supportGroupManager, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
+    public function getResources(int $id, SupportManager $SupportManager, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
     {
-        $supportGroup = $supportGroupManager->getSupportGroup($id);
+        $supportGroup = $SupportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -350,7 +350,7 @@ class ContributionController extends AbstractController
 
         $this->manager->flush();
 
-        $this->discache($contribution->getSupportGroup());
+        $this->discache($contribution->getSupportGroup(), true);
 
         return $this->json([
             'code' => 200,
@@ -385,8 +385,14 @@ class ContributionController extends AbstractController
     /**
      * Supprime les contributions en cache du suivi.
      */
-    protected function discache(SupportGroup $supportGroup): bool
+    protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
     {
-        return (new FilesystemAdapter())->deleteItem(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId());
+        $cache = new FilesystemAdapter();
+
+        if ($isUpdate === false) {
+            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId());
+        }
+
+        return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId());
     }
 }

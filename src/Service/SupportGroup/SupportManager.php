@@ -7,13 +7,20 @@ use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
 use App\Entity\GroupPeople;
 use App\Entity\Person;
+use App\Entity\Rdv;
+use App\Entity\Referent;
 use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
 use App\Form\Utils\Choices;
+use App\Repository\ContributionRepository;
+use App\Repository\DocumentRepository;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\NoteRepository;
+use App\Repository\RdvRepository;
+use App\Repository\ReferentRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
 use App\Repository\SupportGroupRepository;
@@ -22,37 +29,39 @@ use App\Service\hydrateObjectWithArray;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class SupportGroupManager
+class SupportManager
 {
     use hydrateObjectWithArray;
 
-    private $container;
+    private $session;
     private $repoSupportGroup;
     private $repoService;
     private $repoSubService;
     private $repoEvaluationGroup;
     private $manager;
+    private $cache;
 
     public function __construct(
-        ContainerInterface $container,
+        SessionInterface $session,
         EntityManagerInterface $manager,
         SupportGroupRepository $repoSupportGroup,
         ServiceRepository $repoService,
         SubServiceRepository $repoSubService,
         EvaluationGroupRepository $repoEvaluationGroup)
     {
-        $this->container = $container;
+        $this->session = $session;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoService = $repoService;
         $this->repoSubService = $repoSubService;
         $this->repoEvaluationGroup = $repoEvaluationGroup;
 
         $this->manager = $manager;
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
@@ -72,45 +81,9 @@ class SupportGroupManager
     }
 
     /**
-     * Donne le suivi social complet.
-     */
-    public function getFullSupportGroup(int $id): ?SupportGroup
-    {
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_FULLSUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
-            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
-
-            return $this->repoSupportGroup->findFullSupportById($id);
-        });
-    }
-
-    /**
-     * Donne le suivi social.
-     */
-    public function getSupportGroup(int $id): ?SupportGroup
-    {
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
-            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
-
-            return $this->repoSupportGroup->findSupportById($id);
-        });
-    }
-
-    /**
-     * Donne l'évaluation sociale complète.
-     */
-    public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
-    {
-        return (new FilesystemAdapter())->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
-            $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
-
-            return $this->repoEvaluationGroup->findEvaluationById($supportGroup);
-        });
-    }
-
-    /**
      * Créé un nouveau suivi.
      */
-    public function create(GroupPeople $groupPeople, SupportGroup $supportGroup, bool $cloneSupport = false)
+    public function create(GroupPeople $groupPeople, SupportGroup $supportGroup, bool $cloneSupport = false): bool
     {
         if ($this->activeSupportExists($groupPeople, $supportGroup)) {
             return false;
@@ -149,7 +122,7 @@ class SupportGroupManager
     /**
      * Crée un suivi individuel.
      */
-    public function createSupportPerson(RolePerson $rolePerson, SupportGroup $supportGroup)
+    public function createSupportPerson(RolePerson $rolePerson, SupportGroup $supportGroup): SupportPerson
     {
         $supportPerson = (new SupportPerson())
             ->setSupportGroup($supportGroup)
@@ -178,7 +151,7 @@ class SupportGroupManager
     /**
      * Met à jour le suivi social du groupe.
      */
-    public function update(SupportGroup $supportGroup)
+    public function update(SupportGroup $supportGroup): void
     {
         $supportGroup->setUpdatedAt(new \DateTime());
         $serviceId = $supportGroup->getService()->getId();
@@ -194,7 +167,11 @@ class SupportGroupManager
         $this->updateSupportPeople($supportGroup);
         $this->updateAccommodationGroup($supportGroup);
 
+        $this->manager->flush();
+
         $this->discache($supportGroup);
+
+        $this->addFlash('success', 'Le suivi social est mis à jour.');
     }
 
     /**
@@ -229,9 +206,148 @@ class SupportGroupManager
     }
 
     /**
+     * Donne le suivi social complet.
+     */
+    public function getFullSupportGroup(int $id): ?SupportGroup
+    {
+        return $this->cache->get(SupportGroup::CACHE_FULLSUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
+            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+
+            return $this->repoSupportGroup->findFullSupportById($id);
+        });
+    }
+
+    /**
+     * Donne le suivi social.
+     */
+    public function getSupportGroup(int $id): ?SupportGroup
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
+            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+
+            return $this->repoSupportGroup->findSupportById($id);
+        });
+    }
+
+    /**
+     * Donne l'évaluation sociale complète.
+     */
+    public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
+    {
+        return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+
+            return $this->repoEvaluationGroup->findEvaluationById($supportGroup);
+        });
+    }
+
+    /**
+     * Donne le référent du suivi social.
+     */
+    public function getReferent(SupportGroup $supportGroup, ReferentRepository $repoReferent): ?Referent
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_REFERENT_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoReferent) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoReferent->findLastReferent($supportGroup->getGroupPeople());
+        });
+    }
+
+    /**
+     * Donne le nombre de notes du suivi social.
+     */
+    public function getNbNotes(SupportGroup $supportGroup, NoteRepository $repoNote): int
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoNote) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoNote->count(['supportGroup' => $supportGroup->getId()]);
+        });
+    }
+
+    /**
+     * Donne le nombre de RDVs du suivi social.
+     */
+    public function getNbRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): int
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoRdv->count(['supportGroup' => $supportGroup->getId()]);
+        });
+    }
+
+    /**
+     * Donne le dernier RDV du suivi social.
+     */
+    public function getLastRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): ?Rdv
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
+            $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
+
+            return $repoRdv->findLastRdvFromSupport($supportGroup->getId());
+        });
+    }
+
+    /**
+     * Donne le RDV suivant du suivi social.
+     */
+    public function getNextRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): ?Rdv
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
+            $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
+
+            return $repoRdv->findNextRdvFromSupport($supportGroup->getId());
+        });
+    }
+
+    /**
+     * Donne le nombre de documents du suivi social.
+     */
+    public function getNbDocuments(SupportGroup $supportGroup, DocumentRepository $repoDocument): int
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoDocument) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoDocument->count(['supportGroup' => $supportGroup->getId()]);
+        });
+    }
+
+    /**
+     * Donne le nombre de contributions du suivi social.
+     */
+    public function getNbContributions(SupportGroup $supportGroup, ContributionRepository $repoContribution): ?int
+    {
+        if (!$supportGroup->getAccommodationGroups()) {
+            return  null;
+        }
+
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoContribution) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoContribution->count(['supportGroup' => $supportGroup->getId()]);
+        });
+    }
+
+    /**
+     * Vide le cache du suivi social et des indicateurs du service.
+     */
+    public function discache(SupportGroup $supportGroup): bool
+    {
+        if ($supportGroup->getReferent()) {
+            $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+        }
+
+        return $this->cache->deleteItems([
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+            Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
+        ]);
+    }
+
+    /**
      * Initialise l'évaluation sociale.
      */
-    protected function initEvaluation(EvaluationGroup $evaluationGroup, NormalizerInterface $normalizer)
+    protected function initEvaluation(EvaluationGroup $evaluationGroup, NormalizerInterface $normalizer): void
     {
         $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
         $evalHousingGroup = $evaluationGroup->getEvalHousingGroup();
@@ -287,7 +403,7 @@ class SupportGroupManager
      *
      * @return void
      */
-    protected function checkSupportGroup(SupportGroup $supportGroup)
+    protected function checkSupportGroup(SupportGroup $supportGroup): void
     {
         // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
         $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
@@ -385,7 +501,7 @@ class SupportGroupManager
     /**
      * Met à jour la prise en charge des personnes du groupe.
      */
-    protected function updateAccommodationPeople(AccommodationGroup $accommodationGroup)
+    protected function updateAccommodationPeople(AccommodationGroup $accommodationGroup): void
     {
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
             $supportPerson = $accommodationPerson->getSupportPerson();
@@ -460,27 +576,10 @@ class SupportGroupManager
     }
 
     /**
-     * Vide le cache du suivi social et des indicateurs du service.
-     */
-    public function discache(SupportGroup $supportGroup): bool
-    {
-        $cache = new FilesystemAdapter();
-
-        if ($supportGroup->getReferent()) {
-            $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
-        }
-
-        return $cache->deleteItems([
-            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
-            Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
-        ]);
-    }
-
-    /**
      * Ajoute un message flash.
      */
     protected function addFlash(string $alert, string $msg)
     {
-        $this->container->get('session')->getFlashBag()->add($alert, $msg);
+        $this->session->getFlashBag()->add($alert, $msg);
     }
 }

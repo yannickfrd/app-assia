@@ -12,7 +12,7 @@ use App\Repository\DocumentRepository;
 use App\Service\Download;
 use App\Service\FileUploader;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupManager;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -40,9 +40,9 @@ class DocumentController extends AbstractController
      *
      * @Route("support/{id}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listDocuments(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupManager->getSupportGroup($id);
+        $supportGroup = $SupportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -74,7 +74,7 @@ class DocumentController extends AbstractController
         // Sinon, récupère les documents en cache.
         return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+                $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
                 return $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request);
             }
@@ -221,7 +221,7 @@ class DocumentController extends AbstractController
     {
         $this->manager->flush();
 
-        $this->discache($document->getSupportGroup());
+        $this->discache($document->getSupportGroup(), true);
 
         return $this->json([
             'code' => 200,
@@ -237,8 +237,14 @@ class DocumentController extends AbstractController
     /**
      * Supprime les documents en cache du suivi.
      */
-    protected function discache(SupportGroup $supportGroup): bool
+    protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
     {
-        return (new FilesystemAdapter())->deleteItem(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId());
+        $cache = new FilesystemAdapter();
+
+        if ($isUpdate === false) {
+            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId());
+        }
+
+        return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId());
     }
 }

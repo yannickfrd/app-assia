@@ -19,7 +19,7 @@ use App\Security\CurrentUserService;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportGroupManager;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
@@ -36,12 +36,12 @@ class NoteController extends AbstractController
     use ErrorMessageTrait;
 
     private $manager;
-    private $repo;
+    private $repoNote;
 
-    public function __construct(EntityManagerInterface $manager, NoteRepository $repo)
+    public function __construct(EntityManagerInterface $manager, NoteRepository $repoNote)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->repoNote = $repoNote;
     }
 
     /**
@@ -63,7 +63,7 @@ class NoteController extends AbstractController
 
         return $this->render('app/note/listNotes.html.twig', [
             'form' => $form->createView(),
-            'notes' => $pagination->paginate($this->repo->findAllNotesQuery($search, $currentUser),
+            'notes' => $pagination->paginate($this->repoNote->findAllNotesQuery($search, $currentUser),
                 $request,
                 10) ?? null,
         ]);
@@ -76,9 +76,9 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportGroupManager $supportGroupManager, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportGroupManager->getSupportGroup($id);
+        $supportGroup = $SupportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -93,7 +93,7 @@ class NoteController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalNotes' => $request->query->count() ? $this->repo->count(['supportGroup' => $supportGroup]) : null,
+            'nbTotalNotes' => $SupportManager->getNbNotes($supportGroup, $this->repoNote),
             'notes' => $this->getNotes($supportGroup, $request, $search, $pagination),
         ]);
     }
@@ -105,15 +105,15 @@ class NoteController extends AbstractController
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0) {
-            return $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
+            return $pagination->paginate($this->repoNote->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
         }
 
         // Sinon, récupère les notes en cache.
         return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(7 * 24 * 60 * 60); // 7 jours
+                $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $pagination->paginate($this->repo->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
+                return $pagination->paginate($this->repoNote->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
             }
         );
     }
@@ -258,7 +258,7 @@ class NoteController extends AbstractController
     {
         $this->manager->flush();
 
-        $this->discache($note->getSupportGroup());
+        $this->discache($note->getSupportGroup(), true);
 
         return $this->json([
             'code' => 200,
@@ -277,11 +277,14 @@ class NoteController extends AbstractController
     /**
      * Supprime les notes en cache du suivi et de l'utlisateur.
      */
-    protected function discache(SupportGroup $supportGroup): bool
+    protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
     {
-        return (new FilesystemAdapter())->deleteItems([
-            SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
-            User::CACHE_USER_NOTES_KEY.$this->getUser()->getId(),
-        ]);
+        $cache = new FilesystemAdapter();
+
+        if ($isUpdate === false) {
+            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId());
+        }
+
+        return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
     }
 }
