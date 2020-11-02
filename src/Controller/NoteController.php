@@ -11,7 +11,6 @@ use App\Form\Model\SupportNoteSearch;
 use App\Form\Note\NoteSearchType;
 use App\Form\Note\NoteType;
 use App\Form\Note\SupportNoteSearchType;
-use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
@@ -184,31 +183,31 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, SupportGroupRepository $repoSupportGroup, EvaluationGroupRepository $repo, RdvRepository $repoRdv, Environment $renderer): Response
+    public function generateNoteEvaluation(int $id, SupportGroupRepository $repoSupport, SupportManager $supportManager, RdvRepository $repoRdv, Environment $renderer): Response
     {
-        $supportGroup = $repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $repoSupport->findSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $evaluation = $repo->findEvaluationById($supportGroup);
+        $evaluation = $supportManager->getEvaluation($supportGroup);
 
         $note = (new Note())
-            ->setTitle('Rapport social '.$evaluation->getUpdatedAt()->format('d/m/Y'))
+        ->setTitle('Rapport social '.$evaluation->getUpdatedAt()->format('d/m/Y'))
             ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
                 'support' => $supportGroup,
                 'evaluation' => $evaluation,
-                'nextRdv' => $repoRdv->findNextRdvFromSupport($supportGroup->getId()),
-                'lastRdv' => $repoRdv->findLastRdvFromSupport($supportGroup->getId()),
-            ]))
-            ->setType(2)
-            ->setSupportGroup($supportGroup)
-            ->setCreatedBy($this->getUser());
+                'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
+                'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
+                ]))
+                ->setType(2)
+                ->setSupportGroup($supportGroup)
+                ->setCreatedBy($this->getUser());
 
         $this->manager->persist($note);
         $this->manager->flush();
 
         return $this->redirectToRoute('support_notes', [
-            'id' => $supportGroup->getId(),
+            'id' => $id,
             'noteId' => $note->getId(),
         ]);
     }

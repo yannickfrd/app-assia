@@ -9,8 +9,8 @@
     <h1 class="h3"><b>Rapport social</b></h3>
     <br/>
 
-    {{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y"), "rdv.last") }}
-    {{ utils.view(nextRdv ? nextRdv.start|date("d/m/Y"), "rdv.next") }}
+    {{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
+    {{ utils.view(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
 
     <br/>
 
@@ -47,12 +47,6 @@
         ", " ~ nbSupportPeople ~ " personnes"), "Family typology") }}
 
     {% set evalHousing = evaluation.evalHousingGroup %}
-    {% if evalHousing %}
-        {# {{ utils.view(evalHousing.housingAddress ? evalHousing.housingAddress ~ (evalHousing.housingCity ? " - " 
-            ~ evalHousing.housingDept ~ " " ~ evalHousing.housingCity : "") : "", "Housing address", "evaluation") }}
-        {{ utils.view(evalHousing.domiciliation == YES ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
-            ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }} #}
-    {% endif %}
 
     <br/>
 
@@ -73,40 +67,37 @@
     {% endif %}
 
     <h3 class="h4"><b>Situation sociale</b></h3>
-    
-    <ul>
-        {% for evalPerson in evaluation.evaluationPeople %}
-            {% set evalSocial = evalPerson.evalSocialPerson %}
-            {% if evalSocial %}
-                {% if nbSupportPeople > 1 %}
-                    <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
-                {% endif %}
-                {{ utils.view(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
-                    ~ evalSocial.socialSecurityToString : evalSocial.rightSocialSecurityToString, "Right social security", "evaluation") }}
-                {{ utils.view(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
-                {{ utils.view(evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
-                {% if evalSocial.familyBreakdown or evalSocial.friendshipBreakdown %}
-                    {{ utils.view(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
-                    {{ utils.view(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
-                {% endif %}
-                {% if evalSocial.healthProblem %}
-                    {{ utils.view(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
-                    <ul>
-                        {% for key, value in evalSocial.healthProblemsType %}
-                            {% if attribute(evalSocial, key) %}
-                                <li>{{ value }}</li>
-                            {% endif %}
-                        {% endfor %}									 
-                    </ul>
-                {% endif %}
-                {{ utils.view(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
-                    ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
-                {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
-                    " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
-                {{ evalSocial.commentEvalSocialPerson }}
+    {% for evalPerson in evaluation.evaluationPeople %}
+        {% set evalSocial = evalPerson.evalSocialPerson %}
+        {% if evalSocial %}
+            {% if nbSupportPeople > 1 %}
+                <h4><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</h4>
             {% endif %}
-        {% endfor %}
-    </ul>
+            {{ utils.view(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
+                ~ evalSocial.socialSecurityToString : evalSocial.rightSocialSecurityToString, "Right social security", "evaluation") }}
+            {{ utils.view(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
+            {{ utils.view(evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
+            {% if evalSocial.familyBreakdown or evalSocial.friendshipBreakdown %}
+                {{ utils.view(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
+                {{ utils.view(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
+            {% endif %}
+            {% if evalSocial.healthProblem %}
+                {{ utils.view(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
+                <ul>
+                    {% for key, value in evalSocial.healthProblemsType %}
+                        {% if attribute(evalSocial, key) %}
+                            <li>{{ value }}</li>
+                        {% endif %}
+                    {% endfor %}									 
+                </ul>
+            {% endif %}
+            {{ utils.view(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
+                ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
+            {{ utils.view(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
+                " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
+            {{ evalSocial.commentEvalSocialPerson }}
+        {% endif %}
+    {% endfor %}
 
     {% if evaluation.evalSocialGroup %}
         {% set evalSocial = evaluation.evalSocialGroup %}
@@ -409,7 +400,7 @@
 
     {% set evalHousing = evaluation.evalHousingGroup %}
     {% if evalHousing %}
-    <br/>
+        <br/>
         <h3 class="h4"><b>Situation au regard du logement</b></h3>
         {{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
         {% if evalHousing.siaoRequest %}
@@ -445,10 +436,10 @@
             {{ utils.view(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
                 " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
         {% endif %}
-        {% if evalHousing.collectiveAgreementHousing %}
+        {# {% if evalHousing.collectiveAgreementHousing %}
             {{ utils.view(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
                 " (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
-        {% endif %}
+        {% endif %} #}
         {% if evalHousing.hsgActionEligibility %}					
             {{ utils.view(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
             {{ utils.view(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 

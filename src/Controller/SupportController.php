@@ -207,8 +207,8 @@ class SupportController extends AbstractController
             'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
             'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $repoDocument),
             'nbContributions' => $supportManager->getNbContributions($supportGroup, $repoContribution),
-            'nextRdv' => $nbRdvs ? $supportManager->getLastRdvs($supportGroup, $repoRdv) : null,
-            'lastRdv' => $nbRdvs ? $supportManager->getNextRdvs($supportGroup, $repoRdv) : null,
+            'lastRdv' => $nbRdvs ? $supportManager->getLastRdvs($supportGroup, $repoRdv) : null,
+            'nextRdv' => $nbRdvs ? $supportManager->getNextRdvs($supportGroup, $repoRdv) : null,
             'evaluation' => $supportManager->getEvaluation($supportGroup),
         ]);
     }

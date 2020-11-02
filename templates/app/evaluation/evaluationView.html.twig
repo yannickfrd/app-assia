@@ -53,35 +53,35 @@
     {# Justice #}
     {% if support.service.justice == YES %}
         <hr>
-    <section>
-        <div class="d-flex mb-3">
-            <h2 class="h4">Justice</h2>
-            {% if theme_color is defined %}
-                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                </span>
-            {% endif %}
-        </div>
-        {% for evalPerson in evaluation.evaluationPeople %}
-            {% set evalJustice = evalPerson.evalJusticePerson %}
-            {% if evalJustice %}
-                <div class="my-3">
-                    {% if nbSupportPeople > 1 %}
-                        <div class="row mb-2">
-                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+        <section>
+            <div class="d-flex mb-3">
+                <h2 class="h4">Justice</h2>
+                {% if theme_color is defined %}
+                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                    </span>
+                {% endif %}
+            </div>
+            {% for evalPerson in evaluation.evaluationPeople %}
+                {% set evalJustice = evalPerson.evalJusticePerson %}
+                {% if evalJustice %}
+                    <div class="my-3">
+                        {% if nbSupportPeople > 1 %}
+                            <div class="row mb-2">
+                                <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                            </div>
+                        {% endif %}
+                        <div class="row">
+                            {{ utils.view(evalJustice.justiceStatusToString, "Justice status", "evaluation") }}
+                            {{ utils.view(evalJustice.justiceActToString, "Justice act", "evaluation") }}
                         </div>
-                    {% endif %}
-                    <div class="row">
-                        {{ utils.view(evalJustice.justiceStatusToString, "Justice status", "evaluation") }}
-                        {{ utils.view(evalJustice.justiceActToString, "Justice act", "evaluation") }}
+                        <div class="row my-2">
+                            <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice }}</div>
+                        </div>
                     </div>
-                    <div class="row my-2">
-                        <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice }}</div>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </section>
+                {% endif %}
+            {% endfor %}
+        </section>
     {% endif %}
 
     <hr>
@@ -198,37 +198,37 @@
         {% endfor %}
 
         {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-sm table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Enfant(s)</th>
-                                <th>Garde ou scolarité</th>
-                                <th>Lieu de garde/scolarité</th>
-                                <th>Hébergement</th>
-                                <th>À charge</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for evalPerson in evaluation.evaluationPeople %}
-                                {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-                                {% if evalFamilyPerson and evalPerson.supportPerson.role == ROLE_CHILD %}
-                                    <tr>
-                                        <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-                                        <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
-                                        <td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
-                                        <td>{{ evalFamilyPerson.childToHostToString }}</td>
-                                        <td>{{ evalFamilyPerson.childDependanceToString }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Enfant(s)</th>
+                                    <th>Garde ou scolarité</th>
+                                    <th>Lieu de garde/scolarité</th>
+                                    <th>Hébergement</th>
+                                    <th>À charge</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for evalPerson in evaluation.evaluationPeople %}
+                                    {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
+                                    {% if evalFamilyPerson and evalPerson.supportPerson.role == ROLE_CHILD %}
+                                        <tr>
+                                            <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                                            <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
+                                            <td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
+                                            <td>{{ evalFamilyPerson.childToHostToString }}</td>
+                                            <td>{{ evalFamilyPerson.childDependanceToString }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
 
         {% set evalFamily = evaluation.evalFamilyGroup %}
@@ -559,7 +559,6 @@
                 </div>
 
             {% endif %}
-
         {% endfor %}
     </section>
 
@@ -568,108 +567,108 @@
     {# Logement - Hébergement #}
     {% set evalHousing = evaluation.evalHousingGroup %}
     {% if evalHousing %}
-    <hr>
-    <section class="mb-5">
-        <div class="d-flex mb-3">
-            <h2 class="h4">Logement - Hébergement</h2>
-            {% if theme_color is defined %}
-                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                </span>
-        {% endif %}
-        </div>
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
-        </div>
+        <hr>
+        <section class="mb-5">
+            <div class="d-flex mb-3">
+                <h2 class="h4">Logement - Hébergement</h2>
+                {% if theme_color is defined %}
+                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                    </span>
+            {% endif %}
+            </div>
             <div class="row mb-3">
-                {{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
-                {% if evalHousing.siaoRequest == YES %}
-                    {{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
-                        ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
-                        ~ ")" : "") : "", "Siao request date", "evaluation") }}
-                    {{ utils.view(evalHousing.siaoRequestDeptToString, "Siao request dept", "evaluation") }}
-                    {{ utils.view(evalHousing.siaoRecommendationToString, "Siao recommendation", "evaluation") }}
-                {% endif %}
+                {{ utils.view(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
             </div>
-        {% if evalHousing.socialHousingRequest %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
+                    {% if evalHousing.siaoRequest == YES %}
+                        {{ utils.view(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
+                            ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
+                            ~ ")" : "") : "", "Siao request date", "evaluation") }}
+                        {{ utils.view(evalHousing.siaoRequestDeptToString, "Siao request dept", "evaluation") }}
+                        {{ utils.view(evalHousing.siaoRecommendationToString, "Siao recommendation", "evaluation") }}
+                    {% endif %}
+                </div>
+            {% if evalHousing.socialHousingRequest %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.socialHousingRequestToString ~ (evalHousing.socialHousingRequestId ? " (NUR : " 
+                        ~ evalHousing.socialHousingRequestId ~ ")" : ""), "Social housing request", "evaluation") }}
+                    {{ utils.view(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate|date("d/m/Y") 
+                        ~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate|date("d/m/Y") 
+                        ~ ")" : "") : "", "Date demande de logement social", "evaluation") }}
+                    {{ utils.view(evalHousing.housingWishes, "Housing wishes", "evaluation") }}
+                    {{ utils.view(evalHousing.citiesWishes, "Cities wishes", "evaluation") }}
+                    {{ utils.view(evalHousing.specificities, "Specificities", "evaluation") }}
+                </div>
+            {% endif %}
+            {% if evalHousing.syplo %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.syploToString ~ (evalHousing.syploDate ? " (" 
+                        ~ evalHousing.syploDate|date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
+                    {{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
+                </div>
+            {% endif %}
+            {% if evalHousing.daloCommission %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == YES ? 
+                        " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
+                        ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
+                    {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
+                    {{ utils.view(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
+                    {{ utils.view(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
+                        " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
+                </div>
+            {% endif %}
+            {% if evalHousing.collectiveAgreementHousing %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
+                        " (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
+                </div>
+            {% endif %}
+            {% if evalHousing.hsgActionEligibility %}					
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
+                    {{ utils.view(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
+                        " (le " ~ evalHousing.hsgActionDate|date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
+                    {{ utils.view(evalHousing.hsgActionRecordId, "Hsg action record id", "evaluation") }}
+                    {{ utils.view(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
+                </div>
+            {% endif %}
+            {% if evalHousing.expulsionInProgress %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
+                    {{ utils.view(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
+                        " (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
+                    {{ utils.view(evalHousing.expulsionComment) }}
+                </div>
+            {% endif %}
+            {% if evalHousing.housingExperience %}
+                <div class="row mb-3">
+                    {{ utils.view(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
+                    {{ utils.view(evalHousing.housingExpeComment) }}
+                </div>
+            {% endif %}
             <div class="row mb-3">
-                {{ utils.view(evalHousing.socialHousingRequestToString ~ (evalHousing.socialHousingRequestId ? " (NUR : " 
-                    ~ evalHousing.socialHousingRequestId ~ ")" : ""), "Social housing request", "evaluation") }}
-                {{ utils.view(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate|date("d/m/Y") 
-                    ~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate|date("d/m/Y") 
-                    ~ ")" : "") : "", "Date demande de logement social", "evaluation") }}
-                {{ utils.view(evalHousing.housingWishes, "Housing wishes", "evaluation") }}
-                {{ utils.view(evalHousing.citiesWishes, "Cities wishes", "evaluation") }}
-                {{ utils.view(evalHousing.specificities, "Specificities", "evaluation") }}
+                <div class="col-md-6">
+                    <ul class="mb-0">
+                        {% for key, value in evalHousing.housingHelps %}
+                            {% if attribute(evalHousing, key) %}
+                                <li>{{ value }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-        {% endif %}
-        {% if evalHousing.syplo %}
             <div class="row mb-3">
-                {{ utils.view(evalHousing.syploToString ~ (evalHousing.syploDate ? " (" 
-                    ~ evalHousing.syploDate|date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
-                {{ utils.view(evalHousing.syploId, "Syplo id", "evaluation") }}
+                {{ utils.view(evalHousing.domiciliation == YES ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
+                    ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
             </div>
-        {% endif %}
-        {% if evalHousing.daloCommission %}
-            <div class="row mb-3">
-                {{ utils.view(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == YES ? 
-                    " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
-                    ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
-                {{ utils.view(evalHousing.daloId, "Dalo id", "evaluation") }}
-                {{ utils.view(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
-                {{ utils.view(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
-                    " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
+            <div class="row my-3">
+                <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>
             </div>
-        {% endif %}
-        {% if evalHousing.collectiveAgreementHousing %}
-            <div class="row mb-3">
-                {{ utils.view(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
-                    " (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
-            </div>
-        {% endif %}
-        {% if evalHousing.hsgActionEligibility %}					
-            <div class="row mb-3">
-                {{ utils.view(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
-                {{ utils.view(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
-                    " (le " ~ evalHousing.hsgActionDate|date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
-                {{ utils.view(evalHousing.hsgActionRecordId, "Hsg action record id", "evaluation") }}
-                {{ utils.view(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
-            </div>
-        {% endif %}
-        {% if evalHousing.expulsionInProgress %}
-            <div class="row mb-3">
-                {{ utils.view(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
-                {{ utils.view(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
-                    " (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
-                {{ utils.view(evalHousing.expulsionComment) }}
-            </div>
-        {% endif %}
-        {% if evalHousing.housingExperience %}
-            <div class="row mb-3">
-                {{ utils.view(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
-                {{ utils.view(evalHousing.housingExpeComment) }}
-            </div>
-        {% endif %}
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <ul class="mb-0">
-                    {% for key, value in evalHousing.housingHelps %}
-                        {% if attribute(evalHousing, key) %}
-                            <li>{{ value }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        <div class="row mb-3">
-            {{ utils.view(evalHousing.domiciliation == YES ? evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " 
-                ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
-        </div>
-        <div class="row my-3">
-            <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>
-        </div>
 
-    </section>
+        </section>
 
     {% endif %}
 
