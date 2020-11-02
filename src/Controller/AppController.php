@@ -10,37 +10,22 @@ use App\Form\Model\OccupancySearch;
 use App\Form\Model\SupportsByUserSearch;
 use App\Form\OccupancySearchType;
 use App\Form\SupportsByUserSearchType;
-use App\Repository\NoteRepository;
-use App\Repository\RdvRepository;
-use App\Repository\ServiceRepository;
-use App\Repository\SupportGroupRepository;
 use App\Service\Indicators\IndicatorsService;
 use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
-use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class AppController extends AbstractController
 {
-    protected $repoService;
-    protected $repoSupportGroup;
-    protected $repoNote;
-    protected $repoRdv;
     protected $cache;
 
-    public function __construct(ServiceRepository $repoService, SupportGroupRepository $repoSupportGroup, NoteRepository $repoNote, RdvRepository $repoRdv)
+    public function __construct()
     {
-        $this->repoService = $repoService;
-        $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoNote = $repoNote;
-        $this->repoRdv = $repoRdv;
-
         $this->cache = new FilesystemAdapter();
     }
 
@@ -51,14 +36,14 @@ class AppController extends AbstractController
      * @Route("/")
      * @IsGranted("ROLE_USER")
      */
-    public function home(IndicatorsService $indicators, CacheInterface $cache): Response
+    public function home(IndicatorsService $indicators): Response
     {
         return $this->render('app/home/dashboard.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
-            'servicesIndicators' => $indicators->getServicesIndicators($this->getServices()),
-            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->getSupports() : null,
-            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->getNotes() : null,
-            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $this->getRdvs() : null,
+            'servicesIndicators' => $indicators->getServicesIndicators($indicators->getServices($this->getUser())),
+            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupports($this->getUser()) : null,
+            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getNotes($this->getUser()) : null,
+            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getRdvs($this->getUser()) : null,
         ]);
     }
 
@@ -260,53 +245,5 @@ class AppController extends AbstractController
         }
 
         return $search;
-    }
-
-    /**
-     * Donne les services de l'utilisateur en cache.
-     */
-    protected function getServices(): ?array
-    {
-        return $this->cache->get(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
-
-            return $this->repoService->findServicesAndSubServicesOfUser($this->getUser());
-        });
-    }
-
-    /**
-     * Donne les suivis de l'utilisateur en cache.
-     */
-    protected function getSupports(): ?array
-    {
-        return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
-
-            return $this->repoSupportGroup->findAllSupportsFromUser($this->getUser());
-        });
-    }
-
-    /**
-     * Donne les notes de l'utilisateur en cache.
-     */
-    protected function getNotes(): ?array
-    {
-        return $this->cache->get(User::CACHE_USER_NOTES_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
-
-            $this->repoNote->findAllNotesFromUser($this->getUser(), 10);
-        });
-    }
-
-    /**
-     * Donne les rdvs de l'utilisateur en cache.
-     */
-    protected function getRdvs(): ?array
-    {
-        return $this->cache->get(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId(), function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
-
-            $this->repoRdv->findAllRdvsFromUser($this->getUser(), 10);
-        });
     }
 }

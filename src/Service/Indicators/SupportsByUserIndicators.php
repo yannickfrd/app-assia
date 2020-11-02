@@ -2,11 +2,11 @@
 
 namespace App\Service\Indicators;
 
-use App\Repository\UserRepository;
-use App\Repository\DeviceRepository;
-use App\Security\CurrentUserService;
 use App\Form\Model\SupportsByUserSearch;
+use App\Repository\DeviceRepository;
 use App\Repository\SupportGroupRepository;
+use App\Repository\UserRepository;
+use App\Security\CurrentUserService;
 
 class SupportsByUserIndicators
 {
@@ -36,7 +36,7 @@ class SupportsByUserIndicators
         $initDevicesUser = $this->getInitDevicesUser($devices);
 
         $devices = $initDevicesUser;
-        $dataUsers = [];
+        $datasUsers = [];
         $sumTheoreticalSupports = 0;
         $sumCoeffSupports = 0;
 
@@ -72,7 +72,7 @@ class SupportsByUserIndicators
             }
 
             if ($nbUserSupports > 0) {
-                $dataUsers[$user->getId()] = [
+                $datasUsers[$user->getId()] = [
                     'user' => $user,
                     'nbSupports' => $nbUserSupports,
                     'nbTheoreticalSupports' => $nbTheoreticalSupports,
@@ -92,7 +92,7 @@ class SupportsByUserIndicators
             'sumTheoreticalSupports' => $sumTheoreticalSupports,
             'sumCoeffSupports' => $sumCoeffSupports,
             'devices' => $devices,
-            'dataUsers' => $dataUsers,
+            'datasUsers' => $datasUsers,
         ];
     }
 

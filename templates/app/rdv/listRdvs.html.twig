@@ -46,8 +46,8 @@
                         <tr id="rdv-{{ rdv.id }}">
                             <th scope="row" class="align-middle">
                             {% if rdv.supportGroup %}
-                                <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
-                                    title="Voir le rendez-vous"><span class="fas fa-eye"></span>
+                                <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" 
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Voir le rendez-vous"><span class="fas fa-eye"></span>
                                 </a>
                             </th>
                             {% endif %}

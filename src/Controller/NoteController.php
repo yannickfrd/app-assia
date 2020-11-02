@@ -76,9 +76,9 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $SupportManager->getSupportGroup($id);
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -93,7 +93,7 @@ class NoteController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalNotes' => $SupportManager->getNbNotes($supportGroup, $this->repoNote),
+            'nbTotalNotes' => $supportManager->getNbNotes($supportGroup, $this->repoNote),
             'notes' => $this->getNotes($supportGroup, $request, $search, $pagination),
         ]);
     }

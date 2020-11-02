@@ -392,4 +392,52 @@ class IndicatorsService
             'contributions' => $this->repoContribution->count(['createdBy' => $user]),
         ];
     }
+
+    /**
+     * Donne les services de l'utilisateur en cache.
+     */
+    public function getServices(User $user): ?array
+    {
+        return $this->cache->get(User::CACHE_USER_SERVICES_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $this->repoService->findServicesAndSubServicesOfUser($user);
+        });
+    }
+
+    /**
+     * Donne les suivis de l'utilisateur en cache.
+     */
+    public function getSupports(User $user): ?array
+    {
+        return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
+            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
+
+            return $this->repoSupportGroup->findAllSupportsFromUser($user);
+        });
+    }
+
+    /**
+     * Donne les notes de l'utilisateur en cache.
+     */
+    public function getNotes(User $user): ?array
+    {
+        return $this->cache->get(User::CACHE_USER_NOTES_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
+            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
+
+            $this->repoNote->findAllNotesFromUser($user, 10);
+        });
+    }
+
+    /**
+     * Donne les rdvs de l'utilisateur en cache.
+     */
+    public function getRdvs(User $user): ?array
+    {
+        return $this->cache->get(User::CACHE_USER_RDVS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
+            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
+
+            $this->repoRdv->findAllRdvsFromUser($user, 10);
+        });
+    }
 }

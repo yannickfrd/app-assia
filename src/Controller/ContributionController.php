@@ -81,9 +81,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportContributions(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
+    public function showSupportContributions(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $SupportManager->getSupportGroup($id);
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -126,9 +126,9 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function getResources(int $id, SupportManager $SupportManager, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
+    public function getResources(int $id, SupportManager $supportManager, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
     {
-        $supportGroup = $SupportManager->getSupportGroup($id);
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

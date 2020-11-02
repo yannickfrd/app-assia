@@ -35,20 +35,14 @@ class AccommodationGroupController extends AbstractController
      *
      * @Route("support/{id}/accommodations", name="support_accommodations", methods="GET")
      */
-    public function supportAccommodationsGroup(int $id, SupportManager $SupportManager): Response
+    public function supportAccommodationsGroup(int $id, SupportManager $supportManager): Response
     {
-        $supportGroup = $SupportManager->getFullSupportGroup($id);
+        $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        // $accommodationGroups = $this->repo->findBy(
-        //     ['supportGroup' => $supportGroup],
-        //     ['startDate' => 'DESC'],
-        // );
-
         return $this->render('app/accommodation/supportAccommodationsGroup.html.twig', [
             'support' => $supportGroup,
-            // 'support_group_accommodations' => $accommodationGroups,
         ]);
     }
 
@@ -99,11 +93,11 @@ class AccommodationGroupController extends AbstractController
      *
      * @param int $id // AccommodationGroup
      */
-    public function editAccommodationGroup(int $id, SupportManager $SupportManager, Request $request): Response
+    public function editAccommodationGroup(int $id, SupportManager $supportManager, Request $request): Response
     {
         $accommodationGroup = $this->repo->findAccommodationGroupById($id);
         // $supportGroup = $repoSupport->findSupportById($accommodationGroup->getSupportGroup()->getId());
-        $supportGroup = $SupportManager->getSupportGroup($accommodationGroup->getSupportGroup()->getId());
+        $supportGroup = $supportManager->getSupportGroup($accommodationGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 

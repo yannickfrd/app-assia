@@ -16,9 +16,11 @@
 			{% endif %}
 			<div class="d-flex flex-row align-items-center justify-content-between mx-2 mb-2">
 				<div class="d-flex align-items-center">
-					<h2 class="h2 mr-3 mb-0"><a class="far fa-list-alt mr-2 text-{{ theme_color }}" 
-						href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}" 
-						title="Passer en vue liste"></a><span class="d-none d-sm-inline">Agenda</span></h2>
+					<h2 class="h2 mr-3 mb-0 d-none d-sm-block">Agenda</h2>
+					<a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom" title="Passer en vue liste" 
+						href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}">
+						<span class="far fa-list-alt"></span>
+					</a>
 					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom" 
 						title="Ajouter un rendez-vous"><span class="far fa-calendar-plus"></span>
 					</button>

@@ -40,9 +40,9 @@ class DocumentController extends AbstractController
      *
      * @Route("support/{id}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listDocuments(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
+    public function listDocuments(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $SupportManager->getSupportGroup($id);
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -155,8 +155,8 @@ class DocumentController extends AbstractController
 
         $file = 'uploads/documents/'.$document->getSupportGroup()->getGroupPeople()->getId().'/'.$document->getInternalFileName();
 
-        if (file_exists($file)) {
-            unlink($file);
+        if (\file_exists($file)) {
+            \unlink($file);
         }
 
         $this->manager->remove($document);
@@ -185,7 +185,7 @@ class DocumentController extends AbstractController
 
         $fileName = $fileUploader->upload($file, $path);
 
-        $size = filesize($fileUploader->getTargetDirectory().$path.'/'.$fileName);
+        $size = \filesize($fileUploader->getTargetDirectory().$path.'/'.$fileName);
 
         $document->setInternalFileName($fileName)
             ->setSize($size)

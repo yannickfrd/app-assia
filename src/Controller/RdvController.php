@@ -75,9 +75,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportManager $SupportManager, Request $request, Pagination $pagination): Response
+    public function viewSupportListRdvs(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $SupportManager->getSupportGroup($id);
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -150,9 +150,9 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportManager $SupportManager, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
     {
-        $supportGroup = $SupportManager->getSupportGroup($id);
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

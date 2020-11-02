@@ -15,8 +15,10 @@
 
         <div class="row">
             <div class="d-flex col-md-6 mb-1 align-items-center">
-                <a class="h3 fas fa-calendar-alt mr-2 mb-0 text-{{ theme_color }}" href="{{ path('support_calendar_show', {'id':support.id}) }}" title="Passer en vue agenda"></a>
-                <a id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" href="{{ path('support_calendar_show', {'id':support.id}) }}" data-toggle="tooltip" data-placement="bottom" title="Ajouter un rdv">
+                <a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" href="{{ path('support_calendar_show', {'id':support.id}) }}" 
+                    data-toggle="tooltip" data-placement="bottom" title="Passer en vue agenda"><span class="far fa-list-alt"></a>
+                <a id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" href="{{ path('support_calendar_show', {'id':support.id}) }}" 
+                    data-toggle="tooltip" data-placement="bottom" title="Ajouter un rdv">
                     <span class="fas fa-plus-square mr-2"></span>Nouveau RDV</a>
                 <div class="d-inline align-middle">Total :
                     <span id="count-rdvs">{{ rdvs.getTotalItemCount|number_format(0,'', ' ')}}</span>
