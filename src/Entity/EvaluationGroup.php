@@ -34,6 +34,11 @@ class EvaluationGroup
     private $title;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $backgroundPeople;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $comment;
@@ -139,6 +144,18 @@ class EvaluationGroup
     public function setTitle(?string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getBackgroundPeople(): ?string
+    {
+        return $this->backgroundPeople;
+    }
+
+    public function setBackgroundPeople(?string $backgroundPeople): self
+    {
+        $this->backgroundPeople = $backgroundPeople;
 
         return $this;
     }

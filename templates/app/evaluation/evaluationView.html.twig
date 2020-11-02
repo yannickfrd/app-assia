@@ -718,4 +718,22 @@
         </section>
     {% endif %}
 
+    {# Parcours de vie #}
+    {% if evaluation.backgroundPeople %}
+        <hr>
+        <section class="mb-5">
+            <div class="d-flex mb-3">
+                <h2 class="h4">Parcours de vie</h2>
+                {% if theme_color is defined %}
+                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                    </span>
+                {% endif %}
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-12 justify">{{ evaluation.backgroundPeople }}</div>
+            </div>
+        </section>
+    {% endif %}
+
 {% endapply %}

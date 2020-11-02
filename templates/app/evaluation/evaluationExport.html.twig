@@ -6,7 +6,7 @@
 
 {% apply spaceless %}
 
-    <h1 class="h3"><b>Rapport social</b></h3>
+    <h1 class="h3"><b>Rapport social</b></h1>
     <br/>
 
     {{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
@@ -373,7 +373,7 @@
             {% if evalBudget.debts %}
                 {{ utils.view(evalBudget.debtsToString, "Debts", "evaluation") }}
                 {% if evalBudget.debts == YES %}
-                Type de dettes :
+                <p>Type de dettes :</p>
                 <ul>
                     {% for key, value in evalBudget.debtsType %}
                         {% if attribute(evalBudget, key) %}
@@ -480,6 +480,13 @@
         {{ utils.view(evalHotelLife.roomMaintenance, "Room maintenance", "evaluation") }}
         {{ utils.view(evalHotelLife.otherHotelLife, "Other hotel life", "evaluation") }}
         {{ utils.view(evalHotelLife.commentHotelLife, "Comment hotel life", "evaluation") }}
+    {% endif %}
+
+    {# Parcours de vie #}
+    {% if evaluation.backgroundPeople %}
+        <br/>
+        <h3 class="h4"><b>Parcours de vie</b></h3>
+        {{ utils.view(evaluation.backgroundPeople) }}
     {% endif %}
 
 {% endapply %}

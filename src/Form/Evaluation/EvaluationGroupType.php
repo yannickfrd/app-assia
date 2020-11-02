@@ -16,6 +16,13 @@ class EvaluationGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('backgroundPeople', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'backgroundPeople.comment',
+                ],
+            ])
             ->add('initEvalGroup', InitEvalGroupType::class)
             ->add('evalSocialGroup', EvalSocialGroupType::class)
             ->add('evalFamilyGroup', EvalFamilyGroupType::class)
@@ -41,6 +48,7 @@ class EvaluationGroupType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => EvaluationGroup::class,
+                'translation_domain' => 'evaluation',
         ]);
     }
 

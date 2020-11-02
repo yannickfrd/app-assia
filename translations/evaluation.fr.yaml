@@ -2,6 +2,8 @@ Init eval: Initial
 placeholder.select: -- Sélectionner --
 initEvalGroup.comment: Écrire un commentaire relatif à la situation initiale du groupe
 initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
+backgroundPeople: Parcours de vie 
+backgroundPeople.comment: Présenter le parcours de vie / historique du ménage
 
 # Administratif
 Adm: Administratif
