@@ -8,8 +8,8 @@ import { Modal } from 'bootstrap'
 export default class Calendar {
 
     constructor() {
-        this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
 
         this.selectType = new SelectType()

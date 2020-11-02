@@ -6,11 +6,11 @@ import Loader from '../utils/loader'
 export default class UpdateEvaluation {
 
     constructor() {
-        this.ajaxRequest = new AjaxRequest()
+        this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.formElt = document.querySelector('form[name="evaluation"]')
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
         this.editMode = document.querySelector('div[data-edit-mode]').getAttribute('data-edit-mode')
-        this.loader = new Loader()
         this.init()
     }
 

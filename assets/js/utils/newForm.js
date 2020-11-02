@@ -9,8 +9,8 @@ import { Modal } from 'bootstrap'
 export default class NewForm {
 
     constructor(btnId, containerId, modalId) {
-        this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.modalElt = new Modal(document.getElementById(modalId))
         this.btnElt = document.getElementById(btnId)
         this.containerElt = document.getElementById(containerId)

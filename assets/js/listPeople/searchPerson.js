@@ -7,8 +7,8 @@ import AjaxRequest from '../utils/ajaxRequest'
 export default class SearchPerson {
 
     constructor(lengthSearch = 3, time = 500) {
-        this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         
         this.formElt = document.querySelector('#people_search')
         this.formModal = document.querySelector('.modal-content form')

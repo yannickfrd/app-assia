@@ -9,8 +9,8 @@ import { Modal } from 'bootstrap'
 export default class SupportContributions {
 
     constructor() {
-        this.ajaxRequest = new AjaxRequest()
-        this.loader = new Loader('modal-contribution')
+        this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.selectType = new SelectType()
         this.validationForm = new ValidationForm()
         this.parametersUrl = new ParametersUrl()

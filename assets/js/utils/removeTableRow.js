@@ -8,8 +8,8 @@ import Loader from './loader'
 export default class RemoveTableRow {
 
     constructor(selectors = '', btnConfirmId = 'modal-confirm', updatedFieldId = null) {
-        this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.trElts = document.querySelectorAll(selectors)
         this.modalConfirmElt = document.getElementById(btnConfirmId)
         this.updatedField = document.getElementById(updatedFieldId)

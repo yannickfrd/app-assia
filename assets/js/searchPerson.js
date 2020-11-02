@@ -7,8 +7,8 @@ import AjaxRequest from './utils/ajaxRequest'
 export default class SearchPerson {
 
     constructor(lengthSearch = 3, time = 500) {
-        this.ajaxRequest = new AjaxRequest()
         this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.searchElt = document.getElementById('search-person')
         this.resultsSearchElt = document.getElementById('results_search')
         this.lengthSearch = lengthSearch

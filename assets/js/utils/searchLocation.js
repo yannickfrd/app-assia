@@ -9,7 +9,8 @@ export default class SearchLocation {
     constructor(containerId, locationType = 'address', codeDepartement = '95', lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
         this.containerElt = document.getElementById(containerId)
         if (this.containerElt) {
-            this.ajaxRequest = new AjaxRequest()
+            this.loader = new Loader()
+            this.ajaxRequest = new AjaxRequest(this.loader)
             this.searchElt = this.containerElt.querySelector('.js-search')
             this.addressElt = this.containerElt.querySelector('.js-address')
             this.cityElt = this.containerElt.querySelector('.js-city')
@@ -27,7 +28,6 @@ export default class SearchLocation {
             this.lon = lon // Longitude
             this.results = null
             this.countdownID = null
-            this.loader = new Loader()
             this.init()
         }
     }

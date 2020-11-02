@@ -9,10 +9,10 @@ import Loader from '../utils/loader'
 export default class UpdatePerson {
 
     constructor() {
-        this.ajaxRequest = new AjaxRequest()
+        this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.personFormElt = document.querySelector('form[name=person]')
         this.updatePersonBtnElt = document.getElementById('updatePerson')
-        this.loader = new Loader()
         this.init()
     }
 

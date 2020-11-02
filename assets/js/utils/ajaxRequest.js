@@ -6,9 +6,9 @@ import Loader from '../utils/loader'
  */
 export default class AjaxRequest {
 
-    constructor() {
+    constructor(loader = null) {
         this.xhr = new XMLHttpRequest()
-        this.loader = new Loader()
+        this.loader = loader ?? new Loader()
         this.timeSend = null // Temp pour test
         this.timeResp = null // Temp pour test
     }
@@ -54,7 +54,7 @@ export default class AjaxRequest {
         this.loader.off()
 
         if (this.xhr.status === 403) {
-            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action.')
+            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
         }
         return new MessageFlash('danger', `Une erreur s'est produite (${this.xhr.status} ${this.xhr.statusText}).`)
     }

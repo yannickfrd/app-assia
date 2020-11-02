@@ -21,6 +21,7 @@ https://demo.esperer95.app
 - Correction 'erreur 500' lors d'une mise à jour d'un suivi après la suppression d'une personne.
 - Modif affichage du champ 'Impôts sur le revenu' (non dépendant du champ 'Ressources').
 - Ajout du champ 'Historique du ménage / Parcours de vie' dans l'évaluation sociale.
+- Modif du message d'erreur 403 pour les notes et les documents.
 - Factorisation diverse.
 
 ## Version 2.4.1 - 22/10/2020

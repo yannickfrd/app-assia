@@ -10,11 +10,11 @@ import { Modal } from 'bootstrap'
 export default class SupportNotes {
 
     constructor() {
-        this.ajaxRequest = new AjaxRequest()
+        this.loader = new Loader()
+        this.ajaxRequest = new AjaxRequest(this.loader)
         this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-note'))
-        this.loader = new Loader()
 
         this.newNoteBtn = document.getElementById('js-new-note')
         this.noteElts = document.querySelectorAll('.js-note')

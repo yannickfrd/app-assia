@@ -212,11 +212,16 @@ export default class SupportDocuments {
             method: type, 
             body: data
         }).then(response => {
+            if (response.status === 403) {
+                new MessageFlash('Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
+                throw new Error('403 Forbidden access.')
+            }
             response.json().then((data) => {
                 return this.responseAjax(data)
             })
         }).catch(error => {
-            console.error('Error : ' + error)
+            this.loader.off()
+            console.error(error)
         })
     }
 
