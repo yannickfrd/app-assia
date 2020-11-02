@@ -19,6 +19,7 @@ https://demo.esperer95.app
 ## Version 2.4.2-3 - 02/11/2020
 - Correction problème non affichage 'situation sociale' lors de la génration du rapport social.
 - Correction 'erreur 500' lors d'une mise à jour d'un suivi après la suppression d'une personne.
+- Modif affichage du champ 'Impôts sur le revenu' (non dépendant du champ 'Ressources').
 - Factorisation diverse.
 
 ## Version 2.4.1 - 22/10/2020
