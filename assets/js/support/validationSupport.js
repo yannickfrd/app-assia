@@ -20,7 +20,7 @@ export default class ValidationSupport {
         this.statusSelectElt = document.getElementById(this.prefix + 'status')
         this.startDateInputElt = document.getElementById(this.prefix + 'startDate')
         this.endDateInputElt = document.getElementById(this.prefix + 'endDate')
-        this.endStatusInputElt = document.getElementById(this.prefix + 'endStatus')
+        this.endStatusSelectElt = document.getElementById(this.prefix + 'endStatus')
         this.btnSubmitElts = document.querySelectorAll('button[type="submit"]')
         this.dateInputElts = document.querySelectorAll('input[type="date"]')
         this.now = new Date()
@@ -36,12 +36,13 @@ export default class ValidationSupport {
             dateInputElt.addEventListener('focusout', () => this.checkDate(dateInputElt))
         })
 
-        if (this.statusSelectElt) {
+        if (this.startDateInputElt) {
             this.startDateInputElt.addEventListener('focusout', () => this.checkStartDate())
             this.endDateInputElt.addEventListener('focusout', () => this.checkEndDate())
-            this.endStatusInputElt.addEventListener('change', () => this.checkEndStatus())
-            this.checkFormBeforeSubmit()
+            this.endStatusSelectElt.addEventListener('change', () => this.checkEndStatus())
         }
+        this.checkFormBeforeSubmit()
+
         this.displayFields()
 
         this.visibleElt(this.subServiceSelectElt.parentNode.parentNode, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
@@ -52,18 +53,14 @@ export default class ValidationSupport {
      */
     checkFormBeforeSubmit() {
         this.btnSubmitElts.forEach(btnElt => {
-
             btnElt.addEventListener('click', e => {
-                if (this.statusSelectElt) {
+                if (this.startDateInputElt) {
                     this.checkStartDate()
                     this.checkEndDate()
                     this.checkEndStatus()
                 }
-
-                if (this.validationForm.checkForm(e) > 0) {
-                    e.preventDefault(), {
-                        once: true
-                    }
+                if (this.loader.isActive() || this.validationForm.checkForm() > 0) {
+                    e.preventDefault()
                 }
             })
         })
@@ -92,7 +89,7 @@ export default class ValidationSupport {
      */
     checkStartDate() {
         let intervalWithNow = (this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000)
-        let status = this.selectType.getOption(this.statusSelectElt)
+        let status = this.statusSelectElt ? this.selectType.getOption(this.statusSelectElt) : null
 
         if ((this.startDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             return this.validationForm.invalidField(this.startDateInputElt, 'Date invalide.')
@@ -101,13 +98,13 @@ export default class ValidationSupport {
             return this.validationForm.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieure de 30 jours par rapport à la date du jour.')
         }
 
-        if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) { // Statut = En cours, Supsendu, Terminé
+        if (!intervalWithNow && [2, 3, 4].indexOf(status) != -1) { // Statut = En cours, Suspendu, Terminé
             return this.validationForm.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         }
-        if (intervalWithNow && [1, 5].indexOf(status) != -1) { // Statut =  Orientation/pré-adm.
+        if (intervalWithNow && [1, 5].indexOf(status) != -1) { // Statut = Orientation/pré-adm.
             return this.validationForm.invalidField(this.startDateInputElt, 'Il ne peut pas y avoir de date début de suivi pour une pré-admission.')
         }
-        if (intervalWithNow || (!intervalWithNow && [1, 6].indexOf(status) != -1)) { // Statut =  Orientation/pré-adm. / Liste d'attente
+        if (intervalWithNow || (!intervalWithNow && [1, 6].indexOf(status) != -1)) { // Statut = Orientation/pré-adm. / Liste d'attente
             return this.validationForm.validField(this.startDateInputElt)
         }
     }
@@ -130,10 +127,10 @@ export default class ValidationSupport {
         if (intervalWithNow < 0) {
             return this.validationForm.invalidField(this.endDateInputElt, 'La date ne peut pas être postérieure à la date du jour.')
         }
-        if (!this.endDateInputElt.value && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
+        if (!this.endDateInputElt.value && this.statusSelectElt && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
             return this.validationForm.invalidField(this.endDateInputElt, 'La date de fin ne peut pas être vide si le suivi est terminé.')
         }
-        if (this.endDateInputElt.value) { // Statut = Terminé
+        if (this.endDateInputElt.value && this.statusSelectElt) { // Statut = Terminé
             this.selectType.setOption(this.statusSelectElt, 4)
         }
     }
@@ -142,10 +139,10 @@ export default class ValidationSupport {
      * Vérifie le motif de fin de suivi.
      */
     checkEndStatus() {
-        if (!this.endStatusInputElt.value && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
-            return this.validationForm.invalidField(this.endStatusInputElt, 'La situation à la fin du suivi ne peut pas être vide.')
+        if (this.endDateInputElt.value && !this.selectType.getOption(this.endStatusSelectElt)) {
+            return this.validationForm.invalidField(this.endStatusSelectElt, 'La situation à la fin du suivi ne peut pas être vide.')
         }
-        return this.validationForm.validField(this.endStatusInputElt)
+        return this.validationForm.validField(this.endStatusSelectElt)
     }
     
     /**

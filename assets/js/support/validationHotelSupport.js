@@ -48,7 +48,9 @@ export default class ValidationHotelSupport {
                     this.startDateElt,
                     'La date ne peut pas être antérieure à la date de la demande.')
             })
-        });
+        })
+
+        const msgStartDate = 'La date ne peut pas être antérieure au début de l\'accompagnement.'
 
         dateElts = [this.startDateElt, this.evaluationDateElt]
         dateElts.forEach(dateElt => {
@@ -56,9 +58,9 @@ export default class ValidationHotelSupport {
                 this.validationForm.checkIntervalBeetweenDates(
                     this.startDateElt,
                     this.evaluationDateElt,
-                    'La date ne peut pas être antérieure au début de l\'accompagnement.')
+                    msgStartDate)
             })
-        });
+        })
 
         dateElts = [this.startDateElt, this.agreementDateElt]
         dateElts.forEach(dateElt => {
@@ -66,9 +68,9 @@ export default class ValidationHotelSupport {
                 this.validationForm.checkIntervalBeetweenDates(
                     this.startDateElt,
                     this.agreementDateElt,
-                    'La date ne peut pas être antérieure au début de l\'accompagnement.')
+                    msgStartDate)
             })
-        });
+        })
 
         dateElts = [this.startDateElt, this.endDateElt]
         dateElts.forEach(dateElt => {
@@ -76,17 +78,7 @@ export default class ValidationHotelSupport {
                 this.validationForm.checkIntervalBeetweenDates(
                     this.startDateElt,
                     this.endDateElt,
-                    'La date ne peut pas être antérieure au début de l\'accompagnement.')
-            })
-        });
-
-        this.btnSubmitElts.forEach(btnElt => {
-            btnElt.addEventListener('click', e => {
-                if (this.validationForm.checkForm(e) > 0) {
-                    e.preventDefault(), {
-                        once: true
-                    }
-                }
+                    msgStartDate)
             })
         })
     }

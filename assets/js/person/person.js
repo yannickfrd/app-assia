@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editMode === 'true') {
         new UpdatePerson()
         new CheckChange('person') // form name
-        new NewForm()
+        // new NewForm()
     } else {
         new NewGroupPeople(parametersUrl)
         // new CheckChange('role_person_group') // form name

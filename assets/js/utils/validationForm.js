@@ -78,10 +78,10 @@ export default class ValidationForm {
 
     /**
      * Vérifie les champs à compléter.
-     * @param {NodeList} elts 
-     * @param {Boolean} requiredField 
+     * @param {NodeList} elts
+     * @param {Boolean} requiredField
      */
-    checkFields(elts, requiredField = null) {
+    checkFields(elts, requiredField = false) {
         const hasDatas = requiredField ? null : this.oneFieldIsFilled(elts)
         elts.forEach(elt => {
             const fieldElt = elt.querySelector('input, select')
@@ -92,15 +92,15 @@ export default class ValidationForm {
                     this.invalidField(fieldElt, 'Saisie obligatoire.')
                     fieldElt.addEventListener('change', () => this.validField(fieldElt))
                 }
-            } else {
-                this.validField(fieldElt)
+            // } else {
+                // this.validField(fieldElt)
             }
         })
     }
 
     /**
      * Vérifie si au moins un des champs de la catégorie est complété.
-     * @param {NodeList} elts 
+     * @param {NodeList} elts
      * @return {Boolean}
      */
     oneFieldIsFilled(elts) {

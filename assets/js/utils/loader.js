@@ -29,6 +29,6 @@ export default class Loader {
      * @return {Boolean}
      */
     isActive() {
-        return this.inLoading
+        return this.inLoading || false === this.loaderElt.classList.contains('d-none')
     }
 }

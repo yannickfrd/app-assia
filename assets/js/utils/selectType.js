@@ -10,9 +10,9 @@ export default class SelectType {
      */
     getOption(selectElt) {
         if (selectElt === null) {
-            console.error('selectElt is null !')
-            return
+            return console.error('selectElt is null !')
         }
+        
         let value = false
         selectElt.querySelectorAll('option').forEach(optionElt => {
             if (optionElt.selected || optionElt.selected === true) {
@@ -29,6 +29,10 @@ export default class SelectType {
      * @param {String} value 
      */
     setOption(selectElt, value) {
+        if (selectElt === null) {
+            return console.error('selectElt is null !')
+        }
+
         selectElt.querySelectorAll('option').forEach(optionElt => {
             if (parseInt(optionElt.value) === parseInt(value)) {
                 return optionElt.selected = true

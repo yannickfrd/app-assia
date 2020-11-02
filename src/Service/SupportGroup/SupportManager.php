@@ -139,6 +139,7 @@ class SupportManager
 
         if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
             $supportPerson->setStartDate($birthdate);
+            $this->addFlash('warning', 'La date de début de suivi retenue est la date de naissance de l\'enfant ('.$supportPerson->getPerson()->getFullname().').');
         }
 
         $this->manager->persist($supportPerson);
@@ -475,7 +476,7 @@ class SupportManager
             if ($supportPerson->getStartDate() && $person && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 // Si c'est le cas, on prend en compte la date de naissance
                 $supportPerson->setStartDate($person->getBirthdate());
-                $this->addFlash('warning', 'La date de début de suivi ne peut pas être antérieure à la date de naissance de la personne ('.$supportPerson->getPerson()->getFullname().').');
+                // $this->addFlash('light', 'La date de début de suivi retenue est la date de naissance de l\'enfant ('.$supportPerson->getPerson()->getFullname().').');
             }
         }
     }

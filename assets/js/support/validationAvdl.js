@@ -62,16 +62,6 @@ export default class ValidationAvdlSupport {
                 this.supportEndDateElt,
                 'La date ne peut pas être antérieure au début de l\'accompagnement.')
         })
-
-        this.btnSubmitElts.forEach(btnElt => {
-            btnElt.addEventListener('click', e => {
-                if (this.validationForm.checkForm(e) > 0) {
-                    e.preventDefault(), {
-                        once: true
-                    }
-                }
-            })
-        })
     }
 
     /**
