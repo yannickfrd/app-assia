@@ -2,7 +2,7 @@
  * Smooth Scroll animation
  */
 // function smoothScrollTop(delay) {
-//     document.getElementById('scroll-top').addEventListener('click', function (e) {
+//     document.getElementById('scroll-top').addEventListener('click', (e) => {
 //         e.preventDefault()
 //         let target = this.getAttribute('href')
 //         $('html, body').stop().animate({

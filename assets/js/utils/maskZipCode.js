@@ -3,7 +3,7 @@
  */
 import 'jquery-mask-plugin'
 
-$(document).ready(function ($) {
+document.addEventListener('DOMContentLoaded', () => {
     $('.js-zipcode').mask('99 999', {
         placeholder: '__ ___'
     })

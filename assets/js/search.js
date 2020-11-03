@@ -1,11 +1,12 @@
 import Search from './utils/search'
 import './utils/maskPhone'
 import 'select2'
+// import {Collapse} from 'bootstrap'
 
 // import MaskInput from './utils/maskInput'
 // new MaskInput('.js-phone')
 
-let select2Array = {
+const select2Array = {
     'typology': 'Typologie familiale',
     'status': 'Statut',
     'referents': 'Référents',
@@ -27,15 +28,23 @@ for (let i in select2Array) {
 
 new Search('form-search')
 
-let headingSearchElt = document.getElementById('headingSearch')
+const headingSearchElt = document.getElementById('headingSearch')
 
 if (headingSearchElt) {
-    let spanFaElt = headingSearchElt.querySelector('span.fa')
-    headingSearchElt.addEventListener('click', function () {
+    const spanFaElt = headingSearchElt.querySelector('span.fa')
+    headingSearchElt.addEventListener('click', () => {
         if (headingSearchElt.classList.contains('collapsed')) {
             spanFaElt.classList.replace('fa-chevron-down', 'fa-chevron-right')
         } else {
             spanFaElt.classList.replace('fa-chevron-right', 'fa-chevron-down')
         }
     })
+    // const bsCollapse = new Collapse(headingSearchElt)
+    if (window.innerWidth < 400) {
+        headingSearchElt.click()
+    }
 }
+
+
+
+

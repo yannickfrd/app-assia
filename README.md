@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.4.4 - 22/10/2020
+2.4.5 - 03/11/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,9 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 2.4.5 - 03/11/2020
+- Modif affichage Collapse de recherche et modif affichage tableau admin des users en mode smartphone.
 
 ## Version 2.4.2-4 - 02/11/2020
 - Correction problème non affichage 'situation sociale' lors de la génration du rapport social.
