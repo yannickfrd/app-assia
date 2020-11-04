@@ -2,11 +2,13 @@
 
 namespace App\Service;
 
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
+use PhpOffice\PhpWord\Writer\WriterInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportWord
@@ -19,8 +21,12 @@ class ExportWord
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
     }
 
-    public function export(string $content, ?string $title = 'document', string $logoPath = null)
+    /**
+     * Export file.
+     */
+    public function export(string $content, ?string $title = 'document', ?string $logoPath = null)
     {
+        /** * @var Section $section */
         $section = $this->addSection();
 
         $this->addHeader($section, $logoPath);
@@ -32,7 +38,10 @@ class ExportWord
         return $this->save($title);
     }
 
-    protected function addSection()
+    /**
+     * Add a section.
+     */
+    protected function addSection(): Section
     {
         return $this->phpWord->addSection([
             'marginLeft' => 1136,
@@ -44,21 +53,25 @@ class ExportWord
         ]);
     }
 
-    // Add first page header
-    protected function addHeader($section, $logoPath = null)
+    /**
+     * Add first page header.
+     */
+    protected function addHeader(Section $section, ?string $logoPath = null): void
     {
         $header = $section->addHeader('first');
         $defaultLogo = 'images/logo_esperer95.jpg';
 
-        if (file_exists($defaultLogo)) {
+        if (\file_exists($defaultLogo)) {
             $header->addImage($logoPath ?? $defaultLogo, [
                 'height' => 60,
             ]);
         }
     }
 
-    // Add footer
-    protected function addFooter($section)
+    /**
+     * Add the footer.
+     */
+    protected function addFooter(Section $section): void
     {
         // Add first page footer
         $footer = $section->addFooter('first');
@@ -78,23 +91,32 @@ class ExportWord
         ]);
     }
 
-    // Add title
-    protected function addTitle($section, ?string $title)
+    /**
+     * Add the title.
+     */
+    protected function addTitle(Section $section, ?string $title = null): void
     {
-        $section->addText($title, $this->getDefaultFontStyleTitle(), $this->getDefaultParagraphStyleTitle());
-        // $section->addTitle($title);
-        // $this->phpWord->addTitleStyle(1, $this->getDefaultFontStyleTitle(), $this->getDefaultParagraphStyleTitle());
+        if ($title) {
+            $section->addText($title, $this->getDefaultFontStyleTitle(), $this->getDefaultParagraphStyleTitle());
+            // $section->addTitle($title);
+            // $this->phpWord->addTitleStyle(1, $this->getDefaultFontStyleTitle(), $this->getDefaultParagraphStyleTitle());
+        }
     }
 
-    // Add body content
-    protected function addContent($section, string $content)
+    /**
+     * Add the body content.
+     */
+    protected function addContent(Section $section, string $content): void
     {
-        $htmlContent = str_replace('  ', '', $content);
-        $htmlContent = str_replace('<br>', '<br/>', $content);
+        $htmlContent = \str_replace('  ', '', $content);
+        $htmlContent = \str_replace('<br>', '<br/>', $content);
         Html::addHtml($section, $htmlContent, false, false);
     }
 
-    protected function getFontStyleFooter()
+    /**
+     * Get the font style for footer.
+     */
+    protected function getFontStyleFooter(): array
     {
         return  [
             'name' => 'Calibri Light',
@@ -104,8 +126,10 @@ class ExportWord
         ];
     }
 
-    // Police par défaut du titre
-    protected function getDefaultFontStyleTitle()
+    /**
+     * Police par défaut du titre.
+     */
+    protected function getDefaultFontStyleTitle(): array
     {
         return [
             'name' => 'Calibri Light',
@@ -116,34 +140,49 @@ class ExportWord
         ];
     }
 
-    // Style de paragraphe par défaut du titre
-    protected function getDefaultParagraphStyleTitle()
+    /**
+     * Get the default paragrah style of the title.
+     *
+     * @return void
+     */
+    protected function getDefaultParagraphStyleTitle(): array
     {
         return [
             'align' => 'center',
             'spaceAfter' => 500,
+              'shading' => [
+                'fill' => 'dddddd',
+            ],
         ];
     }
 
-    // Style par défaut du contenu
-    protected function setDefaultStyleDocument()
+    /**
+     * Set the default style of the document.
+     */
+    protected function setDefaultStyleDocument(): void
     {
         $this->phpWord->setDefaultFontName('Calibri');
         $this->phpWord->setDefaultFontSize(11);
+
+        $this->phpWord->setDefaultParagraphStyle([
+            'spaceAfter' => 80,
+            'spacing' => 1,
+        ]);
     }
 
-    // Save the document
-    public function save(?string $title, $download = true)
+    /**
+     * Save the document.
+     */
+    public function save(?string $title, bool $download = true): ?StreamedResponse
     {
-        $title = str_replace([' ', '/'], '-', $title ? $title : 'document');
-        $title = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $title);
+        $title = \str_replace([' ', '/', '\''], '-', $title ? $title : 'document');
+        $title = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $title);
 
         // Settings::setPdfRendererPath('..\vendor\dompdf\dompdf');
         // Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
 
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
-        $path = \dirname(__DIR__).'/../public/uploads/exports/'.(new \DateTime())->format('Y/m/d/');
-
+        // $path = \dirname(__DIR__).'/../public/uploads/exports/'.(new \DateTime())->format('Y/m/d/');
         // $objWriter->save($path.$title.'.docx');
 
         if (true === $download) {
@@ -151,15 +190,14 @@ class ExportWord
         }
     }
 
-    protected function download($objWriter, string $title)
+    /**
+     * Download file.
+     */
+    protected function download(WriterInterface $objWriter, string $title): StreamedResponse
     {
         $response = new StreamedResponse();
-
-        $contentType = 'application/vnd.ms-word';
-        $filename = $title.'.docx';
-
-        $response->headers->set('Content-Type', $contentType);
-        $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
+        $response->headers->set('Content-Type', 'application/vnd.ms-word');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$title.'.docx');
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);

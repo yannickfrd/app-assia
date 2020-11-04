@@ -192,7 +192,7 @@ class NoteController extends AbstractController
         $evaluation = $supportManager->getEvaluation($supportGroup);
 
         $note = (new Note())
-        ->setTitle('Rapport social '.$evaluation->getUpdatedAt()->format('d/m/Y'))
+        ->setTitle('Grille d\'évaluation sociale '.$evaluation->getUpdatedAt()->format('d/m/Y'))
             ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
                 'support' => $supportGroup,
                 'evaluation' => $evaluation,

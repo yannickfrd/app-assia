@@ -31,7 +31,7 @@ Asf amt: Montant ASF
 Asf: ASF
 Asylum allowance amt: Montant ADA (€)
 Asylum allowance: ADA
-Budget balance amt: Reste à vivre (€)
+Budget balance amt: Reste à vivre
 Budget: Budget
 Charge comment: Commentaire sur les charges
 Charge other amt: Montant autre charge (€)
@@ -64,7 +64,7 @@ Debt tax delays: Retards d'impôts
 Debt unpaid maint amt: Montant pension alimentaire non réglée (€)
 Debt unpaid maint: Pension alimentaire non réglée
 Debts amt: Montant des dettes (€)
-Debts group amt: Dettes totales du groupe (€)
+Debts group amt: Dettes totales du groupe
 Debts: Dettes
 Dis adult allowance amt: Montant AAH (€)
 Dis adult allowance: AAH
@@ -77,7 +77,7 @@ Electricity gas: Electricité / Gaz
 End rights date: Date de fin de droits
 Family allowance amt: Montant allocations familiales (€)
 Family allowance: Allocations familiales
-Income tax: Impôt sur le revenu
+Income tax: Impôt sur le revenu (n-1 ou n-2)
 Income n1 amt: Revenu fiscal n-1
 Income n2 amt: Revenu fiscal n-2
 Incomen1amt: Revenu fiscal n-1
@@ -88,7 +88,7 @@ Maintenance amt: Montant pension alimentaire (€)
 Maintenance: Pension alimentaire
 Minimum income amt: Montant RSA (€)
 Minimum income: RSA
-Monthly repayment amt: Montant du remboursement mensuel (€)
+Monthly repayment amt: Montant du remboursement mensuel
 Moratorium: Moratoire
 Mutual amt: Montant mutuelle(s) (€)
 Mutual: Mutuelle(s)

@@ -26,10 +26,10 @@
 
             <h2 class="h4 my-4">Coordonnées</h1>
                 <div class="form-group row mb-2">
-                    {{ utils.view(app.user.firstname, 'Firstname') }}
-                    {{ utils.view(app.user.lastname, 'Lastname') }}
-                    {{ utils.view(app.user.username, 'Login') }}
-                    {{ utils.view(app.user.statusToString, 'Status') }}
+                    {{ divElt.get(app.user.firstname, 'Firstname') }}
+                    {{ divElt.get(app.user.lastname, 'Lastname') }}
+                    {{ divElt.get(app.user.username, 'Login') }}
+                    {{ divElt.get(app.user.statusToString, 'Status') }}
                 </div>
                 <div class="form-group row mb-2">
                     <div class="col-md-6">{{ form_row(form.email) }}</div>

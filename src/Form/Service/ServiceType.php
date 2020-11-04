@@ -3,18 +3,18 @@
 namespace App\Form\Service;
 
 use App\Entity\Pole;
-use App\Entity\User;
 use App\Entity\Service;
-use App\Form\Utils\Choices;
+use App\Entity\User;
 use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
 use App\Repository\UserRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceType extends AbstractType
 {
@@ -22,10 +22,9 @@ class ServiceType extends AbstractType
     {
         $builder
             ->add('name', null, [
-                'attr' => [
-                    'placeholder' => 'service.name',
-                ],
+                'attr' => ['placeholder' => 'service.name'],
             ])
+            ->add('shortName')
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',

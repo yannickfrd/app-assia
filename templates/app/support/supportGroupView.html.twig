@@ -1,5 +1,5 @@
 {% extends "base.html.twig" %}
-{% import "macros/view.html.twig" as utils %}
+{% import "macros/viewDiv.html.twig" as divElt %}
 
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
@@ -130,8 +130,8 @@
 				</span>
 			</div>	
 			<div class="row mb-2">
-				{{ utils.view(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
-				{{ utils.view(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
+				{{ divElt.get(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
+				{{ divElt.get(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
 			</div>
 		{% endif %}
 
@@ -144,14 +144,14 @@
 				</span>
 			</div>	
 			<div class="row mb-2">
-				{{ utils.view(referent.socialWorker ~ (referent.socialWorker2 ? ' (suppl. : ' ~ referent.socialWorker2 ~ ')' ), "referent.socialWorker") }}
-				{{ utils.view(referent.name ~ (referent.type ? ' (' ~ referent.typeToString ~ ''), "referent.name") }}
-				{{ utils.view(referent.email, "Email") }}
-				{{ utils.view(referent.email, "Email2") }}
-				{{ utils.view(referent.phone1, "Phone1") }}
-				{{ utils.view(referent.phone1, "Phone2") }}
-				{{ utils.view(referent.address ~ (referent.city ? ' - ' ~ referent.city), "Address") }}
-				{{ utils.view(referent.comment) }}
+				{{ divElt.get(referent.socialWorker ~ (referent.socialWorker2 ? ' (suppl. : ' ~ referent.socialWorker2 ~ ')' ), "referent.socialWorker") }}
+				{{ divElt.get(referent.name ~ (referent.type ? ' (' ~ referent.typeToString ~ ')'), "referent.name") }}
+				{{ divElt.get(referent.email, "Email") }}
+				{{ divElt.get(referent.email, "Email2") }}
+				{{ divElt.get(referent.phone1, "Phone1") }}
+				{{ divElt.get(referent.phone1, "Phone2") }}
+				{{ divElt.get(referent.address ~ (referent.city ? ' - ' ~ referent.city), "Address") }}
+				{{ divElt.get(referent.comment) }}
 			</div>
 		{% endif %}
 
@@ -163,8 +163,8 @@
 				<div class="col-md-12 mb-2">
 					<div class="float-right">
 						<a href="{{ path('support_note_new_evaluation', {'id': support.id }) }}" class="btn btn-{{ theme_color }} shadow"
-							title="Générer une note sociale à partir de l'évaluation ci-dessous">
-							<span class="fas fa-sticky-note mr-2"></span>Générer rapport social</a>
+							title="Générer une grille d'évaluation sociale à partir des éléments renseignés ci-dessous">
+							<span class="fas fa-sticky-note mr-2"></span>Générer grille éval.</a>
 					</div>
 				</div>
 			</div>	

@@ -175,7 +175,7 @@ class Person
 
     public function setFirstname(?string $firstname): self
     {
-        $this->firstname = ucfirst($firstname);
+        $this->firstname = \ucfirst($firstname);
 
         return $this;
     }
@@ -211,7 +211,7 @@ class Person
 
     public function setUsename(?string $usename): self
     {
-        $this->usename = ucfirst($usename);
+        $this->usename = \ucfirst($usename);
 
         return $this;
     }

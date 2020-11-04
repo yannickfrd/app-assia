@@ -1,4 +1,4 @@
-{% import "macros/view.html.twig" as utils %}
+    {% import "macros/viewDiv.html.twig" as divElt %}
 
 <div class="row">
     <div class="col-md-6 mb-1 py-2">
@@ -8,19 +8,19 @@
             <span>{{ support.subService ? " | " ~ support.subService.name }}</span>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ utils.view(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
-    {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+    {{ divElt.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
+    {{ divElt.get(support.startDate ? support.startDate|date("d/m/Y") 
         ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
-    {{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
+    {{ divElt.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
         ~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
 </div>
 
 {% set originRequest = support.originRequest %}
 {% if originRequest %}
     <div class="row my-2">
-        {{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
+        {{ divElt.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
             ~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "forms") }}
-        {{ utils.view(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
+        {{ divElt.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
     </div>
 {% endif %}
 
@@ -28,40 +28,40 @@
 
 {% if hotelSupport %}
     <div class="row my-2">
-        {{ utils.view(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
-        {{ utils.view(hotelSupport.originDept, "Origin dept") }}
-        {{ utils.view(hotelSupport.gipId, "Gip id") }}
-        {{ originRequest ? utils.view(originRequest.comment, "Comment") }}
+        {{ divElt.get(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
+        {{ divElt.get(hotelSupport.originDept, "Origin dept") }}
+        {{ divElt.get(hotelSupport.gipId, "Gip id") }}
+        {{ originRequest ? divElt.get(originRequest.comment, "Comment") }}
     </div>
 
     {% if support.accommodationGroups|length %}
         <div class="row my-2">
-            {{ utils.view(support.accommodationGroups[0].accommodation ? support.accommodationGroups[0].accommodation.name  
+            {{ divElt.get(support.accommodationGroups[0].accommodation ? support.accommodationGroups[0].accommodation.name  
                 ~ " (" ~ support.address ~ ", " ~ support.city ~ ")", "Hotel") }}
-            {{ utils.view(support.accommodationGroups[0].comment, "Comment") }}
+            {{ divElt.get(support.accommodationGroups[0].comment, "Comment") }}
         </div>
     {% endif %}
 
     <div class="my-2">
         <div class="row">
-            {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+            {{ divElt.get(support.startDate ? support.startDate|date("d/m/Y") 
                 ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "support.dates") }}
-            {{ utils.view(hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") : "", "hotelSupport.evaluation") }}
+            {{ divElt.get(hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") : "", "hotelSupport.evaluation") }}
         </div>
         <div class="row">
-            {{ utils.view(hotelSupport.levelSupportToString, "hotelSupport.levelSupport") }}
-            {{ utils.view(hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y"), "hotelSupport.agreementDate") }}
+            {{ divElt.get(hotelSupport.levelSupportToString, "hotelSupport.levelSupport") }}
+            {{ divElt.get(hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y"), "hotelSupport.agreementDate") }}
         </div>
         <div class="row">
-            {{ utils.view(hotelSupport.departmentAnchorToString, "hotelSupport.departmentAnchor") }}
-            {{ utils.view(hotelSupport.recommendationToString, "hotelSupport.recommendation") }}
+            {{ divElt.get(hotelSupport.departmentAnchorToString, "hotelSupport.departmentAnchor") }}
+            {{ divElt.get(hotelSupport.recommendationToString, "hotelSupport.recommendation") }}
         </div>
         <div class="row">
-            {{ utils.view(support.comment, "Comment") }}
+            {{ divElt.get(support.comment, "Comment") }}
         </div>
     </div>
 {% endif %}
 
 <div class="row">
-    {{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
+    {{ divElt.get(support.coefficient ? support.coefficient, "Coefficient") }}
 </div>

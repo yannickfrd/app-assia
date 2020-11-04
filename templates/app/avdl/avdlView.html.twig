@@ -1,4 +1,4 @@
-{% import "macros/view.html.twig" as utils %}
+{% import "macros/viewDiv.html.twig" as divElt %}
 
 <div class="row">
     <div class="col-md-6 mb-1 py-2">
@@ -7,56 +7,56 @@
             {{ support.service.name }}</a>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ utils.view(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
-    {{ utils.view(support.startDate ? support.startDate|date("d/m/Y") 
+    {{ divElt.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
+    {{ divElt.get(support.startDate ? support.startDate|date("d/m/Y") 
         ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
-    {{ utils.view(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
+    {{ divElt.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
         ~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
 </div>
 
 {% set originRequest = support.originRequest %}
 {% if originRequest %}
     <div class="row my-2">
-        {{ utils.view(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
+        {{ divElt.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
             ~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "forms") }}
-        {{ utils.view(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "avdl.orientationDate", "forms") }}
+        {{ divElt.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "avdl.orientationDate", "forms") }}
     </div>
 {% endif %}
 
     <div class="row my-2">
-    {{ utils.view(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Adresse") }}
+    {{ divElt.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Adresse") }}
 </div>
 
 {% set avdl = support.avdl %}
 
 {% if avdl and avdl.diagStartDate %}
     <div class="row my-2">
-        {{ utils.view(avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") 
+        {{ divElt.get(avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") 
             ~ (avdl.diagEndDate ? " - " ~ avdl.diagEndDate|date("d/m/Y") : "") : "", "avdl.diag") }}
-        {{ utils.view(avdl.diagTypeToString, "avdl.diagType") }}
-        {{ utils.view(avdl.recommendationSupportToString, "avdl.recommendationSupport") }}
-        {{ utils.view(avdl.diagComment, "Comment") }}
+        {{ divElt.get(avdl.diagTypeToString, "avdl.diagType") }}
+        {{ divElt.get(avdl.recommendationSupportToString, "avdl.recommendationSupport") }}
+        {{ divElt.get(avdl.diagComment, "Comment") }}
     </div>
 {% endif %}
 
 {% if avdl and avdl.supportStartDate %}
     <div class="row my-2">
-        {{ utils.view(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
+        {{ divElt.get(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
             ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y") : "") : "", "avdl.support") }}
-        {{ utils.view(avdl.supportTypeToString, "avdl.supportType") }}
-        {{ utils.view(avdl.supportComment, "Comment") }}
+        {{ divElt.get(avdl.supportTypeToString, "avdl.supportType") }}
+        {{ divElt.get(avdl.supportComment, "Comment") }}
     </div>
 {% endif %}
 {% if avdl and avdl.supportStartDate %}
     <div class="row my-2">
-        {{ utils.view(avdl.endSupportReasonToString, "avdl.endSupportReason") }}
-        {{ utils.view(avdl.accessHousingModalityToString, "avdl.accessHousingModality") }}
-        {{ utils.view(avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") ~
+        {{ divElt.get(avdl.endSupportReasonToString, "avdl.endSupportReason") }}
+        {{ divElt.get(avdl.accessHousingModalityToString, "avdl.accessHousingModality") }}
+        {{ divElt.get(avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") ~
             (avdl.propoResult ? " | Resultat : " ~ avdl.propoResultToString ), "avdl.propoHousingDate") }}
-        {{ utils.view(avdl.endSupportComment, "Comment") }}
+        {{ divElt.get(avdl.endSupportComment, "Comment") }}
     </div>
 {% endif %}
 
 <div class="row">
-    {{ utils.view(support.coefficient ? support.coefficient, "Coefficient") }}
+    {{ divElt.get(support.coefficient ? support.coefficient, "Coefficient") }}
 </div>

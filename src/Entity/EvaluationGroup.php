@@ -299,6 +299,24 @@ class EvaluationGroup
         return $this;
     }
 
+    public function getEvalHotelLifeGroup(): ?EvalHotelLifeGroup
+    {
+        return $this->evalHotelLifeGroup;
+    }
+
+    public function setEvalHotelLifeGroup(EvalHotelLifeGroup $evalHotelLifeGroup): self
+    {
+        if ($evalHotelLifeGroup->getId() || false == $this->objectIsEmpty($evalHotelLifeGroup)) {
+            $this->evalHotelLifeGroup = $evalHotelLifeGroup;
+        }
+        // set the owning side of the relation if necessary
+        if ($this !== $evalHotelLifeGroup->getEvaluationGroup()) {
+            $evalHotelLifeGroup->setEvaluationGroup($this);
+        }
+
+        return $this;
+    }
+
     protected function objectIsEmpty(object $originRequest)
     {
         foreach ((array) $originRequest as $value) {
@@ -308,22 +326,5 @@ class EvaluationGroup
         }
 
         return true;
-    }
-
-    public function getEvalHotelLifeGroup(): ?EvalHotelLifeGroup
-    {
-        return $this->evalHotelLifeGroup;
-    }
-
-    public function setEvalHotelLifeGroup(EvalHotelLifeGroup $evalHotelLifeGroup): self
-    {
-        $this->evalHotelLifeGroup = $evalHotelLifeGroup;
-
-        // set the owning side of the relation if necessary
-        if ($evalHotelLifeGroup->getEvaluationGroup() !== $this) {
-            $evalHotelLifeGroup->setEvaluationGroup($this);
-        }
-
-        return $this;
     }
 }
