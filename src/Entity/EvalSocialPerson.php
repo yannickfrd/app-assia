@@ -72,6 +72,11 @@ class EvalSocialPerson
     private $childWelfareBackground;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $aseComment;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $familyBreakdown;
@@ -219,6 +224,18 @@ class EvalSocialPerson
     public function setChildWelfareBackground(?int $childWelfareBackground): self
     {
         $this->childWelfareBackground = $childWelfareBackground;
+
+        return $this;
+    }
+
+    public function getAseComment(): ?string
+    {
+        return $this->aseComment;
+    }
+
+    public function setAseComment(?string $aseComment): self
+    {
+        $this->aseComment = $aseComment;
 
         return $this;
     }

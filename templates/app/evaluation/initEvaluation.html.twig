@@ -22,13 +22,13 @@
 		</div>
 	</div>
 
-	{# {% set form_evaluation_people = form.supportPerson is defined ? form.supportPerson|filter(e => e.vars.value.person.age >= 16) : people_filtered_by_age %} #}
+	{# {% set form_evaluation_people = form.supportPerson is defined ? form.supportPerson|filter(e => e.vars.value.person.age >= 16) : people_over_16 %} #}
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-init_eval">
-			{{ utils.loopSupportPeople(id, people_filtered_by_age, theme_color) }}
+			{{ utils.loopSupportPeople(id, people_over_16, theme_color) }}
 
-			{% for key, evalPerson in people_filtered_by_age %}
+			{% for key, evalPerson in people_over_16 %}
 				{% set evalBudgetPerson = evalPerson.initEvalPerson %}
 				{% set entity = "initEvalPerson" %}
 				<div id="collapse-init_eval-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"

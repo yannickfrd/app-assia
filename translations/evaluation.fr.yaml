@@ -17,7 +17,7 @@ Nationality: Nationalité
 Nb renewals: Nombre de renouvellements
 Paper type: Type de papier
 Paper: Papier d'identité
-Renewal permit date: Date de renouvellement du titre
+Renewal permit date: Date d'obtention du titre
 Resid permit request: Demande de titre de séjour
 Work right: Autorisation de travail
 evalAdminPerson.comment: Écrire un commentaire relatif à la situation administrative
@@ -184,17 +184,18 @@ Cities wishes: Communes ou départements souhaités
 Collective agreement housing date: Date de labellisation Accord Collectif
 Collective agreement housing: Labellisation Accord Collectif
 Comment eval housing: Commentaire relatif à la situation liée au logement et l'hébergement
-Dalo commission: Passage en commission DALO
-Dalo decision date: Date de décision du DALO
-Dalo id: Numéro DALO
-Dalo record date: Date de dépôt du DALO
-Dalo requalified daho: DALO requalifié en DAHO
+Dalo action: Recours DALO/ DAHO
+Dalo decision date: Date de décision du DALO/ DAHO
+Dalo id: Numéro DALO/ DAHO
+Dalo record date: Date de dépôt du DALO/ DAHO
+Dalo type: Type de recours DALO/ DAHO
 Dalo tribunal action date: Date du recours Tribunal administratif
-Dalo tribunal action: DALO recours Tribunal administratif
+Dalo tribunal action: DALO/ DAHO recours Tribunal administratif
 Department or zip code: Département ou code postal
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
+Domiciliation comment: Complément adresse de domiciliation
 Domiciliation: Domiciliation
 End domiciliation date: Date de fin domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
@@ -249,7 +250,8 @@ Animal type: Type d'animal
 Animal: Présence d'un animal
 Care support: Service de soins ou d'acc. à domicile
 Care support type: Type de service soins ou d'acc. à domicile
-Child welfare background: Parcours institutionnel enfance
+Child welfare background: Parcours institutionnel enfance (ASE)
+Ase comment: Commentaire concernant le parcours ASE
 Comment eval social: Commentaire relatif à la situation sociale
 Dom violence victim: Femme victime de violence conjugale
 End rights social security date: Date de fin de droits à la Sécurité sociale

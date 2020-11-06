@@ -121,7 +121,7 @@ export default class evaluation {
         new DisplayFields(prefix, "siaoRequest", [1])
         new DisplayFields(prefix, "socialHousingRequest", [1])
         new DisplayFields(prefix, "syplo", [1])
-        new DisplayFields(prefix, "daloCommission", [1])
+        new DisplayFields(prefix, "daloAction", [1])
         new DisplayFields(prefix, "daloTribunalAction", [1])
         new DisplayFields(prefix, "collectiveAgreementHousing", [1])
         new DisplayFields(prefix, "hsgActionEligibility", [1])
@@ -151,36 +151,6 @@ export default class evaluation {
     }
 
     /**
-     * Evaluation sociale individuelle.
-     * @param {String} prefix 
-     */
-    evalSocialPerson(prefix) {
-        document.getElementById("accordion-eval_social").querySelectorAll("button.js-person").forEach(personElt => {
-            const i = personElt.getAttribute("data-key")
-            new DisplayFields(prefix, i + "_evalSocialPerson_rightSocialSecurity", [1, 3])
-            new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1])
-            new DisplayFields(prefix, i + "_evalSocialPerson_careSupport", [1])
-            new DisplayFields(prefix, i + "_evalSocialPerson_violenceVictim", [1])
-            this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row")
-            this.selectTrElts("eval_social", "evalSocialPerson", i, "healthProblemType")
-        })
-    }
-
-    /**
-     * Evaluation administrative individuelle.
-     * @param {String} prefix 
-     */
-    evalAdmPerson(prefix) {
-        document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
-            const i = personElt.getAttribute("data-key")
-            new DisplayFields(prefix, i + "_evalAdmPerson_nationality", [2, 3, 4])
-            new DisplayFields(prefix, i + "_evalAdmPerson_paper", [1, 3])
-            new DisplayFields(prefix, i + "_evalAdmPerson_paperType", [20, 21, 22, 30, 31, 97])
-            new DisplayFields(prefix, i + "_evalAdmPerson_asylumBackground", [1])
-        })
-    }
-
-    /**
      * Evaluation familiale individuelle.
      * @param {String} prefix 
      */
@@ -195,15 +165,16 @@ export default class evaluation {
     }
 
     /**
-     * Evaluation professionnelle individuelle.
+     * Evaluation administrative individuelle.
      * @param {String} prefix 
      */
-    evalProfPerson(prefix) {
-        document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").forEach(personElt => {
+    evalAdmPerson(prefix) {
+        document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
             const i = personElt.getAttribute("data-key")
-            new DisplayFields(prefix, i + "_evalProfPerson_profStatus", [3, 5, 8])
-            new DisplayFields(prefix, i + "_evalProfPerson_transportMeansType", [1, 2, 3])
-            new DisplayFields(prefix, i + "_evalProfPerson_rqth", [1])
+            new DisplayFields(prefix, i + "_evalAdmPerson_nationality", [2, 3, 4])
+            new DisplayFields(prefix, i + "_evalAdmPerson_paper", [1, 3])
+            new DisplayFields(prefix, i + "_evalAdmPerson_paperType", [20, 21, 22, 30, 31, 97])
+            new DisplayFields(prefix, i + "_evalAdmPerson_asylumBackground", [1])
         })
     }
 
@@ -229,6 +200,37 @@ export default class evaluation {
             this.editAmt(prefix, "eval_budget", entity, i, "resources")
             this.editAmt(prefix, "eval_budget", entity, i, "charges")
             this.changeResources("eval_budget", prefix, i, entity)
+        })
+    }
+
+
+    /**
+     * Evaluation professionnelle individuelle.
+     * @param {String} prefix 
+     */
+    evalProfPerson(prefix) {
+        document.getElementById("accordion-eval_prof").querySelectorAll("button.js-person").forEach(personElt => {
+            const i = personElt.getAttribute("data-key")
+            new DisplayFields(prefix, i + "_evalProfPerson_profStatus")
+            new DisplayFields(prefix, i + "_evalProfPerson_transportMeansType", [1, 2, 97])
+            new DisplayFields(prefix, i + "_evalProfPerson_rqth", [1])
+        })
+    }
+
+    /**
+     * Evaluation sociale individuelle.
+     * @param {String} prefix 
+     */
+    evalSocialPerson(prefix) {
+        document.getElementById("accordion-eval_social").querySelectorAll("button.js-person").forEach(personElt => {
+            const i = personElt.getAttribute("data-key")
+            new DisplayFields(prefix, i + "_evalSocialPerson_rightSocialSecurity", [1, 3])
+            new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_careSupport", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_childWelfareBackground", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_violenceVictim", [1])
+            this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row")
+            this.selectTrElts("eval_social", "evalSocialPerson", i, "healthProblemType")
         })
     }
 

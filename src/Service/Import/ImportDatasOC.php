@@ -605,8 +605,8 @@ class ImportDatasOC extends ImportDatas
         ->setSiaoRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
         ->setSocialHousingRequest($this->findInArray($this->field['Demande de logement social active'], self::DLS) ?? (!empty($this->field['NUR']) ? Choices::YES : Choices::NO))
         ->setSocialHousingRequestId($this->field['NUR'])
-        ->setDaloCommission($this->findInArray($this->field['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
-        ->setDaloRequalifiedDaho($this->findInArray($this->field['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
+        ->setDaloAction($this->findInArray($this->field['DALO / DAHO'], self::DALO_COMMISSION) ?? null)
+        ->setDaloType($this->findInArray($this->field['DALO / DAHO'], self::DALO_REQUALIFIED_DAHO) ?? null)
         ->setEvaluationGroup($evaluationGroup);
 
         $this->manager->persist($evalHousingGroup);

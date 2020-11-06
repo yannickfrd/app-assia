@@ -55,6 +55,12 @@ class EvalHousingGroup
         99 => 'Non renseignée',
     ];
 
+    public const DALO_TYPE = [
+        1 => 'Hébergement',
+        2 => 'Logement',
+        3 => 'DALO requalifié hébergement',
+    ];
+
     public const HOUSING_HELPS = [
         'fsl' => 'Fonds de solidarité pour le logement (FSL)',
         'fslEligibility' => 'Eligibilité aide à l\'installation FSL',
@@ -150,9 +156,9 @@ class EvalHousingGroup
     private $syploDate;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="dalo_commission", type="smallint", nullable=true)
      */
-    private $daloCommission;
+    private $daloAction;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -177,9 +183,9 @@ class EvalHousingGroup
     private $daloTribunalActionDate;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="dalo_requalified_daho", type="smallint", nullable=true)
      */
-    private $daloRequalifiedDaho;
+    private $daloType;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -341,6 +347,11 @@ class EvalHousingGroup
      * @Groups("export")
      */
     private $domiciliationDept;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $domiciliationComment;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -585,22 +596,22 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getDaloCommission(): ?int
+    public function getDaloAction(): ?int
     {
-        return $this->daloCommission;
+        return $this->daloAction;
     }
 
     /**
      * @Groups("export")
      */
-    public function getDaloCommissionToString(): ?string
+    public function getDaloActionToString(): ?string
     {
-        return $this->daloCommission ? Choices::YES_NO_IN_PROGRESS[$this->daloCommission] : null;
+        return $this->daloAction ? Choices::YES_NO_IN_PROGRESS[$this->daloAction] : null;
     }
 
-    public function setDaloCommission(?int $daloCommission): self
+    public function setDaloAction(?int $daloAction): self
     {
-        $this->daloCommission = $daloCommission;
+        $this->daloAction = $daloAction;
 
         return $this;
     }
@@ -629,22 +640,22 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getDaloRequalifiedDaho(): ?int
+    public function getDaloType(): ?int
     {
-        return $this->daloRequalifiedDaho;
+        return $this->daloType;
     }
 
     /**
      * @Groups("export")
      */
-    public function getDaloRequalifiedDahoToString(): ?string
+    public function getDaloTypeToString(): ?string
     {
-        return $this->daloRequalifiedDaho ? Choices::YES_NO[$this->daloRequalifiedDaho] : null;
+        return $this->daloType ? self::DALO_TYPE[$this->daloType] : null;
     }
 
-    public function setDaloRequalifiedDaho(?int $daloRequalifiedDaho): self
+    public function setDaloType(?int $daloType): self
     {
-        $this->daloRequalifiedDaho = $daloRequalifiedDaho;
+        $this->daloType = $daloType;
 
         return $this;
     }
@@ -1158,6 +1169,18 @@ class EvalHousingGroup
     public function setDomiciliationDept(?string $domiciliationDept): self
     {
         $this->domiciliationDept = $domiciliationDept;
+
+        return $this;
+    }
+
+    public function getDomiciliationComment(): ?string
+    {
+        return $this->domiciliationComment;
+    }
+
+    public function setDomiciliationComment(?string $domiciliationComment): self
+    {
+        $this->domiciliationComment = $domiciliationComment;
 
         return $this;
     }

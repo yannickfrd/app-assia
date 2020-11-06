@@ -84,19 +84,19 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('daloCommission', ChoiceType::class, [
+            ->add('daloAction', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('daloType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalHousingGroup::DALO_TYPE),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('daloId')
             ->add('daloRecordDate', DateType::class, [
                 'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('daloRequalifiedDaho', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('daloDecisionDate', DateType::class, [
@@ -208,6 +208,7 @@ class EvalHousingGroupType extends AbstractType
                     'readonly' => true,
                 ],
             ])
+            ->add('domiciliationComment')
             ->add('housingAccessType', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',

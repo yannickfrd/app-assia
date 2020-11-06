@@ -84,9 +84,9 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-eval_budget">
-			{{ utils.loopSupportPeople(id, people_filtered_by_age, theme_color) }}
+			{{ utils.loopSupportPeople(id, people_over_16, theme_color) }}
 
-			{% for key, evalPerson in people_filtered_by_age %}
+			{% for key, evalPerson in people_over_16 %}
 				{% set evalBudgetPerson = evalPerson.evalBudgetPerson %}
 				{% set entity = "evalBudgetPerson" %}
 

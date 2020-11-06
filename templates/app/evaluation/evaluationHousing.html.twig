@@ -39,12 +39,12 @@
 			<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploDate) }}</div>
 		</div>
 		<div class="form-group row">
-			<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloCommission) }}</div>
-			<div class="col-md-6" data-parent-field="daloCommission">{{ form_row(form.evalHousingGroup.daloRecordDate) }}</div>
-			<div class="col-md-6" data-parent-field="daloCommission">{{ form_row(form.evalHousingGroup.daloId) }}</div>
-			<div class="col-md-6" data-parent-field="daloCommission">{{ form_row(form.evalHousingGroup.daloRequalifiedDaho) }}</div>
-			<div class="col-md-6" data-parent-field="daloCommission">{{ form_row(form.evalHousingGroup.daloDecisionDate) }}</div>
-			<div class="col-md-6" data-parent-field="daloCommission">{{ form_row(form.evalHousingGroup.daloTribunalAction) }}</div>
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloAction) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloType) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloRecordDate) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloId) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloDecisionDate) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloTribunalAction) }}</div>
 			<div class="col-md-6" data-parent-field="daloTribunalAction">{{ form_row(form.evalHousingGroup.daloTribunalActionDate) }}</div>
 		</div>
 		{# <div class="form-group row">
@@ -146,6 +146,7 @@
 				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationAddress) }}</div>
 				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationCity) }}</div>
 				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationDept) }}</div>
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationComment) }}</div>
 			</div>
 		</div>
 		<div class="form-group row">

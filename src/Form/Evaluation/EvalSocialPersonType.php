@@ -44,6 +44,12 @@ class EvalSocialPersonType extends AbstractType
                 'required' => false,
                 'help' => "Aide sociale à l'enfance, PJJ…",
             ])
+            ->add('aseComment', null, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Ase comment',
+                ],
+            ])
             ->add('familyBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
                 'attr' => [
