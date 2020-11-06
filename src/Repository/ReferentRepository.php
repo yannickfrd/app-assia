@@ -47,13 +47,13 @@ class ReferentRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    public function findLastReferent(GroupPeople $groupPeople): ?Referent
+    public function findReferents(GroupPeople $groupPeople)
     {
         return $this->createQueryBuilder('r')->select('PARTIAL r.{id, name, type, socialWorker, socialWorker2, email, email2, phone1, phone2, address, city}')
             ->where('r.groupPeople = :groupPeople')
             ->setParameter('groupPeople', $groupPeople)
             ->orderBy('r.id', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 }

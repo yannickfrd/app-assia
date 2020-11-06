@@ -30,23 +30,23 @@ class SubServiceType extends AbstractType
                     'placeholder' => 'Email',
                 ],
             ])
-            // ->add('chief', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'fullname',
-            //     'query_builder' => function (UserRepository $repo) {
-            //         return $repo->createQueryBuilder('u')
-            //             ->where('u.disabledAt IS NULL')
-            //             ->andWhere('u.status IN (:status)')
-            //             ->setParameter('status', [
-            //                 User::STATUS_COORDO,
-            //                 User::STATUS_CHIEF,
-            //                 User::STATUS_DIRECTOR,
-            //             ])
-            //             ->orderBy('u.lastname', 'ASC');
-            //     },
-            //     'placeholder' => 'placeholder.select',
-            //     'required' => false,
-            // ])
+            ->add('chief', EntityType::class, [
+                'label' => 'subService.chief',
+                'class' => User::class,
+                'choice_label' => 'fullname',
+                'query_builder' => function (UserRepository $repo) {
+                    return $repo->createQueryBuilder('u')
+                        ->where('u.disabledAt IS NULL')
+                        ->andWhere('u.status IN (:status)')
+                        ->setParameter('status', [
+                            User::STATUS_COORDO,
+                            User::STATUS_CHIEF,
+                        ])
+                        ->orderBy('u.lastname', 'ASC');
+                },
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
