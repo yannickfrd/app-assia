@@ -6,7 +6,6 @@ use App\Entity\Service;
 use App\Entity\SubService;
 use App\Form\SubService\SubServiceType;
 use App\Repository\AccommodationRepository;
-use App\Repository\SubServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,12 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class SubServiceController extends AbstractController
 {
     private $manager;
-    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, SubServiceRepository $repo)
+    public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
     }
 
     /**
@@ -29,7 +26,7 @@ class SubServiceController extends AbstractController
      *
      * @Route("/service/{id}/sub-service/new", name="sub_service_new", methods="GET|POST")
      */
-    public function newSubService(Service $service, SubService $subService = null, Request $request): Response
+    public function newSubService(Service $service, Request $request): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $service);
 

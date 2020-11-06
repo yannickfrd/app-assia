@@ -77,7 +77,9 @@ Start date: Date de début
 Status: Statut
 Sub service: Sous-service
 Sub services: Sous-services
-subService.name: Nom du sous-service  
+subService:
+  name: Nom du sous-service  
+  chief: Coordination
 Support access: Accès aux suivis sociaux du service
 Support dates: Dates de suivi
 Theoretical end date: Date de fin théorique
@@ -141,6 +143,7 @@ Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
 referent:
   name: Nom du service
+  type: Type de service
   socialWorker: Nom du travailleur social
   socialWorker2: Travailleur social suppléant
   comment.plaholder: Écrire un commentaire concernant le service social référent...
