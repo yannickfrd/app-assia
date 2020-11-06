@@ -206,6 +206,8 @@ class NoteController extends AbstractController
         $this->manager->persist($note);
         $this->manager->flush();
 
+        $this->discache($supportGroup);
+
         return $this->redirectToRoute('support_notes', [
             'id' => $id,
             'noteId' => $note->getId(),

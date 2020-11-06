@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.4.6 - 04/11/2020
+2.5.0 - 06/11/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,8 +16,14 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 2.4.6 - 04/11/2020
-- Amélioration de l'évaluation sociale générée en note et au format Word.
+## Version 2.5.0 - 06/11/2020
+- Refonte de l'export de l'évaluation sociale en note et au format Word.
+- Evaluation sociale : ajout des champs 'Complément adresse de domiciliation', 'Commentaire concernant le parcours ASE'.
+- Evaluation sociale : ajout de l'item 'Aucune' au champ 'Garde ou scolarité'.
+- Evaluation sociale : modification du 'DALO requalifié DAHO' en 'Type de recours DALO/ DAHO'.
+- Evalution sociale : affichage du champ 'Date de fin de validité du titre' pour tout type de papier (CNI, passport...).
+- Modif de l'encart 'Autre service ou référent' dans la fiche de vue du suivi et du groupe.
+
 
 ## Version 2.4.5 - 03/11/2020
 - Modif affichage Collapse de recherche et modif affichage tableau admin des users en mode smartphone.

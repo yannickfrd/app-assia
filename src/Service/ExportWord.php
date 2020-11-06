@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use PhpOffice\PhpWord\Element\Header;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
@@ -29,7 +30,7 @@ class ExportWord
         /** * @var Section $section */
         $section = $this->addSection();
 
-        $this->addHeader($section, $logoPath);
+        $this->addHeader($section, $title, $logoPath);
         $this->addFooter($section);
         $this->addTitle($section, $title);
         $this->addContent($section, $content);
@@ -56,9 +57,10 @@ class ExportWord
     /**
      * Add first page header.
      */
-    protected function addHeader(Section $section, ?string $logoPath = null): void
+    protected function addHeader(Section $section, string $title, ?string $logoPath = null): void
     {
-        $header = $section->addHeader('first');
+        // Add first page header
+        $header = $section->addHeader(HEADER::FIRST);
         $defaultLogo = 'images/logo_esperer95.jpg';
 
         if (\file_exists($defaultLogo)) {
@@ -66,6 +68,12 @@ class ExportWord
                 'height' => 60,
             ]);
         }
+
+        // Add sub page header
+        $headerSub = $section->addHeader();
+        $headerSub->addPreserveText('ESPERER 95 | '.$title, $this->getFontStyleFooter(), [
+            'alignment' => 'right',
+        ]);
     }
 
     /**
@@ -151,7 +159,7 @@ class ExportWord
             'align' => 'center',
             'spaceAfter' => 500,
               'shading' => [
-                'fill' => 'dddddd',
+                'fill' => 'e9ecef',
             ],
         ];
     }
@@ -161,7 +169,7 @@ class ExportWord
      */
     protected function setDefaultStyleDocument(): void
     {
-        $this->phpWord->setDefaultFontName('Calibri');
+        $this->phpWord->setDefaultFontName('Calibri Light');
         $this->phpWord->setDefaultFontSize(11);
 
         $this->phpWord->setDefaultParagraphStyle([

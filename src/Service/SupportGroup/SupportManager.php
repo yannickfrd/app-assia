@@ -8,7 +8,6 @@ use App\Entity\EvaluationPerson;
 use App\Entity\GroupPeople;
 use App\Entity\Person;
 use App\Entity\Rdv;
-use App\Entity\Referent;
 use App\Entity\RolePerson;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
@@ -245,12 +244,12 @@ class SupportManager
     /**
      * Donne le référent du suivi social.
      */
-    public function getReferent(SupportGroup $supportGroup, ReferentRepository $repoReferent): ?Referent
+    public function getReferents(SupportGroup $supportGroup, ReferentRepository $repoReferent)
     {
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_REFERENT_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoReferent) {
             $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
 
-            return $repoReferent->findLastReferent($supportGroup->getGroupPeople());
+            return $repoReferent->findReferents($supportGroup->getGroupPeople());
         });
     }
 

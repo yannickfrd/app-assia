@@ -10,8 +10,8 @@
 	{% set EDIT_MODE = form.vars.value.evalBudgetGroup ? true : false %}
 	{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 	{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
-	{% set people_filtered_by_age = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
-	{% set people_without_children = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
+	{% set people_over_16 = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
+	{% set people_adults = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
 
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 	<div class="container">
@@ -47,11 +47,11 @@
 			{% if support.service.justice == YES %}
 				{% include "app/evaluation/evaluationJustice.html.twig" %}
 			{% endif %}
-			{% include "app/evaluation/evaluationSocial.html.twig" %}
-			{% include "app/evaluation/evaluationAdm.html.twig" %}
 			{% include "app/evaluation/evaluationFamily.html.twig" %}
-			{% include "app/evaluation/evaluationProf.html.twig" %}
+			{% include "app/evaluation/evaluationAdm.html.twig" %}
 			{% include "app/evaluation/evaluationBudget.html.twig" %}
+			{% include "app/evaluation/evaluationProf.html.twig" %}
+			{% include "app/evaluation/evaluationSocial.html.twig" %}
 			{% include "app/evaluation/evaluationHousing.html.twig" %}
 			{% if support.service.id == constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
 				{% include "app/evaluation/evaluationHotelLife.html.twig" %}

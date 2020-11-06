@@ -89,8 +89,8 @@ class SupportGroupRepository extends ServiceEntityRepository
     protected function getsupportQuery()
     {
         return $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, preAdmission, justice}')
-            ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice}')
+            ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name, email}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')

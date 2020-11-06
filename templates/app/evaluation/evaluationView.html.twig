@@ -1,21 +1,23 @@
 {% import "macros/viewDiv.html.twig" as divElt %}
 
-{% set nbSupportPeople = support.supportPeople|length %}
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 {% set IN_PROGRESS = constant("App\\Form\\Utils\\Choices::IN_PROGRESS") %}
 
+{% set eval_people = evaluation.evaluationPeople %}
+{% set eval_adults = evaluation.evaluationPeople|filter(e => e.supportPerson.role != ROLE_CHILD) %}
+{% set eval_children = eval_people|filter(e => e.supportPerson.role == ROLE_CHILD) %}
+{% set people_over_18 = eval_people|filter(e => e.supportPerson.person.age >= 18) %}
+{% set nb_people = support.supportPeople|length %}
+
 {% apply spaceless %}
 
-    {% set nbSupportPeople = support.supportPeople|length %}
-
     <div class="row mb-2">
-        {{ divElt.get(support.groupPeople.familyTypologyToString ~ (nbSupportPeople > 1 ? 
-            ", " ~ nbSupportPeople ~ " personnes"), "Family typology") }}
+        {{ divElt.get(support.groupPeople.familyTypologyToString ~ (nb_people > 1 ? ", " ~ nb_people ~ " personnes"), "Family typology") }}
     </div>
 
     <div class="row mb-2">
-        <div class="col-md-10">
+        <div class="col-12 col-lg-10">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
@@ -31,19 +33,19 @@
                     </thead>
                     <tbody>
                         {% for supportPerson in support.supportPeople %}
-                        <tr>
-                            <td scope="row">
-                                {{ supportPerson.person.fullname }}
-                                {{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}
-                            </td>
-                            <td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
-                            <td class="d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
-                                -->{{ supportPerson.person.age > 1 ? "s" }}</td>
-                            <td>{{ supportPerson.person.genderToString }}</td>
-                            <td>{{ supportPerson.roleToString }}</td>
-                            <td>{{ supportPerson.person.phone1 }}</td>
-                            <td class="d-none d-sm-table-cell">{{ supportPerson.person.email }}</td>
-                        </tr>
+                            <tr>
+                                <td scope="row" class="align-middle">
+                                    {{ supportPerson.person.fullname }}
+                                    {{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}
+                                </td>
+                                <td class="align-middle">{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
+                                    -->{{ supportPerson.person.age > 1 ? "s" }}</td>
+                                <td class="align-middle">{{ supportPerson.person.genderToString }}</td>
+                                <td class="align-middle">{{ supportPerson.roleToString }}</td>
+                                <td class="align-middle">{{ supportPerson.person.phone1 }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ supportPerson.person.email }}</td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -53,141 +55,64 @@
 
     {# Justice #}
     {% if support.service.justice == YES %}
-        <hr>
+        <hr/>
         <section>
             <div class="d-flex mb-3">
                 <h2 class="h4">Justice</h2>
-                {% if theme_color is defined %}
                     <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
                         class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
                     </span>
-                {% endif %}
             </div>
-            {% for evalPerson in evaluation.evaluationPeople %}
+
+            {% set eval_people_justice = eval_people|filter(e => e.evalJusticePerson) %}
+            {% for evalPerson in eval_people_justice %}
                 {% set evalJustice = evalPerson.evalJusticePerson %}
-                {% if evalJustice %}
-                    <div class="my-3">
-                        {% if nbSupportPeople > 1 %}
-                            <div class="row mb-2">
-                                <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                            </div>
-                        {% endif %}
-                        <div class="row">
-                            {{ divElt.get(evalJustice.justiceStatusToString, "Justice status", "evaluation") }}
-                            {{ divElt.get(evalJustice.justiceActToString, "Justice act", "evaluation") }}
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice }}</div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </section>
-    {% endif %}
-
-    <hr>
-
-    {# Social #}
-    <section>
-        <div class="d-flex mb-3">
-            <h2 class="h4">Social</h2>
-            {% if theme_color is defined %}
-                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                </span>
-            {% endif %}
-        </div>
-        {% for evalPerson in evaluation.evaluationPeople %}
-            {% set evalSocial = evalPerson.evalSocialPerson %}
-            {% if evalSocial %}
                 <div class="my-3">
-                    {% if nbSupportPeople > 1 %}
+                    {% if nb_people > 1 %}
                         <div class="row mb-2">
                             <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
                         </div>
                     {% endif %}
-                    <div class="row mb-2">
-                        {{ divElt.get(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
-                            ~ evalSocial.socialSecurityToString : evalSocial.rightSocialSecurityToString, "Right social security", "evaluation") }}
-                        {{ divElt.get(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
-                        {{ divElt.get(evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
+                    <div class="row">
+                        {{ divElt.get(evalJustice.justiceStatusToString, "Justice status", "evaluation") }}
+                        {{ divElt.get(evalJustice.justiceActToString, "Justice act", "evaluation") }}
                     </div>
-                    {% if evalSocial.familyBreakdown or evalSocial.friendshipBreakdown %}
-                        <div class="row mb-2">
-                            {{ divElt.get(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
-                            {{ divElt.get(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
-                        </div>
-                    {% endif %}
-                    {% if evalSocial.healthProblem %}
-                        <div class="row mb-2">
-                            {{ divElt.get(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
-                            <div class="col-md-6">
-                                <ul class="mb-0">
-                                    {% for key, value in evalSocial.healthProblemsType %}
-                                        {% if attribute(evalSocial, key) %}
-                                            <li>{{ value }}</li>
-                                        {% endif %}
-                                    {% endfor %}									 
-                                </ul>
-                            </div>
-                        </div>
-                    {% endif %}
-                    <div class="row mb-2">
-                        {{ divElt.get(evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
-                            ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
-                        {{ divElt.get(evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
-                            " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
+                    <div class="row my-2">
+                        <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice }}</div>
                     </div>
-                    {% if evalSocial.commentEvalSocialPerson %}
-                        <div class="row mb-2">
-                            <div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson }}</div>
-                        </div>
-                    {% endif %}
                 </div>
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
+            
+        </section>
+    {% endif %}
 
-        {% if evaluation.evalSocialGroup %}
-            {% set evalSocial = evaluation.evalSocialGroup %}
-            <div class="row mb-2">
-                {{ divElt.get(evalSocial.reasonRequestToString, "Reason request", "evaluation") }}
-                {{ divElt.get(evalSocial.wanderingTimeToString, "Wandering time", "evaluation") }}
-                {{ divElt.get(evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" : "" ), "Animal", "evaluation") }}
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
-            </div>
-        {% endif %}
-
-
-    </section>
-
-    <hr>
+    <hr/>
 
     {# Famille #}
     <section>
         <div class="d-flex mb-3">
             <h2 class="h4">Famille</h2>
-            {% if theme_color is defined %}
-                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                </span>
-            {% endif %}
+            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            </span>
         </div>
-        {% for evalPerson in evaluation.evaluationPeople|filter(e => e.supportPerson.role != ROLE_CHILD) %}
+
+        {% set eval_adults_family = eval_adults|filter(e => e.evalFamilyPerson) %}
+        {% set nb_adults_family = eval_adults_family|length %}
+        {% for evalPerson in eval_adults_family %}
             {% set evalFamily = evalPerson.evalFamilyPerson %}
-            <div class="my-3">
-                {% if nbSupportPeople > 1 %}
-                    <div class="row mb-2">
-                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                    </div>
+                {% if nb_adults_family > 1 %}
+                <div class="row mb-2">
+                    <div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+                </div>
                 {% endif %}
+            <div class="my-3">
                 <div class="row mb-2">
                     {{ divElt.get(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
                     {{ divElt.get(evalFamily.noConciliationOrderToString, "No conciliation order", "evaluation") }}
                     {{ divElt.get(evalFamily.protectiveMeasure == YES and evalFamily.protectiveMeasureType ? 
                         evalFamily.protectiveMeasureTypeToString : "", "Protective measure", "evaluation") }}
-                    {{ divElt.get(evalFamily.unbornChild ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
+                    {{ divElt.get(evalFamily.unbornChild == YES ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
                         ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
                 </div>
                 <div class="row my-2">
@@ -196,7 +121,8 @@
             </div>
         {% endfor %}
 
-        {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
+        {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
+        {% if eval_children_family|length > 0 %}
             <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -211,7 +137,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for evalPerson in evaluation.evaluationPeople|filter(e => e.supportPerson.role == ROLE_CHILD) %}
+                                {% for evalPerson in eval_children_family %}
                                     {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
                                     <tr>
                                         <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
@@ -233,7 +159,7 @@
             <div class="row mb-2">
                 {{ divElt.get(evalFamily.cafId, "Caf id", "evaluation") }}
                 {{ divElt.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
-                {{ divElt.get(evalFamily.famlReunification ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
+                {{ divElt.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
                     ~ evalFamily.nbPeopleReunification ~ " personne(s))" : "") : "", "Faml reunification", "evaluation") }}
             </div>
             <div class="row my-3">
@@ -244,23 +170,23 @@
 
     </section>
 
-    <hr>
+    <hr/>
 
     {# Identité - Papier #}
     <section>
         <div class="d-flex mb-3">
             <h2 class="h4">Identité - Papier</h2>
-            {% if theme_color is defined %}
-                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                </span>
-            {% endif %}
+            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            </span>
         </div>
 
-        {% for evalPerson in evaluation.evaluationPeople|filter(e => e.supportPerson.role != ROLE_CHILD) %}
+        {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
+        {% set nb_adults_admin = eval_adults_admin|length %}
+        {% for evalPerson in eval_adults_admin %}
             {% set evalAdm = evalPerson.evalAdmPerson %}
             <div class="my-3">
-                {% if nbSupportPeople > 1 %}
+                {% if nb_adults_admin > 1 %}
                     <div class="row mb-2">
                         <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
                     </div>
@@ -270,8 +196,8 @@
                         ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
                     {{ divElt.get(evalAdm.arrivalDate ? evalAdm.arrivalDate|date("d/m/Y"), "Arrival date", "evaluation") }}
                     {{ divElt.get(evalAdm.paper == YES and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
-                    {{ divElt.get(evalAdm.asylumBackground == YES and evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
-                        evalAdm.asylumBackgroundToString, "Asylum background", "evaluation") }}
+                    {{ divElt.get(evalAdm.asylumBackground == YES ? (evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
+                        evalAdm.asylumBackgroundToString), "Asylum background", "evaluation") }}
                     {{ divElt.get(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
                         ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation") }}
                     {{ divElt.get(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
@@ -283,153 +209,106 @@
             </div>
         {% endfor %}
 
-        {% if support.groupPeople.familyTypology in [4, 5, 6, 8] %} {# si typologie familiale avec enfants #}
-        <div class="row my-3">
-            <div class="col-md-6 table-responsive">
-                <table class="table table-sm table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Enfants</th>
-                            <th>Nationalité</th>
-                            <th>Papier</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for evalPerson in evaluation.evaluationPeople|filter(e => e.supportPerson.role == ROLE_CHILD) %}
-                            {% set evalAdm = evalPerson.evalAdmPerson %}
+        {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %} {# si typologie familiale avec enfants #}
+            <div class="row my-3">
+                <div class="col-md-6 table-responsive">
+                    <table class="table table-sm table-bordered table-hover">
+                        <thead>
                             <tr>
-                                <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-                                <td>{{ evalAdm.nationalityToString }}</td>
-                                <td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+                                <th scope="col">Enfants</th>
+                                <th>Nationalité</th>
+                                <th>Papier</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for evalPerson in eval_children %}
+                                {% set evalAdm = evalPerson.evalAdmPerson %}
+                                {% if evalAdm %}
+                                    <tr>
+                                        <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                                        <td>{{ evalAdm.nationalityToString }}</td>
+                                        <td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
         {% endif %}
-        
     </section>
 
-    <hr>
-
-    {# Emploi #}
-    <section>
-        <div class="d-flex mb-3">
-            <h2 class="h4">Emploi</h2>
-            {% if theme_color is defined %}
+    {# Budget #}
+    {% set eval_people_budget = eval_people|filter(e => e.evalBudgetPerson) %}
+    {% set nb_people_budget = eval_people_budget|length %}
+    {% set evalBudgetGroup = evaluation.evalBudgetGroup %}
+    {% if evalBudgetGroup %}
+        <hr/>
+        <section>
+            <div class="d-flex mb-3">
+                <h2 class="h4">Budget</h2>
                 <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
                     class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
                 </span>
-            {% endif %}
-        </div>
-
-        {% for evalPerson in evaluation.evaluationPeople %}
-            {% set evalProf = evalPerson.evalProfPerson %}
-            {% if evalProf %}
-                <div class="my-3">
-                    {% if nbSupportPeople > 1 %}
-                        <div class="row mb-2">
-                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
-                        </div>
-                    {% endif %}
-                    <div class="row mb-2">
-                        {{ divElt.get(evalProf.schoolLevelToString, "School level", "evaluation") }}
-                        {{ divElt.get(evalProf.profExperienceToString, "Prof experience", "evaluation") }}
-                        {{ divElt.get(evalProf.profStatus ? evalProf.profStatusToString ~ (evalProf.contractType ? " (" 
-                            ~ evalProf.contractTypeToString ~ ")" : "") : "", "Prof status", "evaluation") }}
-                        {{ divElt.get(evalProf.jobCenterId, "Job center id", "evaluation") }}
-                        {{ divElt.get(evalProf.jobType, "Job type", "evaluation") }}
-                        {{ divElt.get(evalProf.contractEndDate ? evalProf.contractEndDate|date("d/m/Y"), "Contract end date", "evaluation") }}
-                        {{ divElt.get(evalProf.workingHours ? evalProf.workingHours ~ (evalProf.nbWorkingHours ? " (nb d'heures : " 
-                            ~ evalProf.nbWorkingHours ~ ")" : "") : "", "Working hours", "evaluation") }}
-                        {{ divElt.get(evalProf.employerName ? evalProf.employerName ~ (evalProf.workPlace ? " | " 
-                            ~ evalProf.workPlace : "") : "", "Employer name", "evaluation") }}
-                        {{ divElt.get(evalProf.transportMeansType ? evalProf.transportMeansTypeToString ~ (evalProf.transportMeans ? " (" 
-                            ~ evalProf.transportMeans ~ ")" : ""): "", "Transport means type", "evaluation") }}
-                        {{ divElt.get(evalProf.rqth ? evalProf.rqthToString ~ (evalProf.endRqthDate ? " (fin de validité : " 
-                            ~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
-                    </div>
-                    <div class="row my-2">
-                        <div class="col-md-12 justify">{{ evalProf.commentEvalProf }}</div>
+            </div>
+            {% if nb_people_budget > 1 %}           
+                <div class="row mb-1">
+                    <div class="col-md-6">
+                        <table class="table table-sm table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th class="text-right">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td scope="row">Ressources</td>
+                                    <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") }} €</td>
+                                </tr>
+                                {% if evalBudgetGroup.chargesGroupAmt %}
+                                <tr>
+                                    <td scope="row">Charges</td>
+                                    <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") }} €</td>
+                                </tr>
+                                {% endif %}
+                            {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
+                                <tr>
+                                    <td scope="row">Remboursement mensuel des dettes</td>
+                                    <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") }} €</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="font-weight-bold">
+                                    <td scope="row">Reste à vivre</td>
+                                    <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") }} €</td>
+                                </tr>
+                                {% if evalBudgetGroup.debtsGroupAmt %}
+                                <tr>
+                                    <td scope="row">Montant total des dettes</td>
+                                    <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
+                                </tr>
+                                {% endif %}
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             {% endif %}
-        {% endfor %}
-    </section>
 
-    {% set evalBudgetGroup = evaluation.evalBudgetGroup %}
-    {% if evalBudgetGroup %}
-
-    <hr>
-
-    {# Budget #}
-    <section>
-        <div class="d-flex mb-3">
-            <h2 class="h4">Budget</h2>
-            {% if theme_color is defined %}
-                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                </span>
-            {% endif %}
-        </div>
-        <div class="row mb-1">
-            <div class="col-md-6">
-                <table class="table table-sm table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th class="text-right">Montant</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td scope="row">Ressources</td>
-                            <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") }} €</td>
-                        </tr>
-                        {% if evalBudgetGroup.chargesGroupAmt %}
-                        <tr>
-                            <td scope="row">Charges</td>
-                            <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") }} €</td>
-                        </tr>
-                        {% endif %}
-                        {% if evalBudgetGroup.debtsGroupAmt %}
-                        <tr>
-                            <td scope="row">Remboursement mensuel des dettes</td>
-                            <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") }} €</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                    <tfoot>
-                        <tr class="font-weight-bold">
-                            <td scope="row">Reste à vivre</td>
-                            <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") }} €</td>
-                        </tr>
-                        {% if evalBudgetGroup.debtsGroupAmt %}
-                        <tr>
-                            <td scope="row">Montant total des dettes</td>
-                            <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
-                        </tr>
-                        {% endif %}
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        {% for evalPerson in evaluation.evaluationPeople %}
-            {% set evalBudget = evalPerson.evalBudgetPerson %}
-            {% if evalBudget %}	
+            {% for evalPerson in eval_people_budget %}
+                {% set evalBudget = evalPerson.evalBudgetPerson %}
                 <div class="my-3">
-                    {% if nbSupportPeople > 1 %}
+                    {% if nb_people_budget > 1 %}
                         <div class="row mb-2">
                             <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
                         </div>
                     {% endif %}
-                    <div class="row mb-2">
+                    <div class="row">
                             {{ evalBudget.resources == YES and evalBudget.resourcesAmt > 0 ? '' : 
                                 divElt.get(evalBudget.resourcesToString, "Resources", "evaluation") }}
-                            {{ evalBudget.charges == YES and evalBudget.chargesAmt > 0 ? '' : 
-                                divElt.get(evalBudget.chargesToString, "Charges", "evaluation") }}
+                            {# {{ evalBudget.charges == YES and evalBudget.chargesAmt > 0 ? '' : 
+                                divElt.get(evalBudget.chargesToString, "Charges", "evaluation") }} #}
                     </div>
                     <div class="row">
                         {% if evalBudget.resources == YES %}
@@ -524,7 +403,6 @@
                         {{ divElt.get(evalBudget.debtsToString, "Debts", "evaluation") }}
                         {% if evalBudget.debts == YES %}
                         <div class="col-md-6">
-                            <div class="py-2 text-secondary">Type de dettes :</div>
                             <ul class="mb-0">
                                 {% for key, value in evalBudget.debtsType %}
                                     {% if attribute(evalBudget, key) %}
@@ -550,25 +428,141 @@
                         </div>
                     {% endif %}
                 </div>
+            {% endfor %}
+        </section>
+    {% endif %}
 
-            {% endif %}
+    <hr/>
+
+    {# Emploi #}
+    <section>
+        <div class="d-flex mb-3">
+            <h2 class="h4">Emploi</h2>
+            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            </span>
+        </div>
+
+        {% set eval_adults_prof = eval_adults|filter(e => e.evalProfPerson) %}
+        {% set nb_adults_prof = eval_adults_prof|length %}
+        {% for evalPerson in eval_adults_prof %}
+            {% set evalProf = evalPerson.evalProfPerson %}
+            <div class="my-3">
+                {% if nb_adults_prof > 1 %}
+                    <div class="row mb-2">
+                        <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                    </div>
+                {% endif %}
+                <div class="row mb-2">
+                    {{ divElt.get(evalProf.schoolLevelToString, "School level", "evaluation") }}
+                    {{ divElt.get(evalProf.profExperienceToString, "Prof experience", "evaluation") }}
+                    {{ divElt.get(evalProf.profStatus ? evalProf.profStatusToString ~ (evalProf.contractType ? " (" 
+                        ~ evalProf.contractTypeToString ~ ")" : "") : "", "Prof status", "evaluation") }}
+                    {{ divElt.get(evalProf.jobCenterId, "Job center id", "evaluation") }}
+                    {{ divElt.get(evalProf.jobType, "Job type", "evaluation") }}
+                    {{ divElt.get(evalProf.contractEndDate ? evalProf.contractEndDate|date("d/m/Y"), "Contract end date", "evaluation") }}
+                    {{ divElt.get(evalProf.workingHours ? evalProf.workingHours ~ (evalProf.nbWorkingHours ? " (nb d'heures : " 
+                        ~ evalProf.nbWorkingHours ~ ")" : "") : "", "Working hours", "evaluation") }}
+                    {{ divElt.get(evalProf.employerName ? evalProf.employerName ~ (evalProf.workPlace ? " | " 
+                        ~ evalProf.workPlace : "") : "", "Employer name", "evaluation") }}
+                    {{ divElt.get(evalProf.transportMeansType ? evalProf.transportMeansTypeToString ~ (evalProf.transportMeans ? " (" 
+                        ~ evalProf.transportMeans ~ ")" : ""): "", "Transport means type", "evaluation") }}
+                    {{ divElt.get(evalProf.rqth in [YES, IN_PROGRESS] ? evalProf.rqthToString ~ (evalProf.endRqthDate ? " (fin de validité : " 
+                        ~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
+                </div>
+                <div class="row my-2">
+                    <div class="col-md-12 justify">{{ evalProf.commentEvalProf }}</div>
+                </div>
+            </div>
         {% endfor %}
     </section>
 
-    {% endif %}
+    <hr/>
+
+    {# Social #}
+    <section>
+        <div class="d-flex mb-3">
+            <h2 class="h4">Social</h2>
+            <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            </span>
+        </div>
+
+        {% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
+        {% set nb_people_social = eval_people_social|length %}
+        {% for evalPerson in eval_people_social %}
+            {% set evalSocial = evalPerson.evalSocialPerson %}
+            {% if evalSocial.rightSocialSecurity or evalSocial.healthProblem == YES or evalSocial.commentEvalSocialPerson  %}
+                <div class="my-3">
+                    {% if nb_people_social > 1 %}
+                        <div class="row mb-2">
+                            <div class="col-md-12"><b>{{ evalPerson.supportPerson.person.fullname }}</b></div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ divElt.get(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
+                            ~ evalSocial.socialSecurityToString : evalSocial.rightSocialSecurityToString, "Right social security", "evaluation") }}
+                        {{ divElt.get(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
+                        {{ divElt.get(evalSocial.childWelfareBackground == YES ? evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
+                    </div>
+                    {% if evalSocial.familyBreakdown == YES or evalSocial.friendshipBreakdown == YES %}
+                        <div class="row mb-2">
+                            {{ divElt.get(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
+                            {{ divElt.get(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
+                        </div>
+                    {% endif %}
+                    {% if evalSocial.healthProblem == YES %}
+                        <div class="row mb-2">
+                            {{ divElt.get(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
+                            <div class="col-md-6">
+                                <ul class="mb-0">
+                                    {% for key, value in evalSocial.healthProblemsType %}
+                                        {% if attribute(evalSocial, key) %}
+                                            <li>{{ value }}</li>
+                                        {% endif %}
+                                    {% endfor %}									 
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        {{ divElt.get(evalSocial.careSupport == YES ? evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
+                            ~ evalSocial.careSupportTypeToString : ""), "Care support", "evaluation") }}
+                        {{ divElt.get(evalSocial.violenceVictim == YES ? evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
+                            " (Violence conjugale)" : ""), "Violence victim", "evaluation") }}
+                    </div>
+                    {% if evalSocial.commentEvalSocialPerson %}
+                        <div class="row mb-2">
+                            <div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if evaluation.evalSocialGroup %}
+            {% set evalSocial = evaluation.evalSocialGroup %}
+            <div class="row mb-2">
+                {{ divElt.get(evalSocial.reasonRequestToString, "Reason request", "evaluation") }}
+                {{ divElt.get(evalSocial.wanderingTimeToString, "Wandering time", "evaluation") }}
+                {{ divElt.get(evalSocial.animal == YES ? evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" : "" ), "Animal", "evaluation") }}
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
+            </div>
+        {% endif %}
+    </section>
 
     {# Logement - Hébergement #}
     {% set evalHousing = evaluation.evalHousingGroup %}
     {% if evalHousing %}
-        <hr>
+        <hr/>
         <section class="mb-5">
             <div class="d-flex mb-3">
                 <h2 class="h4">Logement - Hébergement</h2>
-                {% if theme_color is defined %}
-                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                    </span>
-            {% endif %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
             </div>
             <div class="row mb-3">
                 {{ divElt.get(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
@@ -595,16 +589,16 @@
                     {{ divElt.get(evalHousing.specificities, "Specificities", "evaluation") }}
                 </div>
             {% endif %}
-            {% if evalHousing.syplo %}
+            {% if evalHousing.syplo in [YES, IN_PROGRESS] %}
                 <div class="row mb-3">
                     {{ divElt.get(evalHousing.syploToString ~ (evalHousing.syploDate ? " (" 
                         ~ evalHousing.syploDate|date("d/m/Y") ~ ")" : ""), "Syplo", "evaluation") }}
                     {{ divElt.get(evalHousing.syploId, "Syplo id", "evaluation") }}
                 </div>
             {% endif %}
-            {% if evalHousing.daloCommission %}
+            {% if evalHousing.daloAction in [YES, IN_PROGRESS] %}
                 <div class="row mb-3">
-                    {{ divElt.get(evalHousing.daloCommissionToString ~ (evalHousing.daloRequalifiedDaho == YES ? 
+                    {{ divElt.get(evalHousing.daloActionToString ~ (evalHousing.daloType == YES ? 
                         " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
                         ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
                     {{ divElt.get(evalHousing.daloId, "Dalo id", "evaluation") }}
@@ -613,13 +607,13 @@
                         " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
                 </div>
             {% endif %}
-            {% if evalHousing.collectiveAgreementHousing %}
+            {#{% if evalHousing.collectiveAgreementHousing %}
                 <div class="row mb-3">
                     {{ divElt.get(evalHousing.collectiveAgreementHousingToString ~ (evalHousing.collectiveAgreementHousingDate ? 
                         " (le " ~ evalHousing.collectiveAgreementHousingDate|date("d/m/Y") ~ ")"), "Collective agreement housing", "evaluation") }}
                 </div>
-            {% endif %}
-            {% if evalHousing.hsgActionEligibility %}					
+            {% endif %} #}
+            {% if evalHousing.hsgActionEligibility in [YES, IN_PROGRESS] %}					
                 <div class="row mb-3">
                     {{ divElt.get(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
                     {{ divElt.get(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
@@ -628,7 +622,7 @@
                     {{ divElt.get(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
                 </div>
             {% endif %}
-            {% if evalHousing.expulsionInProgress %}
+            {% if evalHousing.expulsionInProgress == YES %}
                 <div class="row mb-3">
                     {{ divElt.get(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
                     {{ divElt.get(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
@@ -662,21 +656,18 @@
             </div>
 
         </section>
-
     {% endif %}
 
     {# Vie à l'hôtel #}
     {% set evalHotelLife = evaluation.evalHotelLifeGroup %}
     {% if evalHotelLife %}
-        <hr>
+        <hr/>
         <section class="mb-5">
             <div class="d-flex mb-3">
                 <h2 class="h4">Vie à l'hôtel</h2>
-                {% if theme_color is defined %}
-                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                    </span>
-                {% endif %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
             </div>
             {% if evalHotelLife.food %}
                 <div class="row mb-3">
@@ -713,15 +704,13 @@
 
     {# Parcours de vie #}
     {% if evaluation.backgroundPeople %}
-        <hr>
+        <hr/>
         <section class="mb-5">
             <div class="d-flex mb-3">
                 <h2 class="h4">Parcours de vie</h2>
-                {% if theme_color is defined %}
-                    <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-                        class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
-                    </span>
-                {% endif %}
+                <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+                    class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+                </span>
             </div>
             <div class="row mb-3">
                 <div class="col-md-12 justify">{{ evaluation.backgroundPeople }}</div>

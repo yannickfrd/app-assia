@@ -135,25 +135,9 @@
 			</div>
 		{% endif %}
 
-		{% if referent %}
-			<hr>
-			<div class="d-flex mb-3">
-				<h2 class="h4">Référent social</h2>
-				<span class="align-content-center"><a href="{{ path('referent_edit', {'id': referent.id }) }}" 
-					class="text-{{ theme_color }} ml-2" title="Voir la fiche du réferent social"><span class="fas fa-edit"></span></a>
-				</span>
-			</div>	
-			<div class="row mb-2">
-				{{ divElt.get(referent.socialWorker ~ (referent.socialWorker2 ? ' (suppl. : ' ~ referent.socialWorker2 ~ ')' ), "referent.socialWorker") }}
-				{{ divElt.get(referent.name ~ (referent.type ? ' (' ~ referent.typeToString ~ ')'), "referent.name") }}
-				{{ divElt.get(referent.email, "Email") }}
-				{{ divElt.get(referent.email, "Email2") }}
-				{{ divElt.get(referent.phone1, "Phone1") }}
-				{{ divElt.get(referent.phone1, "Phone2") }}
-				{{ divElt.get(referent.address ~ (referent.city ? ' - ' ~ referent.city), "Address") }}
-				{{ divElt.get(referent.comment) }}
-			</div>
-		{% endif %}
+		<hr>
+
+        {% include "app/referent/historyReferents.html.twig" %}
 
 		{# {% endcache %} #}
 

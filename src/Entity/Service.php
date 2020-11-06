@@ -59,10 +59,6 @@ class Service
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $shortName;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="service", orphanRemoval=true, cascade={"persist"})
@@ -198,18 +194,6 @@ class Service
     public function setName(?string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getShortName(): ?string
-    {
-        return $this->shortName;
-    }
-
-    public function setShortName(?string $shortName): self
-    {
-        $this->shortName = $shortName;
 
         return $this;
     }

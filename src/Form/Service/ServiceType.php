@@ -24,7 +24,6 @@ class ServiceType extends AbstractType
             ->add('name', null, [
                 'attr' => ['placeholder' => 'service.name'],
             ])
-            ->add('shortName')
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',

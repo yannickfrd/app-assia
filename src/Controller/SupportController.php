@@ -202,7 +202,7 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'referent' => $supportManager->getReferent($supportGroup, $repoReferent),
+            'referents' => $supportManager->getReferents($supportGroup, $repoReferent),
             'nbNotes' => $supportManager->getNbNotes($supportGroup, $repoNote),
             'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
             'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $repoDocument),
