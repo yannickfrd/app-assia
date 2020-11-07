@@ -12,7 +12,7 @@ export default class UpdateEvaluation {
         this.formElt = document.querySelector('form[name="evaluation"]')
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
         this.editMode = document.querySelector('div[data-edit-mode]').getAttribute('data-edit-mode')
-        this.autoSave = new AutoSave(this.sendRequest.bind(this), this.formElt, 5 * 60, 20)
+        this.autoSave = new AutoSave(this.sendRequest.bind(this), this.formElt, 5 * 60, 20,  ['SELECT', 'INPUT', 'TEXTAREA'])
         this.init()
     }
 

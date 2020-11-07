@@ -50,6 +50,7 @@ class SubServiceType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
+                    'class' => 'justify',
                     'placeholder' => 'service.comment.placeholder',
                 ],
             ]);

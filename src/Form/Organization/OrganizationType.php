@@ -16,6 +16,7 @@ class OrganizationType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 5,
+                    'class' => 'justify',
                     'placeholder' => 'Description...',
                 ],
             ]);

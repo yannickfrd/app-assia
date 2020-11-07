@@ -13,19 +13,34 @@ class EvalHotelLifeGroupType extends AbstractType
     {
         $builder
         ->add('food', null, [
-                'attr' => ['rows' => 5],
+                'attr' => [
+                        'rows' => 5,
+                        'class' => 'justify',
+                ],
         ])
         ->add('clothing', null, [
-                'attr' => ['rows' => 5],
+                'attr' => [
+                        'rows' => 5,
+                        'class' => 'justify',
+                ],
         ])
         ->add('roomMaintenance', null, [
-                'attr' => ['rows' => 5],
+                'attr' => [
+                        'rows' => 5,
+                        'class' => 'justify',
+                ],
         ])
         ->add('otherHotelLife', null, [
-                'attr' => ['rows' => 5],
+                'attr' => [
+                        'rows' => 5,
+                        'class' => 'justify',
+                ],
         ])
         ->add('commentHotelLife', null, [
-                'attr' => ['rows' => 5],
+                'attr' => [
+                        'rows' => 5,
+                        'class' => 'justify',
+                ],
         ]);
     }
 

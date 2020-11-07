@@ -168,6 +168,27 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne une note.
+     */
+    public function findNote(int $id): ?Note
+    {
+        return $this->createQueryBuilder('n')->select('n')
+            ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('n.id = :id')
+            ->setParameter('id', $id)
+
+            ->orderBy('sp.head', 'DESC')
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getSingleResult();
+    }
+
+    /**
      * Compte le nombre de notes.
      *
      * @return mixed

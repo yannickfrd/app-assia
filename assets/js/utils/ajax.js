@@ -6,9 +6,15 @@ import Loader from './loader'
  */
 export default class Ajax {
 
-    constructor(loader = null) {
+    /**
+     * @param {Object} loader 
+     * @param {Numer} delayError in seconds 
+     */
+    constructor(loader = null, delayError = 20) {
         this.loader = loader ?? new Loader()
         this.loading = false
+        this.delayError = delayError
+        this.countdownID = null
         // this.timeSend = null // Temp pour test
         // this.timeResp = null // Temp pour test
     }
@@ -29,20 +35,18 @@ export default class Ajax {
             method: method, 
             body: data
         }).then(response => this.getResponse(response, callback) 
-        ).catch(error => this.error(error))
+        ).catch(error => this.getError(`Une erreur s'est produite (${error}).`))
     }
 
     /**
      * Envoie un message d'erreur après 10 secondes si pas de réponse du serveur.
      */
     timer() {
-        setTimeout(() => {
+        this.countdownID = setTimeout(() => {
             if (this.loading === true) {
-                this.loading = false
-                this.loader.off()
-                console.error('Pas de réponse du serveur')
+                this.getError('Pas de réponse du serveur. Veuillez réessayer.')
             }
-        }, 15000);
+        }, this.delayError * 1000)
     }
 
     /**
@@ -53,8 +57,9 @@ export default class Ajax {
     getResponse(response, callback) {
         this.loading = false
         this.loader.off()
+        clearInterval(this.countdownID)
         if (response.status === 403) {
-            new MessageFlash('Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.');
+            new MessageFlash('Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
             throw new Error('403 Forbidden access.')
         }
 
@@ -63,10 +68,10 @@ export default class Ajax {
         switch (response.headers.get('content-type')) {
             case 'application/json':
                 finalResponse = response.json()
-                break;
+                break
             default:
                 finalResponse = response.text()
-                break;
+                break
         }
 
         finalResponse.then((data) => {
@@ -76,12 +81,13 @@ export default class Ajax {
 
     /**
      * Donne l'erreur.
-     * @param {String} error 
+     * @param {String} msg 
      */
-    getError(error) {
+    getError(msg) {
         this.loading = false
         this.loader.off()
-        console.error(error)
-        new MessageFlash('danger', `Une erreur s'est produite (${error}).`)
+        clearInterval(this.countdownID)
+        console.error(msg)
+        new MessageFlash('danger', msg)
     }
 }

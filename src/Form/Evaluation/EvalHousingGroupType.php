@@ -230,6 +230,7 @@ class EvalHousingGroupType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
+                    'class' => 'justify',
                     'placeholder' => 'evalHousingGroup.comment',
                 ],
             ]);

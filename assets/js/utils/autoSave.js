@@ -5,26 +5,31 @@ export default class AutoSave {
 
 /**
  * @param {CallableFunction} callback 
- * @param {HTMLElement} htmlElt 
+ * @param {HTMLElement} targetElt 
  * @param {Number} delay in secondes
  * @param {Number} minCount 
  */
-    constructor(callback, htmlElt, delay = 10 * 60, minCount = 10) {
+    constructor(callback, targetElt = document, delay = 10 * 60, minCount = 10, validTargets = null) {
         this.callback = callback
-        this.htmlElt = htmlElt
+        this.targetElt = targetElt
         this.delay = delay * 1000
         this.minCount = minCount
+        this.validTargets = validTargets
         this.active = false
         this.count = 0
-
-        this.htmlElt.addEventListener('keydown', () => this.counter())
-        this.htmlElt.addEventListener('click', () => this.counter())
+        this.addEvents()
     }
+
     /**
-     * Compte le nombre de saisie.
+     * Ajoute les eventListener.
      */
-    counter() {
-        this.count++
+    addEvents() {
+        this.targetElt.addEventListener('keydown', () => this.counter())
+        this.targetElt.addEventListener('click', e => {
+            if (null === this.validTargets || this.validTargets.indexOf(e.target.nodeName) != -1) {
+                this.counter()
+            }
+        })
     }
 
     /**
@@ -33,12 +38,20 @@ export default class AutoSave {
     init() {
         clearInterval(this.countdownID)
         this.countdownID = setTimeout(this.init.bind(this), this.delay)
+
         if (this.count > this.minCount) {
             this.count = 0
             this.active = true
             console.log('Auto save...')
-            this.callback();
+            this.callback()
         }
+    }
+
+    /**
+     * Compte le nombre de saisie.
+     */
+    counter() {
+        this.count++
     }
 
     /**

@@ -19,6 +19,7 @@ https://demo.esperer95.app
 ## Version 2.6.0 - 07/11/2020
 - Créé une classe de gestion des sauvegardes automatiques (pour evaluation sociale et note).
 - Créé une nouvelle classe Ajax.
+- Modif affichage des textarea en justifié.
 
 ## Version 2.5.0 - 06/11/2020
 - Refonte de l'export de l'évaluation sociale en note et au format Word.

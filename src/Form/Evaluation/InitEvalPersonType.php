@@ -105,6 +105,7 @@ class InitEvalPersonType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
+                    'class' => 'justify',
                     'placeholder' => 'initEvalPerson.comment',
                 ],
             ]);

@@ -39,6 +39,25 @@ class RdvRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne un rendez-vous.
+     */
+    public function findRdv(int $id): ?Rdv
+    {
+        return $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('r.id = :id')
+            ->setParameter('id', $id)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getSingleResult();
+    }
+
+    /**
      * Donne tous les RDVs à exporter.
      */
     public function findRdvsToExport(RdvSearch $search): ?array

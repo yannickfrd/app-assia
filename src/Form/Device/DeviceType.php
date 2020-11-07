@@ -5,9 +5,9 @@ namespace App\Form\Device;
 use App\Entity\Device;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DeviceType extends AbstractType
 {
@@ -53,12 +53,6 @@ class DeviceType extends AbstractType
                 'attr' => [
                     'rows' => 5,
                     'placeholder' => 'service.comment.placeholder',
-                ],
-            ])
-            ->add('comment', null, [
-                'attr' => [
-                    'rows' => 5,
-                    'placeholder' => 'device.comment.placeholder',
                 ],
             ]);
     }

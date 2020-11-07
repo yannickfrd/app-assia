@@ -86,6 +86,54 @@
         {% endfor %}
     {% endif %}
 
+    {# Identité - Papier #}
+    <h3 class="h4" style="{{ style_h3 }}">Situation administrative</h3>
+
+    {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
+    {% set nb_adults_admin = eval_adults_admin|length %}
+    {% for evalPerson in eval_adults_admin %}
+        {% set evalAdm = evalPerson.evalAdmPerson %}
+        {% if nb_adults_admin > 1 %}
+            <p style="{{ style_h4 }}"><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</p>
+        {% endif %}
+        {{ pElt.get(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
+            ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
+        {{ pElt.get(evalAdm.arrivalDate ? evalAdm.arrivalDate|date("d/m/Y"), "Arrival date", "evaluation") }}
+        {{ pElt.get(evalAdm.paper == YES and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
+        {{ pElt.get(evalAdm.asylumBackground == YES ? (evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
+            evalAdm.asylumBackgroundToString), "Asylum background", "evaluation") }}
+        {{ pElt.get(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
+            ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date"  ) }}
+        {{ pElt.get(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
+        {{ pElt.get(evalAdm.workRightToString, "Work right", "evaluation") }}
+        <div style="text-align: justify;">{{ pElt.get(evalAdm.commentEvalAdmPerson) }}</div>
+    {% endfor %}
+
+    {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %} {# si typologie familiale avec enfants #}
+        <br/>
+        <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
+            <thead>
+                <tr style="background-color: #e9ecef; font-weight: bold;">
+                    <th scope="col"> Enfants</th>
+                    <th> Nationalité</th>
+                    <th> Papier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for evalPerson in eval_children %}
+                    {% set evalAdm = evalPerson.evalAdmPerson %}
+                    {% if evalAdm %}
+                        <tr>
+                            <td scope="row"> {{ evalPerson.supportPerson.person.fullname }}</td>
+                            <td> {{ evalAdm.nationalityToString }}</td>
+                            <td> {{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
     {# Famille #}
     <h3 class="h4" style="{{ style_h3 }}">Situation familiale</h3>
 
@@ -143,54 +191,6 @@
     {% endif %}
 
     <br/>
-
-    {# Identité - Papier #}
-    <h3 class="h4" style="{{ style_h3 }}">Situation administrative</h3>
-
-    {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
-    {% set nb_adults_admin = eval_adults_admin|length %}
-    {% for evalPerson in eval_adults_admin %}
-        {% set evalAdm = evalPerson.evalAdmPerson %}
-        {% if nb_adults_admin > 1 %}
-            <p style="{{ style_h4 }}"><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</p>
-        {% endif %}
-        {{ pElt.get(evalAdm.nationality ? evalAdm.nationalityToString ~ (evalAdm.country ? ' (' 
-            ~ evalAdm.country ~ ')' : "") : "", "Nationality", "evaluation") }}
-        {{ pElt.get(evalAdm.arrivalDate ? evalAdm.arrivalDate|date("d/m/Y"), "Arrival date", "evaluation") }}
-        {{ pElt.get(evalAdm.paper == YES and evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString, "Paper", "evaluation") }}
-        {{ pElt.get(evalAdm.asylumBackground == YES ? (evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
-            evalAdm.asylumBackgroundToString), "Asylum background", "evaluation") }}
-        {{ pElt.get(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
-            ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date"  ) }}
-        {{ pElt.get(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
-        {{ pElt.get(evalAdm.workRightToString, "Work right", "evaluation") }}
-        <div style="text-align: justify;">{{ pElt.get(evalAdm.commentEvalAdmPerson) }}</div>
-    {% endfor %}
-
-    {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %} {# si typologie familiale avec enfants #}
-        <br/>
-        <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
-            <thead>
-                <tr style="background-color: #e9ecef; font-weight: bold;">
-                    <th scope="col"> Enfants</th>
-                    <th> Nationalité</th>
-                    <th> Papier</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for evalPerson in eval_children %}
-                    {% set evalAdm = evalPerson.evalAdmPerson %}
-                    {% if evalAdm %}
-                        <tr>
-                            <td scope="row"> {{ evalPerson.supportPerson.person.fullname }}</td>
-                            <td> {{ evalAdm.nationalityToString }}</td>
-                            <td> {{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
 
     {# Situation financière #}
     {% set eval_people_budget = eval_people|filter(e => e.evalBudgetPerson) %}
@@ -509,6 +509,13 @@
                 
     {% endif %}
 
+    {# Parcours de vie #}
+    {% if evaluation.backgroundPeople %}
+        <br/>
+        <h3 class="h4" style="{{ style_h3 }}">Parcours de vie</h3>
+        <div style="text-align: justify;">{{ pElt.get(evaluation.backgroundPeople) }}</div>
+    {% endif %}
+
     {# Vie à l'hôtel #}
     {% set evalHotelLife = evaluation.evalHotelLifeGroup %}
     {% if evalHotelLife %}
@@ -521,13 +528,6 @@
             {{ pElt.get(evalHotelLife.otherHotelLife, "Other hotel life", "evaluation") }}
             {{ pElt.get(evalHotelLife.commentHotelLife, "Comment hotel life", "evaluation") }}
         </div>
-    {% endif %}
-
-    {# Parcours de vie #}
-    {% if evaluation.backgroundPeople %}
-        <br/>
-        <h3 class="h4" style="{{ style_h3 }}">Parcours de vie</h3>
-        <div style="text-align: justify;">{{ pElt.get(evaluation.backgroundPeople) }}</div>
     {% endif %}
 
     {# Signature #}

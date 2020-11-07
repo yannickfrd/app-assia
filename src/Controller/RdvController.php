@@ -223,8 +223,10 @@ class RdvController extends AbstractController
      *
      * @Route("rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv(Rdv $rdv): Response
+    public function getRdv(int $id): Response
     {
+        $rdv = $this->repo->findRdv($id);
+
         $this->denyAccessUnlessGranted('VIEW', $rdv);
 
         // Obtenir le nom de la personne suivie

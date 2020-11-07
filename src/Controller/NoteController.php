@@ -15,7 +15,6 @@ use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
 use App\Security\CurrentUserService;
-use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportManager;
@@ -217,11 +216,14 @@ class NoteController extends AbstractController
     /**
      * @Route("note/{id}/export", name="note_export", methods="GET")
      */
-    public function exportNote(Note $note, ExportWord $exportWord, ExportPDF $exportPDF): Response
+    public function exportNote(int $id, ExportWord $exportWord): Response
     {
-        // return $exportPDF->init();
+        $note = $this->repoNote->findNote($id);
+        $supportGroup = $note->getSupportGroup();
+        $fullname = $this->getHeadSupportPerson($supportGroup);
 
-        return $exportWord->export($note->getContent(), $note->getTitle(), $note->getSupportGroup()->getService()->getPole()->getLogoPath());
+        return $exportWord->export($note->getContent(), $note->getTitle(), $supportGroup->getService()->getPole()->getLogoPath(), $fullname);
+        // return $exportPDF->init();
     }
 
     /**
@@ -287,5 +289,19 @@ class NoteController extends AbstractController
         }
 
         return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
+    }
+
+    /**
+     * Donne le demandeur principal du suivi.
+     */
+    protected function getHeadSupportPerson(SupportGroup $supportGroup): ?string
+    {
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            if (true === $supportPerson->getHead()) {
+                return $supportPerson->getPerson()->getFullname();
+            }
+        }
+
+        return null;
     }
 }

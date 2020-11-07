@@ -16,7 +16,7 @@ export default class SearchPerson {
         this.lastnameInputElt = document.getElementById('lastname')
         this.firstnameInputElt = document.getElementById('firstname')
         this.birthdateInputElt = document.getElementById('birthdate')
-        this.tableElt = document.querySelector('div.table-responsive');
+        this.tableElt = document.querySelector('div.table-responsive')
         this.listResultElt = document.getElementById('list-result-people')
         this.groupId = this.listResultElt.getAttribute('data-group-id')
         this.helperSearchElt = document.querySelector('.js-helper-search')
@@ -164,7 +164,7 @@ export default class SearchPerson {
                 title="${person.gender == 1 ? 'Femme' : 'Homme'}"></span>
             </td>`
          
-        trElt.querySelector('td').innerHTML = this.addAnchorElt(person);
+        trElt.querySelector('td').innerHTML = this.addAnchorElt(person)
 
         if (this.groupId) {
             const aElt = trElt.querySelector('a')

@@ -47,16 +47,16 @@
 			{% if support.service.justice == YES %}
 				{% include "app/evaluation/evaluationJustice.html.twig" %}
 			{% endif %}
-			{% include "app/evaluation/evaluationFamily.html.twig" %}
 			{% include "app/evaluation/evaluationAdm.html.twig" %}
+			{% include "app/evaluation/evaluationFamily.html.twig" %}
 			{% include "app/evaluation/evaluationBudget.html.twig" %}
 			{% include "app/evaluation/evaluationProf.html.twig" %}
 			{% include "app/evaluation/evaluationSocial.html.twig" %}
 			{% include "app/evaluation/evaluationHousing.html.twig" %}
+			{% include "app/evaluation/backgroundPeople.html.twig" %}
 			{% if support.service.id == constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
 				{% include "app/evaluation/evaluationHotelLife.html.twig" %}
 			{% endif %}
-				{% include "app/evaluation/backgroundPeople.html.twig" %}
 		</div>
 
 		<div class="form-group row">

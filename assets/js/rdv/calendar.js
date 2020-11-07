@@ -208,8 +208,7 @@ export default class Calendar {
             }
         }
         if (data.msg) {
-            console.log('hide');
-            this.modalElt.hide();
+            this.modalElt.hide()
             new MessageFlash(data.alert, data.msg)
         }
         this.loader.off()

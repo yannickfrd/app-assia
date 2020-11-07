@@ -45,7 +45,7 @@ export default class SupportDocuments {
             documentElt.addEventListener('click', e => this.getDocument(e, documentElt))
             const btnDeleteElt = documentElt.querySelector('button.js-delete')
             btnDeleteElt.addEventListener('click', () => {
-                this.modalDeleteElt.show();
+                this.modalDeleteElt.show()
                 this.documentId = Number(btnDeleteElt.parentElement.parentElement.id.replace('document-', ''))
                 this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
             })

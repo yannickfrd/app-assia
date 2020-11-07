@@ -25,18 +25,18 @@ class ExportWord
     /**
      * Export file.
      */
-    public function export(string $content, ?string $title = 'document', ?string $logoPath = null)
+    public function export(string $content, ?string $title = 'document', ?string $logoPath = null, string $info = null)
     {
         /** * @var Section $section */
         $section = $this->addSection();
 
-        $this->addHeader($section, $title, $logoPath);
+        $this->addHeader($section, $title, $logoPath, $info);
         $this->addFooter($section);
         $this->addTitle($section, $title);
         $this->addContent($section, $content);
         $this->setDefaultStyleDocument();
 
-        return $this->save($title);
+        return $this->save($title, $info);
     }
 
     /**
@@ -57,7 +57,7 @@ class ExportWord
     /**
      * Add first page header.
      */
-    protected function addHeader(Section $section, string $title, ?string $logoPath = null): void
+    protected function addHeader(Section $section, string $title, ?string $logoPath = null, ?string $info = null): void
     {
         // Add first page header
         $header = $section->addHeader(HEADER::FIRST);
@@ -71,7 +71,7 @@ class ExportWord
 
         // Add sub page header
         $headerSub = $section->addHeader();
-        $headerSub->addPreserveText('ESPERER 95 | '.$title, $this->getFontStyleFooter(), [
+        $headerSub->addPreserveText('ESPERER 95 | '.$title.' | '.$info, $this->getFontStyleFooter(), [
             'alignment' => 'right',
         ]);
     }
@@ -181,9 +181,9 @@ class ExportWord
     /**
      * Save the document.
      */
-    public function save(?string $title, bool $download = true): ?StreamedResponse
+    public function save(?string $title, string $info, bool $download = true): ?StreamedResponse
     {
-        $title = \str_replace([' ', '/', '\''], '-', $title ? $title : 'document');
+        $title = \str_replace([' ', '/', '\''], '-', ($title ? $title : 'document').'-'.$info);
         $title = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $title);
 
         // Settings::setPdfRendererPath('..\vendor\dompdf\dompdf');

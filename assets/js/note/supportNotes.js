@@ -82,8 +82,8 @@ export default class SupportNotes {
      */
     goOutModal(e) {
         if (e.target === this.modalNoteElt && this.autoSave.count > 0) {
-            if (window.confirm("Attention, vous n'avez pas enregistrer les modifications.\n Voulez-vous les enregistrer ?")) {
-                this.saveNote()
+            if (window.confirm("Attention, vous n'avez pas enregistrer les modifications. \nContinuez sans sauvegarder ?")) {
+                this.modalElt.hide()
             }
         }
     }
@@ -132,7 +132,7 @@ export default class SupportNotes {
      * @param {HTMLElement} noteElt 
      */
     getNote(noteElt) {
-        this.modalElt.show();
+        this.modalElt.show()
 
         this.noteElt = noteElt
         this.contentNoteElt = noteElt.querySelector('.card-text')
@@ -197,7 +197,7 @@ export default class SupportNotes {
     }
 
     /**
-     * Réponse du serveur
+     * Réponse du serveur.
      * @param {Object} response 
      */
     responseAjax(response) {
@@ -208,19 +208,19 @@ export default class SupportNotes {
                     this.createNote(response.data)
                     break
                 case 'update':
-                    if (!this.autoSave) {
+                    if (!this.autoSave.active) {
                         this.updateNote(response.data)
                     }
                     break
                 case 'delete':
                     document.getElementById('note-' + this.cardId).remove()
                     this.updateCounts(-1)
-                    this.modalElt.hide();
+                    this.modalElt.hide()
                     break
             }
 
-            if (!this.autoSave) {
-                this.modalElt.hide();
+            if (!this.autoSave.active) {
+                this.modalElt.hide()
                 new MessageFlash(response.alert, response.msg)
                 this.loader.off()
             }
@@ -288,7 +288,7 @@ export default class SupportNotes {
     }
 
     /**
-     * Met à jour le copteur du nombre de notes.
+     * Met à jour le compteur du nombre de notes.
      * @param {Number} value 
      */
     updateCounts(value) {
