@@ -39,7 +39,7 @@ class ContributionControllerTest extends WebTestCase
         $this->contribution = $this->dataFixtures['contribution1'];
     }
 
-    public function testViewListContributionsIsUp()
+    public function testviewListContributionsIsUp()
     {
         $this->client->request('GET', $this->generateUri('contributions'));
 

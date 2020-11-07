@@ -33,7 +33,7 @@ class AvdlControllerTest extends WebTestCase
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
     }
 
-    public function testViewListAvdlSupportsIsUp()
+    public function testviewListAvdlSupportsIsUp()
     {
         $this->client->request('GET', $this->generateUri('avdl_supports'));
 

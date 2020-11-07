@@ -39,7 +39,7 @@ class RdvControllerTest extends WebTestCase
         $this->rdv = $this->dataFixtures['rdv1'];
     }
 
-    public function testViewListRdvsIsUp()
+    public function testviewListRdvsIsUp()
     {
         $this->client->request('GET', $this->generateUri('rdvs'));
 

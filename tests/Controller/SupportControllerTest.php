@@ -36,7 +36,7 @@ class SupportControllerTest extends WebTestCase
         $this->supportGroup = $this->dataFixtures['supportGroup1'];
     }
 
-    public function testViewListSupportsIsUp()
+    public function testviewListSupportsIsUp()
     {
         $this->client->request('GET', $this->generateUri('supports'));
 
