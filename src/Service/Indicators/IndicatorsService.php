@@ -225,55 +225,55 @@ class IndicatorsService
         $yesterdayIndicator = $indicator ?? $this->createIndicator($totay);
 
         return [
-            'Nombre de personnes créées' => [
+            'Nb. de personnes créées' => [
                 'all' => $this->repoPerson->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedPeople(),
                 'today' => $this->repoPerson->countPeople($criteriaByCreation),
             ],
-            'Nombre de groupes créés' => [
+            'Nb. de groupes créés' => [
                 'all' => $this->repoGroupPeople->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedGroups(),
                 'today' => $this->repoGroupPeople->countGroups($criteriaByCreation),
             ],
-            'Nombre de suivis créés' => [
+            'Nb. de suivis créés' => [
                 'all' => $allSupports = $this->repoSupportGroup->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedSupportsGroup(),
                 'today' => $this->repoSupportGroup->countSupports($criteriaByCreation),
             ],
-            'Nombre de suivis mis à jour' => [
+            'Nb. de suivis mis à jour' => [
                 'all' => $allSupports,
                 'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
                 'today' => $this->repoSupportGroup->countSupports($criteriaByUpdate),
             ],
-            'Nombre de suivis en cours' => $this->repoSupportGroup->count([
+            'Nb. de suivis en cours' => $this->repoSupportGroup->count([
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
             ]),
-            'Nombre de notes créées' => [
+            'Nb. de notes créées' => [
                 'all' => $allNotes = $this->repoNote->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedNotes(),
                 'today' => $this->repoNote->countNotes($criteriaByCreation),
             ],
-            'Nombre de notes mises à jour' => [
+            'Nb. de notes mises à jour' => [
                 'all' => $allNotes,
                 'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
                 'today' => $this->repoNote->countNotes($criteriaByUpdate),
             ],
-            'Nombre de RDVs créés' => [
+            'Nb. de RDVs créés' => [
                 'all' => $this->repoRdv->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedRdvs(),
                 'today' => $this->repoRdv->countRdvs($criteriaByCreation),
             ],
-            'Nombre de documents créés' => [
+            'Nb. de documents créés' => [
                 'all' => $this->repoDocument->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedDocuments(),
                 'today' => $this->repoDocument->countDocuments($criteriaByCreation),
             ],
-            'Nombre de paiements créés' => [
+            'Nb. de paiements créés' => [
                 'all' => $this->repoContribution->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedContributions(),
                 'today' => $this->repoContribution->countContributions($criteriaByCreation),
             ],
-            'Nombre de connexions' => [
+            'Nb. de connexions' => [
                 'all' => $this->repoConnection->count([]),
                 'yesterday' => $yesterdayIndicator->getNbConnections(),
                 'today' => $this->repoConnection->countConnections($criteriaByCreation),
