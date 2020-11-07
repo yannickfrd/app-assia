@@ -64,14 +64,12 @@ export default class Ajax {
         }
 
         let finalResponse = null
+        const contentType = response.headers.get('content-type')
 
-        switch (response.headers.get('content-type')) {
-            case 'application/json':
-                finalResponse = response.json()
-                break
-            default:
-                finalResponse = response.text()
-                break
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            finalResponse = response.json()
+        } else {
+            finalResponse = response.text()
         }
 
         finalResponse.then((data) => {
