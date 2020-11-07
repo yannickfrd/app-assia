@@ -1,5 +1,5 @@
 import Loader from '../utils/loader'
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 
 /**
  * Recherche instannée Ajax.
@@ -8,7 +8,7 @@ export default class SearchPerson {
 
     constructor(lengthSearch = 3, time = 500) {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         
         this.formElt = document.querySelector('#people_search')
         this.formModal = document.querySelector('.modal-content form')
@@ -101,7 +101,7 @@ export default class SearchPerson {
         const formData = new FormData(this.formElt)
         const paramsToString = new URLSearchParams(formData).toString()
         if (paramsToString != this.paramsToString) {
-            this.ajaxRequest.send('POST', '/people/search', this.response.bind(this), true, paramsToString)
+            this.ajax.send('POST', '/people/search', this.response.bind(this), new FormData(this.formElt))
             this.loader.on()
             this.paramsToString = paramsToString
         }

@@ -30,7 +30,7 @@ trait ErrorMessageTrait
             'code' => 200,
             'alert' => 'danger',
             'msg' => 'Une erreur s\'est produite. '.join(' ', $msg),
-        ], 200);
+        ]);
     }
 
     // /**

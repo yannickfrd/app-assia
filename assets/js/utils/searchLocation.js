@@ -1,4 +1,4 @@
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 import Loader from './loader'
 
 /**
@@ -10,7 +10,7 @@ export default class SearchLocation {
         this.containerElt = document.getElementById(containerId)
         if (this.containerElt) {
             this.loader = new Loader()
-            this.ajaxRequest = new AjaxRequest(this.loader)
+            this.ajax = new Ajax(this.loader)
             this.searchElt = this.containerElt.querySelector('.js-search')
             this.addressElt = this.containerElt.querySelector('.js-address')
             this.cityElt = this.containerElt.querySelector('.js-city')
@@ -77,7 +77,7 @@ export default class SearchLocation {
                 url = 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
             }
 
-            this.ajaxRequest.send('GET', url, this.responseAjax.bind(this), true)
+            this.ajax.send('GET', url, this.responseAjax.bind(this))
         }
     }
 

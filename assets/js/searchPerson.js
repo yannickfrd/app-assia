@@ -1,5 +1,5 @@
 import Loader from './utils/loader'
-import AjaxRequest from './utils/ajaxRequest'
+import Ajax from './utils/ajax'
 
 /**
  * Recherche instannée Ajax.
@@ -8,7 +8,7 @@ export default class SearchPerson {
 
     constructor(lengthSearch = 3, time = 500) {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.searchElt = document.getElementById('search-person')
         this.resultsSearchElt = document.getElementById('results_search')
         this.lengthSearch = lengthSearch
@@ -40,7 +40,7 @@ export default class SearchPerson {
         if (valueSearch.length >= this.lengthSearch) {
             this.loader.on()
             let url = '/search/person?search=' + valueSearch
-            this.ajaxRequest.send('GET', url, this.response.bind(this), true)
+            this.ajax.send('GET', url, this.response.bind(this))
         }
     }
 

@@ -2,6 +2,7 @@ import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
 import { Modal } from 'bootstrap'
+import Ajax from '../utils/ajax'
 
 /**
  * Classe de gestion des documents.
@@ -10,6 +11,7 @@ export default class SupportDocuments {
 
     constructor() {
         this.loader = new Loader()
+        this.ajax = new Ajax(this.loader)
         this.modalElt = new Modal(document.getElementById('modal-document'))
         this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
         this.selectType = new SelectType()
@@ -57,7 +59,7 @@ export default class SupportDocuments {
 
         this.modalConfirmElt.addEventListener('click', e => {
             e.preventDefault()
-            this.sendRequest('GET', this.modalConfirmElt.getAttribute('data-url'))
+            this.ajax.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this))
         })
     }
 
@@ -183,7 +185,7 @@ export default class SupportDocuments {
         const formData = new FormData(this.formDocumentElt)
         formData.append('file', this.documentFileInput.files)
         
-        this.sendRequest('POST', url, formData)
+        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
     }
 
     /**
@@ -195,34 +197,8 @@ export default class SupportDocuments {
         e.preventDefault()
         this.loader.on()
         if (window.confirm('Voulez-vous vraiment supprimer ce document ?')) {
-            this.sendRequest('GET', url)
+            this.ajax.send('GET', url, this.responseAjax.bind(this))
         }
-    }
-
-    /**
-     * Envoie la requête Ajax.
-     * @param {String} url 
-     * @param {String} type 
-     * @param {Object} data 
-     */
-    async sendRequest(type = 'GET', url, data = null) {
-        this.loader.on()
-
-        await fetch(url, {
-            method: type, 
-            body: data
-        }).then(response => {
-            if (response.status === 403) {
-                new MessageFlash('Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
-                throw new Error('403 Forbidden access.')
-            }
-            response.json().then((data) => {
-                return this.responseAjax(data)
-            })
-        }).catch(error => {
-            this.loader.off()
-            console.error(error)
-        })
     }
 
     /**

@@ -1,14 +1,15 @@
+import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 
 export default class ExportData {
 
-    constructor(ajaxRequest) {
-        this.ajaxRequest = ajaxRequest
+    constructor() {
         this.formElt = document.querySelector('#form-search>form')
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
         this.resultsElt = document.getElementById('results')
         this.loader = new Loader()
+        this.ajax = new Ajax(this.loader);
         this.init()
     }
 
@@ -17,9 +18,7 @@ export default class ExportData {
             btnElt.addEventListener('click', e => {
                 this.loader.on()
                 e.preventDefault()
-
-                let formToString = new URLSearchParams(new FormData(this.formElt)).toString()
-                this.ajaxRequest.send('POST', btnElt.getAttribute('data-url'), this.response.bind(this), true, formToString)
+                this.ajax.send('POST', btnElt.getAttribute('data-url'), this.response.bind(this), new FormData(this.formElt))
 
                 if (btnElt.id === 'export') {
                     this.loader.off()

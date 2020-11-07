@@ -1,4 +1,5 @@
 import SelectType from '../utils/selectType'
+import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
 
 /**
@@ -9,6 +10,7 @@ export default class SwitchServiceSupport {
     constructor() {
         this.selectType = new SelectType()
         this.loader = new Loader()
+        this.ajax = new Ajax(this.loader)
 
         this.formElt = document.getElementById('modal-new-support')
         this.serviceSelectElt = document.getElementById('support_service')
@@ -42,26 +44,7 @@ export default class SwitchServiceSupport {
      */
     changeService() {
         if (this.selectType.getOption(this.serviceSelectElt)) {
-            this.sendAjaxRequest()
-        }
-    }
-
-    /**
-     * Envoie la requête Ajax.
-     */
-    async sendAjaxRequest() {
-        if (this.selectType.getOption(this.serviceSelectElt)) {
-            this.loader.on()
-            await fetch('/support/change_service', {
-                method: 'POST',
-                body: new URLSearchParams(this.getData())
-            }).then(response => {
-                response.text().then((data) => {
-                    return this.responseAjax(data)
-                })
-            }).catch(error => {
-            console.error('Error : ' + error)
-            })
+            this.ajax.send('POST', '/support/change_service', this.responseAjax.bind(this), new URLSearchParams(this.getData()))
         }
     }
 

@@ -1,4 +1,4 @@
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 import ValidationForm from '../utils/validationForm'
 
 // Création automatique du login de l'utilisateur
@@ -19,7 +19,7 @@ export default class Username {
         this.confirmPasswordLabelElt = document.querySelector('label[for=' + formName + '_confirmPassword]')
         this.confirmPasswordInputElt = document.getElementById(formName + '_confirmPassword')
 
-        this.ajaxRequest = new AjaxRequest()
+        this.ajax = new Ajax()
         this.validationForm = new ValidationForm()
         this.init()
     }
@@ -60,7 +60,7 @@ export default class Username {
     }
 
     sendAjaxRequest() {
-        this.ajaxRequest.send('GET', '/user/username_exists?value=' + this.usernameInputElt.value, this.response.bind(this), true)
+        this.ajax.send('GET', '/user/username_exists?value=' + this.usernameInputElt.value, this.response.bind(this))
     }
 
     /**

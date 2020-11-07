@@ -1,4 +1,4 @@
-import AjaxRequest from './ajaxRequest'
+import Ajax from './ajax'
 import Loader from './loader'
 import SwitchServiceSupport from '../support/switchServiceSupport'
 import { Modal } from 'bootstrap'
@@ -10,7 +10,7 @@ export default class NewForm {
 
     constructor(btnId, containerId, modalId) {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.modalElt = new Modal(document.getElementById(modalId))
         this.btnElt = document.getElementById(btnId)
         this.containerElt = document.getElementById(containerId)
@@ -34,7 +34,7 @@ export default class NewForm {
      */
     sendRequest(btnElt) {
         this.loader.on()
-        this.ajaxRequest.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this), true), {
+        this.ajax.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this)), {
             once: true
         }
     }

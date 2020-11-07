@@ -1,4 +1,4 @@
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
@@ -10,7 +10,7 @@ export default class SupportContributions {
 
     constructor() {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.selectType = new SelectType()
         this.validationForm = new ValidationForm()
         this.parametersUrl = new ParametersUrl()
@@ -110,7 +110,7 @@ export default class SupportContributions {
 
         this.modalConfirmElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajaxRequest.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this), true)
+            this.ajax.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this))
         })
 
         this.typeSelect.addEventListener('input', () => {
@@ -129,7 +129,7 @@ export default class SupportContributions {
             e.preventDefault()
             this.loader.on()
             if (this.resourcesChecked === false) {
-                this.ajaxRequest.send('GET', this.btnNewElt.getAttribute('data-url'), this.responseAjax.bind(this), true)
+                this.ajax.send('GET', this.btnNewElt.getAttribute('data-url'), this.responseAjax.bind(this))
             } else {
                 this.getResources()
             }
@@ -446,7 +446,7 @@ export default class SupportContributions {
         this.initForm()
         this.checkType()
 
-        this.ajaxRequest.send('GET', '/contribution/' + id + '/get', this.responseAjax.bind(this), true)
+        this.ajax.send('GET', '/contribution/' + id + '/get', this.responseAjax.bind(this))
     }
 
     /**
@@ -486,9 +486,7 @@ export default class SupportContributions {
     tryToSave() {
         this.loader.on()
         if (this.isValidForm()) {
-            let formData = new FormData(this.formContributionElt)
-            let formToString = new URLSearchParams(formData).toString()
-            this.ajaxRequest.send('POST', this.formContributionElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
+            this.ajax.send('POST', this.formContributionElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formContributionElt))
         } else {
             new MessageFlash('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
             this.loader.off()
@@ -502,7 +500,7 @@ export default class SupportContributions {
     deleteContribution(url) {
         this.loader.on()
         if (window.confirm('Voulez-vous vraiment supprimer cette enregistrement ?')) {
-            this.ajaxRequest.send('GET', url, this.responseAjax.bind(this), true)
+            this.ajax.send('GET', url, this.responseAjax.bind(this))
         }
     }
 

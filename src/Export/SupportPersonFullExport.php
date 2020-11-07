@@ -88,7 +88,8 @@ class SupportPersonFullExport
     {
         $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
 
-        $this->evaluationPerson = $supportPerson->getEvaluationsPerson()->last() ?? new EvaluationPerson();
+        $nbEvaluations = $supportPerson->getEvaluationsPerson()->count();
+        $this->evaluationPerson = $evaluations[$nbEvaluations - 1] ?? new EvaluationPerson();
         $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
 
         $this->datas = array_merge($this->datas, [

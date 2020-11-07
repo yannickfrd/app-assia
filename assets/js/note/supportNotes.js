@@ -1,6 +1,7 @@
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
+import AutoSave from '../utils/autoSave'
 import SelectType from '../utils/selectType'
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import ParametersUrl from '../utils/parametersUrl'
@@ -11,7 +12,7 @@ export default class SupportNotes {
 
     constructor() {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-note'))
@@ -33,11 +34,10 @@ export default class SupportNotes {
         this.countNotesElt = document.getElementById('count-notes')
         this.nbTotalNotesElt = document.getElementById('nb-total-notes')
         this.supportId = document.getElementById('container-notes').getAttribute('data-support')
-        this.autoSave = false
-        this.count = 0
         this.editor
-
+    
         this.init()
+        this.autoSave = new AutoSave(this.autoSaveNote.bind(this), this.editorElt, 2 * 60, 20)
     }
 
     init() {
@@ -50,16 +50,16 @@ export default class SupportNotes {
         })
 
         this.btnSaveElt.addEventListener('click', e => {
-            this.clearTimer(e)
+            this.autoSave.clear(e)
             if (this.loader.isActive() === false) {
                 this.saveNote()
             }
         })
 
-        this.btnCancelElt.addEventListener('click', e => this.clearTimer(e))
+        this.btnCancelElt.addEventListener('click', e => this.autoSave.clear(e))
 
         this.btnDeleteElt.addEventListener('click', e => {
-            this.clearTimer(e)
+            this.autoSave.clear(e)
             if (this.loader.isActive() === false) {
                 this.deleteNote()
             }
@@ -75,13 +75,13 @@ export default class SupportNotes {
 
         this.modalNoteElt.addEventListener('mousedown', e => this.goOutModal(e))
     }
-    
+
     /**
      * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
      * @param {Event} e 
      */
     goOutModal(e) {
-        if (e.target === this.modalNoteElt && this.count > 0) {
+        if (e.target === this.modalNoteElt && this.autoSave.count > 0) {
             if (window.confirm("Attention, vous n'avez pas enregistrer les modifications.\n Voulez-vous les enregistrer ?")) {
                 this.saveNote()
             }
@@ -123,8 +123,7 @@ export default class SupportNotes {
         this.editor.setData('')
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
         this.btnExportElt.classList.replace('d-block', 'd-none')
-        this.editorElt.addEventListener('keydown', this.countKeyDown.bind(this))
-        this.timerAutoSave()
+        this.autoSave.init()
     }
 
 
@@ -150,7 +149,7 @@ export default class SupportNotes {
         const statusValue = noteElt.querySelector('.js-note-status').getAttribute('data-value')
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), statusValue)
 
-        if (this.autoSave === false) {
+        if (this.autoSave.active === false) {
             this.editor.setData(this.contentNoteElt.innerHTML)
         }
 
@@ -160,44 +159,7 @@ export default class SupportNotes {
         this.btnExportElt.classList.replace('d-none', 'd-block')
         this.btnExportElt.href = '/note/' + this.cardId + '/export'
 
-        this.editorElt.addEventListener('keydown', this.countKeyDown.bind(this))
-
-        this.timerAutoSave()
-    }
-
-    /**
-     * Compte le nombre de saisie dans l'éditeur de texte.
-     */
-    countKeyDown() {
-        this.count++
-    }
-
-    /**
-     * Timer pour la sauvegarde automatique.
-     */
-    timerAutoSave() {
-        clearInterval(this.countdownID)
-        this.countdownID = setTimeout(this.timerAutoSave.bind(this), 2 * 60 * 1000) // toutes les 2 minutes
-        if (this.count > 10) {
-            this.autoSave = true
-            this.count = 0
-            this.autoSaveElt.classList.add('d-block')
-            setTimeout(() => {
-                this.autoSaveElt.classList.remove('d-block')
-            }, 5000)
-            this.saveNote()
-        }
-    }
-
-    /**
-     * Remet à zéro le timer.
-     * @param {Event} e 
-     */
-    clearTimer(e) {
-        e.preventDefault()
-        this.autoSave = false
-        this.count = 0
-        clearInterval(this.countdownID)
+        this.autoSave.init()
     }
 
     /**
@@ -209,13 +171,20 @@ export default class SupportNotes {
         }
 
         this.noteContentElt.textContent = this.editor.getData()
-        const formData = new FormData(this.formNoteElt)
 
-        if (!this.autoSave) {
+        if (!this.autoSave.active) {
             this.loader.on()
         }
 
-        this.ajaxRequest.send('POST', this.formNoteElt.getAttribute('action'), this.responseAjax.bind(this), true, new URLSearchParams(formData))
+        this.ajax.send('POST', this.formNoteElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formNoteElt))
+    }
+
+    autoSaveNote() {
+        this.autoSaveElt.classList.add('d-block')
+            setTimeout(() => {
+                this.autoSaveElt.classList.remove('d-block')
+            }, 5000)
+        this.saveNote()
     }
 
     /**
@@ -223,8 +192,7 @@ export default class SupportNotes {
      */
     deleteNote() {
         if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
-            this.loader.on()
-            this.ajaxRequest.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this), true, null)
+            this.ajax.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this))
         }
     }
 

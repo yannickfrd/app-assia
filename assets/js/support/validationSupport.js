@@ -2,6 +2,7 @@ import DisplayFields from '../utils/displayFields'
 import ValidationForm from '../utils/validationForm'
 import SelectType from '../utils/selectType'
 import ValidationDate from '../utils/validationDate'
+import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
 
 /**
@@ -13,6 +14,7 @@ export default class ValidationSupport {
         this.validationForm = new ValidationForm()
         this.selectType = new SelectType()
         this.loader = new Loader()
+        this.ajax = new Ajax(this.loader)
 
         this.prefix = 'support_'
         this.serviceSelectElt = document.getElementById(this.prefix + 'service')
@@ -148,24 +150,9 @@ export default class ValidationSupport {
     /**
      * Envoie la requête Ajax.
      */
-    async sendAjaxRequest() {
+    sendAjaxRequest() {
         if (this.selectType.getOption(this.serviceSelectElt)) {
-            this.loader.on()
-            await fetch('/support/change_service', {
-                method: 'POST',
-                body: new URLSearchParams(this.getData())
-                // body: JSON.stringify(this.getData()),
-                // headers: {
-                //     'Content-Type': 'application/json'
-                // }
-            }).then(response => {
-                // console.log(response)
-                response.text().then((data) => {
-                    return this.responseAjax(data)
-                })
-            }).catch(error => {
-                console.error('Error : ' + error)
-            })
+            this.ajax.send('POST', '/support/change_service', this.responseAjax.bind(this), new URLSearchParams(this.getData()))
         }
     }
 

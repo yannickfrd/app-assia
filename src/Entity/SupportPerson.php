@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Form\Utils\Choices;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -145,7 +145,7 @@ class SupportPerson
 
     public function getRoleToString(): ?string
     {
-        return RolePerson::ROLE[$this->role];
+        return $this->role ? RolePerson::ROLE[$this->role] : null;
     }
 
     public function setRole(?int $role): self

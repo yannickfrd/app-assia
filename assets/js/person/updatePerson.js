@@ -1,5 +1,5 @@
 import ValidationPerson from './validationPerson'
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 
@@ -10,7 +10,7 @@ export default class UpdatePerson {
 
     constructor() {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.personFormElt = document.querySelector('form[name=person]')
         this.updatePersonBtnElt = document.getElementById('updatePerson')
         this.init()
@@ -30,10 +30,8 @@ export default class UpdatePerson {
                 e.preventDefault()
                 if (validationPerson.getNbErrors() === 0) {
                     this.loader.on()
-                    const formData = new FormData(this.personFormElt)
-                    const formToString = new URLSearchParams(formData).toString()
                     const url = this.updatePersonBtnElt.getAttribute('data-url')
-                    this.ajaxRequest.send('POST', url, this.response.bind(this), true, formToString)
+                    this.ajax.send('POST', url, this.response.bind(this), new FormData(this.personFormElt))
                 }
             })
         }

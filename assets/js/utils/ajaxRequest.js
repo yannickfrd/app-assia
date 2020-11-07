@@ -2,7 +2,7 @@ import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 
 /**
- * Requête AJAX
+ * Requête AJAX (DEPRECATED).
  */
 export default class AjaxRequest {
 
@@ -18,12 +18,16 @@ export default class AjaxRequest {
      * @param {String} method 
      * @param {String} url 
      * @param {CallableFunction} callback 
-     * @param {Bool} async 
      * @param {Object} data 
      */
-    send(method = 'GET', url, callback, async = true, data = null) {
+    send(method = 'GET', url, callback, data = null) {
+
+        // Pour les object :
+        // const formData = new FormData(this.formElt)
+        // const paramsToString = new URLSearchParams(formData).toString()
+
         this.timeSend = Date.now() // Temp pour test
-        this.xhr.open(method, url, async)
+        this.xhr.open(method, url, true)
 
         if (method === 'POST') {
             this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')

@@ -1,4 +1,4 @@
-import AjaxRequest from '../utils/ajaxRequest'
+import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import DateFormat from '../utils/dateFormat'
@@ -9,7 +9,7 @@ export default class Calendar {
 
     constructor() {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
 
         this.selectType = new SelectType()
@@ -158,7 +158,7 @@ export default class Calendar {
         this.loader.on()
         this.rdvElt = rdvElt
         this.rdvId = Number(this.rdvElt.id.replace('rdv-', ''))
-        this.ajaxRequest.send('GET', '/rdv/' + this.rdvId + '/get', this.responseAjax.bind(this), true)
+        this.ajax.send('GET', '/rdv/' + this.rdvId + '/get', this.responseAjax.bind(this))
     }
 
     /**
@@ -170,10 +170,8 @@ export default class Calendar {
 
         if (this.modalRdvElt.querySelector('#rdv_title').value != '') {
             this.updateDatetimes()
-            let formData = new FormData(this.formRdvElt)
-            let formToString = new URLSearchParams(formData).toString()
             this.loader.on()
-            this.ajaxRequest.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), true, formToString)
+            this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
         } else {
             new MessageFlash('danger', 'La rdv est vide.')
         }
@@ -185,7 +183,7 @@ export default class Calendar {
     requestDeleteRdv() {
         if (window.confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
             this.loader.on()
-            this.ajaxRequest.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this), true, null)
+            this.ajax.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this))
         }
     }
 

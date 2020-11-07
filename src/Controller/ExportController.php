@@ -47,7 +47,7 @@ class ExportController extends AbstractController
                 'alert' => 'success',
                 'type' => 'export',
                 'msg' => 'Votre fichier d\'export est prêt. Un mail vous a été envoyé.',
-            ], 200);
+            ]);
         }
 
         return $this->render('app/export/export.html.twig', [
@@ -77,7 +77,7 @@ class ExportController extends AbstractController
                     'type' => 'count',
                     'count' => $count,
                     'msg' => 'Nombre de résultats : '.$count,
-                ], 200);
+                ]);
         }
 
         $this->getErrorMessage($form);

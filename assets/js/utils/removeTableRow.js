@@ -1,4 +1,4 @@
-import AjaxRequest from './ajaxRequest'
+import Ajax from './ajax'
 import MessageFlash from './messageFlash'
 import Loader from './loader'
 
@@ -9,7 +9,7 @@ export default class RemoveTableRow {
 
     constructor(selectors = '', btnConfirmId = 'modal-confirm', updatedFieldId = null) {
         this.loader = new Loader()
-        this.ajaxRequest = new AjaxRequest(this.loader)
+        this.ajax = new Ajax(this.loader)
         this.trElts = document.querySelectorAll(selectors)
         this.modalConfirmElt = document.getElementById(btnConfirmId)
         this.updatedField = document.getElementById(updatedFieldId)
@@ -37,7 +37,7 @@ export default class RemoveTableRow {
     sendRequest(btnElt, trElt) {
         this.loader.on()
         this.trElt = trElt
-        this.ajaxRequest.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this), true), {
+        this.ajax.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this)), {
             once: true
         }
     }

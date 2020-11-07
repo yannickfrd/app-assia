@@ -6,8 +6,8 @@ import '../utils/accordionChevron'
 import AutoSize from '../utils/AutoSize'
 
 document.addEventListener('DOMContentLoaded', () => {
-    new Evaluation()
     new UpdateEvaluation()
+    new Evaluation()
     new CheckChange('evaluation') // form name
     new SearchLocation('domiciliation_location')
     new AutoSize('textarea')

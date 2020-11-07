@@ -1,4 +1,4 @@
-import AjaxRequest from './ajaxRequest'
+import Ajax from './ajax'
 import { Modal } from 'bootstrap'
 
 /**
@@ -7,7 +7,7 @@ import { Modal } from 'bootstrap'
 export default class AutoLogout {
 
     constructor(timeout = 30, timeAlert = 5) {
-        this.ajaxRequest = new AjaxRequest()
+        this.ajax = new Ajax()
         this.userNameElt = document.getElementById('user-name')
         this.modalElt = new Modal(document.getElementById('modal-autoLogout'))
         this.timerElt = document.getElementById('timer-logout')
@@ -64,7 +64,7 @@ export default class AutoLogout {
      */
     deconnection() {
         clearInterval(this.intervalID)
-        this.ajaxRequest.send('GET', '/deconnexion', this.reloadPage.bind(this), true)
+        this.ajax.send('GET', '/deconnexion', this.reloadPage.bind(this))
     }
 
     /**
