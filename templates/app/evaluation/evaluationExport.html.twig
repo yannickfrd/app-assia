@@ -472,8 +472,9 @@
             </ul>
         {% endif %}
         {% if evalHousing.daloAction in [YES, IN_PROGRESS] %}
-            {{ pElt.get(evalHousing.daloActionToString ~ (evalHousing.daloType == YES ? " - Requalifié DAHO" ), "Dalo commission", "evaluation") }}
+            {{ pElt.get(evalHousing.daloActionToString, "Dalo action", "evaluation") }}
             <ul>
+                {{ liElt.get(evalHousing.daloTypeToString, "Dalo type", "evaluation") }}
                 {{ liElt.get(evalHousing.daloDecisionDate ? evalHousing.daloDecisionDate|date("d/m/Y"), "Dalo decision date", "evaluation") }}
                 {{ liElt.get(evalHousing.daloId, "Dalo id", "evaluation") }}
                 {{ liElt.get(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}

@@ -597,9 +597,9 @@
             {% endif %}
             {% if evalHousing.daloAction in [YES, IN_PROGRESS] %}
                 <div class="row mb-3">
-                    {{ divElt.get(evalHousing.daloActionToString ~ (evalHousing.daloType == YES ? 
-                        " - Requalifié DAHO" ) ~ (evalHousing.daloDecisionDate ? " (" 
-                        ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo commission", "evaluation") }}
+                    {{ divElt.get(evalHousing.daloActionToString ~ (evalHousing.daloDecisionDate ? " (" 
+                        ~ evalHousing.daloDecisionDate|date("d/m/Y") ~ ")"), "Dalo action", "evaluation") }}
+                    {{ divElt.get(evalHousing.daloTypeToString, "Dalo type", "evaluation") }}
                     {{ divElt.get(evalHousing.daloId, "Dalo id", "evaluation") }}
                     {{ divElt.get(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
                     {{ divElt.get(evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
