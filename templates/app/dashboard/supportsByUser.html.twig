@@ -62,7 +62,7 @@
                                             <span class="text-secondary small"> /{{ datasUser.nbTheoreticalSupports }}</span>
                                         {% endif %}
                                         {% if datasUser.nbSupports != datasUser.sumCoeff %}
-                                            <br /><span class="text-{{ theme_color }}"> ({{ datasUser.sumCoeff }})</span>
+                                            <br/><span class="text-{{ theme_color }}"> ({{ datasUser.sumCoeff }})</span>
                                         {% endif %}
                                         {% endapply %}
                                     </td>
@@ -74,7 +74,7 @@
                                                     <span class="text-secondary small"> /{{ device.nbTheoreticalSupports }}</span>
                                                 {% endif %}
                                                 {% if device.nbSupports != device.sumCoeff %}
-                                                    <br /><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
+                                                    <br/><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
                                                 {% endif %}
                                                 {% endapply %}
                                             </td>
@@ -96,7 +96,7 @@
                             <td scope="row" colspan="2" class="align-middle text-right">Total</td>
                             <td class="align-middle text-right">{{ nbSupports }}
                                 {% if nbSupports != sumCoeffSupports %}
-                                    <br /><span class="text-{{ theme_color }}"> ({{ sumCoeffSupports }})</span>
+                                    <br/><span class="text-{{ theme_color }}"> ({{ sumCoeffSupports }})</span>
                                 {% endif %}
                                 {% for device in devices %}
                                     <td class="align-middle text-right">{{ device.nbSupports }}
@@ -104,7 +104,7 @@
                                     <span class="small"> /{{ device.nbTheoreticalSupports }}</span>
                                 {% endif %}
                                     {% if device.nbSupports != device.sumCoeff %}
-                                        <br /><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
+                                        <br/><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
                                     {% endif %}
                                     </td>
                                 {% endfor %}
@@ -114,7 +114,7 @@
                             <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
                             <td class="align-middle text-right">{{ (nbSupports / datasUsers|length)|round(1, "common") }}
                                 {% if nbSupports != sumCoeffSupports %}
-                                    <br /><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1, "common") }})</span>
+                                    <br/><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1, "common") }})</span>
                                 {% endif %}
                             </td>
                         </tr>

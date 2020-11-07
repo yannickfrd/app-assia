@@ -15,11 +15,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ExportWord
 {
     protected $phpWord;
+    protected $defaultLogo;
 
     public function __construct()
     {
         $this->phpWord = new PhpWord();
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
+        $this->defaultLogo = 'images/logo_esperer95.jpg';
     }
 
     /**
@@ -33,7 +35,7 @@ class ExportWord
         $this->addHeader($section, $title, $logoPath, $info);
         $this->addFooter($section);
         $this->addTitle($section, $title);
-        $this->addContent($section, $content);
+        $this->addContent($section, $content, $logoPath, $title);
         $this->setDefaultStyleDocument();
 
         return $this->save($title, $info);
@@ -61,13 +63,8 @@ class ExportWord
     {
         // Add first page header
         $header = $section->addHeader(HEADER::FIRST);
-        $defaultLogo = 'images/logo_esperer95.jpg';
 
-        if (\file_exists($defaultLogo)) {
-            $header->addImage($logoPath ?? $defaultLogo, [
-                'height' => 60,
-            ]);
-        }
+        $this->addLogo($header, $logoPath);
 
         // Add sub page header
         $headerSub = $section->addHeader();
@@ -114,11 +111,30 @@ class ExportWord
     /**
      * Add the body content.
      */
-    protected function addContent(Section $section, string $content): void
+    protected function addContent(Section $section, string $content, string $logoPath = null, string $title = null): void
     {
-        $htmlContent = \str_replace('  ', '', $content);
-        $htmlContent = \str_replace('<br>', '<br/>', $content);
-        Html::addHtml($section, $htmlContent, false, false);
+        $content = \str_replace('  ', '', $content);
+
+        Html::addHtml($section, $content, false, false);
+
+        if (str_contains($title, 'Grille d\'évaluation sociale')) {
+            $this->addLogo($section, $logoPath, 60, 'right');
+        }
+    }
+
+    /**
+     * Add a logo.
+     *
+     * @param Section|Header|Footer $element
+     */
+    protected function addLogo($element, string $logoPath = null, int $height = 60, string $align = 'left'): void
+    {
+        if (\file_exists($this->defaultLogo)) {
+            $element->addImage($logoPath ?? $this->defaultLogo, [
+                'height' => $height,
+                'align' => $align,
+            ]);
+        }
     }
 
     /**

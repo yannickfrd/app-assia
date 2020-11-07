@@ -41,7 +41,7 @@
                         </td>
                         <td class="align-middle">
                             {% for supportPerson in support.supportPeople|filter(s => s.head == true) %}
-                                {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br />
+                                {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br/>
                             {% endfor %}
                         <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
                             -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
@@ -51,7 +51,7 @@
                             {% endif %}
                         </td>
                         <td class="align-middle">
-                            {{ support.service.name }}<br />{% if support.device %}({{ support.device.name }}){% endif %}                    
+                            {{ support.service.name }}<br/>{% if support.device %}({{ support.device.name }}){% endif %}                    
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>
                         <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}

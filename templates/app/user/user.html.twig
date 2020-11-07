@@ -152,7 +152,7 @@
                             </th>
                             <td class="align-middle">
                             {% for supportPerson in support.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
-                            {{ supportPerson.person.fullname }}<br />
+                            {{ supportPerson.person.fullname }}<br/>
                             {% endfor %}
                             <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
                                 {% if support.groupPeople.nbPeople > 1 %}{{ support.groupPeople.nbPeople }} personnes{% endif %}
@@ -169,7 +169,7 @@
             </div>
             <a href="{{ path('new_support_search_person') }}" class="m-2 btn btn-{{ theme_color }} btn-sm">
                 <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
-            <br />
+            <br/>
 
         </section>
         <hr>

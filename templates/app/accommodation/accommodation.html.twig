@@ -138,7 +138,7 @@
                             </th>
                             <td>
                                 {% for supportPerson in accommodation_group.supportGroup.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
-                                {{ supportPerson.person.fullname }}<br />
+                                {{ supportPerson.person.fullname }}<br/>
                                 {% endfor %}                        
                             </td>
                             <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>

@@ -62,7 +62,7 @@
                             <td class="align-middle">
                                 {% if rdv.supportGroup %}
                                     {% for supportPerson in rdv.supportGroup.supportPeople|filter(s => s.head == true) %}
-                                        {{ supportPerson.person.fullname }}<br>
+                                        {{ supportPerson.person.fullname }}<br/>
                                     {% endfor %}
                                 {% endif %} 
                             </td>

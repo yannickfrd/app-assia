@@ -82,7 +82,7 @@
                             {{ rolePerson.person.firstname }}
                             {% if  rolePerson.head %}<span data-placement="bottom"
                                 title="Demandeur/euse principal·e">*</span>{% endif %}</td>
-                        <td>{% if rolePerson.person.birthdate %}{{ rolePerson.person.birthdate|date("d/m/Y") }}<br />
+                        <td>{% if rolePerson.person.birthdate %}{{ rolePerson.person.birthdate|date("d/m/Y") }}<br/>
                             ({{ rolePerson.person.age }}{% if rolePerson.person.age > 1 %}
                             ans{% elseif rolePerson.person.age > 0 %} an{% endif %}){% endif %}
                         <td>{% if rolePerson.person.gender == constant("App\\Entity\\Person::GENDER_FEMALE") %}

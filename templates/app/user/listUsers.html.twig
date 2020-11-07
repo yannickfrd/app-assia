@@ -87,7 +87,7 @@
                                 {% for service in user.services %}
                                     {% if service.pole.id not in poles %}
                                         {% set poles = poles|merge([service.pole.id]) %}
-                                        {{ service.pole.name }}<br>
+                                        {{ service.pole.name }}<br/>
                                     {% endif %}
                                 {% endfor %}
                             </td>

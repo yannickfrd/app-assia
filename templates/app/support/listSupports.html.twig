@@ -71,7 +71,7 @@
                             </td>
                             <td class="align-middle">
                                 {% for supportPerson in supportPeople %}
-                                    {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br />
+                                    {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br/>
                                 {% endfor %}
                             </td>
                             <td class="align-middle">
@@ -105,7 +105,7 @@
                                 <a href="{{ path('accommodation_edit', {'id':accommodationGroup.accommodation.id}) }}"
                                     class="text-{{ theme_color }}" title="Voir la fiche du groupe de places" data-toggle="tooltip" data-placement="bottom">
                                     {{ accommodationGroup.accommodation.address }} - {{ accommodationGroup.accommodation.city }}
-                                </a><br />
+                                </a><br/>
                                 {% endfor %} #}
                         </tr>
                         {# {% endcache %} #}

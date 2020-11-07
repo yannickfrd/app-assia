@@ -5,6 +5,8 @@
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 {% set IN_PROGRESS = constant("App\\Form\\Utils\\Choices::IN_PROGRESS") %}
 
+{% set theme_color = app.request.hasPreviousSession and app.session.get("theme_color") ? app.session.get("theme_color") : "dark" %}
+
 {% set eval_people = evaluation.evaluationPeople %}
 {% set eval_adults = evaluation.evaluationPeople|filter(e => e.supportPerson.role != ROLE_CHILD) %}
 {% set eval_children = evaluation.evaluationPeople|filter(e => e.supportPerson.role == ROLE_CHILD) %}
@@ -12,7 +14,7 @@
 {% set nb_people = support.supportPeople|length %}
 {% set evalHousing = evaluation.evalHousingGroup %}
 
-{% set style_h3 = "font-size: 21.5px; font-weight: bold;" %}
+{% set style_h3 = "font-size: 21.5px; font-weight: bold; color: {{ theme_color }};" %}
 {% set style_h4 = "font-size: 16px; font-weight: bold;" %}
 {% set style_table = "border: 1px #b5b5b5 solid;" %}
 {% set style_thead = "background-color: #e9ecef; font-weight: bold;" %}
@@ -63,15 +65,16 @@
         </tbody>
     </table>
 
-    <br/>
-
-    {{ pElt.get(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
-    {{ pElt.get(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
-
-    <br/>
+    {# Rendez-vous #}
+    {% if lastRdv or nextRdv %}
+        <br/>   
+        {{ pElt.get(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
+        {{ pElt.get(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
+    {% endif %}
 
     {# Justice #}
     {% if support.service.justice == YES %}
+        <br/>
         <h3 class="h4" style="{{ style_h3 }}">Situation judiciaire</h3>
         {% for evalPerson in evaluation.evaluationPeople %}
             {% set evalJustice = evalPerson.evalJusticePerson %}
@@ -86,7 +89,9 @@
         {% endfor %}
     {% endif %}
 
+
     {# Identité - Papier #}
+    <br/>
     <h3 class="h4" style="{{ style_h3 }}">Situation administrative</h3>
 
     {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
@@ -135,6 +140,7 @@
     {% endif %}
 
     {# Famille #}
+    <br/>
     <h3 class="h4" style="{{ style_h3 }}">Situation familiale</h3>
 
     {% set eval_adults_family = eval_adults|filter(e => e.evalFamilyPerson) %}
@@ -189,8 +195,6 @@
             ~ evalFamily.nbPeopleReunification ~ " personne(s))" : "") : "", "Faml reunification", "evaluation") }}
         <div style="text-align: justify;">{{ pElt.get(evaluation.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
     {% endif %}
-
-    <br/>
 
     {# Situation financière #}
     {% set eval_people_budget = eval_people|filter(e => e.evalBudgetPerson) %}
@@ -250,10 +254,10 @@
                     <p style="{{ style_h4 }}"><u>{{ evalPerson.supportPerson.person.fullname }}</u> :</p>
                 {% endif %}            
 
-                <!-- {{ evalBudget.resources != YES or null == evalBudget.resourcesAmt ? pElt.get(evalBudget.resourcesToString, "Resources", "evaluation") }} -->
+                {{ evalBudget.resources != YES or null == evalBudget.resourcesAmt ? pElt.get(evalBudget.resourcesToString, "Resources", "evaluation") }}
                 {# {{ evalBudget.charges != YES or null == evalBudget.chargesAmt ? pElt.get(evalBudget.chargesToString, "Charges", "evaluation") }} #}
                 
-                <!-- {% if evalBudget.resources == YES %}
+                {% if evalBudget.resources == YES %}
                     <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                         <thead>
                             <tr style="{{ style_thead }}">
@@ -292,11 +296,11 @@
                             {% endif %}
                         </tfoot>
                     </table>
-                {% endif %} -->
+                {% endif %}
 
-                <!-- {{ pElt.get(evalBudget.incomeN1Amt > 0 ? evalBudget.incomeN1Amt|number_format(0, ",", " ") ~ " €", "Impôts sur le revenu n-1") }}
+                {{ pElt.get(evalBudget.incomeN1Amt > 0 ? evalBudget.incomeN1Amt|number_format(0, ",", " ") ~ " €", "Impôts sur le revenu n-1") }}
                 {{ pElt.get(evalBudget.incomeN2Amt > 0 ? evalBudget.incomeN2Amt|number_format(0, ",", " ") ~ " €", "Impôts sur le revenu n-2") }}
-                {{ pElt.get(evalBudget.resourcesComment, "Resources comment", "evaluation") }} -->
+                {{ pElt.get(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
 
                 {% if evalBudget.charges == YES %}
                     <br/>
@@ -327,9 +331,9 @@
                     </table>
                 {% endif %}
 
-                <!-- {% if evalBudget.chargeComment %}
-                {{ pElt.get(evalBudget.chargeComment, "Charge comment", "evaluation") }}
-                {% endif %} -->
+                {% if evalBudget.chargeComment %}
+                    {{ pElt.get(evalBudget.chargeComment, "Charge comment", "evaluation") }}
+                {% endif %}
 
                 {% if evalBudget.debts %}
                     <br/>
@@ -356,9 +360,9 @@
         {% endfor %}
     {% endif %}
 
-    <br/>
 
     {# Situation professionnelle #}
+    <br/>
     <h3 class="h4" style="{{ style_h3 }}">Situation professionnelle</h3>
 
     {% set eval_adults_prof = eval_adults|filter(e => e.evalProfPerson) %}
@@ -386,9 +390,9 @@
         <div style="text-align: justify;">{{ pElt.get(evalProf.commentEvalProf) }}</div>
     {% endfor %}
 
-    <br/>
 
     {# Situation sociale #}
+    <br/>
     <h3 class="h4" style="{{ style_h3 }}">Situation sociale</h3>
 
     {% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
@@ -537,9 +541,10 @@
         {{ support.service.name }}<br/>
         Association ESPERER 95<br/>
         {% set subService = support.subService %}
-        <i><a href="mailto:{{ app.user.email }}" style="color :blue;">{{ subService and subService.email ?  subService.email : 
+        <i><a href="mailto:{{ app.user.email }}" style="color: {{ theme_color }};">{{ subService and subService.email ?  subService.email : 
             (support.service.email ? support.service.email : app.user.email) }}</a></i><br/> 
-        <i>{{ app.user.phone1 }}</i>
+        <i>{{ app.user.phone1 }}</i><br/>
+        <a href="www.esperer-95.org" style="color: {{ theme_color }};">www.esperer-95.org</a>
     </p>
 
 {% endapply %}
