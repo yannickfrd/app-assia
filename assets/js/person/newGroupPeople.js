@@ -1,11 +1,15 @@
 import ValidationPerson from './validationPerson'
 import SelectType from '../utils/selectType'
-//
-export default class NewGroupPeople {
-    constructor(parametersUrl) {
-        this.selectType = new SelectType()
+import ParametersUrl from '../utils/parametersUrl'
 
-        this.parametersUrl = parametersUrl
+/**
+ * Nouveau groupe de personnes.
+ */
+export default class NewGroupPeople {
+    constructor() {
+        this.selectType = new SelectType()
+        this.parametersUrl = new ParametersUrl()
+
         this.form = document.querySelector('#person>form').name // role_person_group
 
         this.typoInputElt = document.getElementById('role_person_group_groupPeople_familyTypology')

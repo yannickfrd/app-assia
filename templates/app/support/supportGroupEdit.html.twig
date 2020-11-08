@@ -14,7 +14,11 @@
 
 	<div class="container">
 
-		{% include "app/support/navSuppport.html.twig" %}
+		{% if support.id %}
+			{% include "app/support/navSuppport.html.twig" %}
+		{% else %}
+			{% include "app/groupPeople/navGroup.html.twig" %}
+		{% endif %}
 
 		{% include "model/msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>

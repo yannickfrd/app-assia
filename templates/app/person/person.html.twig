@@ -14,43 +14,32 @@
 
     <div class="container">
 
-        <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
-        <div class="small text-secondary">
-            <p> Créé le {{person.createdAt|date("d/m/Y à H:i") }}
-                {{ person.createdBy ? " par " ~ person.createdBy.fullname }}
-                <span id="js-person-updated">
-                    {% if person.createdAt != person.updatedAt %}
-                        (modifié le {{ person.updatedAt|date("d/m/Y à H:i") }}
-                        {{ person.updatedBy ? " par " ~ person.updatedBy.fullname }})
-                    {% endif %}
-                </span>
-            </p>
-        </div>
-        {% else %}
-        <div class="mb-4"></div>
-        {% endif %}
-
         {% if group_people is defined %}
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
-                        <span class="fas fa-users mr-2"></span>Fiche groupe
-                        <span class="small text-secondary">{{ group_people.familyTypologyToString }}</span>
-                    </a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Fiche individuelle</li>
-            </ol>
-        </nav>
+            {% include "app/groupPeople/navGroup.html.twig" %}
+        {% else %}
+            <h1 class="h2 mb-3">{{ title }}</h1>
+        {% endif %}
+        
+        {% if EDIT_MODE %}
+            <div class="small text-secondary my-2">
+                <p> Créé le {{person.createdAt|date("d/m/Y à H:i") }}
+                    {{ person.createdBy ? " par " ~ person.createdBy.fullname }}
+                    <span id="js-person-updated">
+                        {% if person.createdAt != person.updatedAt %}
+                            (modifié le {{ person.updatedAt|date("d/m/Y à H:i") }}
+                            {{ person.updatedBy ? " par " ~ person.updatedBy.fullname }})
+                        {% endif %}
+                    </span>
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
         {% endif %}
 
         <hr>
 
         <div id="person" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
 
-            {% include "model/msgFlash.html.twig" %}
-            <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}
 

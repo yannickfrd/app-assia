@@ -1,14 +1,10 @@
 <section class="m-0">
 
-	{% if support.id %}
 	{% set group_people = support.groupPeople %}
-	{% set people = support.supportPeople %}
 	{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
-	{% endif %}
 
 	<div class="d-md-flex justify-content-md-between mb-2">
 		<h1 class="h2">Suivi<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
-		{% if support.id %}
 		<div id="support" data-support="{{ support.id }}">
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_view', {'id':support.id}) }}" 
 				data-toggle="tooltip" data-placement="bottom" title="Page d'accueil du suivi">
@@ -43,17 +39,10 @@
 				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
 		</div>
-		{% endif %}
 	</div>
 	
 	{% include "model/msgFlash.html.twig" %}
-	{# {% if support.id %}
-	<div class="small text-secondary">
-		<p>Suivi créé le {{support.createdAt|date("d/m/Y à H:i") }}{% if support.createdBy %} par {{ support.createdBy.fullname}}{% endif %}
-			<span id="js-updatedSupport">(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }}{{ support.updatedBy ? " par " ~ support.updatedBy.fullname }})</span>
-		</p>
-	</div>
-	{% endif %} #}
+
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
@@ -61,19 +50,17 @@
 					<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ group_people.familyTypologyToString }}</span>
 				</a>
 			</li>
-			{% if support.id %}
 			<li class="breadcrumb-item">
 				<a class="text-{{ theme_color }}" href="{{ path('support_view', {'id':support.id }) }}">Suivi social</a>
 			</li>
-			{% endif %}
 			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
 		</ol>
 	</nav>
 	<div id="js-support-people">
-	{% for person in people %}
-		<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
-			class="btn btn-outline-secondary btn-sm rounded-pill smal mb-2">{{ person.person.fullname }}</a>
-	{% endfor %}
+		{% for person in support.supportPeople %}
+			<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
+				class="btn btn-outline-secondary btn-sm rounded-pill smal mb-2">{{ person.person.fullname }}</a>
+		{% endfor %}
 	</div>
 </section>
 

@@ -20,21 +20,9 @@
         {% if support %}
             {% include "app/support/navSuppport.html.twig" %}
         {% else %}
-            <h1 class="h2 mb-3">{{ title }}</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
-                            <span class="fas fa-users mr-2"></span>Fiche groupe
-                            <span class="small">{{ group_people.familyTypologyToString }}</span>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        {% if EDIT_MODE %}Service social référent{% else %}Nouveau service social{% endif %}
-                    </li>
-                </ol>
-            </nav>                
+            {% include "app/groupPeople/navGroup.html.twig" %}
         {% endif %}
+        
         {% if EDIT_MODE %}
             <div class="small text-secondary">
                 <p> Créé le {{referent.createdAt|date("d/m/Y à H:i") }}
@@ -46,12 +34,10 @@
         {% else %}
             <div class="mb-4"></div>
         {% endif %}
+
         <hr>
 
         <section>
-            {% include "model/msgFlash.html.twig" %}
-            <div id="js-msg-flash-content"></div>
-
             {{ form_start(form) }}
 
             <div class="form-group row">
@@ -82,11 +68,12 @@
                             href="{{ path('referent_delete', {'id':referent.id}) }}"
                             title="Supprimer le service social référent" data-toggle="tooltip" data-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce service social référent ?')){return true;}else{return false;}"><span
-                                class="fas fa-trash-alt"></span><span class="sr-only">Supprimer</span></a>
+                                class="fas fa-trash-alt mr-2"></span>Supprimer</a>
                     </div>
                     {% endif %}
                     <div class="mb-4 float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span 
+                            class="fas fa-edit mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>

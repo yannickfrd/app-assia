@@ -115,7 +115,7 @@ support:
   dates: Date d'accompagnement
   startDate: Date de début d'accompagnement
   endDate: Date de fin d'accompagnement
-Clone support: Je récupère les informations du dernier suivi social (évaluation et documents) en accord avec le service concerné.
+Clone support: Je souhaite récupérer les informations du précédent suivi social (évaluation et documents) en accord avec le service concerné.
 
 ### OriginRequest
 Decision date: Date de décision

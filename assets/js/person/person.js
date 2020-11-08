@@ -2,20 +2,19 @@
 import UpdatePerson from './updatePerson'
 import NewForm from '../utils/newForm'
 import NewGroupPeople from './newGroupPeople'
-import ParametersUrl from '../utils/parametersUrl'
 import CheckChange from '../utils/checkChange'
 import '../utils/maskPhone'
 
-let parametersUrl = new ParametersUrl()
-
 document.addEventListener('DOMContentLoaded', () => {
-    let editMode = document.getElementById('person').dataset.editMode
+    const editMode = document.getElementById('person').dataset.editMode
     if (editMode === 'true') {
         new UpdatePerson()
         new CheckChange('person') // form name
-        // new NewForm()
     } else {
-        new NewGroupPeople(parametersUrl)
+        new NewGroupPeople()
         // new CheckChange('role_person_group') // form name
+    }
+    if (document.getElementById('js-people')) {
+        new NewForm('btn-new-support', 'container-form-new-support', 'modal-new-support') // Formulaire pour la création d'un nouveau suivi
     }
 })
