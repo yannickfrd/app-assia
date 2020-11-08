@@ -283,7 +283,7 @@ class PersonController extends AbstractController
 
         $this->addFlash('warning', 'La personne est supprimée.');
 
-        return $this->redirectToRoute('people');
+        return $this->redirectToRoute('home');
     }
 
     /**

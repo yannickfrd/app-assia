@@ -76,7 +76,7 @@ class PersonControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Groupe : ajouter une personne');
+        $this->assertSelectorTextContains('h1', 'GroupeAjouter une personne');
     }
 
     // public function testAddPersonInGroup() // à tester via Panther
@@ -182,7 +182,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', "Création d'une personne");
-        $this->assertSelectorTextContains('div.container nav ol.breadcrumb li:last-child', 'Fiche individuelle');
+        $this->assertSelectorTextContains('div.container nav ol.breadcrumb li:last-child', 'Création d\'une personne');
     }
 
     public function testFailToCreateNewPersonInGroup()
