@@ -126,7 +126,7 @@ export default class SupportDocuments {
         const validExtensions = ['csv', 'doc', 'docx', 'jpg', 'odp', 'ods', 'odt', 'pdf', 'png', 'rar', 'txt', 'xls', 'xlsx', 'zip']
         const extensionFile = this.documentFileInput.value.split('.').pop().toLowerCase()
         // Vérifie si l'extension du fichier est valide
-        if ((validExtensions.indexOf(extensionFile) === -1)) {
+        if (!validExtensions.includes(extensionFile)) {
             error = true
             new MessageFlash('danger', `Le format du fichier n'est pas valide (${extensionFile}).\n'Formats acceptés : ${validExtensions.join(', ')}.`)
         }

@@ -173,7 +173,7 @@ export default class SupportContributions {
         })
 
         // Si PF / Redevance et Loyer.
-        if ([1, 2].indexOf(option) != -1) {
+        if ([1, 2].includes(option)) {
             this.selectType.setOption(this.monthContribDaySelect, '1')
             this.formContributionElt.querySelectorAll('.js-contribution').forEach(elt => {
                 elt.classList.remove('d-none')
@@ -184,21 +184,21 @@ export default class SupportContributions {
         if (option === 2) {
             this.formContributionElt.querySelector('.js-rent').classList.remove('d-none')
         }
-        if ([1, 2, 10, 30, 31, 32].indexOf(option) != -1) { // Redevance, caution, remboursement
+        if ([1, 2, 10, 30, 31, 32].includes(option)) { // Redevance, caution, remboursement
             this.formContributionElt.querySelectorAll('.js-payment').forEach(elt => {
                 elt.classList.remove('d-none')
             })
         }
-        if ([1, 2, 10].indexOf(option) != -1) { // Redevance, loyer, caution
+        if ([1, 2, 10].includes(option)) { // Redevance, loyer, caution
             this.formContributionElt.querySelector('.js-stillToPayAmt').classList.remove('d-none')
         }
-        if ([1, 2, 10].indexOf(option) != -1) { // Redevance, loyer, caution
+        if ([1, 2, 10].includes(option)) { // Redevance, loyer, caution
             this.formContributionElt.querySelector('label[for="contribution_toPayAmt"]').textContent = 'Montant à régler'
         }
         if (option === 20) { // Prêt
             this.formContributionElt.querySelector('label[for="contribution_toPayAmt"]').textContent = 'Montant prêté'
         }
-        if ([1, 2, 10, 20].indexOf(option) != -1) { // Redevance, loyer, caution, prêt
+        if ([1, 2, 10, 20].includes(option)) { // Redevance, loyer, caution, prêt
             this.formContributionElt.querySelector('.js-toPayAmt').classList.remove('d-none')
         }
         if (option === 11) { // Restitution caution
@@ -309,7 +309,7 @@ export default class SupportContributions {
      * @param {Number} option 
      */
     checkContributionDate(option) {
-        if ([1, 2].indexOf(option) != -1) { // PF et Loyer
+        if ([1, 2].includes(option)) { // PF et Loyer
             if (!this.selectType.getOption(this.monthContribMonthSelect)) {
                 this.error = true
                 this.validationForm.invalidField(this.monthContribMonthSelect, 'Saisie obligatoire.')
@@ -338,7 +338,7 @@ export default class SupportContributions {
             this.error = true
             return this.validationForm.invalidField(this.toPayAmtInput, 'Valeur invalide.')
         }
-        if ([1, 2, 10, 20].indexOf(option) != -1 && !this.toPayAmtInput.value) { // PF, loyer, cautionn prêt
+        if ([1, 2, 10, 20].includes(option) && !this.toPayAmtInput.value) { // PF, loyer, cautionn prêt
             this.error = true
             return this.validationForm.invalidField(this.toPayAmtInput, 'Saisie obligatoire.')
         }
@@ -368,8 +368,8 @@ export default class SupportContributions {
             this.error = true
             return this.validationForm.invalidField(this.paidAmtInput, 'Valeur invalide.')
         }
-        if ((!this.paidAmtInput.value && [1, 2, 10].indexOf(option) != -1 && (this.paymentDateInput.value || this.selectType.getOption(this.paymentTypeSelect))) ||
-            (!this.paidAmtInput.value && [30, 31, 32].indexOf(option) != -1)) {
+        if ((!this.paidAmtInput.value && [1, 2, 10].includes(option) && (this.paymentDateInput.value || this.selectType.getOption(this.paymentTypeSelect))) ||
+            (!this.paidAmtInput.value && [30, 31, 32].includes(option))) {
             this.error = true
             return this.validationForm.invalidField(this.paidAmtInput, 'Saisie obligatoire.')
         }

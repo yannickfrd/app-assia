@@ -24,7 +24,7 @@ export default class ValidationForm {
         let categories = []
         document.querySelectorAll('div[data-check-valid]').forEach(elt => {
             const category = elt.getAttribute('data-check-valid')
-            if (categories.indexOf(category) === -1) {
+            if (!categories.includes(category)) {
                 categories.push(category)
             }
         })
@@ -120,7 +120,7 @@ export default class ValidationForm {
      */
     isFilledField(fieldElt) {
         const value = this.selectType.getOption(fieldElt)
-        if ((['text', 'number', 'date'].indexOf(fieldElt.type) != -1 && fieldElt.value != '') ||
+        if ((['text', 'number', 'date'].includes(fieldElt.type) && fieldElt.value != '') ||
             (fieldElt.type === 'checkbox' && fieldElt.checked === true) ||
             (fieldElt.type === 'select-one' && value != '' && !isNaN(value))) {
             return true

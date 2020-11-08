@@ -606,7 +606,7 @@ export default class evaluation {
         const resourcesGroupAmt = parseFloat(this.resourcesGroupAmtElt.textContent.replace(" ", ""))
         const contributionRate = this.updateContributionBtnElt.getAttribute("data-contribution-rate")
 
-        if ([1, 3].indexOf(contributionType) != -1 && !isNaN(resourcesGroupAmt) && !isNaN(contributionRate)) {
+        if ([1, 3].includes(contributionType) && !isNaN(resourcesGroupAmt) && !isNaN(contributionRate)) {
             this.contributionAmtInput.value = Math.round(resourcesGroupAmt * contributionRate * 100) / 100
             this.calculationMethodElt.innerHTML = "Mode de calcul : Montant des ressources (" + resourcesGroupAmt +
                 "&nbsp€) x Taux de participation (" + (contributionRate * 100) + "&nbsp%)."

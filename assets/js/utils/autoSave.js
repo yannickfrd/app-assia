@@ -8,6 +8,7 @@ export default class AutoSave {
  * @param {HTMLElement} targetElt 
  * @param {Number} delay in secondes
  * @param {Number} minCount 
+ * @param {Array} validTargets 
  */
     constructor(callback, targetElt = document, delay = 10 * 60, minCount = 10, validTargets = null) {
         this.callback = callback
@@ -26,7 +27,7 @@ export default class AutoSave {
     addEvents() {
         this.targetElt.addEventListener('keydown', () => this.counter())
         this.targetElt.addEventListener('click', e => {
-            if (null === this.validTargets || this.validTargets.indexOf(e.target.nodeName) != -1) {
+            if (null === this.validTargets || this.validTargets.includes(e.target.nodeName)) {
                 this.counter()
             }
         })

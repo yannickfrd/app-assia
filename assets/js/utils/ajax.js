@@ -66,7 +66,7 @@ export default class Ajax {
         let finalResponse = null
         const contentType = response.headers.get('content-type')
 
-        if (contentType && contentType.indexOf("application/json") !== -1) {
+        if (contentType && contentType.includes("application/json")) {
             finalResponse = response.json()
         } else {
             finalResponse = response.text()
