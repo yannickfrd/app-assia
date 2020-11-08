@@ -21,7 +21,8 @@
                     {% for referent in referents|reverse %}
                         <tr>
                             <td scope="row">
-                                <a href="{{ path('referent_edit', {'id':referent.id}) }}"
+                                <a href="{{  support is defined ? path('support_referent_edit', {'support_id': support.id, 'id':referent.id}) : 
+                                    path('group_referent_edit', {'id':referent.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                     title="Voir le service social accompagnateur"><span class="fas fa-eye"></span>
                                 </a>
@@ -41,6 +42,6 @@
             </table>
         </div>
     {% endif %}
-    <a href="{{ path('referent_new', {'id':group_people.id}) }}" class="m-2 btn btn-{{ theme_color }} btn-sm">
-        <span class="fas fa-plus-square mr-2"></span>Ajouter un service ou référent</a>
+    <a href="{{ support is defined ? path('support_referent_new', {'support_id':support.id}) : path('group_referent_new', {'group_id':group_people.id}) }}" 
+        class="m-2 btn btn-{{ theme_color }} btn-sm"><span class="fas fa-plus-square mr-2"></span>Ajouter un service ou référent</a>
 </section>

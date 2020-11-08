@@ -1,3 +1,4 @@
+{# {% cache "GroupPeopleSupport" ~ supportGroup.id supportGroup.updatedAt.timestamp %} #}
 <section>
     <h2 class="h4 my-4">Historique des suivis sociaux</h2>
     <div class="table-responsive">
@@ -17,7 +18,6 @@
                 {% set supports = group_people is defined ? group_people.supports : person.supports %}
                 {% for support in supports|reverse %}
                     {% set supportGroup = group_people is defined ? support : support.supportGroup %}
-                    {# {% cache "GroupPeopleSupport" ~ supportGroup.id supportGroup.updatedAt.timestamp %} #}
                     {% if supportGroup.referent %}
                         {% set contact_user %}
                             <div class='text-left p-2'>
@@ -34,7 +34,6 @@
                             <br/>Email : {{ supportGroup.service.email }}
                         </div>
                     {% endset %}
-
                     <tr>
                         <td scope="row" class="align-middle">
                             {% if is_granted("VIEW", supportGroup) %}
@@ -47,12 +46,6 @@
                                 title="Accès non autorisé"><span class="fas fa-ban"></span>
                             </span>
                             {% endif %}
-                            {# {% if is_granted("EDIT", supportGroup) %}
-                            <a href="{{ path('support_view', {'id':supportGroup.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
-                                title="Modifier le suivi social"><span class="fas fa-edit"></span>
-                            </a>
-                            {% endif %} #}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>
                         <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
@@ -74,17 +67,17 @@
                         </td>
                         <td class="align-middle">{{ supportGroup.service ? supportGroup.service.pole.name }}</td>
                     </tr>
-                    {# {% endcache %} #}
-                {% endfor %}
-            </tbody>
+                    {% endfor %}
+                </tbody>
         </table>
     </div>
     {% if group_people is defined %}
-        <button id="btn-new-support" class="m-2 btn btn-{{ theme_color }} btn-sm" 
-            data-url="{{ path('group_people_new_support', {'id': group_people.id}) }}">
-            <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</button>
+    <button id="btn-new-support" class="m-2 btn btn-{{ theme_color }} btn-sm" 
+    data-url="{{ path('group_people_new_support', {'id': group_people.id}) }}">
+    <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</button>
     {% else %}
-        <p class="ml-2 text-secondary"><span class="fas fa-info-circle mr-2"></span>
-            Pour créer un nouveau suivi, aller sur la fiche du groupe ou créer un nouveau groupe (ci-dessus).<p>
-    {% endif %}
+    <p class="ml-2 text-secondary"><span class="fas fa-info-circle mr-2"></span>
+        Pour créer un nouveau suivi, aller sur la fiche du groupe ou créer un nouveau groupe (ci-dessus).<p>
+            {% endif %}
 </section>
+{# {% endcache %} #}

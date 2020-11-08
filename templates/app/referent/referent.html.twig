@@ -6,43 +6,46 @@
 {% if referent.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
 
 {% if EDIT_MODE %}
-{% set title = referent.name %}
+{% set title = "Référent | " ~ referent.name %}
 {% else %}
 {% set title = "Nouveau service social référent" %}
 {% endif %}
 
-{% block title %}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{{ parent() }}{% endblock %}
 
 {% block body %}
 
     <div class="container">
 
-        <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
-        <div class="small text-secondary">
-            <p> Créé le {{referent.createdAt|date("d/m/Y à H:i") }}
-                {{ referent.createdBy ? " par " ~ referent.createdBy.fullname }}
-                (modifié le {{ referent.updatedAt|date("d/m/Y à H:i") }}
-                {{ referent.updatedBy ? " par " ~ referent.updatedBy.fullname }})
-            </p>
-        </div>
+        {% if support %}
+            {% include "app/support/navSuppport.html.twig" %}
         {% else %}
-        <div class="mb-4"></div>
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
+                            <span class="fas fa-users mr-2"></span>Fiche groupe
+                            <span class="small">{{ group_people.familyTypologyToString }}</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {% if EDIT_MODE %}Service social référent{% else %}Nouveau service social{% endif %}
+                    </li>
+                </ol>
+            </nav>                
         {% endif %}
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
-                        <span class="fas fa-users mr-2"></span>Fiche groupe
-                        <span class="small">{{ group_people.familyTypologyToString }}</span>
-                    </a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    {% if EDIT_MODE %}Service social référent{% else %}Nouveau service social{% endif %}
-                </li>
-            </ol>
-        </nav>
-
+        {% if EDIT_MODE %}
+            <div class="small text-secondary">
+                <p> Créé le {{referent.createdAt|date("d/m/Y à H:i") }}
+                    {{ referent.createdBy ? " par " ~ referent.createdBy.fullname }}
+                    (modifié le {{ referent.updatedAt|date("d/m/Y à H:i") }}
+                    {{ referent.updatedBy ? " par " ~ referent.updatedBy.fullname }})
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
+        {% endif %}
         <hr>
 
         <section>

@@ -36,8 +36,8 @@ class ReferentControllerTest extends WebTestCase
 
     public function testNewReferentIsUp()
     {
-        $this->client->request('GET', $this->generateUri('referent_new', [
-            'id' => $this->dataFixtures['groupPeople']->getId(),
+        $this->client->request('GET', $this->generateUri('group_referent_new', [
+            'group_id' => $this->dataFixtures['groupPeople']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -47,8 +47,8 @@ class ReferentControllerTest extends WebTestCase
     public function testCreateNewReferentIsSuccessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('referent_new', [
-            'id' => $this->dataFixtures['groupPeople']->getId(),
+        $crawler = $this->client->request('GET', $this->generateUri('group_referent_new', [
+            'group_id' => $this->dataFixtures['groupPeople']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([
@@ -66,7 +66,7 @@ class ReferentControllerTest extends WebTestCase
 
     public function testEditReferentIsUp()
     {
-        $this->client->request('GET', $this->generateUri('referent_edit', [
+        $this->client->request('GET', $this->generateUri('group_referent_edit', [
             'id' => $this->referent->getId(),
         ]));
 
@@ -77,7 +77,7 @@ class ReferentControllerTest extends WebTestCase
     public function testEditReferentIsSucessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('referent_edit', [
+        $crawler = $this->client->request('GET', $this->generateUri('group_referent_edit', [
             'id' => $this->referent->getId(),
         ]));
 
