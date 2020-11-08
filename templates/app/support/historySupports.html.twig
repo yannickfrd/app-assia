@@ -1,0 +1,90 @@
+<section>
+    <h2 class="h4 my-4">Historique des suivis sociaux</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-dark">
+            <thead>
+                <tr>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                    <th scope="col" class="align-middle th-w-100">Statut</th>
+                    <th scope="col" class="align-middle th-date">Date de début</th>
+                    <th scope="col" class="align-middle th-date">Date de fin</th>
+                    <th scope="col" class="align-middle th-w-150">Travailleur/se social·e</th>
+                    <th scope="col" class="align-middle th-w-150">Service (Dispositif)</th>
+                    <th scope="col" class="align-middle th-w-100">Pôle</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set supports = group_people is defined ? group_people.supports : person.supports %}
+                {% for support in supports|reverse %}
+                    {% set supportGroup = group_people is defined ? support : support.supportGroup %}
+                    {# {% cache "GroupPeopleSupport" ~ supportGroup.id supportGroup.updatedAt.timestamp %} #}
+                    {% if supportGroup.referent %}
+                        {% set contact_user %}
+                            <div class='text-left p-2'>
+                                <b>Coordonnées :</b>
+                                <br/>Téléphone : {{ supportGroup.referent.phone1}}
+                                <br/>Email : {{ supportGroup.referent.email }}
+                            </div>
+                        {% endset %}
+                    {% endif %}
+                    {% set contact_service %}
+                        <div class='text-left p-2'>
+                            <b>Coordonnées du service :</b>
+                            <br/>Téléphone : {{ supportGroup.service.phone1}}
+                            <br/>Email : {{ supportGroup.service.email }}
+                        </div>
+                    {% endset %}
+
+                    <tr>
+                        <td scope="row" class="align-middle">
+                            {% if is_granted("VIEW", supportGroup) %}
+                            <a href="{{ path('support_view', {'id':supportGroup.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                title="Voir le suivi social"><span class="fas fa-eye"></span>
+                            </a>
+                            {% else %}
+                            <span class="btn btn-{{ theme_color }} btn-sm shadow my-1 cursor-default" data-toggle="tooltip" data-placement="bottom"
+                                title="Accès non autorisé"><span class="fas fa-ban"></span>
+                            </span>
+                            {% endif %}
+                            {# {% if is_granted("EDIT", supportGroup) %}
+                            <a href="{{ path('support_view', {'id':supportGroup.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                title="Modifier le suivi social"><span class="fas fa-edit"></span>
+                            </a>
+                            {% endif %} #}
+                        </td>
+                        <td class="align-middle">{{ support.statusToString }}</td>
+                        <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                        <td class="align-middle">
+                            {% if supportGroup.referent %}
+                                <a href="mailto:{{ supportGroup.referent.email }}" class="text-{{ theme_color }}"
+                                    data-toggle="tooltip" data-toggle="tooltip" data-placement="right" data-html="true"
+                                    title="{{ contact_user }}">{{ supportGroup.referent.fullname }}</a>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle">
+                            {% if supportGroup.service %}
+                                <a href="mailto:{{ supportGroup.service.email }}" class="text-{{ theme_color }}"
+                                    data-toggle="tooltip" data-toggle="tooltip" data-placement="right" data-html="true"
+                                    title="{{ contact_service }}">{{ supportGroup.service.name }}</a>
+                                    {{ supportGroup.device ? ' (' ~ supportGroup.device.name ~ ')' }}
+                            {% endif %}
+                        </td>
+                        <td class="align-middle">{{ supportGroup.service ? supportGroup.service.pole.name }}</td>
+                    </tr>
+                    {# {% endcache %} #}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if group_people is defined %}
+        <button id="btn-new-support" class="m-2 btn btn-{{ theme_color }} btn-sm" 
+            data-url="{{ path('group_people_new_support', {'id': group_people.id}) }}">
+            <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</button>
+    {% else %}
+        <p class="ml-2 text-secondary"><span class="fas fa-info-circle mr-2"></span>
+            Pour créer un nouveau suivi, aller sur la fiche du groupe ou créer un nouveau groupe (ci-dessus).<p>
+    {% endif %}
+</section>
