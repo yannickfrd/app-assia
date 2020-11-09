@@ -191,16 +191,16 @@ class NoteController extends AbstractController
         $evaluation = $supportManager->getEvaluation($supportGroup);
 
         $note = (new Note())
-        ->setTitle('Grille d\'évaluation sociale '.$evaluation->getUpdatedAt()->format('d/m/Y'))
+            ->setTitle('Grille d\'évaluation sociale '.$evaluation->getUpdatedAt()->format('d/m/Y'))
             ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
                 'support' => $supportGroup,
                 'evaluation' => $evaluation,
                 'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
                 'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
                 ]))
-                ->setType(2)
-                ->setSupportGroup($supportGroup)
-                ->setCreatedBy($this->getUser());
+            ->setType(2)
+            ->setSupportGroup($supportGroup)
+            ->setCreatedBy($this->getUser());
 
         $this->manager->persist($note);
         $this->manager->flush();

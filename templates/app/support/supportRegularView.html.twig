@@ -1,4 +1,4 @@
-{% import "macros/viewDiv.html.twig" as divElt %}
+{% import "macros/viewDiv.html.twig" as view_div %}
 
 <div class="row">
     <div class="col-md-6 mb-1 py-2">
@@ -7,37 +7,36 @@
             {{ support.service.name }}</a>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ divElt.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
+    {{ view_div.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
     {% set originRequest = support.originRequest %}
     {% if originRequest %}
-    {{ divElt.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
+    {{ view_div.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
         ~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "forms") }}
-    {{ divElt.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
+    {{ view_div.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
     {% endif %}
 </div>
 <div class="row">
-    {{ divElt.get(support.startDate ? support.startDate|date("d/m/Y") 
+    {{ view_div.get(support.startDate ? support.startDate|date("d/m/Y") 
         ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
-    {{ divElt.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " (" 
-        ~ support.referent2.fullname ~ ")" : "") : "", "Referent") }}
+    {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " | " ~ support.referent2.fullname : "") : "", "Referent") }}
 </div>
 <div class="row">
-    {{ divElt.get(support.theoreticalEndDate ? support.theoreticalEndDate|date("d/m/Y") : "", "Theoretical end date") }}
+    {{ view_div.get(support.theoreticalEndDate ? support.theoreticalEndDate|date("d/m/Y") : "", "Theoretical end date") }}
 </div>
 <div class="row">
     {% for accommodationGroup in support.accommodationGroups %}
         {% if loop.last %}
-                {{ divElt.get(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
+                {{ view_div.get(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
                     ~ (accommodationGroup.endDate ? " - " ~ accommodationGroup.endDate|date("d/m/Y") : "") : "", "Date d'hébergement") }}
-                {# {{ divElt.get(accommodationGroup.accommodation ? accommodationGroup.accommodation.name : "", "Nom du groupe de places") }} #}
-                {{ divElt.get(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
+                {# {{ view_div.get(accommodationGroup.accommodation ? accommodationGroup.accommodation.name : "", "Nom du groupe de places") }} #}
+                {{ view_div.get(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
         {% endif %}	
     {% endfor %}
-    {{ divElt.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Adresse") }}
+    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Adresse") }}
 </div>
 <div class="row">
-    {{ divElt.get(support.coefficient ? support.coefficient, "Coefficient") }}
+    {{ view_div.get(support.coefficient ? support.coefficient, "Coefficient") }}
 </div>
 <div class="row">
-    {{ divElt.get(support.comment) }}
+    {{ view_div.get(support.comment|nl2br) }}
 </div>

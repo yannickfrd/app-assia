@@ -365,7 +365,7 @@ class SupportController extends AbstractController
         if ($supportManager->cloneSupport($supportGroup)) {
             $this->manager->flush();
 
-            $this->addFlash('success', 'Les éléments du dernier suivi ont été ajoutés (évaluation sociale, documents...)');
+            $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
         } else {
             $this->addFlash('warning', 'Aucun autre suivi n\'a été trouvé.');
         }

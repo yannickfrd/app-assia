@@ -30,7 +30,7 @@
                         </td>
                         <td class="align-middle justify"><span class="font-weight-bold">
                             {{ rdv.title }}{% if rdv.title and rdv.content %} : {% endif %}</span>
-                            <span class="">{{ rdv.content|slice(0,190) |striptags('<b>')|raw }}</span> 
+                            <span class="">{{ rdv.content|slice(0,190)|striptags|raw }}</span> 
                             {% if rdv.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
                         </td>
                         <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>

@@ -1,0 +1,7 @@
+{#  #}
+{% macro get(value, key = null, trans = "forms") %}{% apply spaceless %}
+    {% if value not in ["", null] %}
+        {% if key %}<b style="font-size: 16px;">{{ key|trans({}, trans) }} : </b>{% endif %}
+        <p>{{ value|replace({"\r\n": "</p><p>"})|striptags("<br><p>")|raw }}</p>
+    {% endif %}
+{% endapply %}{% endmacro %}

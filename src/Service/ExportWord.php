@@ -27,11 +27,12 @@ class ExportWord
     /**
      * Export file.
      */
-    public function export(string $content, ?string $title = 'document', ?string $logoPath = null, string $info = null)
+    public function export(string $content, ?string $title = 'document', ?string $logoPath = null, string $info = '')
     {
+        $title = $title ?? 'Document';
+
         /** * @var Section $section */
         $section = $this->addSection();
-
         $this->addHeader($section, $title, $logoPath, $info);
         $this->addFooter($section);
         $this->addTitle($section, $title);
@@ -59,7 +60,7 @@ class ExportWord
     /**
      * Add first page header.
      */
-    protected function addHeader(Section $section, string $title, ?string $logoPath = null, ?string $info = null): void
+    protected function addHeader(Section $section, string $title, ?string $logoPath = null, string $info): void
     {
         // Add first page header
         $header = $section->addHeader(HEADER::FIRST);
@@ -113,8 +114,7 @@ class ExportWord
      */
     protected function addContent(Section $section, string $content, string $logoPath = null, string $title = null): void
     {
-        $content = \str_replace('  ', '', $content);
-
+        // $content = \str_replace(['&lt;br /&gt;'], '<br/>', $content);
         Html::addHtml($section, $content, false, false);
 
         if (str_contains($title, 'Grille d\'évaluation sociale')) {
@@ -191,15 +191,23 @@ class ExportWord
         $this->phpWord->setDefaultParagraphStyle([
             'spaceAfter' => 80,
             'spacing' => 1,
+            'cellMargin' => 50,
         ]);
+    }
+
+    protected function getStyleTable(): array
+    {
+        return [
+            'borderColor' => 'b5b5b5', 'borderSize' => 6, 'cellMargin' => 50,
+        ];
     }
 
     /**
      * Save the document.
      */
-    public function save(?string $title, string $info, bool $download = true): ?StreamedResponse
+    public function save(string $title, string $info, bool $download = true): ?StreamedResponse
     {
-        $title = \str_replace([' ', '/', '\''], '-', ($title ? $title : 'document').'-'.$info);
+        $title = \str_replace([' ', '/', '\''], '-', $title.'-'.$info);
         $title = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $title);
 
         // Settings::setPdfRendererPath('..\vendor\dompdf\dompdf');

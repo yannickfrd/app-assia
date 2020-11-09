@@ -1,5 +1,5 @@
 {% extends "base.html.twig" %}
-{% import "macros/viewDiv.html.twig" as divElt %}
+{% import "macros/viewDiv.html.twig" as view_div %}
 
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
@@ -107,7 +107,7 @@
 							<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
 					{% endif %}
 					{% if is_granted("ROLE_SUPER_ADMIN") %}
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les éléments du dernier suivi social ?'" %}
+						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
 						<a class="mr-3 btn btn-{{ theme_color }} d-block" href="{{ path('support_clone', {'id':support.id}) }}" 
 							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
 							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}">Dupliquer dernier suivi</a>
@@ -130,8 +130,8 @@
 				</span>
 			</div>	
 			<div class="row mb-2">
-				{{ divElt.get(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
-				{{ divElt.get(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
+				{{ view_div.get(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
+				{{ view_div.get(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
 			</div>
 		{% endif %}
 

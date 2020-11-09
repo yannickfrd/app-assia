@@ -91,7 +91,7 @@ class SupportManager
         $supportGroup->setGroupPeople($groupPeople)
             ->setCoefficient($supportGroup->getDevice()->getCoefficient());
 
-        // Si l'utilisateur vuet récuper les éléments du dernier suivi, alors clone l'évaluation sociale et les documents existants.
+        // Si l'utilisateur veut récupérer les informations du précédent suivi, alors clone l'évaluation sociale et les documents existants.
         if (true === $cloneSupport) {
             $this->cloneSupport($supportGroup);
         }

@@ -31,7 +31,7 @@
                                 </td>
                                 <td class="align-middle justify"><span class="font-weight-bold">
                                     {{ note.title }}{% if note.title %} : {% endif %}</span>
-                                    <span class="">{{ note.content|slice(0,190) |striptags('<b>')|raw }}</span> 
+                                    {{ note.content|slice(0,190)|striptags|raw }} 
                                     {% if note.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
                                 </td>
                                 <td class="align-middle">
