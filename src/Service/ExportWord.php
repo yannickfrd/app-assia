@@ -114,12 +114,28 @@ class ExportWord
      */
     protected function addContent(Section $section, string $content, string $logoPath = null, string $title = null): void
     {
-        // $content = \str_replace(['&lt;br /&gt;'], '<br/>', $content);
-        Html::addHtml($section, $content, false, false);
+        Html::addHtml($section, $this->editContent($content), false, false);
 
         if (str_contains($title, 'Grille d\'évaluation sociale')) {
             $this->addLogo($section, $logoPath, 60, 'right');
         }
+    }
+
+    /**
+     * Modifie le contenu Html afin d'ajouter certains éléments de mise en forme supprimés par CKEditor.
+     */
+    protected function editContent(string $content): string
+    {
+        // $content = \str_replace(['&lt;br /&gt;'], '<br/>', $content);
+        $content = \str_replace('<br>', '<br/>', $content);
+        $content = \str_replace('<h3>', '<h3 style="font-size: 21.5px;">', $content);
+        $content = \str_replace('<h4>', '<h4 style="font-size: 16px;">', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>Ressources', '<table style="width: 50%; border: 1px #b5b5b5 solid;"><thead><tr><th><strong> Ressources', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>Charges', '<table style="width: 50%; border: 1px #b5b5b5 solid;"><thead><tr><th><strong> Charges', $content);
+        $content = \str_replace('<table>', '<table style="width: 100%; border: 1px #b5b5b5 solid;"> ', $content);
+        $content = \str_replace('<thead><tr>', '<thead><tr style="background-color: #e9ecef;"> ', $content);
+
+        return $content;
     }
 
     /**

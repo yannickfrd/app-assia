@@ -34,7 +34,7 @@
             evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : ""), "Domiciliation address", "evaluation") }}
     {% endif %}
 
-    <br/>
+    <p> </p>
 
     {{ view_p.get(support.groupPeople.familyTypologyToString~ (nb_people > 1 ? 
         ", " ~ nb_people ~ " personnes"), "Family typology") }}
@@ -68,14 +68,14 @@
 
     {# Rendez-vous #}
     {% if lastRdv or nextRdv %}
-        <br/>   
+        <p> </p>   
         {{ view_p.get(lastRdv ? lastRdv.start|date("d/m/Y"), "rdv.last") }}
         {{ view_p.get(nextRdv ? nextRdv.start|date("d/m/Y"), "rdv.next") }}
     {% endif %}
 
     {# Justice #}
     {% if support.service.justice == YES %}
-        <br/>
+        <p> </p>
         <h3 class="h4" style="{{ style_h3 }}">Situation judiciaire</h3>
         {% for evalPerson in evaluation.evaluationPeople %}
             {% set evalJustice = evalPerson.evalJusticePerson %}
@@ -92,7 +92,7 @@
 
 
     {# Identité - Papier #}
-    <br/>
+    <p> </p>
     <h3 class="h4" style="{{ style_h3 }}">Situation administrative</h3>
 
     {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
@@ -109,14 +109,14 @@
         {{ view_p.get(evalAdm.asylumBackground == YES ? (evalAdm.asylumStatus ? evalAdm.asylumStatusToString : 
             evalAdm.asylumBackgroundToString), "Asylum background", "evaluation") }}
         {{ view_p.get(evalAdm.renewalPermitDate ? evalAdm.renewalPermitDate|date("d/m/Y") 
-            ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date"  ) }}
+            ~ (evalAdm.nbRenewals ? " (" ~ evalAdm.nbRenewals ~ " renouvellement(s))") : "", "Renewal permit date", "evaluation" ) }}
         {{ view_p.get(evalAdm.endValidPermitDate ? evalAdm.endValidPermitDate|date("d/m/Y") : "", "End valid permit date", "evaluation") }}
         {{ view_p.get(evalAdm.workRightToString, "Work right", "evaluation") }}
         <div style="text-align: justify;">{{ view_text.get(evalAdm.commentEvalAdmPerson) }}</div>
     {% endfor %}
 
     {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %} {# si typologie familiale avec enfants #}
-        <br/>
+        <p> </p>
         <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
             <thead>
                 <tr style="background-color: #e9ecef; font-weight: bold;">
@@ -141,7 +141,7 @@
     {% endif %}
 
     {# Famille #}
-    <br/>
+    <p> </p>
     <h3 class="h4" style="{{ style_h3 }}">Situation familiale</h3>
 
     {% set eval_adults_family = eval_adults|filter(e => e.evalFamilyPerson) %}
@@ -161,7 +161,7 @@
 
     {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
     {% if eval_children_family|length > 0 %}
-        <br/>
+        <p> </p>
         <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
             <thead>
                 <tr style="background-color: #e9ecef; font-weight: bold;">
@@ -189,7 +189,7 @@
 
     {% set evalFamily = evaluation.evalFamilyGroup %}
     {% if evalFamily %}
-        <br/>
+        <p> </p>
         {# {{ view_p.get(evalFamily.cafId, "Caf id", "evaluation") }} #}
         {{ view_p.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
         {{ view_p.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
@@ -202,7 +202,7 @@
     {% set nb_people_budget = eval_people_budget|length %}
     {% set evalBudgetGroup = evaluation.evalBudgetGroup %}
     {% if evalBudgetGroup %}
-        <br/>
+        <p> </p>
         <h3 class="h4" style="{{ style_h3 }}">Situation financière</h3>
         {% if nb_people_budget > 1 %}
             <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
@@ -246,7 +246,7 @@
                 </tfoot>
             </table>
         {% endif %}
-        <br/>
+        <p> </p>
 
         {% for evalPerson in eval_people_budget %}
             {% set evalBudget = evalPerson.evalBudgetPerson %}
@@ -259,7 +259,7 @@
                 {# {{ evalBudget.charges != YES or null == evalBudget.chargesAmt ? view_p.get(evalBudget.chargesToString, "Charges", "evaluation") }} #}
                 
                 {% if evalBudget.resources == YES %}
-                    <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
+                    <table id="tbl_resources" class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                         <thead>
                             <tr style="{{ style_thead }}">
                                 <th scope="col"> Ressources</th>
@@ -284,27 +284,25 @@
                                 <td class="text-right" style="text-align: right;">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
                             </tr>
                             {% if evalBudget.incomeN1Amt %}
-                            <tr>
-                                <td scope="row">Impôts sur le revenu n-1</td>
-                                <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €</td>
-                            </tr>							
+                                <tr>
+                                    <td scope="row"> Impôts sur le revenu n-1</td>
+                                    <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €</td>
+                                </tr>							
                             {% endif %}
                             {% if evalBudget.incomeN2Amt %}
-                            <tr>
-                                <td scope="row">Impôts sur le revenu n-2</td>
-                                <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
-                            </tr>
+                                <tr>
+                                    <td scope="row"> Impôts sur le revenu n-2</td>
+                                    <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
+                                </tr>
                             {% endif %}
                         </tfoot>
                     </table>
                 {% endif %}
 
-                {{ view_p.get(evalBudget.incomeN1Amt > 0 ? evalBudget.incomeN1Amt|number_format(0, ",", " ") ~ " €", "Impôts sur le revenu n-1") }}
-                {{ view_p.get(evalBudget.incomeN2Amt > 0 ? evalBudget.incomeN2Amt|number_format(0, ",", " ") ~ " €", "Impôts sur le revenu n-2") }}
                 {{ view_p.get(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
 
                 {% if evalBudget.charges == YES %}
-                    <br/>
+                    <p> </p>
                     <table class="table-bordered mb-2" style="width: 40%; {{ style_table }}">
                         <thead>
                             <tr style="{{ style_thead }}">
@@ -362,7 +360,7 @@
 
 
     {# Situation professionnelle #}
-    <br/>
+    <p> </p>
     <h3 class="h4" style="{{ style_h3 }}">Situation professionnelle</h3>
 
     {% set eval_adults_prof = eval_adults|filter(e => e.evalProfPerson) %}
@@ -392,7 +390,7 @@
 
 
     {# Situation sociale #}
-    <br/>
+    <p> </p>
     <h3 class="h4" style="{{ style_h3 }}">Situation sociale</h3>
 
     {% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
@@ -439,7 +437,7 @@
 
     {% set evalHousing = evaluation.evalHousingGroup %}
     {% if evalHousing %}
-        <br/>
+        <p> </p>
         <h3 class="h4" style="{{ style_h3 }}">Situation au regard du logement</h3>
         {{ view_p.get(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
         {% if evalHousing.siaoRequest %}
@@ -516,7 +514,7 @@
 
     {# Parcours de vie #}
     {% if evaluation.backgroundPeople %}
-        <br/>
+        <p> </p>
         <h3 class="h4" style="{{ style_h3 }}">Parcours de vie</h3>
         <div style="text-align: justify;">{{ view_text.get(evaluation.backgroundPeople) }}</div>
     {% endif %}
@@ -524,7 +522,7 @@
     {# Vie à l'hôtel #}
     {% set evalHotelLife = evaluation.evalHotelLifeGroup %}
     {% if evalHotelLife %}  
-        <br/>
+        <p> </p>
         <h3 class="h4" style="{{ style_h3 }}">Vie à l'hôtel</h3>
         <div style="text-align: justify;">
             {% if evalHotelLife.food %}<br/>{{ view_text.get(evalHotelLife.food, "Food", "evaluation") }}{% endif %}
@@ -536,7 +534,7 @@
     {% endif %}
 
     {# Signature #}
-    <br/><br/>
+    <p> </p><p> </p>
     <p style="text-align: right;"><!--
      -->{{ app.user.firstname }} {{ app.user.lastname }}<br/><!--
      -->{{ support.service.name }}<br/><!--
