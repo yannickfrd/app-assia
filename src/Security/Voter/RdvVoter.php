@@ -2,13 +2,13 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class RdvVoter extends Voter
 {
-    use UserIsAdminTrait;
+    use UserAdminOfServiceTrait;
 
     private $security;
     protected $currentUser;
@@ -76,7 +76,7 @@ class RdvVoter extends Voter
     {
         if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->userIsAdmin($this->rdv->getCreatedBy())
+            || $this->isAdminUserOfService($this->rdv->getSupportGroup()->getService())
             || $this->currentUserId == $this->rdv->getSupportGroup()->getReferent()->getId()
         ) {
             return true;
@@ -89,7 +89,7 @@ class RdvVoter extends Voter
     {
         if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->userIsAdmin($this->rdv->getCreatedBy())
+            || $this->isAdminUserOfService($this->rdv->getSupportGroup()->getService())
             || $this->currentUserId == $this->rdv->getSupportGroup()->getReferent()->getId()
         ) {
             return true;

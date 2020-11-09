@@ -7,7 +7,7 @@ use App\Entity\User;
 trait UserIsAdminTrait
 {
     // If current user is administrator
-    protected function userIsAdmin(User $user)
+    protected function isAdminUser(User $user)
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {

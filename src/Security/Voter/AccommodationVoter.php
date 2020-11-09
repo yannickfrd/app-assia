@@ -8,6 +8,8 @@ use Symfony\Component\Security\Core\Security;
 
 class AccommodationVoter extends Voter
 {
+    use UserAdminOfServiceTrait;
+
     private $security;
     protected $user;
     protected $userId;
@@ -54,7 +56,7 @@ class AccommodationVoter extends Voter
 
     protected function canView()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminService())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUserOfService(($this->accommodation->getService()))) {
             return true;
         }
 
@@ -69,7 +71,7 @@ class AccommodationVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminService()) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUserOfService(($this->accommodation->getService()))) {
             return true;
         }
 
@@ -85,7 +87,7 @@ class AccommodationVoter extends Voter
 
     protected function canDelete()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminService())) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUserOfService(($this->accommodation->getService()))) {
             return true;
         }
 
@@ -95,20 +97,6 @@ class AccommodationVoter extends Voter
         // ) {
         //     return true;
         // }
-        return false;
-    }
-
-    // If current user is administrator
-    protected function isAdminService()
-    {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            foreach ($this->user->getServiceUser() as $serviceUser) {
-                if ($this->accommodation->getService()->getId() == $serviceUser->getService()->getId()) {
-                    return true;
-                }
-            }
-        }
-
         return false;
     }
 }

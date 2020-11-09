@@ -2,13 +2,13 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class DocumentVoter extends Voter
 {
-    use UserIsAdminTrait;
+    use UserAdminOfServiceTrait;
 
     private $security;
     protected $currentUser;
@@ -26,7 +26,7 @@ class DocumentVoter extends Voter
             && $subject instanceof \App\Entity\Document;
     }
 
-    protected function voteOnAttribute($attribute, $document, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $document, TokenInterface $token): bool
     {
         $this->currentUser = $token->getUser();
         $this->currentUserId = $this->currentUser->getId();
@@ -51,7 +51,7 @@ class DocumentVoter extends Voter
         return false;
     }
 
-    protected function canView()
+    protected function canView(): bool
     {
         if ($this->currentUserId == $this->document->getCreatedBy()->getId()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
@@ -71,11 +71,11 @@ class DocumentVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(): bool
     {
         if ($this->currentUserId == $this->document->getCreatedBy()->getId()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->userIsAdmin($this->document->getCreatedBy())
+            || $this->isAdminUserOfService($this->document->getSupportGroup()->getService())
             || $this->currentUserId == $this->document->getSupportGroup()->getReferent()->getId()
         ) {
             return true;
@@ -84,11 +84,11 @@ class DocumentVoter extends Voter
         return false;
     }
 
-    protected function canDelete()
+    protected function canDelete(): bool
     {
         if ($this->currentUserId == $this->document->getCreatedBy()->getId()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->userIsAdmin($this->document->getCreatedBy())
+            || $this->isAdminUserOfService($this->document->getSupportGroup()->getService())
             || $this->currentUserId == $this->document->getSupportGroup()->getReferent()->getId()
         ) {
             return true;

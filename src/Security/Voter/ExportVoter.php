@@ -2,9 +2,9 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class ExportVoter extends Voter
 {
@@ -81,7 +81,7 @@ class ExportVoter extends Voter
             return true;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->export->getCreatedBy()))) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 
@@ -94,7 +94,7 @@ class ExportVoter extends Voter
             return true;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->export->getCreatedBy()))) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 

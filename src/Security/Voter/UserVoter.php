@@ -2,11 +2,9 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\User;
-use App\Security\Voter\UserIsAdminTrait;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class UserVoter extends Voter
 {
@@ -55,7 +53,7 @@ class UserVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->userIsAdmin($this->user)) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUser($this->user)) {
             return true;
         }
 
@@ -68,7 +66,7 @@ class UserVoter extends Voter
 
     protected function canDisable()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->userIsAdmin($this->user))) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser($this->user))) {
             return true;
         }
 
