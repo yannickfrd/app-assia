@@ -35,7 +35,8 @@ export default class SupportNotes {
         this.nbTotalNotesElt = document.getElementById('nb-total-notes')
         this.supportId = document.getElementById('container-notes').getAttribute('data-support')
         this.editor
-    
+        this.data = null
+
         this.init()
         this.autoSave = new AutoSave(this.autoSaveNote.bind(this), this.editorElt, 2 * 60, 20)
     }
@@ -150,7 +151,10 @@ export default class SupportNotes {
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), statusValue)
 
         if (this.autoSave.active === false) {
-            this.editor.setData(this.contentNoteElt.innerHTML)
+            const content  = this.contentNoteElt.innerHTML
+            this.editor.setData(content)
+            this.noteContentElt.textContent = content
+            this.data = this.editor.getData()
         }
 
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
@@ -170,7 +174,9 @@ export default class SupportNotes {
             return new MessageFlash('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
 
-        this.noteContentElt.textContent = this.editor.getData()
+        if (this.editor.getData() != this.data) {
+            this.noteContentElt.textContent = this.editor.getData()
+        }
 
         if (!this.autoSave.active) {
             this.loader.on()

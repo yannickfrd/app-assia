@@ -208,7 +208,7 @@
             <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                 <thead>
                     <tr style="{{ style_thead }}">
-                        <th scope="col"></th>
+                        <th scope="col"> Ménage</th>
                         <th class="text-right" style="text-align: right;">Montant</th>
                     </tr>
                 </thead>
@@ -529,12 +529,12 @@
             {% if evalHotelLife.clothing %}<br/>{{ view_text.get(evalHotelLife.clothing, "Clothing", "evaluation") }}{% endif %}
             {% if evalHotelLife.roomMaintenance %}<br/>{{ view_text.get(evalHotelLife.roomMaintenance, "Room maintenance", "evaluation") }}{% endif %}
             {% if evalHotelLife.otherHotelLife %}<br/>{{ view_text.get(evalHotelLife.otherHotelLife, "Other hotel life", "evaluation") }}{% endif %}
-            {% if evalHotelLife.commentHotelLife %}<br/>{{ view_text.get(evalHotelLife.commentHotelLife, "Comment hotel life", "evaluation") }}{% endif %}
+            {% if evalHotelLife.commentHotelLife %}<br/>{{ view_text.get(evalHotelLife.commentHotelLife, "Comment hotel life", "evaluation") }}<br/>{% endif %}
         </div>
     {% endif %}
 
     {# Signature #}
-    <p> </p><p> </p>
+    <p><br/></p>
     <p style="text-align: right;"><!--
      -->{{ app.user.firstname }} {{ app.user.lastname }}<br/><!--
      -->{{ support.service.name }}<br/><!--
