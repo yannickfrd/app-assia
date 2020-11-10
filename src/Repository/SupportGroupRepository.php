@@ -118,6 +118,8 @@ class SupportGroupRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
+        $query->andWhere('sp.head = TRUE');
+
         return $query->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -141,7 +143,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
 
             ->where('sg.service = :service')
-            ->setParameter('service', $serviceId);
+            ->setParameter('service', $serviceId)
+            ->andWhere('sp.head = TRUE');
 
         $query = $this->filter($query, $search);
 
@@ -183,7 +186,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
 
             ->where('sg.service = :service')
-            ->setParameter('service', $serviceId);
+            ->setParameter('service', $serviceId)
+            ->andWhere('sp.head = TRUE');
 
         $query = $this->filter($query, $search);
 
@@ -378,7 +382,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
             ->setParameter('start', $start)
             ->andWhere('sg.startDate <= :end')
-            ->setParameter('end', $end);
+            ->setParameter('end', $end)
+            ->andWhere('sp.head = TRUE');
 
         if ($search->getReferents() && $search->getReferents()->count() > 0) {
             $expr = $query->expr();

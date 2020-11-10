@@ -100,7 +100,7 @@ class SearchType extends AbstractType
                     'label_attr' => ['class' => 'sr-only'],
                     'placeholder' => '-- Référent --',
                     'attr' => [
-                        'class' => 'multi-select w-min-150 w-max-200',
+                        'class' => 'multi-select w-min-150 w-max-220',
                         'data-select2-id' => 'referents',
                     ],
                     'required' => false,

@@ -32,33 +32,31 @@
                 <tbody>
                     {% for support in supports %}
                     {# {% cache "referentSupport" ~ user.id ~ support.id support.updatedAt.timestamp %} #}
-                    <tr id="support-{{ support.id }}">
-                        <td scope="row" class="align-middle">
-                            <a href="{{ path('support_view', {'id':support.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-                                title="Voir le suivi social"><span class="fas fa-eye"></span>
-                            </a>
-                        </td>
-                        <td class="align-middle">
-                            {% for supportPerson in support.supportPeople|filter(s => s.head == true) %}
-                                {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br/>
-                            {% endfor %}
-                        <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
-                            -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
-                            {% if support.nbPeople != support.groupPeople.nbPeople %}
-                                <span class="fas fa-exclamation-triangle text-warning" 
-                                    title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
-                            {% endif %}
-                        </td>
-                        <td class="align-middle">
-                            {{ support.service.name }}<br/>{% if support.device %}({{ support.device.name }}){% endif %}                    
-                        </td>
-                        <td class="align-middle">{{ support.statusToString }}</td>
-                        <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}
-                        <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}
-                            {% if support.endDate == null and support.theoreticalEndDate %}{{ support.theoreticalEndDate|date("d/m/Y") }}<br/>(Fin théorique){% endif %}
-                        </td>
-                    </tr>
+                        {% set person = (support.supportPeople|first).person %}
+                        <tr id="support-{{ support.id }}">
+                            <td scope="row" class="align-middle">
+                                <a href="{{ path('support_view', {'id':support.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                    title="Voir le suivi social"><span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td class="align-middle">{{ person ? person.fullname }}</td>
+                            <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
+                                -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
+                                {% if support.nbPeople != support.groupPeople.nbPeople %}
+                                    <span class="fas fa-exclamation-triangle text-warning" 
+                                        title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {{ support.service.name }}<br/>{% if support.device %}({{ support.device.name }}){% endif %}                    
+                            </td>
+                            <td class="align-middle">{{ support.statusToString }}</td>
+                            <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}
+                            <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}
+                                {% if support.endDate == null and support.theoreticalEndDate %}{{ support.theoreticalEndDate|date("d/m/Y") }}<br/>(Fin théorique){% endif %}
+                            </td>
+                        </tr>
                     {# {% endcache %} #}
                     {% endfor %}
                 </tbody>

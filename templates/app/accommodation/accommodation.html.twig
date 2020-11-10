@@ -109,50 +109,45 @@
         </section>
 
         {% if accommodation.id is not null %}
-        
-        <hr>
-    
-        <section id="accommodation_groups">
-            <h2 class="h4 my-4">Prises en charge</h2>
-            <p class="text-secondary">Affiche les 10 dernières prises en charge.</p>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="align-middle th-w-20"></th>
-                            <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
-                            <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
-                            <th scope="col" class="align-middle th-w-100">Nb de personnes prises en charge</th>
-                            <th scope="col" class="align-middle th-date">Date d'entrée</th>
-                            <th scope="col" class="align-middle th-date">Date de sortie</th>
-                            <th scope="col" class="align-middle th-w-100">Motif de fin</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for accommodation_group in accommodations_group %}
-                        <tr>
-                            <th scope="row">
-                                <a href="{{ path('support_accommodation_edit', {'id':accommodation_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                    data-toggle="tooltip" data-placement="bottom" title="Voir le détail de la prise en charge"><span class="fas fa-eye"></span>
-                                </a>
-                            </th>
-                            <td>
-                                {% for supportPerson in accommodation_group.supportGroup.supportPeople|filter(s => s.role != constant("App\\Entity\\RolePerson::ROLE_CHILD")) %}
-                                {{ supportPerson.person.fullname }}<br/>
-                                {% endfor %}                        
-                            </td>
-                            <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>
-                            <td>{{ accommodation_group.accommodationPeople|length ? accommodation_group.accommodationPeople|length }}</td>
-                            <td>{{ accommodation_group.startDate ? accommodation_group.startDate|date("d/m/Y") }}</td>                    
-                            <td>{{ accommodation_group.endDate ? accommodation_group.endDate|date("d/m/Y") }}</td>                    
-                            <td>{{ accommodation_group.endReasonToString }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            <hr>
+            <section id="accommodation_groups">
+                <h2 class="h4 my-4">Prises en charge</h2>
+                <p class="text-secondary">Affiche les 10 dernières prises en charge.</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                                <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
+                                <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
+                                <th scope="col" class="align-middle th-w-100">Nb de personnes prises en charge</th>
+                                <th scope="col" class="align-middle th-date">Date d'entrée</th>
+                                <th scope="col" class="align-middle th-date">Date de sortie</th>
+                                <th scope="col" class="align-middle th-w-100">Motif de fin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for accommodation_group in accommodations_group %}
+                                {% set person = (accommodation_group.supportGroup.supportPeople|first).person %}
+                                <tr>
+                                    <th scope="row">
+                                        <a href="{{ path('support_accommodation_edit', {'id':accommodation_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir le détail de la prise en charge"><span class="fas fa-eye"></span>
+                                        </a>
+                                    </th>
+                                    <td>{{ person ? person.fullname }}</td>
+                                    <td>{{ accommodation_group.groupPeople.familyTypologyToString }}</td>
+                                    <td>{{ accommodation_group.accommodationPeople|length ? accommodation_group.accommodationPeople|length }}</td>
+                                    <td>{{ accommodation_group.startDate ? accommodation_group.startDate|date("d/m/Y") }}</td>                    
+                                    <td>{{ accommodation_group.endDate ? accommodation_group.endDate|date("d/m/Y") }}</td>                    
+                                    <td>{{ accommodation_group.endReasonToString }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-        </section>
+            </section>
         {% endif %}
 
     </div>

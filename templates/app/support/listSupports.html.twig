@@ -48,12 +48,8 @@
                     <tbody>            
                         {% for support in supports %}
                         {# {% cache "servicesSupport" ~ app.user.id ~ support.id support.updatedAt.timestamp %} #}
+                            {% set person = (support.supportPeople|first).person %}
                             {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
-                            {% if support.supportPeople|filter(s => s.role != ROLE_CHILD)|length %}
-                                {% set supportPeople = support.supportPeople|filter(s => s.role != ROLE_CHILD) %}
-                            {% else %} 
-                                {% set supportPeople = support.supportPeople %}
-                            {% endif %}
                         <tr>
                             <td scope="row" class="align-middle">
                                 {% if is_granted("VIEW", support) %}
@@ -69,16 +65,8 @@
                                 </a>
                                 {% endif %} #}
                             </td>
-                            <td class="align-middle">
-                                {% for supportPerson in supportPeople %}
-                                    {{ supportPerson.person.fullname }}{{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}<br/>
-                                {% endfor %}
-                            </td>
-                            <td class="align-middle">
-                                {% for supportPerson in supportPeople %}
-                                    {{ supportPerson.person.birthdate|date("d/m/Y") }}<br/>
-                                {% endfor %}
-                            </td>
+                            <td class="align-middle">{{ person ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
+                            <td class="align-middle">{{ person and person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
                                 -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
                                 {% if support.nbPeople != support.groupPeople.nbPeople %}

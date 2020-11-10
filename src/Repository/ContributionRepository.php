@@ -33,7 +33,8 @@ class ContributionRepository extends ServiceEntityRepository
      */
     public function findAllContributionsQuery(ContributionSearch $search): Query
     {
-        $query = $this->getContributionsQuery();
+        $query = $this->getContributionsQuery()
+            ->andWhere('sp.head = TRUE');
 
         if ($search) {
             $query = $this->filter($query, $search);

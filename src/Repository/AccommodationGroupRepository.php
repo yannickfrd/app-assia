@@ -2,12 +2,12 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Accommodation;
 use App\Entity\AccommodationGroup;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method AccommodationGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -65,6 +65,7 @@ class AccommodationGroupRepository extends ServiceEntityRepository
 
             ->andWhere('ag.accommodation = :accommodation')
             ->setParameter('accommodation', $accommodation)
+            ->andWhere('sp.head = TRUE')
 
             ->orderBy('ag.startDate', 'DESC')
 

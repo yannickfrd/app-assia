@@ -62,11 +62,7 @@
                         {% set toPayAmt = 0 %}
                         {% set paidAmt = 0 %}
                         {% for contribution in contributions %}
-                            {% if contribution.supportGroup.supportPeople|filter(s => s.head == true)|length %}
-                                {% set supportPerson = contribution.supportGroup.supportPeople|filter(s => s.head == true)|first %}
-                            {% else %} 
-                                {% set supportPerson = contribution.supportGroup.supportPeople|first %}
-                            {% endif %}
+                            {% set person = (contribution.supportGroup.supportPeople|first).person %}
                             <tr>
                                 <td scope="row" class="align-middle text-center">
                                     <a class="btn btn-{{ theme_color }} btn-sm shadow"
@@ -74,7 +70,7 @@
                                         data-toggle="tooltip" data-placement="bottom" title="Voir {{ contribution.typeToString }}"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td class="align-middle">{{ supportPerson.person.fullname }}</td>
+                                <td class="align-middle">{{ person ? person.fullname }}</td>
                                 <td class="align-middle">{{ contribution.typeToString }}
                                     <span class="text-secondary">
                                         {{ contribution.type == constant("TYPE_RENT", contribution) ? "(" ~ contribution.rentAmt|number_format(0, ",", " ") ~ " €)" }}<br/>

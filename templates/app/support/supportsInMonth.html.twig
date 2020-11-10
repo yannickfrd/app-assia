@@ -2,6 +2,10 @@
 
 {% block title %}Suivis du mois{{ parent() }}{% endblock %}
 
+{% block stylesheets %}
+	{{ encore_entry_link_tags("multiSelect") }}
+{% endblock %}
+
 {% block body %}
 
     <section class="mt-0">
@@ -58,33 +62,33 @@
                     </thead>
                     <tbody>
                         {% for support in supports %}
-                        <tr>
-                            <th scope="row" class="align-middle">
-                                <a href="{{ path('support_view', {'id':support.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
-                                    title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
-                                </a>
-                            </th>
-                            {% set supportPerson = (support.supportPeople|filter(s => s.head == true)|first) %}
-                            <td class="align-middle">{{ supportPerson ? supportPerson.person.fullname }}</td>
-                            <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
-                            <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
-                            <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
-                            <td class="align-middle">
-                                {{ support.service ? support.service.name }}<br/>{{ support.device ? "(" ~ support.device.name ~ ")" }}
-                            </td>
-                            {% for contribution in contributions|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Contribution::TYPE_CONTRIBUTION") ) %}
-                                {% if loop.first %}
-                                    <td class="align-middle text-right">{{ contribution.toPayAmt|number_format(2, ",", " ") }} €</td>
-                                    <td class="align-middle text-right">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
-                                    <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
-                                    <td class="align-middle">{{ contribution.comment }}</td>
-                                {% endif %}
-                            {% else %}
-                                <td colspan="5"></td>
-                            {% endfor %}
-                        </tr>
+                            {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
+                            <tr>
+                                <th scope="row" class="align-middle">
+                                    <a href="{{ path('support_view', {'id':support.id}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                        title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                    </a>
+                                </th>
+                                <td class="align-middle">{{ person ? person.fullname }}</td>
+                                <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
+                                <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                                <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
+                                <td class="align-middle">
+                                    {{ support.service ? support.service.name }}<br/>{{ support.device ? "(" ~ support.device.name ~ ")" }}
+                                </td>
+                                {% for contribution in contributions|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Contribution::TYPE_CONTRIBUTION") ) %}
+                                    {% if loop.first %}
+                                        <td class="align-middle text-right">{{ contribution.toPayAmt|number_format(2, ",", " ") }} €</td>
+                                        <td class="align-middle text-right">{{ contribution.paidAmt|number_format(2, ",", " ") }} €</td>
+                                        <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
+                                        <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
+                                        <td class="align-middle">{{ contribution.comment }}</td>
+                                    {% endif %}
+                                {% else %}
+                                    <td colspan="5"></td>
+                                {% endfor %}
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>

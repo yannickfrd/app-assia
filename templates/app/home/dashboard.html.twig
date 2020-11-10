@@ -19,7 +19,7 @@
     <div class="my-5">
       {% include "app/managing/managingServices.html.twig" %}
           {% if isSocialWorker or supports|length > 0 %}
-              {% include "app/home/listSupports.html.twig" %}
+            {% include "app/home/listSupports.html.twig" %}
           {% endif %}
           {% if isSocialWorker or notes|length > 0 %}
             {% include "app/home/listNotes.html.twig" %}
