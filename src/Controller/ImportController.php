@@ -11,6 +11,7 @@ use App\Service\Import\ImportDatasOC;
 use App\Service\Import\ImportDatasPAF;
 use App\Service\Import\ImportDatasRdv;
 use App\Service\Import\ImportDatasUser;
+use App\Service\Import\UpdateDatasAMH;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +56,17 @@ class ImportController extends AbstractController
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importAMH(Request $request, ImportDatasAMH $importDatas): Response
+    {
+        return $this->import($request, $importDatas, 'import_amh.csv');
+    }
+
+    /**
+     * Mise à jour des données de l'AMH.
+     *
+     * @Route("update_import_adm", name="update_import_adm", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function updateAMH(Request $request, UpdateDatasAMH $importDatas): Response
     {
         return $this->import($request, $importDatas, 'import_amh.csv');
     }

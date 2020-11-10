@@ -23,7 +23,7 @@ class EvalAdmPerson
         22 => 'Autorisation provisoire de séjour',
         20 => 'Carte de résident',
         21 => 'Carte de séjour temporaire',
-        01 => 'CNI',
+        01 => 'CNI française',
         03 => 'Papiers étrangers',
         02 => 'Passeport',
         30 => 'Récépissé première demande',
