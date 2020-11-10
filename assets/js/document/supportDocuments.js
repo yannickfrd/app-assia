@@ -11,7 +11,7 @@ export default class SupportDocuments {
 
     constructor() {
         this.loader = new Loader()
-        this.ajax = new Ajax(this.loader)
+        this.ajax = new Ajax(this.loader, 60)
         this.modalElt = new Modal(document.getElementById('modal-document'))
         this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
         this.selectType = new SelectType()

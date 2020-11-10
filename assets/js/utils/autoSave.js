@@ -44,7 +44,7 @@ export default class AutoSave {
             this.count = 0
             this.active = true
             console.log('Auto save...')
-            this.callback()
+            return this.callback()
         }
     }
 

@@ -78,18 +78,6 @@ export default class SupportNotes {
     }
 
     /**
-     * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
-     * @param {Event} e 
-     */
-    goOutModal(e) {
-        if (e.target === this.modalNoteElt && this.autoSave.count > 0) {
-            if (window.confirm("Attention, vous n'avez pas enregistrer les modifications. \nContinuez sans sauvegarder ?")) {
-                this.modalElt.hide()
-            }
-        }
-    }
-
-    /**
      * Initialise CKEditor.
      */
     ckEditor() {
@@ -199,6 +187,19 @@ export default class SupportNotes {
     deleteNote() {
         if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
             this.ajax.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this))
+        }
+    }
+
+
+    /**
+     * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
+     * @param {Event} e 
+     */
+    goOutModal(e) {
+        if (e.target === this.modalNoteElt && this.editor.getData() != this.data) {
+            if (window.confirm("Attention, vous n'avez pas enregistrer les modifications. \nContinuez sans sauvegarder ?")) {
+                this.modalElt.hide()
+            }
         }
     }
 

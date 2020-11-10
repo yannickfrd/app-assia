@@ -33,8 +33,10 @@ export default class SearchPerson {
     }
     
     init() {
-        this.lastnameInputElt.addEventListener('keyup', () => this.timer())
-        this.firstnameInputElt.addEventListener('keyup', () => this.timer())
+        [this.lastnameInputElt, this.firstnameInputElt].forEach(elt =>
+            elt.addEventListener('keyup', () => this.timer())
+        );
+
         this.birthdateInputElt.addEventListener('change', () => this.checkDate(this.birthdateInputElt))
         this.searchBtnElt.addEventListener('click', e => this.onClickBtnElt(e))
     }

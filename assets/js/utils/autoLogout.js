@@ -30,9 +30,10 @@ export default class AutoLogout {
     count() {
         this.time--
         if (this.time === this.timeAlert) {
-            this.modalElt.show()
-            document.addEventListener('click', this.clearTimer.bind(this))
-            document.addEventListener('keydown', this.clearTimer.bind(this))
+            this.modalElt.show();
+            ['click', 'keydown'].forEach(eventType =>
+                document.addEventListener(eventType, this.clearTimer.bind(this))
+            );
         }
         if (this.time <= this.timeAlert) {
             this.timerElt.textContent = this.getFullTime()

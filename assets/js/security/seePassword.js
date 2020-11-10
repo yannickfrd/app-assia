@@ -1,25 +1,39 @@
-// Class pour démasquer le mot de passe
+/**
+ * Class pour afficher le mot de passe.
+ */
 export default class SeePassword {
+
     constructor() {
-        this.passwordGroupElts = document.querySelectorAll('.js-password-group')
         this.init()
     }
 
     init() {
-        this.passwordGroupElts.forEach(passwordGroupElt => {
-            let passwordElt = passwordGroupElt.querySelector('.js-password')
-            let showPasswordElt = passwordGroupElt.querySelector('.js-show-password')
-            showPasswordElt.addEventListener('mousedown', this.see.bind(this, passwordElt)) // Affiche du mot de passe au clic sur l'oeil
-            document.addEventListener('mouseup', this.hide.bind(this, passwordElt)) // Masque le mot de passe au relachement de la souris
-            showPasswordElt.addEventListener('touchstart', this.see.bind(this, passwordElt)) // Affiche du mot de passe au touché tactile sur l'oeil
-            document.addEventListener('touchend', this.hide.bind(this, passwordElt)) // Masque le mot de passe au relachement du touché tactile
+        document.querySelectorAll('.js-password-group').forEach(passwordGroupElt => {
+            const passwordElt = passwordGroupElt.querySelector('.js-password');
+            const showPasswordElt = passwordGroupElt.querySelector('.js-show-password');
+            //  Affiche du mot de passe au clic sur l'oeil
+            ['mousedown', 'touchstart'].forEach(eventType => {
+                showPasswordElt.addEventListener(eventType, this.see.bind(this, passwordElt))
+            });
+            // Masque le mot de passe au relachement de la souris ou du doigt
+            ['mouseup', 'touchend'].forEach(eventType => {
+                document.addEventListener(eventType, this.hide.bind(this, passwordElt))
+            });
         })
     }
-    // Affiche du mot de passe
+    
+    /**
+     * Affiche du mot de passe.
+     * @param {HTMLElement} passwordElt 
+     */
     see(passwordElt) {
         passwordElt.type = 'text'
     }
-    // Masque le mot de passe
+
+    /**
+     * Masque le mot de passe.
+     * @param {HTMLElement} passwordElt 
+     */
     hide(passwordElt) {
         passwordElt.type = 'password'
     }

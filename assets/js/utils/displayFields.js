@@ -25,9 +25,10 @@ export default class DisplayFields {
 
         switch (this.inputElt.type) {
             case 'select-one':
-                this.checkSelect()
-                this.inputElt.addEventListener('change', this.checkSelect.bind(this)) // au changement sur mobile
-                this.inputElt.addEventListener('click', this.checkSelect.bind(this)) // au click sur ordinateur 
+                this.checkSelect();
+                ['change', 'click'].forEach(eventType => {
+                    this.inputElt.addEventListener(eventType, this.checkSelect.bind(this)) // au click sur ordinateur ou au changement sur mobile
+                })
                 break
             case 'date':
                 this.checkInput()

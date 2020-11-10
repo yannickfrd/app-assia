@@ -133,24 +133,23 @@ export default class SupportContributions {
             } else {
                 this.getResources()
             }
-        })
+        });
 
-        this.rentAmtInput.addEventListener('input', () => {
-            this.calculateAmountToPay()
-        })
-        this.aplAmtInput.addEventListener('input', () => {
-            this.calculateAmountToPay()
-        })
+        [this.rentAmtInput, this.aplAmtInput].forEach(elt => {
+            elt.addEventListener('input', () => {
+                this.calculateAmountToPay()
+            });
+        });
+            
+        [this.toPayAmtInput, this.paidAmtInput].forEach(elt => {
+            elt.addEventListener('input', () => {
+                this.calculateAmountStillDue()
+            });
+        });
 
-        this.toPayAmtInput.addEventListener('input', () => {
-            this.calculateAmountStillDue()
-        })
-        this.paidAmtInput.addEventListener('input', () => {
-            this.calculateAmountStillDue()
-        })
         this.paymentDateInput.addEventListener('focusout', () => {
             this.checkPaidAmt()
-        })
+        });
 
         this.calculateSumAmts()
 
