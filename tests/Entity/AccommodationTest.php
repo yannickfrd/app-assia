@@ -24,6 +24,7 @@ class AccommodationTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
         ]);
 

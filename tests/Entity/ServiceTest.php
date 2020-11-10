@@ -30,6 +30,7 @@ class ServiceTest extends WebTestCase
             ->getManager();
 
         $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 

@@ -1,18 +1,4 @@
 App\Entity\Service:
-  service1:
-    name: AVDL
-    pole: "@pole"
-    email: avdl@esperer-95.org
-    phone1: 01 00 00 00 00
-    address: Pontoise
-    city: Pontoise
-    zipcode: 95 000
-    accommodation: true
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-    createdBy: "@userSuperAdmin"
-    updatedBy: "@userSuperAdmin"
-
   service{2..5}:
     name: <sentence(3, true)>
     city: <fr_FR:city()>
@@ -26,35 +12,6 @@ App\Entity\Service:
     pole: "@pole"
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
-
-
-App\Entity\ServiceUser:
-  serviceUser:
-    service: "@service1"
-    user: "@userSuperAdmin"
-
-  servUser{2..5}:
-    service: "@service*"
-    user: "@userSuperAdmin"
-
-    
-App\Entity\User:
-  userSuperAdmin:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-
-App\Entity\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
 
 App\Entity\Device:
   device1:

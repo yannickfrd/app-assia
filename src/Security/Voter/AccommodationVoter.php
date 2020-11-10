@@ -28,11 +28,11 @@ class AccommodationVoter extends Voter
 
     protected function voteOnAttribute($attribute, $accommodation, TokenInterface $token)
     {
-        $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
+        $this->currentUser = $token->getUser();
+        $this->currentUserId = $this->currentUser->getId();
         $this->accommodation = $accommodation;
 
-        if (!$this->user) {
+        if (!$this->currentUser) {
             return false;
         }
 
@@ -60,7 +60,7 @@ class AccommodationVoter extends Voter
             return true;
         }
 
-        foreach ($this->user->getServiceUser() as $serviceUser) {
+        foreach ($this->currentUser->getServiceUser() as $serviceUser) {
             if ($this->accommodation->getService()->getId() == $serviceUser->getService()->getId()) {
                 return true;
             }
@@ -75,9 +75,9 @@ class AccommodationVoter extends Voter
             return true;
         }
 
-        if (($this->accommodation->getReferent() && $this->accommodation->getReferent()->getId() == $this->userId)
-            || ($this->accommodation->getReferent2() && $this->accommodation->getReferent2()->getId() == $this->userId)
-            || ($this->accommodation->getCreatedBy() && $this->accommodation->getCreatedBy()->getId() == $this->userId)
+        if (($this->accommodation->getReferent() && $this->accommodation->getReferent()->getId() == $this->currentUserId)
+            || ($this->accommodation->getReferent2() && $this->accommodation->getReferent2()->getId() == $this->currentUserId)
+            || ($this->accommodation->getCreatedBy() && $this->accommodation->getCreatedBy()->getId() == $this->currentUserId)
         ) {
             return true;
         }
@@ -91,9 +91,9 @@ class AccommodationVoter extends Voter
             return true;
         }
 
-        // if (($this->accommodation->getReferent() && $this->accommodation->getReferent()->getId() == $this->userId)
-        //     || ($this->accommodation->getReferent2() && $this->accommodation->getReferent2()->getId() == $this->userId)
-        //     || ($this->accommodation->getCreatedBy() && $this->accommodation->getCreatedBy()->getId() == $this->userId)
+        // if (($this->accommodation->getReferent() && $this->accommodation->getReferent()->getId() == $this->currentUserId)
+        //     || ($this->accommodation->getReferent2() && $this->accommodation->getReferent2()->getId() == $this->currentUserId)
+        //     || ($this->accommodation->getCreatedBy() && $this->accommodation->getCreatedBy()->getId() == $this->currentUserId)
         // ) {
         //     return true;
         // }

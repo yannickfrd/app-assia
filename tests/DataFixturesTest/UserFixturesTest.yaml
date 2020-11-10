@@ -62,8 +62,16 @@ App\Entity\Service:
   service1:
     name: AVDL
     pole: "@pole"
+    email: avdl@esperer-95.org
+    phone1: 01 00 00 00 00
+    address: Pontoise
+    city: Pontoise
+    zipcode: 95 000
+    accommodation: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
 App\Entity\ServiceUser:
   serviceUser1:

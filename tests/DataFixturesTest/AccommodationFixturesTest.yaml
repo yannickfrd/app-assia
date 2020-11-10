@@ -33,19 +33,7 @@ App\Entity\Accommodation:
     device: "@device1"
     createdBy: "@userRoleAdmin"
     updatedBy: "@userRoleAdmin"
-
-    
-App\Entity\User:
-  userRoleAdmin:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-
+  
 App\Entity\Person:
   person: 
     firstname: John
@@ -66,22 +54,6 @@ App\Entity\RolePerson:
     role: 5
     person: "@person"
     groupPeople: "@groupPeople"
-
-
-App\Entity\Service:
-  service1:
-    name: AVDL
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-
-App\Entity\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
 
 App\Entity\Device:
   device1:

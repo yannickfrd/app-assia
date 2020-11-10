@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Service;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -17,39 +16,31 @@ class SubServiceControllerTest extends WebTestCase
     /** @var KernelBrowser */
     protected $client;
 
-    /** @var array */
-    protected $dataFixtures;
-
-    /** @var Service */
-    protected $service;
-
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-        ]);
-
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
-
-        $this->service = $this->dataFixtures['service1'];
-        $this->subService = $this->dataFixtures['subService1'];
     }
 
     public function testNewSubServiceIsUp()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userSuperAdmin']);
+
         $this->client->request('GET', $this->generateUri('sub_service_new', [
-            'id' => $this->service->getId(),
+            'id' => $dataFixtures['service1']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau sous-service');
     }
 
-    public function testCreateNewSubServiceIsSuccessful()
+    public function testCreateNewSubServiceIsSuccessfull()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userRoleAdmin']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('sub_service_new', [
-            'id' => $this->service->getId(),
+            'id' => $dataFixtures['service1']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([
@@ -63,21 +54,27 @@ class SubServiceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditServiceisUp()
+    public function testEditSubServiceisUp()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userRoleAdmin']);
+
         $this->client->request('GET', $this->generateUri('sub_service_edit', [
-            'id' => $this->subService->getId(),
+            'id' => $dataFixtures['subService1']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $this->service->getName());
+        $this->assertSelectorTextContains('h1', $dataFixtures['service1']->getName());
     }
 
-    public function testEditServiceisSuccessful()
+    public function testEditSubServiceisSuccessful()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userRoleAdmin']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('sub_service_edit', [
-            'id' => $this->subService->getId(),
+            'id' => $dataFixtures['subService1']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([]);
@@ -90,18 +87,29 @@ class SubServiceControllerTest extends WebTestCase
 
     public function testDisableSubService()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userSuperAdmin']);
+
         $this->client->request('GET', $this->generateUri('sub_service_disable', [
-            'id' => $this->subService->getId(),
+            'id' => $dataFixtures['subService1']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
+    protected function getFixtureFiles()
+    {
+        return [
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+        ];
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $dataFixtures = null;
     }
 }

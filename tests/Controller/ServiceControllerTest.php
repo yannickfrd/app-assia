@@ -2,10 +2,8 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Service;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,25 +15,15 @@ class ServiceControllerTest extends WebTestCase
     /** @var KernelBrowser */
     protected $client;
 
-    /** @var array */
-    protected $dataFixtures;
-
-    /** @var Service */
-    protected $service;
-
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-        ]);
-
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
-
-        $this->service = $this->dataFixtures['service1'];
     }
 
     public function testListServicesIsUp()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('services'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -44,6 +32,9 @@ class ServiceControllerTest extends WebTestCase
 
     public function testSearchServicesIsSuccessful()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userRoleUser']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('services'));
 
@@ -62,6 +53,9 @@ class ServiceControllerTest extends WebTestCase
 
     public function testNewServiceIsUp()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userSuperAdmin']);
+
         $this->client->request('GET', $this->generateUri('service_new'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -70,6 +64,9 @@ class ServiceControllerTest extends WebTestCase
 
     public function testCreateNewServiceIsSuccessful()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($dataFixtures['userSuperAdmin']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('service_new'));
 
@@ -86,21 +83,53 @@ class ServiceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditServiceisUp()
+    public function testEditServiceisUpInSuperAdmin()
     {
+        $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
+        ]));
+
+        $service = $dataFixtures['service1'];
+
+        $this->createLogin($dataFixtures['userSuperAdmin']);
+
         $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $this->service->getId(),
+            'id' => $service->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $this->service->getName());
+        $this->assertSelectorTextContains('h1', $service->getName());
+    }
+
+    public function testEditServiceisUpInRoleAdmin()
+    {
+        $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
+        ]));
+
+        $service = $dataFixtures['service1'];
+
+        $this->createLogin($dataFixtures['userRoleAdmin']);
+
+        $this->client->request('GET', $this->generateUri('service_edit', [
+            'id' => $service->getId(),
+        ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', $service->getName());
     }
 
     public function testEditServiceisSuccessful()
     {
+        $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+            dirname(__DIR__).'/DataFixturesTest/AccommodationFixturesTest.yaml',
+        ]));
+
+        $this->createLogin($dataFixtures['userRoleAdmin']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $this->service->getId(),
+            'id' => $dataFixtures['service1']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([]);
@@ -113,18 +142,30 @@ class ServiceControllerTest extends WebTestCase
 
     public function testDisableService()
     {
+        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+
+        $this->createLogin($dataFixtures['userSuperAdmin']);
+
         $this->client->request('GET', $this->generateUri('service_disable', [
-            'id' => $this->service->getId(),
+            'id' => $dataFixtures['service1']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
+    protected function getFixtureFiles()
+    {
+        return [
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+        ];
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $dataFixtures = null;
     }
 }
