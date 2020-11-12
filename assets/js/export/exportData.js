@@ -9,7 +9,7 @@ export default class ExportData {
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
         this.resultsElt = document.getElementById('results')
         this.loader = new Loader()
-        this.ajax = new Ajax(this.loader, 120)
+        this.ajax = new Ajax(this.loader, 30 * 60)
         this.init()
     }
 

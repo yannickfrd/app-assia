@@ -63,7 +63,7 @@ class ImportController extends AbstractController
     /**
      * Mise à jour des données de l'AMH.
      *
-     * @Route("update_import_adm", name="update_import_adm", methods="GET|POST")
+     * @Route("update_import_amh", name="update_import_amh", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function updateAMH(Request $request, UpdateDatasAMH $importDatas): Response

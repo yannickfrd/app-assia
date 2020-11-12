@@ -31,6 +31,10 @@ class SupportPersonExport
             }
             $arrayData[] = $this->getDatas($supportPerson);
             ++$i;
+            if ($i > 50) {
+                sleep(5);
+                $i = 0;
+            }
         }
 
         return (new ExportExcel('export_suivis', 'xlsx', $arrayData, null))->exportFile();

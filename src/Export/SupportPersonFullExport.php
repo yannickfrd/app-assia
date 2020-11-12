@@ -74,8 +74,14 @@ class SupportPersonFullExport
         $arrayData = [];
         $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), 'evaluation');
 
+        $i = 0;
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->getDatas($supportPerson);
+            ++$i;
+            if ($i > 100) {
+                sleep(5);
+                $i = 0;
+            }
         }
 
         return (new ExportExcel('export_suivis', 'xlsx', $arrayData, 15))->exportFile(true);
@@ -88,8 +94,8 @@ class SupportPersonFullExport
     {
         $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
 
-        $nbEvaluations = $supportPerson->getEvaluationsPerson()->count();
-        $this->evaluationPerson = $evaluations[$nbEvaluations - 1] ?? new EvaluationPerson();
+        $evaluations = $supportPerson->getEvaluationsPerson();
+        $this->evaluationPerson = $evaluations[$evaluations->count() - 1] ?? new EvaluationPerson();
         $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
 
         $this->datas = array_merge($this->datas, [

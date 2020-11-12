@@ -38,6 +38,8 @@ class ExportController extends AbstractController
      */
     public function export(Request $request, Pagination $pagination): Response
     {
+        set_time_limit(60 * 60);
+
         $form = ($this->createForm(ExportSearchType::class, new ExportSearch()))
             ->handleRequest($request);
 

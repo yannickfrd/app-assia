@@ -59,6 +59,7 @@ class EvalHousingGroup
         1 => 'Hébergement',
         2 => 'Logement',
         3 => 'DALO requalifié hébergement',
+        99 => 'Non renseigné',
     ];
 
     public const HOUSING_HELPS = [
@@ -1127,7 +1128,7 @@ class EvalHousingGroup
      */
     public function getDomiciliationToString(): ?string
     {
-        return $this->domiciliation ? Choices::YES_NO[$this->domiciliation] : null;
+        return $this->domiciliation ? Choices::YES_NO_IN_PROGRESS[$this->domiciliation] : null;
     }
 
     public function setEndDomiciliationDate(?\DateTimeInterface $endDomiciliationDate): self
