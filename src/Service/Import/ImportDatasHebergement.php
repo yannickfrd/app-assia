@@ -357,6 +357,7 @@ class ImportDatasHebergement extends ImportDatas
     protected $repoDevice;
     protected $repoPerson;
 
+    protected $fields;
     protected $field;
 
     protected $devices = [];

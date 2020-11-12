@@ -522,6 +522,8 @@ class ImportDatasAMH extends ImportDatas
 
     protected $datas;
     protected $row;
+    
+    protected $fields;
     protected $field;
 
     protected $service;

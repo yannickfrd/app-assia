@@ -97,7 +97,7 @@ class SubServiceRepository extends ServiceEntityRepository
         return $query->orderBy('ss.name', 'ASC');
     }
 
-    public function findSubServicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service)
+    public function findSubServicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, ?Service $service = null)
     {
         $query = $this->createQueryBuilder('ss')->select('ss')
             ->leftJoin('ss.service', 's')->addSelect('s')

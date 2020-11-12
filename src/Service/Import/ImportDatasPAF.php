@@ -42,10 +42,12 @@ class ImportDatasPAF extends ImportDatas
 
     protected $manager;
 
+    protected $fields;
+    protected $field;
+
     protected $items = [];
     protected $repoHotelSupport;
     protected $hotelSupports;
-    protected $field;
 
     protected $service;
 

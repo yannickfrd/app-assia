@@ -25,19 +25,19 @@ class AccommodationGroupHotelType extends AbstractType
 
             if ($attr['serviceId']) {
                 $serviceId = $attr['serviceId'];
-                $subServiceId = $attr['subServiceId'];
+                // $subServiceId = $attr['subServiceId'];
             } else {
                 $supportGroup = $form->getParent()->getParent()->getData();
                 $service = $supportGroup->getService();
                 $serviceId = $service ? $service->getId() : null;
-                $subServiceId = $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null;
+                // $subServiceId = $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null;
             }
 
             $form
                 ->add('accommodation', EntityType::class, [
                     'class' => Accommodation::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (AccommodationRepository $repo) use ($serviceId, $subServiceId) {
+                    'query_builder' => function (AccommodationRepository $repo) use ($serviceId) {
                         return $repo->getAccommodationsQueryList($serviceId);
                     },
                     'label' => Service::SERVICE_PASH_ID == $serviceId ? 'hotelName' : 'accommodation.name',

@@ -12,10 +12,12 @@ class ImportDatasHotel extends ImportDatas
 {
     protected $manager;
 
+    protected $fields;
+    protected $field;
+
     protected $items = [];
     protected $repoAccommodation;
     protected $repoSubService;
-    protected $field;
     protected $localities;
 
     public function __construct(

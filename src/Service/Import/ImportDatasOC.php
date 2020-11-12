@@ -322,6 +322,9 @@ class ImportDatasOC extends ImportDatas
 
     protected $row;
 
+    protected $fields;
+    protected $field;
+
     protected $service;
     protected $deviceHotelOC;
     protected $deviceHotelSupport;

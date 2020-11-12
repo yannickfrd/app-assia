@@ -6,6 +6,9 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 trait ExportExcelTrait
 {
+    protected $datas;
+    protected $normalisation;
+
     public function formatDate(?\DateTime $date)
     {
         return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;

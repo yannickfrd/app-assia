@@ -46,6 +46,11 @@ class HotelSupportSearch
     private $supportDates;
 
     /**
+     * @var int|null
+     */
+    private $diagOrSupport;
+
+    /**
      * @var array
      */
     private $levelSupport;

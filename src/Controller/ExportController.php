@@ -82,7 +82,7 @@ class ExportController extends AbstractController
                 ]);
         }
 
-        $this->getErrorMessage($form);
+        return $this->getErrorMessage($form);
     }
 
     /**

@@ -284,9 +284,10 @@ class SupportController extends AbstractController
                 'data' => null,
             ], 200);
             } catch (\Throwable $th) {
-                return $this->getErrorMessage();
             }
         }
+
+        return $this->getErrorMessage();
     }
 
     /**

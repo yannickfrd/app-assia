@@ -47,7 +47,7 @@ class OccupancyIndicators
     /**
      * Donne tous les dispositifs avec leur taux d'occupation.
      */
-    public function getOccupancyRateByDevice(\DateTime $start, \DateTime $end, Service $service = null): array
+    public function getOccupancyRateByDevice(\DateTimeInterface $start, \DateTimeInterface $end, Service $service = null): array
     {
         $devices = $this->repoDevice->findDevicesWithAccommodation($this->currentUser, $start, $end, $service);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end, $service);
@@ -107,7 +107,7 @@ class OccupancyIndicators
     /**
      * Donne tous les services avec leur taux d'occupation.
      */
-    public function getOccupancyRateByService(\DateTime $start, \DateTime $end, Device $device = null): array
+    public function getOccupancyRateByService(\DateTimeInterface $start, \DateTimeInterface $end, Device $device = null): array
     {
         $services = $this->repoService->findServicesWithAccommodation($this->currentUser, $start, $end, $device);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end);
@@ -168,7 +168,7 @@ class OccupancyIndicators
     /**
      * Donne tous les sous-services du service avec leur taux d'occupation.
      */
-    public function getOccupancyRateBySubService(\DateTime $start, \DateTime $end, Service $service): array
+    public function getOccupancyRateBySubService(\DateTimeInterface $start, \DateTimeInterface $end, Service $service): array
     {
         $subServices = $this->repoSubService->findSubServicesWithAccommodation($this->currentUser, $start, $end, $service);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end);
@@ -228,7 +228,7 @@ class OccupancyIndicators
     /**
      * Donne tous les groupes de places d'un service avec leur taux d'occupation.
      */
-    public function getOccupancyRateByAccommodation(\DateTime $start, \DateTime $end, Service $service = null, SubService $subService = null): array
+    public function getOccupancyRateByAccommodation(\DateTimeInterface $start, \DateTimeInterface $end, Service $service = null, SubService $subService = null): array
     {
         $accommodations = $this->repoAccommodation->findAccommodationsForOccupancy($this->currentUser, $service, $subService);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end, $service, $subService);
@@ -281,7 +281,7 @@ class OccupancyIndicators
     /**
      * Donne l'intervalle entre 2 dates.
      */
-    protected function getDateInterval(\DateTime $startDate1, \DateTime $endDate1 = null, \DateTime $startDate2, \DateTime $endDate2): ?\DateInterval
+    protected function getDateInterval(\DateTimeInterface $startDate1, \DateTimeInterface $endDate1 = null, \DateTime $startDate2, \DateTime $endDate2): ?\DateInterval
     {
         $minDate = max($startDate1, $startDate2);
         $maxDate = min($endDate1 ?? $endDate2, $endDate2);

@@ -31,7 +31,7 @@ class ContributionRepository extends ServiceEntityRepository
     /**
      * Donne toutes les participations financières à afficher.
      */
-    public function findAllContributionsQuery(ContributionSearch $search): Query
+    public function findAllContributionsQuery(?ContributionSearch $search = null): Query
     {
         $query = $this->getContributionsQuery()
             ->andWhere('sp.head = TRUE');

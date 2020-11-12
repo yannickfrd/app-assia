@@ -9,9 +9,11 @@ class UpdateDatasAMH extends ImportDatas
 {
     protected $manager;
 
+    protected $fields;
+    protected $field;
+
     protected $items = [];
     protected $repoPerson;
-    protected $field;
 
     protected $service;
 

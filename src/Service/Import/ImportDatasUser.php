@@ -15,6 +15,9 @@ class ImportDatasUser extends ImportDatas
     protected $manager;
     protected $notification;
 
+    protected $fields;
+    protected $field;
+
     protected $repoUser;
     protected $passwordEncoder;
 
