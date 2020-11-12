@@ -202,7 +202,7 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'referents' => $supportManager->getReferents($supportGroup, $repoReferent),
+            'referents' => $supportManager->getReferents($supportGroup->getGroupPeople(), $repoReferent),
             'nbNotes' => $supportManager->getNbNotes($supportGroup, $repoNote),
             'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
             'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $repoDocument),
@@ -227,7 +227,11 @@ class SupportController extends AbstractController
 
         $this->addFlash('warning', 'Le suivi social est supprimé.');
 
-        return $this->redirectToRoute('group_people_show', ['id' => $supportGroup->getGroupPeople()->getId()]);
+        $groupPeople = $supportGroup->getGroupPeople();
+
+        (new FilesystemAdapter())->deleteItem(GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$groupPeople->getId());
+
+        return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
     }
 
     /**

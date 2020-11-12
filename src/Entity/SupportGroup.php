@@ -29,7 +29,6 @@ class SupportGroup
     public const CACHE_FULLSUPPORT_KEY = 'support_group_full';
     public const CACHE_SUPPORT_NOTES_KEY = 'support.notes';
     public const CACHE_SUPPORT_RDVS_KEY = 'support.rdvs';
-    public const CACHE_SUPPORT_REFERENT_KEY = 'support.referent';
     public const CACHE_SUPPORT_DOCUMENTS_KEY = 'support.documents';
     public const CACHE_SUPPORT_CONTRIBUTIONS_KEY = 'support.contributions';
     public const CACHE_SUPPORT_NB_NOTES_KEY = 'support.notes_count';

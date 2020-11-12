@@ -13,10 +13,13 @@ use App\Form\GroupPeople\GroupPeopleType;
 use App\Form\Model\GroupPeopleSearch;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\GroupPeopleRepository;
+use App\Repository\ReferentRepository;
 use App\Repository\RolePersonRepository;
+use App\Repository\SupportGroupRepository;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,19 +64,23 @@ class GroupPeopleController extends AbstractController
      *
      * @Route("/group/{id}", name="group_people_show", methods="GET|POST")
      */
-    public function showGroupPeople($id, Request $request): Response
+    public function showGroupPeople(int $id, Request $request, ReferentRepository $repoReferent, SupportGroupRepository $repoSuppport): Response
     {
         $groupPeople = $this->repo->findGroupPeopleById($id);
 
         $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
         $formGroupPeople->handleRequest($request);
 
+        $supports = $this->getSupports($groupPeople, $repoSuppport);
+
         if ($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
-            $this->updateGroupPeople($groupPeople);
+            $this->updateGroupPeople($groupPeople, $supports);
         }
 
         return $this->render('app/groupPeople/groupPeople.html.twig', [
             'form' => $formGroupPeople->createView(),
+            'supports' => $supports,
+            'referents' => $this->getReferents($groupPeople, $repoReferent),
         ]);
     }
 
@@ -138,11 +145,11 @@ class GroupPeopleController extends AbstractController
     /**
      * Met à jour un groupe de personnes.
      */
-    protected function updateGroupPeople(GroupPeople $groupPeople)
+    protected function updateGroupPeople(GroupPeople $groupPeople, array $supports)
     {
         $this->manager->flush();
 
-        $this->discacheSupport($groupPeople);
+        $this->discacheSupports($supports);
 
         $this->addFlash('success', 'Les modifications sont enregistrées.');
     }
@@ -233,14 +240,34 @@ class GroupPeopleController extends AbstractController
         ], 200);
     }
 
+    protected function getSupports(GroupPeople $groupPeople, SupportGroupRepository $repoSuppport)
+    {
+        return (new FilesystemAdapter())->get(GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$groupPeople->getId(), function (CacheItemInterface $item) use ($groupPeople, $repoSuppport) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoSuppport->findSupportsOfGroupPeople($groupPeople);
+        });
+    }
+
+    protected function getReferents(GroupPeople $groupPeople, ReferentRepository $repoReferent)
+    {
+        return (new FilesystemAdapter())->get(GroupPeople::CACHE_GROUP_REFERENTS_KEY.$groupPeople->getId(), function (CacheItemInterface $item) use ($groupPeople, $repoReferent) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoReferent->findReferentsOfGroupPeople($groupPeople);
+        });
+    }
+
     /**
-     * Supprime le chache du suivi.
+     * Supprime le suivis en cache.
+     *
+     * @param array|supportGroup[] $supports
      */
-    protected function discacheSupport(GroupPeople $groupPeople): void
+    protected function discacheSupports($supports): void
     {
         $cache = new FilesystemAdapter();
 
-        foreach ($groupPeople->getSupports() as $supportGroup) {
+        foreach ($supports as $supportGroup) {
             $cache->deleteItems([
                 SupportGroup::CACHE_SUPPORT_KEY.$supportGroup->getId(),
                 SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),

@@ -11,6 +11,7 @@ use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,6 +69,8 @@ class ReferentController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', "Le service social {$referent->getName()} est mis à jour.");
+
+            $this->discache($referent->getGroupPeople());
         }
 
         return $this->render('app/referent/referent.html.twig', [
@@ -91,6 +94,8 @@ class ReferentController extends AbstractController
 
         $this->addFlash('warning', "Le service social $name est supprimé.");
 
+        $this->discache($referent->getGroupPeople());
+
         return $this->redirectToRoute('group_people_show', [
             'id' => $referent->getGroupPeople()->getId(),
         ]);
@@ -99,7 +104,7 @@ class ReferentController extends AbstractController
     /**
      * Crée un service référent une fois le formulaire soumis et validé.
      */
-    protected function createReferent(GroupPeople $groupPeople, Referent $referent, ?SupportGroup $support): Response
+    protected function createReferent(GroupPeople $groupPeople, Referent $referent, ?SupportGroup $support = null): Response
     {
         $referent->setGroupPeople($groupPeople);
 
@@ -107,6 +112,8 @@ class ReferentController extends AbstractController
         $this->manager->flush();
 
         $this->addFlash('success', "Le service social {$referent->getName()} est créé.");
+
+        $this->discache($groupPeople);
 
         if ($support) {
             return $this->redirectToRoute('support_referent_edit', [
@@ -118,5 +125,13 @@ class ReferentController extends AbstractController
         return $this->redirectToRoute('group_referent_edit', [
             'id' => $referent->getId(),
         ]);
+    }
+
+    /**
+     * Supprime les référents en cache du groupe.
+     */
+    protected function discache(GroupPeople $groupPeople): bool
+    {
+        return (new FilesystemAdapter())->deleteItem(GroupPeople::CACHE_GROUP_REFERENTS_KEY.$groupPeople->getId());
     }
 }

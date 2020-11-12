@@ -25,18 +25,11 @@ class GroupPeopleRepository extends ServiceEntityRepository
      */
     public function findGroupPeopleById(int $id): ?GroupPeople
     {
-        return $this->createQueryBuilder('g')
-            ->select('g')
+        return $this->createQueryBuilder('g')->select('g')
             ->leftJoin('g.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
             ->leftJoin('g.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname}')
             ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addSelect('p')
-            ->leftJoin('g.supports', 'sg')->addSelect('sg')
-            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
-            ->leftJoin('sg.service', 's')->addSelect('s')
-            ->leftJoin('sg.device', 'd')->addSelect('d')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
-            ->leftJoin('g.referents', 'referents')->addSelect('referents')
 
             ->andWhere('g.id = :id')
             ->setParameter('id', $id)

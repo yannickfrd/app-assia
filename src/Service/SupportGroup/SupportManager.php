@@ -115,6 +115,8 @@ class SupportManager
 
         $this->manager->flush();
 
+        $this->cache->deleteItem(GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$groupPeople->getId());
+
         return true;
     }
 
@@ -242,14 +244,14 @@ class SupportManager
     }
 
     /**
-     * Donne le référent du suivi social.
+     * Donne les référents du suivi.
      */
-    public function getReferents(SupportGroup $supportGroup, ReferentRepository $repoReferent)
+    public function getReferents(GroupPeople $groupPeople, ReferentRepository $repoReferent)
     {
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_REFERENT_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoReferent) {
+        return $this->cache->get(GroupPeople::CACHE_GROUP_REFERENTS_KEY.$groupPeople->getId(), function (CacheItemInterface $item) use ($groupPeople, $repoReferent) {
             $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
 
-            return $repoReferent->findReferents($supportGroup->getGroupPeople());
+            return $repoReferent->findReferentsOfGroupPeople($groupPeople);
         });
     }
 
@@ -339,6 +341,7 @@ class SupportManager
         }
 
         return $this->cache->deleteItems([
+            GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$supportGroup->getGroupPeople()->getId(),
             SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
             Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
         ]);
@@ -400,8 +403,6 @@ class SupportManager
 
     /**
      * Vérifie la cohérence des données du suivi social.
-     *
-     * @return void
      */
     protected function checkSupportGroup(SupportGroup $supportGroup): void
     {

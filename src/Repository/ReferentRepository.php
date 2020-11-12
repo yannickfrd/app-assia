@@ -47,9 +47,9 @@ class ReferentRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    public function findReferents(GroupPeople $groupPeople)
+    public function findReferentsOfGroupPeople(GroupPeople $groupPeople)
     {
-        return $this->createQueryBuilder('r')->select('PARTIAL r.{id, name, type, socialWorker, socialWorker2, email, email2, phone1, phone2, address, city}')
+        return $this->createQueryBuilder('r')->select('r')
             ->where('r.groupPeople = :groupPeople')
             ->setParameter('groupPeople', $groupPeople)
             ->orderBy('r.id', 'DESC')

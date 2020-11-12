@@ -20,6 +20,9 @@ class GroupPeople
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
+    public const CACHE_GROUP_SUPPORTS_KEY = 'group_people.supports';
+    public const CACHE_GROUP_REFERENTS_KEY = 'group_people.referents';
+
     public const FAMILY_TYPOLOGY = [
         1 => 'Femme isolée',
         2 => 'Homme isolé',
