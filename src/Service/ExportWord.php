@@ -131,9 +131,9 @@ class ExportWord
         $content = \str_replace('<br>', '<br/>', $content);
         $content = \str_replace('<h3>', '<h3 style="font-size: 21.5px;">', $content);
         $content = \str_replace('<h4>', '<h4 style="font-size: 16px;">', $content);
-        $content = \str_replace('<table><thead><tr><th><strong>Ménage', '<table style="'.$styleTable.'"><thead><tr><th><strong> Ménage', $content);
-        $content = \str_replace('<table><thead><tr><th><strong>Ressources', '<table style="'.$styleTable.'"><thead><tr><th><strong> Ressources', $content);
-        $content = \str_replace('<table><thead><tr><th><strong>Charges', '<table style="'.$styleTable.'"><thead><tr><th><strong> Charges', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>&nbsp;Ménage', '<table style="'.$styleTable.'"><thead><tr><th><strong>&nbsp;Ménage', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>&nbsp;Ressources', '<table style="'.$styleTable.'"><thead><tr><th><strong>&nbsp;Ressources', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>&nbsp;Charges', '<table style="'.$styleTable.'"><thead><tr><th><strong>&nbsp;Charges', $content);
         $content = \str_replace('<table>', '<table style="width: 100%; border: 1px #b5b5b5 solid;"> ', $content);
         $content = \str_replace('<thead><tr>', '<thead><tr style="background-color: #e9ecef;"> ', $content);
 

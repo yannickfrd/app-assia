@@ -34,7 +34,7 @@
             evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : ""), "Domiciliation address", "evaluation") }}
     {% endif %}
 
-    <p> </p>
+    <p>&nbsp;</p>
 
     {{ view_p.get(support.groupPeople.familyTypologyToString~ (nb_people > 1 ? 
         ", " ~ nb_people ~ " personnes"), "Family typology") }}
@@ -42,25 +42,25 @@
     <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
         <thead>
             <tr style="{{ style_thead }}">
-                <th> Nom et prénom</th>
-                <th> Date de naissance</th>
-                <th> Âge</th>
-                <th> Sexe</th>
-                <th> Lien de parenté</th>
-                {# <th>Téléphone</th>
-                <th>Adresse email</th> #}
+                <th>&nbsp;Nom et prénom&nbsp;</th>
+                <th>&nbsp;Date de naissance&nbsp;</th>
+                <th>&nbsp;Âge&nbsp;</th>
+                <th>&nbsp;Sexe&nbsp;</th>
+                <th>&nbsp;Lien de parenté&nbsp;</th>
+                {# <th>&nbsp;Téléphone&nbsp;</th>
+                <th>&nbsp;Adresse email&nbsp;</th> #}
             </tr>
         </thead>
         <tbody>
             {% for supportPerson in support.supportPeople %}
             <tr>
-                <td scope="row"> {{ supportPerson.person.fullname }}</td>
-                <td> {{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
-                <td> {{ supportPerson.person.age }} an{{ supportPerson.person.age > 1 ? "s" }}</td>
-                <td> {{ supportPerson.person.genderToString }}</td>
-                <td> {{ supportPerson.roleToString }}</td>
-                {# <td>{{ supportPerson.person.phone1 }}</td>
-                <td>{{ supportPerson.person.email }}</td> #}
+                <td scope="row">&nbsp;{{ supportPerson.person.fullname }}&nbsp;</td>
+                <td>&nbsp;{{ supportPerson.person.birthdate|date("d/m/Y") }}&nbsp;</td>
+                <td>&nbsp;{{ supportPerson.person.age }} an{{ supportPerson.person.age > 1 ? "s" }}&nbsp;</td>
+                <td>&nbsp;{{ supportPerson.person.genderToString }}&nbsp;</td>
+                <td>&nbsp;{{ supportPerson.roleToString }}&nbsp;</td>
+                {# <td>&nbsp;{{ supportPerson.person.phone1 }}&nbsp;</td>
+                <td>&nbsp;{{ supportPerson.person.email }}&nbsp;</td> #}
             </tr>
             {% endfor %}
         </tbody>
@@ -68,14 +68,14 @@
 
     {# Rendez-vous #}
     {% if lastRdv or nextRdv %}
-        <p> </p>   
+        <p>&nbsp;</p>   
         {{ view_p.get(lastRdv ? lastRdv.start|date("d/m/Y"), "rdv.last") }}
         {{ view_p.get(nextRdv ? nextRdv.start|date("d/m/Y"), "rdv.next") }}
     {% endif %}
 
     {# Justice #}
     {% if support.service.justice == YES %}
-        <p> </p>
+        <p>&nbsp;</p>
         <h3 class="h4" style="{{ style_h3 }}">Situation judiciaire</h3>
         {% for evalPerson in evaluation.evaluationPeople %}
             {% set evalJustice = evalPerson.evalJusticePerson %}
@@ -92,7 +92,7 @@
 
 
     {# Identité - Papier #}
-    <p> </p>
+    <p>&nbsp;</p>
     <h3 class="h4" style="{{ style_h3 }}">Situation administrative</h3>
 
     {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
@@ -116,13 +116,13 @@
     {% endfor %}
 
     {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %} {# si typologie familiale avec enfants #}
-        <p> </p>
+        <p>&nbsp;</p>
         <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
             <thead>
                 <tr style="background-color: #e9ecef; font-weight: bold;">
-                    <th scope="col"> Enfants</th>
-                    <th> Nationalité</th>
-                    <th> Papier</th>
+                    <th scope="col">&nbsp;Enfants&nbsp;</th>
+                    <th> Nationalité&nbsp;</th>
+                    <th> Papier&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,9 +130,9 @@
                     {% set evalAdm = evalPerson.evalAdmPerson %}
                     {% if evalAdm %}
                         <tr>
-                            <td scope="row"> {{ evalPerson.supportPerson.person.fullname }}</td>
-                            <td> {{ evalAdm.nationalityToString }}</td>
-                            <td> {{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+                            <td scope="row">&nbsp;{{ evalPerson.supportPerson.person.fullname }}&nbsp;</td>
+                            <td>&nbsp;{{ evalAdm.nationalityToString }}&nbsp;</td>
+                            <td>&nbsp;{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}&nbsp;</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -141,7 +141,7 @@
     {% endif %}
 
     {# Famille #}
-    <p> </p>
+    <p>&nbsp;</p>
     <h3 class="h4" style="{{ style_h3 }}">Situation familiale</h3>
 
     {% set eval_adults_family = eval_adults|filter(e => e.evalFamilyPerson) %}
@@ -161,14 +161,14 @@
 
     {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
     {% if eval_children_family|length > 0 %}
-        <p> </p>
+        <p>&nbsp;</p>
         <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
             <thead>
                 <tr style="background-color: #e9ecef; font-weight: bold;">
-                    <th scope="col"> Enfant(s)</th>
-                    <th> Garde ou scolarité</th>
-                    <th> Hébergement</th>
-                    <th> À charge</th>
+                    <th scope="col">&nbsp;Enfant(s)&nbsp;</th>
+                    <th> Garde ou scolarité&nbsp;</th>
+                    <th> Hébergement&nbsp;</th>
+                    <th> À charge&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -176,10 +176,10 @@
                     {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
                     {% if evalFamilyPerson %}     
                         <tr>
-                            <td scope="row"> {{ evalPerson.supportPerson.person.fullname }}</td>
-                            <td> {{ evalFamilyPerson.childcareSchoolToString }}{{ evalFamilyPerson.childcareSchoolLocation ? " (" ~ evalFamilyPerson.childcareSchoolLocation ~ ")" }}</td>
-                            <td> {{ evalFamilyPerson.childToHostToString }}</td>
-                            <td> {{ evalFamilyPerson.childDependanceToString }}</td>
+                            <td scope="row">&nbsp;{{ evalPerson.supportPerson.person.fullname }}&nbsp;</td>
+                            <td>&nbsp;{{ evalFamilyPerson.childcareSchoolToString }}{{ evalFamilyPerson.childcareSchoolLocation ? " (" ~ evalFamilyPerson.childcareSchoolLocation ~ ")" }}&nbsp;</td>
+                            <td>&nbsp;{{ evalFamilyPerson.childToHostToString }}&nbsp;</td>
+                            <td>&nbsp;{{ evalFamilyPerson.childDependanceToString }}&nbsp;</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -189,7 +189,7 @@
 
     {% set evalFamily = evaluation.evalFamilyGroup %}
     {% if evalFamily %}
-        <p> </p>
+        <p>&nbsp;</p>
         {# {{ view_p.get(evalFamily.cafId, "Caf id", "evaluation") }} #}
         {{ view_p.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
         {{ view_p.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
@@ -202,51 +202,51 @@
     {% set nb_people_budget = eval_people_budget|length %}
     {% set evalBudgetGroup = evaluation.evalBudgetGroup %}
     {% if evalBudgetGroup %}
-        <p> </p>
+        <p>&nbsp;</p>
         <h3 class="h4" style="{{ style_h3 }}">Situation financière</h3>
         {% if nb_people_budget > 1 %}
             <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                 <thead>
                     <tr style="{{ style_thead }}">
-                        <th scope="col"> Ménage</th>
-                        <th class="text-right" style="text-align: right;">Montant</th>
+                        <th scope="col">&nbsp;Ménage&nbsp;</th>
+                        <th class="text-right" style="text-align: right;">&nbsp;Montant&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td scope="row"> Ressources</td>
-                        <td class="text-right" style="text-align: right;">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                        <td scope="row">&nbsp;Ressources&nbsp;</td>
+                        <td class="text-right" style="text-align: right;">&nbsp;{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                     </tr>
                     {% if evalBudgetGroup.chargesGroupAmt %}
                     <tr>
-                        <td scope="row"> Charges</td>
-                        <td class="text-right" style="text-align: right;">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                        <td scope="row">&nbsp;Charges&nbsp;</td>
+                        <td class="text-right" style="text-align: right;">&nbsp;{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                     </tr>
                     {% endif %}
                     {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
                     <tr>
-                        <td scope="row"> Remboursement mensuel des dettes</td>
-                        <td class="text-right" style="text-align: right;">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                        <td scope="row">&nbsp;Remboursement mensuel des dettes&nbsp;</td>
+                        <td class="text-right" style="text-align: right;">&nbsp;{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                     </tr>
                     {% endif %}
                 </tbody>
                 <tfoot>
                     {% if evalBudgetGroup.budgetBalanceAmt > 0 %}
                         <tr class="font-weight-bold" style="font-weight: bold;">
-                            <td scope="row"> Reste à vivre</td>
-                            <td class="text-right" style="text-align: right;">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                            <td scope="row">&nbsp;Reste à vivre&nbsp;</td>
+                            <td class="text-right" style="text-align: right;">&nbsp;{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                         </tr>
                     {% endif %}
                     {% if evalBudgetGroup.debtsGroupAmt > 0 %}
                         <tr>
-                            <td scope="row"> Montant total des dettes</td>
-                            <td class="text-right" style="text-align: right;">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                            <td scope="row">&nbsp;Montant total des dettes&nbsp;</td>
+                            <td class="text-right" style="text-align: right;">&nbsp;{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                         </tr>        
                     {% endif %}
                 </tfoot>
             </table>
         {% endif %}
-        <p> </p>
+        <p>&nbsp;</p>
 
         {% for evalPerson in eval_people_budget %}
             {% set evalBudget = evalPerson.evalBudgetPerson %}
@@ -259,40 +259,40 @@
                 {# {{ evalBudget.charges != YES or null == evalBudget.chargesAmt ? view_p.get(evalBudget.chargesToString, "Charges", "evaluation") }} #}
                 
                 {% if evalBudget.resources == YES %}
-                    <table id="tbl_resources" class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
+                    <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                         <thead>
                             <tr style="{{ style_thead }}">
-                                <th scope="col"> Ressources</th>
-                                <th class="text-right" style="text-align: right;">Montant</th>
+                                <th scope="col">&nbsp;Ressources&nbsp;</th>
+                                <th class="text-right" style="text-align: right;">&nbsp;Montant&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for key, value in evalBudget.resourcesType %}
                                 {% if attribute(evalBudget, key) %}
                                 <tr>
-                                    <td scope="row"> {{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
-                                        attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}</td>
+                                    <td scope="row">&nbsp;{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
+                                        attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}&nbsp;</td>
                                     {% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
-                                    <td class="text-right" style="text-align: right;">{{ amt > 0 ? amt ~ ' €' }}</td>
+                                    <td class="text-right" style="text-align: right;">&nbsp;{{ amt > 0 ? amt ~ ' €' }}&nbsp;</td>
                                 </tr>
                                 {% endif %}
                             {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold" style="font-weight: bold;">
-                                <td scope="row"> Total des ressources</td>
-                                <td class="text-right" style="text-align: right;">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+                                <td scope="row">&nbsp;Total des ressources&nbsp;</td>
+                                <td class="text-right" style="text-align: right;">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €&nbsp;</td>
                             </tr>
                             {% if evalBudget.incomeN1Amt %}
                                 <tr>
-                                    <td scope="row"> Impôts sur le revenu n-1</td>
-                                    <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €</td>
+                                    <td scope="row">&nbsp;Impôts sur le revenu n-1&nbsp;</td>
+                                    <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €&nbsp;</td>
                                 </tr>							
                             {% endif %}
                             {% if evalBudget.incomeN2Amt %}
                                 <tr>
-                                    <td scope="row"> Impôts sur le revenu n-2</td>
-                                    <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
+                                    <td scope="row">&nbsp;Impôts sur le revenu n-2&nbsp;</td>
+                                    <td class="text-right" style="text-align: right;">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €&nbsp;</td>
                                 </tr>
                             {% endif %}
                         </tfoot>
@@ -302,29 +302,29 @@
                 {{ view_p.get(evalBudget.resourcesComment, "Resources comment", "evaluation") }}
 
                 {% if evalBudget.charges == YES %}
-                    <p> </p>
-                    <table class="table-bordered mb-2" style="width: 40%; {{ style_table }}">
+                    <p>&nbsp;</p>
+                    <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                         <thead>
                             <tr style="{{ style_thead }}">
-                                <th scope="col"> Charges</th>
-                                <td class="text-right font-weight-bold" style="text-align: right;">Montant</td>
+                                <th scope="col">&nbsp;Charges&nbsp;</th>
+                                <th class="text-right font-weight-bold" style="text-align: right;">&nbsp;Montant&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for key, value in evalBudget.chargesType %}
                                 {% if attribute(evalBudget, key) %}
                                 <tr>
-                                    <td scope="row"> {{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
-                                        attribute(evalBudget, key ~ 'Precision') : "Autre(s) charge(s)") }}</td>
-                                    <td class="text-right" style="text-align: right;">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") ~ ' €' }}</td>
+                                    <td scope="row">&nbsp;{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
+                                        attribute(evalBudget, key ~ 'Precision') : "Autre(s) charge(s)") }}&nbsp;</td>
+                                    <td class="text-right" style="text-align: right;">&nbsp;{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                                 </tr>
                                 {% endif %}
                             {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold" style="font-weight: bold;">
-                                <td scope="row"> Total des charges</td>
-                                <td class="text-right" style="text-align: right;">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+                                <td scope="row">&nbsp;Total des charges&nbsp;</td>
+                                <td class="text-right" style="text-align: right;">&nbsp;{{ evalBudget.resourcesAmt|number_format(0, ",", " ") ~ ' €' }}&nbsp;</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -360,7 +360,7 @@
 
 
     {# Situation professionnelle #}
-    <p> </p>
+    <p>&nbsp;</p>
     <h3 class="h4" style="{{ style_h3 }}">Situation professionnelle</h3>
 
     {% set eval_adults_prof = eval_adults|filter(e => e.evalProfPerson) %}
@@ -390,7 +390,7 @@
 
 
     {# Situation sociale #}
-    <p> </p>
+    <p>&nbsp;</p>
     <h3 class="h4" style="{{ style_h3 }}">Situation sociale</h3>
 
     {% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
@@ -437,7 +437,7 @@
 
     {% set evalHousing = evaluation.evalHousingGroup %}
     {% if evalHousing %}
-        <p> </p>
+        <p>&nbsp;</p>
         <h3 class="h4" style="{{ style_h3 }}">Situation au regard du logement</h3>
         {{ view_p.get(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
         {% if evalHousing.siaoRequest %}
@@ -514,7 +514,7 @@
 
     {# Parcours de vie #}
     {% if evaluation.backgroundPeople %}
-        <p> </p>
+        <p>&nbsp;</p>
         <h3 class="h4" style="{{ style_h3 }}">Parcours de vie</h3>
         <div style="text-align: justify;">{{ view_text.get(evaluation.backgroundPeople) }}</div>
     {% endif %}
@@ -522,7 +522,7 @@
     {# Vie à l'hôtel #}
     {% set evalHotelLife = evaluation.evalHotelLifeGroup %}
     {% if evalHotelLife %}  
-        <p> </p>
+        <p>&nbsp;</p>
         <h3 class="h4" style="{{ style_h3 }}">Vie à l'hôtel</h3>
         <div style="text-align: justify;">
             {% if evalHotelLife.food %}<br/>{{ view_text.get(evalHotelLife.food, "Food", "evaluation") }}{% endif %}
