@@ -2,20 +2,20 @@
 
 namespace App\Controller;
 
-use App\Service\Download;
-use App\Service\Pagination;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\DatabaseBackup;
 use App\Form\DatabaseBackup\BackupSearchType;
 use App\Form\Model\BackupSearch;
 use App\Repository\DatabaseBackupRepository;
+use App\Service\Download;
 use App\Service\DumpDatabase;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DatabaseBackupController extends AbstractController
 {

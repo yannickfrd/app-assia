@@ -3,8 +3,8 @@
 namespace App\Form\Model;
 
 use App\Form\Model\Traits\DateSearchTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class HotelSupportSearch
 {

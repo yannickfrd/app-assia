@@ -2,8 +2,8 @@
 
 namespace App\Form\Model;
 
-use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Traits\ContributionSearchTrait;
+use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 
 class ContributionSearch

@@ -127,7 +127,7 @@ class AccommodationGroupController extends AbstractController
 
         if ($countAddPeople > 1) {
             $this->addFlash('success', $countAddPeople.' personnes sont ajoutées à la prise en charge.');
-        } elseif ($countAddPeople == 1) {
+        } elseif (1 == $countAddPeople) {
             $this->addFlash('success', $countAddPeople.' personne est ajoutée à la prise en charge.');
         } else {
             $this->addFlash('warning', 'Aucune personne n\'a été ajoutée.');

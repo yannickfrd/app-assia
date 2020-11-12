@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
-use Tinify\Tinify;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tinify\Tinify;
 
 class FileUploader
 {

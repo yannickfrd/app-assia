@@ -2,12 +2,12 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
 use App\Entity\EvaluationPerson;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EvaluationPersonType extends AbstractType
@@ -25,7 +25,7 @@ class EvaluationPersonType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $evaluationPerson = $event->getData();
             $service = $evaluationPerson->getEvaluationGroup()->getSupportGroup()->getService();
-            if ($service->getJustice() == Choices::YES) {
+            if (Choices::YES == $service->getJustice()) {
                 $event->getForm()->add('evalJusticePerson', EvalJusticePersonType::class);
             }
         });

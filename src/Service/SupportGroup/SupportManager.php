@@ -99,10 +99,10 @@ class SupportManager
         $serviceId = $supportGroup->getService()->getId();
 
         // Contrôle le service du suivi
-        if ($serviceId === Service::SERVICE_AVDL_ID) {
+        if (Service::SERVICE_AVDL_ID === $serviceId) {
             $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
         }
-        if ($serviceId === Service::SERVICE_PASH_ID) {
+        if (Service::SERVICE_PASH_ID === $serviceId) {
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
@@ -157,10 +157,10 @@ class SupportManager
         $serviceId = $supportGroup->getService()->getId();
 
         // Vérifie le service du suivi
-        if ($serviceId === Service::SERVICE_AVDL_ID) {
+        if (Service::SERVICE_AVDL_ID === $serviceId) {
             $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
         }
-        if ($serviceId === Service::SERVICE_PASH_ID) {
+        if (Service::SERVICE_PASH_ID === $serviceId) {
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
@@ -411,7 +411,7 @@ class SupportManager
         $nbActiveSupportPeople = 0;
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            $supportPerson->getEndDate() === null ? ++$nbActiveSupportPeople : null;
+            null === $supportPerson->getEndDate() ? ++$nbActiveSupportPeople : null;
         }
 
         if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
@@ -420,7 +420,7 @@ class SupportManager
                 Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
         }
 
-        if ($supportGroup->getDevice() && $supportGroup->getDevice()->getAccommodation() === Choices::YES) {
+        if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getAccommodation()) {
             // Vérifie qu'il y a un hébergement créé
             if (0 === $supportGroup->getAccommodationGroups()->count()) {
                 $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
@@ -491,8 +491,8 @@ class SupportManager
         if (4 === $supportGroup->getStatus() && $supportGroup->getEndAccommodation()) {
             foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
                 if (!$accommodationGroup->getEndDate()) {
-                    $accommodationGroup->getEndDate() === null ? $accommodationGroup->setEndDate($supportGroup->getEndDate()) : null;
-                    $accommodationGroup->getEndReason() === null ? $accommodationGroup->setEndReason(1) : null;
+                    null === $accommodationGroup->getEndDate() ? $accommodationGroup->setEndDate($supportGroup->getEndDate()) : null;
+                    null === $accommodationGroup->getEndReason() ? $accommodationGroup->setEndReason(1) : null;
 
                     $this->updateAccommodationPeople($accommodationGroup);
                 }
@@ -509,8 +509,8 @@ class SupportManager
             $supportPerson = $accommodationPerson->getSupportPerson();
             $person = $supportPerson->getPerson();
 
-            $accommodationPerson->getEndDate() === null ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
-            $accommodationPerson->getEndReason() === null ? $accommodationPerson->setEndReason(1) : null;
+            null === $accommodationPerson->getEndDate() ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
+            null === $accommodationPerson->getEndReason() ? $accommodationPerson->setEndReason(1) : null;
 
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 $supportPerson->setStartDate($person->getBirthdate());

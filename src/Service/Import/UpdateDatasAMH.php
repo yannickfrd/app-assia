@@ -55,7 +55,7 @@ class UpdateDatasAMH extends ImportDatas
                 foreach ($person->getSupports() as $supportPerson) {
                     foreach ($supportPerson->getEvaluationsPerson() as $evaluationPerson) {
                         $evalAdmPerson = $evaluationPerson->getEvalAdmPerson();
-                        if ($evalAdmPerson && $evalAdmPerson->getPaperType() === 1 && $evalAdmPerson->getPaper() != 1 && $evalAdmPerson->getNationality() != 1) {
+                        if ($evalAdmPerson && 1 === $evalAdmPerson->getPaperType() && 1 != $evalAdmPerson->getPaper() && 1 != $evalAdmPerson->getNationality()) {
                             $evalAdmPerson->setPaperType(null);
                             ++$nbUpdatedPeople;
                         }

@@ -3,10 +3,10 @@
 namespace App\Form\Service;
 
 use App\Entity\Organization;
-use Symfony\Component\Form\AbstractType;
 use App\Repository\OrganizationRepository;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceOrganizationType extends AbstractType

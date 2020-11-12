@@ -4,14 +4,14 @@ namespace App\Form\Pole;
 
 use App\Entity\Pole;
 use App\Entity\User;
-use App\Form\Utils\Choices;
 use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
 use App\Repository\UserRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PoleType extends AbstractType
 {

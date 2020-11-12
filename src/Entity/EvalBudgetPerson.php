@@ -999,7 +999,7 @@ class EvalBudgetPerson
     }
 
     public function getDebtHealthToString(): ?string
-        {
+    {
         return $this->debtHealth ? Choices::YES_NO_BOOLEAN[$this->debtHealth] : null;
     }
 

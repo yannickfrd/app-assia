@@ -413,7 +413,7 @@ class ImportDatasOC extends ImportDatas
     protected function checkGroupExists(int $typology)
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
-        if (false == $this->groupExists()) {
+        if (false === $this->groupExists()) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
                 $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
@@ -480,7 +480,7 @@ class ImportDatasOC extends ImportDatas
 
     protected function createGroupPeople(int $typology): GroupPeople
     {
-        if ($this->field['Rôle'] == 'CHEF DE FAMILLE') {
+        if ('CHEF DE FAMILLE' === $this->field['Rôle']) {
             $this->personExistsInDatabase();
         }
 
@@ -529,7 +529,7 @@ class ImportDatasOC extends ImportDatas
     protected function getUserReferent(): ?User
     {
         foreach ($this->users as $key => $user) {
-            if ($key == $this->field['TS accompagnement']) {
+            if ($key === $this->field['TS accompagnement']) {
                 return $user;
             }
         }
@@ -539,7 +539,7 @@ class ImportDatasOC extends ImportDatas
 
     protected function getDevice(int $status): Device
     {
-        if ($status == SupportGroup::STATUS_IN_PROGRESS) {
+        if (SupportGroup::STATUS_IN_PROGRESS === $status) {
             return $this->deviceHotelSupport;
         }
 
@@ -623,9 +623,9 @@ class ImportDatasOC extends ImportDatas
             $this->existPeople[] = $this->person;
         } else {
             foreach ($this->people as $person2) {
-                if ($this->person->getLastname() == $person2->getLastname()
-                        && $this->person->getFirstname() == $person2->getFirstname()
-                        && $this->person->getBirthdate() == $person2->getBirthdate()) {
+                if ($this->person->getLastname() === $person2->getLastname()
+                        && $this->person->getFirstname() === $person2->getFirstname()
+                        && $this->person->getBirthdate() === $person2->getBirthdate()) {
                     $this->duplicatedPeople[] = $this->person;
                     $duplicatedPerson = true;
                     $this->person = $person2;
@@ -688,7 +688,7 @@ class ImportDatasOC extends ImportDatas
         $hotelSupport = (new HotelSupport())
             ->setGipId($this->field['ID_GIP'])
             ->setEvaluationDate($this->field['Date diagnostic'] ? new \Datetime($this->field['Date diagnostic']) : null)
-            ->setDepartmentAnchor($this->field['Ancrage 95'] == 'OUI' ? 95 : null)
+            ->setDepartmentAnchor('OUI' === $this->field['Ancrage 95'] ? 95 : null)
             ->setRecommendation($this->findInArray($this->field['Préconisation'], self::RECOMMENDATION) ?? null)
             ->setSupportGroup($supportGroup);
 
@@ -719,17 +719,17 @@ class ImportDatasOC extends ImportDatas
 
     protected function createInitEvalPerson(SupportPerson $supportPerson): ?InitEvalPerson
     {
-        if ($this->field['Rôle'] == 'ENFANT') {
+        if ('ENFANT' === $this->field['Rôle']) {
             return null;
         }
 
         $resourceType = $this->field['Type ressources'];
         $resourceOther = null;
 
-        if ($resourceType == 'AIDE EXTERIEURE') {
+        if ('AIDE EXTERIEURE' === $resourceType) {
             $resourceOther = 'Aide extérieure';
         }
-        if ($resourceType == 'RESSOURCES NON DECLAREES') {
+        if ('RESSOURCES NON DECLAREES' === $resourceType) {
             $resourceOther = 'Ressources non déclarées';
         }
 
@@ -761,7 +761,7 @@ class ImportDatasOC extends ImportDatas
 
     protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson)
     {
-        if ($this->field['Rôle'] != 'ENFANT') {
+        if ('ENFANT' != $this->field['Rôle']) {
             $evalSocialPerson = (new EvalSocialPerson())
                 ->setRightSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::RIGHT_SOCIAL_SECURITY) ?? null)
                 ->setSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::SOCIAL_SECURITY) ?? null)
@@ -775,7 +775,7 @@ class ImportDatasOC extends ImportDatas
 
     protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson)
     {
-        if ($this->field['Rôle'] != 'ENFANT' && (!empty($this->field['Grossesse']) || !empty($this->field['Situation matrimoniale']))) {
+        if ('ENFANT' != $this->field['Rôle'] && (!empty($this->field['Grossesse']) || !empty($this->field['Situation matrimoniale']))) {
             $evalFamilyPerson = (new EvalFamilyPerson())
                 ->setMaritalStatus($this->findInArray($this->field['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
                 ->setUnbornChild($this->findInArray($this->field['Grossesse'], self::YES_NO) ?? null)
@@ -819,9 +819,9 @@ class ImportDatasOC extends ImportDatas
 
         if ((float) $this->field['Age'] >= 16 && (!empty($resourceType) || !empty($this->field['Montant ressources']) || !empty($this->field['Dettes']))) {
             $resourceOther = null;
-            if ($resourceType == 'AIDE EXTERIEURE') {
+            if ('AIDE EXTERIEURE' === $resourceType) {
                 $resourceOther = 'Aide extérieure';
-            } elseif ($resourceType == 'RESSOURCES NON DECLAREES') {
+            } elseif ('RESSOURCES NON DECLAREES' === $resourceType) {
                 $resourceOther = 'Ressources non déclarées';
             }
 
@@ -856,7 +856,7 @@ class ImportDatasOC extends ImportDatas
         $this->head = false;
         $this->role = 97;
 
-        if ($this->field['Rôle'] == 'CHEF DE FAMILLE') {
+        if ('CHEF DE FAMILLE' === $this->field['Rôle']) {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
                 $this->gender = Person::GENDER_FEMALE;
@@ -871,9 +871,9 @@ class ImportDatasOC extends ImportDatas
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
-        } elseif ($this->field['Rôle'] == 'ENFANT') {
+        } elseif ('ENFANT' === $this->field['Rôle']) {
             $this->role = RolePerson::ROLE_CHILD;
-        } elseif ($this->field['Rôle'] == 'CONJOINT( E )') {
+        } elseif ('CONJOINT( E )' === $this->field['Rôle']) {
             $this->role = 1;
         }
     }

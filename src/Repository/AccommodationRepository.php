@@ -247,9 +247,9 @@ class AccommodationRepository extends ServiceEntityRepository
                 ->setParameter('pole_id', $search->getPole());
         }
 
-        if ($search->getDisabled() == Choices::DISABLED) {
+        if (Choices::DISABLED == $search->getDisabled()) {
             $query->andWhere('a.disabledAt IS NOT NULL');
-        } elseif ($search->getDisabled() == Choices::ACTIVE) {
+        } elseif (Choices::ACTIVE == $search->getDisabled()) {
             $query->andWhere('a.disabledAt IS NULL');
         }
 

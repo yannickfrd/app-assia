@@ -599,7 +599,7 @@ class ImportDatasAMH extends ImportDatas
                 $supportPerson = $this->createSupportPerson($supportGroup);
                 $this->createEvaluationPerson($evaluationGroup, $supportPerson);
 
-                if ($this->field['DP'] == 'Oui') {
+                if ('Oui' === $this->field['DP']) {
                     $this->createNote($supportGroup, 'Notes ACCESS', $this->field['Notes']);
                 }
             }
@@ -632,7 +632,7 @@ class ImportDatasAMH extends ImportDatas
                 ->setCreatedBy($this->user)
                 ->setUpdatedBy($this->user);
 
-        if ($this->field['DP'] == 'Oui') {
+        if ('Oui' === $this->field['DP']) {
             $person->setPhone1(strlen($this->field['Téléphone']) <= 15 ? Phone::formatPhone($this->field['Téléphone']) : null);
         }
 
@@ -642,7 +642,7 @@ class ImportDatasAMH extends ImportDatas
     protected function checkGroupExists(int $typology)
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
-        if (false == $this->groupExists()) {
+        if (false === $this->groupExists()) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
                 $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
@@ -675,7 +675,7 @@ class ImportDatasAMH extends ImportDatas
         // Vérifie si le groupe de la personne existe déjà.
         foreach ($this->items as $key => $value) {
             // Si déjà créé, on vérifie le suivi social.
-            if ($key == $this->field['ID_ménage']) {
+            if ($key === $this->field['ID_ménage']) {
                 $groupExists = true;
 
                 $supports = $this->items[$this->field['ID_ménage']]['supports'];
@@ -683,13 +683,13 @@ class ImportDatasAMH extends ImportDatas
                 $supportExists = false;
                 // Vérifie si le suivi du groupe de la personne a déjà été créé.
                 foreach ($supports as $key => $value) {
-                    if ($key == $this->field['ID_AMH']) {
+                    if ($key === $this->field['ID_AMH']) {
                         $supportExists = true;
                     }
                 }
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
-                if (false == $supportExists) {
+                if (false === $supportExists) {
                     $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_ménage']]['groupPeople']);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
@@ -706,7 +706,7 @@ class ImportDatasAMH extends ImportDatas
 
     protected function createGroupPeople(int $typology): GroupPeople
     {
-        if ($this->field['DP'] == 'Oui') {
+        if ('Oui' === $this->field['DP']) {
             $this->personExistsInDatabase();
         }
 
@@ -765,7 +765,7 @@ class ImportDatasAMH extends ImportDatas
 
     protected function getDevice(): Device
     {
-        if ($this->field['Etat suivi AMH'] == 'En cours' && $this->field['Dispositif'] == 'Familles avec AMH') {
+        if ('En cours' === $this->field['Etat suivi AMH'] && 'Familles avec AMH' === $this->field['Dispositif']) {
             return $this->deviceHotelSupport;
         }
 
@@ -788,7 +788,7 @@ class ImportDatasAMH extends ImportDatas
     protected function getUserReferent(): ?User
     {
         foreach ($this->users as $key => $user) {
-            if ($key == $this->field['TS AMH']) {
+            if ($key === $this->field['TS AMH']) {
                 return $user;
             }
         }
@@ -913,12 +913,12 @@ class ImportDatasAMH extends ImportDatas
         }
 
         foreach (self::RECOMMENDATION_TYPE as $key => $value) {
-            if (strstr($recommendation, $key) && $value == 20) {
+            if (strstr($recommendation, $key) && 20 === $value) {
                 return $value;
             }
         }
         foreach (self::RECOMMENDATION_TYPE as $key => $value) {
-            if (strstr($recommendation, $key) && $value == 10) {
+            if (strstr($recommendation, $key) && 10 === $value) {
                 return $value;
             }
         }
@@ -935,15 +935,15 @@ class ImportDatasAMH extends ImportDatas
             $this->existPeople[] = $this->person;
         } else {
             foreach ($this->people as $person2) {
-                if ($this->person->getLastname() == $person2->getLastname()
-                        && $this->person->getFirstname() == $person2->getFirstname()
-                        && $this->person->getBirthdate() == $person2->getBirthdate()) {
+                if ($this->person->getLastname() === $person2->getLastname()
+                        && $this->person->getFirstname() === $person2->getFirstname()
+                        && $this->person->getBirthdate() === $person2->getBirthdate()) {
                     $this->duplicatedPeople[] = $this->person;
                     $duplicatedPerson = true;
                     $this->person = $person2;
                 }
             }
-            if (false == $duplicatedPerson) {
+            if (false === $duplicatedPerson) {
                 $this->manager->persist($this->person);
                 $this->person->addRolesPerson($this->createRolePerson($groupPeople));
                 $this->people[] = $this->person;
@@ -1034,7 +1034,7 @@ class ImportDatasAMH extends ImportDatas
 
     protected function createInitEvalPerson(SupportPerson $supportPerson): ?InitEvalPerson
     {
-        if ($this->field['Rôle'] == 'Enfant') {
+        if ('Enfant' === $this->field['Rôle']) {
             return null;
         }
 
@@ -1088,7 +1088,7 @@ class ImportDatasAMH extends ImportDatas
 
     protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson)
     {
-        if ($this->field['Rôle'] != 'Enfant') {
+        if ('Enfant' != $this->field['Rôle']) {
             $evalSocialPerson = (new EvalSocialPerson())
                 ->setViolenceVictim(strstr($this->field['Spécificités'], 'PVV') ? Choices::YES : null)
                 ->setDomViolenceVictim(strstr($this->field['Spécificités'], 'FVVC') ? Choices::YES : null)
@@ -1131,19 +1131,19 @@ class ImportDatasAMH extends ImportDatas
 
     protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson)
     {
-        if ($this->field['Rôle'] != 'Enfant' && (!empty($this->field['Situation matrimoniale']))) {
+        if ('Enfant' != $this->field['Rôle'] && (!empty($this->field['Situation matrimoniale']))) {
             $evalFamilyPerson = (new EvalFamilyPerson())
             ->setMaritalStatus($this->findInArray($this->field['Situation matrimoniale'], self::MARITAL_STATUS) ?? null)
             ->setEvaluationPerson($evaluationPerson);
 
-            if ($this->field['Sexe'] == 'Femme') {
+            if ('Femme' === $this->field['Sexe']) {
                 $evalFamilyPerson->setUnbornChild($this->findInArray($this->field['Enfant à naître'], self::YES_NO));
             }
 
             $this->manager->persist($evalFamilyPerson);
         }
 
-        if ($this->field['Rôle'] == 'Enfant') {
+        if ('Enfant' === $this->field['Rôle']) {
             $evalFamilyPerson = (new EvalFamilyPerson())
                 ->setChildToHost($this->findInArray($this->field['Type garde enfant(s)'], self::CHILD_TO_HOST) ?? null)
                 ->setChildcareSchoolLocation($this->field['Ecole'])
@@ -1211,8 +1211,8 @@ class ImportDatasAMH extends ImportDatas
                 ->setDebtTaxDelays(strstr($resourceType, 'Retards impôts') ? Choices::YES : 0)
                 ->setDebtRental(strstr($resourceType, 'Dettes locatives') ? Choices::YES : 0)
                 ->setDebtOther(strstr($resourceType, 'Autre') ? Choices::YES : 0)
-                ->setSettlementPlan($this->field['Démarches endettement'] == 'Plan d\'appurement' ? 2 : null)
-                ->setMoratorium($this->field['Démarches endettement'] == 'Moratoire en cours' ? Choices::YES : null)
+                ->setSettlementPlan('Plan d\'appurement' === $this->field['Démarches endettement'] ? 2 : null)
+                ->setMoratorium('Moratoire en cours' === $this->field['Démarches endettement'] ? Choices::YES : null)
                 ->setOverIndebtRecord($this->findInArray($this->field['Démarches endettement'], self::OVER_INDEBT_RECORD) ?? null)
                 ->setOverIndebtRecordDate($this->field['Date dépôt dossier'] ? new \Datetime($this->field['Date dépôt dossier']) : null)
                 ->setResources($this->findInArray($this->field['Ressources'], self::RESOURCES))
@@ -1263,7 +1263,7 @@ class ImportDatasAMH extends ImportDatas
         $this->head = false;
         $this->role = 97;
 
-        if ($this->field['DP'] == 'Oui') {
+        if ('Oui' === $this->field['DP']) {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
                 $this->gender = Person::GENDER_FEMALE;
@@ -1278,9 +1278,9 @@ class ImportDatasAMH extends ImportDatas
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
-        } elseif ($this->field['Rôle'] == 'Enfant') {
+        } elseif ('Enfant' === $this->field['Rôle']) {
             $this->role = RolePerson::ROLE_CHILD;
-        } elseif ($this->field['Rôle'] == 'Concubin(e)') {
+        } elseif ('Concubin(e)' === $this->field['Rôle']) {
             $this->role = 1;
         }
     }
@@ -1374,7 +1374,7 @@ class ImportDatasAMH extends ImportDatas
 
         $accommodationGroup = (new AccommodationGroup())
             ->setAccommodation($hotel)
-            ->setComment($hotel == null ? $hotelName : null)
+            ->setComment(null === $hotel ? $hotelName : null)
             ->setSupportGroup($supportGroup)
             ->setGroupPeople($groupPeople);
 
@@ -1397,7 +1397,7 @@ class ImportDatasAMH extends ImportDatas
     protected function getHotel(string $hotelName): ?Accommodation
     {
         foreach ($this->hotels as $key => $hotel) {
-            if ($hotelName == $key) {
+            if ($hotelName === $key) {
                 return $hotel;
             }
         }

@@ -20,7 +20,7 @@ class OriginRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $serviceId = $builder->getOption('attr')['serviceId'] ?? null;
-        $required = $serviceId == Service::SERVICE_AVDL_ID ? true : false;
+        $required = Service::SERVICE_AVDL_ID == $serviceId ? true : false;
 
         $builder
             ->add('organization', EntityType::class, [
@@ -34,7 +34,7 @@ class OriginRequestType extends AbstractType
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
-                'label' => $serviceId == Service::SERVICE_AVDL_ID ? 'avdl.orientationDate' : '',
+                'label' => Service::SERVICE_AVDL_ID == $serviceId ? 'avdl.orientationDate' : '',
                 'widget' => 'single_text',
                 'required' => $required,
             ])

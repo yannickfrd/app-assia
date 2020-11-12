@@ -241,7 +241,7 @@ class DocumentController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
-        if ($isUpdate === false) {
+        if (false === $isUpdate) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId());
         }
 

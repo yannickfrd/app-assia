@@ -40,12 +40,12 @@ class AccommodationGroupHotelType extends AbstractType
                     'query_builder' => function (AccommodationRepository $repo) use ($serviceId, $subServiceId) {
                         return $repo->getAccommodationsQueryList($serviceId);
                     },
-                    'label' => $serviceId == Service::SERVICE_PASH_ID ? 'hotelName' : 'accommodation.name',
+                    'label' => Service::SERVICE_PASH_ID == $serviceId ? 'hotelName' : 'accommodation.name',
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])
                 ->add('startDate', DateType::class, [
-                    'label' => $serviceId == Service::SERVICE_PASH_ID ? 'hotelSupport.startDate' : 'accommodationGroup.startDate',
+                    'label' => Service::SERVICE_PASH_ID == $serviceId ? 'hotelSupport.startDate' : 'accommodationGroup.startDate',
                     'widget' => 'single_text',
                     'required' => false,
                 ])

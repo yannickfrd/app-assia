@@ -42,7 +42,7 @@ class DumpDatabase
 
         $cmd = "mysqldump -h{$this->host} -u{$this->userName} -p{$this->password} {$this->databaseName} > {$path}{$fileName}";
 
-        if ($this->host == 'localhost') {
+        if ('localhost' === $this->host) {
             $cmd = "{$this->pathMySqlDump}/mysqldump --host={$this->host} --user={$this->userName} {$this->databaseName} > {$path}{$fileName}";
         }
 

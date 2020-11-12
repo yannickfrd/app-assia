@@ -112,7 +112,7 @@ class ImportDatasRdv extends ImportDatas
         $createdAt = new \Datetime($rdv['Date saisie']);
         $content = ($rdv['Notes'] ? $rdv['Notes']."\n" : '').
             (!$userReferent ? 'TS : '.$rdv['TS'] : '').
-            ($rdv['Etat RDV'] == 'Point téléphonique' ? "\n".$rdv['Etat RDV'] : null);
+            ('Point téléphonique' === $rdv['Etat RDV'] ? "\n".$rdv['Etat RDV'] : null);
 
         $rdv = (new Rdv())
             ->setTitle('RDV '.$rdv['Nom'])
@@ -134,7 +134,7 @@ class ImportDatasRdv extends ImportDatas
     protected function getUserReferent(string $ts): ?User
     {
         foreach ($this->users as $key => $user) {
-            if ($key == $ts) {
+            if ($key === $ts) {
                 return $user;
             }
         }

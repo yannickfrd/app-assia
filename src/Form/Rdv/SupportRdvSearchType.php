@@ -2,8 +2,8 @@
 
 namespace App\Form\Rdv;
 
-use App\Form\Type\DateSearchType;
 use App\Form\Model\SupportRdvSearch;
+use App\Form\Type\DateSearchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

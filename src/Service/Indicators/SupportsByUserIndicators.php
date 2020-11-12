@@ -82,7 +82,7 @@ class SupportsByUserIndicators
             }
         }
         foreach ($devices as $deviceKey => $device) {
-            if ($device['nbSupports'] == 0) {
+            if (0 === $device['nbSupports']) {
                 unset($devices[$deviceKey]);
             }
         }

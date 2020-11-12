@@ -52,7 +52,7 @@ class ContributionController extends AbstractController
     public function listContributions(Request $request, Pagination $pagination): Response
     {
         $search = new ContributionSearch();
-        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
+        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
@@ -373,7 +373,7 @@ class ContributionController extends AbstractController
             ->setStart(new \DateTime($today->format('Y').'-01-01'))
             ->setEnd($today);
 
-        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
+        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
@@ -389,7 +389,7 @@ class ContributionController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
-        if ($isUpdate === false) {
+        if (false === $isUpdate) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId());
         }
 

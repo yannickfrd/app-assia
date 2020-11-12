@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Form\Utils\Choices;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\ResourcesEntityTrait;
+use App\Form\Utils\Choices;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**

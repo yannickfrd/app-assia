@@ -106,7 +106,7 @@ class SocialIndicators
 
     protected function updateVar(SupportPerson $supportPerson, ?int $var = null, array $varDatas)
     {
-        if ($var == null) {
+        if (null === $var) {
             $varDatas[99]['nbPeople'] = $varDatas[99]['nbPeople'] + 1;
             $supportPerson->getHead() ? $varDatas[99]['nbGroups'] = $varDatas[99]['nbGroups'] + 1 : null;
         } else {

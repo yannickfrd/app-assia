@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
+use App\Repository\AccommodationGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\AccommodationGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -50,7 +50,7 @@ class UpdateAccommodationPersonCommand extends Command
             foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
                 ++$nbAccommodationPeople;
                 foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-                    if ($accommodationPerson->getSupportPerson() == null && $accommodationPerson->getPerson()->getId() == $supportPerson->getPerson()->getId()) {
+                    if (null == $accommodationPerson->getSupportPerson() && $accommodationPerson->getPerson()->getId() == $supportPerson->getPerson()->getId()) {
                         $accommodationPerson->setSupportPerson($supportPerson);
                         ++$countUpdate;
                     }

@@ -17,7 +17,7 @@ class HotelSupportService
 
         $supportGroup->setStatus($supportGroup->getEndDate() ? SupportGroup::STATUS_ENDED : SupportGroup::STATUS_IN_PROGRESS);
 
-        if ($hotelSupport && $supportGroup->getDevice()->getId() == Device::HOTEL_SUPPORT) {
+        if ($hotelSupport && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getId()) {
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
         }
 
@@ -36,7 +36,7 @@ class HotelSupportService
     protected function updateSupportPeople(SupportGroup $supportGroup): void
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if (null == $supportPerson->getEndStatus()) {
+            if (null === $supportPerson->getEndStatus()) {
                 $supportPerson
                     ->setStatus($supportGroup->getStatus())
                     ->setStartDate($supportGroup->getStartDate())
@@ -74,11 +74,11 @@ class HotelSupportService
     protected function getCoeffSupport(HotelSupport $hotelSupport): float
     {
         // Si accompagnement en complémentarité : coeff. 0,5
-        if ($hotelSupport->getLevelSupport() == 3) {
+        if (3 === $hotelSupport->getLevelSupport()) {
             return SupportGroup::COEFFICIENT_HALF;
         }
         // Si veille sociale : coeff. 0,3
-        if ($hotelSupport->getLevelSupport() == 4) {
+        if (4 === $hotelSupport->getLevelSupport()) {
             return SupportGroup::COEFFICIENT_THIRD;
         }
         // Sinon par défaut : coeff. 1

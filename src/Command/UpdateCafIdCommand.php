@@ -2,11 +2,11 @@
 
 namespace App\Command;
 
-use App\Entity\RolePerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\RolePerson;
 use App\Repository\SupportGroupRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,7 +56,7 @@ class UpdateCafIdCommand extends Command
                     foreach ($support->getSupportPeople() as $supportPerson) {
                         /** @var EvaluationPerson $evaluationPerson */
                         $evaluationPerson = $supportPerson->getEvaluationsPerson()->first();
-                        if ($evaluationPerson->getSupportPerson()->getRole() != RolePerson::ROLE_CHILD) {
+                        if (RolePerson::ROLE_CHILD != $evaluationPerson->getSupportPerson()->getRole()) {
                             if ($evaluationPerson->getEvalBudgetPerson()) {
                                 $evaluationPerson->getEvalBudgetPerson()->setCafId($cafId);
                             }

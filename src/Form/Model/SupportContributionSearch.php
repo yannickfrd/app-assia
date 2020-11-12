@@ -15,7 +15,6 @@ class SupportContributionSearch
      */
     private $contributionId;
 
-
     public function getContributionId(): ?int
     {
         return $this->contributionId;

@@ -4,7 +4,9 @@ namespace App\Service;
 
 use Tinify\Tinify;
 
-// Une classe pour compresser et optimiser les images avec Tinify
+/**
+ * Une classe pour compresser et optimiser les images avec Tinify
+ */
 class OptimizeImage
 {
     protected $tinify;

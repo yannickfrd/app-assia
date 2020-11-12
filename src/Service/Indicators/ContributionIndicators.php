@@ -92,6 +92,6 @@ class ContributionIndicators
      */
     public function withinMonth(?\datetime $date = null, \datetime $month): bool
     {
-        return $date ? $date->format('Y-m') == $month->format('Y-m') : false;
+        return $date ? $date->format('Y-m') === $month->format('Y-m') : false;
     }
 }

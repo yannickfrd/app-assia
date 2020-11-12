@@ -2,35 +2,35 @@
 
 namespace App\Service\Import;
 
-use DateTime;
-use App\Entity\Device;
-use App\Entity\Person;
-use App\Entity\Service;
-use App\Entity\RolePerson;
-use App\Entity\GroupPeople;
-use App\Form\Utils\Choices;
-use App\Entity\SupportGroup;
 use App\Entity\Accommodation;
-use App\Entity\EvalAdmPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\OriginRequest;
-use App\Entity\SupportPerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\InitEvalPerson;
-use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalFamilyGroup;
-use App\Entity\EvalSocialGroup;
-use App\Entity\EvaluationGroup;
-use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalFamilyPerson;
-use App\Entity\EvalHousingGroup;
-use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationPerson;
 use App\Entity\AccommodationGroup;
 use App\Entity\AccommodationPerson;
+use App\Entity\Device;
+use App\Entity\EvalAdmPerson;
+use App\Entity\EvalBudgetGroup;
+use App\Entity\EvalBudgetPerson;
+use App\Entity\EvalFamilyGroup;
+use App\Entity\EvalFamilyPerson;
+use App\Entity\EvalHousingGroup;
+use App\Entity\EvalProfPerson;
+use App\Entity\EvalSocialGroup;
+use App\Entity\EvalSocialPerson;
+use App\Entity\EvaluationGroup;
+use App\Entity\EvaluationPerson;
+use App\Entity\GroupPeople;
+use App\Entity\InitEvalGroup;
+use App\Entity\InitEvalPerson;
+use App\Entity\OriginRequest;
+use App\Entity\Person;
+use App\Entity\RolePerson;
+use App\Entity\Service;
+use App\Entity\SupportGroup;
+use App\Entity\SupportPerson;
+use App\Form\Utils\Choices;
+use App\Notification\MailNotification;
 use App\Repository\DeviceRepository;
 use App\Repository\PersonRepository;
-use App\Notification\MailNotification;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportDatasHebergement extends ImportDatas
@@ -421,7 +421,7 @@ class ImportDatasHebergement extends ImportDatas
         $deviceExists = false;
 
         foreach ($this->devices as $key => $value) {
-            if ($key == $this->field['Dispositif']) {
+            if ($key === $this->field['Dispositif']) {
                 $deviceExists = true;
             }
         }
@@ -440,7 +440,7 @@ class ImportDatasHebergement extends ImportDatas
         $accommodationExists = false;
 
         foreach ($this->accommodations as $key => $value) {
-            if ($key == $this->field['Nom place']) {
+            if ($key === $this->field['Nom place']) {
                 $accommodationExists = true;
             }
         }
@@ -458,7 +458,7 @@ class ImportDatasHebergement extends ImportDatas
     {
         $groupExists = false;
         foreach ($this->items as $key => $value) {
-            if ($key == $this->field['N° ménage']) {
+            if ($key === $this->field['N° ménage']) {
                 $groupExists = true;
             }
         }
@@ -802,10 +802,10 @@ class ImportDatasHebergement extends ImportDatas
             ->setContractType($this->findInArray($this->field['Emploi (entrée)'], self::CONTRACT_TYPE) ?? null)
             ->setResources($this->findInArray($this->field['Ressources (entrée)'], self::YES_NO) ?? null)
             ->setResourcesAmt((float) $this->field['Montant ressources (entrée)'])
-            ->setUnemplBenefit($this->field['ARE (entrée)'] == 'Oui' ? Choices::YES : null)
-            ->setMinimumIncome($this->field['RSA (entrée)'] == 'Oui' ? Choices::YES : null)
-            ->setFamilyAllowance($this->field['AF (entrée)'] == 'Oui' ? Choices::YES : null)
-            ->setSalary($this->field['Salaire (entrée)'] == 'Oui' ? Choices::YES : null)
+            ->setUnemplBenefit('Oui' === $this->field['ARE (entrée)'] ? Choices::YES : null)
+            ->setMinimumIncome('Oui' === $this->field['RSA (entrée)'] ? Choices::YES : null)
+            ->setFamilyAllowance('Oui' === $this->field['AF (entrée)'] ? Choices::YES : null)
+            ->setSalary('Oui' === $this->field['Salaire (entrée)'] ? Choices::YES : null)
             ->setRessourceOther($this->field['Autres ressources (entrée)'] ? Choices::YES : null)
             ->setRessourceOtherPrecision($this->field['Autres ressources (entrée)'])
             ->setComment($this->field['Commentaire situation à l\'entrée']);
@@ -823,7 +823,7 @@ class ImportDatasHebergement extends ImportDatas
         ->setFamilyBreakdown($this->findInArray($this->field['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
         ->setFriendshipBreakdown($this->findInArray($this->field['Rupture liens familiaux et amicaux'], self::YES_NO) ?? null)
         ->setChildWelfareBackground($this->findInArray($this->field['Parcours institutionnel enfance'], self::YES_NO) ?? null)
-        ->setHealthProblem($this->field['Problématique santé mentale'] == Choices::YES || $this->field['Problématique santé - Addiction'] == Choices::YES ? Choices::YES : null)
+        ->setHealthProblem(Choices::YES === $this->field['Problématique santé mentale'] || Choices::YES === $this->field['Problématique santé - Addiction'] ? Choices::YES : null)
         ->setMentalHealthProblem($this->findInArray($this->field['Problématique santé mentale'], self::YES_NO_BOOLEAN) ?? null)
         ->setAddictionProblem($this->findInArray($this->field['Problématique santé - Addiction'], self::YES_NO_BOOLEAN) ?? null)
         ->setCareSupport($this->findInArray($this->field['Service soin ou acc. à domicile'], self::CARE_SUPPORT) ?? null)
@@ -859,7 +859,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setPaper($this->findInArray($this->field['Situation administrative'], self::PAPER) ?? null)
             ->setPaperType($this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) ?? null)
             ->setAsylumBackground($this->findInArray($this->field['Parcours asile'], self::YES_NO) ?? null)
-            ->setCommentEvalAdmPerson($this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) == 97 ? $this->field['Situation administrative'] : null);
+            ->setCommentEvalAdmPerson(97 === $this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) ? $this->field['Situation administrative'] : null);
 
         $this->manager->persist($evalAdmPerson);
 
@@ -884,10 +884,10 @@ class ImportDatasHebergement extends ImportDatas
             ->setEvaluationPerson($evaluationPerson)
             ->setResources($this->findInArray($this->field['Ressources'], self::YES_NO) ?? null)
             ->setResourcesAmt((float) $this->field['Montant ressources'])
-            ->setUnemplBenefit($this->field['ARE'] == 'Oui' ? Choices::YES : null)
-            ->setMinimumIncome($this->field['RSA'] == 'Oui' ? Choices::YES : null)
-            ->setFamilyAllowance($this->field['AF'] == 'Oui' ? Choices::YES : null)
-            ->setSalary($this->field['Salaire'] == 'Oui' ? Choices::YES : null)
+            ->setUnemplBenefit('Oui' === $this->field['ARE'] ? Choices::YES : null)
+            ->setMinimumIncome('Oui' === $this->field['RSA'] ? Choices::YES : null)
+            ->setFamilyAllowance('Oui' === $this->field['AF'] ? Choices::YES : null)
+            ->setSalary('Oui' === $this->field['Salaire'] ? Choices::YES : null)
             ->setRessourceOther($this->field['Autres ressources'] ? Choices::YES : null)
             ->setRessourceOtherPrecision($this->field['Autres ressources']);
 
@@ -899,7 +899,7 @@ class ImportDatasHebergement extends ImportDatas
     protected function findDevice(): ?Device
     {
         foreach (self::DEVICES as $key => $value) {
-            if ($key == $this->field['Dispositif']) {
+            if ($key === $this->field['Dispositif']) {
                 return $this->repoDevice->find($value);
             }
         }
@@ -910,7 +910,7 @@ class ImportDatasHebergement extends ImportDatas
     protected function findInArray($needle, array $haystack): ?int
     {
         foreach ($haystack as $key => $value) {
-            if ($key == $needle) {
+            if ($key === $needle) {
                 return $value;
             }
         }
@@ -924,7 +924,7 @@ class ImportDatasHebergement extends ImportDatas
         $this->head = false;
         $this->role = 97;
 
-        if ($this->field['Rôle'] == ' DP') {
+        if (' DP' === $this->field['Rôle']) {
             $this->head = true;
             if (in_array($typology, [1, 4])) {
                 $this->gender = Person::GENDER_FEMALE;
@@ -939,9 +939,9 @@ class ImportDatasHebergement extends ImportDatas
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
-        } elseif ($this->field['Rôle'] == 'Enfant') {
+        } elseif ('Enfant' === $this->field['Rôle']) {
             $this->role = RolePerson::ROLE_CHILD;
-        } elseif ($this->field['Rôle'] == 'Conjoint·e') {
+        } elseif ('Conjoint·e' === $this->field['Rôle']) {
             $this->role = 1;
         }
     }

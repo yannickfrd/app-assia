@@ -53,10 +53,10 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
             ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson');
 
-        if ($service && $service->getJustice() == Choices::YES) {
+        if ($service && Choices::YES == $service->getJustice()) {
             $query = $query->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp');
         }
-        if ($service && $service->getId() == Service::SERVICE_PASH_ID) {
+        if ($service && Service::SERVICE_PASH_ID == $service->getId()) {
             $query = $query->leftJoin('eg.evalHotelLifeGroup', 'ehlg')->addSelect('ehlg');
         }
 

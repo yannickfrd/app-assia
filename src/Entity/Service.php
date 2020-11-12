@@ -59,7 +59,6 @@ class Service
      */
     private $name;
 
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ServiceUser", mappedBy="service", orphanRemoval=true, cascade={"persist"})
      */

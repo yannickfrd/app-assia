@@ -208,7 +208,7 @@ class Calendar
     {
         $month = $this->month - 1;
         $year = $this->year;
-        
+
         if ($month < 1) {
             --$year;
             $month = 12;

@@ -4,7 +4,6 @@ namespace App\Command;
 
 use App\Repository\IndicatorRepository;
 use App\Service\Indicators\IndicatorsService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,7 +31,7 @@ class CreateDailyIndicatorsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->createDailyIndicators((new DateTime('today'))->modify('-1 day'));
+        $message = $this->createDailyIndicators((new \DateTime('today'))->modify('-1 day'));
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;

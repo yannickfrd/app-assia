@@ -53,7 +53,7 @@ class ImportDatasHotel extends ImportDatas
             'name' => $this->field['Nom'],
         ]);
 
-        if ($this->field['Nom'] == 'Non' || $accommodationExists) {
+        if ('Non' === $this->field['Nom'] || $accommodationExists) {
             return null;
         }
 

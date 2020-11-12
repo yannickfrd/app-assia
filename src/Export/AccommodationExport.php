@@ -2,8 +2,8 @@
 
 namespace App\Export;
 
-use App\Service\ExportExcel;
 use App\Entity\Accommodation;
+use App\Service\ExportExcel;
 
 class AccommodationExport
 {

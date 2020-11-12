@@ -31,8 +31,8 @@ class ImportDatas
         $this->datas = [];
 
         $row = 1;
-        if (($handle = fopen($fileName, 'r')) !== false) {
-            while (($data = fgetcsv($handle, 2000, ';')) !== false) {
+        if (false !== ($handle = fopen($fileName, 'r'))) {
+            while (false !== ($data = fgetcsv($handle, 2000, ';'))) {
                 $num = count($data);
                 ++$row;
                 $row = [];

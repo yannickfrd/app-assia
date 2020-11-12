@@ -33,7 +33,7 @@ class AvdlOrganizationsCommand extends Command
         $outputExec = [];
         exec($cmd, $outputExec, $return);
 
-        if ($return == 0) {
+        if (0 == $return) {
             $message = '[OK] Insert is successfull !';
             $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
         } else {

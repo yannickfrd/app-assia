@@ -29,13 +29,13 @@ class UpdateContributionTableCommand extends Command
     {
         $sql = 'ALTER TABLE contribution CHANGE date month_contrib DATE ; ALTER TABLE contribution CHANGE housing_assitance_amt apl_amt DOUBLE ; ALTER TABLE contribution CHANGE due_amt to_pay_amt DOUBLE ; ';
         $sql = $sql.'UPDATE contribution SET type=10 WHERE type=2 ; UPDATE contribution SET type=32 WHERE type=13 ; UPDATE contribution SET type=31 WHERE type=12 ; UPDATE contribution SET type=30 WHERE type=11 ; UPDATE contribution SET type=20 WHERE type=3 ; UPDATE contribution SET type=11 WHERE type=22 ; UPDATE contribution SET payment_type=1 WHERE payment_type=2 ; ';
-        
+
         $cmd = 'php bin/console doctrine:query:sql "'.$sql.'"';
 
         $outputExec = [];
         exec($cmd, $outputExec, $return);
 
-        if ($return == 0) {
+        if (0 == $return) {
             $message = '[OK] Update SQL is successfull !';
             $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
         } else {

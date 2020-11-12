@@ -24,7 +24,7 @@ class AvdlService
             ->setStartDate($this->getAvdlStartDate($avdl))
             ->setEndDate($this->getAvdlEndDate($avdl));
 
-        if ($supportGroup->getDevice()->getId() == Device::AVDL_DALO) {
+        if (Device::AVDL_DALO === $supportGroup->getDevice()->getId()) {
             $supportGroup->setCoefficient($this->getAvdlCoeffSupport($avdl));
         }
 
@@ -39,7 +39,7 @@ class AvdlService
     protected function updateSupportPeople(SupportGroup $supportGroup): void
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if (null == $supportPerson->getEndStatus()) {
+            if (null === $supportPerson->getEndStatus()) {
                 $supportPerson
                     ->setStatus($supportGroup->getStatus())
                     ->setStartDate($supportGroup->getStartDate())
@@ -53,11 +53,11 @@ class AvdlService
      */
     protected function getAvdlStatus(Avdl $avdl): int
     {
-        // if (null == $avdl->getDiagStartDate() && null == $avdl->getSupportStartDate()) {
+        // if (null === $avdl->getDiagStartDate() && null === $avdl->getSupportStartDate()) {
         //     return SupportGroup::STATUS_PRE_ADD_IN_PROGRESS;
         // }
 
-        if (($avdl->getDiagEndDate() && $avdl->getSupportStartDate() == null) || $avdl->getSupportEndDate()) {
+        if (($avdl->getDiagEndDate() && null === $avdl->getSupportStartDate()) || $avdl->getSupportEndDate()) {
             return SupportGroup::STATUS_ENDED;
         }
 
@@ -81,7 +81,7 @@ class AvdlService
      */
     protected function getAvdlEndDate(Avdl $avdl): ?\DateTimeInterface
     {
-        if ($avdl->getSupportEndDate() || ($avdl->getDiagEndDate() && $avdl->getSupportStartDate() == null)) {
+        if ($avdl->getSupportEndDate() || ($avdl->getDiagEndDate() && null === $avdl->getSupportStartDate())) {
             return max([
                 $avdl->getDiagEndDate(),
                 $avdl->getSupportEndDate(),
@@ -99,11 +99,11 @@ class AvdlService
     protected function getAvdlCoeffSupport(Avdl $avdl): float
     {
         // Si prêt au logement (PAL) : coeff. 0.25
-        if ($avdl->getSupportType() == 1) {
+        if (1 === $avdl->getSupportType()) {
             return SupportGroup::COEFFICIENT_QUARTER;
         }
         // Si accompagnement lourd : coeff. 2
-        if ($avdl->getSupportType() == 5) {
+        if (5 === $avdl->getSupportType()) {
             return SupportGroup::COEFFICIENT_DOUBLE;
         }
         // Sinon par défaut : coeff. 1

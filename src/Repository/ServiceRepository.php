@@ -50,9 +50,9 @@ class ServiceRepository extends ServiceEntityRepository
             $query = $query->andWhere('p.id = :pole')
                 ->setParameter('pole', $search->getPole());
         }
-        if ($search->getDisabled() == Choices::DISABLED) {
+        if (Choices::DISABLED == $search->getDisabled()) {
             $query->andWhere('s.disabledAt IS NOT NULL');
-        } elseif ($search->getDisabled() == Choices::ACTIVE) {
+        } elseif (Choices::ACTIVE == $search->getDisabled()) {
             $query->andWhere('s.disabledAt IS NULL');
         }
 

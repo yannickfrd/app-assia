@@ -2,15 +2,15 @@
 
 namespace App\Form\Contribution;
 
-use App\Form\Utils\Choices;
 use App\Entity\Contribution;
 use App\Form\Model\ContributionSearch;
-use Symfony\Component\Form\AbstractType;
 use App\Form\Model\SupportContributionSearch;
 use App\Form\Type\DateSearchType;
+use App\Form\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SupportContributionSearchType extends AbstractType
 {

@@ -50,7 +50,7 @@ class NoteController extends AbstractController
     public function listNotes(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $search = new NoteSearch();
-        if ($this->getUser()->getStatus() == User::STATUS_SOCIAL_WORKER) {
+        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
@@ -284,7 +284,7 @@ class NoteController extends AbstractController
     {
         $cache = new FilesystemAdapter();
 
-        if ($isUpdate === false) {
+        if (false === $isUpdate) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId());
         }
 

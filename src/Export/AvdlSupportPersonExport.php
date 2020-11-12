@@ -3,9 +3,9 @@
 namespace App\Export;
 
 use App\Entity\Avdl;
-use App\Service\ExportExcel;
 use App\Entity\OriginRequest;
 use App\Entity\SupportPerson;
+use App\Service\ExportExcel;
 
 class AvdlSupportPersonExport
 {

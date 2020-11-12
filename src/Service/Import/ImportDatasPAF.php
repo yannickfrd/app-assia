@@ -141,7 +141,7 @@ class ImportDatasPAF extends ImportDatas
     protected function getUserReferent(string $ts): ?User
     {
         foreach ($this->users as $key => $user) {
-            if ($key == $ts) {
+            if ($key === $ts) {
                 return $user;
             }
         }

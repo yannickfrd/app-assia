@@ -4,7 +4,6 @@ namespace App\Command;
 
 use App\Repository\IndicatorRepository;
 use App\Service\Indicators\IndicatorsService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,9 +42,9 @@ class CreateIndicatorsCommand extends Command
      */
     protected function createAllIndicators()
     {
-        $startDate = (new DateTime('2020-02-25'));
+        $startDate = (new \DateTime('2020-02-25'));
 
-        $diff = $startDate->diff(new DateTime())->days;
+        $diff = $startDate->diff(new \DateTime())->days;
 
         $date = clone $startDate;
         $count = 0;

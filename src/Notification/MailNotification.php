@@ -37,7 +37,7 @@ class MailNotification
 
         $request = Request::createFromGlobals();
 
-        if ($request->server->get('SERVER_NAME') != '127.0.0.1:8000') {
+        if ('127.0.0.1:8000' != $request->server->get('SERVER_NAME')) {
             $mail->SMTPAuth = true; // Enable SMTP authentication
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->SMTPDebug = SMTP::DEBUG_OFF;
@@ -110,7 +110,7 @@ class MailNotification
             'name' => $user->getFullname(),
         ];
 
-        $subject = 'Esperer95.app'.($this->appVersion == 'test' ? ' version TEST' : null).' : Création de compte | '.$user->getFullname();
+        $subject = 'Esperer95.app'.('test' == $this->appVersion ? ' version TEST' : null).' : Création de compte | '.$user->getFullname();
 
         $context = [
             'user' => $user,
