@@ -15,9 +15,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% set supports = group_people is defined ? group_people.supports : person.supports %}
+                {% set supports = person is defined ? person.supports : group_people.supports %}
                 {% for support in supports|reverse %}
-                    {% set supportGroup = group_people is defined ? support : support.supportGroup %}
+                    {% set supportGroup = person is defined ? support.supportGroup : support %}
                     {% if supportGroup.referent %}
                         {% set contact_user %}
                             <div class='text-left p-2'>

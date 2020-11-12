@@ -31,7 +31,7 @@ class SupportPersonExport
             }
             $arrayData[] = $this->getDatas($supportPerson);
             ++$i;
-            if ($i > 50) {
+            if ($i > 100) {
                 sleep(5);
                 $i = 0;
             }
