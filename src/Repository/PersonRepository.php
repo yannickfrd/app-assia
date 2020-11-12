@@ -27,18 +27,11 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findPersonById(int $id): ?Person
     {
-        return $this->createQueryBuilder('p')
-            ->select('p')
+        return $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
             ->leftJoin('p.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname}')
             ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
-            ->leftJoin('p.supports', 'sp')->addSelect('PARTIAL sp.{id, status, startDate, endDate, updatedAt}')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate}')
-            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
 
             ->andWhere('p.id = :id')
             ->setParameter('id', $id)

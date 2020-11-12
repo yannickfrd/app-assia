@@ -28,6 +28,8 @@ class Person
     use ContactEntityTrait;
     use SoftDeleteableEntity;
 
+    public const CACHE_PERSON_SUPPORTS_KEY = 'person.supports';
+
     public const GENDER_FEMALE = 1;
     public const GENDER_MALE = 2;
 

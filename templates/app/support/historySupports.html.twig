@@ -15,7 +15,6 @@
                 </tr>
             </thead>
             <tbody>
-                {% set supports = person is defined ? person.supports : group_people.supports %}
                 {% for support in supports|reverse %}
                     {% set supportGroup = person is defined ? support.supportGroup : support %}
                     {% if supportGroup.referent %}

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Person;
 use App\Entity\SupportPerson;
 use App\Form\Model\SupportGroupSearch;
 use App\Security\CurrentUserService;
@@ -57,6 +58,26 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         return $query->orderBy('sg.startDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
+     * Donne les suivis sociaux de la personne.
+     */
+    public function findSupportsOfPerson(Person $person)
+    {
+        return $this->createQueryBuilder('sp')->select('sp')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+
+            ->where('sp.person = :person')
+            ->setParameter('person', $person)
+
+            ->orderBy('sp.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }

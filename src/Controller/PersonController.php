@@ -17,10 +17,13 @@ use App\Form\Person\PersonSearchType;
 use App\Form\Person\PersonType;
 use App\Form\Person\RolePersonGroupType;
 use App\Form\RolePerson\RolePersonType;
+use App\Repository\GroupPeopleRepository;
 use App\Repository\PersonRepository;
+use App\Repository\SupportPersonRepository;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -186,8 +189,9 @@ class PersonController extends AbstractController
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function editPersonInGroup(GroupPeople $groupPeople, int $person_id, Request $request, SessionInterface $session): Response
+    public function editPersonInGroup(int $id, int $person_id, Request $request, GroupPeopleRepository $repoGroupPeople, SupportPersonRepository $repoSuppport, SessionInterface $session): Response
     {
+        $groupPeople = $repoGroupPeople->findGroupPeopleById($id);
         $person = $this->repo->findPersonById($person_id);
 
         $form = ($this->createForm(PersonType::class, $person))
@@ -202,8 +206,9 @@ class PersonController extends AbstractController
         }
 
         return $this->render('app/person/person.html.twig', [
-            'group_people' => $groupPeople,
             'form' => $form->createView(),
+            'group_people' => $groupPeople,
+            'supports' => $repoSuppport->findSupportsOfPerson($person),
             'form_new_group' => $formNewGroup->createView(),
             'hasRights' => $this->hasRights($person, $session),
         ]);
@@ -215,19 +220,21 @@ class PersonController extends AbstractController
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @Route("/person/{id}", name="person_show", methods="GET")
      */
-    public function personShow(Person $person, RolePerson $rolePerson = null, Request $request, SessionInterface $session): Response
+    public function personShow(int $id, Request $request, SupportPersonRepository $repoSuppport, SessionInterface $session): Response
     {
+        $person = $this->repo->findPersonById($id);
+
         $form = ($this->createForm(PersonType::class, $person))
             ->handleRequest($request);
 
         // Formulaire pour ajouter un nouveau groupe à la personne
-        $rolePerson = new RolePerson();
-        $formNewGroup = $this->createForm(PersonNewGroupType::class, $rolePerson, [
+        $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
             'action' => $this->generateUrl('person_new_group', ['id' => $person->getId()]),
         ]);
 
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
+            'supports' => $repoSuppport->findSupportsOfPerson($person),
             'form_new_group' => $formNewGroup->createView(),
             'hasRights' => $this->hasRights($person, $session),
         ]);
@@ -449,6 +456,15 @@ class PersonController extends AbstractController
         }
 
         return false;
+    }
+
+    protected function getSupports(Person $person, SupportPersonRepository $repoSuppport)
+    {
+        return (new FilesystemAdapter())->get(Person::CACHE_PERSON_SUPPORTS_KEY.$person->getId(), function (CacheItemInterface $item) use ($person, $repoSuppport) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoSuppport->findSupportsOfPerson($person);
+        });
     }
 
     /**

@@ -467,6 +467,25 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne les suivis sociaux du ménage.
+     */
+    public function findSupportsOfGroupPeople(GroupPeople $groupPeople)
+    {
+        return $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+
+            ->where('sg.groupPeople = :groupPeople')
+            ->setParameter('groupPeople', $groupPeople)
+
+            ->orderBy('sg.startDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
      * Donne le dernier suivi social auquel l'utilisateur peur avoir accès.
      */
     public function countSupportOfGroupPeople(GroupPeople $groupPeople): int
