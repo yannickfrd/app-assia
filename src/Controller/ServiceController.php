@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Service;
-use App\Export\ServiceExport;
 use App\Form\Model\ServiceSearch;
 use App\Form\Service\ServiceSearchType;
 use App\Form\Service\ServiceType;
@@ -11,6 +10,7 @@ use App\Repository\AccommodationRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SubServiceRepository;
 use App\Repository\UserRepository;
+use App\Service\Export\ServiceExport;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

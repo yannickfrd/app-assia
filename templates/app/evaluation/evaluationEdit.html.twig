@@ -7,7 +7,7 @@
 {% block body %}
 
 	{% set evaluationGroup = form.vars.value %}
-	{% set EDIT_MODE = form.vars.value.evalBudgetGroup ? true : false %}
+	{% set EDIT_MODE = form.vars.value.evalBudgetGroup != null %}
 	{% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 	{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 	{% set people_over_16 = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}

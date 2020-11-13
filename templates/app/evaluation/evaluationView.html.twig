@@ -10,8 +10,6 @@
 {% set people_over_18 = eval_people|filter(e => e.supportPerson.person.age >= 18) %}
 {% set nb_people = support.supportPeople|length %}
 
-
-
 {% apply spaceless %}
 
     <div class="row mb-2">
@@ -98,8 +96,7 @@
                 class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
             </span>
         </div>
-
-        {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
+        {% set eval_adults_admin = eval_adults|filter(e => e.evalAdmPerson) %}
         {% set nb_adults_admin = eval_adults_admin|length %}
         {% for evalPerson in eval_adults_admin %}
             {% set evalAdm = evalPerson.evalAdmPerson %}

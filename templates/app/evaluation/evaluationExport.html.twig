@@ -90,12 +90,11 @@
         {% endfor %}
     {% endif %}
 
-
     {# Identité - Papier #}
     <p>&nbsp;</p>
     <h3 class="h4" style="{{ style_h3 }}">Situation administrative</h3>
 
-    {% set eval_adults_admin = eval_adults|filter(e => e.evalProfPerson) %}
+    {% set eval_adults_admin = eval_adults|filter(e => e.evalAdmPerson) %}
     {% set nb_adults_admin = eval_adults_admin|length %}
     {% for evalPerson in eval_adults_admin %}
         {% set evalAdm = evalPerson.evalAdmPerson %}

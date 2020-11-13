@@ -8,7 +8,6 @@ use App\Entity\GroupPeople;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
-use App\Export\SupportPersonExport;
 use App\Form\Model\SupportGroupSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
@@ -26,6 +25,7 @@ use App\Repository\ReferentRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Calendar;
+use App\Service\Export\SupportPersonExport;
 use App\Service\Grammar;
 use App\Service\Indicators\SocialIndicators;
 use App\Service\Pagination;
@@ -92,7 +92,7 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportManager->create($groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() ? true : false)) {
+            if ($supportManager->create($groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getStartDate() && Choices::YES == $supportGroup->getService()->getAccommodation()
@@ -385,6 +385,8 @@ class SupportController extends AbstractController
      */
     protected function exportData(SupportGroupSearch $search)
     {
+        set_time_limit(10 * 60);
+
         $supports = $this->repoSupportPerson->findSupportsToExport($search);
 
         if (!$supports) {

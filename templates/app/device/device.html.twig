@@ -4,7 +4,7 @@
 
 {% set device = form.vars.value %}
 {% set disabled = device.isDisabled %}
-{% set EDIT_MODE = device.id ? true : false %}
+{% set EDIT_MODE = device.id != null %}
 {% set title = EDIT_MODE ? 'Dispositif ' ~ device.name ~ (disabled ? ' (désactivé)') : 'Nouveau dispositif' %}
 
 {% block title %}{{ title }}{{ parent() }}{% endblock %}

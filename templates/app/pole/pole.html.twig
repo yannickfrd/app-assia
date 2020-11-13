@@ -3,7 +3,7 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set pole = form.vars.value %}
-{% set EDIT_MODE = pole.id ? true : false %}
+{% set EDIT_MODE = pole.id != null %}
 {% set title =  EDIT_MODE ? pole.name : 'Nouveau pôle' %}
 {% block title %}{{ title }}{{ parent() }}{% endblock %}
 

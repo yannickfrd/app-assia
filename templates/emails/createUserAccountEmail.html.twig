@@ -6,7 +6,7 @@
 
 {% block body %}
 
-    <p>Un compte utilisateur a été créé pour vous sur l'application {% if app_version == "test" %}de <b><u>TEST</u></b> {% endif %} : 
+    <p>Un compte utilisateur a été créé pour vous sur l'application {% if app_version != "prod" %}de <b><u>TEST</u></b> {% endif %} : 
         <b><a href="{{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}">{{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}</a></b>
     </p>
 

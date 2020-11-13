@@ -51,6 +51,7 @@ services:
     App\EventListener\MaintenanceListener:
         arguments:
             $maintenance: '%env(MAINTENANCE)%'
+            $appVersion: '%env(APP_VERSION)%'
         tags:
         - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest' }
     

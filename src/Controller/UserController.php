@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Export\UserExport;
 use App\Form\Model\UserSearch;
 use App\Form\User\UserSearchType;
 use App\Repository\UserRepository;
+use App\Service\Export\UserExport;
 use App\Service\Pagination;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,12 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     private $repo;
-    private $manager;
 
-    public function __construct(UserRepository $repo, EntityManagerInterface $manager)
+    public function __construct(UserRepository $repo)
     {
         $this->repo = $repo;
-        $this->manager = $manager;
     }
 
     /**
@@ -32,14 +29,6 @@ class UserController extends AbstractController
      */
     public function listUsers(Request $request, Pagination $pagination): Response
     {
-        // $users = $this->repo->findAll();
-
-        // foreach ($users as $user) {
-        //     $user->setPhone1(str_replace(' ', '', $user->getPhone1()));
-        // }
-
-        // $this->manager->flush();
-
         $search = new UserSearch();
 
         $form = ($this->createForm(UserSearchType::class, $search))
@@ -90,7 +79,7 @@ class UserController extends AbstractController
         $user = $this->repo->findOneBy(['username' => $request->query->get('value')]);
 
         return $this->json([
-            'response' => $user ? true : false,
+            'response' => $user != null,
         ], 200);
     }
 

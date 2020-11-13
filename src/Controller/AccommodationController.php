@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Accommodation;
 use App\Entity\Service;
-use App\Export\AccommodationExport;
 use App\Form\Accommodation\AccommodationSearchType;
 use App\Form\Accommodation\AccommodationType;
 use App\Form\Model\AccommodationSearch;
 use App\Repository\AccommodationGroupRepository;
 use App\Repository\AccommodationRepository;
 use App\Security\CurrentUserService;
+use App\Service\Export\AccommodationExport;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

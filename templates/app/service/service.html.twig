@@ -4,7 +4,7 @@
 
 {% set service = form.vars.value %}
 {% set disabled = service.isDisabled %}
-{% set EDIT_MODE = service.id ? true : false %}
+{% set EDIT_MODE = service.id != null %}
 {% set YES = 1 %}
 {% set title = EDIT_MODE ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
 

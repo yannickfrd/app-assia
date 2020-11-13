@@ -12,35 +12,42 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use ZipArchive;
 
 class ExportExcel
 {
-    private $name;
-    private $format;
-    private $arrayData;
-    private $columnsWidth;
+    protected $name;
+    protected $format;
+    protected $arrayData;
+    protected $columnsWidth;
 
-    private $spreadsheet;
-    private $sheet;
+    protected $spreadsheet;
+    protected $sheet;
 
-    private $nbColumns;
-    private $nbRows;
-    private $highestColumn;
-    private $headers;
-    private $allCells;
+    protected $nbColumns;
+    protected $nbRows;
+    protected $highestColumn;
+    protected $headers;
+    protected $allCells;
 
-    private $writer;
-    private $contentType;
-    private $now;
+    protected $writer;
+    protected $contentType;
+    protected $now;
 
-    public function __construct(string $name, string $format, array $arrayData, int $columnsWidth = null)
+    protected $datas;
+    protected $normalisation;
+
+    /**
+     * Initialize the style sheet.
+     */
+    public function createSheet(string $name, string $format, array $arrayData, int $columnsWidth = null): void
     {
         $this->name = $name;
         $this->format = $format;
         $this->arrayData = $arrayData;
         $this->columnsWidth = $columnsWidth;
+        $this->now = new \DateTime();
 
         $this->spreadsheet = new Spreadsheet();
         $this->sheet = $this->spreadsheet->getActiveSheet();
@@ -59,14 +66,6 @@ class ExportExcel
         $this->headers = 'A1:'.$this->highestColumn.'1';
         $this->allCells = 'A1:'.$this->highestColumn.$this->nbRows;
 
-        $this->now = new \DateTime();
-
-        $this->init();
-    }
-
-    // Initialize the style sheet
-    protected function init()
-    {
         $this->formatColumnsWidth();
         $this->formatDateColumns();
         $this->formatMoneyColumns();
@@ -75,7 +74,11 @@ class ExportExcel
         $this->formatPrint();
     }
 
-    // Export the file
+    /**
+     * Export the file.
+     *
+     * @return StreamedResponse|Response
+     */
     public function exportFile(bool $asynch = false)
     {
         $this->getFormat($this->format);
@@ -98,8 +101,10 @@ class ExportExcel
         return $this->getResponse($filename);
     }
 
-    // Insert a row with subtotal
-    public function addTotalRow()
+    /**
+     * Insert a row with subtotal.
+     */
+    public function addTotalRow(): void
     {
         $this->sheet->insertNewRowBefore(1, 1);
         $this->sheet->getCell('A1')->setValue('Total :');
@@ -118,7 +123,7 @@ class ExportExcel
 
         $zip = new \ZipArchive();
 
-        if ($zip->open($zipFile, ZipArchive::CREATE)) {
+        if ($zip->open($zipFile, \ZipArchive::CREATE)) {
             // $zip->addFromString('localname', 'file content goes here');
             $zip->addFile($file, $filename);
             $zip->close();
@@ -131,6 +136,9 @@ class ExportExcel
         return  $zipFile;
     }
 
+    /**
+     * @return StreamedResponse|Response
+     */
     protected function getResponse(string $filename)
     {
         $response = new StreamedResponse();
@@ -149,8 +157,10 @@ class ExportExcel
         return $response;
     }
 
-    // Format the widht of columns
-    protected function formatColumnsWidth()
+    /**
+     * Format the widht of columns.
+     */
+    protected function formatColumnsWidth(): void
     {
         $columnLetter = 'A';
 
@@ -169,8 +179,10 @@ class ExportExcel
         }
     }
 
-    // Format the columns with date
-    protected function formatDateColumns()
+    /**
+     * Format the columns with date.
+     */
+    protected function formatDateColumns(): void
     {
         // Format les colonnes de date
         foreach ($this->getColumnsWithType('Date') as  $col) {
@@ -182,8 +194,10 @@ class ExportExcel
         }
     }
 
-    // Format the money columns
-    protected function formatMoneyColumns()
+    /**
+     * Format the money columns.
+     */
+    protected function formatMoneyColumns(): void
     {
         // Format les colonnes de date
         foreach ($this->getColumnsWithType('€') as  $col) {
@@ -195,7 +209,10 @@ class ExportExcel
         }
     }
 
-    protected function formatUrlColumns()
+    /**
+     * Format the URL columns.
+     */
+    protected function formatUrlColumns(): void
     {
         // Format les colonnes avec une URL
         foreach ($this->getColumnsWithType('Url') as  $col) {
@@ -206,8 +223,10 @@ class ExportExcel
         }
     }
 
-    // Return the columns with a special type (Date, Url, money...)
-    protected function getColumnsWithType($word)
+    /**
+     * Return the columns with a special type (Date, Url, money...).
+     */
+    protected function getColumnsWithType(string $word): array
     {
         $alphas = range('A', 'Z');
         $columns = [];
@@ -226,8 +245,10 @@ class ExportExcel
         return $columns;
     }
 
-    // Format the sheet to print
-    protected function formatPrint()
+    /**
+     * Format the sheet to print.
+     */
+    protected function formatPrint(): void
     {
         // Page margins for print
         $this->sheet->getPageMargins()->setTop(0.4);
@@ -248,8 +269,10 @@ class ExportExcel
         $this->sheet->getPageSetup()->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
     }
 
-    // Format the style sheet
-    protected function formatSheet()
+    /**
+     * Format the style sheet.
+     */
+    protected function formatSheet(): void
     {
         // Set name of sheet
         $this->sheet->setTitle($this->name);
@@ -272,8 +295,10 @@ class ExportExcel
         $this->sheet->getStyle('A1');
     }
 
-    // Get format of file
-    protected function getFormat($format)
+    /**
+     * Get format of file.
+     */
+    protected function getFormat(string $format): void
     {
         switch ($format) {
             case 'xlsx':
@@ -294,8 +319,10 @@ class ExportExcel
         }
     }
 
-    // Get the style of headers
-    protected function getStyleHeaders()
+    /**
+     * Get the style of headers.
+     */
+    protected function getStyleHeaders(): array
     {
         return [
             'font' => [
@@ -321,8 +348,10 @@ class ExportExcel
         ];
     }
 
-    // Get the style of table
-    protected function getStyleTable()
+    /**
+     * Get the style of table.
+     */
+    protected function getStyleTable(): array
     {
         return  [
             'alignment' => [
@@ -335,5 +364,33 @@ class ExportExcel
                 ],
             ],
         ];
+    }
+
+    /**
+     * Formatte une date.
+     *
+     * @return mixed
+     */
+    public function formatDate(?\DateTime $date)
+    {
+        return $date ? Date::PHPToExcel($date->format('Y-m-d')) : null;
+    }
+
+    /**
+     * Formatte une date et une heure.
+     *
+     * @return mixed
+     */
+    public function formatDatetime(?\DateTime $date)
+    {
+        return $date ? Date::PHPToExcel($date->format('Y-m-d H:i')) : null;
+    }
+
+    /**
+     * Ajoute l'objet normalisé.
+     */
+    protected function add(object $object, string $name = null)
+    {
+        $this->datas = array_merge($this->datas, $this->normalisation->normalize($object, $name));
     }
 }

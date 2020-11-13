@@ -3,7 +3,7 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set accommodation = form.vars.value %}
-{% set EDIT_MODE = accommodation.id ? true : false %}
+{% set EDIT_MODE = accommodation.id != null %}
 {% set disabled = accommodation.isDisabled %}
 {% set title = EDIT_MODE ? accommodation.name ~ (disabled ? ' (désactivé)') : 'Nouveau groupe de places' %}
 

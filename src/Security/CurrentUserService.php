@@ -32,6 +32,6 @@ class CurrentUserService
 
     public function hasRole(string $role): bool
     {
-        return in_array($role, $this->user->getRoles()) ? true : false;
+        return in_array($role, $this->user->getRoles()) != null;
     }
 }

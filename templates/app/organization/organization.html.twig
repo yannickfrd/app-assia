@@ -3,7 +3,7 @@
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
 {% set organization = form.vars.value %}
-{% set EDIT_MODE = organization.id ? true : false %}
+{% set EDIT_MODE = organization.id != null %}
 {% set title = EDIT_MODE ? 'Organisme ' ~ organization.name : 'Nouvel organisme' %}
 
 {% block title %}{{ title }}{{ parent() }}{% endblock %}

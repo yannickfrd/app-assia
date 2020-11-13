@@ -216,14 +216,15 @@ class NoteController extends AbstractController
     /**
      * @Route("note/{id}/export", name="note_export", methods="GET")
      */
-    public function exportNote(int $id, ExportWord $exportWord): Response
+    public function exportNote(int $id, Request $request, ExportWord $exportWord): Response
     {
         $note = $this->repoNote->findNote($id);
         $supportGroup = $note->getSupportGroup();
         $fullname = $this->getHeadSupportPerson($supportGroup);
 
-        return $exportWord->export($note->getContent(), $note->getTitle(), $supportGroup->getService()->getPole()->getLogoPath(), $fullname);
-        // return $exportPDF->init();
+        $exportWord->createDocument($note->getContent(), $note->getTitle(), $supportGroup->getService()->getPole()->getLogoPath(), $fullname);
+
+        return $exportWord->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
     }
 
     /**

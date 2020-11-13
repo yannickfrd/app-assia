@@ -300,7 +300,7 @@ export default class SupportContributions {
         this.checkPaymentType(option)
         this.checkPaidAmt(option)
 
-        return this.error === false ? true : false
+        return this.error != true
     }
 
     /**

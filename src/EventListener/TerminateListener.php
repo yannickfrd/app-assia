@@ -2,17 +2,17 @@
 
 namespace App\EventListener;
 
-use App\Entity\User;
-use Twig\Environment;
 use App\Entity\Export;
 use App\Entity\SupportPerson;
-use App\Form\Model\ExportSearch;
+use App\Entity\User;
 use App\Form\Export\ExportSearchType;
+use App\Form\Model\ExportSearch;
 use App\Notification\MailNotification;
-use App\Export\SupportPersonFullExport;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use App\Service\Export\SupportPersonFullExport;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Component\Security\Core\Security;
+use Twig\Environment;
 
 class TerminateListener
 {

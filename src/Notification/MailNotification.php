@@ -75,14 +75,11 @@ class MailNotification
             $mail->Body = $htmlBody;
             $mail->AltBody = $txtBody ?? null;
 
-            $mail->send();
-
-            return true;
+            return $mail->send();
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            // dd($e);
-
-            return false;
+            if ($this->appVersion != 'test') {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
         }
     }
 
