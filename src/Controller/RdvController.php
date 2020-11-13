@@ -6,7 +6,6 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Rdv;
 use App\Entity\SupportGroup;
 use App\Entity\User;
-use App\Export\RdvExport;
 use App\Form\Model\RdvSearch;
 use App\Form\Model\SupportRdvSearch;
 use App\Form\Rdv\RdvSearchType;
@@ -15,6 +14,7 @@ use App\Form\Rdv\SupportRdvSearchType;
 use App\Repository\RdvRepository;
 use App\Security\CurrentUserService;
 use App\Service\Calendar;
+use App\Service\Export\RdvExport;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -135,7 +135,8 @@ class RdvController extends AbstractController
                 $calendar->getFirstMonday(),
                 $calendar->getLastday(),
                 null,
-                $this->getUser()),
+                $this->getUser(),
+            ),
         ]);
     }
 
@@ -386,17 +387,16 @@ class RdvController extends AbstractController
         $cache = new FilesystemAdapter();
 
         if ($supportGroup) {
-            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
+            $cache->deleteItems([
+                SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(),
+                SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(),
+                SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+            ]);
+            if ($isUpdate) {
+                $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId());
+            }
         }
 
-        if ($isUpdate) {
-            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId());
-        }
-
-        return $cache->deleteItems([
-            User::CACHE_USER_RDVS_KEY.$this->getUser()->getId(),
-            SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(),
-            SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(),
-        ]);
+        return $cache->deleteItem(User::CACHE_USER_RDVS_KEY.$this->getUser()->getId());
     }
 }

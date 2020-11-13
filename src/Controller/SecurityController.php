@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Service;
 use App\Entity\User;
 use App\Form\Model\UserChangeInfo;
 use App\Form\Model\UserChangePassword;
@@ -173,7 +174,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
 
-            $this->discache();
+            $this->discache($user);
 
             $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est mis à jour.');
         }
@@ -209,6 +210,8 @@ class SecurityController extends AbstractController
                 ->setDisabledAt(new \DateTime());
             $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
         }
+
+        $this->discache($user);
 
         $this->manager->flush();
 
@@ -332,6 +335,8 @@ class SecurityController extends AbstractController
 
         $this->manager->persist($user);
         $this->manager->flush();
+
+        $this->discache($user);
 
         $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est créé.');
 
@@ -459,10 +464,16 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * Supprime l'item en cache des services de l'utilisateur.
+     * Supprime les utilisateurs en cache pour chaque service.
      */
-    protected function discache(): bool
+    protected function discache(User $user): bool
     {
-        return (new FilesystemAdapter())->deleteItem(User::CACHE_USER_SERVICES_KEY.$this->getUser()->getId());
+        $cache = new FilesystemAdapter();
+
+        foreach ($user->getServices() as $service) {
+            $cache->deleteItem(Service::CACHE_SERVICE_USERS_KEY.$service->getId());
+        }
+
+        return $cache->deleteItem(User::CACHE_USER_SERVICES_KEY.$user->getId());
     }
 }

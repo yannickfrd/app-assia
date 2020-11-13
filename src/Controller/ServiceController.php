@@ -13,8 +13,10 @@ use App\Repository\UserRepository;
 use App\Service\Export\ServiceExport;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,7 +61,7 @@ class ServiceController extends AbstractController
      * @Route("/service/new", name="service_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function newService(Service $service = null, Request $request): Response
+    public function newService(Request $request): Response
     {
         $service = new Service();
 
@@ -104,7 +106,9 @@ class ServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        $accommodations = $repoAccommodation->findAccommodationsFromService($service);
+        $cache = new FilesystemAdapter();
+
+        $accommodations = $this->getAccommodations($service, $repoAccommodation, $cache);
 
         $nbPlaces = 0;
         foreach ($accommodations as $accommodation) {
@@ -113,8 +117,8 @@ class ServiceController extends AbstractController
 
         return $this->render('app/service/service.html.twig', [
             'form' => $form->createView(),
-            'subServices' => $repoSubService->findSubServicesFromService($service),
-            'users' => $repoUser->findUsersFromService($service),
+            'subServices' => $this->getSubServices($service, $repoSubService, $cache),
+            'users' => $this->getUsers($service, $repoUser, $cache),
             'accommodations' => $accommodations,
             'nbPlaces' => $nbPlaces,
         ]);
@@ -150,5 +154,32 @@ class ServiceController extends AbstractController
         $services = $this->repo->findServicesToExport($search);
 
         return (new ServiceExport())->exportData($services);
+    }
+
+    protected function getSubServices(Service $service, SubServiceRepository $repoSubService, FilesystemAdapter $cache)
+    {
+        return $cache->get(Service::CACHE_SERVICE_SUBSERVICES_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoSubService) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoSubService->findSubServicesOfService($service);
+        });
+    }
+
+    protected function getAccommodations(Service $service, AccommodationRepository $repoAccommodation, FilesystemAdapter $cache)
+    {
+        return $cache->get(Service::CACHE_SERVICE_ACCOMMODATIONS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoAccommodation) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoAccommodation->findAccommodationsOfService($service);
+        });
+    }
+
+    protected function getUsers(Service $service, UserRepository $repoUser, FilesystemAdapter $cache)
+    {
+        return $cache->get(Service::CACHE_SERVICE_USERS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoUser) {
+            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+
+            return $repoUser->findUsersOfService($service);
+        });
     }
 }

@@ -247,6 +247,10 @@ th.required:after {
     text-align: justify;
 }
 
+.text-del {
+    text-decoration: line-through;
+}
+
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: var(--light) !important;
 }

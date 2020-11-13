@@ -1,0 +1,72 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "accommodations" %}
+
+{% set SERVICE_PASH_ID = constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
+
+{% block card_title %}{% if service.id == SERVICE_PASH_ID  %}Hôtels{% else %}Groupes de places rattachés{% endif %}{% endblock %}
+
+{% block card_body %}
+
+	{% set nbAccommodations = accommodations|length %}
+
+	{% set addAccommodation %}
+		{% if is_granted("EDIT", service) %}
+			<div class="row my-3">
+				<div class="col-md-12">
+					<a href="{{ path('service_accommodation_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+					<span class="fas fa-plus-square pr-2"></span>Créer un nouveau {% if service.id == SERVICE_PASH_ID  %}hôtel{% else %}groupe de places{% endif %}</a>
+				</div>
+			</div>
+		{% endif %}
+	{% endset %}
+
+	{{ addAccommodation }}
+
+	<p class="align-middle">{{ nbAccommodations }} groupe{{ nbAccommodations > 0 ? 's' }}<!--
+		-->{{ nbPlaces > 0 ? ' (' ~ nbPlaces ~ ' places)' }}.</p>
+
+	{% if nbAccommodations > 0 and is_granted("VIEW", accommodations[0]) %}
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+				<thead>
+					<tr>
+						<th scope="col" class="align-middle th-w-20"></th>
+						<th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
+						<th scope="col" class="align-middle th-w-100">Dispositif</th>
+						<th scope="col" class="align-middle th-w-80">Nombre de places</th>
+						<th scope="col" class="align-middle th-date">Date d'ouverture</th>
+						<th scope="col" class="align-middle th-date">Date de fermeture</th>
+						<th scope="col" class="align-middle th-w-100">Ville</th>
+						<th scope="col" class="align-middle th-w-60">Code postal</th>
+						<th scope="col" class="align-middle th-w-150">Adresse</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for accommodation in accommodations %}
+						<tr class="{% if accommodation.disabled %}text-secondary{% endif %}">
+							<td scope="row" class="align-middle">
+								<a href="{{ path('accommodation_edit', {'id':accommodation.id}) }}"
+									class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+									data-placement="bottom" title="Voir le groupe de places">
+									<span class="fas fa-eye"></span>
+								</a>
+							</td>
+							<td class="align-middle">{% if accommodation.disabled %}<del>{{ accommodation.name }}</del> (désactivé){% else %}{{ accommodation.name }}{% endif %}</td>
+							<td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
+							<td class="align-middle">{{ accommodation.nbPlaces }}</td>
+							<td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
+							<td class="align-middle">{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
+							<td class="align-middle">{{ accommodation.city|capitalize }}</td>
+							<td class="align-middle">{{ accommodation.zipcode }}</td>
+							<td class="align-middle">{{ accommodation.address }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endif %}
+
+	{{ addAccommodation }}
+
+{% endblock %}

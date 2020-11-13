@@ -23,18 +23,7 @@ App\Entity\Rdv:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-
-
-App\Entity\User:
-  userRoleUser:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
+    supportGroup: "@supportGroup"
 
 App\Entity\Person:
   person: 
@@ -74,18 +63,3 @@ App\Entity\SupportPerson:
     person: "@person"
     head: true
     role: 5
-
-
-App\Entity\Service:
-  service1:
-    name: AVDL
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-
-App\Entity\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>

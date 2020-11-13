@@ -241,9 +241,9 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDV entre 2 dates par jour.
      */
-    public function findRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null): array
+    public function findRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): array
     {
-        $rdvs = $this->findRdvsBetween($start, $end, $supportGroup);
+        $rdvs = $this->findRdvsBetween($start, $end, $supportGroup, $user);
         $days = [];
 
         foreach ($rdvs as $rdv) {

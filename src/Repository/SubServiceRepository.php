@@ -28,7 +28,7 @@ class SubServiceRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findSubServicesFromService(Service $service)
+    public function findSubServicesOfService(Service $service)
     {
         return $this->createQueryBuilder('ss')
             ->select('PARTIAL ss.{id, name, phone1, email, disabledAt}')

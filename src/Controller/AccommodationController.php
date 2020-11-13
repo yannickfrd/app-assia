@@ -15,6 +15,7 @@ use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,6 +74,8 @@ class AccommodationController extends AbstractController
 
             $this->addFlash('success', 'Le groupe de places est créé.');
 
+            $this->discache($accommodation->getService());
+
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
 
@@ -102,6 +105,8 @@ class AccommodationController extends AbstractController
 
             $this->manager->flush();
 
+            $this->discache($accommodation->getService());
+
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
@@ -124,6 +129,8 @@ class AccommodationController extends AbstractController
 
         $this->addFlash('warning', 'Le groupe de places est supprimé.');
 
+        $this->discache($accommodation->getService());
+
         return $this->redirectToRoute('service_edit', ['id' => $accommodation->getService()->getId()]);
     }
 
@@ -144,6 +151,8 @@ class AccommodationController extends AbstractController
             $this->addFlash('warning', 'Le groupe de place "'.$accommodation->getName().'" est désactivé.');
         }
 
+        $this->discache($accommodation->getService());
+
         $this->manager->flush();
 
         return $this->redirectToRoute('accommodation_edit', ['id' => $accommodation->getId()]);
@@ -163,5 +172,15 @@ class AccommodationController extends AbstractController
         }
 
         return (new AccommodationExport())->exportData($accommodations);
+    }
+
+    /**
+     * Supprime les groupes de places en cache du service.
+     */
+    protected function discache(Service $service): bool
+    {
+        $cache = new FilesystemAdapter();
+
+        return $cache->deleteItem(Service::CACHE_SERVICE_ACCOMMODATIONS_KEY.$service->getId());
     }
 }

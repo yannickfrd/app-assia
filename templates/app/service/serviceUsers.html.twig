@@ -1,0 +1,55 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "users" %}
+
+{% block card_title %}Utilisateurs rattachés{% endblock %}
+
+{% block card_body %}
+
+	<p class="align-middle">{{ users|length }} utilisateur{{ users|length > 1 ? 's' }}.</p>
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+			<thead>
+				<tr>
+					<th scope="col" class="align-middle th-w-20"></th>
+					<th scope="col" class="align-middle th-w-150">Prénom</th>
+					<th scope="col" class="align-middle th-w-140">Nom</th>
+					<th scope="col" class="align-middle th-w-140">Fonction</th>
+					<th scope="col" class="align-middle th-w-140">Téléphone</th>
+					<th scope="col" class="align-middle th-w-140">Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% set canEdit = is_granted("EDIT", service) %}
+				{% for user in users %}
+				<tr>
+					<td scope="row">
+						{% if canEdit %}
+							<a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+								data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
+							</a>
+						{% else %}
+							<span class="btn btn-{{ theme_color }} btn-sm shadow cursor-default"><span class="fas fa-ban"></span></span>                           
+						{% endif %}
+					</td>
+					<td class="align-middle">{{ user.firstname }}</td>
+					<td class="align-middle">{{ user.lastname }}</td>
+					<td class="align-middle">{{ user.statusToString }}</td>
+					<td class="align-middle">{{ user.phone1}}</td>
+					<td class="align-middle">{{ user.email }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	{% if is_granted("EDIT", service) %}
+	<div class="row">
+		<div class="col-md-12">
+			<a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+				class="fas fa-plus-square pr-2"></span>Créer un nouvel utilisateur</a>
+		</div>
+	</div>
+	{% endif %}
+
+{% endblock %}

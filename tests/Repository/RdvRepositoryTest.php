@@ -7,6 +7,7 @@ use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\RdvSearch;
 use App\Form\Model\SupportRdvSearch;
+use App\Repository\RdvRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -36,6 +37,7 @@ class RdvRepositoryTest extends WebTestCase
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
@@ -105,6 +107,8 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsFromUser()
     {
+        // dd($this->repo->findAllRdvsFromUser($this->user));
+
         $this->assertGreaterThanOrEqual(1, count($this->repo->findAllRdvsFromUser($this->user)));
     }
 

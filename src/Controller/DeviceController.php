@@ -104,7 +104,7 @@ class DeviceController extends AbstractController
      *
      * @ROute("/service/{id}/devices", name="service_devices", methods="GET")
      */
-    public function getDevicesFromService(Service $service, SubServiceRepository $repoSubService, DeviceRepository $repoDevice, UserRepository $repoUser)
+    public function getDevicesOfService(Service $service, SubServiceRepository $repoSubService, DeviceRepository $repoDevice, UserRepository $repoUser)
     {
         $subServices = [];
         foreach ($repoSubService->getSubServicesFromService($service) as $subService) {
@@ -112,7 +112,7 @@ class DeviceController extends AbstractController
         }
 
         $devices = [];
-        foreach ($repoDevice->getDevicesFromService($service->getId()) as $device) {
+        foreach ($repoDevice->getDevicesOfService($service->getId()) as $device) {
             $devices[$device->getId()] = $device->getName();
         }
 

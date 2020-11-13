@@ -8,6 +8,7 @@ use App\Form\SubService\SubServiceType;
 use App\Repository\AccommodationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,6 +44,8 @@ class SubServiceController extends AbstractController
 
             $this->addFlash('success', 'Le sous-service est créé.');
 
+            $this->discache($subService->getService());
+
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
 
@@ -68,6 +71,8 @@ class SubServiceController extends AbstractController
             $this->denyAccessUnlessGranted('EDIT', $subService->getService());
 
             $this->manager->flush();
+
+            $this->discache($subService->getService());
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
@@ -105,8 +110,20 @@ class SubServiceController extends AbstractController
             $this->addFlash('warning', 'Le sous-service "'.$subService->getName().'" est désactivé.');
         }
 
+        $this->discache($subService->getService());
+
         $this->manager->flush();
 
         return $this->redirectToRoute('service_edit', ['id' => $subService->getService()->getId()]);
+    }
+
+    /**
+     * Supprime les sous-services en cache du service.
+     */
+    protected function discache(Service $service): bool
+    {
+        $cache = new FilesystemAdapter();
+
+        return $cache->deleteItem(Service::CACHE_SERVICE_SUBSERVICES_KEY.$service->getId());
     }
 }

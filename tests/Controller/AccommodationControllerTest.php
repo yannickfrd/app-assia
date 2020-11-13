@@ -153,11 +153,10 @@ class AccommodationControllerTest extends WebTestCase
     public function testSuccessToCreateNewAccommodation()
     {
         $this->createLogin($this->dataFixtures['userRoleAdmin']);
-
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('service_accommodation_new', [
             'id' => $this->service->getId(),
-        ]));
+            ]));
 
         $form = $crawler->selectButton('send')->form([
             'accommodation[name]' => 'Nouveau logement',

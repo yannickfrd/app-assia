@@ -85,9 +85,9 @@ class AccommodationRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, count($query->getQuery()->getResult()));
     }
 
-    public function testFindAccommodationsFromService()
+    public function testfindAccommodationsOfService()
     {
-        $this->assertGreaterThanOrEqual(1, $this->repo->findAccommodationsFromService($this->service));
+        $this->assertGreaterThanOrEqual(1, $this->repo->findAccommodationsOfService($this->service));
     }
 
     protected function tearDown(): void

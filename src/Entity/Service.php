@@ -28,6 +28,9 @@ class Service
     use DisableEntityTrait;
 
     public const CACHE_INDICATORS_KEY = 'stats.service';
+    public const CACHE_SERVICE_ACCOMMODATIONS_KEY = 'service.accommodations';
+    public const CACHE_SERVICE_SUBSERVICES_KEY = 'service.sub_services';
+    public const CACHE_SERVICE_USERS_KEY = 'service.users';
 
     public const SERVICE_AVDL_ID = 5;
     public const SERVICE_PASH_ID = 10;

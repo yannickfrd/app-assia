@@ -217,7 +217,7 @@ class UserRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findUsersFromService(Service $service)
+    public function findUsersOfService(Service $service)
     {
         return $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, disabledAt}')

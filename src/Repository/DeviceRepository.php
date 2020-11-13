@@ -65,7 +65,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne les dispositifs du service.
      */
-    public function getDevicesFromService(int $id)
+    public function getDevicesOfService(int $id)
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -83,7 +83,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs du service.
      */
-    public function getDevicesFromServiceQueryList(Service $service)
+    public function getDevicesOfServiceQueryList(Service $service)
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')

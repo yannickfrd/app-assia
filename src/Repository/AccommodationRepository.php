@@ -93,7 +93,7 @@ class AccommodationRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findAccommodationsFromService(Service $service)
+    public function findAccommodationsOfService(Service $service)
     {
         return $this->createQueryBuilder('a')->select('a')
             ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id, name}')
