@@ -10,18 +10,16 @@ class MaintenanceListener
 {
     protected $renderer;
     protected $maintenance;
-    protected $appVersion;
 
-    public function __construct(Environment $renderer, bool $maintenance = false, string $appVersion = 'prod')
+    public function __construct(Environment $renderer, bool $maintenance = false)
     {
         $this->renderer = $renderer;
         $this->maintenance = $maintenance;
-        $this->appVersion = $appVersion;
     }
 
     public function onKernelRequest(RequestEvent $event)
     {
-        if ($this->maintenance && $this->appVersion === 'prod') {
+        if ($this->maintenance) {
             $event->setResponse(
                 new Response(
                     $this->renderer->render('bundles/TwigBundle/Exception/maintenance.html.twig'),
