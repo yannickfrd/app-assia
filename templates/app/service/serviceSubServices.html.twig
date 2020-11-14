@@ -1,0 +1,62 @@
+{% extends "model/collapseCard.html.twig" %}
+
+{% set id = "sub_services" %}
+
+{% block card_title %}Sous-services{% endblock %}
+
+{% block card_body %}
+
+	{% if subServices|length > 0 %}
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+				<thead>
+					<tr>
+						<th scope="col" class="align-middle th-w-20"></th>
+						<th scope="col" class="align-middle th-w-140">{{ "Name"|trans([], "forms") }}</th>
+						<th scope="col" class="align-middle th-w-140">{{ "subService.chief"|trans([], "forms") }}</th>
+						<th scope="col" class="align-middle th-w-140">{{ "Phone"|trans([], "forms") }}</th>
+						<th scope="col" class="align-middle th-w-140">{{ "Email"|trans([], "forms") }}</th>
+						<th scope="col" class="align-middle th-w-20"></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for subService in subServices %}
+						<tr class="{% if subService.disabled %}text-secondary{% endif %}">
+							<td class="align-middle" scope="row">
+								{% if is_granted("EDIT", service) %}
+								<a href="{{ path('sub_service_edit', {'id':subService.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+									data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du sous-service"><span class="fas fa-eye"></span>
+								</a>                    
+								{% endif %}
+							</td>
+							<td class="align-middle">{% if subService.disabled %}<del>{{ subService.name  }}</del> (désactivé){% else %}{{ subService.name }}{% endif %}</td>
+							<td class="align-middle">{{ subService.chief ? subService.chief.fullname }}</td>
+							<td class="align-middle">{{ subService.phone1}}</td>
+							<td class="align-middle">{{ subService.email }}</td>
+							<td class="align-middle">
+								{% if is_granted("DISABLE", service) %}
+									<a id="modal-btn-disable" class="mr-3 btn btn-danger" href="{{ path('sub_service_disable', {'id':subService.id}) }}"
+										title="Supprimer le sous-service" data-toggle="tooltip" data-placement="bottom"
+										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce sous-service ?')){return true;}else{return false;}">
+										<span class="fas fa-trash-alt"></span>
+									</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<p>Aucun sous-service.<p>
+	{% endif %}
+	{% if is_granted("EDIT", service) %}
+		<div class="row">
+			<div class="col-md-12">
+				<a href="{{ path('sub_service_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+					class="fas fa-plus-square pr-2"></span>Créer un sous-service</a>
+			</div>
+		</div>
+	{% endif %}
+
+{% endblock %}
