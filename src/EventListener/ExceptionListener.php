@@ -2,10 +2,10 @@
 
 namespace App\EventListener;
 
-use Twig\Environment;
 use App\Notification\MailNotification;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\Security\Core\Security;
+use Twig\Environment;
 
 class ExceptionListener
 {

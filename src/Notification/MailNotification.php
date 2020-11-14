@@ -77,9 +77,7 @@ class MailNotification
 
             return $mail->send();
         } catch (Exception $e) {
-            if ($this->appVersion != 'test') {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            }
+            // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 
