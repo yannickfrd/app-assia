@@ -30,6 +30,7 @@ class RdvControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
