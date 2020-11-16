@@ -233,7 +233,7 @@ export default class Calendar {
         this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
-        this.rdvTitleElt.textContent = 'RDV | ' + rdv.supportFullname
+        this.rdvTitleElt.textContent = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
 
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
         this.btnDeleteElt.href = '/rdv/' + this.rdvId + '/delete'

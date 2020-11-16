@@ -224,28 +224,20 @@ class RdvController extends AbstractController
      *
      * @Route("rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv(int $id): Response
+    public function getRdv(int $id, SupportManager $supportManager): Response
     {
         $rdv = $this->repo->findRdv($id);
 
         $this->denyAccessUnlessGranted('VIEW', $rdv);
 
-        // Obtenir le nom de la personne suivie
-        if ($rdv->getSupportGroup()) {
-            $supportFullname = '';
-            foreach ($rdv->getSupportGroup()->getSupportPeople() as $supportPerson) {
-                if (true == $supportPerson->getHead()) {
-                    $supportFullname = $supportPerson->getPerson()->getFullname();
-                }
-            }
-        }
+        $supportGroup = $rdv->getSupportGroup();
 
         return $this->json([
             'code' => 200,
             'action' => 'show',
             'rdv' => [
                 'title' => $rdv->getTitle(),
-                'supportFullname' => $supportFullname ?? null,
+                'fullnameSupport' => $supportGroup ? $supportManager->getFullnameHeadSupport($supportGroup) : null,
                 'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
                 'end' => $rdv->getEnd()->format("Y-m-d\TH:i"),
                 'location' => $rdv->getLocation(),
