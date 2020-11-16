@@ -68,7 +68,7 @@
             </div>
             {% endif %}
 
-            {% if EDIT_MODE == false or hasRights %}
+            {% if EDIT_MODE == false or canEdit %}
 
                 <div class="form-group row">
                     <div class="col-md-6">{{ form_row(form_person.phone1) }}</div>

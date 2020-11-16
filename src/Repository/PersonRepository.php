@@ -96,7 +96,7 @@ class PersonRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('p')->select('p');
 
-        $date = \DateTime::createFromFormat('d/m/Yq', $search) ?? false;
+        $date = \DateTime::createFromFormat('d-m-Y', $search) ?? false;
 
         if ($date) {
             $query->where('p.birthdate = :birthdate')

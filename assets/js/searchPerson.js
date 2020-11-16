@@ -36,11 +36,10 @@ export default class SearchPerson {
      * Compte le nombre de caratères saisis et lance la requête Ajax<.
      */
     count() {
-        let valueSearch = this.searchElt.value
+        const valueSearch = this.searchElt.value.replaceAll('/', '-')
         if (valueSearch.length >= this.lengthSearch) {
             this.loader.on()
-            let url = '/search/person?search=' + valueSearch
-            this.ajax.send('GET', url, this.response.bind(this))
+            this.ajax.send('GET', '/search/person/' + valueSearch, this.response.bind(this))
         }
     }
 
@@ -72,8 +71,8 @@ export default class SearchPerson {
      */
     addItem(data) {
         data.people.forEach(person => {
-            let aElt = document.createElement('a')
-            aElt.innerHTML = `<span class="text-capitalize text-secondary small">${person.fullname}</span>`
+            const aElt = document.createElement('a')
+            aElt.innerHTML = `<span class="text-capitalize text-secondary small">${person.fullname} (${person.birthdate})</span>`
             aElt.href = '/person/' + person.id
             aElt.className = 'list-group-item list-group-item-action pl-3 pr-1 py-1'
             this.resultsSearchElt.appendChild(aElt)
@@ -87,7 +86,7 @@ export default class SearchPerson {
      * Affiche 'Aucun résultat.'.
      */
     noResult() {
-        let spanElt = document.createElement('p')
+        const spanElt = document.createElement('p')
         spanElt.textContent = 'Aucun résultat.'
         spanElt.className = 'list-group-item pl-3 py-2'
         this.resultsSearchElt.appendChild(spanElt)

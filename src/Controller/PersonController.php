@@ -205,12 +205,14 @@ class PersonController extends AbstractController
             $this->manager->flush();
         }
 
+        $supports = $repoSuppport->findSupportsOfPerson($person);
+
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
             'group_people' => $groupPeople,
-            'supports' => $repoSuppport->findSupportsOfPerson($person),
+            'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
-            'hasRights' => $this->hasRights($person, $session),
+            'canEdit' => $this->canEdit($person, $supports, $session),
         ]);
     }
 
@@ -232,11 +234,13 @@ class PersonController extends AbstractController
             'action' => $this->generateUrl('person_new_group', ['id' => $person->getId()]),
         ]);
 
+        $supports = $repoSuppport->findSupportsOfPerson($person);
+
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
-            'supports' => $repoSuppport->findSupportsOfPerson($person),
+            'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
-            'hasRights' => $this->hasRights($person, $session),
+            'canEdit' => $this->canEdit($person, $supports, $session),
         ]);
     }
 
@@ -296,16 +300,17 @@ class PersonController extends AbstractController
     /**
      * Permet de trouver les personnes par le mode de recherche instannée AJAX.
      *
-     * @Route("/search/person", name="search_person", methods="GET")
+     * @Route("/search/person/{search}", name="search_person", methods="GET")
      */
-    public function searchPerson(Request $request): Response
+    public function searchPerson(string $search): Response
     {
         $people = [];
 
-        foreach ($this->repo->findPeopleByResearch($request->query->get('search')) as $person) {
+        foreach ($this->repo->findPeopleByResearch($search) as $person) {
             $people[] = [
                 'id' => $person->getId(),
                 'fullname' => $person->getFullname(),
+                'birthdate' => $person->getBirthdate()->format('d/m/Y'),
             ];
         }
 
@@ -443,13 +448,13 @@ class PersonController extends AbstractController
     /**
      * Vérifie si l'utilisateur a les droits concernant la personne.
      */
-    protected function hasRights(Person $person, SessionInterface $session): bool
+    protected function canEdit(Person $person, array $supports, SessionInterface $session): bool
     {
         if ($person->getCreatedBy() == $this->getUser()) {
             return true;
         }
 
-        foreach ($person->getSupports() as $supportPerson) {
+        foreach ($supports as $supportPerson) {
             if (in_array($supportPerson->getSupportGroup()->getService()->getId(), array_keys($session->get('userServices')))) {
                 return true;
             }

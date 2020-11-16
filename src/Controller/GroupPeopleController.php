@@ -68,17 +68,17 @@ class GroupPeopleController extends AbstractController
     {
         $groupPeople = $this->repo->findGroupPeopleById($id);
 
-        $formGroupPeople = $this->createForm(GroupPeopleType::class, $groupPeople);
-        $formGroupPeople->handleRequest($request);
+        $form = $this->createForm(GroupPeopleType::class, $groupPeople)
+            ->handleRequest($request);
 
         $supports = $this->getSupports($groupPeople, $repoSuppport);
 
-        if ($formGroupPeople->isSubmitted() && $formGroupPeople->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->updateGroupPeople($groupPeople, $supports);
         }
 
         return $this->render('app/groupPeople/groupPeople.html.twig', [
-            'form' => $formGroupPeople->createView(),
+            'form' => $form->createView(),
             'supports' => $supports,
             'referents' => $this->getReferents($groupPeople, $repoReferent),
         ]);
