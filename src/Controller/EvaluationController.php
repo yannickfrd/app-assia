@@ -11,8 +11,11 @@ use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
+use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\ExportWord;
 use App\Service\Normalisation;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +23,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Environment;
 
 class EvaluationController extends AbstractController
 {
@@ -85,6 +89,31 @@ class EvaluationController extends AbstractController
         }
 
         return $this->getErrorMessage($form, $normalisation);
+    }
+
+    /**
+     * Générer une note à partir de la dernière évaluation sociale du suivi.
+     *
+     * @Route("support/{id}/evaluation/export_word", name="evaluation/export_word", methods="GET")
+     */
+    public function generateNoteEvaluation(int $id, Request $request, SupportManager $supportManager, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer, ExportWord $exportWord): Response
+    {
+        $supportGroup = $supportManager->getSupportGroup($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $evaluation = $supportManager->getEvaluation($supportGroup, $repoEvaluation);
+
+        $content = $renderer->render('app/evaluation/evaluationExport.html.twig', [
+            'support' => $supportGroup,
+            'evaluation' => $evaluation,
+            'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
+            'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
+        ]);
+
+        $exportWord->createDocument($content, 'Grille d\'évaluation sociale '.(new \DateTime())->format('d/m/Y'), $supportGroup->getService()->getPole()->getLogoPath());
+
+        return $exportWord->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
     }
 
     /**

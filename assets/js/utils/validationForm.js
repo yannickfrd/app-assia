@@ -42,6 +42,16 @@ export default class ValidationForm {
     }
 
     /**
+     * Réinitialisation du formulaire.
+     */
+    reinit() {
+        this.containerElt.querySelectorAll('input, select, textarea').forEach(elt => {
+            this.removeInvalidFeedbackElt(this.getlabel(elt))
+            elt.classList.remove('is-valid', 'is-invalid')
+        })
+    }
+
+    /**
      * Défilement vers le premier élément invalide
      */
     scrollToFirstInvalidElt() {

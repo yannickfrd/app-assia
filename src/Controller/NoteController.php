@@ -11,6 +11,7 @@ use App\Form\Model\SupportNoteSearch;
 use App\Form\Note\NoteSearchType;
 use App\Form\Note\NoteType;
 use App\Form\Note\SupportNoteSearchType;
+use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\SupportGroupRepository;
@@ -177,41 +178,41 @@ class NoteController extends AbstractController
         ], 200);
     }
 
-    /**
-     * Générer une note à partir de la dernière évaluation sociale du suivi.
-     *
-     * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
-     */
-    public function generateNoteEvaluation(int $id, SupportGroupRepository $repoSupport, SupportManager $supportManager, RdvRepository $repoRdv, Environment $renderer): Response
-    {
-        $supportGroup = $repoSupport->findSupportById($id);
+        /**
+         * Générer une note à partir de la dernière évaluation sociale du suivi.
+         *
+         * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
+         */
+        public function generateNoteEvaluation(int $id, SupportManager $supportManager, SupportGroupRepository $repoSupport, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer): Response
+        {
+            $supportGroup = $repoSupport->findSupportById($id);
 
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+            $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $evaluation = $supportManager->getEvaluation($supportGroup);
+            $evaluation = $supportManager->getEvaluation($supportGroup, $repoEvaluation);
 
-        $note = (new Note())
-            ->setTitle('Grille d\'évaluation sociale '.$evaluation->getUpdatedAt()->format('d/m/Y'))
-            ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
-                'support' => $supportGroup,
-                'evaluation' => $evaluation,
-                'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
-                'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
+            $note = (new Note())
+                ->setTitle('Grille d\'évaluation sociale '.$evaluation->getUpdatedAt()->format('d/m/Y'))
+                ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
+                    'support' => $supportGroup,
+                    'evaluation' => $evaluation,
+                    'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
+                    'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
                 ]))
-            ->setType(2)
-            ->setSupportGroup($supportGroup)
-            ->setCreatedBy($this->getUser());
+                ->setType(2)
+                ->setSupportGroup($supportGroup)
+                ->setCreatedBy($this->getUser());
 
-        $this->manager->persist($note);
-        $this->manager->flush();
+            $this->manager->persist($note);
+            $this->manager->flush();
 
-        $this->discache($supportGroup);
+            $this->discache($supportGroup);
 
-        return $this->redirectToRoute('support_notes', [
-            'id' => $id,
-            'noteId' => $note->getId(),
-        ]);
-    }
+            return $this->redirectToRoute('support_notes', [
+                'id' => $id,
+                'noteId' => $note->getId(),
+            ]);
+        }
 
     /**
      * @Route("note/{id}/export", name="note_export", methods="GET")

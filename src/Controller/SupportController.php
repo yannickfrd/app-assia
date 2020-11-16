@@ -22,12 +22,11 @@ use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\ReferentRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Calendar;
-use App\Service\Export\SupportPersonExport;
 use App\Service\Grammar;
-use App\Service\Indicators\SocialIndicators;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,13 +45,11 @@ class SupportController extends AbstractController
 
     private $manager;
     private $repoSupportGroup;
-    private $repoSupportPerson;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, SupportPersonRepository $repoSupportPerson)
+    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup)
     {
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoSupportPerson = $repoSupportPerson;
     }
 
     /**
@@ -60,7 +57,7 @@ class SupportController extends AbstractController
      *
      * @Route("/supports", name="supports", methods="GET|POST")
      */
-    public function viewListSupports(Request $request, Pagination $pagination): Response
+    public function viewListSupports(Request $request, SupportManager $supportManager, SupportPersonRepository $repoSupportPerson, Pagination $pagination): Response
     {
         $search = (new SupportGroupSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 
@@ -68,7 +65,7 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search);
+            return $supportManager->exportData($search, $repoSupportPerson);
         }
 
         return $this->render('app/support/listSupports.html.twig', [
@@ -83,16 +80,16 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportManager $supportManager): Response
+    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
     {
-        $supportGroup = $supportManager->getNewSupportGroup($groupPeople, $request);
+        $supportGroup = $supportManager->getNewSupportGroup($groupPeople, $request, $repoService);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportManager->create($groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
+            if ($supportManager->create($this->manager, $groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getStartDate() && Choices::YES == $supportGroup->getService()->getAccommodation()
@@ -167,7 +164,7 @@ class SupportController extends AbstractController
         ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportManager->update($supportGroup);
+            $supportManager->update($this->manager, $supportGroup);
 
             return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
@@ -194,7 +191,15 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET")
      */
-    public function viewSupportGroup(int $id, SupportManager $supportManager, ReferentRepository $repoReferent, RdvRepository $repoRdv, NoteRepository $repoNote, DocumentRepository $repoDocument, ContributionRepository $repoContribution): Response
+    public function viewSupportGroup(
+        int $id,
+        SupportManager $supportManager,
+        ReferentRepository $repoReferent,
+        RdvRepository $repoRdv,
+        NoteRepository $repoNote,
+        DocumentRepository $repoDocument,
+        ContributionRepository $repoContribution,
+        EvaluationGroupRepository $repoEvaluation): Response
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
@@ -209,7 +214,7 @@ class SupportController extends AbstractController
             'nbContributions' => $supportManager->getNbContributions($supportGroup, $repoContribution),
             'lastRdv' => $nbRdvs ? $supportManager->getLastRdvs($supportGroup, $repoRdv) : null,
             'nextRdv' => $nbRdvs ? $supportManager->getNextRdvs($supportGroup, $repoRdv) : null,
-            'evaluation' => $supportManager->getEvaluation($supportGroup),
+            'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
         ]);
     }
 
@@ -241,7 +246,7 @@ class SupportController extends AbstractController
      */
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportManager $supportManager): Response
     {
-        if (!$supportManager->addPeopleInSupport($supportGroup, $repo)) {
+        if (!$supportManager->addPeopleInSupport($this->manager, $supportGroup, $repo)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
@@ -292,27 +297,6 @@ class SupportController extends AbstractController
         }
 
         return $this->getErrorMessage();
-    }
-
-    /**
-     * @Route("/indicators/social", name="indicators_social", methods="GET|POST")
-     */
-    public function showSocialIndicators(Request $request, SocialIndicators $socialIndicators): Response
-    {
-        $search = new SupportGroupSearch();
-
-        $form = ($this->createForm(SupportGroupSearchType::class, $search))
-            ->handleRequest($request);
-
-        $supports = $this->repoSupportPerson->findSupportsFullToExport($search);
-
-        $datas = $socialIndicators->getResults($supports);
-
-        return $this->render('app/evaluation/socialIndicators.html.twig', [
-            'supportGroupSearch' => $search,
-            'form' => $form->createView(),
-            'datas' => $datas,
-        ]);
     }
 
     /**
@@ -367,7 +351,7 @@ class SupportController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($supportManager->cloneSupport($supportGroup)) {
+        if ($supportManager->cloneSupport($supportGroup, $this->repoSupportGroup)) {
             $this->manager->flush();
 
             $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
@@ -378,24 +362,6 @@ class SupportController extends AbstractController
         return $this->redirectToRoute('support_view', [
             'id' => $supportGroup->getId(),
         ]);
-    }
-
-    /**
-     * Exporte les données.
-     */
-    protected function exportData(SupportGroupSearch $search)
-    {
-        set_time_limit(10 * 60);
-
-        $supports = $this->repoSupportPerson->findSupportsToExport($search);
-
-        if (!$supports) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
-
-            return $this->redirectToRoute('supports');
-        }
-
-        return (new SupportPersonExport())->exportData($supports);
     }
 
     /**

@@ -13,6 +13,7 @@ use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
+use App\Form\Model\SupportGroupSearch;
 use App\Form\Utils\Choices;
 use App\Repository\ContributionRepository;
 use App\Repository\DocumentRepository;
@@ -21,8 +22,9 @@ use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
 use App\Repository\ReferentRepository;
 use App\Repository\ServiceRepository;
-use App\Repository\SubServiceRepository;
 use App\Repository\SupportGroupRepository;
+use App\Repository\SupportPersonRepository;
+use App\Service\Export\SupportPersonExport;
 use App\Service\Grammar;
 use App\Service\hydrateObjectWithArray;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,41 +41,26 @@ class SupportManager
 
     private $session;
     private $repoSupportGroup;
-    private $repoService;
-    private $repoSubService;
-    private $repoEvaluationGroup;
-    private $manager;
     private $cache;
 
-    public function __construct(
-        SessionInterface $session,
-        EntityManagerInterface $manager,
-        SupportGroupRepository $repoSupportGroup,
-        ServiceRepository $repoService,
-        SubServiceRepository $repoSubService,
-        EvaluationGroupRepository $repoEvaluationGroup)
+    public function __construct(SessionInterface $session, SupportGroupRepository $repoSupportGroup)
     {
         $this->session = $session;
         $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoService = $repoService;
-        $this->repoSubService = $repoSubService;
-        $this->repoEvaluationGroup = $repoEvaluationGroup;
-
-        $this->manager = $manager;
         $this->cache = new FilesystemAdapter();
     }
 
     /**
      * Donne un nouveau suivi paramétré.
      */
-    public function getNewSupportGroup(GroupPeople $groupPeople, Request $request)
+    public function getNewSupportGroup(GroupPeople $groupPeople, Request $request, ServiceRepository $repoService)
     {
         $supportGroup = (new SupportGroup())->setGroupPeople($groupPeople);
 
         $serviceId = $request->request->get('support')['service'];
 
         if ((int) $serviceId) {
-            $supportGroup->setService($this->repoService->find($serviceId));
+            $supportGroup->setService($repoService->find($serviceId));
         }
 
         return $supportGroup;
@@ -82,7 +69,7 @@ class SupportManager
     /**
      * Créé un nouveau suivi.
      */
-    public function create(GroupPeople $groupPeople, SupportGroup $supportGroup, bool $cloneSupport = false): bool
+    public function create(EntityManagerInterface $manager, GroupPeople $groupPeople, SupportGroup $supportGroup, bool $cloneSupport = false): bool
     {
         if ($this->activeSupportExists($groupPeople, $supportGroup)) {
             return false;
@@ -106,14 +93,14 @@ class SupportManager
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
-        $this->manager->persist($supportGroup);
+        $manager->persist($supportGroup);
 
         // Créé un suivi social individuel pour chaque personne du groupe
         foreach ($groupPeople->getRolePeople() as $rolePerson) {
-            $this->createSupportPerson($rolePerson, $supportGroup);
+            $this->createSupportPerson($manager, $rolePerson, $supportGroup);
         }
 
-        $this->manager->flush();
+        $manager->flush();
 
         $this->cache->deleteItem(GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$groupPeople->getId());
 
@@ -123,7 +110,7 @@ class SupportManager
     /**
      * Crée un suivi individuel.
      */
-    public function createSupportPerson(RolePerson $rolePerson, SupportGroup $supportGroup): SupportPerson
+    protected function createSupportPerson(EntityManagerInterface $manager, RolePerson $rolePerson, SupportGroup $supportGroup): SupportPerson
     {
         $supportPerson = (new SupportPerson())
             ->setSupportGroup($supportGroup)
@@ -143,7 +130,7 @@ class SupportManager
             $this->addFlash('warning', $supportPerson->getPerson()->getFullname().' : la date de début de suivi retenue est sa date de naissance.');
         }
 
-        $this->manager->persist($supportPerson);
+        $manager->persist($supportPerson);
 
         $supportGroup->setNbPeople($supportGroup->getNbPeople() + 1);
 
@@ -153,7 +140,7 @@ class SupportManager
     /**
      * Met à jour le suivi social du groupe.
      */
-    public function update(SupportGroup $supportGroup): void
+    public function update(EntityManagerInterface $manager, SupportGroup $supportGroup): void
     {
         $supportGroup->setUpdatedAt(new \DateTime());
         $serviceId = $supportGroup->getService()->getId();
@@ -169,7 +156,7 @@ class SupportManager
         $this->updateSupportPeople($supportGroup);
         $this->updateAccommodationGroup($supportGroup);
 
-        $this->manager->flush();
+        $manager->flush();
 
         $this->discache($supportGroup);
 
@@ -208,6 +195,22 @@ class SupportManager
     }
 
     /**
+     * Exporte les données.
+     */
+    public function exportData(SupportGroupSearch $search, SupportPersonRepository $repoSupportPerson)
+    {
+        set_time_limit(10 * 60);
+
+        $supports = $repoSupportPerson->findSupportsToExport($search);
+
+        if (!$supports) {
+            return $this->addFlash('warning', 'Aucun résultat à exporter.');
+        }
+
+        return (new SupportPersonExport())->exportData($supports);
+    }
+
+    /**
      * Donne le suivi social complet.
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
@@ -234,12 +237,12 @@ class SupportManager
     /**
      * Donne l'évaluation sociale complète.
      */
-    public function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
+    public function getEvaluation(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluationGroup): ?EvaluationGroup
     {
-        return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+        return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoEvaluationGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-            return $this->repoEvaluationGroup->findEvaluationById($supportGroup);
+            return $repoEvaluationGroup->findEvaluationById($supportGroup);
         });
     }
 
@@ -523,13 +526,13 @@ class SupportManager
     /**
      * Ajoute les personnes au suivi.
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation): bool
+    public function addPeopleInSupport(EntityManagerInterface $manager, SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation): bool
     {
         $addPeople = false;
 
         foreach ($supportGroup->getGroupPeople()->getRolePeople() as $rolePerson) {
             if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
-                $supportPerson = $this->createSupportPerson($rolePerson, $supportGroup);
+                $supportPerson = $this->createSupportPerson($manager, $rolePerson, $supportGroup);
 
                 $evaluationGroup = $repoEvaluation->findLastEvaluationFromSupport($supportGroup);
 
@@ -538,7 +541,7 @@ class SupportManager
                         ->setEvaluationGroup($evaluationGroup)
                         ->setSupportPerson($supportPerson);
 
-                    $this->manager->persist($evaluationPerson);
+                    $manager->persist($evaluationPerson);
                 }
 
                 $this->addFlash('success', $rolePerson->getPerson()->getFullname().' est ajouté'.Grammar::gender($supportPerson->getPerson()->getGender()).' au suivi.');
@@ -547,7 +550,7 @@ class SupportManager
             }
         }
 
-        $this->manager->flush();
+        $manager->flush();
 
         return $addPeople;
     }

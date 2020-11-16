@@ -17,8 +17,10 @@ class Normalisation
         $this->normalizer = $normalizer;
     }
 
-    // Normalise l'entité
-    public function normalize($entity, $name = null)
+    /**
+     * Normalise l'entité.
+     */
+    public function normalize(object $entity, string $name = null): array
     {
         $array = $this->normalizer->normalize($entity, null, ['groups' => 'export']);
 
@@ -34,7 +36,10 @@ class Normalisation
         return $array;
     }
 
-    public function getKeys($array, $translationFile = 'forms')
+    /**
+     * Donne la clé.
+     */
+    public function getKeys(array $array, string $translationFile = 'forms'): array
     {
         $arrayKeys = [];
         foreach ($array as $value) {
@@ -52,8 +57,10 @@ class Normalisation
         return $arrayKeys;
     }
 
-    // Inverse l'écriture en camelCase
-    public function unCamelCase($content, $separator = ' ', $translationFile = 'forms')
+    /**
+     * Inverse l'écriture en camelCase.
+     */
+    public function unCamelCase(string $content, string $separator = ' ', string $translationFile = 'forms'): string
     {
         $content = preg_replace('#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#', $separator.'$1', $content);
 

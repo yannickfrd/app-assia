@@ -179,9 +179,6 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v4.0.0"
     },
-    "laminas/laminas-code": {
-        "version": "3.4.1"
-    },
     "laminas/laminas-eventmanager": {
         "version": "3.2.1"
     },

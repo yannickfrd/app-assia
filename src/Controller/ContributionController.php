@@ -331,7 +331,7 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'create',
             'alert' => 'success',
-            'msg' => 'L\'opération "'.$contribution->getTypeToString().'" enregistrée.',
+            'msg' => 'L\'opération "'.$contribution->getTypeToString().'" est enregistrée.',
             'data' => [
                 'contribution' => $normalizer->normalize($contribution, null, [
                     'groups' => ['get', 'export'],

@@ -79,14 +79,14 @@ export default class SupportContributions {
         })
 
         document.querySelectorAll('tr.contribution').forEach(trElt => {
-            let btnGetElt = trElt.querySelector('button.js-get')
+            const btnGetElt = trElt.querySelector('button.js-get')
             btnGetElt.addEventListener('click', () => {
                 if (this.loader.isActive() === false) {
                     this.trElt = trElt
                     this.getContribution(Number(btnGetElt.getAttribute('data-id')))
                 }
             })
-            let btnDeleteElt = trElt.querySelector('button.js-delete')
+            const btnDeleteElt = trElt.querySelector('button.js-delete')
             btnDeleteElt.addEventListener('click', () => {
                 this.trElt = trElt
                 this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
@@ -164,7 +164,7 @@ export default class SupportContributions {
      * Vérifie le type de partipation (redevance ou caution).
      */
     checkType() {
-        let option = this.selectType.getOption(this.typeSelect)
+        const option = this.selectType.getOption(this.typeSelect)
 
         // Masque tous les champs du formulaire.
         this.formContributionElt.querySelectorAll('.js-contrib').forEach(elt => {
@@ -217,8 +217,8 @@ export default class SupportContributions {
         this.sumToPayAmtElt.textContent = this.getSumAmts(document.querySelectorAll('td.js-toPayAmt')).toLocaleString() + ' €'
         this.sumPaidAmtElt.textContent = this.getSumAmts(document.querySelectorAll('td.js-paidAmt')).toLocaleString() + ' €'
 
-        let stillToPayAmtElts = document.querySelectorAll('td.js-stillToPayAmt')
-        let sumStillToPayAmt = this.getSumAmts(stillToPayAmtElts)
+        const stillToPayAmtElts = document.querySelectorAll('td.js-stillToPayAmt')
+        const sumStillToPayAmt = this.getSumAmts(stillToPayAmtElts)
         stillToPayAmtElts.forEach(elt => {
             this.changeTextColor(elt, elt.textContent)
         })
@@ -230,9 +230,9 @@ export default class SupportContributions {
      * Donne le ratio de jours de présence dans le mois.
      */
     getRateDays() {
-        let date = new Date(this.selectType.getOption(this.monthContribYearSelect) + '-' + this.selectType.getOption(this.monthContribMonthSelect) + '-01')
-        let nextMonth = (new Date(date)).setMonth(date.getMonth() + 1)
-        let nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24))
+        const date = new Date(this.selectType.getOption(this.monthContribYearSelect) + '-' + this.selectType.getOption(this.monthContribMonthSelect) + '-01')
+        const nextMonth = (new Date(date)).setMonth(date.getMonth() + 1)
+        const nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24))
         let rateDays = 1
 
         if (this.supportStartDate > date) {
@@ -254,7 +254,7 @@ export default class SupportContributions {
      * Calcule le montant de la participation.
      */
     calculateAmountToPay() {
-        let rateDays = this.getRateDays()
+        const rateDays = this.getRateDays()
         let calculationMethod = ''
         // Si redevance ou PF à payer
         if (this.contributionAmt > 0) {
@@ -291,8 +291,9 @@ export default class SupportContributions {
      */
     isValidForm() {
         this.error = false
-        let option = this.selectType.getOption(this.typeSelect)
+        const option = this.selectType.getOption(this.typeSelect)
 
+        this.checkContributionType(option)
         this.checkContributionDate(option)
         this.checkToPaidAmt(option)
         this.checkReturnAmt(option)
@@ -301,6 +302,19 @@ export default class SupportContributions {
         this.checkPaidAmt(option)
 
         return this.error != true
+    }
+
+    /**
+     * Vérifie le type de contribution.
+     * @param {Number} option 
+     */
+    checkContributionType(option) {
+        if (!option) {
+            this.error = true
+            return this.validationForm.invalidField(this.typeSelect, 'Saisie obligatoire.')
+        }
+
+        return this.validationForm.validField(this.typeSelect)
     }
 
     /**
@@ -380,7 +394,7 @@ export default class SupportContributions {
      * @param {Number} option 
      */
     checkPaymentDate(option) {
-        let intervalWithNow = (this.now - new Date(this.paymentDateInput.value)) / (1000 * 60 * 60 * 24)
+        const intervalWithNow = (this.now - new Date(this.paymentDateInput.value)) / (1000 * 60 * 60 * 24)
 
         if ((this.paymentDateInput.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             this.error = true
@@ -452,11 +466,9 @@ export default class SupportContributions {
      * Réinitialise le formulaire.
      */
     initForm() {
-        this.selectType.setOption(this.paymentTypeSelect, '')
-        this.paymentTypeSelect.classList.remove('is-valid')
+        this.validationForm.reinit()
         this.formContributionElt.querySelectorAll('input').forEach(inputElt => {
             if (inputElt.type != 'hidden') {
-                inputElt.classList.remove('is-valid')
                 inputElt.value = null
             }
         })
@@ -570,7 +582,7 @@ export default class SupportContributions {
      * @param {Array} data 
      */
     showContribution(data) {
-        // let modalContentElt = document.querySelector('.modal-content')
+        // const modalContentElt = document.querySelector('.modal-content')
         // modalContentElt.innerHTML = contribution.content
         const contribution = data.contribution
         this.modalElt.show()
@@ -614,18 +626,18 @@ export default class SupportContributions {
      * @param {Array} data 
      */
     createContribution(data) {
-        let contributionElt = document.createElement('tr')
+        const contributionElt = document.createElement('tr')
         contributionElt.className = 'js-payment'
 
         contributionElt.innerHTML = this.getPrototypeContribution(data)
 
-        let containerContributionsElt = document.getElementById('container-contributions')
+        const containerContributionsElt = document.getElementById('container-contributions')
         containerContributionsElt.insertBefore(contributionElt, containerContributionsElt.firstChild)
         this.updateCounts(1)
 
         this.calculateSumAmts()
 
-        let btnGetElt = contributionElt.querySelector('button.js-get')
+        const btnGetElt = contributionElt.querySelector('button.js-get')
         btnGetElt.addEventListener('click', () => {
             if (this.loader.isActive() === false) {
                 this.trElt = contributionElt
@@ -633,7 +645,7 @@ export default class SupportContributions {
             }
         })
 
-        let btnDeleteElt = contributionElt.querySelector('button.js-delete')
+        const btnDeleteElt = contributionElt.querySelector('button.js-delete')
         btnDeleteElt.addEventListener('click', () => {
             this.trElt = contributionElt
             this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
@@ -740,7 +752,7 @@ export default class SupportContributions {
      * @param {inputElt} dateElt 
      */
     checkDate(dateElt) {
-        let interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24))
+        const interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24))
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
             return this.validationForm.invalidField(dateElt, 'Date invalide.')
         }
@@ -752,7 +764,7 @@ export default class SupportContributions {
      * @param {*} elts 
      */
     getSumAmts(elts) {
-        let array = []
+        const array = []
         elts.forEach(elt => {
             let value = elt.textContent
             if (value) {
@@ -761,7 +773,7 @@ export default class SupportContributions {
             }
         })
 
-        let sum = array.reduce((a, b) => a + b, 0)
+        const sum = array.reduce((a, b) => a + b, 0)
 
         if (!isNaN(sum)) {
             return sum
