@@ -195,6 +195,20 @@ class SupportManager
     }
 
     /**
+     * Donne le demandeur principal du suivi.
+     */
+    public function getFullnameHeadSupport(?SupportGroup $supportGroup): ?string
+    {
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            if (true === $supportPerson->getHead()) {
+                return $supportPerson->getPerson()->getFullname();
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Exporte les données.
      */
     public function exportData(SupportGroupSearch $search, SupportPersonRepository $repoSupportPerson)
@@ -457,11 +471,16 @@ class SupportManager
         $nbPeople = $supportGroup->getSupportPeople()->count();
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            // Si personne seule dans le suivi ou si lad ate de début de suivi est vide, copie la date de début de suivi
-            if (1 === $nbPeople || null === $supportPerson->getStartDate()) {
+            // Si c'est une personne seule ou si la date de début de suivi est vide, copie la date de début de suivi.
+            if (1 == $nbPeople || null == $supportPerson->getStartDate()) {
+                $supportPerson->setStartDate($supportGroup->getStartDate());
+            }
+            if (1 == $nbPeople || null == $supportPerson->getEndDate() || null == $supportPerson->getEndStatus()) {
                 $supportPerson
                     ->setStatus($supportGroup->getStatus())
-                    ->setStartDate($supportGroup->getStartDate());
+                    ->setEndDate($supportGroup->getEndDate())
+                    ->setEndStatus($supportGroup->getEndStatus())
+                    ->setEndStatusComment($supportGroup->getEndStatusComment());
             }
             if ($supportPerson->getEndDate()) {
                 $supportPerson->setStatus(SupportGroup::STATUS_ENDED);
@@ -476,7 +495,7 @@ class SupportManager
                 $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
             }
 
-            // Vérifie si la date de suivi n'est pas antérieure à la date de naissance
+            // Vérifie si la date de suivi n'est pas antérieure à la date de naissance.
             $person = $supportPerson->getPerson();
             if ($supportPerson->getStartDate() && $person && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 // Si c'est le cas, on prend en compte la date de naissance
