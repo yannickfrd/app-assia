@@ -108,9 +108,9 @@
 					{% endif %}
 					{% if is_granted("ROLE_SUPER_ADMIN") %}
 						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
-						<a class="mr-3 btn btn-{{ theme_color }} d-block" href="{{ path('support_clone', {'id':support.id}) }}" 
+						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id':support.id}) }}" 
 							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}">Dupliquer dernier suivi</a>
+							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><span class="fas fa-clone mr-2"></span><span class="d-none d-sm-inline">Copier suivi</span></a>
 					{% endif %}
 				</div>
 				<div class="mb-3 float-right">
@@ -147,8 +147,14 @@
 				<div class="col-md-12 mb-2">
 					<div class="float-right">
 						<a href="{{ path('support_note_new_evaluation', {'id': support.id }) }}" class="btn btn-{{ theme_color }} shadow"
-							title="Générer une grille d'évaluation sociale à partir des éléments renseignés ci-dessous">
-							<span class="fas fa-sticky-note mr-2"></span>Générer grille éval.</a>
+							data-toggle="tooltip" data-placement="bottom" title="Exporter l'évaluation sociale vers une note">
+							<span class="fas fa-file-export fa-lg"></span><span class="d-none d-sm-inline ml-2">Note</span></a>
+						<a href="{{ path('evaluation_export', {'id': support.id, 'type': 'word' }) }}" class="btn btn-{{ theme_color }} shadow"
+							data-toggle="tooltip" data-placement="bottom" title="Exporter l'évaluation sociale au format Word">
+							<span class="fas fa-file-word bg-primary fa-lg"></span><span class="d-none d-sm-inline ml-2">Word</span></a>
+						<a href="{{ path('evaluation_export', {'id': support.id, 'type': 'pdf' }) }}" class="btn btn-{{ theme_color }} shadow"
+							data-toggle="tooltip" data-placement="bottom" title="Exporter l'évaluation sociale au format PDF">
+							<span class="fas fa-file-pdf bg-danger fa-lg"></span><span class="d-none d-sm-inline ml-2">PDF</span></a>
 					</div>
 				</div>
 			</div>	

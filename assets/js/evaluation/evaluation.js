@@ -28,7 +28,7 @@ export default class evaluation {
         this.evalBudgetRepaymentAmtElts = this.evalBudgetElt.querySelectorAll(".js-repaymentAmt")
         this.evalBudgetBudgetBalancAmtElts = this.evalBudgetElt.querySelectorAll(".js-budgetBalanceAmt")
 
-        this.contributionAmtInput = document.getElementById("evaluation_evalBudgetGroup_contributionAmt")
+        this.contributionAmtElt = document.getElementById("evaluation_evalBudgetGroup_contributionAmt")
         this.updateContributionBtnElt = document.getElementById("update_contribution")
         this.calculationMethodElt = document.getElementById("calculationMethod")
 
@@ -78,10 +78,11 @@ export default class evaluation {
                 this.updateContribution()
             })
         }
-        if (this.contributionAmtInput) {
-            this.contributionAmtInput.addEventListener("input", e => {
+        if (this.contributionAmtElt) {
+            this.contributionAmtElt.addEventListener("input", e => {
                 e.preventDefault()
                 this.calculationMethodElt.textContent = ""
+                this.updateBudgetBalanceAmt()
             })
         }
 
@@ -527,8 +528,14 @@ export default class evaluation {
         })
 
         this.groupAmtElt(type).textContent = array.reduce((a, b) => a + b, 0)
+        this.updateBudgetBalanceAmt()
+    }
 
-        this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent)
+    /**
+     * Met à jour le reste à vivre du groupe.
+     */
+    updateBudgetBalanceAmt() {
+        this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.contributionAmtElt.value - this.repaymentGroupAmtElt.textContent)
     }
 
     /**
@@ -607,7 +614,7 @@ export default class evaluation {
         const contributionRate = this.updateContributionBtnElt.getAttribute("data-contribution-rate")
 
         if ([1, 3].includes(contributionType) && !isNaN(resourcesGroupAmt) && !isNaN(contributionRate)) {
-            this.contributionAmtInput.value = Math.round(resourcesGroupAmt * contributionRate * 100) / 100
+            this.contributionAmtElt.value = Math.round(resourcesGroupAmt * contributionRate * 100) / 100
             this.calculationMethodElt.innerHTML = "Mode de calcul : Montant des ressources (" + resourcesGroupAmt +
                 "&nbsp€) x Taux de participation (" + (contributionRate * 100) + "&nbsp%)."
         } else {

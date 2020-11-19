@@ -40,10 +40,10 @@ class AppController extends AbstractController
     {
         return $this->render('app/home/dashboard.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
-            'servicesIndicators' => $indicators->getServicesIndicators($indicators->getServices($this->getUser())),
-            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupports($this->getUser()) : null,
-            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getNotes($this->getUser()) : null,
-            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getRdvs($this->getUser()) : null,
+            'servicesIndicators' => $indicators->getServicesIndicators($indicators->getUserServices($this->getUser())),
+            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserSupports($this->getUser()) : null,
+            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserNotes($this->getUser()) : null,
+            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserRdvs($this->getUser()) : null,
         ]);
     }
 

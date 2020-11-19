@@ -6,7 +6,6 @@ use PhpOffice\PhpWord\Element\Header;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
 use PhpOffice\PhpWord\Writer\WriterInterface;
@@ -18,19 +17,22 @@ class ExportWord
     protected $phpWord;
 
     protected $title;
+    protected $logo = false;
     protected $logoPath;
     protected $infoAdd;
     protected $defaultLogo;
+    protected $fullHTML;
 
-    public function __construct()
+    public function __construct($fullHTML = false)
     {
         $this->phpWord = new PhpWord();
+        $this->fullHTML = $fullHTML;
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
         $this->defaultLogo = 'images/logo_esperer95.jpg';
     }
 
     /**
-     * Export file.
+     * Create Word document.
      */
     public function createDocument(string $content, ?string $title, ?string $logoPath = null, string $infoAdd = ''): void
     {
@@ -38,12 +40,11 @@ class ExportWord
         $this->logoPath = $logoPath;
         $this->infoAdd = $infoAdd;
 
-        /** * @var Section $section */
         $section = $this->addSection();
-        $this->addHeader($section);
-        $this->addFooter($section);
         $this->addTitle($section);
         $this->addContent($section, $content);
+        $this->addHeader($section);
+        $this->addFooter($section);
         $this->setDefaultStyleDocument();
     }
 
@@ -54,21 +55,44 @@ class ExportWord
      */
     public function save(bool $download = true)
     {
+        $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
+
+        if (true === $download) {
+            return $this->download($objWriter, $this->getFilename());
+        }
+
+        return new Response('OK');
+    }
+
+    /**
+     * Download file.
+     */
+    protected function download(WriterInterface $objWriter, string $filename): StreamedResponse
+    {
+        $response = new StreamedResponse();
+        $response->headers->set('Content-Type', 'application/vnd.ms-word');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$filename.'.docx');
+        $response->setPrivate();
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->setCallback(function () use ($objWriter) {
+            $objWriter->save('php://output');
+        });
+
+        return $response;
+    }
+
+    /**
+     * Get the formated file name.
+     *
+     * @return void
+     */
+    protected function getFileName(): string
+    {
         $filename = \str_replace([' ', '/', '\''], '-', $this->title.'-'.$this->infoAdd);
         $filename = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $filename);
 
-        // Settings::setPdfRendererPath('..\vendor\dompdf\dompdf');
-        // Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
-
-        $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
-        // $path = \dirname(__DIR__).'/../public/uploads/exports/'.(new \DateTime())->format('Y/m/d/');
-        // $objWriter->save($path.$this->title.'.docx');
-
-        if (true === $download) {
-            return $this->download($objWriter, $filename);
-        }
-
-        return new Response();
+        return (new \DateTime())->format('Y_m_d_').$filename;
     }
 
     /**
@@ -98,7 +122,7 @@ class ExportWord
 
         // Add sub page header
         $headerSub = $section->addHeader();
-        $headerSub->addPreserveText('ESPERER 95 | '.$this->title.' | '.$this->infoAdd, $this->getFontStyleFooter(), [
+        $headerSub->addPreserveText('ESPERER 95 | '.$this->title.($this->infoAdd ? ' | '.$this->infoAdd : ''), $this->getFontStyleFooter(), [
             'alignment' => 'right',
         ]);
     }
@@ -110,13 +134,10 @@ class ExportWord
     {
         // Add first page footer
         $footer = $section->addFooter('first');
-        $footer->addPreserveText((new \Datetime())->format('d/m/Y'), $this->getFontStyleFooter(), [
-            'alignment' => 'center',
-            'positioning' => 'absolute',
-            'spaceAfter' => 0,
-        ]);
-        $footer->addPreserveText('{PAGE} / {NUMPAGES}', $this->getFontStyleFooter(), [
+        $footer->addPreserveText((new \Datetime())->format('d/m/Y').'                                                                           
+            {PAGE} / {NUMPAGES}', $this->getFontStyleFooter(), [
             'alignment' => 'right',
+            // 'positioning' => 'absolute',
         ]);
 
         // Add footer for all other pages
@@ -143,28 +164,42 @@ class ExportWord
      */
     protected function addContent(Section $section, string $content): void
     {
-        Html::addHtml($section, $this->editContent($content), false, false);
+        Html::addHtml($section, $this->formatContent($content), $this->fullHTML, false);
 
-        if (str_contains($this->title, 'Grille d\'évaluation sociale')) {
+        if (true === $this->logo) {
             $this->addLogo($section, $this->logoPath, 60, 'right');
         }
     }
 
     /**
-     * Modifie le contenu Html afin d'ajouter certains éléments de mise en forme supprimés par CKEditor.
+     * Modifie le contenu HTML afin d'ajouter certains éléments de mise en forme supprimés par CKEditor.
      */
-    protected function editContent(string $content): string
+    protected function formatContent(string $content): string
     {
-        // $content = \str_replace(['&lt;br /&gt;'], '<br/>', $content);
         $styleTable = 'width: 50%; border: 1px #b5b5b5 solid;';
-        $content = \str_replace('<br>', '<br/>', $content);
-        $content = \str_replace('<h3>', '<h3 style="font-size: 21.5px;">', $content);
-        $content = \str_replace('<h4>', '<h4 style="font-size: 16px;">', $content);
-        $content = \str_replace('<table><thead><tr><th><strong>&nbsp;Ménage', '<table style="'.$styleTable.'"><thead><tr><th><strong>&nbsp;Ménage', $content);
-        $content = \str_replace('<table><thead><tr><th><strong>&nbsp;Ressources', '<table style="'.$styleTable.'"><thead><tr><th><strong>&nbsp;Ressources', $content);
-        $content = \str_replace('<table><thead><tr><th><strong>&nbsp;Charges', '<table style="'.$styleTable.'"><thead><tr><th><strong>&nbsp;Charges', $content);
-        $content = \str_replace('<table>', '<table style="width: 100%; border: 1px #b5b5b5 solid;"> ', $content);
-        $content = \str_replace('<thead><tr>', '<thead><tr style="background-color: #e9ecef;"> ', $content);
+        $content = \str_replace(
+            ['<br>', '<hr>', '<h2>', '<h3>'],
+            ['<br/>', '<hr/>', '<h2 style="font-size: 21.5px;">', '<h3 style="font-size: 16px;">'],
+            $content
+        );
+        $content = \str_replace('<h2', '<br/><h2', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>Ménage', '<table style="'.$styleTable.'"><thead><tr><th><strong>Ménage', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>Ressources', '<table style="'.$styleTable.'"><thead><tr><th><strong>Ressources', $content);
+        $content = \str_replace('<table><thead><tr><th><strong>Charges', '<table style="'.$styleTable.'"><thead><tr><th><strong>Charges', $content);
+        $content = \str_replace('<table>', '<table style="width: 100%; border: 1px #b5b5b5 solid;">', $content);
+        $content = \str_replace(['<td><p style="text-align:left;">', '<td><p style="text-align:justify;">'], '<td>&nbsp;', $content);
+        $content = \str_replace(['<td><p', '</p></td>'], ['<td', '</td>'], $content);
+        $content = \str_replace('<thead><tr>', '<thead><tr style="background-color: #e9ecef;">&nbsp;', $content);
+        $content = \str_replace(
+            ['<th>', '</th>', '<td>', '</td>'],
+            ['<th>&nbsp;', '&nbsp;</th>', '<td>&nbsp;', '&nbsp;</td>'],
+            $content
+        );
+
+        if (\strstr($content, '<br/>{LOGO_SIGNATURE}')) {
+            $content = \str_replace('<br/>{LOGO_SIGNATURE}', '', $content);
+            $this->logo = true;
+        }
 
         return $content;
     }
@@ -190,7 +225,7 @@ class ExportWord
     protected function getFontStyleFooter(): array
     {
         return  [
-            'name' => 'Calibri Light',
+            'name' => 'Calibri',
             'size' => 10,
             'italic' => true,
             'color' => '1B2232',
@@ -203,7 +238,7 @@ class ExportWord
     protected function getDefaultFontStyleTitle(): array
     {
         return [
-            'name' => 'Calibri Light',
+            'name' => 'Calibri',
             'size' => 18,
             'color' => '1B2232',
             'bold' => true,
@@ -220,7 +255,7 @@ class ExportWord
     {
         return [
             'align' => 'center',
-            'spaceAfter' => 500,
+            'spaceAfter' => 400,
               'shading' => [
                 'fill' => 'e9ecef',
             ],
@@ -232,11 +267,11 @@ class ExportWord
      */
     protected function setDefaultStyleDocument(): void
     {
-        $this->phpWord->setDefaultFontName('Calibri Light');
+        $this->phpWord->setDefaultFontName('Calibri');
         $this->phpWord->setDefaultFontSize(11);
 
         $this->phpWord->setDefaultParagraphStyle([
-            'spaceAfter' => 80,
+            'spaceAfter' => 120,
             'spacing' => 1,
             'cellMargin' => 50,
         ]);
@@ -247,23 +282,5 @@ class ExportWord
         return [
             'borderColor' => 'b5b5b5', 'borderSize' => 6, 'cellMargin' => 50,
         ];
-    }
-
-    /**
-     * Download file.
-     */
-    protected function download(WriterInterface $objWriter, string $filename): StreamedResponse
-    {
-        $response = new StreamedResponse();
-        $response->headers->set('Content-Type', 'application/vnd.ms-word');
-        $response->headers->set('Content-Disposition', 'attachment;filename='.$filename.'.docx');
-        $response->setPrivate();
-        $response->headers->addCacheControlDirective('no-cache', true);
-        $response->headers->addCacheControlDirective('must-revalidate', true);
-        $response->setCallback(function () use ($objWriter) {
-            $objWriter->save('php://output');
-        });
-
-        return $response;
     }
 }

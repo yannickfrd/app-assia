@@ -12,7 +12,9 @@ use App\Entity\SupportPerson;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\RdvRepository;
+use App\Repository\ReferentRepository;
 use App\Repository\SupportGroupRepository;
+use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Normalisation;
 use App\Service\SupportGroup\SupportManager;
@@ -94,26 +96,35 @@ class EvaluationController extends AbstractController
     /**
      * Générer une note à partir de la dernière évaluation sociale du suivi.
      *
-     * @Route("support/{id}/evaluation/export_word", name="evaluation/export_word", methods="GET")
+     * @Route("support/{id}/evaluation/export/{type}", name="evaluation_export", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, Request $request, SupportManager $supportManager, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer, ExportWord $exportWord): Response
+    public function exportEvaluation(int $id, string $type, Request $request, SupportManager $supportManager, ReferentRepository $repoReferent, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer): Response
     {
-        $supportGroup = $supportManager->getSupportGroup($id);
+        $export = $type === 'word' ? new ExportWord(true) : new ExportPDF();
+
+        $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $evaluation = $supportManager->getEvaluation($supportGroup, $repoEvaluation);
+        $title = 'Grille d\'évaluation sociale';
+        $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
+        $fullnameSupport = $supportManager->getFullnameHeadSupport($supportGroup);
 
         $content = $renderer->render('app/evaluation/evaluationExport.html.twig', [
+            'type' => $type,
             'support' => $supportGroup,
-            'evaluation' => $evaluation,
+            'referents' => $supportManager->getReferents($supportGroup->getGroupPeople(), $repoReferent),
+            'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
             'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
             'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
+            'title' => $title,
+            'logo_path' => $type === 'pdf' ? $export->getPathImage($logoPath) : null,
+            'header_info' => 'ESPERER 95 | '.$title.' | '.$fullnameSupport,
         ]);
 
-        $exportWord->createDocument($content, 'Grille d\'évaluation sociale '.(new \DateTime())->format('d/m/Y'), $supportGroup->getService()->getPole()->getLogoPath());
+        $export->createDocument($content, $title, $logoPath, $fullnameSupport);
 
-        return $exportWord->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+        return $export->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
     }
 
     /**
@@ -249,7 +260,7 @@ class EvaluationController extends AbstractController
         $evalBudgetGroup->setChargesGroupAmt($chargesGroupAmt);
         $evalBudgetGroup->setDebtsGroupAmt($debtsGroupAmt);
         $evalBudgetGroup->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
-        $evalBudgetGroup->setBudgetBalanceAmt($resourcesGroupAmt - $chargesGroupAmt - $monthlyRepaymentAmt);
+        $evalBudgetGroup->setBudgetBalanceAmt($resourcesGroupAmt - $chargesGroupAmt - $evalBudgetGroup->getContributionAmt() - $monthlyRepaymentAmt);
         // Ressources et dettes initiales
         $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);

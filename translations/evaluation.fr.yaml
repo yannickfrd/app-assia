@@ -43,7 +43,7 @@ Charges: Charges
 Childcare amt: Montant garde enfant(s) (€)
 Childcare: Garde d'enfant(s)
 Comment eval budget: Commentaire relatif à la situation budgétaire
-Contribution amt: Montant de la redevance   
+Contribution amt: Montant de la participation financière
 Debt amt: Montant total des dettes (€)
 Debt bank old amt: Montant découverts bancaires (€)
 Debt bank overdrafts: Découverts bancaires
@@ -157,7 +157,7 @@ evalFamilyGroup.comment: Écrire un commentaire relatif à la situation familial
 evalFamilyPerson.comment: Écrire un commentaire relatif à la situation familiale de la personne
 
 # Prof
-Comment eval prof:  Commentaire relatif la situation professionnelle
+Comment eval prof: Commentaire relatif la situation professionnelle
 Contract end date: Date de fin du contrat
 Contract start date: Date de début du contrat
 Contract type: Type de contrat

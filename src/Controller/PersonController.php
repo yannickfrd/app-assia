@@ -300,6 +300,7 @@ class PersonController extends AbstractController
     /**
      * Permet de trouver les personnes par le mode de recherche instannée AJAX.
      *
+     * @Route("/search/person", name="search_person", methods="GET")
      * @Route("/search/person/{search}", name="search_person", methods="GET")
      */
     public function searchPerson(string $search): Response

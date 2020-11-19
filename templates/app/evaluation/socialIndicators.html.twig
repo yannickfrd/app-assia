@@ -34,9 +34,9 @@
                                     {% for data in value %}
                                         <tr>
                                             <td scope="row" class="align-middle">{{ data.name }}</td>
-                                            <td class="align-middle text-right">{{ data.nbGroups }}</td>
+                                            <td class="align-middle text-right">{{ data.nbGroups|number_format(0, ",", " ") }}</td>
                                             <td class="align-middle text-right font-italic">{{ datas.nbGroups ? ((data.nbGroups / datas.nbGroups) * 100)|round(2) ~ " %" }}</td>
-                                            <td class="align-middle text-right">{{ data.nbPeople }}</td>
+                                            <td class="align-middle text-right">{{ data.nbPeople|number_format(0, ",", " ") }}</td>
                                             <td class="align-middle text-right font-italic">{{ datas.nbPeople ? ((data.nbPeople / datas.nbPeople) * 100)|round(2) ~ " %" }}</td>
                                         </tr>
                                     {% endfor %}
@@ -44,9 +44,9 @@
                                 <tfoot>
                                     <tr class="font-weight-bold">
                                         <td scope="row" class="align-middle text-center">Total</td>
-                                        <td class="align-middle text-right">{{ datas.nbGroups }}</td>
+                                        <td class="align-middle text-right">{{ datas.nbGroups|number_format(0, ",", " ") }}</td>
                                         <td class="align-middle text-right font-italic">100 %</td>
-                                        <td class="align-middle text-right">{{ datas.nbPeople }}</td>
+                                        <td class="align-middle text-right">{{ datas.nbPeople|number_format(0, ",", " ") }}</td>
                                         <td class="align-middle text-right font-italic">100 %</td>
                                     </tr>
                                 </tfoot>

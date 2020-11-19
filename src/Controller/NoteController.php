@@ -14,8 +14,10 @@ use App\Form\Note\SupportNoteSearchType;
 use App\Repository\EvaluationGroupRepository;
 use App\Repository\NoteRepository;
 use App\Repository\RdvRepository;
+use App\Repository\ReferentRepository;
 use App\Repository\SupportGroupRepository;
 use App\Security\CurrentUserService;
+use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportManager;
@@ -178,54 +180,77 @@ class NoteController extends AbstractController
         ], 200);
     }
 
-        /**
-         * Générer une note à partir de la dernière évaluation sociale du suivi.
-         *
-         * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
-         */
-        public function generateNoteEvaluation(int $id, SupportManager $supportManager, SupportGroupRepository $repoSupport, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer): Response
-        {
-            $supportGroup = $repoSupport->findSupportById($id);
+    /**
+     * Générer une note à partir de la dernière évaluation sociale du suivi.
+     *
+     * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
+     */
+    public function generateNoteEvaluation(int $id, SupportManager $supportManager, SupportGroupRepository $repoSupport, ReferentRepository $repoReferent, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer): Response
+    {
+        $supportGroup = $repoSupport->findFullSupportById($id);
 
-            $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-            $evaluation = $supportManager->getEvaluation($supportGroup, $repoEvaluation);
+        $title = 'Grille d\'évaluation sociale ';
 
-            $note = (new Note())
-                ->setTitle('Grille d\'évaluation sociale '.$evaluation->getUpdatedAt()->format('d/m/Y'))
+        $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
+        $extension = pathinfo($logoPath, PATHINFO_EXTENSION);
+        $data = file_get_contents($logoPath);
+        $base64 = 'data:image/'.$extension.';base64,'.base64_encode($data);
+
+        $note = (new Note())
+                ->setTitle('Grille d\'évaluation sociale '.(new \DateTime())->format('d/m/Y'))
                 ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
+                    'type' => 'note',
                     'support' => $supportGroup,
-                    'evaluation' => $evaluation,
+                    'referents' => $supportManager->getReferents($supportGroup->getGroupPeople(), $repoReferent),
+                    'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
                     'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
                     'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
+                    'logo_path' => $base64,
+                    'title' => $title,
                 ]))
                 ->setType(2)
                 ->setSupportGroup($supportGroup)
                 ->setCreatedBy($this->getUser());
 
-            $this->manager->persist($note);
-            $this->manager->flush();
+        $this->manager->persist($note);
+        $this->manager->flush();
 
-            $this->discache($supportGroup);
+        $this->discache($supportGroup);
 
-            return $this->redirectToRoute('support_notes', [
+        return $this->redirectToRoute('support_notes', [
                 'id' => $id,
                 'noteId' => $note->getId(),
             ]);
-        }
+    }
 
     /**
-     * @Route("note/{id}/export", name="note_export", methods="GET")
+     * Export de la note au format Word ou PDF.
+     *
+     * @Route("note/{id}/export/word", name="note_export_word", methods="GET")
+     * @Route("note/{id}/export/pdf", name="note_export_pdf", methods="GET")
      */
-    public function exportNote(int $id, Request $request, ExportWord $exportWord): Response
+    public function export(int $id, Request $request, SupportManager $supportManager, Environment $renderer): Response
     {
         $note = $this->repoNote->findNote($id);
         $supportGroup = $note->getSupportGroup();
-        $fullname = $this->getHeadSupportPerson($supportGroup);
 
-        $exportWord->createDocument($note->getContent(), $note->getTitle(), $supportGroup->getService()->getPole()->getLogoPath(), $fullname);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        return $exportWord->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+        $export = $request->attributes->get('_route') === 'note_export_word' ? new ExportWord() : new ExportPDF();
+
+        $content = $note->getContent();
+        $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
+        $fullnameSupport = $supportManager->getFullnameHeadSupport($supportGroup);
+
+        if ($export instanceof ExportPDF) {
+            $content = $export->formatContent($content, $renderer, $note->getTitle(), $logoPath, $fullnameSupport);
+        }
+
+        $export->createDocument($content, $note->getTitle(), $logoPath, $fullnameSupport);
+
+        return $export->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
     }
 
     /**
@@ -291,19 +316,5 @@ class NoteController extends AbstractController
         }
 
         return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
-    }
-
-    /**
-     * Donne le demandeur principal du suivi.
-     */
-    protected function getHeadSupportPerson(SupportGroup $supportGroup): ?string
-    {
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if (true === $supportPerson->getHead()) {
-                return $supportPerson->getPerson()->getFullname();
-            }
-        }
-
-        return null;
     }
 }

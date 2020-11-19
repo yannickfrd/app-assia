@@ -122,7 +122,7 @@ class Note
 
     public function getTypeToString(): ?string
     {
-        return self::TYPE[$this->type];
+        return $this->type ? self::TYPE[$this->type] : null;
     }
 
     public function getStatus(): ?int
@@ -139,7 +139,7 @@ class Note
 
     public function getStatusToString(): ?string
     {
-        return self::STATUS[$this->status];
+        return $this->status ? self::STATUS[$this->status] : null;
     }
 
     public function getComment(): ?string

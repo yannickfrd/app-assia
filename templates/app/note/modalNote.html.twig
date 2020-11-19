@@ -24,12 +24,16 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="d-flex float-left">
-                    <button id="modal-btn-delete" class="btn btn-danger d-none mr-3" data-toggle="tooltip" 
-                        data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span>
+                    <button id="modal-btn-delete" class="btn btn-danger d-none mr-2 mr-md-3" data-toggle="tooltip" 
+                        data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span>
                     </button>
-                    <a id="js-btn-export" class="btn btn-primary d-none mr-2" 
-                        data-toggle="tooltip" data-placement="bottom" title="Exporter la note sur Word">
-                        <span class="fas fa-file-word fa-lg"></span>
+                    <a id="export-note-word" class="btn btn-{{ theme_color }} d-none mr-1" 
+                        data-toggle="tooltip" data-placement="bottom" title="Exporter la note au format Word">
+                        <span class="fas fa-file-word bg-primary fa-lg"></span><span class="d-none d-lg-inline ml-2">Word</span>
+                    </a>
+                    <a id="export-note-pdf" class="btn btn-{{ theme_color }} d-none" 
+                        data-toggle="tooltip" data-placement="bottom" title="Exporter la note au format PDF">
+                        <span class="fas fa-file-pdf bg-danger fa-lg"></span><span class="d-none d-lg-inline ml-2">PDF</span>
                     </a>
                     <div id="js-auto-save" class="text-secondary d-none py-1">
                         <span class="fas fa-sync-alt mr-2"></span>
@@ -37,7 +41,7 @@
                     </div>
                 </div>
                 <div class="float-right">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }}">Enregistrer</button>
                 </div>
             </div>

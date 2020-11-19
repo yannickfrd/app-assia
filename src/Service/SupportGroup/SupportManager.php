@@ -102,7 +102,7 @@ class SupportManager
 
         $manager->flush();
 
-        $this->cache->deleteItem(GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$groupPeople->getId());
+        $this->discache($supportGroup);
 
         return true;
     }

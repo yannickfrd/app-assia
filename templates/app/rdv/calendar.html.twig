@@ -29,7 +29,7 @@
 				<div class="float-right">
 					<a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}" 
 						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois actuel"><!--
-						--><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline  ml-2">Mois actuel</span></a>
+						--><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline ml-2">Mois actuel</span></a>
 					<a href="{% if support is defined %}{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}" 
 						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>

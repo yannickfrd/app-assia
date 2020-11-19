@@ -312,12 +312,12 @@ class PersonControllerTest extends WebTestCase
         $this->createLogin($this->user);
 
         $this->client->request('GET', $this->generateUri('search_person', [
-            'search' => '',
+            'search' => 'D',
         ]));
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertGreaterThanOrEqual(5, count($data['people']));
+        $this->assertGreaterThanOrEqual(1, count($data['people']));
     }
 
     public function testSearchPersonWithoutResult()

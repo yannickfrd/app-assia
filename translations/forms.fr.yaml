@@ -64,6 +64,7 @@ Pole: Pôle
 Pole name: Nom du pôle
 Pre admission: Pré-admission
 Referent: Référent
+Social referent: Référent social
 Referent2: Référent 2
 Referents: Référents
 Role: Rôle dans le groupe
@@ -78,7 +79,7 @@ Status: Statut
 Sub service: Sous-service
 Sub services: Sous-services
 subService:
-  name: Nom du sous-service  
+  name: Nom du sous-service
   chief: Coordination
 Support access: Accès aux suivis sociaux du service
 Support dates: Dates de suivi
@@ -166,7 +167,7 @@ service:
 Accommodation type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou collectif
-Contribution amt: Montant de la redevance
+Contribution amt: Montant de la participation financière
 
 ### Contribution
 Apl amt: Montant APL

@@ -26,7 +26,8 @@ export default class SupportNotes {
         this.editorElt = this.modalNoteElt.querySelector('#editor')
         this.btnSaveElt = this.modalNoteElt.querySelector('#js-btn-save')
         this.btnCancelElt = this.modalNoteElt.querySelector('#js-btn-cancel')
-        this.btnExportElt = this.modalNoteElt.querySelector('#js-btn-export')
+        this.btnExportWordElt = this.modalNoteElt.querySelector('#export-note-word')
+        this.btnExportPdfElt = this.modalNoteElt.querySelector('#export-note-pdf')
         this.btnDeleteElt = this.modalNoteElt.querySelector('#modal-btn-delete')
 
         this.themeColor = document.getElementById('header').getAttribute('data-color')
@@ -111,7 +112,8 @@ export default class SupportNotes {
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), 1)
         this.editor.setData('')
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
-        this.btnExportElt.classList.replace('d-block', 'd-none')
+        this.btnExportWordElt.classList.replace('d-block', 'd-none')
+        this.btnExportPdfElt.classList.replace('d-block', 'd-none')
         this.autoSave.init()
     }
 
@@ -144,12 +146,14 @@ export default class SupportNotes {
             this.noteContentElt.textContent = content
             this.data = this.editor.getData()
         }
-
+        
         this.btnDeleteElt.classList.replace('d-none', 'd-block')
         this.btnDeleteElt.href = '/note/' + this.cardId + '/delete'
 
-        this.btnExportElt.classList.replace('d-none', 'd-block')
-        this.btnExportElt.href = '/note/' + this.cardId + '/export'
+        this.btnExportWordElt.classList.replace('d-none', 'd-block')
+        this.btnExportWordElt.href = '/note/' + this.cardId + '/export/word'
+        this.btnExportPdfElt.classList.replace('d-none', 'd-block')
+        this.btnExportPdfElt.href = '/note/' + this.cardId + '/export/pdf'
 
         this.autoSave.init()
     }
@@ -227,7 +231,6 @@ export default class SupportNotes {
             }
 
             if (!this.autoSave.active) {
-                this.modalElt.hide()
                 new MessageFlash(response.alert, response.msg)
                 this.loader.off()
             }
@@ -281,6 +284,7 @@ export default class SupportNotes {
     updateNote(data) {
         this.titleNoteElt.textContent = this.modalNoteElt.querySelector('#note_title').value
         this.contentNoteElt.innerHTML = this.editor.getData()
+        this.data = this.editor.getData()
 
         const noteTypeElt = this.noteElt.querySelector('.js-note-type')
         noteTypeElt.textContent = data.type

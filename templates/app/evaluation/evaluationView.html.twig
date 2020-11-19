@@ -78,7 +78,7 @@
                         {{ view_div.get(evalJustice.justiceActToString, "Justice act", "evaluation") }}
                     </div>
                     <div class="row my-2">
-                        <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice }}</div>
+                        <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice|nl2br }}</div>
                     </div>
                 </div>
             {% endfor %}
@@ -119,7 +119,7 @@
                     {{ view_div.get(evalAdm.workRightToString, "Work right", "evaluation") }}
                 </div>
                 <div class="row my-2">
-                    <div class="col-md-12 justify">{{ evalAdm.commentEvalAdmPerson }}</div>
+                    <div class="col-md-12 justify">{{ evalAdm.commentEvalAdmPerson|nl2br }}</div>
                 </div>
             </div>
         {% endfor %}
@@ -183,7 +183,7 @@
                         ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")" : "") : "", "Unborn child", "evaluation") }}
                 </div>
                 <div class="row my-2">
-                    <div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson }}</div>
+                    <div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson|nl2br }}</div>
                 </div>
             </div>
         {% endfor %}
@@ -230,7 +230,7 @@
                     ~ evalFamily.nbPeopleReunification ~ " personne(s))" : "") : "", "Faml reunification", "evaluation") }}
             </div>
             <div class="row my-3">
-                <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup }}</div>
+                <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup|nl2br }}</div>
             </div>
         {% endif %}
 
@@ -265,16 +265,22 @@
                                     <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") }} €</td>
                                 </tr>
                                 {% if evalBudgetGroup.chargesGroupAmt %}
-                                <tr>
-                                    <td scope="row">Charges</td>
-                                    <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") }} €</td>
-                                </tr>
+                                    <tr>
+                                        <td scope="row">Charges</td>
+                                        <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") }} €</td>
+                                    </tr>
                                 {% endif %}
-                            {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
-                                <tr>
-                                    <td scope="row">Remboursement mensuel des dettes</td>
-                                    <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") }} €</td>
-                                </tr>
+                                {% if evalBudgetGroup.contributionAmt %}
+                                    <tr>
+                                        <td scope="row">Participation financière</td>
+                                        <td class="text-right">{{ evalBudgetGroup.contributionAmt|number_format(0, ",", " ") }} €</td>
+                                    </tr>
+                                {% endif %}
+                                {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
+                                    <tr>
+                                        <td scope="row">Remboursement mensuel des dettes</td>
+                                        <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") }} €</td>
+                                    </tr>
                                 {% endif %}
                             </tbody>
                             <tfoot>
@@ -283,10 +289,10 @@
                                     <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") }} €</td>
                                 </tr>
                                 {% if evalBudgetGroup.debtsGroupAmt %}
-                                <tr>
-                                    <td scope="row">Montant total des dettes</td>
-                                    <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
-                                </tr>
+                                    <tr>
+                                        <td scope="row">Montant total des dettes</td>
+                                        <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") }} €</td>
+                                    </tr>
                                 {% endif %}
                             </tfoot>
                         </table>
@@ -377,7 +383,7 @@
                                     <tfoot>
                                         <tr class="font-weight-bold">
                                             <td scope="row">Total des charges</td>
-                                            <td class="text-right">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+                                            <td class="text-right">{{ evalBudget.chargesAmt|number_format(0, ",", " ") }} €</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -420,7 +426,7 @@
                     {% endif %}
                     {% if evalBudget.commentEvalBudget %}
                         <div class="row my-3">
-                            <div class="col-md-12 justify">{{ evalBudget.commentEvalBudget }}</div>
+                            <div class="col-md-12 justify">{{ evalBudget.commentEvalBudget|nl2br }}</div>
                         </div>
                     {% endif %}
                 </div>
@@ -467,7 +473,7 @@
                         ~ evalProf.endRqthDate|date("d/m/Y") ~ ")" : ""): "", "Rqth", "evaluation") }}
                 </div>
                 <div class="row my-2">
-                    <div class="col-md-12 justify">{{ evalProf.commentEvalProf }}</div>
+                    <div class="col-md-12 justify">{{ evalProf.commentEvalProf|nl2br }}</div>
                 </div>
             </div>
         {% endfor %}
@@ -529,7 +535,7 @@
                     </div>
                     {% if evalSocial.commentEvalSocialPerson %}
                         <div class="row mb-2">
-                            <div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson }}</div>
+                            <div class="col-md-12 justify">{{ evalSocial.commentEvalSocialPerson|nl2br }}</div>
                         </div>
                     {% endif %}
                 </div>
@@ -544,7 +550,7 @@
                 {{ view_div.get(evalSocial.animal == YES ? evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" : "" ), "Animal", "evaluation") }}
             </div>
             <div class="row mb-2">
-                <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup }}</div>
+                <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup|nl2br }}</div>
             </div>
         {% endif %}
     </section>
@@ -648,7 +654,7 @@
                     ~ evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity : "") : "", "Domiciliation", "evaluation") }}
             </div>
             <div class="row my-3">
-                <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing }}</div>
+                <div class="col-md-12 justify">{{ evalHousing.commentEvalHousing|nl2br }}</div>
             </div>
 
         </section>
@@ -665,7 +671,7 @@
                 </span>
             </div>
             <div class="row mb-3">
-                <div class="col-md-12 justify">{{ evaluation.backgroundPeople }}</div>
+                <div class="col-md-12 justify">{{ evaluation.backgroundPeople|nl2br }}</div>
             </div>
         </section>
     {% endif %}
@@ -702,13 +708,13 @@
             {% if evalHotelLife.otherHotelLife %}
                 <div class="row mb-3">
                     <div class="col-md-12 text-secondary">{{ "Other hotel life"|trans({}, "evaluation") }}</div>
-                    <div class="col-md-12 justify">{% autoescape %}{{ evalHotelLife.otherHotelLife|nl2br }}{% endautoescape %}</div>
+                    <div class="col-md-12 justify">{{ evalHotelLife.otherHotelLife|nl2br }}</div>
                 </div>
             {% endif %}
             {% if evalHotelLife.commentHotelLife %}
                 <div class="row mb-3">
                     <div class="col-md-12 text-secondary">{{ "Comment hotel life"|trans({}, "evaluation") }}</div>
-                    <div class="col-md-12 justify">{% autoescape %}{{ evalHotelLife.commentHotelLife|nl2br }}{% endautoescape %}</div>
+                    <div class="col-md-12 justify">{{ evalHotelLife.commentHotelLife|nl2br }}</div>
                 </div>
             {% endif %}
         </section>

@@ -127,7 +127,7 @@ class NoteControllerTest extends WebTestCase
 
     public function testExportNote()
     {
-        $this->client->request('GET', $this->generateUri('note_export', [
+        $this->client->request('GET', $this->generateUri('note_export_word', [
             'id' => $this->note->getId(),
         ]));
 
