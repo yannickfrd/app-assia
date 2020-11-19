@@ -97,8 +97,10 @@ class SupportManager
 
         // Créé un suivi social individuel pour chaque personne du groupe
         foreach ($groupPeople->getRolePeople() as $rolePerson) {
-            $this->createSupportPerson($manager, $rolePerson, $supportGroup);
+            $supportGroup->addSupportPerson($this->createSupportPerson($manager, $rolePerson, $supportGroup));
         }
+
+        $this->checkValidHead($supportGroup);
 
         $manager->flush();
 
@@ -113,7 +115,6 @@ class SupportManager
     protected function createSupportPerson(EntityManagerInterface $manager, RolePerson $rolePerson, SupportGroup $supportGroup): SupportPerson
     {
         $supportPerson = (new SupportPerson())
-            ->setSupportGroup($supportGroup)
             ->setPerson($rolePerson->getPerson())
             ->setHead($rolePerson->getHead())
             ->setRole($rolePerson->getRole())
@@ -138,6 +139,39 @@ class SupportManager
     }
 
     /**
+     * Vérifie la validité du demandeur principal.
+     */
+    protected function checkValidHead(SupportGroup $supportGroup): void
+    {
+        $nbHeads = 0;
+        $maxAge = 0;
+        $minorHead = false;
+
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            $age = $supportPerson->getPerson()->getAge();
+            if ($age > $maxAge) {
+                $maxAge = $age;
+            }
+            if (true === $supportPerson->getHead()) {
+                ++$nbHeads;
+                if ($age < 18) {
+                    $minorHead = true;
+                    $this->addFlash('warning', 'Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur.');
+                }
+            }
+        }
+
+        if ($nbHeads != 1 || true === $minorHead) {
+            foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+                $supportPerson->setHead(false);
+                if ($supportPerson->getPerson()->getAge() === $maxAge) {
+                    $supportPerson->setHead(true);
+                }
+            }
+        }
+    }
+
+    /**
      * Met à jour le suivi social du groupe.
      */
     public function update(EntityManagerInterface $manager, SupportGroup $supportGroup): void
@@ -155,6 +189,7 @@ class SupportManager
 
         $this->updateSupportPeople($supportGroup);
         $this->updateAccommodationGroup($supportGroup);
+        $this->checkValidHead($supportGroup);
 
         $manager->flush();
 

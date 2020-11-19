@@ -145,8 +145,10 @@ class GroupPeopleController extends AbstractController
     /**
      * Met à jour un groupe de personnes.
      */
-    protected function updateGroupPeople(GroupPeople $groupPeople, array $supports)
+    protected function updateGroupPeople(GroupPeople $groupPeople, array $supports): void
     {
+        $this->checkValidHead($groupPeople);
+
         $this->manager->flush();
 
         $this->discacheSupports($supports);
@@ -157,7 +159,7 @@ class GroupPeopleController extends AbstractController
     /**
      * Ajoute une personne dans le groupe.
      */
-    protected function addPersonInGroup(GroupPeople $groupPeople, RolePerson $rolePerson, person $person, RolePersonRepository $repoRolePerson)
+    protected function addPersonInGroup(GroupPeople $groupPeople, RolePerson $rolePerson, person $person, RolePersonRepository $repoRolePerson): void
     {
         // Si la personne est asssociée, ne fait rien, créé la liaison
         if ($this->personExists($groupPeople, $person, $repoRolePerson)) {
@@ -175,6 +177,8 @@ class GroupPeopleController extends AbstractController
         $this->manager->persist($rolePerson);
 
         $groupPeople->setNbPeople($groupPeople->getRolePeople()->count() + 1); // Compte le nombre de personnes dans le groupe et ajoute 1
+
+        $this->checkValidHead($groupPeople);
 
         $this->manager->flush();
 
@@ -226,6 +230,39 @@ class GroupPeopleController extends AbstractController
             'msg' => $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.',
             'data' => $nbPeople - 1,
         ], 200);
+    }
+
+    /**
+     * Vérifie la validité du demandeur principal.
+     */
+    protected function checkValidHead(GroupPeople $groupPeople): void
+    {
+        $nbHeads = 0;
+        $maxAge = 0;
+        $minorHead = false;
+
+        foreach ($groupPeople->getRolePeople() as $rolePerson) {
+            $age = $rolePerson->getPerson()->getAge();
+            if ($age > $maxAge) {
+                $maxAge = $age;
+            }
+            if (true === $rolePerson->getHead()) {
+                ++$nbHeads;
+                if ($age < 18) {
+                    $minorHead = true;
+                    $this->addFlash('warning', 'Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur.');
+                }
+            }
+        }
+
+        if ($nbHeads != 1 || true === $minorHead) {
+            foreach ($groupPeople->getRolePeople() as $rolePerson) {
+                $rolePerson->setHead(false);
+                if ($rolePerson->getPerson()->getAge() === $maxAge) {
+                    $rolePerson->setHead(true);
+                }
+            }
+        }
     }
 
     /**
