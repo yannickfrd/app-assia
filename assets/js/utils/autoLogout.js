@@ -28,6 +28,7 @@ export default class AutoLogout {
      * Compte le temps restant.
      */
     count() {
+        console.log(this.time);
         this.time--
         if (this.time === this.timeAlert) {
             this.modalElt.show();

@@ -36,7 +36,7 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Merci de vous connecter');
     }
 
-    public function testAccessHomePageWithRoleSuperAdmin()
+    public function testAccessHomePageInRoleSuperAdmin()
     {
         $this->client = static::createClient();
         $this->client->followRedirects(true);
@@ -52,7 +52,7 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testAccessHomePageWithRoleAdmin()
+    public function testAccessHomePageInRoleAdmin()
     {
         $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
@@ -62,7 +62,7 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Tableau de bord');
     }
 
-    public function testAccessHomePageWithRoleUser()
+    public function testAccessHomePageInRoleUser()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
@@ -72,9 +72,18 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Tableau de bord');
     }
 
-    public function testPageServiceDashboardIsUp()
+    public function testPageServiceDashboardInRoleUser()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $this->client->request('GET', $this->generateUri('supports_by_user'));
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testPageServiceDashboardInRoleAdmin()
+    {
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         $this->client->request('GET', $this->generateUri('supports_by_user'));
 
