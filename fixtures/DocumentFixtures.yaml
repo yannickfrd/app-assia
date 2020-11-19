@@ -8,7 +8,7 @@ App\Entity\Document:
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
-    groupPeople: "@groupPeople1"
+    peopleGroup: "@peopleGroup1"
     supportGroup: "@supportGroup1"
 
   document{2..200}:
@@ -20,5 +20,5 @@ App\Entity\Document:
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@user*"
-    groupPeople: "@groupPeople*"
+    peopleGroup: "@peopleGroup*"
     supportGroup: "@supportGroup*"

@@ -31,7 +31,7 @@ class PersonRepository extends ServiceEntityRepository
             ->leftJoin('p.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
             ->leftJoin('p.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname}')
             ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id, role, head}')
-            ->leftJoin('r.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
+            ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
 
             ->andWhere('p.id = :id')
             ->setParameter('id', $id)

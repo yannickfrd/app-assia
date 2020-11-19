@@ -4,7 +4,7 @@
     {% form_theme form_role_person "form/bootstrap_4_horizontal.html.twig" %}
 {% endif %}
 
-{% set title = app.request.get("_route") == "people" ? "Rechercher une personne" : (group_people is defined ? "Ajouter" : "Nouveau suivi : rechercher") ~ " une personne" %}
+{% set title = app.request.get("_route") == "people" ? "Rechercher une personne" : (people_group is defined ? "Ajouter" : "Nouveau suivi : rechercher") ~ " une personne" %}
 
 {% block title %}{{ title }}{{ parent() }}{% endblock %}
 
@@ -13,8 +13,8 @@
     <section class="my-0">
 
         <div class="container">
-            {% if group_people is defined %}
-                {% include "app/groupPeople/navGroup.html.twig" %}
+            {% if people_group is defined %}
+                {% include "app/peopleGroup/navGroup.html.twig" %}
             {% else %}
                 <h1 class="h2 mb-3">{{ title }}</h1>
             {% endif %}
@@ -28,7 +28,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
-                    <a href="{{ group_people is defined ? path('group_create_person', {'id':group_people.id}) : path('person_new') }}"
+                    <a href="{{ people_group is defined ? path('group_create_person', {'id':people_group.id}) : path('person_new') }}"
                         class="btn btn-{{ theme_color }} btn-sm mb-3 float-right d-none js-create-person">
                         <span class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
                 </div>
@@ -52,12 +52,12 @@
                                     <th scope="col" class="align-middle th-w-80">Sexe</th>
                                 </tr>
                             </thead>
-                            <tbody id="list-result-people" data-group-id="{{ group_people is defined ? group_people.id }}">
+                            <tbody id="list-result-people" data-group-id="{{ people_group is defined ? people_group.id }}">
                                 {% for person in people %}
                                     <tr>
                                         <td scope="row" class="align-middle text-center">
-                                            {% if group_people is defined %}
-                                                <a href="{{ path('group_add_person', {'id':group_people.id, 'person_id': person.id}) }}"
+                                            {% if people_group is defined %}
+                                                <a href="{{ path('group_add_person', {'id':people_group.id, 'person_id': person.id}) }}"
                                                     class="js-add-person shadow" data-toggle="modal" data-target="#modal-block"
                                                     data-placement="bottom" title="Ajouter la personne au groupe">
                                                     <span class="fas fa-plus-square text-{{ theme_color }} fa-2x"></span>
@@ -97,7 +97,7 @@
     </section>
 
     {% if form_role_person is defined %}
-        {% include "app/groupPeople/addPerson.html.twig" %}
+        {% include "app/peopleGroup/addPerson.html.twig" %}
     {% endif %}
 
 {% endblock %}

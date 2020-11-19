@@ -1,7 +1,7 @@
 // import ValidationPerson from './validationPerson'
 import UpdatePerson from './updatePerson'
 import NewForm from '../utils/newForm'
-import NewGroupPeople from './newGroupPeople'
+import NewPeopleGroup from './newPeopleGroup'
 import CheckChange from '../utils/checkChange'
 import '../utils/maskPhone'
 
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         new UpdatePerson()
         new CheckChange('person') // form name
     } else {
-        new NewGroupPeople()
+        new NewPeopleGroup()
         // new CheckChange('role_person_group') // form name
     }
     if (document.getElementById('js-people')) {

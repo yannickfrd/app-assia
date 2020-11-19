@@ -5,7 +5,7 @@ namespace App\Service\SupportGroup;
 use App\Entity\AccommodationGroup;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\Rdv;
 use App\Entity\RolePerson;
@@ -53,9 +53,9 @@ class SupportManager
     /**
      * Donne un nouveau suivi paramétré.
      */
-    public function getNewSupportGroup(GroupPeople $groupPeople, Request $request, ServiceRepository $repoService)
+    public function getNewSupportGroup(PeopleGroup $peopleGroup, Request $request, ServiceRepository $repoService)
     {
-        $supportGroup = (new SupportGroup())->setGroupPeople($groupPeople);
+        $supportGroup = (new SupportGroup())->setPeopleGroup($peopleGroup);
 
         $serviceId = $request->request->get('support')['service'];
 
@@ -69,13 +69,13 @@ class SupportManager
     /**
      * Créé un nouveau suivi.
      */
-    public function create(EntityManagerInterface $manager, GroupPeople $groupPeople, SupportGroup $supportGroup, bool $cloneSupport = false): bool
+    public function create(EntityManagerInterface $manager, PeopleGroup $peopleGroup, SupportGroup $supportGroup, bool $cloneSupport = false): bool
     {
-        if ($this->activeSupportExists($groupPeople, $supportGroup)) {
+        if ($this->activeSupportExists($peopleGroup, $supportGroup)) {
             return false;
         }
 
-        $supportGroup->setGroupPeople($groupPeople)
+        $supportGroup->setPeopleGroup($peopleGroup)
             ->setCoefficient($supportGroup->getDevice()->getCoefficient());
 
         // Si l'utilisateur veut récupérer les informations du précédent suivi, alors clone l'évaluation sociale et les documents existants.
@@ -96,7 +96,7 @@ class SupportManager
         $manager->persist($supportGroup);
 
         // Créé un suivi social individuel pour chaque personne du groupe
-        foreach ($groupPeople->getRolePeople() as $rolePerson) {
+        foreach ($peopleGroup->getRolePeople() as $rolePerson) {
             $supportGroup->addSupportPerson($this->createSupportPerson($manager, $rolePerson, $supportGroup));
         }
 
@@ -298,12 +298,12 @@ class SupportManager
     /**
      * Donne les référents du suivi.
      */
-    public function getReferents(GroupPeople $groupPeople, ReferentRepository $repoReferent)
+    public function getReferents(PeopleGroup $peopleGroup, ReferentRepository $repoReferent)
     {
-        return $this->cache->get(GroupPeople::CACHE_GROUP_REFERENTS_KEY.$groupPeople->getId(), function (CacheItemInterface $item) use ($groupPeople, $repoReferent) {
+        return $this->cache->get(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup, $repoReferent) {
             $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
 
-            return $repoReferent->findReferentsOfGroupPeople($groupPeople);
+            return $repoReferent->findReferentsOfPeopleGroup($peopleGroup);
         });
     }
 
@@ -393,7 +393,7 @@ class SupportManager
         }
 
         return $this->cache->deleteItems([
-            GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$supportGroup->getGroupPeople()->getId(),
+            PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$supportGroup->getPeopleGroup()->getId(),
             SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
             Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
         ]);
@@ -459,7 +459,7 @@ class SupportManager
     protected function checkSupportGroup(SupportGroup $supportGroup): void
     {
         // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
-        $nbPeople = $supportGroup->getGroupPeople()->getNbPeople();
+        $nbPeople = $supportGroup->getPeopleGroup()->getNbPeople();
         $nbSupportPeople = $supportGroup->getSupportPeople()->count();
         $nbActiveSupportPeople = 0;
 
@@ -584,7 +584,7 @@ class SupportManager
     {
         $addPeople = false;
 
-        foreach ($supportGroup->getGroupPeople()->getRolePeople() as $rolePerson) {
+        foreach ($supportGroup->getPeopleGroup()->getRolePeople() as $rolePerson) {
             if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
                 $supportPerson = $this->createSupportPerson($manager, $rolePerson, $supportGroup);
 
@@ -612,10 +612,10 @@ class SupportManager
     /**
      * Vérifie si un suivi social est déjà en cours dans le même service.
      */
-    protected function activeSupportExists(GroupPeople $groupPeople, SupportGroup $supportGroup): ?SupportGroup
+    protected function activeSupportExists(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?SupportGroup
     {
         return $this->repoSupportGroup->findOneBy([
-            'groupPeople' => $groupPeople,
+            'peopleGroup' => $peopleGroup,
             'status' => SupportGroup::STATUS_IN_PROGRESS,
             'service' => $supportGroup->getService(),
         ]);

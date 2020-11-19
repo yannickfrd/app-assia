@@ -49,7 +49,7 @@ class UserRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('u')->select('u')
             ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
             ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'su')->addSelect('su')

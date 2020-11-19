@@ -5,15 +5,15 @@ import ParametersUrl from '../utils/parametersUrl'
 /**
  * Nouveau groupe de personnes.
  */
-export default class NewGroupPeople {
+export default class NewPeopleGroup {
     constructor() {
         this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
 
         this.form = document.querySelector('#person>form').name // role_person_group
 
-        this.typoInputElt = document.getElementById('role_person_group_groupPeople_familyTypology')
-        this.nbPeopleInputElt = document.getElementById('role_person_group_groupPeople_nbPeople')
+        this.typoInputElt = document.getElementById('role_person_people_groupGroup_familyTypology')
+        this.nbPeopleInputElt = document.getElementById('role_person_people_groupGroup_nbPeople')
         this.roleInputElt = document.getElementById('role_person_role')
 
         if (this.typoInputElt) {
@@ -46,8 +46,8 @@ export default class NewGroupPeople {
             this.form + '_person_gender',
             this.form + '_person_email',
             this.form + '_role',
-            this.form + '_groupPeople_familyTypology',
-            this.form + '_groupPeople_nbPeople'
+            this.form + '_peopleGroup_familyTypology',
+            this.form + '_peopleGroup_nbPeople'
         )
 
         document.getElementById('send').addEventListener('click', e => {

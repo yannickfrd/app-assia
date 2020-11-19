@@ -91,7 +91,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
             ->leftJoin('ag.accommodation', 'a')->addSelect('a')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -113,7 +113,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');

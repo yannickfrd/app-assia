@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\GroupPeople;
+namespace App\Form\PeopleGroup;
 
-use App\Entity\GroupPeople;
-use App\Form\Model\GroupPeopleSearch;
+use App\Entity\PeopleGroup;
+use App\Form\Model\PeopleGroupSearch;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GroupPeopleSearchType extends AbstractType
+class PeopleGroupSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -64,7 +64,7 @@ class GroupPeopleSearchType extends AbstractType
                     'class' => 'sr-only',
                 ],
                 'required' => false,
-                'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
+                'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
                 'attr' => [
                     'class' => 'w-max-200',
                     'autocomplete' => 'off',
@@ -85,7 +85,7 @@ class GroupPeopleSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => GroupPeopleSearch::class,
+            'data_class' => PeopleGroupSearch::class,
             'method' => 'get',
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,

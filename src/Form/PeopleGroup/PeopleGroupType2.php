@@ -1,36 +1,29 @@
 <?php
 
-namespace App\Form\GroupPeople;
+namespace App\Form\PeopleGroup;
 
-use App\Entity\GroupPeople;
-use App\Form\Person\RolePersonMinType;
+use App\Entity\PeopleGroup;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GroupPeopleType extends AbstractType
+class PeopleGroupType2 extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('familyTypology', ChoiceType::class, [
-                'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
+                'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
                 'placeholder' => 'placeholder.select',
+                'empty_data' => 'placeholder.select',
             ])
             ->add('nbPeople')
-            ->add('rolePeople', CollectionType::class, [
-                'entry_type' => RolePersonMinType::class,
-                'allow_add' => false,
-                'allow_delete' => false,
-                'required' => true,
-            ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 4,
-                    'placeholder' => 'groupPeople.comment',
+                    'placeholder' => 'peopleGroup.comment',
                 ],
             ]);
     }
@@ -38,13 +31,8 @@ class GroupPeopleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => GroupPeople::class,
+            'data_class' => PeopleGroup::class,
             'translation_domain' => 'forms',
         ]);
-    }
-
-    public function getBlockPrefix()
-    {
-        return 'group';
     }
 }

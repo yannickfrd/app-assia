@@ -26,9 +26,9 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                                href="{{ path('group_people_show', {'id': support.groupPeople.id}) }}"><span
+                                href="{{ path('people_group_show', {'id': support.peopleGroup.id}) }}"><span
                                     class="fas fa-users mr-2"></span>Fiche groupe <span
-                                    class="small">{{ support.groupPeople.familyTypologyToString }}</span></a></li>
+                                    class="small">{{ support.peopleGroup.familyTypologyToString }}</span></a></li>
                         <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
                                 href="{{ path('support_view', {'id':support.id }) }}">Suivi social</a></li>
                         <li class="breadcrumb-item active" aria-current="page">

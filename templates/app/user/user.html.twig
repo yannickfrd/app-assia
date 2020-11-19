@@ -149,8 +149,8 @@
                                         </a>
                                     </th>
                                     <td class="align-middle"> {{ person ? person.fullname }}</td>
-                                    <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}
-                                        {{ support.groupPeople.nbPeople ? ' ' ~ support.groupPeople.nbPeople ~ ' personnes' }}
+                                    <td class="align-middle">{{ support.peopleGroup.familyTypologyToString }}
+                                        {{ support.peopleGroup.nbPeople ? ' ' ~ support.peopleGroup.nbPeople ~ ' personnes' }}
                                     </td>
                                     <td class="align-middle">{{ support.statusToString }}</td>
                                     <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>

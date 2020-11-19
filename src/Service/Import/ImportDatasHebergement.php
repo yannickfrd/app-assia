@@ -17,10 +17,10 @@ use App\Entity\EvalSocialGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
 use App\Entity\OriginRequest;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\Service;
@@ -396,14 +396,14 @@ class ImportDatasHebergement extends ImportDatas
 
                 $this->checkGroupExists($typology, $service, $device, $accommodation);
 
-                $groupPeople = $this->items[$this->field['N° ménage']][0];
+                $peopleGroup = $this->items[$this->field['N° ménage']][0];
                 $supportGroup = $this->items[$this->field['N° ménage']][1];
                 $accommodationGroup = $this->items[$this->field['N° ménage']][2];
                 $evaluationGroup = $this->items[$this->field['N° ménage']][3];
 
                 $this->getRoleAndGender($typology);
                 $person = $this->createPerson();
-                $rolePerson = $this->createRolePerson($groupPeople, $person);
+                $rolePerson = $this->createRolePerson($peopleGroup, $person);
                 $supportPerson = $this->createSupportPerson($supportGroup, $person, $rolePerson);
                 $this->createAccommodationPerson($person, $accommodationGroup, $supportPerson);
                 $this->createEvaluationPerson($evaluationGroup, $supportPerson);
@@ -465,13 +465,13 @@ class ImportDatasHebergement extends ImportDatas
         }
 
         if (!$groupExists) {
-            $groupPeople = $this->createGroupPeople($typology);
-            $supportGroup = $this->createSupportGroup($groupPeople, $service, $device);
-            $accommodationGroup = $this->createAccommodationGroup($groupPeople, $supportGroup, $accommodation);
+            $peopleGroup = $this->createPeopleGroup($typology);
+            $supportGroup = $this->createSupportGroup($peopleGroup, $service, $device);
+            $accommodationGroup = $this->createAccommodationGroup($peopleGroup, $supportGroup, $accommodation);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             $this->items[$this->field['N° ménage']] = [
-                $groupPeople,
+                $peopleGroup,
                 $supportGroup,
                 $accommodationGroup,
                 $evaluationGroup,
@@ -496,21 +496,21 @@ class ImportDatasHebergement extends ImportDatas
         return $accommodation;
     }
 
-    protected function createGroupPeople(int $typology): GroupPeople
+    protected function createPeopleGroup(int $typology): PeopleGroup
     {
-        $groupPeople = (new GroupPeople())
+        $peopleGroup = (new PeopleGroup())
                     ->setFamilyTypology($typology)
                     ->setNbPeople((int) $this->field['Nb pers'])
                     ->setComment($this->field['N° ménage'])
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
-        $this->manager->persist($groupPeople);
+        $this->manager->persist($peopleGroup);
 
-        return $groupPeople;
+        return $peopleGroup;
     }
 
-    protected function createSupportGroup(GroupPeople $groupPeople, Service $service, Device $device): SupportGroup
+    protected function createSupportGroup(PeopleGroup $peopleGroup, Service $service, Device $device): SupportGroup
     {
         $supportGroup = (new SupportGroup())
                     ->setStatus($this->getStatus())
@@ -519,7 +519,7 @@ class ImportDatasHebergement extends ImportDatas
                     ->setEndStatus($this->findInArray($this->field['Type sortie'], self::END_STATUS) ?? null)
                     ->setEndStatusComment($this->field['Commentaire sur la sortie'])
                     ->setNbPeople((int) $this->field['Nb pers'])
-                    ->setGroupPeople($groupPeople)
+                    ->setPeopleGroup($peopleGroup)
                     ->setService($service)
                     ->setDevice($device)
                     ->setCreatedBy($this->user)
@@ -564,13 +564,13 @@ class ImportDatasHebergement extends ImportDatas
         return $originRequest;
     }
 
-    protected function createAccommodationGroup(GroupPeople $groupPeople, SupportGroup $supportGroup, Accommodation $accommodation): AccommodationGroup
+    protected function createAccommodationGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup, Accommodation $accommodation): AccommodationGroup
     {
         $accommodationGroup = (new AccommodationGroup())
             ->setStartDate($supportGroup->getStartDate() ? $supportGroup->getStartDate() : null)
             ->setEndDate($supportGroup->getEndDate() ? $supportGroup->getEndDate() : null)
             ->setEndReason($supportGroup->getEndDate() ? Choices::YES : null)
-            ->setGroupPeople($groupPeople)
+            ->setPeopleGroup($peopleGroup)
             ->setSupportGroup($supportGroup)
             ->setAccommodation($accommodation)
             ->setCreatedBy($this->user)
@@ -723,13 +723,13 @@ class ImportDatasHebergement extends ImportDatas
         ]);
     }
 
-    protected function createRolePerson(GroupPeople $groupPeople, Person $person): RolePerson
+    protected function createRolePerson(PeopleGroup $peopleGroup, Person $person): RolePerson
     {
         $this->rolePerson = (new RolePerson())
                  ->setHead($this->head)
                  ->setRole($this->role)
                  ->setPerson($person)
-                 ->setGroupPeople($groupPeople);
+                 ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($this->rolePerson);
 

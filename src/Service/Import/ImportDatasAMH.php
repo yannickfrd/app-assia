@@ -16,10 +16,10 @@ use App\Entity\EvalSocialGroup;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
 use App\Entity\HotelSupport;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\Referent;
 use App\Entity\RolePerson;
@@ -522,7 +522,7 @@ class ImportDatasAMH extends ImportDatas
 
     protected $datas;
     protected $row;
-    
+
     protected $fields;
     protected $field;
 
@@ -592,7 +592,7 @@ class ImportDatasAMH extends ImportDatas
 
                 $this->checkGroupExists($typology);
 
-                $this->person = $this->createPerson($this->items[$this->field['ID_ménage']]['groupPeople']);
+                $this->person = $this->createPerson($this->items[$this->field['ID_ménage']]['peopleGroup']);
 
                 $support = $this->items[$this->field['ID_ménage']]['supports'][$this->field['ID_AMH']];
                 $supportGroup = $support['support'];
@@ -647,20 +647,20 @@ class ImportDatasAMH extends ImportDatas
         if (false === $this->groupExists()) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
-                $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
+                $peopleGroup = $this->personExists->getRolesPerson()->first()->getPeopleGroup();
             // Sinon, on crée le groupe.
             } else {
-                $groupPeople = $this->createGroupPeople($typology);
+                $peopleGroup = $this->createPeopleGroup($typology);
             }
 
-            $supportGroup = $this->createSupportGroup($groupPeople);
-            $this->createAccommodationGroup($groupPeople, $supportGroup);
-            $this->createReferent($groupPeople);
+            $supportGroup = $this->createSupportGroup($peopleGroup);
+            $this->createAccommodationGroup($peopleGroup, $supportGroup);
+            $this->createReferent($peopleGroup);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
             $this->items[$this->field['ID_ménage']] = [
-                'groupPeople' => $groupPeople,
+                'peopleGroup' => $peopleGroup,
                 'supports' => [
                     $this->field['ID_AMH'] => [
                         'support' => $supportGroup,
@@ -692,7 +692,7 @@ class ImportDatasAMH extends ImportDatas
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
                 if (false === $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_ménage']]['groupPeople']);
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_ménage']]['peopleGroup']);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
                     $this->items[$this->field['ID_ménage']]['supports'][$this->field['ID_AMH']] = [
@@ -706,13 +706,13 @@ class ImportDatasAMH extends ImportDatas
         return $groupExists;
     }
 
-    protected function createGroupPeople(int $typology): GroupPeople
+    protected function createPeopleGroup(int $typology): PeopleGroup
     {
         if ('Oui' === $this->field['DP']) {
             $this->personExistsInDatabase();
         }
 
-        $groupPeople = (new GroupPeople())
+        $peopleGroup = (new PeopleGroup())
                     ->setFamilyTypology($typology)
                     ->setNbPeople((int) $this->field['Nb personnes'])
                     ->setSiSiaoId((int) $this->field['Id Groupe'])
@@ -720,12 +720,12 @@ class ImportDatasAMH extends ImportDatas
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
-        $this->manager->persist($groupPeople);
+        $this->manager->persist($peopleGroup);
 
-        return $groupPeople;
+        return $peopleGroup;
     }
 
-    protected function createSupportGroup(GroupPeople $groupPeople): SupportGroup
+    protected function createSupportGroup(PeopleGroup $peopleGroup): SupportGroup
     {
         $comment = '';
 
@@ -754,7 +754,7 @@ class ImportDatasAMH extends ImportDatas
                     ->setNbPeople((int) $this->field['Nb personnes'])
                     ->setCoefficient($device->getCoefficient())
                     ->setComment($comment)
-                    ->setGroupPeople($groupPeople)
+                    ->setPeopleGroup($peopleGroup)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
@@ -928,7 +928,7 @@ class ImportDatasAMH extends ImportDatas
         return null;
     }
 
-    protected function createPerson(GroupPeople $groupPeople): Person
+    protected function createPerson(PeopleGroup $peopleGroup): Person
     {
         $duplicatedPerson = false;
 
@@ -947,7 +947,7 @@ class ImportDatasAMH extends ImportDatas
             }
             if (false === $duplicatedPerson) {
                 $this->manager->persist($this->person);
-                $this->person->addRolesPerson($this->createRolePerson($groupPeople));
+                $this->person->addRolesPerson($this->createRolePerson($peopleGroup));
                 $this->people[] = $this->person;
             }
         }
@@ -964,13 +964,13 @@ class ImportDatasAMH extends ImportDatas
         ]);
     }
 
-    protected function createRolePerson(GroupPeople $groupPeople): RolePerson
+    protected function createRolePerson(PeopleGroup $peopleGroup): RolePerson
     {
         $rolePerson = (new RolePerson())
                  ->setHead($this->head)
                  ->setRole($this->findInArray($this->field['Rôle'], self::ROLE) ?? 99)
                  ->setPerson($this->person)
-                 ->setGroupPeople($groupPeople);
+                 ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($rolePerson);
 
@@ -1322,14 +1322,14 @@ class ImportDatasAMH extends ImportDatas
         return null;
     }
 
-    protected function createReferent(GroupPeople $groupPeople): ?Referent
+    protected function createReferent(PeopleGroup $peopleGroup): ?Referent
     {
         $referent = (new Referent())
             ->setName($this->field['Service social référent'])
             ->setType($this->getTypeReferent())
             ->setSocialWorker($this->field['Référent social'])
             ->setComment($this->field['Coordonnées référent'])
-            ->setGroupPeople($groupPeople);
+            ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($referent);
 
@@ -1364,7 +1364,7 @@ class ImportDatasAMH extends ImportDatas
         ];
     }
 
-    protected function createAccommodationGroup(GroupPeople $groupPeople, SupportGroup $supportGroup): ?AccommodatioNGroup
+    protected function createAccommodationGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?AccommodatioNGroup
     {
         $hotelName = str_replace('HOTEL - ', '', ($this->field['Nom hôtel'] ?? $this->field['Précision lieu hébgt']));
 
@@ -1378,7 +1378,7 @@ class ImportDatasAMH extends ImportDatas
             ->setAccommodation($hotel)
             ->setComment(null === $hotel ? $hotelName : null)
             ->setSupportGroup($supportGroup)
-            ->setGroupPeople($groupPeople);
+            ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($accommodationGroup);
 

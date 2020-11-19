@@ -2,7 +2,7 @@
 
 {% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
 
-{% set group_people = form.vars.value %}
+{% set people_group = form.vars.value %}
 
 {% block title %}Fiche de groupe{{ parent() }}{% endblock %}
 
@@ -13,11 +13,11 @@
         <section>
             <h1 class="h2 mb-3">Groupe</h1>
             <div class="small text-secondary">
-                <p>Créé le {{ group_people.createdAt|date("d/m/Y à H:i") }}
-                    {{ group_people.createdBy ? " par " ~ group_people.createdBy.fullname }}
-                    {% if group_people.updatedAt != group_people.createdAt %}
-                        (modifié le {{ group_people.updatedAt|date("d/m/Y à H:i") }}
-                        {{ group_people.updatedBy ? " par " ~ group_people.updatedBy.fullname }})
+                <p>Créé le {{ people_group.createdAt|date("d/m/Y à H:i") }}
+                    {{ people_group.createdBy ? " par " ~ people_group.createdBy.fullname }}
+                    {% if people_group.updatedAt != people_group.createdAt %}
+                        (modifié le {{ people_group.updatedAt|date("d/m/Y à H:i") }}
+                        {{ people_group.updatedBy ? " par " ~ people_group.updatedBy.fullname }})
                     {% endif %}
                 </p>
             </div>
@@ -65,7 +65,7 @@
                                 {% set person = form_person.vars.value.person %}
                                 <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                     <th scope="row" class="align-middle">
-                                        <a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.id, "slug":person.slug}) }}"
+                                        <a href="{{ path("group_person_show", {"id":people_group.id, "person_id":person.id, "slug":person.slug}) }}"
                                             class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
                                             title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                         </a>
@@ -98,10 +98,10 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ path("group_search_person", {"id":group_people.id}) }}"
+                    <a href="{{ path("group_search_person", {"id":people_group.id}) }}"
                         class="btn btn-{{ theme_color }} btn-sm my-2">
                         <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
-                    <a href="{{ path("group_create_person", {"id":group_people.id}) }}"
+                    <a href="{{ path("group_create_person", {"id":people_group.id}) }}"
                         data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom" class="btn btn-secondary btn-sm my-2">
                         <span class="fas fa-plus-square mr-2"></span>Naissance</a>
                 </div>
@@ -122,7 +122,7 @@
                 <div class="col-md-12">
                     {% if is_granted("ROLE_ADMIN") %}
                     <div class="float-left d-flex">
-                        <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('group_people_delete', {'id':group_people.id}) }}"
+                        <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('people_group_delete', {'id':people_group.id}) }}"
                             data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
                             class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
@@ -148,12 +148,12 @@
 
     </div>
 
-{% include "app/groupPeople/removePerson.html.twig" %}
+{% include "app/peopleGroup/removePerson.html.twig" %}
 
 {% include "app/support/modalNewSupport.html.twig" %}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("groupPeople") }}
+    {{ encore_entry_script_tags("peopleGroup") }}
 {% endblock %}

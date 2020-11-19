@@ -32,9 +32,9 @@ class PersonExport extends ExportExcel
         $nbPeople = [];
         $roles = [];
         foreach ($person->getRolesPerson() as $roleUser) {
-            $groupPeople = $roleUser->getGroupPeople();
-            $typologies[] = $groupPeople->getFamilyTypologyToString();
-            $nbPeople[] = $groupPeople->getNbPeople();
+            $peopleGroup = $roleUser->getPeopleGroup();
+            $typologies[] = $peopleGroup->getFamilyTypologyToString();
+            $nbPeople[] = $peopleGroup->getNbPeople();
             $roles[] = $roleUser->getRoleToString();
         }
 

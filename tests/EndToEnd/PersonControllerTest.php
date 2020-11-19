@@ -80,8 +80,8 @@ class PersonControllerTest extends PantherTestCase
         sleep(1); // $this->client->waitFor("#js-btn-confirm");
 
         $form = $crawler->selectButton('js-btn-confirm')->form([
-            'person_new_group[groupPeople][familyTypology]' => 1,
-            'person_new_group[groupPeople][nbPeople]' => 1,
+            'person_new_group[peopleGroup][familyTypology]' => 1,
+            'person_new_group[peopleGroup][nbPeople]' => 1,
             'person_new_group[role]' => 1,
         ]);
 

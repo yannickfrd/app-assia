@@ -207,11 +207,11 @@ class SupportGroup
     private $createdBy; // NE PAS SUPPRIMER
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="supports")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="supports")
+     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id", nullable=false)
      * @MaxDepth(1)
      */
-    private $groupPeople;
+    private $peopleGroup;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SupportPerson", mappedBy="supportGroup", cascade={"persist", "remove"}, orphanRemoval=true)
@@ -488,14 +488,14 @@ class SupportGroup
         return $this;
     }
 
-    public function getGroupPeople(): ?GroupPeople
+    public function getPeopleGroup(): ?PeopleGroup
     {
-        return $this->groupPeople;
+        return $this->peopleGroup;
     }
 
-    public function setGroupPeople(?GroupPeople $groupPeople): self
+    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
     {
-        $this->groupPeople = $groupPeople;
+        $this->peopleGroup = $peopleGroup;
 
         return $this;
     }

@@ -44,7 +44,7 @@ class HotelSupportPersonExport extends ExportExcel
     {
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
-        $groupPeople = $supportGroup->getGroupPeople();
+        $peopleGroup = $supportGroup->getPeopleGroup();
         $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
         $hotelSupport = $supportGroup->getHotelSupport() ?? new HotelSupport();
         $accommodationGroup = $supportGroup->getAccommodationGroups()->first();
@@ -55,8 +55,8 @@ class HotelSupportPersonExport extends ExportExcel
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
             'Âge' => $person->getAge(),
-            'Typologie familiale' => $groupPeople->getFamilyTypologyToString(),
-            'Nb de personnes' => $groupPeople->getNbPeople(),
+            'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
+            'Nb de personnes' => $peopleGroup->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
             'Date début suivi' => $this->formatDate($supportGroup->getStartDate()),

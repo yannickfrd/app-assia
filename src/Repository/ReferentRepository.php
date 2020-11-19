@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Referent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -47,11 +47,11 @@ class ReferentRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    public function findReferentsOfGroupPeople(GroupPeople $groupPeople)
+    public function findReferentsOfPeopleGroup(PeopleGroup $peopleGroup)
     {
         return $this->createQueryBuilder('r')->select('r')
-            ->where('r.groupPeople = :groupPeople')
-            ->setParameter('groupPeople', $groupPeople)
+            ->where('r.peopleGroup = :peopleGroup')
+            ->setParameter('peopleGroup', $peopleGroup)
             ->orderBy('r.id', 'DESC')
             ->getQuery()
             ->getResult();

@@ -8,7 +8,7 @@ App\Entity\Document:
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
     supportGroup: "@supportGroup"
 
   document{2..5}:
@@ -20,7 +20,7 @@ App\Entity\Document:
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
     supportGroup: "@supportGroup"
 
 App\Entity\User:
@@ -41,8 +41,8 @@ App\Entity\Person:
     gender: 2
     birthdate: <date_create("1980-01-01")>
 
-App\Entity\GroupPeople:
-  groupPeople:
+App\Entity\PeopleGroup:
+  peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
@@ -51,7 +51,7 @@ App\Entity\SupportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
     referent: "@userRoleUser"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
     service: "@service1"
     createdAt: <date_create()>
     updatedAt: <date_create()>

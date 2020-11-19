@@ -7,7 +7,7 @@ App\Entity\SupportGroup:
     referent: "@userRoleUser"
     service: "@service1"
     device: "@device1"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: $referent
@@ -21,7 +21,7 @@ App\Entity\SupportGroup:
     referent: "@userRoleUser"
     service: "@service1"
     device: "@device1"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: $referent
@@ -60,8 +60,8 @@ App\Entity\Person:
     birthdate: <date_create("1980-01-01")>
 
 
-App\Entity\GroupPeople:
-  groupPeople:
+App\Entity\PeopleGroup:
+  peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
@@ -71,7 +71,7 @@ App\Entity\RolePerson:
     head: 1
     role: 5
     person: "@person"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
 
 
 App\Entity\Service:

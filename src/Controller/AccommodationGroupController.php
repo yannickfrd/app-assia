@@ -187,7 +187,7 @@ class AccommodationGroupController extends AbstractController
      */
     protected function createAccommodationGroup(SupportGroup $supportGroup, AccommodationGroup $accommodationGroup): Response
     {
-        $accommodationGroup->setGroupPeople($supportGroup->getGroupPeople());
+        $accommodationGroup->setPeopleGroup($supportGroup->getPeopleGroup());
 
         $this->manager->persist($accommodationGroup);
 

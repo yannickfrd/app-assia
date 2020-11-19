@@ -47,7 +47,7 @@ class SupportPersonExport extends ExportExcel
     {
         $person = $supportPerson->getPerson();
         $supportGroup = $supportPerson->getSupportGroup();
-        $groupPeople = $supportGroup->getGroupPeople();
+        $peopleGroup = $supportGroup->getPeopleGroup();
         $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
 
         $startAccommodations = [];
@@ -64,7 +64,7 @@ class SupportPersonExport extends ExportExcel
         }
 
         $datas = [
-            'N° Groupe' => $groupPeople->getId(),
+            'N° Groupe' => $peopleGroup->getId(),
             'N° Suivi groupe' => $supportGroup->getId(),
             'N° Personne' => $person->getId(),
             'N° Suivi personne' => $supportPerson->getId(),
@@ -72,8 +72,8 @@ class SupportPersonExport extends ExportExcel
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
             'Âge' => $person->getAge(),
-            'Typologie familiale' => $groupPeople->getFamilyTypologyToString(),
-            'Nb de personnes' => $groupPeople->getNbPeople(),
+            'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
+            'Nb de personnes' => $peopleGroup->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
             'Statut suivi (personne)' => $supportPerson->getStatusToString(),

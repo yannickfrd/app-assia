@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Referent;
 use App\Entity\SupportGroup;
 use App\Form\Referent\ReferentType;
-use App\Repository\GroupPeopleRepository;
+use App\Repository\PeopleGroupRepository;
 use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -30,24 +30,24 @@ class ReferentController extends AbstractController
      *
      * @Route("group/{group_id}/referent/new", name="group_referent_new", methods="GET|POST")
      * @Route("suppport/{support_id}/referent/new", name="support_referent_new", methods="GET|POST")
-     * @ParamConverter("groupPeople", options={"id" = "group_id"})
+     * @ParamConverter("peopleGroup", options={"id" = "group_id"})
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
-    public function newReferent(?int $group_id, ?int $support_id, Request $request, GroupPeopleRepository $repoGroupPeople, SupportGroupRepository $repoSupport): Response
+    public function newReferent(?int $group_id, ?int $support_id, Request $request, PeopleGroupRepository $repoPeopleGroup, SupportGroupRepository $repoSupport): Response
     {
         $support = $support_id ? $repoSupport->findSupportById($support_id) : null;
-        $groupPeople = $group_id ? $repoGroupPeople->findGroupPeopleById($group_id) : $support->getGroupPeople();
+        $peopleGroup = $group_id ? $repoPeopleGroup->findPeopleGroupById($group_id) : $support->getPeopleGroup();
         $referent = new Referent();
 
         $form = ($this->createForm(ReferentType::class, $referent))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createReferent($groupPeople, $referent, $support);
+            return $this->createReferent($peopleGroup, $referent, $support);
         }
 
         return $this->render('app/referent/referent.html.twig', [
-            'group_people' => $groupPeople,
+            'people_group' => $peopleGroup,
             'support' => $support,
             'form' => $form->createView(),
         ]);
@@ -70,11 +70,11 @@ class ReferentController extends AbstractController
 
             $this->addFlash('success', "Le service social {$referent->getName()} est mis à jour.");
 
-            $this->discache($referent->getGroupPeople());
+            $this->discache($referent->getPeopleGroup());
         }
 
         return $this->render('app/referent/referent.html.twig', [
-            'group_people' => $referent->getGroupPeople(),
+            'people_group' => $referent->getPeopleGroup(),
             'support' => $support_id ? $repoSupport->findSupportById($support_id) : null,
             'form' => $form->createView(),
         ]);
@@ -94,26 +94,26 @@ class ReferentController extends AbstractController
 
         $this->addFlash('warning', "Le service social $name est supprimé.");
 
-        $this->discache($referent->getGroupPeople());
+        $this->discache($referent->getPeopleGroup());
 
-        return $this->redirectToRoute('group_people_show', [
-            'id' => $referent->getGroupPeople()->getId(),
+        return $this->redirectToRoute('people_group_show', [
+            'id' => $referent->getPeopleGroup()->getId(),
         ]);
     }
 
     /**
      * Crée un service référent une fois le formulaire soumis et validé.
      */
-    protected function createReferent(GroupPeople $groupPeople, Referent $referent, ?SupportGroup $support = null): Response
+    protected function createReferent(PeopleGroup $peopleGroup, Referent $referent, ?SupportGroup $support = null): Response
     {
-        $referent->setGroupPeople($groupPeople);
+        $referent->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($referent);
         $this->manager->flush();
 
         $this->addFlash('success', "Le service social {$referent->getName()} est créé.");
 
-        $this->discache($groupPeople);
+        $this->discache($peopleGroup);
 
         if ($support) {
             return $this->redirectToRoute('support_referent_edit', [
@@ -130,8 +130,8 @@ class ReferentController extends AbstractController
     /**
      * Supprime les référents en cache du groupe.
      */
-    protected function discache(GroupPeople $groupPeople): bool
+    protected function discache(PeopleGroup $peopleGroup): bool
     {
-        return (new FilesystemAdapter())->deleteItem(GroupPeople::CACHE_GROUP_REFERENTS_KEY.$groupPeople->getId());
+        return (new FilesystemAdapter())->deleteItem(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId());
     }
 }

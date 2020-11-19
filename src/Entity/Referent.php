@@ -76,10 +76,10 @@ class Referent
     private $comment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="referents")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="referents")
+     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id", nullable=false)
      */
-    private $groupPeople;
+    private $peopleGroup;
 
     public function getId(): ?int
     {
@@ -163,14 +163,14 @@ class Referent
         return $this;
     }
 
-    public function getGroupPeople(): ?GroupPeople
+    public function getPeopleGroup(): ?PeopleGroup
     {
-        return $this->groupPeople;
+        return $this->peopleGroup;
     }
 
-    public function setGroupPeople(?GroupPeople $groupPeople): self
+    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
     {
-        $this->groupPeople = $groupPeople;
+        $this->peopleGroup = $peopleGroup;
 
         return $this;
     }

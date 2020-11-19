@@ -11,7 +11,7 @@ class Download
      *
      * @return void
      */
-    public function send(string $file)
+    public function send(string $file): StreamedResponse
     {
         if (file_exists($file)) {
             $response = new StreamedResponse();

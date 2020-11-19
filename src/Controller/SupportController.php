@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\EvaluationGroup;
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
@@ -80,16 +80,16 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(GroupPeople $groupPeople, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
+    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
     {
-        $supportGroup = $supportManager->getNewSupportGroup($groupPeople, $request, $repoService);
+        $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportManager->create($this->manager, $groupPeople, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
+            if ($supportManager->create($this->manager, $peopleGroup, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getStartDate() && Choices::YES == $supportGroup->getService()->getAccommodation()
@@ -103,7 +103,7 @@ class SupportController extends AbstractController
         }
 
         return $this->render('app/support/supportGroupEdit.html.twig', [
-            'group_people' => $groupPeople,
+            'people_group' => $peopleGroup,
             'form' => $form->createView(),
         ]);
     }
@@ -111,16 +111,16 @@ class SupportController extends AbstractController
     /**
      * Donne le formulaire pour créer un nouveau suivi social au groupe (via AJAX).
      *
-     * @Route("/group/{id}/new_support", name="group_people_new_support", methods="GET")
+     * @Route("/group/{id}/new_support", name="people_group_new_support", methods="GET")
      */
-    public function newSupportGroupAjax(GroupPeople $groupPeople)
+    public function newSupportGroupAjax(PeopleGroup $peopleGroup)
     {
         $supportGroup = (new SupportGroup())->setReferent($this->getUser());
 
-        $nbSupports = $this->repoSupportGroup->countSupportOfGroupPeople($groupPeople);
+        $nbSupports = $this->repoSupportGroup->countSupportOfPeopleGroup($peopleGroup);
 
         $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
-            'action' => $this->generateUrl('support_new', ['id' => $groupPeople->getId()]),
+            'action' => $this->generateUrl('support_new', ['id' => $peopleGroup->getId()]),
         ]);
 
         return $this->json([
@@ -207,7 +207,7 @@ class SupportController extends AbstractController
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'referents' => $supportManager->getReferents($supportGroup->getGroupPeople(), $repoReferent),
+            'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),
             'nbNotes' => $supportManager->getNbNotes($supportGroup, $repoNote),
             'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
             'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $repoDocument),
@@ -232,11 +232,11 @@ class SupportController extends AbstractController
 
         $this->addFlash('warning', 'Le suivi social est supprimé.');
 
-        $groupPeople = $supportGroup->getGroupPeople();
+        $peopleGroup = $supportGroup->getPeopleGroup();
 
-        (new FilesystemAdapter())->deleteItem(GroupPeople::CACHE_GROUP_SUPPORTS_KEY.$groupPeople->getId());
+        (new FilesystemAdapter())->deleteItem(PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId());
 
-        return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
+        return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
 
     /**

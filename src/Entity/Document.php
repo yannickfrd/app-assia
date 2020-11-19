@@ -68,9 +68,10 @@ class Document
     private $createdBy; // NE PAS SUPPRIMER
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="documents")
+     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
      */
-    private $groupPeople;
+    private $peopleGroup;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SupportGroup", inversedBy="documents")
@@ -147,14 +148,14 @@ class Document
         return $this;
     }
 
-    public function getGroupPeople(): ?GroupPeople
+    public function getPeopleGroup(): ?PeopleGroup
     {
-        return $this->groupPeople;
+        return $this->peopleGroup;
     }
 
-    public function setGroupPeople(?GroupPeople $groupPeople): self
+    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
     {
-        $this->groupPeople = $groupPeople;
+        $this->peopleGroup = $peopleGroup;
 
         return $this;
     }

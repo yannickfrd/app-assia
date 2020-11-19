@@ -106,14 +106,12 @@ class DocumentController extends AbstractController
      * Lit le document.
      *
      * @Route("document/{id}/read", name="document_read", methods="GET")
-     *
-     * @return mixed
      */
-    public function readDocument(Document $document, Download $download)
+    public function readDocument(Document $document, Download $download): Response
     {
         $this->denyAccessUnlessGranted('VIEW', $document);
 
-        $file = 'uploads/documents/'.$document->getGroupPeople()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
+        $file = 'uploads/documents/'.$document->getPeopleGroup()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
 
         if (file_exists($file)) {
             return $download->send($file);
@@ -121,7 +119,7 @@ class DocumentController extends AbstractController
 
         $this->addFlash('danger', 'Ce fichier n\'existe pas.');
 
-        return $this->redirectToRoute('support_documents', ['supportId' => $document->getSupportGroup()->getId()]);
+        return $this->redirectToRoute('support_documents', ['id' => $document->getSupportGroup()->getId()]);
     }
 
     /**
@@ -153,7 +151,7 @@ class DocumentController extends AbstractController
     {
         $documentName = $document->getName();
 
-        $file = 'uploads/documents/'.$document->getSupportGroup()->getGroupPeople()->getId().'/'.$document->getInternalFileName();
+        $file = 'uploads/documents/'.$document->getSupportGroup()->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
 
         if (\file_exists($file)) {
             \unlink($file);
@@ -179,9 +177,9 @@ class DocumentController extends AbstractController
     {
         $file = $form['file']->getData();
 
-        $groupPeople = $supportGroup->getGroupPeople();
+        $peopleGroup = $supportGroup->getPeopleGroup();
 
-        $path = '/'.$groupPeople->getId().'/'.(new \DateTime())->format('Y/m');
+        $path = '/'.$peopleGroup->getId().'/'.(new \DateTime())->format('Y/m');
 
         $fileName = $fileUploader->upload($file, $path);
 
@@ -189,7 +187,7 @@ class DocumentController extends AbstractController
 
         $document->setInternalFileName($fileName)
             ->setSize($size)
-            ->setGroupPeople($groupPeople)
+            ->setPeopleGroup($peopleGroup)
             ->setSupportGroup($supportGroup);
 
         $supportGroup->setUpdatedAt(new \DateTime());
@@ -206,7 +204,7 @@ class DocumentController extends AbstractController
             'msg' => 'Le document "'.$document->getName().'" est enregistré.',
             'data' => [
                 'documentId' => $document->getId(),
-                'groupPeopleId' => $groupPeople->getId(),
+                'peopleGroupId' => $peopleGroup->getId(),
                 'type' => $document->getTypeToString(),
                 'size' => $size,
                 'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),

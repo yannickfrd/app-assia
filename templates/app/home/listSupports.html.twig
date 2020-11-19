@@ -41,9 +41,9 @@
                                 </a>
                             </td>
                             <td class="align-middle">{{ person ? person.fullname }}</td>
-                            <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
+                            <td class="align-middle">{{ support.peopleGroup.familyTypologyToString }}<!--
                                 -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
-                                {% if support.nbPeople != support.groupPeople.nbPeople %}
+                                {% if support.nbPeople != support.peopleGroup.nbPeople %}
                                     <span class="fas fa-exclamation-triangle text-warning" 
                                         title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                                 {% endif %}

@@ -7,7 +7,7 @@ App\Entity\SupportGroup:
     referent: "@userRoleUser"
     service: "@service1"
     device: "@device1"
-    groupPeople: "@groupPeople1"
+    peopleGroup: "@peopleGroup1"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: $referent

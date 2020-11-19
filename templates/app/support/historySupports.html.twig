@@ -1,4 +1,4 @@
-{# {% cache "GroupPeopleSupport" ~ supportGroup.id supportGroup.updatedAt.timestamp %} #}
+{# {% cache "PeopleGroupSupport" ~ supportGroup.id supportGroup.updatedAt.timestamp %} #}
 <section>
     <h2 class="h4 my-4">Historique des suivis sociaux</h2>
     <div class="table-responsive">
@@ -70,9 +70,9 @@
                 </tbody>
         </table>
     </div>
-    {% if group_people is defined %}
+    {% if people_group is defined %}
     <button id="btn-new-support" class="m-2 btn btn-{{ theme_color }} btn-sm" 
-    data-url="{{ path('group_people_new_support', {'id': group_people.id}) }}">
+    data-url="{{ path('people_group_new_support', {'id': people_group.id}) }}">
     <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</button>
     {% else %}
     <p class="ml-2 text-secondary"><span class="fas fa-info-circle mr-2"></span>

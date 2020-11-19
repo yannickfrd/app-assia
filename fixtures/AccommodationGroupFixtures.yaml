@@ -8,7 +8,7 @@ App\Entity\AccommodationGroup:
     createdBy: "@user*"
     updatedBy: "@user*"
     accommodation: "@accommodation*"
-    groupPeople: "@groupPeople*"
+    peopleGroup: "@peopleGroup*"
     supportGroup: "@supportGroup*"
 
 App\Entity\AccommodationPerson:

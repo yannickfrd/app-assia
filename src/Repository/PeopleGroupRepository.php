@@ -2,28 +2,28 @@
 
 namespace App\Repository;
 
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method GroupPeople|null find($id, $lockMode = null, $lockVersion = null)
- * @method GroupPeople|null findOneBy(array $criteria, array $orderBy = null)
- * @method GroupPeople[]    findAll()
- * @method GroupPeople[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method PeopleGroup|null find($id, $lockMode = null, $lockVersion = null)
+ * @method PeopleGroup|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PeopleGroup[]    findAll()
+ * @method PeopleGroup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class GroupPeopleRepository extends ServiceEntityRepository
+class PeopleGroupRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, GroupPeople::class);
+        parent::__construct($registry, PeopleGroup::class);
     }
 
     /**
      * Donne le groupe de personnes.
      */
-    public function findGroupPeopleById(int $id): ?GroupPeople
+    public function findPeopleGroupById(int $id): ?PeopleGroup
     {
         return $this->createQueryBuilder('g')->select('g')
             ->leftJoin('g.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
@@ -43,7 +43,7 @@ class GroupPeopleRepository extends ServiceEntityRepository
     /**
      * Donne tous les groupes de personnes.
      */
-    public function findAllGroupPeopleQuery($search): Query
+    public function findAllPeopleGroupQuery($search): Query
     {
         $query = $this->createQueryBuilder('g')
             ->select('PARTIAL g.{id, familyTypology, nbPeople}')

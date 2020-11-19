@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
-class GroupPeopleControllerTest extends WebTestCase
+class PeopleGroupControllerTest extends WebTestCase
 {
     use FixturesTrait;
     use AppTestTrait;
@@ -21,8 +21,8 @@ class GroupPeopleControllerTest extends WebTestCase
     /** @var array */
     protected $dataFixtures;
 
-    /** @var GroupPeople */
-    protected $groupPeople;
+    /** @var PeopleGroup */
+    protected $peopleGroup;
 
     protected function setUp()
     {
@@ -31,25 +31,25 @@ class GroupPeopleControllerTest extends WebTestCase
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->groupPeople = $this->dataFixtures['groupPeople1'];
+        $this->peopleGroup = $this->dataFixtures['peopleGroup1'];
     }
 
-    public function testListGroupsPeopleIsUp()
+    public function testListPeopleGroupsIsUp()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('groups_people'));
+        $this->client->request('GET', $this->generateUri('people_groups'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupes de personnes');
     }
 
-    public function testSearchGroupsPeopleIsSucessful()
+    public function testSearchPeopleGroupsIsSucessful()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('groups_people'));
+        $crawler = $this->client->request('GET', $this->generateUri('people_groups'));
 
         $form = $crawler->selectButton('search')->form([]);
 
@@ -59,25 +59,25 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Groupes de personnes');
     }
 
-    public function testEditGroupPeopleIsUp()
+    public function testEditPeopleGroupIsUp()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('group_people_show', [
-            'id' => $this->groupPeople->getId(),
+        $this->client->request('GET', $this->generateUri('people_group_show', [
+            'id' => $this->peopleGroup->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupe');
     }
 
-    public function testEditGroupPeopleIsSuccessful()
+    public function testEditPeopleGroupIsSuccessful()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('group_people_show', [
-            'id' => $this->groupPeople->getId(),
+        $crawler = $this->client->request('GET', $this->generateUri('people_group_show', [
+            'id' => $this->peopleGroup->getId(),
         ]));
 
         $faker = \Faker\Factory::create('fr_FR');
@@ -94,23 +94,23 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Groupe');
     }
 
-    public function testDeleteGroupPeopleWithRoleUser()
+    public function testDeletePeopleGroupWithRoleUser()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('group_people_delete', [
-            'id' => $this->groupPeople->getId(),
+        $this->client->request('GET', $this->generateUri('people_group_delete', [
+            'id' => $this->peopleGroup->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDeleteGroupPeopleWithRoleAdmin()
+    public function testDeletePeopleGroupWithRoleAdmin()
     {
         $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
-        $this->client->request('GET', $this->generateUri('group_people_delete', [
-            'id' => $this->groupPeople->getId(),
+        $this->client->request('GET', $this->generateUri('people_group_delete', [
+            'id' => $this->peopleGroup->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -121,7 +121,7 @@ class GroupPeopleControllerTest extends WebTestCase
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->client->request('POST', $this->generateUri('group_add_person', [
-            'id' => $this->groupPeople->getId(),
+            'id' => $this->peopleGroup->getId(),
             'person_id' => $this->dataFixtures['person1']->getId(),
         ]));
         // $this->client->followRedirect();

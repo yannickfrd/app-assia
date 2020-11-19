@@ -96,7 +96,7 @@ class ImportDatasPAF extends ImportDatas
         foreach ($this->items as $key => $item) {
             $hotelSupport = $this->repoHotelSupport->findOneBy(['accessId' => $key]);
             if ($hotelSupport) {
-                $this->items[$key]['groupPeople'] = $hotelSupport;
+                $this->items[$key]['peopleGroup'] = $hotelSupport;
                 foreach ($item['pafs'] as $paf) {
                     $this->createPAF($hotelSupport->getSupportGroup(), $paf);
                     ++$nbPafs;

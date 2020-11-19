@@ -72,7 +72,7 @@ class PersonControllerTest extends WebTestCase
         $this->createLogin($this->user);
 
         $this->client->request('GET', $this->generateUri('group_search_person', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
+            'id' => $this->dataFixtures['peopleGroup1']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -83,7 +83,7 @@ class PersonControllerTest extends WebTestCase
     // {
     //     /** @var Crawler */
     //     $crawler = $this->client->request("GET", $this->generateUri("group_search_person", [
-    //         "id" => $this->dataFixtures["groupPeople1"]->getId()
+    //         "id" => $this->dataFixtures["peopleGroup1"]->getId()
     //     ]));
 
     //     $form = $crawler->selectButton("js-btn-confirm")->form([
@@ -136,8 +136,8 @@ class PersonControllerTest extends WebTestCase
             'role_person_group[person][lastname]' => 'DOE',
             'role_person_group[person][birthdate]' => '1980-01-01',
             'role_person_group[person][gender]' => 2,
-            'role_person_group[groupPeople][familyTypology]' => 2,
-            'role_person_group[groupPeople][nbPeople]' => 1,
+            'role_person_group[peopleGroup][familyTypology]' => 2,
+            'role_person_group[peopleGroup][nbPeople]' => 1,
             'role_person_group[role]' => 5,
         ]);
 
@@ -160,8 +160,8 @@ class PersonControllerTest extends WebTestCase
             'role_person_group[person][lastname]' => 'MULLER',
             'role_person_group[person][birthdate]' => '1987-05-09',
             'role_person_group[person][gender]' => 1,
-            'role_person_group[groupPeople][familyTypology]' => 1,
-            'role_person_group[groupPeople][nbPeople]' => 1,
+            'role_person_group[peopleGroup][familyTypology]' => 1,
+            'role_person_group[peopleGroup][nbPeople]' => 1,
             'role_person_group[role]' => 5,
         ]);
 
@@ -177,7 +177,7 @@ class PersonControllerTest extends WebTestCase
         $this->createLogin($this->user);
 
         $this->client->request('GET', $this->generateUri('group_create_person', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
+            'id' => $this->dataFixtures['peopleGroup1']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -191,7 +191,7 @@ class PersonControllerTest extends WebTestCase
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('group_create_person', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
+            'id' => $this->dataFixtures['peopleGroup1']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([
@@ -213,7 +213,7 @@ class PersonControllerTest extends WebTestCase
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('group_create_person', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
+            'id' => $this->dataFixtures['peopleGroup1']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([
@@ -236,7 +236,7 @@ class PersonControllerTest extends WebTestCase
         $this->createLogin($this->user);
 
         $this->client->request('GET', $this->generateUri('group_person_show', [
-            'id' => $this->dataFixtures['groupPeople1']->getId(),
+            'id' => $this->dataFixtures['peopleGroup1']->getId(),
             'person_id' => $this->person->getId(),
             'slug' => $this->person->getSlug(),
         ]));

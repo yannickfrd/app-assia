@@ -8,17 +8,17 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
+                <a class="text-{{ theme_color }}" href="{{ path('people_group_show', {'id': people_group.id}) }}">
                     <span class="fas fa-users mr-2"></span>Fiche groupe
-                    <span class="small">{{ group_people.familyTypologyToString }}</span>
+                    <span class="small">{{ people_group.familyTypologyToString }}</span>
                 </a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
         </ol>
     </nav> 
 	<div id="js-people">
-		{% for rolePerson in group_people.rolePeople %}
-			<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":rolePerson.person.id, "slug":rolePerson.person.slug}) }}" 
+		{% for rolePerson in people_group.rolePeople %}
+			<a href="{{ path("group_person_show", {"id":people_group.id, "person_id":rolePerson.person.id, "slug":rolePerson.person.slug}) }}" 
 				class="btn btn-outline-secondary btn-sm rounded-pill smal mb-2">{{ rolePerson.person.fullname }}</a>
 		{% endfor %}
 	</div>

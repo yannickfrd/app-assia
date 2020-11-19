@@ -24,7 +24,7 @@
 
 		{# {% cache "support_group.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
 
-		{% set group_people = support.groupPeople %}
+		{% set people_group = support.peopleGroup %}
 		<div class="small text-secondary">
 			<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? " par " ~ support.createdBy.fullname }}
 				{% if support.updatedAt != support.createdAt %}
@@ -36,15 +36,15 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a class="text-{{ theme_color }}" href="{{ path('group_people_show', {'id': group_people.id}) }}">
-						<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ group_people.familyTypologyToString }}</span>
+					<a class="text-{{ theme_color }}" href="{{ path('people_group_show', {'id': people_group.id}) }}">
+						<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
 					</a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">Suivi social (Accueil)</li>
 			</ol>
 		</nav>
 		{% for person in support.supportPeople %}
-			<a href="{{ path("group_person_show", {"id":group_people.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
+			<a href="{{ path("group_person_show", {"id":people_group.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
 				class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ person.person.fullname }}</a>
 		{% endfor %}
 

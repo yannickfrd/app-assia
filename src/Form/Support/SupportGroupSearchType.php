@@ -27,7 +27,7 @@ class SupportGroupSearchType extends AbstractType
             // ->add('familyTypologies', ChoiceType::class, [
             //     'label_attr' => ['class' => 'sr-only'],
             //     'multiple' => true,
-            //     'choices' => Choices::getChoices(GroupPeople::FAMILY_TYPOLOGY),
+            //     'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
             //     'attr' => [
             //         'class' => 'multi-select',
             //         'data-select2-id' => 'typology',

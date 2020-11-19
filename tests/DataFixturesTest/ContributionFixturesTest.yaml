@@ -49,8 +49,8 @@ App\Entity\Person:
     birthdate: <date_create("1980-01-01")>
 
 
-App\Entity\GroupPeople:
-  groupPeople:
+App\Entity\PeopleGroup:
+  peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
@@ -60,7 +60,7 @@ App\Entity\SupportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
     referent: "@userRoleUser"
-    groupPeople: "@groupPeople"
+    peopleGroup: "@peopleGroup"
     service: "@service1"
     createdAt: <date_create()>
     updatedAt: <date_create()>

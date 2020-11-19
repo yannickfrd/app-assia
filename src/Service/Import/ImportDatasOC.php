@@ -12,10 +12,10 @@ use App\Entity\EvalProfPerson;
 use App\Entity\EvalSocialPerson;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
 use App\Entity\HotelSupport;
 use App\Entity\InitEvalGroup;
 use App\Entity\InitEvalPerson;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\Service;
@@ -375,7 +375,7 @@ class ImportDatasOC extends ImportDatas
 
                 $this->checkGroupExists($typology);
 
-                $this->person = $this->createPerson($this->items[$this->field['ID_GIP']]['groupPeople']);
+                $this->person = $this->createPerson($this->items[$this->field['ID_GIP']]['peopleGroup']);
 
                 $support = $this->items[$this->field['ID_GIP']]['supports'][$this->field['ID_Support']];
                 $supportGroup = $support['support'];
@@ -419,18 +419,18 @@ class ImportDatasOC extends ImportDatas
         if (false === $this->groupExists()) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
-                $groupPeople = $this->personExists->getRolesPerson()->first()->getGroupPeople();
+                $peopleGroup = $this->personExists->getRolesPerson()->first()->getPeopleGroup();
             // Sinon, on crée le groupe.
             } else {
-                $groupPeople = $this->createGroupPeople($typology);
+                $peopleGroup = $this->createPeopleGroup($typology);
             }
 
-            $supportGroup = $this->createSupportGroup($groupPeople);
+            $supportGroup = $this->createSupportGroup($peopleGroup);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
             $this->items[$this->field['ID_GIP']] = [
-                'groupPeople' => $groupPeople,
+                'peopleGroup' => $peopleGroup,
                 'supports' => [
                     $this->field['ID_Support'] => [
                         'support' => $supportGroup,
@@ -467,7 +467,7 @@ class ImportDatasOC extends ImportDatas
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
                 if (false === $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['groupPeople']);
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['ID_GIP']]['peopleGroup']);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
                     $this->items[$this->field['ID_GIP']]['supports'][$this->field['ID_Support']] = [
@@ -481,24 +481,24 @@ class ImportDatasOC extends ImportDatas
         return $groupExists;
     }
 
-    protected function createGroupPeople(int $typology): GroupPeople
+    protected function createPeopleGroup(int $typology): PeopleGroup
     {
         if ('CHEF DE FAMILLE' === $this->field['Rôle']) {
             $this->personExistsInDatabase();
         }
 
-        $groupPeople = (new GroupPeople())
+        $peopleGroup = (new PeopleGroup())
                     ->setFamilyTypology($typology)
                     ->setNbPeople($this->findInArray($this->field['Compo'], self::NB_PEOPLE) ?? null)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
-        $this->manager->persist($groupPeople);
+        $this->manager->persist($peopleGroup);
 
-        return $groupPeople;
+        return $peopleGroup;
     }
 
-    protected function createSupportGroup(GroupPeople $groupPeople): SupportGroup
+    protected function createSupportGroup(PeopleGroup $peopleGroup): SupportGroup
     {
         $userReferent = $this->getUserReferent();
 
@@ -506,7 +506,7 @@ class ImportDatasOC extends ImportDatas
         $device = $this->getDevice($status);
 
         $supportGroup = (new SupportGroup())
-                    ->setGroupPeople($groupPeople)
+                    ->setPeopleGroup($peopleGroup)
                     ->setService($this->service)
                     ->setDevice($device)
                     ->setReferent($userReferent)
@@ -617,7 +617,7 @@ class ImportDatasOC extends ImportDatas
         return $evalHousingGroup;
     }
 
-    protected function createPerson(GroupPeople $groupPeople): Person
+    protected function createPerson(PeopleGroup $peopleGroup): Person
     {
         $duplicatedPerson = false;
 
@@ -636,7 +636,7 @@ class ImportDatasOC extends ImportDatas
             }
             if (false === $duplicatedPerson) {
                 $this->manager->persist($this->person);
-                $this->person->addRolesPerson($this->createRolePerson($groupPeople));
+                $this->person->addRolesPerson($this->createRolePerson($peopleGroup));
                 $this->people[] = $this->person;
             }
         }
@@ -653,13 +653,13 @@ class ImportDatasOC extends ImportDatas
         ]);
     }
 
-    protected function createRolePerson(GroupPeople $groupPeople): RolePerson
+    protected function createRolePerson(PeopleGroup $peopleGroup): RolePerson
     {
         $rolePerson = (new RolePerson())
                  ->setHead($this->head)
                  ->setRole($this->role)
                  ->setPerson($this->person)
-                 ->setGroupPeople($groupPeople);
+                 ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($rolePerson);
 

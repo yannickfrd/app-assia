@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\AvdlSupportSearch;
@@ -95,7 +95,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
 
             ->addOrderBy('sp.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC');
@@ -114,7 +114,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             // ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
 
         $query = $this->filter($query, $search);
@@ -137,7 +137,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
@@ -180,7 +180,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
@@ -224,7 +224,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('p')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('g')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('g')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, fullname}')
             ->andWhere('sp.head = TRUE');
 
@@ -349,7 +349,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
-            ->leftJoin('sg.groupPeople', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename}')
 
@@ -470,7 +470,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne les suivis sociaux du ménage.
      */
-    public function findSupportsOfGroupPeople(GroupPeople $groupPeople)
+    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup)
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
@@ -478,8 +478,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
 
-            ->where('sg.groupPeople = :groupPeople')
-            ->setParameter('groupPeople', $groupPeople)
+            ->where('sg.peopleGroup = :peopleGroup')
+            ->setParameter('peopleGroup', $peopleGroup)
 
             ->orderBy('sg.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
@@ -489,12 +489,12 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne le dernier suivi social auquel l'utilisateur peur avoir accès.
      */
-    public function countSupportOfGroupPeople(GroupPeople $groupPeople): int
+    public function countSupportOfPeopleGroup(PeopleGroup $peopleGroup): int
     {
         $query = $this->createQueryBuilder('sg')->select('count(sg.id)')
 
-            ->where('sg.groupPeople = :groupPeople')
-            ->setParameter('groupPeople', $groupPeople);
+            ->where('sg.peopleGroup = :peopleGroup')
+            ->setParameter('peopleGroup', $peopleGroup);
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('sg.service IN (:services)')
@@ -515,8 +515,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.notes', 'n')->addSelect('n')
             ->leftJoin('sg.documents', 'd')->addSelect('d')
 
-            ->where('sg.groupPeople = :groupPeople')
-            ->setParameter('groupPeople', $supportGroup->getGroupPeople());
+            ->where('sg.peopleGroup = :peopleGroup')
+            ->setParameter('peopleGroup', $supportGroup->getPeopleGroup());
 
         if ($supportGroup->getId()) {
             $query->andWhere('sg.id != :id')

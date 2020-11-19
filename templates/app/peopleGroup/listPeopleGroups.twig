@@ -13,17 +13,17 @@
         <h1 class="h2 mb-3">Groupes de personnes</h1>
     </div>
 
-    {% include "app/groupPeople/searchGroupPeople.html.twig" %}
+    {% include "app/peopleGroup/searchPeopleGroup.html.twig" %}
 
     <div class="container">
 
         <div class="row align-items-baseline">
             <div class="col-md-4 count align-middle">
-                <p class="align-middle">Résultat : {{ groupsPeople.getTotalItemCount|number_format(0,'', ' ')  }}
+                <p class="align-middle">Résultat : {{ peopleGroups.getTotalItemCount|number_format(0,'', ' ')  }}
                     personnes.</p>
             </div>
             <div class="col-md-8">
-                <div class="navigation">{{ knp_pagination_render(groupsPeople) }}</div>
+                <div class="navigation">{{ knp_pagination_render(peopleGroups) }}</div>
             </div>
         </div>
 
@@ -35,48 +35,48 @@
                         </th>
                         <th scope="col" class="align-middle th-w-80" data-placement="bottom"
                             title="N° d'identification du groupe">
-                            {{ knp_pagination_sortable(groupsPeople, "ID", "g.id") }}
+                            {{ knp_pagination_sortable(peopleGroups, "ID", "g.id") }}
                         </th>
                         <th scope="col" class="align-middle th-w-150 text-uppercase">
-                            {{ knp_pagination_sortable(groupsPeople, "Nom", "p.lastname") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Nom", "p.lastname") }}
                         </th>
                         <th scope="col" class="align-middle th-w-120 text-capitalize">
-                            {{ knp_pagination_sortable(groupsPeople, "Prénom", "p.firstname") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Prénom", "p.firstname") }}
                         </th>
                         <th scope="col" class="align-middle th-date">
-                            {{ knp_pagination_sortable(groupsPeople, "Date de naissance", "p.birthdate") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Date de naissance", "p.birthdate") }}
                         </th>
                         <th scope="col" class="align-middle th-w-80">
-                            {{ knp_pagination_sortable(groupsPeople, "Sexe", "p.gender") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Sexe", "p.gender") }}
                         </th>
                         <th scope="col" class="align-middle th-w-100">
-                            {{ knp_pagination_sortable(groupsPeople, "Rôle", "r.role") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Rôle", "r.role") }}
                         </th>
                         <th scope="col" class="align-middle th-w-140">
-                            {{ knp_pagination_sortable(groupsPeople, "Typologie familiale", "g.familyTypology") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Typologie familiale", "g.familyTypology") }}
                         </th>
                         <th scope="col" class="align-middle th-w-100">
-                            {{ knp_pagination_sortable(groupsPeople, "Nb de pers.", "g.nbPeople") }}
+                            {{ knp_pagination_sortable(peopleGroups, "Nb de pers.", "g.nbPeople") }}
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for groupPeople in groupsPeople %}
-                    {% set rolePerson = groupPeople.rolePeople|first %}
+                    {% for peopleGroup in peopleGroups %}
+                    {% set rolePerson = peopleGroup.rolePeople|first %}
                     <tr>
                         <th scope="row">
-                            {% if groupPeople.nbPeople > 1 %}
-                            <a href="{{ path('group_people_show', {'id':groupPeople.id}) }}"
+                            {% if peopleGroup.nbPeople > 1 %}
+                            <a href="{{ path('people_group_show', {'id':peopleGroup.id}) }}"
                                 class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
                                 title="Voir la fiche du groupe"><span class="fas fa-users"></span></a>
                             {% else %}
-                            <a href="{{ path('group_person_show', {'id':groupPeople.id, 'person_id':rolePerson.person.id, 'slug':rolePerson.person.slug}) }}"
+                            <a href="{{ path('group_person_show', {'id':peopleGroup.id, 'person_id':rolePerson.person.id, 'slug':rolePerson.person.slug}) }}"
                                 class="btn btn-{{ theme_color }} shadow" data-placement="bottom"
                                 title="Voir la fiche individuelle"> <span class="fas fa-user"></span></a>
                             {% endif %}
                         </th>
-                        <td data-placement="bottom" title="N° d'identification du groupe">{{ groupPeople.id }} </td>
+                        <td data-placement="bottom" title="N° d'identification du groupe">{{ peopleGroup.id }} </td>
                         <td>{{ rolePerson.person.lastname }}</td>
                         <td class="text-capitalize">
                             {{ rolePerson.person.firstname }}
@@ -91,8 +91,8 @@
                             <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
                             {% endif %} </td>
                         <td>{{ rolePerson.roleToString }}{% if rolePerson.head %} (DP){% endif %}</td>
-                        <td>{{ groupPeople.familyTypologyToString }}</td>
-                        <td>{{ groupPeople.nbPeople }}</td>
+                        <td>{{ peopleGroup.familyTypologyToString }}</td>
+                        <td>{{ peopleGroup.nbPeople }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -100,7 +100,7 @@
         </div>
 
         <div class="navigation">
-            {{ knp_pagination_render(groupsPeople) }}
+            {{ knp_pagination_render(peopleGroups) }}
         </div>
     </div>
 </section>

@@ -22,8 +22,8 @@ App\Entity\Person:
     createdBy: "@user*"
     updatedBy: "@user*"
 
-App\Entity\GroupPeople:
-  groupPeople1:
+App\Entity\PeopleGroup:
+  peopleGroup1:
     familyTypology: 2
     nbPeople: 1
     createdAt: <dateTimeBetween("-2 years", "now")>
@@ -31,7 +31,7 @@ App\Entity\GroupPeople:
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
-  groupPeople{2..50}:
+  peopleGroup{2..50}:
     familyTypology: <numberBetween(1,6)>
     nbPeople: <numberBetween(1, 6)>
     createdAt: <dateTimeBetween("-2 years", "now")>
@@ -44,10 +44,10 @@ App\Entity\RolePerson:
     head: 1
     role: 5
     person: "@person1"
-    groupPeople: "@groupPeople1"
+    peopleGroup: "@peopleGroup1"
 
   rolePerson{2..50}:
     head: <numberBetween(0, 1)>
     role: <numberBetween(1, 5)>
     person: "@person*"
-    groupPeople: "@groupPeople*"
+    peopleGroup: "@peopleGroup*"

@@ -228,7 +228,7 @@ class SupportGroupType extends AbstractType
 
     protected function addAccommodationGroup(SupportGroup $supportGroup)
     {
-        $accommodationGroup = (new AccommodationGroup())->setGroupPeople($supportGroup->getGroupPeople());
+        $accommodationGroup = (new AccommodationGroup())->setPeopleGroup($supportGroup->getPeopleGroup());
         $supportGroup->addAccommodationGroup($accommodationGroup);
 
         return $supportGroup;

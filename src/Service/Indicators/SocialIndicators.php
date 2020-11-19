@@ -5,7 +5,7 @@ namespace App\Service\Indicators;
 use App\Entity\EvalBudgetPerson;
 use App\Entity\EvalProfPerson;
 use App\Entity\EvaluationPerson;
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\SupportPerson;
@@ -29,7 +29,7 @@ class SocialIndicators
     {
         $datas = [];
 
-        $this->typologyDatas = $this->initVar(GroupPeople::FAMILY_TYPOLOGY);
+        $this->typologyDatas = $this->initVar(PeopleGroup::FAMILY_TYPOLOGY);
         $this->genderDatas = $this->initVar(Person::GENDER);
         $this->roleDatas = $this->initVar(RolePerson::ROLE);
         $this->profStatusDatas = $this->initVar(EvalProfPerson::PROF_STATUS);
@@ -43,7 +43,7 @@ class SocialIndicators
 
             $this->typologyDatas = $this->updateVar(
                 $supportPerson,
-                $supportPerson->getSupportGroup()->getGroupPeople()->getFamilyTypology(),
+                $supportPerson->getSupportGroup()->getPeopleGroup()->getFamilyTypology(),
                 $this->typologyDatas
             );
             $this->genderDatas = $this->updateVar(

@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Repository\UserRepository;
@@ -10,13 +10,13 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-class C_GroupPeopleFixtures extends Fixture
+class C_PeopleGroupFixtures extends Fixture
 {
     private $manager;
 
     private $user;
 
-    private $groupPeople;
+    private $peopleGroup;
     private $familyTypology;
     private $nbPeople;
     private $groupCreatedAt;
@@ -52,7 +52,7 @@ class C_GroupPeopleFixtures extends Fixture
             // Crée des faux groupes
             for ($i = 1; $i <= mt_rand(10, 15); ++$i) {
                 $this->setTypology();
-                $this->addGroupPeople();
+                $this->addPeopleGroup();
 
                 // Crée des fausses personnes dans le groupe
                 for ($j = 1; $j <= $this->nbPeople; ++$j) {
@@ -83,7 +83,7 @@ class C_GroupPeopleFixtures extends Fixture
     }
 
     // Crée le groupe
-    public function addGroupPeople()
+    public function addPeopleGroup()
     {
         // Définit la date de création et de mise à jour
         $this->groupCreatedAt = AppFixtures::getDateTimeBeetwen('-24 months', 'now');
@@ -91,7 +91,7 @@ class C_GroupPeopleFixtures extends Fixture
 
         $this->lastname = $this->faker->lastName();
 
-        $this->groupPeople = (new GroupPeople())
+        $this->peopleGroup = (new PeopleGroup())
             ->setFamilyTypology($this->familyTypology)
             ->setNbPeople($this->nbPeople)
             ->setCreatedAt($this->groupCreatedAt)
@@ -99,7 +99,7 @@ class C_GroupPeopleFixtures extends Fixture
             ->setUpdatedAt($this->groupUpdatedAt)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($this->groupPeople);
+        $this->manager->persist($this->peopleGroup);
     }
 
     // Détermine différentes infos sur la personne en fonction de la typologie familiale
@@ -145,7 +145,7 @@ class C_GroupPeopleFixtures extends Fixture
         $this->rolePerson = (new RolePerson())
             ->setHead($this->head)
             ->setRole($this->role)
-            ->setGroupPeople($this->groupPeople)
+            ->setPeopleGroup($this->peopleGroup)
             ->setCreatedAt($this->groupCreatedAt);
 
         $this->manager->persist($this->rolePerson);

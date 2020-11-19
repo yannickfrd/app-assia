@@ -12,9 +12,9 @@ use App\Form\Utils\Choices;
 use App\Repository\ContributionRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\EvaluationGroupRepository;
-use App\Repository\GroupPeopleRepository;
 use App\Repository\IndicatorRepository;
 use App\Repository\NoteRepository;
+use App\Repository\PeopleGroupRepository;
 use App\Repository\PersonRepository;
 use App\Repository\RdvRepository;
 use App\Repository\ServiceRepository;
@@ -31,7 +31,7 @@ class IndicatorsService
     protected $repoUser;
     protected $repoService;
     protected $repoPerson;
-    protected $repoGroupPeople;
+    protected $repoPeopleGroup;
     protected $repoSupportGroup;
     protected $repoSupportPerson;
     protected $repoEvaluation;
@@ -48,7 +48,7 @@ class IndicatorsService
         UserRepository $repoUser,
         ServiceRepository $repoService,
         PersonRepository $repoPerson,
-        GroupPeopleRepository $repoGroupPeople,
+        PeopleGroupRepository $repoPeopleGroup,
         SupportGroupRepository $repoSupportGroup,
         SupportPersonRepository $repoSupportPerson,
         EvaluationGroupRepository $repoEvaluation,
@@ -62,7 +62,7 @@ class IndicatorsService
         $this->repoUser = $repoUser;
         $this->repoService = $repoService;
         $this->repoPerson = $repoPerson;
-        $this->repoGroupPeople = $repoGroupPeople;
+        $this->repoPeopleGroup = $repoPeopleGroup;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->repoSupportPerson = $repoSupportPerson;
         $this->repoEvaluation = $repoEvaluation;
@@ -192,7 +192,7 @@ class IndicatorsService
 
         $indicator = (new Indicator())
             ->setNbCreatedPeople($this->repoPerson->countPeople($criteriaByCreation))
-            ->setNbCreatedGroups($this->repoGroupPeople->countGroups($criteriaByCreation))
+            ->setNbCreatedGroups($this->repoPeopleGroup->countGroups($criteriaByCreation))
             ->setNbCreatedSupportsGroup($this->repoSupportGroup->countSupports($criteriaByCreation))
             ->setNbUpdatedSupportsGroup($this->repoSupportGroup->countSupports($criteriaByUpdate))
             ->setNbCreatedSupportsPeople($this->repoSupportPerson->countSupportPeople($criteriaByCreation))
@@ -231,9 +231,9 @@ class IndicatorsService
                 'today' => $this->repoPerson->countPeople($criteriaByCreation),
             ],
             'Nb. de groupes créés' => [
-                'all' => $this->repoGroupPeople->count([]),
+                'all' => $this->repoPeopleGroup->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedGroups(),
-                'today' => $this->repoGroupPeople->countGroups($criteriaByCreation),
+                'today' => $this->repoPeopleGroup->countGroups($criteriaByCreation),
             ],
             'Nb. de suivis créés' => [
                 'all' => $allSupports = $this->repoSupportGroup->count([]),

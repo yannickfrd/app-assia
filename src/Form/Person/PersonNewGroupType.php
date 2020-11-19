@@ -3,7 +3,7 @@
 namespace App\Form\Person;
 
 use App\Entity\RolePerson;
-use App\Form\GroupPeople\GroupPeopleType2;
+use App\Form\PeopleGroup\PeopleGroupType2;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,7 +19,7 @@ class PersonNewGroupType extends AbstractType
                 'choices' => Choices::getChoices(RolePerson::ROLE),
                 'placeholder' => 'placeholder.select',
             ])
-            ->add('groupPeople', GroupPeopleType2::class);
+            ->add('peopleGroup', PeopleGroupType2::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

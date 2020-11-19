@@ -37,7 +37,7 @@ class ReferentControllerTest extends WebTestCase
     public function testNewReferentIsUp()
     {
         $this->client->request('GET', $this->generateUri('group_referent_new', [
-            'group_id' => $this->dataFixtures['groupPeople']->getId(),
+            'group_id' => $this->dataFixtures['peopleGroup']->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -48,7 +48,7 @@ class ReferentControllerTest extends WebTestCase
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('group_referent_new', [
-            'group_id' => $this->dataFixtures['groupPeople']->getId(),
+            'group_id' => $this->dataFixtures['peopleGroup']->getId(),
         ]));
 
         $form = $crawler->selectButton('send')->form([

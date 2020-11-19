@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RolePersonRepository")
  * @UniqueEntity(
- *     fields={"person", "groupPeople"},
+ *     fields={"person", "peopleGroup"},
  *     errorPath="person",
  *     message="Cette personne est déjà dans le groupe.")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
@@ -72,11 +72,11 @@ class RolePerson
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupPeople", inversedBy="rolePeople", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="rolePeople", cascade={"persist"})
      * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
      * @Assert\Valid()
      */
-    private $groupPeople;
+    private $peopleGroup;
 
     /**
      * @var \DateTime
@@ -136,14 +136,14 @@ class RolePerson
         return $this;
     }
 
-    public function getGroupPeople(): ?GroupPeople
+    public function getPeopleGroup(): ?PeopleGroup
     {
-        return $this->groupPeople;
+        return $this->peopleGroup;
     }
 
-    public function setGroupPeople(?GroupPeople $groupPeople): self
+    public function setPeopleGroup(?PeopleGroup $peopleGroup): self
     {
-        $this->groupPeople = $groupPeople;
+        $this->peopleGroup = $peopleGroup;
 
         return $this;
     }

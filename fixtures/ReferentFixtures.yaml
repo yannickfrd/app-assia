@@ -13,7 +13,7 @@ App\Entity\Referent:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser*"
-    groupPeople: "@groupPeople1"
+    peopleGroup: "@peopleGroup1"
 
   referent{2}:
     name: <sentence(3, true)>
@@ -29,4 +29,4 @@ App\Entity\Referent:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@user*"
     updatedBy: "@user*"
-    groupPeople: "@groupPeople*"
+    peopleGroup: "@peopleGroup*"

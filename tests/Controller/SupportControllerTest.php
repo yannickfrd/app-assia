@@ -79,7 +79,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request(
             'POST',
             $this->generateUri('support_new', [
-                'id' => $this->dataFixtures['groupPeople']->getId(),
+                'id' => $this->dataFixtures['peopleGroup']->getId(),
             ]),
             [
                 'support' => ['service' => 1],
@@ -95,7 +95,7 @@ class SupportControllerTest extends WebTestCase
         $crawler = $this->client->request(
             'POST',
             $this->generateUri('support_new', [
-                'id' => ($this->dataFixtures['groupPeople'])->getId(),
+                'id' => ($this->dataFixtures['peopleGroup'])->getId(),
             ]),
             [
                 'support' => ['service' => 1],

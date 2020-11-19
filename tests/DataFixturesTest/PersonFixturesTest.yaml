@@ -23,8 +23,8 @@ App\Entity\Person:
     updatedBy: "@userRoleUser"
 
 
-App\Entity\GroupPeople:
-  groupPeople1:
+App\Entity\PeopleGroup:
+  peopleGroup1:
     familyTypology: 2
     nbPeople: 1
 
@@ -34,7 +34,7 @@ App\Entity\RolePerson:
     head: 1
     role: 5
     person: "@person1"
-    groupPeople: "@groupPeople1"
+    peopleGroup: "@peopleGroup1"
 
 
 App\Entity\User:

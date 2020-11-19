@@ -113,7 +113,7 @@ class EvaluationController extends AbstractController
         $content = $renderer->render('app/evaluation/evaluationExport.html.twig', [
             'type' => $type,
             'support' => $supportGroup,
-            'referents' => $supportManager->getReferents($supportGroup->getGroupPeople(), $repoReferent),
+            'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),
             'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
             'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
             'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),

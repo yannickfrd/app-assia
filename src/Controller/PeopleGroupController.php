@@ -3,19 +3,19 @@
 namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
-use App\Form\GroupPeople\GroupPeopleSearchType;
-use App\Form\GroupPeople\GroupPeopleType;
-use App\Form\Model\GroupPeopleSearch;
+use App\Form\Model\PeopleGroupSearch;
+use App\Form\PeopleGroup\PeopleGroupSearchType;
+use App\Form\PeopleGroup\PeopleGroupType;
 use App\Form\RolePerson\RolePersonType;
-use App\Repository\GroupPeopleRepository;
+use App\Repository\PeopleGroupRepository;
 use App\Repository\ReferentRepository;
 use App\Repository\RolePersonRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\GroupPeopleManager;
 use App\Service\Pagination;
+use App\Service\PeopleGroupManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,14 +23,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class GroupPeopleController extends AbstractController
+class PeopleGroupController extends AbstractController
 {
     use ErrorMessageTrait;
 
     private $groupManager;
     private $repo;
 
-    public function __construct(GroupPeopleManager $groupManager, GroupPeopleRepository $repo)
+    public function __construct(PeopleGroupManager $groupManager, PeopleGroupRepository $repo)
     {
         $this->groupManager = $groupManager;
         $this->repo = $repo;
@@ -39,55 +39,55 @@ class GroupPeopleController extends AbstractController
     /**
      * Liste des groupes de personnes.
      *
-     * @Route("/groups_people", name="groups_people", methods="GET|POST")
+     * @Route("/people_groups", name="people_groups", methods="GET|POST")
      */
     public function listPeopleGroups(Request $request, Pagination $pagination): Response
     {
-        $search = new GroupPeopleSearch();
+        $search = new PeopleGroupSearch();
 
-        $form = ($this->createForm(GroupPeopleSearchType::class, $search))
+        $form = ($this->createForm(PeopleGroupSearchType::class, $search))
             ->handleRequest($request);
 
-        return $this->render('app/groupPeople/listGroupsPeople.html.twig', [
+        return $this->render('app/peopleGroup/listPeopleGroups.html.twig', [
             'form' => $form->createView(),
-            'groupsPeople' => $pagination->paginate($this->repo->findAllGroupPeopleQuery($search), $request),
+            'peopleGroups' => $pagination->paginate($this->repo->findAllPeopleGroupQuery($search), $request),
         ]);
     }
 
     /**
      * Modification d'un groupe.
      *
-     * @Route("/group/{id}", name="group_people_show", methods="GET|POST")
+     * @Route("/group/{id}", name="people_group_show", methods="GET|POST")
      */
-    public function showGroupPeople(int $id, Request $request, ReferentRepository $repoReferent, SupportGroupRepository $repoSuppport): Response
+    public function showPeopleGroup(int $id, Request $request, ReferentRepository $repoReferent, SupportGroupRepository $repoSuppport): Response
     {
-        $groupPeople = $this->repo->findGroupPeopleById($id);
+        $peopleGroup = $this->repo->findPeopleGroupById($id);
 
-        $form = $this->createForm(GroupPeopleType::class, $groupPeople)
+        $form = $this->createForm(PeopleGroupType::class, $peopleGroup)
             ->handleRequest($request);
 
-        $supports = $this->groupManager->getSupports($groupPeople, $repoSuppport);
+        $supports = $this->groupManager->getSupports($peopleGroup, $repoSuppport);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->groupManager->update($groupPeople, $supports);
+            $this->groupManager->update($peopleGroup, $supports);
         }
 
-        return $this->render('app/groupPeople/groupPeople.html.twig', [
+        return $this->render('app/peopleGroup/peopleGroup.html.twig', [
             'form' => $form->createView(),
             'supports' => $supports,
-            'referents' => $this->groupManager->getReferents($groupPeople, $repoReferent),
+            'referents' => $this->groupManager->getReferents($peopleGroup, $repoReferent),
         ]);
     }
 
     /**
      * Supprime le groupe de personnes.
      *
-     * @Route("/group/{id}/delete", name="group_people_delete", methods="GET")
+     * @Route("/group/{id}/delete", name="people_group_delete", methods="GET")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteGroupPeople(GroupPeople $groupPeople): Response
+    public function deletePeopleGroup(PeopleGroup $peopleGroup): Response
     {
-        $this->groupManager->delete($groupPeople);
+        $this->groupManager->delete($peopleGroup);
 
         $this->addFlash('warning', 'Le groupe est supprimé.');
 
@@ -102,7 +102,7 @@ class GroupPeopleController extends AbstractController
      */
     public function tryAddPersonInGroup(int $id, Request $request, Person $person, RolePersonRepository $repoRolePerson): Response
     {
-        $groupPeople = $this->repo->findGroupPeopleById($id);
+        $peopleGroup = $this->repo->findPeopleGroupById($id);
 
         $rolePerson = new RolePerson();
 
@@ -110,12 +110,12 @@ class GroupPeopleController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->groupManager->addPerson($groupPeople, $rolePerson, $person, $repoRolePerson);
+            $this->groupManager->addPerson($peopleGroup, $rolePerson, $person, $repoRolePerson);
         } else {
             $this->addFlash('danger', "Une erreur s'est produite.");
         }
 
-        return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
+        return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
 
     /**

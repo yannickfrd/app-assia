@@ -53,13 +53,13 @@
                         <tr>
                             <td scope="row" class="align-middle">
                                 {% if is_granted("VIEW", support) %}
-                                <a href="{% if support.groupPeople %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
+                                <a href="{% if support.peopleGroup %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                     title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                 </a>
                                 {% endif %}
                                 {# {% if is_granted("EDIT", support) %}
-                                <a href="{% if support.groupPeople %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
+                                <a href="{% if support.peopleGroup %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                     title="Modifier la fiche du suivi"><span class="fas fa-edit"></span>
                                 </a>
@@ -67,9 +67,9 @@
                             </td>
                             <td class="align-middle">{{ person ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
                             <td class="align-middle">{{ person and person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
-                            <td class="align-middle">{{ support.groupPeople.familyTypologyToString }}<!--
+                            <td class="align-middle">{{ support.peopleGroup.familyTypologyToString }}<!--
                                 -->{{ support.nbPeople > 1 ? ", " ~ support.nbPeople ~ " pers." }}
-                                {% if support.nbPeople != support.groupPeople.nbPeople %}
+                                {% if support.nbPeople != support.peopleGroup.nbPeople %}
                                     <span class="fas fa-exclamation-triangle text-warning" 
                                         title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                                 {% endif %}

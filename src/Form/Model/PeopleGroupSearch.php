@@ -4,7 +4,7 @@ namespace App\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class GroupPeopleSearch
+class PeopleGroupSearch
 {
     /**
      * @var string|null

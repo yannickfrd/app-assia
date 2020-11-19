@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Person;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Repository\GroupPeopleRepository;
+use App\Repository\PeopleGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +17,7 @@ class D_SupportGroupFixtures extends Fixture
     private $user;
     private $service;
 
-    private $groupPeople;
+    private $peopleGroup;
 
     private $supportGroup;
     private $nbSupports;
@@ -26,7 +26,7 @@ class D_SupportGroupFixtures extends Fixture
     private $status;
     public $supports;
 
-    public function __construct(EntityManagerInterface $manager, GroupPeopleRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PeopleGroupRepository $repo)
     {
         $this->manager = $manager;
         $this->repo = $repo;
@@ -35,11 +35,11 @@ class D_SupportGroupFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $groupsPeople = $this->repo->findAll();
+        $peopleGroups = $this->repo->findAll();
 
-        foreach ($groupsPeople as $groupPeople) {
-            $this->user = $groupPeople->getCreatedBy();
-            $this->groupPeople = $groupPeople;
+        foreach ($peopleGroups as $peopleGroup) {
+            $this->user = $peopleGroup->getCreatedBy();
+            $this->peopleGroup = $peopleGroup;
 
             foreach ($this->user->getServiceUser() as $serviceUser) {
                 $this->service = $serviceUser->getService();
@@ -50,7 +50,7 @@ class D_SupportGroupFixtures extends Fixture
             for ($i = 1; $i <= 1; ++$i) {
                 $this->addSupportGroup($i);
 
-                foreach ($this->groupPeople->getRolePeople() as $rolePerson) {
+                foreach ($this->peopleGroup->getRolePeople() as $rolePerson) {
                     $this->addSupportPerson($rolePerson->getPerson());
                 }
             }
@@ -65,7 +65,7 @@ class D_SupportGroupFixtures extends Fixture
 
         if ($this->nbSupports >= 2 && 1 == $k) {
             $this->status = SupportGroup::STATUS_IN_PROGRESS;
-            $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), 'now');
+            $this->startDate = AppFixtures::getDateTimeBeetwen($this->peopleGroup->getCreatedAt(), 'now');
             $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, 'now'));
         } elseif ($this->nbSupports >= 2 && 2 == $k) {
             $this->status = SupportGroup::STATUS_IN_PROGRESS;
@@ -73,7 +73,7 @@ class D_SupportGroupFixtures extends Fixture
             $this->endDate = null;
         } else {
             $this->status = SupportGroup::STATUS_IN_PROGRESS;
-            $this->startDate = AppFixtures::getDateTimeBeetwen($this->groupPeople->getCreatedAt(), 'now');
+            $this->startDate = AppFixtures::getDateTimeBeetwen($this->peopleGroup->getCreatedAt(), 'now');
             if (4 == $this->status) {
                 $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, 'now'));
             } else {
@@ -86,10 +86,10 @@ class D_SupportGroupFixtures extends Fixture
             ->setStatus($this->status)
             ->setReferent($this->user)
             ->setCreatedAt($this->startDate)
-            ->setUpdatedAt($this->groupPeople->getUpdatedAt())
+            ->setUpdatedAt($this->peopleGroup->getUpdatedAt())
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user)
-            ->setGroupPeople($this->groupPeople)
+            ->setPeopleGroup($this->peopleGroup)
             ->setService($this->service);
 
         $this->manager->persist($this->supportGroup);
@@ -110,7 +110,7 @@ class D_SupportGroupFixtures extends Fixture
             ->setHead($rolePerson->getHead())
             ->setRole($rolePerson->getRole())
             ->setCreatedAt($this->startDate)
-            ->setUpdatedAt($this->groupPeople->getUpdatedAt())
+            ->setUpdatedAt($this->peopleGroup->getUpdatedAt())
             ->setPerson($person)
             ->setSupportGroup($this->supportGroup);
 

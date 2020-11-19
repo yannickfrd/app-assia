@@ -65,9 +65,9 @@ class E2eTest extends PantherTestCase
             'role_person_group[person][lastname]' => 'MULLER',
             'role_person_group[person][birthdate]' => '09/05/1987',
             'role_person_group[person][gender]' => 1,
-            'role_person_group[groupPeople][nbPeople]' => 1,
+            'role_person_group[peopleGroup][nbPeople]' => 1,
             'role_person_group[role]' => 5,
-            'role_person_group[groupPeople][familyTypology]' => 2,
+            'role_person_group[peopleGroup][familyTypology]' => 2,
         ]);
 
         $this->client->submit($form);

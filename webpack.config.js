@@ -32,7 +32,7 @@ Encore
     .addEntry('document', './assets/js/document/document.js')
     .addEntry('evaluation', './assets/js/evaluation/evaluationIndex.js')
     .addEntry('export', './assets/js/export/exportIndex.js')
-    .addEntry('groupPeople', './assets/js/groupPeople/groupPeople.js')
+    .addEntry('peopleGroup', './assets/js/peopleGroup/peopleGroup.js')
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
     .addEntry('login', './assets/js/security/login.js')

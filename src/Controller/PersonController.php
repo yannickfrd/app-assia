@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\EvaluationGroup;
-use App\Entity\GroupPeople;
+use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
 use App\Entity\SupportGroup;
@@ -17,7 +17,7 @@ use App\Form\Person\PersonSearchType;
 use App\Form\Person\PersonType;
 use App\Form\Person\RolePersonGroupType;
 use App\Form\RolePerson\RolePersonType;
-use App\Repository\GroupPeopleRepository;
+use App\Repository\PeopleGroupRepository;
 use App\Repository\PersonRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Grammar;
@@ -104,7 +104,7 @@ class PersonController extends AbstractController
      *
      * @Route("/group/{id}/search_person", name="group_search_person", methods="GET|POST")
      */
-    public function addPersonInGroup(GroupPeople $groupPeople, Request $request, Pagination $pagination): Response
+    public function addPersonInGroup(PeopleGroup $peopleGroup, Request $request, Pagination $pagination): Response
     {
         $search = new PersonSearch();
 
@@ -117,7 +117,7 @@ class PersonController extends AbstractController
         return $this->render('app/person/listPeople.html.twig', [
             'form' => $form->createView(),
             'form_role_person' => $formRolePerson->createView() ?? null,
-            'group_people' => $groupPeople,
+            'people_group' => $peopleGroup,
             'personSearch' => $search,
             'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search), $request) : null,
         ]);
@@ -152,7 +152,7 @@ class PersonController extends AbstractController
      *
      * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
      */
-    public function newPersonInGroup(GroupPeople $groupPeople, RolePerson $rolePerson = null, Request $request): Response
+    public function newPersonInGroup(PeopleGroup $peopleGroup, RolePerson $rolePerson = null, Request $request): Response
     {
         $rolePerson = new RolePerson();
 
@@ -169,16 +169,16 @@ class PersonController extends AbstractController
 
                 return $this->redirectToRoute('person_show', ['id' => $personExists->getId()]);
             }
-            $this->createPersonInGroup($person, $rolePerson, $groupPeople);
+            $this->createPersonInGroup($person, $rolePerson, $peopleGroup);
 
-            return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
+            return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
         }
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash('danger', "Attention, une erreur s'est produite.");
         }
 
         return $this->render('app/person/person.html.twig', [
-            'group_people' => $groupPeople,
+            'people_group' => $peopleGroup,
             'form' => $form->createView(),
         ]);
     }
@@ -189,9 +189,9 @@ class PersonController extends AbstractController
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function editPersonInGroup(int $id, int $person_id, Request $request, GroupPeopleRepository $repoGroupPeople, SupportPersonRepository $repoSuppport, SessionInterface $session): Response
+    public function editPersonInGroup(int $id, int $person_id, Request $request, PeopleGroupRepository $repoPeopleGroup, SupportPersonRepository $repoSuppport, SessionInterface $session): Response
     {
-        $groupPeople = $repoGroupPeople->findGroupPeopleById($id);
+        $peopleGroup = $repoPeopleGroup->findPeopleGroupById($id);
         $person = $this->repo->findPersonById($person_id);
 
         $form = ($this->createForm(PersonType::class, $person))
@@ -209,7 +209,7 @@ class PersonController extends AbstractController
 
         return $this->render('app/person/person.html.twig', [
             'form' => $form->createView(),
-            'group_people' => $groupPeople,
+            'people_group' => $peopleGroup,
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
             'canEdit' => $this->canEdit($person, $supports, $session),
@@ -345,7 +345,7 @@ class PersonController extends AbstractController
     protected function createPerson(RolePerson $rolePerson)
     {
         $person = $rolePerson->getPerson();
-        $groupPeople = $rolePerson->getGroupPeople();
+        $peopleGroup = $rolePerson->getPeopleGroup();
 
         // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
         if ($this->personExists($person)) {
@@ -354,10 +354,10 @@ class PersonController extends AbstractController
             return;
         }
 
-        $this->manager->persist($groupPeople);
+        $this->manager->persist($peopleGroup);
 
         $rolePerson->setHead(true)
-            ->setGroupPeople($groupPeople);
+            ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($rolePerson);
 
@@ -369,7 +369,7 @@ class PersonController extends AbstractController
 
         $this->addFlash('success', $person->getFullname().' est créé'.Grammar::gender($person->getGender()).', ainsi que son groupe.');
 
-        return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
+        return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
 
     /**
@@ -387,16 +387,16 @@ class PersonController extends AbstractController
     /**
      * Crée une personne avec son rôle.
      */
-    protected function createPersonInGroup(Person $person, RolePerson $rolePerson = null, GroupPeople $groupPeople)
+    protected function createPersonInGroup(Person $person, RolePerson $rolePerson = null, PeopleGroup $peopleGroup)
     {
         $rolePerson->setHead(false)
-            ->setGroupPeople($groupPeople);
+            ->setPeopleGroup($peopleGroup);
         $this->manager->persist($rolePerson);
 
         $person->addRolesPerson($rolePerson);
         $this->manager->persist($person);
 
-        $groupPeople->setNbPeople($groupPeople->getRolePeople()->count() + 1);
+        $peopleGroup->setNbPeople($peopleGroup->getRolePeople()->count() + 1);
 
         $this->manager->flush();
 
@@ -426,12 +426,12 @@ class PersonController extends AbstractController
      */
     protected function createNewGroupToPerson(Person $person, RolePerson $rolePerson)
     {
-        $groupPeople = $rolePerson->getGroupPeople();
+        $peopleGroup = $rolePerson->getPeopleGroup();
 
-        $this->manager->persist($groupPeople);
+        $this->manager->persist($peopleGroup);
 
         $rolePerson->setHead(true)
-            ->setGroupPeople($groupPeople);
+            ->setPeopleGroup($peopleGroup);
 
         $this->manager->persist($rolePerson);
 
@@ -443,7 +443,7 @@ class PersonController extends AbstractController
 
         $this->addFlash('success', 'Le nouveau groupe est créé.');
 
-        return $this->redirectToRoute('group_people_show', ['id' => $groupPeople->getId()]);
+        return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
 
     /**

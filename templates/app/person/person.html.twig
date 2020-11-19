@@ -14,8 +14,8 @@
 
     <div class="container">
 
-        {% if group_people is defined %}
-            {% include "app/groupPeople/navGroup.html.twig" %}
+        {% if people_group is defined %}
+            {% include "app/peopleGroup/navGroup.html.twig" %}
         {% else %}
             <h1 class="h2 mb-3">{{ title }}</h1>
             {% include "model/msgFlash.html.twig" %}
@@ -60,9 +60,9 @@
 
             {% if EDIT_MODE == false %}
             <div class="form-group row">
-                {% if group_people is not defined %}
-                <div class="col-md-6">{{ form_row(form.groupPeople.familyTypology) }}</div>
-                <div class="col-md-6">{{ form_row(form.groupPeople.nbPeople) }}</div>
+                {% if people_group is not defined %}
+                <div class="col-md-6">{{ form_row(form.peopleGroup.familyTypology) }}</div>
+                <div class="col-md-6">{{ form_row(form.peopleGroup.nbPeople) }}</div>
                 {% endif %}
                 <div class="col-md-6">{{ form_row(form.role) }}</div>
             </div>
@@ -140,7 +140,7 @@
                         {% for role in person.rolesPerson %}
                         <tr>
                             <th scope="row">
-                                <a href="{{ path('group_people_show', {'id':role.groupPeople.id}) }}"
+                                <a href="{{ path('people_group_show', {'id':role.peopleGroup.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
                                     data-placement="bottom" title="Voir la fiche du groupe">
                                     <span class="fas fa-eye"></span>
@@ -148,16 +148,16 @@
                             </th>
                             <td class="d-none d-sm-table-cell" data-toggle="tooltip" 
                                 data-placement="bottom" title="N° d'identification du groupe">
-                                {{ role.groupPeople.id }}</td>
+                                {{ role.peopleGroup.id }}</td>
                             <td class="d-table-row d-sm-table-cell">
-                                {{ role.groupPeople.familyTypologyToString }}
+                                {{ role.peopleGroup.familyTypologyToString }}
                             </td>
-                            <td class="d-table-row d-sm-table-cell">{{ role.groupPeople.nbPeople }}</td>
+                            <td class="d-table-row d-sm-table-cell">{{ role.peopleGroup.nbPeople }}</td>
                             <td>{{ role.roleToString }} {% if role.head %} (DP){% endif %}</td>
                             <td class="d-none d-sm-table-cell">
-                                {{ role.groupPeople.createdAt|date("d/m/Y H:i") }}</td>
+                                {{ role.peopleGroup.createdAt|date("d/m/Y H:i") }}</td>
                             <td class="d-none d-sm-table-cell">
-                                {{ role.groupPeople.updatedAt|date("d/m/Y H:i") }}</td>
+                                {{ role.peopleGroup.updatedAt|date("d/m/Y H:i") }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -178,7 +178,7 @@
 
     </div>
 
-    {% if group_people is defined %}
+    {% if people_group is defined %}
         {% include "app/support/modalNewSupport.html.twig" %}
     {% endif %}
 

@@ -4,7 +4,7 @@
 {% if formCoeff is defined %}{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}{% endif %}
 
 {% set support = form.vars.value %}
-{% set people = support.id ? form.vars.value.supportPeople : group_people.rolePeople %}
+{% set people = support.id ? form.vars.value.supportPeople : people_group.rolePeople %}
 {% set title =  (support.id  ? "Édition du" : "Nouveau") ~ " suivi" %}
 {% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 
@@ -17,7 +17,7 @@
 		{% if support.id %}
 			{% include "app/support/navSuppport.html.twig" %}
 		{% else %}
-			{% include "app/groupPeople/navGroup.html.twig" %}
+			{% include "app/peopleGroup/navGroup.html.twig" %}
 		{% endif %}
 
 		{% include "model/msgFlash.html.twig" %}

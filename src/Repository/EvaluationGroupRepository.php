@@ -32,7 +32,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
         $query = $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
-            ->join('sg.groupPeople', 'gp')->addSelect('PARTIAL gp.{id, familyTypology, nbPeople}')
+            ->join('sg.peopleGroup', 'gp')->addSelect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
             ->join('sg.service', 's')->addSelect('s')
 

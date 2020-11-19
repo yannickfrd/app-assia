@@ -6,22 +6,25 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Table;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\GroupPeopleRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\PeopleGroupRepository")
+ * @Entity @Table(name="group_people")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
-class GroupPeople
+class PeopleGroup
 {
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
-    public const CACHE_GROUP_SUPPORTS_KEY = 'group_people.supports';
-    public const CACHE_GROUP_REFERENTS_KEY = 'group_people.referents';
+    public const CACHE_GROUP_SUPPORTS_KEY = 'people_group.supports';
+    public const CACHE_GROUP_REFERENTS_KEY = 'people_group.referents';
 
     public const FAMILY_TYPOLOGY = [
         1 => 'Femme isolée',
@@ -74,7 +77,7 @@ class GroupPeople
     private $comment;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="groupPeople", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\RolePerson", mappedBy="peopleGroup", orphanRemoval=true)
      * @Assert\All(constraints={
      *      @Assert\NotNull,
      * })
@@ -83,23 +86,23 @@ class GroupPeople
     private $rolePeople;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="groupPeople", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SupportGroup", mappedBy="peopleGroup", orphanRemoval=true)
      * @Assert\Valid()
      */
     private $supports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Referent", mappedBy="groupPeople", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Referent", mappedBy="peopleGroup", orphanRemoval=true)
      */
     private $referents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Document", mappedBy="groupPeople")
+     * @ORM\OneToMany(targetEntity="App\Entity\Document", mappedBy="peopleGroup")
      */
     private $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="groupPeople", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\AccommodationGroup", mappedBy="peopleGroup", orphanRemoval=true)
      */
     private $accommodationGroups;
 
@@ -183,7 +186,7 @@ class GroupPeople
     {
         if (!$this->supports->contains($support)) {
             $this->supports[] = $support;
-            $support->setGroupPeople($this);
+            $support->setPeopleGroup($this);
         }
 
         return $this;
@@ -194,8 +197,8 @@ class GroupPeople
         if ($this->supports->contains($support)) {
             $this->supports->removeElement($support);
             // set the owning side to null (unless already changed)
-            if ($support->getGroupPeople() === $this) {
-                $support->setGroupPeople(null);
+            if ($support->getPeopleGroup() === $this) {
+                $support->setPeopleGroup(null);
             }
         }
 
@@ -214,7 +217,7 @@ class GroupPeople
     {
         if (!$this->rolePeople->contains($rolePerson)) {
             $this->rolePeople[] = $rolePerson;
-            $rolePerson->setGroupPeople($this);
+            $rolePerson->setPeopleGroup($this);
         }
 
         return $this;
@@ -225,8 +228,8 @@ class GroupPeople
         if ($this->rolePeople->contains($rolePerson)) {
             $this->rolePeople->removeElement($rolePerson);
             // set the owning side to null (unless already changed)
-            if ($rolePerson->getGroupPeople() === $this) {
-                $rolePerson->setGroupPeople(null);
+            if ($rolePerson->getPeopleGroup() === $this) {
+                $rolePerson->setPeopleGroup(null);
             }
         }
 
@@ -245,7 +248,7 @@ class GroupPeople
     {
         if (!$this->referents->contains($referent)) {
             $this->referents[] = $referent;
-            $referent->setGroupPeople($this);
+            $referent->setPeopleGroup($this);
         }
 
         return $this;
@@ -256,8 +259,8 @@ class GroupPeople
         if ($this->referents->contains($referent)) {
             $this->referents->removeElement($referent);
             // set the owning side to null (unless already changed)
-            if ($referent->getGroupPeople() === $this) {
-                $referent->setGroupPeople(null);
+            if ($referent->getPeopleGroup() === $this) {
+                $referent->setPeopleGroup(null);
             }
         }
 
@@ -276,7 +279,7 @@ class GroupPeople
     {
         if (!$this->documents->contains($document)) {
             $this->documents[] = $document;
-            $document->setGroupPeople($this);
+            $document->setPeopleGroup($this);
         }
 
         return $this;
@@ -287,8 +290,8 @@ class GroupPeople
         if ($this->documents->contains($document)) {
             $this->documents->removeElement($document);
             // set the owning side to null (unless already changed)
-            if ($document->getGroupPeople() === $this) {
-                $document->setGroupPeople(null);
+            if ($document->getPeopleGroup() === $this) {
+                $document->setPeopleGroup(null);
             }
         }
 
@@ -307,7 +310,7 @@ class GroupPeople
     {
         if (!$this->accommodationGroups->contains($accommodationGroup)) {
             $this->accommodationGroups[] = $accommodationGroup;
-            $accommodationGroup->setGroupPeople($this);
+            $accommodationGroup->setPeopleGroup($this);
         }
 
         return $this;
@@ -318,8 +321,8 @@ class GroupPeople
         if ($this->accommodationGroups->contains($accommodationGroup)) {
             $this->accommodationGroups->removeElement($accommodationGroup);
             // set the owning side to null (unless already changed)
-            if ($accommodationGroup->getGroupPeople() === $this) {
-                $accommodationGroup->setGroupPeople(null);
+            if ($accommodationGroup->getPeopleGroup() === $this) {
+                $accommodationGroup->setPeopleGroup(null);
             }
         }
 

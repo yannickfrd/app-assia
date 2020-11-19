@@ -42,6 +42,6 @@
             </table>
         </div>
     {% endif %}
-    <a href="{{ support is defined ? path('support_referent_new', {'support_id':support.id}) : path('group_referent_new', {'group_id':group_people.id}) }}" 
+    <a href="{{ support is defined ? path('support_referent_new', {'support_id':support.id}) : path('group_referent_new', {'group_id':people_group.id}) }}" 
         class="m-2 btn btn-{{ theme_color }} btn-sm"><span class="fas fa-plus-square mr-2"></span>Ajouter un service ou référent</a>
 </section>
