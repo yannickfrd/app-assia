@@ -88,6 +88,7 @@ class AppController extends AbstractController
      * Tableau de bord du/des services.
      *
      * @Route("/dashboard/supports_by_user", name="supports_by_user", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function showSupportsByUser(SupportsByUserIndicators $indicators, SupportsByUserSearch $search, Request $request): Response
     {
