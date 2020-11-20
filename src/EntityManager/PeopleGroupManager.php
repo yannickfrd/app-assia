@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\EntityManager;
 
 use App\Entity\EvaluationGroup;
 use App\Entity\PeopleGroup;

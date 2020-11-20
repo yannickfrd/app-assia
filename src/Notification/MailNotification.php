@@ -29,7 +29,7 @@ class MailNotification
         $this->port = $port;
     }
 
-    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null, string $cc = null, string $bcc = null)
+    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null, string $cc = null, string $bcc = null): bool
     {
         $mail = new PHPMailer(true);
 
@@ -77,7 +77,8 @@ class MailNotification
 
             return $mail->send();
         } catch (Exception $e) {
-            // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            return false;
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 
@@ -98,7 +99,7 @@ class MailNotification
     /**
      * Mail d'initialisation du mot de psasse.
      */
-    public function createUserAccount(User $user)
+    public function createUserAccount(User $user): bool
     {
         $to = [
             'email' => $user->getEmail(),
@@ -121,7 +122,7 @@ class MailNotification
             $context,
         );
 
-        $this->send($to, $subject, $htmlBody, $txtBody);
+        return $this->send($to, $subject, $htmlBody, $txtBody);
     }
 
     /**
@@ -150,7 +151,7 @@ class MailNotification
         if ($send) {
             return [
                 'type' => 'success',
-                'content' => "Un mail vous a été envoyé. Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables.",
+                'content' => "Un mail vous a été envoyé. Le lien est valide durant 5 minutes. <br/>Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables.",
             ];
         }
 

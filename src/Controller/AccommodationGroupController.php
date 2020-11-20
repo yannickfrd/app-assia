@@ -8,7 +8,7 @@ use App\Entity\AccommodationPerson;
 use App\Entity\SupportGroup;
 use App\Form\Accommodation\AccommodationGroupType;
 use App\Repository\AccommodationGroupRepository;
-use App\Service\SupportGroup\SupportManager;
+use App\EntityManager\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;

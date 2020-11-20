@@ -44,7 +44,3 @@ if (headingSearchElt) {
         headingSearchElt.click();
     }
 }
-
-
-
-

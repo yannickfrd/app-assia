@@ -6,7 +6,7 @@ export default class AddCollectionWidget {
     constructor() {
         this.btnElts = document.querySelectorAll('.add-another-collection-widget')
         this.list = null
-        this.counter = null
+        this.counter = 0
         this.init()
     }
 
@@ -38,16 +38,16 @@ export default class AddCollectionWidget {
         trElt.innerHTML = newWidget
 
         // Add the delete link
-        trElt.appendChild(this.getBtnElt())
+        trElt.appendChild(this.getBtnElt(trElt))
         // Add item to the list
         this.list.appendChild(trElt)
     }
 
     /**
      * Ajoute un lien de suppression d'une catégorie.
-     * @param {HTMLElement} newElt 
+     * @param {HTMLElement} elt 
      */
-    getBtnElt()
+    getBtnElt(elt)
     {
         const tdElt = document.createElement('td')
         tdElt.className = 'align-middle'
@@ -58,7 +58,7 @@ export default class AddCollectionWidget {
 
         btnElt.addEventListener('click', e => {
             e.preventDefault()
-            newElt.remove()
+            elt.remove()
         })
 
         tdElt.appendChild(btnElt)

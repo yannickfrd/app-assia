@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\SupportGroup;
+namespace App\EntityManager;
 
 use App\Entity\AccommodationGroup;
 use App\Entity\EvaluationGroup;

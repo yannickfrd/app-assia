@@ -31,7 +31,7 @@ class EvalAdmPersonType extends AbstractType
                     'class' => 'js-initEval important',
                 ],
                 'placeholder' => 'placeholder.select',
-                'help' => "Carte d'identité, passport, titre de séjour, récépissé...",
+                'help' => 'evalAdmPerson.paper.help',
                 'required' => false,
             ])
             ->add('paperType', ChoiceType::class, [
@@ -72,7 +72,7 @@ class EvalAdmPersonType extends AbstractType
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',
-                    'placeholder' => 'evalAdminPerson.comment',
+                    'placeholder' => 'evalAdmPerson.comment',
                 ],
             ]);
     }

@@ -44,16 +44,30 @@ class SecurityController extends WebTestCase
 
     public function testRegistrationIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
         $this->client->request('GET', $this->generateUri('security_registration'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', "Création d'un compte utilisateur");
+        $this->assertSelectorTextContains('h1', 'Création d\'un compte utilisateur');
+    }
+
+    public function testSendNewEmailToUser()
+    {
+        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+
+        $user = $this->dataFixtures['userRoleUser'];
+
+        $this->client->request('GET', $this->generateUri('security_user_send_new_email', [
+            'id' => $user->getId(),
+        ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', $user->getFullname());
     }
 
     public function testAfterLoginIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
         $this->client->request('GET', $this->generateUri('security_after_login'));
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -62,7 +76,7 @@ class SecurityController extends WebTestCase
 
     public function testInitPasswordIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
         $this->client->request('GET', $this->generateUri('security_init_password'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -71,36 +85,39 @@ class SecurityController extends WebTestCase
 
     public function testShowCurrentUserIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $user = $this->dataFixtures['userRoleUser'];
+
+        $this->createLogin($user);
         $this->client->request('GET', $this->generateUri('my_profile'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $this->user->getFullname());
+        $this->assertSelectorExists('h1', $user->getFullname());
     }
 
     public function testEditUserIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $user = $this->dataFixtures['userRoleAdmin'];
+        $this->createLogin($user);
 
         $this->client->request('GET', $this->generateUri('security_user', [
-            'id' => $this->user->getId(),
+            'id' => $user->getId(),
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Compte utilisateur : '.$this->user->getFullname());
+        $this->assertSelectorTextContains('h1', $user->getFullname());
     }
 
     // public function testForgotPasswordIsUp()
     // {
-    //     $this->client->request("GET", $this->generateUri("security_forgot_password"));
+    //     $this->client->request('GET', $this->generateUri('security_forgot_password'));
 
     //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    //     $this->assertSelectorTextContains("h1", "Mot de passe oublié");
+    //     $this->assertSelectorTextContains('h1', 'Mot de passe oublié');
     // }
 
     public function testReinitPasswordIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->dataFixtures['userRoleUser']);
         $this->client->request('GET', $this->generateUri('security_reinit_password'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -109,16 +126,16 @@ class SecurityController extends WebTestCase
 
     // public function testAuthHomePage()
     // {
-    //     $this->client->request("GET", $this->generateUri("home"));
+    //     $this->client->request('GET', $this->generateUri('home'));
 
     //     static::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     // }
 
     // public function testRedirectToLogin()
     // {
-    //     $this->client->request("GET", $this->generateUri("home"));
+    //     $this->client->request('GET', $this->generateUri('home'));
 
-    //     static::assertResponseRedirects($this->generateUri("security_login"));
+    //     static::assertResponseRedirects($this->generateUri('security_login'));
     // }
 
     public function testFailLogin()

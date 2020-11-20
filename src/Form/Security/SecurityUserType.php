@@ -45,7 +45,7 @@ class SecurityUserType extends AbstractType
                     'placeholder' => 'Login',
                     'autocomplete' => 'off',
                 ],
-                'help' => 'Remplissage auto. en fonction du nom et prénom.',
+                'help' => 'user.username.help',
             ])
             ->add('email', null, [
                 'attr' => [
@@ -59,32 +59,32 @@ class SecurityUserType extends AbstractType
                 ],
             ])
             ->add('status', ChoiceType::class, [
+                'label' => 'user.status',
                 'choices' => Choices::getChoices(User::STATUS),
-                'label' => 'Fonction',
                 'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('roles', ChoiceType::class, [
+                'label' => 'user.roles',
                 'choices' => $this->getRoles(),
-                'label' => 'Rôle',
                 'multiple' => true,
                 'attr' => ['class' => 'h-max-76'],
                 'placeholder' => 'placeholder.select',
             ])
-            ->add('password', PasswordType::class, [
-                'attr' => [
-                    'class' => 'js-password',
-                    'placeholder' => 'Password',
-                ],
-                'help' => '8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)',
-            ])
-            ->add('confirmPassword', PasswordType::class, [
-                'attr' => [
-                    'class' => 'js-password',
-                    'placeholder' => 'Confirm password',
-                ],
-                'help' => 'Veuillez re-saisir le mot de passe pour confirmation',
-            ])
+            // ->add('password', PasswordType::class, [
+            //     'attr' => [
+            //         'class' => 'js-password',
+            //         'placeholder' => 'Password',
+            //     ],
+            //     'help' => 'user.password.help',
+            // ])
+            // ->add('confirmPassword', PasswordType::class, [
+            //     'attr' => [
+            //         'class' => 'js-password',
+            //         'placeholder' => 'Confirm password',
+            //     ],
+            //     'help' => 'user.confirmPassword.help',
+            // ])
             ->add('serviceUser', CollectionType::class, [
                 'entry_type' => ServiceUserType::class,
                 'allow_add' => true,
@@ -92,9 +92,7 @@ class SecurityUserType extends AbstractType
                 'delete_empty' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],
@@ -106,9 +104,7 @@ class SecurityUserType extends AbstractType
                 'delete_empty' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],

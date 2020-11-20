@@ -1,9 +1,12 @@
 Init eval: Initial
 placeholder.select: -- Sélectionner --
-initEvalGroup.comment: Écrire un commentaire relatif à la situation initiale du groupe
 initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
 backgroundPeople: Parcours de vie 
 backgroundPeople.comment: Présenter le parcours de vie / historique du ménage
+
+initEvalGroup:
+  housingStatus.help: Situation résidentielle avant le début du suivi.
+  comment: Écrire un commentaire relatif à la situation initiale du groupe
 
 # Administratif
 Adm: Administratif
@@ -20,9 +23,14 @@ Paper: Papier d'identité
 Renewal permit date: Date d'obtention du titre
 Resid permit request: Demande de titre de séjour
 Work right: Autorisation de travail
-evalAdminPerson.comment: Écrire un commentaire relatif à la situation administrative
+evalAdmPerson:
+  comment: Écrire un commentaire relatif à la situation administrative
+  paper.help: Carte d'identité, passport, titre de séjour, récépissé...
 
 # Budget
+evalBudgetPerson:
+  endRightsDate.help: Date de fin des prestations ou des allocations
+  comment: Écrire un commentaire relatif à la situation budgétaire
 Activity bonus amt: Montant Prime d'activité (€)
 Activity bonus: Prime d'activité
 Alimony amt: Montant Pension alimentaire (€)
@@ -42,7 +50,6 @@ Charges group amt: Charges totales du groupe (€)
 Charges: Charges
 Childcare amt: Montant garde enfant(s) (€)
 Childcare: Garde d'enfant(s)
-Comment eval budget: Commentaire relatif à la situation budgétaire
 Contribution amt: Montant de la participation financière
 Debt amt: Montant total des dettes (€)
 Debt bank old amt: Montant découverts bancaires (€)
@@ -129,7 +136,6 @@ Unempl benefit amt: Montant ARE (€)
 Unempl benefit: ARE
 Water amt: Montant Eau (€)
 Water: Eau
-evalBudgetPerson.comment: Écrire un commentaire relatif à la situation budgétaire
 Youth guarantee amt: Montant Garantie jeunes (€)
 Youth guarantee: Garantie jeunes
 
@@ -178,7 +184,11 @@ Working hours: Horaires de travail
 evalProfPerson.comment: Écrire un commentaire relatif à la situation professionnelle
 
 # Housing
-Housing status before the start of support.: Situation résidentielle avant le début du suivi.
+evalHousingGroup:
+  housingWishes.help: T1, T2, T3, T4, T5...
+
+  comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement
+
 Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
 Collective agreement housing date: Date de labellisation Accord Collectif
@@ -191,7 +201,6 @@ Dalo record date: Date de dépôt du DALO/ DAHO
 Dalo type: Type de recours DALO/ DAHO
 Dalo tribunal action date: Date du recours Tribunal administratif
 Dalo tribunal action: DALO/ DAHO recours Tribunal administratif
-Department or zip code: Département ou code postal
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
@@ -236,7 +245,6 @@ Start domiciliation date: Date de début domiciliation
 Syplo date: Date du SYPLO
 Syplo id: Numéro SYPLO
 Syplo: SYPLO
-evalHousingGroup.comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement
 
 # Justice
 Comment eval justice: Commentaire sur la situation judiciaire
@@ -245,6 +253,9 @@ Justice status: Situation judiciaire
 evalJusticePerson.comment: Écrire un commentaire relatif à la situation judiciaire de la personne
 
 # Social person
+evalSocialPerson:
+  childWelfareBackground.help: Aide sociale à l'enfance, PJJ…
+  comment: Écrire un commentaire relatif à la situation sociale de la personne
 Addiction problem: Problématique d'addiction
 Animal type: Type d'animal
 Animal: Présence d'un animal
@@ -271,9 +282,10 @@ Violence victim: Personne victime de violence
 Wandering time: Durée d'errance
 Wheelchair: Personne en fauteuil roulant
 evalSocialGroup.comment: Écrire un commentaire relatif à la situation sociale du groupe
-evalSocialPerson.comment: Écrire un commentaire relatif à la situation sociale de la personne
 
-location.search.placeholder: Saisir une adresse ou une ville...
+location:
+  search.placeholder: Saisir une adresse ou une ville...
+  department.help: Département ou code postal
 
 ## Vie à l'hôtel
 Food: Alimentation

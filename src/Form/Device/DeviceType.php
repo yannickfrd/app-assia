@@ -47,7 +47,7 @@ class DeviceType extends AbstractType
                 'required' => false,
             ])
             ->add('contributionRate', null, [
-                'help' => 'Rate beetween 0 and 1.',
+                'help' => 'contribution.rate.help',
             ])
             ->add('comment', null, [
                 'attr' => [

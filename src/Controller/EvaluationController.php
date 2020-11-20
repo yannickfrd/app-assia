@@ -17,7 +17,7 @@ use App\Repository\SupportGroupRepository;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Normalisation;
-use App\Service\SupportGroup\SupportManager;
+use App\EntityManager\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

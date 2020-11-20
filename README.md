@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.720 - 19/11/2020
+2.8.0 - 20/11/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,11 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 2.8.0 - 20/11/2020
+- Crée système d'envoi d'email auto. à la création d'un compte utilisateur.
+- Créé class UserManager pour la logique métier de l'entité User.
+- Créé dossier 'EntityManager' avec tous les managers des entités (SupportGroup, PeopleGroup, User).
 
 ## Version 2.7.4 - 20/11/2020
 - Correction liaisons entités avec PeopleGroup.

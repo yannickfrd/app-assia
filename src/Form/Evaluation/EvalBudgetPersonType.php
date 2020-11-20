@@ -104,7 +104,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add('endRightsDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
-                'help' => 'Date de fin des prestations ou des allocations',
+                'help' => 'evalBudgetPerson.endRightsDate.help',
             ])
             ->add('commentEvalBudget', null, [
                 'label_attr' => ['class' => 'sr-only'],

@@ -36,9 +36,9 @@ class AccommodationType extends AbstractType
         $builder
         ->add('name', null, [
             'attr' => [
-                'placeholder' => 'Nom du groupe de places',
+                'placeholder' => 'accommodation.name.placeholder',
             ],
-            'help' => 'Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).',
+            'help' => 'accommodation.name.help',
         ])
         ->add('service', EntityType::class, [
             'class' => Service::class,
@@ -62,13 +62,13 @@ class AccommodationType extends AbstractType
         ->add('accommodationType', ChoiceType::class, [
             'choices' => Choices::getChoices(Accommodation::ACCOMMODATION_TYPE),
             'placeholder' => 'placeholder.select',
-            'help' => 'Chambre, T1, T2, T3...',
+            'help' => 'accommodation.type.help',
             'required' => false,
         ])
         ->add('configuration', ChoiceType::class, [
             'choices' => Choices::getChoices(Accommodation::CONFIGURATION),
             'placeholder' => 'placeholder.select',
-            'help' => 'Diffus ou regroupé',
+            'help' => 'accommodation.configuration.help',
             'required' => false,
         ])
         ->add('individualCollective', ChoiceType::class, [
@@ -86,7 +86,7 @@ class AccommodationType extends AbstractType
             'data_class' => Accommodation::class,
                 'attr' => [
                     'geoLocation' => true,
-                    'seachLabel' => 'Adresse du groupe de places',
+                    'seachLabel' => 'accommodation.location.placeholder',
                 ],
         ])
         ->add('comment', null, [

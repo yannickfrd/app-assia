@@ -82,12 +82,12 @@ class PersonControllerTest extends WebTestCase
     // public function testAddPersonInGroup() // à tester via Panther
     // {
     //     /** @var Crawler */
-    //     $crawler = $this->client->request("GET", $this->generateUri("group_search_person", [
-    //         "id" => $this->dataFixtures["peopleGroup1"]->getId()
+    //     $crawler = $this->client->request('GET', $this->generateUri('group_search_person', [
+    //         'id' => $this->dataFixtures['peopleGroup1']->getId()
     //     ]));
 
-    //     $form = $crawler->selectButton("js-btn-confirm")->form([
-    //         "role" => 1,
+    //     $form = $crawler->selectButton('js-btn-confirm')->form([
+    //         'role' => 1,
     //     ]);
 
     //     $this->client->submit($form);
@@ -102,7 +102,7 @@ class PersonControllerTest extends WebTestCase
         $this->client->request('GET', $this->generateUri('person_new'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', "Création d'une personne");
+        $this->assertSelectorTextContains('h1', 'Création d\'une personne');
     }
 
     public function testFailToCreateNewPerson()
@@ -181,7 +181,7 @@ class PersonControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', "Création d'une personne");
+        $this->assertSelectorTextContains('h1', 'Création d\'une personne');
         $this->assertSelectorTextContains('div.container nav ol.breadcrumb li:last-child', 'Création d\'une personne');
     }
 

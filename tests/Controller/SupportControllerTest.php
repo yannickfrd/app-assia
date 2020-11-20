@@ -174,18 +174,18 @@ class SupportControllerTest extends WebTestCase
 
     // public function testRemoveSupportPerson()
     // {
-    //     $supportPerson = ($this->dataFixtures["supportPerson1"]);
-    //     $csrfToken = $this->client->getContainer()->get("security.csrf.token_manager")->getToken("remove" . $supportPerson->getId());
+    //     $supportPerson = ($this->dataFixtures['supportPerson1']);
+    //     $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('remove' . $supportPerson->getId());
 
-    //     $this->client->request("GET", $this->generateUri("remove_support_pers", [
-    //         "id" => ($this->dataFixtures["supportGroup1"])->getId(),
-    //         "support_pers_id" => $supportPerson->getid(),
-    //         "_token" => $csrfToken
+    //     $this->client->request('GET', $this->generateUri('remove_support_pers', [
+    //         'id' => ($this->dataFixtures['supportGroup1'])->getId(),
+    //         'support_pers_id' => $supportPerson->getid(),
+    //         '_token' => $csrfToken
     //     ]));
 
     //     $result = json_decode($this->client->getResponse()->getContent(), true);
 
-    //     $this->assertSame(200, $result["code"]);
+    //     $this->assertSame(200, $result['code']);
     // }
 
     protected function tearDown(): void

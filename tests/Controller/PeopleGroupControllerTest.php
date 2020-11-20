@@ -126,7 +126,7 @@ class PeopleGroupControllerTest extends WebTestCase
         ]));
         // $this->client->followRedirect();
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-danger', "Une erreur s'est produite.");
+        $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur s\'est produite.');
     }
 
     public function testFailToRemovePersonInGroup()

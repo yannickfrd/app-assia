@@ -1,5 +1,10 @@
 accommodation:
   name: Hébergement ou logement
+  name.placeholder: Nom du groupe de places
+  name.help: Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).
+  location.placeholder : Adresse du groupe de places
+  configuration.help: Diffus ou regroupé
+  type.help: Chambre, T1, T2, T3...
 accommodationGroup:
   startDate: Date d'entrée
 Address: Adresse
@@ -35,6 +40,7 @@ Family typology: Typologie familiale
 Firstname: Prénom
 Fullname: Nom et prénom
 Gender: Sexe
+head.help: Demandeur principal
 Hotel: Hôtel
 hotelName: Nom de l'hôtel
 Lastname: Nom
@@ -85,11 +91,19 @@ Support access: Accès aux suivis sociaux du service
 Support dates: Dates de suivi
 Theoretical end date: Date de fin théorique
 Title: Titre
+user:
+  status: Fonction
+  roles: Rôle
+  username.help: Remplissage auto. en fonction du nom et prénom.
+  password.help: 8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)
+  confirmPassword.help: Veuillez re-saisir le mot de passe pour confirmation
 Username: Login
 Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Écrire une note
 peopleGroup.comment: Écrire un commentaire concernant le groupe
-person.comment: Écrire un commentaire concernant la personne
+person:
+  contactOtherPerson.help: Autre personne à contacter en cas d'urgence.
+  comment: Écrire un commentaire concernant la personne
 comment.placeholder: Écrire un commentaire concernant le suivi social
 service.comment: Écrire un commentaire concernant le service
 Year: Année
@@ -158,7 +172,6 @@ Closing date: Date de fermeture
 Contribution: Participation financière / Redevance
 Contribution type: Type de participation financière
 Contribution rate: Taux de participation financière
-Rate beetween 0 and 1.: Nombre entre 0 et 1.
 Justice activity: Activité Justice
 service:
   comment.placeholder: Écrire une information complémentaire...
@@ -186,6 +199,7 @@ contribution:
   comment.placeholder: Écrire un commentaire
   monthContrib: Mois de la redevance
   type: Type d'opération
+  rate.help: Nombre entre 0 et 1.
 
 ### RDV
 rdv:

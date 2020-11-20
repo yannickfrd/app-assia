@@ -23,7 +23,7 @@ class RolePersonMinType extends AbstractType
                 'attr' => [
                     'class' => 'custom-control-input checkbox',
                 ],
-                'help' => 'Demandeur principal',
+                'help' => 'head.help',
                 'help_attr' => ['class' => 'sr-only'],
                 'required' => false,
             ])

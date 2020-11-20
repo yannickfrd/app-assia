@@ -1,12 +1,16 @@
+import Loader from './loader'
+
 // Classe pour les différents pages de recherche
 export default class Search {
 
     constructor(formId) {
+        this.loader = new Loader();
         this.formSearch = document.getElementById(formId)
         this.inputElts = this.formSearch.getElementsByTagName('input')
         this.checkboxElts = this.formSearch.querySelectorAll('input[type="checkbox"]')
         this.selectElts = this.formSearch.getElementsByTagName('select')
         this.resultsElt = document.getElementById('results')
+        this.btnElts = this.formSearch.querySelectorAll('button')
         this.btnClearElt = this.formSearch.querySelector('button[type="reset"]')
         this.firstInput = this.formSearch.querySelector('input')
 
@@ -26,6 +30,15 @@ export default class Search {
     }
 
     init() {
+        // this.btnElts.forEach(btnElt => {
+        //     btnElt.addEventListener('click', e => {
+        //         if (this.loader.isActive()) {
+        //             e.preventDefault()
+        //         }
+        //         this.loader.on(); 
+        //     })
+        // })
+
         this.btnClearElt.addEventListener('click', e => {
             e.preventDefault()
             this.clearSearch()

@@ -24,7 +24,7 @@ class ChangePasswordType extends AbstractType
                     'class' => 'js-password',
                     'placeholder' => 'New password',
                 ],
-                'help' => '8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)',
+                'help' => 'user.password.help',
             ])
             ->add('confirmNewPassword', PasswordType::class, [
                 'attr' => [

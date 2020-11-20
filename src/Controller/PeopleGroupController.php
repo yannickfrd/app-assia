@@ -15,7 +15,7 @@ use App\Repository\ReferentRepository;
 use App\Repository\RolePersonRepository;
 use App\Repository\SupportGroupRepository;
 use App\Service\Pagination;
-use App\Service\PeopleGroupManager;
+use App\EntityManager\PeopleGroupManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -70,7 +70,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('housingWishes', null, [
-                'help' => 'T1, T2, T3, T4, T5...',
+                'help' => 'evalHousingGroup.housingWishes.help',
             ])
             ->add('citiesWishes')
             ->add('specificities')
@@ -139,7 +139,7 @@ class EvalHousingGroupType extends AbstractType
                 'attr' => [
                     'class' => 'js-zipcode',
                 ],
-                'help' => 'Department or zip code',
+                'help' => 'location.department.help',
             ])
             ->add('hsgActionRecordId')
             ->add('expulsionInProgress', ChoiceType::class, [
@@ -221,10 +221,8 @@ class EvalHousingGroupType extends AbstractType
             ->add('housingAddress')
             ->add('housingCity')
             ->add('housingDept', null, [
-                'attr' => [
-                    'class' => 'js-zipcode',
-                ],
-                'help' => 'Department or zip code',
+                'attr' => ['class' => 'js-zipcode'],
+                'help' => 'location.department.help',
             ])
             ->add('commentEvalHousing', null, [
                 'label_attr' => ['class' => 'sr-only'],

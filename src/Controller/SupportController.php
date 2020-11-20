@@ -28,7 +28,7 @@ use App\Repository\SupportPersonRepository;
 use App\Service\Calendar;
 use App\Service\Grammar;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportManager;
+use App\EntityManager\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

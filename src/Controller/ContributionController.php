@@ -19,7 +19,7 @@ use App\Service\Export\ContributionLightExport;
 use App\Service\Indicators\ContributionIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportManager;
+use App\EntityManager\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
