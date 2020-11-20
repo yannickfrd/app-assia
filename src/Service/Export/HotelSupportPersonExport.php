@@ -29,6 +29,10 @@ class HotelSupportPersonExport extends ExportExcel
                 $arrayData[] = array_keys($this->getDatas($supportPerson));
             }
             $arrayData[] = $this->getDatas($supportPerson);
+            if ($i > 100) {
+                sleep(5);
+                $i = 1;
+            }
             ++$i;
         }
 
@@ -47,7 +51,7 @@ class HotelSupportPersonExport extends ExportExcel
         $peopleGroup = $supportGroup->getPeopleGroup();
         $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
         $hotelSupport = $supportGroup->getHotelSupport() ?? new HotelSupport();
-        $accommodationGroup = $supportGroup->getAccommodationGroups()->first();
+        $accommodationGroup = $supportGroup->getAccommodationGroups()[0];
         $datas = [
             'N° Suivi' => $supportGroup->getId(),
             'ID personne' => $person->getId(),
@@ -63,6 +67,7 @@ class HotelSupportPersonExport extends ExportExcel
             'Date fin suivi' => $this->formatDate($supportGroup->getEndDate()),
             'Statut suivi' => $supportGroup->getStatusToString(),
             'Coefficient' => $supportGroup->getCoefficient(),
+            'Secteur' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : '',
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
             'Référent suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,

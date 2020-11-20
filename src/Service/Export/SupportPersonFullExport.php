@@ -75,11 +75,11 @@ class SupportPersonFullExport extends ExportExcel
         $i = 0;
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->getDatas($supportPerson);
-            ++$i;
             if ($i > 100) {
                 sleep(5);
-                $i = 0;
+                $i = 1;
             }
+            ++$i;
         }
 
         $this->createSheet('export_suivis', 'xlsx', $arrayData, 15);

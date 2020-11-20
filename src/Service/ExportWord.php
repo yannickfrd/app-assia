@@ -28,7 +28,7 @@ class ExportWord
         $this->phpWord = new PhpWord();
         $this->fullHTML = $fullHTML;
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
-        $this->defaultLogo = 'images/logo_esperer95.jpg';
+        $this->defaultLogo = 'images/logo_esperer95.png';
     }
 
     /**
@@ -211,7 +211,7 @@ class ExportWord
      */
     protected function addLogo($element, string $logoPath = null, int $height = 60, string $align = 'left'): void
     {
-        if (\file_exists($this->defaultLogo)) {
+        if (\file_exists($logoPath) || \file_exists($this->defaultLogo)) {
             $element->addImage($logoPath ?? $this->defaultLogo, [
                 'height' => $height,
                 'align' => $align,

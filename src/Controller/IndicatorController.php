@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
-use App\Service\Pagination;
-use App\Form\Model\SupportGroupSearch;
-use App\Repository\IndicatorRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportPersonRepository;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Form\Support\SupportGroupSearchType;
+use App\Form\Model\SupportSearch;
+use App\Form\Support\SupportSearchType;
+use App\Repository\IndicatorRepository;
+use App\Repository\SupportPersonRepository;
 use App\Service\Indicators\SocialIndicators;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndicatorController extends AbstractController
 {
@@ -47,15 +47,15 @@ class IndicatorController extends AbstractController
      */
     public function showSocialIndicators(Request $request, SupportPersonRepository $repoSupportPerson, SocialIndicators $socialIndicators): Response
     {
-        $search = new SupportGroupSearch();
+        $search = new SupportSearch();
 
-        $form = ($this->createForm(SupportGroupSearchType::class, $search))
+        $form = ($this->createForm(SupportSearchType::class, $search))
             ->handleRequest($request);
 
         $supports = $repoSupportPerson->findSupportsFullToExport($search);
 
         return $this->render('app/evaluation/socialIndicators.html.twig', [
-            'supportGroupSearch' => $search,
+            'SupportSearch' => $search,
             'form' => $form->createView(),
             'datas' => $socialIndicators->getResults($supports),
         ]);

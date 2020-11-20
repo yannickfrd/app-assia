@@ -7,11 +7,9 @@ use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Form\Avdl\AvdlSupportSearchType;
 use App\Form\Model\AvdlSupportSearch;
-use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Export\AvdlSupportPersonExport;
 use App\Service\Pagination;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,16 +19,10 @@ class AvdlController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
-    private $repoSupportGroup;
-    private $repoSupportPerson;
     private $serviceId;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, SupportPersonRepository $repoSupportPerson)
+    public function __construct()
     {
-        $this->manager = $manager;
-        $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoSupportPerson = $repoSupportPerson;
         $this->serviceId = Service::SERVICE_AVDL_ID;
     }
 
@@ -39,7 +31,7 @@ class AvdlController extends AbstractController
      *
      * @Route("/avdl-supports", name="avdl_supports", methods="GET|POST")
      */
-    public function viewListAvdlSupports(Request $request, Pagination $pagination): Response
+    public function viewListAvdlSupports(Request $request, Pagination $pagination, SupportPersonRepository $repo): Response
     {
         $search = (new AvdlSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 
@@ -47,22 +39,22 @@ class AvdlController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search);
+            return $this->exportData($search, $repo);
         }
 
         return $this->render('app/avdl/listAvdlSupports.html.twig', [
-            'supportGroupSearch' => $search,
+            'SupportSearch' => $search,
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->repoSupportGroup->findAllAvdlSupportsQuery($search, $this->serviceId), $request),
+            'supports' => $pagination->paginate($repo->findAvdlSupportsQuery($search, $this->serviceId), $request),
         ]);
     }
 
     /**
      * Exporte les données.
      */
-    protected function exportData(AvdlSupportSearch $search)
+    protected function exportData(AvdlSupportSearch $search, SupportPersonRepository $repo)
     {
-        $supports = $this->repoSupportPerson->findSupportsFromServiceToExport($search, $this->serviceId);
+        $supports = $repo->findSupportsFromServiceToExport($search, $this->serviceId);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

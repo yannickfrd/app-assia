@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Person;
 use App\Entity\SupportPerson;
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\AvdlSupportSearch;
+use App\Form\Model\HotelSupportSearch;
+use App\Form\Model\SupportSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -28,14 +30,33 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les suivis pour l'export.
+     * Trouve les suivis sociaux.
      */
-    public function findSupportsToExport(?SupportGroupSearch $search = null)
+    public function findSupportsQuery(SupportSearch $search): Query
     {
         $query = $this->getSupportsQuery();
 
         if ($search) {
-            $query = $this->filter($query, $search);
+            $query = $this->filters($query, $search);
+        }
+
+        return $query->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Retourne toutes les suivis pour l'export.
+     */
+    public function findSupportsToExport(?SupportSearch $search = null)
+    {
+        $query = $this->getSupportsQuery()
+            ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
+            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('a');
+
+        if ($search) {
+            $query = $this->filters($query, $search);
         }
 
         return $query->orderBy('sg.startDate', 'DESC')
@@ -49,17 +70,82 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function findSupportsFromServiceToExport($search = null, int $serviceId)
     {
         $query = $this->getSupportsFromServiceQuery()
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
 
             ->where('sg.service = :service')
             ->setParameter('service', $serviceId);
 
         if ($search) {
-            $query = $this->filter($query, $search);
+            $query = $this->filters($query, $search);
         }
 
         return $query->orderBy('sg.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
+    }
+
+    /**
+     * Trouve les suivis sociaux AVDL.
+     */
+    public function findAvdlSupportsQuery(AvdlSupportSearch $search, int $serviceId): Query
+    {
+        $query = $this->getSupportsQuery()
+            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
+
+            ->where('sg.service = :service')
+            ->setParameter('service', $serviceId);
+
+        $query = $this->filters($query, $search);
+
+        if (AvdlSupportSearch::DIAG == $search->getDiagOrSupport()) {
+            $query->andWhere('avdl.diagStartDate IS NOT NULL');
+        }
+        if (AvdlSupportSearch::SUPPORT == $search->getDiagOrSupport()) {
+            $query->andWhere('avdl.supportStartDate IS NOT NULL');
+        }
+        if ($search->getSupportType()) {
+            $query->andWhere('avdl.supportType IN (:supportType)')
+            ->setParameter('supportType', $search->getSupportType());
+        }
+
+        return $query->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Trouve les suivis sociaux hôtel.
+     */
+    public function findHotelSupportsQuery(HotelSupportSearch $search, int $serviceId): Query
+    {
+        $query = $this->getSupportsQuery()
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
+
+            ->where('sg.service = :service')
+            ->setParameter('service', $serviceId);
+
+        $query = $this->filters($query, $search);
+
+        if ($search->getHotels()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getHotels() as $hotel) {
+                $orX->add($expr->eq('ag.accommodation', $hotel));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getLevelSupport()) {
+            $query->andWhere('hs.levelSupport IN (:levelSupport)')
+            ->setParameter('levelSupport', $search->getLevelSupport());
+        }
+
+        return $query->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -84,12 +170,8 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     protected function getSupportsQuery()
     {
-        return $this->createQueryBuilder('sp')
-            ->select('sp')
+        return $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
-            ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
-            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('a')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -103,51 +185,67 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     protected function getSupportsFromServiceQuery()
     {
-        return $this->createQueryBuilder('sp')
-            ->select('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+        return $this->getSupportsQuery()
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
-            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
-            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
-            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
-            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
-            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs');
     }
 
     /**
      * Filtre la recherche.
      */
-    protected function filter($query, $search)
+    protected function filters($query, $search)
     {
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
+
+        if ($search->getHead()) {
+            $query->andWhere('sp.head = :head')
+                ->setParameter('head', $search->getHead());
+        }
+
         if ($search->getFullname()) {
             $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
-        // if ($search->getBirthdate()) {
-        //     $query->andWhere("p.birthdate = :birthdate")
-        //         ->setParameter("birthdate", $search->getBirthdate());
-        // }
-        // if ($search->getFamilyTypology()) {
-        //     $query->andWhere("g.familyTypology = :familyTypology")
-        //         ->setParameter("familyTypology", $search->getFamilyTypology());
-        // }
-        // if ($search->getNbPeople()) {
-        //     $query->andWhere("g.nbPeople = :nbPeople")
-        //         ->setParameter("nbPeople", $search->getNbPeople());
-        // }
-        // if ($search->getStatus()) {
-        //     $query->andWhere("sg.status = :status")
-        //         ->setParameter("status", $search->getStatus());
-        // }
+
+        if ($search->getServices() && $search->getServices()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getServices() as $service) {
+                $orX->add($expr->eq('sg.service', $service));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getSubServices() && $search->getSubServices()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getSubServices() as $subService) {
+                $orX->add($expr->eq('sg.subService', $subService));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getDevices() && $search->getDevices()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getDevices() as $device) {
+                $orX->add($expr->eq('sg.device', $device));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getReferents() && $search->getReferents()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
+            }
+            $query->andWhere($orX);
+        }
+
         if ($search->getStatus()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -192,31 +290,22 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
         }
 
-        if ($search->getReferents() && $search->getReferents()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getServices() && $search->getServices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('sg.service', $service));
-            }
-            $query->andWhere($orX);
-        }
-        if ($search->getDevices() && $search->getDevices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('sg.device', $device));
-            }
-            $query->andWhere($orX);
-        }
+        // if ($search->getBirthdate()) {
+        //     $query->andWhere("p.birthdate = :birthdate")
+        //         ->setParameter("birthdate", $search->getBirthdate());
+        // }
+        // if ($search->getFamilyTypology()) {
+        //     $query->andWhere("g.familyTypology = :familyTypology")
+        //         ->setParameter("familyTypology", $search->getFamilyTypology());
+        // }
+        // if ($search->getNbPeople()) {
+        //     $query->andWhere("g.nbPeople = :nbPeople")
+        //         ->setParameter("nbPeople", $search->getNbPeople());
+        // }
+        // if ($search->getStatus()) {
+        //     $query->andWhere("sg.status = :status")
+        //         ->setParameter("status", $search->getStatus());
+        // }
 
         return $query;
     }
@@ -241,7 +330,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
 
-        $query = $this->filtersExport($query, $search);
+        $query = $this->filters($query, $search);
 
         return $query->setMaxResults(5000)
             ->orderBy('sp.startDate', 'DESC')
@@ -255,86 +344,10 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->select('COUNT(sp.id)');
 
-        $query = $this->filtersExport($query, $search);
+        $query = $this->filters($query, $search);
 
         return $query->getQuery()
             ->getSingleScalarResult();
-    }
-
-    protected function filtersExport($query, $search)
-    {
-        if ($search->getServices() && $search->getServices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('sg.service', $service));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getDevices() && $search->getDevices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('sg.device', $device));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getReferents() && $search->getReferents()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getStatus()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getStatus() as $status) {
-                $orX->add($expr->eq('sg.status', $status));
-            }
-            $query->andWhere($orX);
-        }
-
-        $supportDates = $search->getSupportDates();
-
-        if (1 == $supportDates) {
-            if ($search->getStart()) {
-                $query->andWhere('sg.startDate >= :start')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $query->andWhere('sg.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
-        }
-        if (2 == $supportDates) {
-            if ($search->getStart()) {
-                if ($search->getStart()) {
-                    $query->andWhere('sg.endDate >= :start')
-                        ->setParameter('start', $search->getStart());
-                }
-                if ($search->getEnd()) {
-                    $query->andWhere('sg.endDate <= :end')
-                        ->setParameter('end', $search->getEnd());
-                }
-            }
-        }
-        if (3 == $supportDates || !$supportDates) {
-            if ($search->getStart()) {
-                $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $query->andWhere('sg.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
-        }
-
-        return $query;
     }
 
     public function countSupportPeople(array $criteria = null): int

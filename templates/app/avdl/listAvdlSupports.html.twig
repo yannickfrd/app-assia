@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 
+{% set form_head = form.vars.value.head == true %}          
+
 {% block title %}Suivis AVDL{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
@@ -22,7 +24,7 @@
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
                     <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number_format(0,'', ' ') }} <!--
-                    -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -53,38 +55,39 @@
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Résultat de la proposition", "avdl.propoResult") }}</th>
                         </tr>
                     </thead>
-                    <tbody>            
+                    <tbody>
                         {% for support in supports %}
-                            {% set person = (support.supportPeople|first).person %}
-                            <tr>
+                            {% set person = support.person %}
+                            {% set supportGroup = support.supportGroup %}
+                            <tr class="{% if form_head == false and support.head %}font-weight-bold{% endif %}">
                                 <td scope="row" class="align-middle">
-                                    {% if is_granted("VIEW", support) %}
-                                        <a href="{% if support.peopleGroup %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
-                                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
-                                            title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                    {% if is_granted("VIEW", supportGroup) %}
+                                        <a href="{{ path('support_view', {'id':supportGroup.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                         </a>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle">{{ person ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
-                                <td class="align-middle">{{ support.device ? support.device.name }}</td>
-                                <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
-                                <td class="align-middle">{{ support.statusToString }}<br/>
-                                    <span class="text-secondary">{{ support.coefficient ? "(coeff. " ~ support.coefficient ~ ")" }}</span>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") ~ (support.head ? "*") }}</td>
+                                <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
+                                <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
+                                <td class="align-middle">{{ supportGroup.statusToString }}<br/>
+                                    <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
                                 </td>
-                                <td class="align-middle">{{ support.city }}</td>
-                                <td class="align-middle">{{ support.originRequest and support.originRequest.orientationDate ? support.originRequest.orientationDate|date("d/m/Y") }}</td>
-                                {% if support.avdl %}
-                                    <td class="align-middle">{{ support.avdl.diagStartDate ? support.avdl.diagStartDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.avdl.diagEndDate ? support.avdl.diagEndDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.avdl.diagTypeToString }}</td>
-                                    <td class="align-middle">{{ support.avdl.recommendationSupportToString }}</td>
-                                    <td class="align-middle">{{ support.avdl.supportStartDate ? support.avdl.supportStartDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.avdl.supportEndDate ? support.avdl.supportEndDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.avdl.supportTypeToString }}</td>
-                                    <td class="align-middle">{{ support.avdl.endSupportReasonToString }}</td>
-                                    <td class="align-middle">{{ support.avdl.accessHousingModalityToString }}</td>
-                                    <td class="align-middle">{{ support.avdl.propoHousingDate ? support.avdl.propoHousingDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.avdl.propoResultToString }}</td>
+                                <td class="align-middle">{{ supportGroup.city }}</td>
+                                <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.orientationDate ? supportGroup.originRequest.orientationDate|date("d/m/Y") }}</td>
+                                {% if supportGroup.avdl %}
+                                    {% set avdl = supportGroup.avdl %}
+                                    <td class="align-middle">{{ avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.diagEndDate ? avdl.diagEndDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.diagTypeToString }}</td>
+                                    <td class="align-middle">{{ avdl.recommendationSupportToString }}</td>
+                                    <td class="align-middle">{{ avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.supportEndDate ? avdl.supportEndDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.supportTypeToString }}</td>
+                                    <td class="align-middle">{{ avdl.endSupportReasonToString }}</td>
+                                    <td class="align-middle">{{ avdl.accessHousingModalityToString }}</td>
+                                    <td class="align-middle">{{ avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.propoResultToString }}</td>
                                 {% else %}
                                     <td class="align-middle" colspan="12"></td>
                                 {% endif %}

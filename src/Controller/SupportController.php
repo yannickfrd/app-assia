@@ -8,12 +8,13 @@ use App\Entity\PeopleGroup;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
-use App\Form\Model\SupportGroupSearch;
+use App\EntityManager\SupportManager;
+use App\Form\Model\SupportSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
 use App\Form\Support\SupportCoefficientType;
-use App\Form\Support\SupportGroupSearchType;
 use App\Form\Support\SupportGroupType;
+use App\Form\Support\SupportSearchType;
 use App\Form\Support\SupportsInMonthSearchType;
 use App\Form\Utils\Choices;
 use App\Repository\ContributionRepository;
@@ -28,7 +29,6 @@ use App\Repository\SupportPersonRepository;
 use App\Service\Calendar;
 use App\Service\Grammar;
 use App\Service\Pagination;
-use App\EntityManager\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -44,12 +44,10 @@ class SupportController extends AbstractController
     use ErrorMessageTrait;
 
     private $manager;
-    private $repoSupportGroup;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup)
+    public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
-        $this->repoSupportGroup = $repoSupportGroup;
     }
 
     /**
@@ -57,21 +55,21 @@ class SupportController extends AbstractController
      *
      * @Route("/supports", name="supports", methods="GET|POST")
      */
-    public function viewListSupports(Request $request, SupportManager $supportManager, SupportPersonRepository $repoSupportPerson, Pagination $pagination): Response
+    public function viewListSupports(Request $request, SupportManager $supportManager, SupportPersonRepository $repo, Pagination $pagination): Response
     {
-        $search = (new SupportGroupSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
+        $search = (new SupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 
-        $form = ($this->createForm(SupportGroupSearchType::class, $search))
+        $form = ($this->createForm(SupportSearchType::class, $search))
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $supportManager->exportData($search, $repoSupportPerson);
+            return $supportManager->exportData($search, $repo);
         }
 
         return $this->render('app/support/listSupports.html.twig', [
-            'supportGroupSearch' => $search,
+            'SupportSearch' => $search,
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->repoSupportGroup->findAllSupportsQuery($search), $request),
+            'supports' => $pagination->paginate($repo->findSupportsQuery($search), $request),
         ]);
     }
 
@@ -113,11 +111,11 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/new_support", name="people_group_new_support", methods="GET")
      */
-    public function newSupportGroupAjax(PeopleGroup $peopleGroup)
+    public function newSupportGroupAjax(PeopleGroup $peopleGroup, SupportGroupRepository $repoSupportGroup)
     {
         $supportGroup = (new SupportGroup())->setReferent($this->getUser());
 
-        $nbSupports = $this->repoSupportGroup->countSupportOfPeopleGroup($peopleGroup);
+        $nbSupports = $repoSupportGroup->countSupportOfPeopleGroup($peopleGroup);
 
         $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
             'action' => $this->generateUrl('support_new', ['id' => $peopleGroup->getId()]),
@@ -154,9 +152,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request, SupportManager $supportManager): Response
+    public function editSupportGroup(int $id, Request $request, SupportGroupRepository $repoSupportGroup, SupportManager $supportManager): Response
     {
-        $supportGroup = $this->repoSupportGroup->findFullSupportById($id);
+        $supportGroup = $repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -308,7 +306,7 @@ class SupportController extends AbstractController
      * "month" : "0?[1-9]|1[0-2]",
      * })
      */
-    public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, ContributionRepository $repoContribution, Pagination $pagination): Response
+    public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, SupportGroupRepository $repoSupportGroup, ContributionRepository $repoContribution, Pagination $pagination): Response
     {
         $search = new SupportsInMonthSearch();
         if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
@@ -326,7 +324,7 @@ class SupportController extends AbstractController
 
         $calendar = new Calendar($year, $month);
 
-        $supports = $pagination->paginate($this->repoSupportGroup->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search), $request, 30);
+        $supports = $pagination->paginate($repoSupportGroup->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search), $request, 30);
 
         $supportsId = [];
         foreach ($supports->getItems() as $support) {
@@ -347,11 +345,11 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, SupportManager $supportManager): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportManager $supportManager, SupportGroupRepository $repoSupportGroup): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($supportManager->cloneSupport($supportGroup, $this->repoSupportGroup)) {
+        if ($supportManager->cloneSupport($supportGroup, $repoSupportGroup)) {
             $this->manager->flush();
 
             $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');

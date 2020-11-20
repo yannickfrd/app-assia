@@ -27,6 +27,10 @@ class AccommodationExport extends ExportExcel
                 $arrayData[] = array_keys($this->getDatas($accommodation));
             }
             $arrayData[] = $this->getDatas($accommodation);
+            if ($i > 100) {
+                sleep(5);
+                $i = 1;
+            }
             ++$i;
         }
 

@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 
+{% set form_head = form.vars.value.head == true %}          
+
 {% block title %}Suivis PASH{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
@@ -22,7 +24,7 @@
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
                     <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number_format(0,'', ' ') }} <!--
-                    -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -51,56 +53,53 @@
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Motif fin accompa-gnement", "hs.endSupportReason") }}</th>
                         </tr>
                     </thead>
-                    <tbody>            
+                    <tbody>
                         {% for support in supports %}
-                            {% set person = (support.supportPeople|first).person %}
-                        <tr>
-                            <td scope="row" class="align-middle">
-                                {% if is_granted("VIEW", support) %}
-                                <a href="{% if support.peopleGroup %}{{ path('support_view', {'id':support.id}) }} {% endif %}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
-                                    title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
-                                </a>
+                            {% set person = support.person %}
+                            {% set supportGroup = support.supportGroup %}
+                            <tr class="{% if form_head == false and support.head %}font-weight-bold{% endif %}">
+                                <td scope="row" class="align-middle text-center">
+                                    {% if is_granted("VIEW", supportGroup) %}
+                                        <a href="{{ path('support_view', {'id':supportGroup.id}) }}"class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") ~ (support.head ? "*") }}</td>
+                                <td class="align-middle">{{ supportGroup.subService ? supportGroup.subService.name }}</td>
+                                <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
+                                <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
+                                <td class="align-middle">{{ supportGroup.statusToString }}<br/>
+                                    <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
+                                </td>
+                                {% set accommodation = supportGroup.accommodationGroups|length ? supportGroup.accommodationGroups[0].accommodation %}
+                                <td class="align-middle">{{ accommodation ? accommodation.name }}<br/>
+                                    <span class="text-secondary">{{ supportGroup.city ? "(" ~ supportGroup.city ~ ")" }}</span>
+                                </td>
+                                {% if supportGroup.hotelSupport %}
+                                    {% set hotelSupport = supportGroup.hotelSupport %}
+                                    <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.orientationDate ? 
+                                        supportGroup.originRequest.orientationDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.organization and 
+                                        supportGroup.originRequest.organization ? supportGroup.originRequest.organization.name ~ 
+                                        (hotelSupport.ssd ? " (" ~  hotelSupport.ssd ~ ")") }}</td>
+                                    <td class="align-middle">{{ supportGroup.startDate ? supportGroup.startDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ hotelSupport.levelSupportToString }}</td>
+                                    <td class="align-middle">{{ hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ hotelSupport.departmentAnchorToString }}</td>
+                                    <td class="align-middle">{{ supportGroup.endDate ? supportGroup.endDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ hotelSupport.endSupportReasonToString }}</td>
+                                {% else %}
+                                    <td class="align-middle" colspan="10"></td>
                                 {% endif %}
-                            </td>
-                            <td class="align-middle">{{ person ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
-                            <td class="align-middle">{{ support.subService ? support.subService.name }}</td>
-                            <td class="align-middle">{{ support.device ? support.device.name }}</td>
-                            <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
-                            <td class="align-middle">{{ support.statusToString }}<br/>
-                                <span class="text-secondary">{{ support.coefficient ? "(coeff. " ~ support.coefficient ~ ")" }}</span>
-                            </td>
-                            {% set accommodation = support.accommodationGroups|length ? support.accommodationGroups[0].accommodation %}
-                            <td class="align-middle">{{ accommodation ? accommodation.name }}<br/>
-                                <span class="text-secondary">{{ support.city ? "(" ~ support.city ~ ")" }}</span>
-                            </td>
-                            {% if support.hotelSupport %}
-                                {% set hotelSupport = support.hotelSupport %}
-                                <td class="align-middle">{{ support.originRequest and support.originRequest.orientationDate ? 
-                                    support.originRequest.orientationDate|date("d/m/Y") }}</td>
-                                <td class="align-middle">{{ support.originRequest and support.originRequest.organization and 
-                                    support.originRequest.organization ? support.originRequest.organization.name ~ 
-                                    (hotelSupport.ssd ? " (" ~  hotelSupport.ssd ~ ")") }}</td>
-                                <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
-                                <td class="align-middle">{{ hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") }}</td>
-                                <td class="align-middle">{{ hotelSupport.levelSupportToString }}</td>
-                                <td class="align-middle">{{ hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y") }}</td>
-                                <td class="align-middle">{{ hotelSupport.departmentAnchorToString }}</td>
-                                <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
-                                <td class="align-middle">{{ hotelSupport.endSupportReasonToString }}</td>
-                            {% else %}
-                                <td class="align-middle" colspan="10"></td>
-                            {% endif %}
-                        </tr>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            
             <div class="navigation">{{ knp_pagination_render(supports) }}</div>
-
         </div>
-
     </section>
 
 {% endblock %}

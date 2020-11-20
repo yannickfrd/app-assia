@@ -6,7 +6,7 @@ use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SupportGroupSearch
+class SupportSearch
 {
     use DateSearchTrait;
     use ReferentServiceDeviceSearchTrait;
@@ -48,6 +48,11 @@ class SupportGroupSearch
      * @var int|null
      */
     private $supportDates;
+
+    /**
+     * @var bool
+     */
+    private $head = true;
 
     /**
      * @var bool
@@ -126,6 +131,18 @@ class SupportGroupSearch
     public function setSupportDates(int $supportDates): self
     {
         $this->supportDates = $supportDates;
+
+        return $this;
+    }
+
+    public function getHead(): ?bool
+    {
+        return $this->head;
+    }
+
+    public function setHead(bool $head): self
+    {
+        $this->head = $head;
 
         return $this;
     }

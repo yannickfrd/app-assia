@@ -5,7 +5,7 @@ namespace App\Tests\Repository;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\User;
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\SupportSearch;
 use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -31,7 +31,7 @@ class SupportGroupRepositoryTest extends WebTestCase
     /** @var User */
     protected $user;
 
-    /** @var SupportGroupSearch */
+    /** @var SupportSearch */
     protected $search;
 
     protected function setUp()
@@ -52,15 +52,15 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->supportGroup = $dataFixtures['supportGroup1'];
         $this->service = $dataFixtures['service1'];
         $this->user = $dataFixtures['userRoleUser'];
-        $this->search = $this->getSupportGroupSearch();
+        $this->search = $this->getSupportSearch();
     }
 
-    protected function getSupportGroupSearch()
+    protected function getSupportSearch()
     {
         $referents = new ArrayCollection();
         $referents->add($this->user);
 
-        return (new SupportGroupSearch())
+        return (new SupportSearch())
             ->setFullName('John Doe')
             ->setFamilyTypologies([1])
             ->setStart(new \DateTime('2018-01-01'))
@@ -83,29 +83,6 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->assertNotNull($this->repo->findFullSupportById($this->supportGroup->getId()));
     }
 
-    // public function testFindAllSupportsQueryWithoutFilters()
-    // {
-    //     $query = $this->repo->findAllSupportsQuery(new SupportGroupSearch());
-    //     $this->assertGreaterThanOrEqual(50, count($query->getResult()));
-    // }
-
-    // public function testFindAllSupportsQueryWithFilters()
-    // {
-    //     $query = $this->repo->findAllSupportsQuery($this->search);
-    //     $this->assertGreaterThanOrEqual(50, count($query->getResult()));
-    // }
-
-    // public function testGetSupportsWithFilters()
-    // {
-    //     $query = $this->repo->getSupports(new SupportGroupSearch());
-    //     $this->assertGreaterThanOrEqual(50, count($query->getResult()));
-    // }
-
-    // public function testGetSupportsWithoutFilters()
-    // {
-    //     $query = $this->repo->getSupports($this->search);
-    //     $this->assertGreaterThanOrEqual(1, count($query->getResult()));
-    // }
 
     public function testFindAllSupportsFromUser()
     {

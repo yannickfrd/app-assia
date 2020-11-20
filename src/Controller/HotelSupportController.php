@@ -2,16 +2,13 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Form\HotelSupport\HotelSupportSearchType;
 use App\Form\Model\HotelSupportSearch;
-use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
 use App\Service\Export\HotelSupportPersonExport;
 use App\Service\Pagination;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,18 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HotelSupportController extends AbstractController
 {
-    use ErrorMessageTrait;
-
-    private $manager;
-    private $repoSupportGroup;
-    private $repoSupportPerson;
     private $serviceId;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repoSupportGroup, SupportPersonRepository $repoSupportPerson)
+    public function __construct()
     {
-        $this->manager = $manager;
-        $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoSupportPerson = $repoSupportPerson;
         $this->serviceId = Service::SERVICE_PASH_ID;
     }
 
@@ -39,7 +28,7 @@ class HotelSupportController extends AbstractController
      *
      * @Route("/hotel-supports", name="hotel_supports", methods="GET|POST")
      */
-    public function viewListHotelSupports(Request $request, Pagination $pagination): Response
+    public function viewListHotelSupports(Request $request, Pagination $pagination, SupportPersonRepository $repo): Response
     {
         $search = (new HotelSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
 
@@ -47,24 +36,25 @@ class HotelSupportController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search);
+            return $this->exportData($search, $repo);
         }
 
         return $this->render('app/hotelSupport/listHotelSupports.html.twig', [
-            'supportGroupSearch' => $search,
+            'SupportSearch' => $search,
             'form' => $form->createView(),
             'supports' => $pagination->paginate(
-                $this->repoSupportGroup->findAllHotelSupportsQuery($search, $this->serviceId),
-                $request),
+                $repo->findHotelSupportsQuery($search, $this->serviceId),
+                $request
+            ),
         ]);
     }
 
     /**
      * Exporte les données.
      */
-    protected function exportData(HotelSupportSearch $search)
+    protected function exportData(HotelSupportSearch $search, SupportPersonRepository $repo)
     {
-        $supports = $this->repoSupportPerson->findSupportsFromServiceToExport($search, $this->serviceId);
+        $supports = $repo->findSupportsFromServiceToExport($search, $this->serviceId);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

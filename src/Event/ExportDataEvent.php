@@ -2,7 +2,7 @@
 
 namespace App\Event;
 
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\SupportSearch;
 use App\Repository\SupportPersonRepository;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -13,13 +13,13 @@ class ExportDataEvent extends Event
     private $search;
     private $repo;
 
-    public function __construct(SupportGroupSearch $search, SupportPersonRepository $repo)
+    public function __construct(SupportSearch $search, SupportPersonRepository $repo)
     {
         $this->search = $search;
         $this->repo = $repo;
     }
 
-    public function getSupportGroupSearch()
+    public function getSupportSearch()
     {
         return $this->search;
     }

@@ -13,7 +13,7 @@ use App\Entity\Service;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
 use App\Entity\User;
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\SupportSearch;
 use App\Form\Utils\Choices;
 use App\Repository\ContributionRepository;
 use App\Repository\DocumentRepository;
@@ -246,7 +246,7 @@ class SupportManager
     /**
      * Exporte les données.
      */
-    public function exportData(SupportGroupSearch $search, SupportPersonRepository $repoSupportPerson)
+    public function exportData(SupportSearch $search, SupportPersonRepository $repoSupportPerson)
     {
         set_time_limit(10 * 60);
 

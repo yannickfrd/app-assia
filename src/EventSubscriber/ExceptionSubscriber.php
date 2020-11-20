@@ -2,12 +2,12 @@
 
 namespace App\EventSubscriber;
 
-use Twig\Environment;
 use App\Event\ExportDataEvent;
 use App\Notification\MailNotification;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Twig\Environment;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -41,7 +41,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     // public function onExport(ExportDataEvent $event)
     // {
-    //     // $this->testService->onDataExport($event->getSupportGroupSearch(), $event->getRepo());
+    //     // $this->testService->onDataExport($event->getSupportSearch(), $event->getRepo());
     // }
 
     public function processException(ExceptionEvent $event)

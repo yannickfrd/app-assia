@@ -28,11 +28,11 @@ class SupportPersonExport extends ExportExcel
                 $arrayData[] = array_keys($this->getDatas($supportPerson));
             }
             $arrayData[] = $this->getDatas($supportPerson);
-            ++$i;
             if ($i > 100) {
                 sleep(5);
-                $i = 0;
+                $i = 1;
             }
+            ++$i;
         }
 
         $this->createSheet('export_suivis', 'xlsx', $arrayData);

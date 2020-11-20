@@ -6,16 +6,13 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\RolePerson;
-use App\Form\Model\PeopleGroupSearch;
-use App\Form\PeopleGroup\PeopleGroupSearchType;
+use App\EntityManager\PeopleGroupManager;
 use App\Form\PeopleGroup\PeopleGroupType;
 use App\Form\RolePerson\RolePersonType;
 use App\Repository\PeopleGroupRepository;
 use App\Repository\ReferentRepository;
 use App\Repository\RolePersonRepository;
 use App\Repository\SupportGroupRepository;
-use App\Service\Pagination;
-use App\EntityManager\PeopleGroupManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,24 +31,6 @@ class PeopleGroupController extends AbstractController
     {
         $this->groupManager = $groupManager;
         $this->repo = $repo;
-    }
-
-    /**
-     * Liste des groupes de personnes.
-     *
-     * @Route("/people_groups", name="people_groups", methods="GET|POST")
-     */
-    public function listPeopleGroups(Request $request, Pagination $pagination): Response
-    {
-        $search = new PeopleGroupSearch();
-
-        $form = ($this->createForm(PeopleGroupSearchType::class, $search))
-            ->handleRequest($request);
-
-        return $this->render('app/peopleGroup/listPeopleGroups.html.twig', [
-            'form' => $form->createView(),
-            'peopleGroups' => $pagination->paginate($this->repo->findAllPeopleGroupQuery($search), $request),
-        ]);
     }
 
     /**

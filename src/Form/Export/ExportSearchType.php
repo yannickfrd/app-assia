@@ -8,7 +8,7 @@ use App\Entity\SubService;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\ExportSearch;
-use App\Form\Model\SupportGroupSearch;
+use App\Form\Model\SupportSearch;
 use App\Form\Utils\Choices;
 use App\Repository\DeviceRepository;
 use App\Repository\ServiceRepository;
@@ -45,7 +45,7 @@ class ExportSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('supportDates', ChoiceType::class, [
-                'choices' => Choices::getChoices(SupportGroupSearch::SUPPORT_DATES),
+                'choices' => Choices::getChoices(SupportSearch::SUPPORT_DATES),
                 'attr' => [
                     'class' => '',
                 ],

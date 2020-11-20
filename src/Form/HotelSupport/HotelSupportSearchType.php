@@ -4,12 +4,8 @@ namespace App\Form\HotelSupport;
 
 use App\Entity\Accommodation;
 use App\Entity\HotelSupport;
-use App\Entity\Service;
-use App\Entity\SupportGroup;
 use App\Form\Model\HotelSupportSearch;
-use App\Form\Model\SupportGroupSearch;
-use App\Form\Type\DateSearchType;
-use App\Form\Type\SearchType;
+use App\Form\Support\SupportSearchType;
 use App\Form\Utils\Choices;
 use App\Repository\AccommodationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -23,38 +19,6 @@ class HotelSupportSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fullname', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'placeholder' => 'Nom et/ou prénom',
-                    'class' => 'w-max-170',
-                ],
-            ])
-            ->add('status', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'multiple' => true,
-                'choices' => Choices::getChoices(SupportGroup::STATUS),
-                'attr' => [
-                    'class' => 'multi-select w-min-120',
-                    'data-select2-id' => 'status',
-                ],
-                'required' => false,
-            ])
-            ->add('supportDates', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getChoices(SupportGroupSearch::SUPPORT_DATES),
-                'placeholder' => '-- Date de suivi --',
-                'required' => false,
-            ])
-            ->add('date', DateSearchType::class, [
-                'data_class' => SupportGroupSearch::class,
-                ])
-            ->add('service', SearchType::class, [
-                    'data_class' => HotelSupportSearch::class,
-                    'attr' => [
-                        'serviceId' => Service::SERVICE_PASH_ID,
-            ],
-            ])
             ->add('hotels', EntityType::class, [
                 'class' => Accommodation::class,
                 'choice_label' => 'name',
@@ -98,19 +62,19 @@ class HotelSupportSearchType extends AbstractType
                     'data-select2-id' => 'endSupportReasons',
                 ],
                 'required' => false,
-            ])
-            ->add('export');
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => HotelSupportSearch::class,
-            'method' => 'get',
-            'translation_domain' => 'forms',
-            'allow_extra_fields' => true,
-            'csrf_protection' => false,
         ]);
+    }
+
+    public function getParent()
+    {
+        return SupportSearchType::class;
     }
 
     public function getBlockPrefix()

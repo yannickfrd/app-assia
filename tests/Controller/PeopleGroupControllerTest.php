@@ -34,31 +34,6 @@ class PeopleGroupControllerTest extends WebTestCase
         $this->peopleGroup = $this->dataFixtures['peopleGroup1'];
     }
 
-    public function testListPeopleGroupsIsUp()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->client->request('GET', $this->generateUri('people_groups'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Groupes de personnes');
-    }
-
-    public function testSearchPeopleGroupsIsSucessful()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('people_groups'));
-
-        $form = $crawler->selectButton('search')->form([]);
-
-        $this->client->submit($form);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Groupes de personnes');
-    }
-
     public function testEditPeopleGroupIsUp()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
