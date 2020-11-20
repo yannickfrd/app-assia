@@ -69,7 +69,7 @@ class Document
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="documents")
-     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $peopleGroup;
 

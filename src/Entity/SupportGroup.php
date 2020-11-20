@@ -208,7 +208,7 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="supports")
-     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(nullable=false)
      * @MaxDepth(1)
      */
     private $peopleGroup;

@@ -77,7 +77,7 @@ class Referent
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PeopleGroup", inversedBy="referents")
-     * @ORM\JoinColumn(name="group_people_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $peopleGroup;
 
