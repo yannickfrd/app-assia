@@ -105,7 +105,7 @@ class NoteController extends AbstractController
     protected function getNotes(SupportGroup $supportGroup, Request $request, SupportNoteSearch $search, Pagination $pagination)
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
-        if ($request->query->count() > 0) {
+        if ($request->query->count() > 0 || $search->getNoteId()) {
             return $pagination->paginate($this->repoNote->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
         }
 
@@ -124,7 +124,7 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new", name="note_new", methods="POST")
      */
-    public function newNote(SupportGroup $supportGroup, Note $note = null, Request $request): Response
+    public function newNote(SupportGroup $supportGroup, Request $request): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 

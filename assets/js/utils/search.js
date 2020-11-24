@@ -1,6 +1,9 @@
 import Loader from './loader'
+import MessageFlash from './messageFlash'
 
-// Classe pour les différents pages de recherche
+/**
+ * Classe pour les différents pages de recherche.
+ */
 export default class Search {
 
     constructor(formId) {
@@ -10,43 +13,44 @@ export default class Search {
         this.checkboxElts = this.formSearch.querySelectorAll('input[type="checkbox"]')
         this.selectElts = this.formSearch.getElementsByTagName('select')
         this.resultsElt = document.getElementById('results')
-        this.btnElts = this.formSearch.querySelectorAll('button')
+        this.btnSearchElt = document.getElementById('search')
+        this.btnExportElt = document.getElementById('js-btn-export')
         this.btnClearElt = this.formSearch.querySelector('button[type="reset"]')
         this.firstInput = this.formSearch.querySelector('input')
-
-        this.dateDay = document.getElementById('date_day')
-        this.dateMonth = document.getElementById('date_month')
-        this.dateYear = document.getElementById('date_year')
-
-        this.startDay = document.getElementById('date_start_day')
-        this.startMonth = document.getElementById('date_start_month')
-        this.startYear = document.getElementById('date_start_year')
-
-        this.endDay = document.getElementById('date_end_day')
-        this.endMonth = document.getElementById('date_end_month')
-        this.endYear = document.getElementById('date_end_year')
-
+        
         this.init()
     }
 
     init() {
-        // this.btnElts.forEach(btnElt => {
-        //     btnElt.addEventListener('click', e => {
-        //         if (this.loader.isActive()) {
-        //             e.preventDefault()
-        //         }
-        //         this.loader.on(); 
-        //     })
-        // })
+        this.btnSearchElt.addEventListener('click', e => {
+            this.loader.inLoading = false
+            if (this.loader.isActive()) {
+                    e.preventDefault()
+                }
+            this.loader.on(); 
+        })
 
         this.btnClearElt.addEventListener('click', e => {
+            this.loader.off(); 
             e.preventDefault()
             this.clearSearch()
         })
-        this.checkDates()
+
+        if (this.btnExportElt) {
+            this.btnExportElt.addEventListener('click', e => {
+                if (this.loader.inLoading) {
+                    e.preventDefault()
+                } else {
+                    new MessageFlash('success', 'L\'export est en cours de préparation. Merci de patienter...', 10);
+                    this.loader.inLoading = true
+                }
+            })
+        }
     }
 
-    // Efface les données du formulaire de recherche au clic
+    /**
+     * Efface les données du formulaire de recherche au clic/
+     */
     clearSearch() {
         this.inputElts.forEach(inputElt => {
             inputElt.value = null
@@ -63,7 +67,7 @@ export default class Search {
         })
 
         this.formSearch.querySelectorAll('.select2-container').forEach(containerElt => {
-            let removeElts = containerElt.querySelectorAll('.select2-selection__choice__remove')
+            const removeElts = containerElt.querySelectorAll('.select2-selection__choice__remove')
             removeElts.forEach(removeElt => {
                 removeElt.click()
             })
@@ -79,37 +83,5 @@ export default class Search {
         if (this.firstInput) {
             this.firstInput.focus()
         }
-    }
-
-    checkDates() {
-        if (this.dateYear) {
-            this.changeDate(this.dateYear, this.dateMonth, this.dateDay)
-        }
-        if (this.startYear) {
-            this.changeDate(this.startYear, this.startMonth, this.startDay)
-        }
-        if (this.endYear) {
-            this.changeDate(this.endYear, this.endMonth, this.endDay)
-        }
-    }
-
-    changeDate(yearElt, monthElt, dayElt) {
-        monthElt.addEventListener('change', () => {
-            this.updateSelect(dayElt, '1')
-        })
-        yearElt.addEventListener('change', () => {
-            this.updateSelect(dayElt, '1')
-        })
-    }
-
-    updateSelect(selectElt, value) {
-        selectElt.querySelectorAll('option').forEach(optionElt => {
-            if (optionElt.value === value) {
-                optionElt.setAttribute('selected', 'selected')
-            } else {
-                optionElt.removeAttribute('selected')
-                optionElt.selected = ''
-            }
-        })
     }
 }

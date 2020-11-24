@@ -14,6 +14,15 @@
     "behat/transliterator": {
         "version": "v1.3.0"
     },
+    "clue/stdio-react": {
+        "version": "v2.4.0"
+    },
+    "clue/term-react": {
+        "version": "v1.3.0"
+    },
+    "clue/utf8-react": {
+        "version": "v1.2.0"
+    },
     "cocur/slugify": {
         "version": "v3.2"
     },
@@ -138,6 +147,9 @@
     "egulias/email-validator": {
         "version": "2.1.17"
     },
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -172,6 +184,9 @@
     },
     "ilovepdf/ilovepdf-php": {
         "version": "v1.1.17"
+    },
+    "jolicode/jolinotif": {
+        "version": "v2.2.0"
     },
     "knplabs/knp-components": {
         "version": "v2.2.0"
@@ -303,6 +318,12 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
+    "react/event-loop": {
+        "version": "v1.1.1"
+    },
+    "react/stream": {
+        "version": "v1.1.1"
+    },
     "sabberworm/php-css-parser": {
         "version": "8.3.1"
     },
@@ -329,6 +350,9 @@
         "files": [
             "./config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "spatie/phpunit-watcher": {
+        "version": "1.23.0"
     },
     "symfony/apache-pack": {
         "version": "1.0",
@@ -757,6 +781,9 @@
     },
     "webmozart/assert": {
         "version": "1.5.0"
+    },
+    "yosymfony/resource-watcher": {
+        "version": "v2.0.1"
     },
     "zendframework/zend-code": {
         "version": "3.3.2"

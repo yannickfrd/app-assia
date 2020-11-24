@@ -60,7 +60,7 @@
                                         </a>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") ~ (support.head ? "*") }}</td>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
                                 <td class="align-middle">{{ person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
                                 <td class="align-middle">{{ supportGroup.peopleGroup.familyTypologyToString }}<!--
                                     -->{{ supportGroup.nbPeople > 1 ? ", " ~ supportGroup.nbPeople ~ " pers." }}

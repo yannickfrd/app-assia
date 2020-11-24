@@ -37,7 +37,7 @@
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}</th>
-                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Service / Secteur", "ss.name") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Secteur", "ss.name") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Dispositif", "d.name") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Statut", "sg.status") }}</th>
@@ -65,7 +65,7 @@
                                         </a>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") ~ (support.head ? "*") }}</td>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
                                 <td class="align-middle">{{ supportGroup.subService ? supportGroup.subService.name }}</td>
                                 <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
                                 <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>

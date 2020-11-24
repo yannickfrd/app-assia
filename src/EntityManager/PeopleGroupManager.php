@@ -2,16 +2,17 @@
 
 namespace App\EntityManager;
 
-use App\Entity\EvaluationGroup;
-use App\Entity\PeopleGroup;
 use App\Entity\Person;
+use App\Service\Grammar;
 use App\Entity\RolePerson;
+use App\Entity\PeopleGroup;
 use App\Entity\SupportGroup;
+use App\Entity\EvaluationGroup;
+use Psr\Cache\CacheItemInterface;
 use App\Repository\ReferentRepository;
 use App\Repository\RolePersonRepository;
-use App\Repository\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
+use App\Repository\SupportGroupRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

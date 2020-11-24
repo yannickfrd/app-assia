@@ -212,7 +212,7 @@ export default class SupportNotes {
      * @param {Object} response 
      */
     responseAjax(response) {
-
+        console.log(response)
         if (response.code === 200) {
             switch (response.action) {
                 case 'create':

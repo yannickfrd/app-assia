@@ -27,6 +27,8 @@ use App\Repository\SupportPersonRepository;
 use App\Service\Export\SupportPersonExport;
 use App\Service\Grammar;
 use App\Service\hydrateObjectWithArray;
+use App\Service\SupportGroup\AvdlService;
+use App\Service\SupportGroup\HotelSupportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -264,11 +266,15 @@ class SupportManager
      */
     public function getFullSupportGroup(int $id): ?SupportGroup
     {
-        return $this->cache->get(SupportGroup::CACHE_FULLSUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
+        $supportGroup = $this->cache->get(SupportGroup::CACHE_FULLSUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
             $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
             return $this->repoSupportGroup->findFullSupportById($id);
         });
+
+        $this->checkSupportGroup($supportGroup);
+
+        return $supportGroup;
     }
 
     /**

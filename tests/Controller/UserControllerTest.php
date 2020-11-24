@@ -83,12 +83,9 @@ class UserControllerTest extends WebTestCase
 
     public function testUsernameExistsIsTrue()
     {
-        $this->client->request('GET', $this->generateUri('username_exists', [
-            'value' => 'r.super_admin',
-        ]));
+        $this->client->request('GET', '/user/username_exists/r.super_admin');
 
         $result = json_decode($this->client->getResponse()->getContent(), true);
-
         $this->assertTrue($result['response']);
     }
 

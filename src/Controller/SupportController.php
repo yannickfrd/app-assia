@@ -258,13 +258,13 @@ class SupportController extends AbstractController
     /**
      * Retire la personne du suivi social.
      *
-     * @Route("/supportGroup/{id}/remove-{support_pers_id}_{_token}", name="remove_support_pers", methods="GET")
+     * @Route("/supportGroup/{id}/remove-{support_pers_id}/{_token}", name="remove_support_pers", methods="GET")
      * @ParamConverter("supportPerson", options={"id" = "support_pers_id"})
      */
-    public function removeSupportPerson(SupportGroup $supportGroup, SupportPerson $supportPerson, Request $request): Response
+    public function removeSupportPerson(SupportGroup $supportGroup, string $_token, SupportPerson $supportPerson): Response
     {
         // Vérifie si le token est valide avant de retirer la personne du suivi social
-        if ($this->isCsrfTokenValid('remove'.$supportPerson->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
             // Vérifie si la personne est le demandeur principal
             if ($supportPerson->getHead()) {
                 return $this->json([

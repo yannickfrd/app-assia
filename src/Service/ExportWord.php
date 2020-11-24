@@ -135,14 +135,14 @@ class ExportWord
         // Add first page footer
         $footer = $section->addFooter('first');
         $footer->addPreserveText((new \Datetime())->format('d/m/Y').'                                                                           
-            {PAGE} / {NUMPAGES}', $this->getFontStyleFooter(), [
+            {PAGE}/{NUMPAGES}', $this->getFontStyleFooter(), [
             'alignment' => 'right',
             // 'positioning' => 'absolute',
         ]);
 
         // Add footer for all other pages
         $footer = $section->addFooter();
-        $footer->addPreserveText('{PAGE} / {NUMPAGES}', $this->getFontStyleFooter(), [
+        $footer->addPreserveText('{PAGE}/{NUMPAGES}', $this->getFontStyleFooter(), [
             'alignment' => 'right',
         ]);
     }

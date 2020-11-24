@@ -4,8 +4,8 @@
 export default class Loader {
 
     constructor() {
-        this.loaderElt = document.getElementById('loader')
         this.inLoading = false
+        this.loaderElt = document.getElementById('loader')
     }
 
     /**

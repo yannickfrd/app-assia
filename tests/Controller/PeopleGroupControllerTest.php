@@ -115,6 +115,7 @@ class PeopleGroupControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSame('danger', $data['alert']);
     }
 

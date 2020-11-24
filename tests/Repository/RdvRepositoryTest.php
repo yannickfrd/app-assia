@@ -107,8 +107,6 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsFromUser()
     {
-        // dd($this->repo->findAllRdvsFromUser($this->user));
-
         $this->assertGreaterThanOrEqual(1, count($this->repo->findAllRdvsFromUser($this->user)));
     }
 

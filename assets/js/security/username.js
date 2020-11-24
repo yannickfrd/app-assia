@@ -60,7 +60,7 @@ export default class Username {
     }
 
     sendAjaxRequest() {
-        this.ajax.send('GET', '/user/username_exists?value=' + this.usernameInputElt.value, this.response.bind(this))
+        this.ajax.send('GET', '/user/username_exists/' + this.usernameInputElt.value, this.response.bind(this))
     }
 
     /**

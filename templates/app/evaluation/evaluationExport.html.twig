@@ -247,24 +247,24 @@
                         <tbody>
                             <tr>
                                 <td>Ressources</td>
-                                <td style="text-align: right;">{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                <td style="text-align: right;">{{ evalBudgetGroup.resourcesGroupAmt|format_currency("EUR") }}</td>
                             </tr>
                             {% if evalBudgetGroup.chargesGroupAmt %}
                                 <tr>
                                     <td>Charges</td>
-                                    <td style="text-align: right;">{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                    <td style="text-align: right;">{{ evalBudgetGroup.chargesGroupAmt|format_currency("EUR") }}</td>
                                 </tr>
                             {% endif %}
                             {% if evalBudgetGroup.contributionAmt %}
                                 <tr>
                                     <td>Participation financière</td>
-                                    <td style="text-align: right;">{{ evalBudgetGroup.contributionAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                    <td style="text-align: right;">{{ evalBudgetGroup.contributionAmt|format_currency("EUR") }}</td>
                                 </tr>
                             {% endif %}
                             {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
                                 <tr>
                                     <td>Remboursement mensuel des dettes</td>
-                                    <td style="text-align: right;">{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                    <td style="text-align: right;">{{ evalBudgetGroup.monthlyRepaymentAmt|format_currency("EUR") }}</td>
                                 </tr>
                             {% endif %}
                         </tbody>
@@ -272,13 +272,13 @@
                             {% if evalBudgetGroup.budgetBalanceAmt > 0 %}
                                 <tr style="font-weight: bold;">
                                     <td>Reste à vivre</td>
-                                    <td style="text-align: right;">{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                    <td style="text-align: right;">{{ evalBudgetGroup.budgetBalanceAmt|format_currency("EUR") }}</td>
                                 </tr>
                             {% endif %}
                             {% if evalBudgetGroup.debtsGroupAmt > 0 %}
                                 <tr>
                                     <td>Montant total des dettes</td>
-                                    <td style="text-align: right;">{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                    <td style="text-align: right;">{{ evalBudgetGroup.debtsGroupAmt|format_currency("EUR") }}</td>
                                 </tr>
                             {% endif %}
                         </tfoot>
@@ -310,8 +310,8 @@
                                         <tr>
                                             <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
                                                 attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}</td>
-                                            {% set amt = attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") %}
-                                            <td style="text-align: right;">{{ amt > 0 ? amt ~ ' €' }}</td>
+                                            {% set amt = attribute(evalBudget, key ~ 'Amt') %}
+                                            <td style="text-align: right;">{{ amt > 0 ? amt|format_currency("EUR") }}</td>
                                         </tr>
                                         {% endif %}
                                     {% endfor %}
@@ -319,18 +319,18 @@
                                 <tfoot>
                                     <tr style="font-weight: bold;">
                                         <td>Total des ressources</td>
-                                        <td style="text-align: right;">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") }} €</td>
+                                        <td style="text-align: right;">{{ evalBudget.resourcesAmt|format_currency("EUR") }}</td>
                                     </tr>
                                     {% if evalBudget.incomeN1Amt %}
                                         <tr>
                                             <td>Impôts sur le revenu n-1</td>
-                                            <td style="text-align: right;">{{ evalBudget.incomeN1Amt|number_format(0, ",", " ") }} €</td>
+                                            <td style="text-align: right;">{{ evalBudget.incomeN1Amt|format_currency("EUR") }}</td>
                                         </tr>							
                                     {% endif %}
                                     {% if evalBudget.incomeN2Amt %}
                                         <tr>
                                             <td>Impôts sur le revenu n-2</td>
-                                            <td style="text-align: right;">{{ evalBudget.incomeN2Amt|number_format(0, ",", " ") }} €</td>
+                                            <td style="text-align: right;">{{ evalBudget.incomeN2Amt|format_currency("EUR") }}</td>
                                         </tr>
                                     {% endif %}
                                 </tfoot>
@@ -354,7 +354,7 @@
                                         <tr>
                                             <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
                                                 attribute(evalBudget, key ~ 'Precision') : "Autre(s) charge(s)") }}</td>
-                                            <td style="text-align: right;">{{ attribute(evalBudget, key ~ 'Amt')|number_format(0, ",", " ") ~ ' €' }}</td>
+                                            <td style="text-align: right;">{{ attribute(evalBudget, key ~ 'Amt')|format_currency("EUR") }}</td>
                                         </tr>
                                         {% endif %}
                                     {% endfor %}
@@ -362,7 +362,7 @@
                                 <tfoot>
                                     <tr style="font-weight: bold;">
                                         <td>Total des charges</td>
-                                        <td style="text-align: right;">{{ evalBudget.resourcesAmt|number_format(0, ",", " ") ~ ' €' }}</td>
+                                        <td style="text-align: right;">{{ evalBudget.resourcesAmt|format_currency("EUR") }}</td>
                                     </tr>
                                 </tfoot>
                             </table>

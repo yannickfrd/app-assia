@@ -4,7 +4,7 @@
 export default class ParametersUrl {
 
     constructor() {
-        var vars = {}
+        const vars = {}
         window.location.href.replace(location.hash, '').replace(
             /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
             (m, key, value) => { // callback
@@ -20,5 +20,10 @@ export default class ParametersUrl {
 
     get(param) {
         return this.vars[param] ? this.vars[param] : null
+    }
+
+    lastParam() {
+        const splitPath = window.location.pathname.split('/')
+        return splitPath[splitPath.length - 1]
     }
 }

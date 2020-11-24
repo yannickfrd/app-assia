@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Service;
 use App\Entity\User;
 use App\Form\Model\UserSearch;
 use App\Form\User\UserSearchType;
@@ -11,7 +10,6 @@ use App\Service\Export\UserExport;
 use App\Service\Pagination;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -75,15 +73,13 @@ class UserController extends AbstractController
     /**
      * Vérifie si le login est déjà utilisé.
      *
-     * @Route("/user/username_exists", name="username_exists", methods="GET")
+     * @Route("/user/username_exists/{username}", name="username_exists", methods="GET")
      */
-    public function usernameExists(Request $request): Response
+    public function usernameExists(string $username = ''): Response
     {
-        $user = $this->repo->findOneBy(['username' => $request->query->get('value')]);
+        $user = $this->repo->findOneBy(['username' => $username]);
 
-        return $this->json([
-            'response' => $user != null,
-        ], 200);
+        return $this->json(['response' => $user != null]);
     }
 
     /**

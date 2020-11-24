@@ -72,14 +72,14 @@
 									</td>
 									<td class="align-middle js-type">{{ contribution.typeToString }}
 										<span class="text-secondary">
-											{{ contribution.type == constant("TYPE_RENT", contribution) ? "(" ~ contribution.rentAmt|number_format(0, ",", " ") ~ " €)" }}<br/>
-											{{ contribution.type == constant("TYPE_RETURN_BAIL", contribution) ? "(" ~ contribution.returnAmt|number_format(0, ",", " ") ~ " €)" }}
+											{{ contribution.type == constant("TYPE_RENT", contribution) ? "(" ~ contribution.rentAmt|format_currency("EUR") }}<br/>
+											{{ contribution.type == constant("TYPE_RETURN_BAIL", contribution) ? "(" ~ contribution.returnAmt|format_currency("EUR") }}
 										</span>								
 									</td>
 									<td class="align-middle js-monthContrib">{{ contribution.monthContrib ? contribution.monthContrib|date("m/Y") }}</td>
-									<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt >= 0 ? contribution.toPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
-									<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt ? contribution.paidAmt|number_format(2, ",", " ") ~ " €" }}</td>
-									<td class="align-middle text-right js-stillToPayAmt">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|number_format(2, ",", " ") ~ " €" }}</td>
+									<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt >= 0 ? contribution.toPayAmt|format_currency("EUR") }}</td>
+									<td class="align-middle text-right js-paidAmt">{{ contribution.paidAmt ? contribution.paidAmt|format_currency("EUR") }}</td>
+									<td class="align-middle text-right js-stillToPayAmt">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|format_currency("EUR") }}</td>
 									<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}
 									<td class="align-middle js-paymentType">{{ contribution.paymentTypeToString }}</td>
 									<td class="align-middle js-comment">{{ contribution.comment|slice(0,65) }}{% if contribution.comment|length > 65 %}...{% endif %}</td>

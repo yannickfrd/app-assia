@@ -102,13 +102,13 @@ class PeopleGroupController extends AbstractController
      *
      * @Route("/role_person/{id}/remove/{_token}", name="role_person_remove", methods="GET")
      */
-    public function tryRemovePersonInGroup(RolePerson $rolePerson, Request $request): Response
+    public function tryRemovePerson(RolePerson $rolePerson, string $_token): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->accessDenied();
         }
         // Vérifie si le token est valide avant de retirer la personne du groupe
-        if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $_token)) {
             return $this->json($this->groupManager->removePerson($rolePerson));
         }
 

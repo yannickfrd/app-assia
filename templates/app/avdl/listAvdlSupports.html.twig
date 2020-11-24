@@ -67,7 +67,7 @@
                                         </a>
                                     {% endif %}
                                 </td>
-                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") ~ (support.head ? "*") }}</td>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
                                 <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
                                 <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
                                 <td class="align-middle">{{ supportGroup.statusToString }}<br/>

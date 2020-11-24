@@ -18,7 +18,7 @@ class SupportNoteSearch
         return $this->noteId;
     }
 
-    public function setNoteId(int $noteId): self
+    public function setNoteId(?int $noteId): self
     {
         $this->noteId = $noteId;
 

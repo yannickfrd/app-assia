@@ -54,24 +54,24 @@ class E2eTest extends PantherTestCase
     //     $this->assertSelectorTextContains("h1", "Tableau de bord");
     // }
 
-    public function testLogin(): void
-    {
-        $this->createPantherLogin();
+    // public function testLogin(): void
+    // {
+    //     $this->createPantherLogin();
 
-        $crawler = $this->client->request('GET', $this->generatePantherUri('person_new'));
+    //     $crawler = $this->client->request('GET', $this->generatePantherUri('person_new'));
 
-        $form = $crawler->selectButton('send')->form([
-            'role_person_group[person][firstname]' => 'Larissa',
-            'role_person_group[person][lastname]' => 'MULLER',
-            'role_person_group[person][birthdate]' => '09/05/1987',
-            'role_person_group[person][gender]' => 1,
-            'role_person_group[peopleGroup][nbPeople]' => 1,
-            'role_person_group[role]' => 5,
-            'role_person_group[peopleGroup][familyTypology]' => 2,
-        ]);
+    //     $form = $crawler->selectButton('send')->form([
+    //         'role_person_group[person][firstname]' => 'Larissa',
+    //         'role_person_group[person][lastname]' => 'MULLER',
+    //         'role_person_group[person][birthdate]' => '09/05/1987',
+    //         'role_person_group[person][gender]' => 1,
+    //         'role_person_group[peopleGroup][nbPeople]' => 1,
+    //         'role_person_group[role]' => 5,
+    //         'role_person_group[peopleGroup][familyTypology]' => 2,
+    //     ]);
 
-        $this->client->submit($form);
+    //     $this->client->submit($form);
 
-        $this->assertSelectorExists('.alert.alert-success');
-    }
+    //     $this->assertSelectorExists('.alert.alert-success');
+    // }
 }
