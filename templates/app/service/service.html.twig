@@ -99,12 +99,12 @@
             {% endif %}
         </section>
 
-        {# {% include "app/service/serviceDevices.html.twig" %} #}
+        {% include "app/service/serviceDevices.html.twig" %}
 
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
 
-        {# {% if EDIT_MODE == true %}
+        {% if EDIT_MODE == true %}
 			{% include "app/service/serviceSubServices.html.twig" %}
         {% endif %}
         {% if is_granted("EDIT", service) %}
@@ -115,7 +115,7 @@
         {% if EDIT_MODE %}
         	{% include "app/service/serviceAccommodations.html.twig" %}
         	{% include "app/service/serviceUsers.html.twig" %}
-        {% endif %} #}
+        {% endif %}
     </div>
 
 {% endblock %}

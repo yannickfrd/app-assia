@@ -43,9 +43,9 @@ class Service
     ];
 
     public const CONTRIBUTION_TYPE = [
-        1 => 'Taux de participation sur les ressources',
-        2 => 'Loyer/redevance fixe',
-        3 => 'Mixte',
+        1 => 'Pourcentage des ressources',
+        2 => 'Montant fixe',
+        3 => 'Autre',
     ];
 
     /**
