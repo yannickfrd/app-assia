@@ -242,7 +242,7 @@ class NoteController extends AbstractController
 
         $content = $note->getContent();
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
-        $fullnameSupport = $supportManager->getFullnameHeadSupport($supportGroup);
+        $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
 
         if ($export instanceof ExportPDF) {
             $content = $export->formatContent($content, $renderer, $note->getTitle(), $logoPath, $fullnameSupport);
@@ -250,7 +250,7 @@ class NoteController extends AbstractController
 
         $export->createDocument($content, $note->getTitle(), $logoPath, $fullnameSupport);
 
-        return $export->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+        return $export->download($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
     }
 
     /**

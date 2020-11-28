@@ -237,7 +237,7 @@ class RdvController extends AbstractController
             'action' => 'show',
             'rdv' => [
                 'title' => $rdv->getTitle(),
-                'fullnameSupport' => $supportGroup ? $supportManager->getFullnameHeadSupport($supportGroup) : null,
+                'fullnameSupport' => $supportGroup ? $supportManager->getHeadPersonSupport($supportGroup)->getFullname() : null,
                 'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
                 'end' => $rdv->getEnd()->format("Y-m-d\TH:i"),
                 'location' => $rdv->getLocation(),

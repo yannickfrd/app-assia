@@ -8,8 +8,6 @@ use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
-use PhpOffice\PhpWord\Writer\WriterInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportWord
@@ -50,28 +48,22 @@ class ExportWord
 
     /**
      * Save the document.
-     *
-     * @return StreamedResponse|Response
      */
-    public function save(bool $download = true)
+    public function save()
     {
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
-
-        if (true === $download) {
-            return $this->download($objWriter, $this->getFilename());
-        }
-
-        return new Response('OK');
     }
 
     /**
      * Download file.
      */
-    protected function download(WriterInterface $objWriter, string $filename): StreamedResponse
+    public function download(): StreamedResponse
     {
+        $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
+
         $response = new StreamedResponse();
         $response->headers->set('Content-Type', 'application/vnd.ms-word');
-        $response->headers->set('Content-Disposition', 'attachment;filename='.$filename.'.docx');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$this->getFilename().'.docx');
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);

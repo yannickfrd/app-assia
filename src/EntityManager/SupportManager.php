@@ -234,11 +234,11 @@ class SupportManager
     /**
      * Donne le demandeur principal du suivi.
      */
-    public function getFullnameHeadSupport(?SupportGroup $supportGroup): ?string
+    public function getHeadPersonSupport(?SupportGroup $supportGroup): ?Person
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             if (true === $supportPerson->getHead()) {
-                return $supportPerson->getPerson()->getFullname();
+                return $supportPerson->getPerson();
             }
         }
 

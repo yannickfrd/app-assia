@@ -108,7 +108,7 @@ class EvaluationController extends AbstractController
 
         $title = 'Grille d\'évaluation sociale';
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
-        $fullnameSupport = $supportManager->getFullnameHeadSupport($supportGroup);
+        $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
 
         $content = $renderer->render('app/evaluation/evaluationExport.html.twig', [
             'type' => $type,
@@ -124,7 +124,7 @@ class EvaluationController extends AbstractController
 
         $export->createDocument($content, $title, $logoPath, $fullnameSupport);
 
-        return $export->save($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+        return $export->download($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
     }
 
     /**

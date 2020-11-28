@@ -22,6 +22,7 @@ class ExportPDF
     public function __construct()
     {
         $this->dompdf = new Dompdf();
+        $this->defaultLogo = 'images/logo_esperer95.png';
     }
 
     /**
@@ -64,31 +65,33 @@ class ExportPDF
 
     /**
      * Save the document.
-     *
-     * @return StreamedResponse|Response
      */
-    public function save(bool $download = true): StreamedResponse
+    public function save(): string
     {
-        if (true === $download) {
-            return $this->download($this->getFilename());
-        }
+        $path = 'uploads/exports/'.(new \DateTime())->format('Y/m/d').$this->getFilename().'.pdf';
 
-        return new Response('OK');
+        $output = $this->dompdf->output();
+
+        file_put_contents($path, $output);
+
+        return $path;
     }
 
     /**
      * Output the generated PDF to Browser.
      */
-    public function download(): StreamedResponse
+    public function download(): Response
     {
         $this->dompdf->stream($this->getFileName());
 
-        return new StreamedResponse();
+        return new Response();
+
+        // return new StreamedResponse();
     }
 
     protected function getFileName()
     {
-        $filename = \str_replace([' ', '/', '\''], '-', $this->title.'-'.$this->infoAdd);
+        $filename = \str_replace([' ', '/', '\''], '-', $this->title.($this->infoAdd ? '-'.$this->infoAdd : ''));
         $filename = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $filename);
 
         return (new \DateTime())->format('Y_m_d_').$filename;
@@ -118,11 +121,17 @@ class ExportPDF
     /**
      * Retourne le chemin d'une image au bon format (base 64).
      */
-    public function getPathImage(string $path): string
+    public function getPathImage(string $path = null): ?string
     {
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
+        $path = $path ?? $this->defaultLogo;
 
-        return 'data:image/'.$extension.';base64,'.base64_encode($data);
+        if (\file_exists($path)) {
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+
+            return 'data:image/'.$extension.';base64,'.base64_encode($data);
+        }
+
+        return null;
     }
 }
