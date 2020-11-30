@@ -8,11 +8,13 @@ use Dompdf\FontMetrics;
 use Dompdf\Options;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Twig\Environment;
 
 class ExportPDF
 {
     protected $dompdf;
+    protected $slugger;
 
     protected $title;
     protected $logoPath;
@@ -22,6 +24,7 @@ class ExportPDF
     public function __construct()
     {
         $this->dompdf = new Dompdf();
+        $this->slugger = new AsciiSlugger();
         $this->defaultLogo = 'images/logo_esperer95.png';
     }
 
@@ -80,9 +83,11 @@ class ExportPDF
     /**
      * Output the generated PDF to Browser.
      */
-    public function download(): Response
+    public function download($download = true): Response
     {
-        $this->dompdf->stream($this->getFileName());
+        if ($download) {
+            $this->dompdf->stream($this->getFileName());
+        }
 
         return new Response();
 
@@ -91,10 +96,9 @@ class ExportPDF
 
     protected function getFileName()
     {
-        $filename = \str_replace([' ', '/', '\''], '-', $this->title.($this->infoAdd ? '-'.$this->infoAdd : ''));
-        $filename = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $filename);
+        $slug = strtolower($this->slugger->slug($this->title.($this->infoAdd ? '-'.$this->infoAdd : '')));
 
-        return (new \DateTime())->format('Y_m_d_').$filename;
+        return (new \DateTime())->format('Y_m_d_').$slug;
     }
 
     /**
@@ -111,7 +115,7 @@ class ExportPDF
             'header_info' => 'ESPERER 95 | '.$title.' | '.$infoAdd,
         ]);
 
-        $content = \str_replace('<h2', '<hr/><h2', $content);
+        // $content = \str_replace('<h2', '<hr/><h2', $content);
         $content = \str_replace('{LOGO_SIGNATURE}', '<p class="text-right"><img src="'.$logoPath.'" width="120"/></p>', $content);
         $content = $style.$headerFooter."<h1>$title</h1>".$content;
 

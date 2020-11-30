@@ -10,19 +10,26 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class B_UserFixtures extends Fixture
 {
     private $passwordEncoder;
+    protected $slugger;
     private $repo;
     private $repoService;
 
     public $users = [];
 
-    public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder, ServiceUserRepository $repo, ServiceRepository $repoService)
+    public function __construct(EntityManagerInterface $manager,
+    UserPasswordEncoderInterface $passwordEncoder,
+    SluggerInterface $slugger,
+    ServiceUserRepository $repo,
+    ServiceRepository $repoService)
     {
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->slugger = $slugger;
         $this->repo = $repo;
         $this->repoService = $repoService;
         $this->faker = \Faker\Factory::create('fr_FR');
@@ -45,11 +52,11 @@ class B_UserFixtures extends Fixture
         //     $user = new User();
 
         //     $username = substr($habitatUser["firstname"], 0, 1) . "." . $habitatUser["lastname"];
-        //     $username = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $username);
-        //     $password = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $habitatUser["firstname"]) . "2502";
+        //     $username = strtolower($this->slugger->slug($username));
+        //     $password = strtolower($this->slugger->slug($habitatUser["firstname"] . "2502"));
 
         //     $email = $habitatUser["firstname"] . "." . $habitatUser["lastname"];
-        //     $email = transliterator_transliterate("Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()", $email) . "@esperer-95.org";
+        //     $email = strtolower($this->slugger->slug($email) . "@esperer-95.org");
 
         //     $user->setUsername($username)
         //         ->setFirstName($habitatUser["firstname"])

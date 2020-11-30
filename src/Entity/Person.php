@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +11,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -141,8 +142,11 @@ class Person
      */
     private $siSiaoId;
 
-    public function __construct()
+    private $slugger;
+
+    public function __construct(SluggerInterface $slugger)
     {
+        $this->slugger = $slugger;
         $this->rolesPerson = new ArrayCollection();
         $this->supports = new ArrayCollection();
         $this->accommodationPeople = new ArrayCollection();
@@ -184,9 +188,7 @@ class Person
 
     public function getSlug(): string
     {
-        $slugify = new Slugify();
-
-        return $slugify->slugify($this->firstname.'-'.$this->lastname);
+        return strtolower((new AsciiSlugger())->slug($this->firstname.'-'.$this->lastname));
     }
 
     public function getFullname(): ?string

@@ -8,11 +8,14 @@ use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class ExportWord
 {
     protected $phpWord;
+    protected $slugger;
 
     protected $title;
     protected $logo = false;
@@ -24,6 +27,7 @@ class ExportWord
     public function __construct($fullHTML = false)
     {
         $this->phpWord = new PhpWord();
+        $this->slugger = new AsciiSlugger();
         $this->fullHTML = $fullHTML;
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
         $this->defaultLogo = 'images/logo_esperer95.png';
@@ -57,7 +61,7 @@ class ExportWord
     /**
      * Download file.
      */
-    public function download(): StreamedResponse
+    public function download($download = true): StreamedResponse
     {
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
 
@@ -71,20 +75,17 @@ class ExportWord
             $objWriter->save('php://output');
         });
 
-        return $response;
+        return $download == true ? $response : new Response();
     }
 
     /**
      * Get the formated file name.
-     *
-     * @return void
      */
     protected function getFileName(): string
     {
-        $filename = \str_replace([' ', '/', '\''], '-', $this->title.'-'.$this->infoAdd);
-        $filename = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove', $filename);
+        $slug = strtolower($this->slugger->slug($this->title.'-'.$this->infoAdd));
 
-        return (new \DateTime())->format('Y_m_d_').$filename;
+        return (new \DateTime())->format('Y_m_d_').$slug ;
     }
 
     /**

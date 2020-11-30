@@ -9,11 +9,13 @@ use App\Notification\MailNotification;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ImportDatasUser extends ImportDatas
 {
     protected $manager;
     protected $notification;
+    protected $slugger;
 
     protected $fields;
     protected $field;
@@ -28,12 +30,14 @@ class ImportDatasUser extends ImportDatas
         EntityManagerInterface $manager,
         MailNotification $notification,
         UserRepository $repoUser,
-        UserPasswordEncoderInterface $passwordEncoder)
+        UserPasswordEncoderInterface $passwordEncoder,
+        SluggerInterface $slugger)
     {
         $this->manager = $manager;
         $this->notification = $notification;
         $this->repoUser = $repoUser;
         $this->passwordEncoder = $passwordEncoder;
+        $this->slugger = $slugger;
     }
 
     public function importInDatabase(string $fileName, Service $service): int
@@ -111,10 +115,7 @@ class ImportDatasUser extends ImportDatas
             $username = $username.substr($value, 0, 1);
         }
 
-        $username = $username.'.'.$lastname;
-        $username = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_.] remove; Lower()', $username);
-
-        return $username;
+        return strtolower($this->slugger->slug($$username.'.'.$lastname));
     }
 
     /**

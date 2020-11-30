@@ -2,18 +2,17 @@
 
 namespace App\Service;
 
-use App\Service\Normalisation;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
-use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use Symfony\Component\HttpFoundation\Response;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Ods;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportExcel
@@ -94,7 +93,7 @@ class ExportExcel
             mkdir($path, 0777, true);
         }
 
-        $filename = $this->name.$this->now->format('_Y_m_d_His').'.'.$this->format;
+        $filename = $this->now->format('Y_m_d_His_').$this->name.'.'.$this->format;
         $file = $path.$filename;
 
         $this->writer->save($file);

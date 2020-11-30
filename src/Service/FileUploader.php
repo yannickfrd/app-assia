@@ -4,16 +4,19 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Tinify\Tinify;
 
 class FileUploader
 {
     protected $targetDirectory;
+    protected $slugger;
     protected $tinify;
 
     public function __construct(string $targetDirectory, Tinify $tinify, string $tinifyKey)
     {
         $this->targetDirectory = $targetDirectory;
+        $this->slugger = new AsciiSlugger();
         $this->tinify = $tinify;
         $this->tinify->setKey($tinifyKey);
     }
@@ -23,11 +26,12 @@ class FileUploader
      */
     public function upload(UploadedFile $file, string $path = null): string
     {
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $originalFilename = str_replace([' ', '/'], '-', $originalFilename);
-        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $originalFilename);
-        $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
-        $extensionFile = $file->guessExtension();
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        // $filename = str_replace([' ', '/'], '-', $filename);
+        // $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $filename);
+        $slug = strtolower($this->slugger->slug($filename));
+        $newFilename = $slug.'-'.uniqid().'.'.$file->guessExtension();
+        // $extensionFile = $file->guessExtension();
 
         // Move the file to the directory where document are stored
         try {
