@@ -118,22 +118,14 @@ class SupportGroupType extends AbstractType
             $subService = $supportGroup->getSubService();
 
             $formModifier($form, $service, $subService);
-
-            switch ($service->getId()) {
-                case Service::SERVICE_AVDL_ID:
-                    $this->addAvdlFields($form);
-                    break;
-                case Service::SERVICE_PASH_ID:
-                    $this->addHotelFields($form);
-                    break;
-                default:
-                    break;
-            }
+            $this->addSupportFields($form, $service);
         });
 
         $builder->get('service')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($formModifier) {
-            $service = $event->getForm()->getData();
-            $formModifier($event->getForm()->getParent(), $service);
+            $form = $event->getForm();
+            $service = $form->getData();
+
+            $formModifier($form->getParent(), $service);
         });
     }
 
@@ -190,10 +182,21 @@ class SupportGroupType extends AbstractType
         };
     }
 
+    protected function addSupportFields(FormInterface $form, Service $service)
+    {
+        switch ($service->getId()) {
+            case Service::SERVICE_AVDL_ID:
+                $this->addAvdlFields($form);
+                break;
+            case Service::SERVICE_PASH_ID:
+                $this->addHotelFields($form);
+                break;
+         }
+    }
+
     protected function addAvdlFields(FormInterface $form)
     {
         $form
-            ->remove('status')
             ->remove('startDate')
             ->remove('endDate')
             ->remove('endStatusComment')
@@ -204,7 +207,6 @@ class SupportGroupType extends AbstractType
     {
         $form
             ->remove('location')
-            ->remove('status')
             ->add('hotelSupport', HotelSupportType::class);
 
         $supportGroup = $form->getConfig()->getData();
