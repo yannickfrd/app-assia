@@ -37,6 +37,7 @@ End status: Situation résidentielle à l'issue
 End status comment: Précision sur la situation à l'issue
 Error: Erreur
 Family typology: Typologie familiale
+Family typologies: Typologie familiale
 Firstname: Prénom
 Fullname: Nom et prénom
 Gender: Sexe
@@ -52,6 +53,7 @@ NbPeople: Nb. pers.
 New password: Nouveau mot de passe
 Old password: Ancien mot de passe
 placeholder:
+  action: -- Action --
   comment: Écrire un commentaire...
   device: -- Dispositif --
   disabled: -- Statut --
@@ -59,7 +61,9 @@ placeholder:
   gender: -- Sexe --
   nbSupports: Nb de suivis
   pole: -- Pôle --
+  referent: -- Référent --
   select: -- Sélectionner --
+  subService: -- Sous-service --
   service: -- Service --
   status: -- Statut --
 Password: Mot de passe
@@ -196,6 +200,12 @@ Salary amt: Montant salaire(s)
 Still to pay amt: Montant restant dû
 To pay amt: Montant à régler
 contribution:
+  send:
+    notice: Envoyer l'avis d'échéance par email
+    receipt: Envoyer le reçu de paiement par email
+  download: 
+    notice: Télécharger l'avis d'échéance
+    receipt: Télécharger le reçu de paiement
   comment.placeholder: Écrire un commentaire
   monthContrib: Mois de la redevance
   type: Type d'opération

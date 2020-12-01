@@ -2,42 +2,43 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\EvaluationGroup;
+use App\Entity\Rdv;
+use App\Entity\Note;
+use App\Entity\User;
+use App\Entity\Document;
+use App\Entity\Referent;
+use App\Service\Grammar;
+use App\Service\Calendar;
 use App\Entity\PeopleGroup;
+use App\Form\Utils\Choices;
+use App\Service\Pagination;
+use App\Entity\Contribution;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Entity\User;
-use App\EntityManager\SupportManager;
+use App\Entity\EvaluationGroup;
 use App\Form\Model\SupportSearch;
-use App\Form\Model\SupportsInMonthSearch;
-use App\Form\Support\NewSupportGroupType;
-use App\Form\Support\SupportCoefficientType;
+use App\Repository\RdvRepository;
+use App\EntityManager\SupportManager;
+use App\Repository\ServiceRepository;
 use App\Form\Support\SupportGroupType;
 use App\Form\Support\SupportSearchType;
-use App\Form\Support\SupportsInMonthSearchType;
-use App\Form\Utils\Choices;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Model\SupportsInMonthSearch;
+use App\Form\Support\NewSupportGroupType;
 use App\Repository\ContributionRepository;
-use App\Repository\DocumentRepository;
-use App\Repository\EvaluationGroupRepository;
-use App\Repository\NoteRepository;
-use App\Repository\RdvRepository;
-use App\Repository\ReferentRepository;
-use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
-use App\Service\Calendar;
-use App\Service\Grammar;
-use App\Service\Pagination;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Support\SupportCoefficientType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\Support\SupportsInMonthSearchType;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class SupportController extends AbstractController
 {
@@ -78,9 +79,9 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
+    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportManager $supportManager): Response
     {
-        $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
+        $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $this->manager->getRepository(Service::class));
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
@@ -189,30 +190,24 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET")
      */
-    public function viewSupportGroup(
-        int $id,
-        SupportManager $supportManager,
-        ReferentRepository $repoReferent,
-        RdvRepository $repoRdv,
-        NoteRepository $repoNote,
-        DocumentRepository $repoDocument,
-        ContributionRepository $repoContribution,
-        EvaluationGroupRepository $repoEvaluation): Response
+    public function viewSupportGroup(int $id, SupportManager $supportManager, RdvRepository $repoRdv): Response
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
+        $repoRdv = $this->manager->getRepository(Rdv::class);
+
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),
-            'nbNotes' => $supportManager->getNbNotes($supportGroup, $repoNote),
+            'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $this->manager->getRepository(Referent::class)),
+            'nbNotes' => $supportManager->getNbNotes($supportGroup, $this->manager->getRepository(Note::class)),
             'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
-            'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $repoDocument),
-            'nbContributions' => $supportManager->getNbContributions($supportGroup, $repoContribution),
+            'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $this->manager->getRepository(Document::class)),
+            'nbContributions' => $supportManager->getNbContributions($supportGroup, $this->manager->getRepository(Contribution::class)),
             'lastRdv' => $nbRdvs ? $supportManager->getLastRdvs($supportGroup, $repoRdv) : null,
             'nextRdv' => $nbRdvs ? $supportManager->getNextRdvs($supportGroup, $repoRdv) : null,
-            'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
+            'evaluation' => $supportManager->getEvaluation($supportGroup, $this->manager->getRepository(EvaluationGroup::class)),
         ]);
     }
 
@@ -242,9 +237,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repo, SupportManager $supportManager): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, SupportManager $supportManager): Response
     {
-        if (!$supportManager->addPeopleInSupport($this->manager, $supportGroup, $repo)) {
+        if (!$supportManager->addPeopleInSupport($this->manager, $supportGroup, $this->manager->getRepository(EvaluationGroup::class))) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 

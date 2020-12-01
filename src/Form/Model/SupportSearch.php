@@ -2,9 +2,10 @@
 
 namespace App\Form\Model;
 
+use App\Entity\SupportGroup;
 use App\Form\Model\Traits\DateSearchTrait;
-use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 
 class SupportSearch
 {
@@ -111,6 +112,17 @@ class SupportSearch
         return $this;
     }
 
+    public function getStatusToString(): array
+    {
+        $status = [];
+
+        foreach ($this->status  as $value) {
+            $status[] = SupportGroup::STATUS[$value];
+        }
+
+        return $status;
+    }
+
     public function getNbPeople(): ?int
     {
         return $this->nbPeople;
@@ -133,6 +145,11 @@ class SupportSearch
         $this->supportDates = $supportDates;
 
         return $this;
+    }
+
+    public function getSupportDatesToString(): string
+    {
+        return $this->supportDates ? self::SUPPORT_DATES[$this->supportDates] : null;
     }
 
     public function getHead(): ?bool

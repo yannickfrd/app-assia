@@ -19,32 +19,12 @@ class SupportSearchType extends AbstractType
     {
         $builder
             ->add('fullname', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Nom et/ou prénom',
                     'class' => 'w-max-170',
                 ],
             ])
-            // ->add('familyTypologies', ChoiceType::class, [
-            //     'label_attr' => ['class' => 'sr-only'],
-            //     'multiple' => true,
-            //     'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
-            //     'attr' => [
-            //         'class' => 'multi-select',
-            //         'data-select2-id' => 'typology',
-            //     ],
-            //     'placeholder' => 'placeholder.familtyTypology',
-            //     'required' => false,
-            // ])
-            // ->add("nbPeople", null, [
-            //     "attr" => [
-            //         "class" => "w-max-100",
-            //         "placeholder" => "NbPeople",
-            //         "autocomplete" => "off"
-            //     ]
-            // ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
@@ -55,7 +35,6 @@ class SupportSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('supportDates', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(SupportSearch::SUPPORT_DATES),
                 'placeholder' => '-- Date de suivi --',
                 'required' => false,
@@ -69,12 +48,8 @@ class SupportSearchType extends AbstractType
             ->add('head', CheckboxType::class, [
                 'label' => 'DP',
                 'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox'],
             ])
             ->add('export');
     }

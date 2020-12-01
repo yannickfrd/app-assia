@@ -40,7 +40,8 @@ class ExportController extends AbstractController
     {
         set_time_limit(60 * 60);
 
-        $form = ($this->createForm(ExportSearchType::class, new ExportSearch()))
+        $search = new ExportSearch();
+        $form = ($this->createForm(ExportSearchType::class, $search))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -78,7 +79,7 @@ class ExportController extends AbstractController
                     'alert' => 'success',
                     'type' => 'count',
                     'count' => $count,
-                    'msg' => 'Nombre de résultats : '.$count,
+                    'msg' => 'Nombre de résultats : '.number_format($count, 0, '', ' '),
                 ]);
         }
 

@@ -14,7 +14,7 @@
 
         <h1 class="h2 mb-3">Export des données</h1>
 
-        <hr>
+        <hr/>
 
         <section>
             {% include "model/msgFlash.html.twig" %}
@@ -23,16 +23,25 @@
             <div id="form-search">
                 {{ form_start(form) }}
                 <div class="form-group row">
-                    <div class="col-md-6">{{ form_row(form.services) }}</div>
-                    <div class="col-md-6">{{ form_row(form.subServices) }}</div>
-                    <div class="col-md-6">{{ form_row(form.devices) }}</div>
-                    <div class="col-md-6">{{ form_row(form.referents) }}</div>
+                    <div class="col-md-6">{{ form_row(form.service.services) }}</div>
+                    <div class="col-md-6">{{ form_row(form.service.subServices) }}</div>
+                    <div class="col-md-6">{{ form_row(form.service.devices) }}</div>
+                    <div class="col-md-6">{{ form_row(form.service.referents) }}</div>
                 </div>
                 <div class="form-group row">
                     <div class="col-md-6">{{ form_row(form.status) }}</div>
                     <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
-                    <div class="col-md-6">{{ form_row(form.start) }}</div>
-                    <div class="col-md-6">{{ form_row(form.end) }}</div>
+                    <div class="col-md-6">{{ form_row(form.date.start) }}</div>
+                    <div class="col-md-6">{{ form_row(form.date.end) }}</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">{{ form_row(form.familyTypologies) }}</div>
+                    <div class="col-md-6">{{ form_row(form.nbPeople) }}</div>
+                     <div class="col-md-6">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
+                            data-placement="bottom" title="Demandeur/euse princiapl·e">{{ form_row(form.head) }}
+                        </div>
+                    </div>
                 </div>
                 {# <div class="form-group row">
                     <div class="col-md-3">
@@ -90,13 +99,12 @@
                 {{ form_end(form, {"render_rest": false}) }}
             </div>
 
-        <hr>
+        <hr/>
         
         </section>
 
         <section class="mb-5">
             <h2 class="h3 mb-3">Mes exports</h1>
-
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
                     <span class="align-middle">Résultat : {{ exports.getTotalItemCount|number_format(0,'', ' ')  }}<!--
@@ -106,7 +114,6 @@
                     <div class="navigation">{{ knp_pagination_render(exports) }}</div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -122,7 +129,6 @@
                                     <th scope="col" class="align-middle th-w-20"></th>
                                 </tr>
                             </thead>
-
                             <tbody id="container-exports">
                                 {% for export in exports %}
                                     <tr id="export-{{ export.id }}" class="js-export">

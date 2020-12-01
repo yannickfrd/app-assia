@@ -2,43 +2,8 @@
 
 namespace App\Form\Model;
 
-use App\Entity\SupportGroup;
-use App\Form\Model\Traits\DateSearchTrait;
-use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
-use Symfony\Component\Validator\Constraints as Assert;
-
-class ExportSearch
+class ExportSearch extends SupportSearch
 {
-    use DateSearchTrait;
-    use ReferentServiceDeviceSearchTrait;
-
-    public const SUPPORT_DATES = [
-        1 => 'Début du suivi',
-        2 => 'Fin du suivi',
-        3 => 'Période de suivi',
-    ];
-
-    /**
-     * @var array
-     */
-    private $familyTypologies;
-
-    /**
-     * @var int|null
-     * @Assert\Range(min = 1, max = 19)
-     */
-    private $nbPeople;
-
-    /**
-     * @var array
-     */
-    private $status;
-
-    /**
-     * @var int|null
-     */
-    private $supportDates;
-
     /**
      * @var bool|null
      */
@@ -73,70 +38,6 @@ class ExportSearch
      * @var bool|null
      */
     private $evalJustice;
-
-    public function getFamilyTypologies(): ?array
-    {
-        return $this->familyTypologies;
-    }
-
-    public function setFamilyTypologies(?array $familyTypologies): self
-    {
-        $this->familyTypologies = $familyTypologies;
-
-        return $this;
-    }
-
-    public function getNbPeople(): ?int
-    {
-        return $this->nbPeople;
-    }
-
-    public function setNbPeople(int $nbPeople): self
-    {
-        $this->nbPeople = $nbPeople;
-
-        return $this;
-    }
-
-    public function getStatus(): ?array
-    {
-        return $this->status;
-    }
-
-    public function getStatusToString(): array
-    {
-        $status = [];
-
-        foreach ($this->status  as $value) {
-            $status[] = SupportGroup::STATUS[$value];
-        }
-
-        return $status;
-    }
-
-    public function setStatus(?array $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getSupportDates(): ?int
-    {
-        return $this->supportDates;
-    }
-
-    public function getSupportDatesToString(): string
-    {
-        return $this->supportDates ? self::SUPPORT_DATES[$this->supportDates] : null;
-    }
-
-    public function setSupportDates(int $supportDates): self
-    {
-        $this->supportDates = $supportDates;
-
-        return $this;
-    }
 
     public function getEvalAdm(): ?bool
     {

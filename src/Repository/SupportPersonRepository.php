@@ -168,6 +168,53 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Donne tous les suivis pour l'export complet.
+     */
+    public function findSupportsFullToExport($search = null)
+    {
+        $query = $this->getSupportsQuery()
+            ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
+            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
+            ->leftJoin('ag.accommodation', 'a')->addSelect('a')
+
+            ->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('ep')
+            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
+            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
+            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
+            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
+            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
+            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
+
+            ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('eg')
+            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
+            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
+            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
+            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
+            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
+
+        return $this->filters($query, $search)
+
+            ->setMaxResults(5000)
+            ->orderBy('sp.startDate', 'DESC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    public function countSupportsToExport($search = null)
+    {
+        $query = $this->createQueryBuilder('sp')->select('sp')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->select('COUNT(sp.id)');
+
+        return $this->filters($query, $search)
+
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     protected function getSupportsQuery()
     {
         return $this->createQueryBuilder('sp')->select('sp')
@@ -290,64 +337,21 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
         }
 
-        // if ($search->getBirthdate()) {
-        //     $query->andWhere("p.birthdate = :birthdate")
-        //         ->setParameter("birthdate", $search->getBirthdate());
-        // }
-        // if ($search->getFamilyTypology()) {
-        //     $query->andWhere("g.familyTypology = :familyTypology")
-        //         ->setParameter("familyTypology", $search->getFamilyTypology());
-        // }
-        // if ($search->getNbPeople()) {
-        //     $query->andWhere("g.nbPeople = :nbPeople")
-        //         ->setParameter("nbPeople", $search->getNbPeople());
-        // }
-        // if ($search->getStatus()) {
-        //     $query->andWhere("sg.status = :status")
-        //         ->setParameter("status", $search->getStatus());
-        // }
+        if ($search->getFamilyTypologies()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getFamilyTypologies() as $familyTypology) {
+                $orX->add($expr->eq('g.familyTypology', $familyTypology));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getNbPeople()) {
+            $query->andWhere('sg.nbPeople = :nbPeople')
+                ->setParameter('nbPeople', $search->getNbPeople());
+        }
 
         return $query;
-    }
-
-    public function findSupportsFullToExport($search = null)
-    {
-        $query = $this->getSupportsQuery();
-
-        $query = $query->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('ep')
-            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
-            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
-            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
-            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
-            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
-            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
-
-            ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('eg')
-            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
-            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
-            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
-            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
-            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
-
-        $query = $this->filters($query, $search);
-
-        return $query->setMaxResults(5000)
-            ->orderBy('sp.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
-    }
-
-    public function countSupportsToExport($search = null)
-    {
-        $query = $this->createQueryBuilder('sp')->select('sp')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
-            ->select('COUNT(sp.id)');
-
-        $query = $this->filters($query, $search);
-
-        return $query->getQuery()
-            ->getSingleScalarResult();
     }
 
     public function countSupportPeople(array $criteria = null): int

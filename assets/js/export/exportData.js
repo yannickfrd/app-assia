@@ -22,7 +22,7 @@ export default class ExportData {
 
                 if (btnElt.id === 'export') {
                     this.loader.off()
-                    new MessageFlash('success', 'Votre export est en cours de préparation...  Vous recevrez le lien de téléchargement par email.')
+                    new MessageFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.')
                 }
             })
         })
@@ -34,7 +34,7 @@ export default class ExportData {
      */
     response(data) {
         if (data.type === 'count') {
-            this.resultsElt.textContent = data.count + ' résultat' + (data.count > 0 ? 's' : '') + '.'
+            this.resultsElt.textContent = parseInt(data.count).toLocaleString('fr') + ' résultat' + (data.count > 0 ? 's' : '') + '.'
         }
 
         this.loader.off()

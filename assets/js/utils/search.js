@@ -22,13 +22,16 @@ export default class Search {
     }
 
     init() {
-        this.btnSearchElt.addEventListener('click', e => {
+        if (this.btnSearchElt) {
+            this.btnSearchElt.addEventListener('click', e => {
             this.loader.inLoading = false
             if (this.loader.isActive()) {
                     e.preventDefault()
                 }
             this.loader.on(); 
-        })
+        })   
+        }
+
 
         this.btnClearElt.addEventListener('click', e => {
             this.loader.off(); 

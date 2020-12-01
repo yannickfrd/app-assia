@@ -40,8 +40,7 @@ class SearchType extends AbstractType
                     'query_builder' => function (ServiceRepository $repo) {
                         return $repo->getServicesFromUserQueryList($this->currentUser);
                     },
-                    'label_attr' => ['class' => 'sr-only'],
-                    'placeholder' => '-- Service --',
+                    'placeholder' => 'placeholder.service',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
                         'data-select2-id' => 'services',
@@ -59,8 +58,7 @@ class SearchType extends AbstractType
                     'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
                         return $repo->getSubServicesFromUserQueryList($this->currentUser, $serviceId);
                     },
-                    'label_attr' => ['class' => 'sr-only'],
-                    'placeholder' => '-- Sous-service --',
+                    'placeholder' => 'placeholder.subService',
                     'attr' => [
                         'class' => 'multi-select w-min-160 w-max-200',
                         'data-select2-id' => 'sub-services',
@@ -78,8 +76,7 @@ class SearchType extends AbstractType
                     'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
                         return $repo->getDevicesFromUserQueryList($this->currentUser, $serviceId);
                     },
-                    'label_attr' => ['class' => 'sr-only'],
-                    'placeholder' => '-- Device --',
+                    'placeholder' => 'placeholder.device',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
                         'data-select2-id' => 'devices',
@@ -97,8 +94,7 @@ class SearchType extends AbstractType
                     'query_builder' => function (UserRepository $repo) use ($serviceId) {
                         return $repo->getAllUsersFromServicesQueryList($this->currentUser, $serviceId);
                     },
-                    'label_attr' => ['class' => 'sr-only'],
-                    'placeholder' => '-- Référent --',
+                    'placeholder' => 'placeholder.referent',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-220',
                         'data-select2-id' => 'referents',
