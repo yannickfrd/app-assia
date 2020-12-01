@@ -144,9 +144,8 @@ class Person
 
     private $slugger;
 
-    public function __construct(SluggerInterface $slugger)
+    public function __construct()
     {
-        $this->slugger = $slugger;
         $this->rolesPerson = new ArrayCollection();
         $this->supports = new ArrayCollection();
         $this->accommodationPeople = new ArrayCollection();

@@ -60,8 +60,10 @@ class ExportWord
 
     /**
      * Download file.
+     *
+     * @return Response|StreamedResponse
      */
-    public function download($download = true): StreamedResponse
+    public function download($download = true)
     {
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
 
@@ -83,9 +85,9 @@ class ExportWord
      */
     protected function getFileName(): string
     {
-        $slug = strtolower($this->slugger->slug($this->title.'-'.$this->infoAdd));
+        $slug = $this->slugger->slug($this->title.'-'.$this->infoAdd);
 
-        return (new \DateTime())->format('Y_m_d_').$slug ;
+        return (new \DateTime())->format('Y_m_d_').$slug;
     }
 
     /**

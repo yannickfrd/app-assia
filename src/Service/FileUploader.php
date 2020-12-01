@@ -29,7 +29,7 @@ class FileUploader
         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         // $filename = str_replace([' ', '/'], '-', $filename);
         // $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $filename);
-        $slug = strtolower($this->slugger->slug($filename));
+        $slug = $this->slugger->slug($filename);
         $newFilename = $slug.'-'.uniqid().'.'.$file->guessExtension();
         // $extensionFile = $file->guessExtension();
 

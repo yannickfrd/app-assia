@@ -10,7 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class B_UserFixtures extends Fixture
 {
@@ -23,13 +23,12 @@ class B_UserFixtures extends Fixture
 
     public function __construct(EntityManagerInterface $manager,
     UserPasswordEncoderInterface $passwordEncoder,
-    SluggerInterface $slugger,
     ServiceUserRepository $repo,
     ServiceRepository $repoService)
     {
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
-        $this->slugger = $slugger;
+        $this->slugger = new AsciiSlugger();
         $this->repo = $repo;
         $this->repoService = $repoService;
         $this->faker = \Faker\Factory::create('fr_FR');

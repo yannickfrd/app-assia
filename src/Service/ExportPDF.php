@@ -71,13 +71,19 @@ class ExportPDF
      */
     public function save(): string
     {
-        $path = 'uploads/exports/'.(new \DateTime())->format('Y/m/d').$this->getFilename().'.pdf';
+        $path = 'uploads/exports/'.(new \DateTime())->format('Y/m/d/');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
 
         $output = $this->dompdf->output();
 
-        file_put_contents($path, $output);
+        $filename = $path.$this->getFilename().'.pdf';  
 
-        return $path;
+        file_put_contents($filename, $output);
+
+        return $filename;
     }
 
     /**
@@ -96,7 +102,7 @@ class ExportPDF
 
     protected function getFileName()
     {
-        $slug = strtolower($this->slugger->slug($this->title.($this->infoAdd ? '-'.$this->infoAdd : '')));
+        $slug = $this->slugger->slug($this->title.($this->infoAdd ? '-'.$this->infoAdd : ''));
 
         return (new \DateTime())->format('Y_m_d_').$slug;
     }
