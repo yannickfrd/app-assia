@@ -33,6 +33,7 @@ use App\Form\Support\SupportCoefficientType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Support\SupportsInMonthSearchType;
+use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -79,9 +80,9 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportManager $supportManager): Response
+    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
     {
-        $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $this->manager->getRepository(Service::class));
+        $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
             ->handleRequest($request);
@@ -237,9 +238,9 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, SupportManager $supportManager): Response
+    public function addPeopleInSupport(SupportGroup $supportGroup, SupportManager $supportManager, EvaluationGroupRepository $repoEvaluationGroup): Response
     {
-        if (!$supportManager->addPeopleInSupport($this->manager, $supportGroup, $this->manager->getRepository(EvaluationGroup::class))) {
+        if (!$supportManager->addPeopleInSupport($this->manager, $supportGroup, $repoEvaluationGroup)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 

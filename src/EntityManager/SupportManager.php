@@ -117,6 +117,7 @@ class SupportManager
     protected function createSupportPerson(EntityManagerInterface $manager, RolePerson $rolePerson, SupportGroup $supportGroup): SupportPerson
     {
         $supportPerson = (new SupportPerson())
+            ->setSupportGroup($supportGroup)
             ->setPerson($rolePerson->getPerson())
             ->setHead($rolePerson->getHead())
             ->setRole($rolePerson->getRole())
