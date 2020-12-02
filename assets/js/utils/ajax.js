@@ -63,18 +63,53 @@ export default class Ajax {
             throw new Error('403 Forbidden access.')
         }
 
-        let finalResponse = null
-        const contentType = response.headers.get('content-type')
-
-        if (contentType && contentType.includes("application/json")) {
-            finalResponse = response.json()
-        } else {
-            finalResponse = response.text()
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then((json) => {
+                return callback(json);
+            });
         }
 
-        finalResponse.then((data) => {
-            return callback(data)
-        })
+        if (contentType && contentType.includes('application/pdf')) {
+            return response.blob().then((blob) => {
+                return this.showFile(blob)
+            });
+        }
+
+        return response.text().then((text) => {
+            return callback(text);
+        });
+    }
+
+    /**
+     * 
+     * @param {Blob} blob 
+     */
+    showFile(blob){
+        // It is necessary to create a new blob object with mime-type explicitly set
+        // otherwise only Chrome works like it should
+        const file = new File([blob], {type: "application/pdf"})
+        // IE doesn't allow using a blob object directly as link href
+        // instead it is necessary to use msSaveOrOpenBlob
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(file);
+            return;
+        } 
+        // For other browsers: 
+        // Create a link pointing to the ObjectURL containing the blob.
+        const data = window.URL.createObjectURL(file);
+        const link = document.createElement('a');
+        link.href = data;
+        link.target = '_blank';
+        link.download = "document.pdf";
+        
+        link.click();
+
+        setTimeout(function(){
+            // For Firefox it is necessary to delay revoking the ObjectURL
+            window.URL.revokeObjectURL(data);
+        }, 100);
     }
 
     /**

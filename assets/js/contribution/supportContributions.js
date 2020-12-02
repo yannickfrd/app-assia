@@ -48,7 +48,6 @@ export default class SupportContributions {
         this.monthContribYearSelect = document.getElementById('contribution_monthContrib_year')
         this.monthContribMonthSelect = document.getElementById('contribution_monthContrib_month')
         this.monthContribDaySelect = document.getElementById('contribution_monthContrib_day')
-        // this.salaryAmtInput = document.getElementById('contribution_salaryAmt')
         this.resourcesAmtInput = document.getElementById('contribution_resourcesAmt')
         this.rentAmtInput = document.getElementById('contribution_rentAmt')
         this.aplAmtInput = document.getElementById('contribution_aplAmt')
@@ -62,8 +61,11 @@ export default class SupportContributions {
         this.commentInput = document.getElementById('contribution_comment')
         this.infoContribElt = document.getElementById('js-info-contrib')
 
-        this.btnDeleteElt = document.getElementById('modal-btn-delete')
-        this.btnSaveElt = document.getElementById('js-btn-save')
+        this.blockExportElt = document.getElementById('js-block-export')
+        this.pdfBtnElt = document.getElementById('js-btn-pdf')
+        this.mailBtnElt = document.getElementById('js-btn-mail')
+        this.deleteBtnElt = document.getElementById('modal-btn-delete')
+        this.saveBtnElt = document.getElementById('js-btn-save')
 
         this.now = new Date()
         this.error = false
@@ -94,17 +96,17 @@ export default class SupportContributions {
 
         })
 
-        this.btnSaveElt.addEventListener('click', e => {
+        this.saveBtnElt.addEventListener('click', e => {
             e.preventDefault()
             if (this.loader.isActive() === false) {
                 this.tryToSave()
             }
         })
 
-        this.btnDeleteElt.addEventListener('click', e => {
+        this.deleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
             if (this.loader.isActive() === false) {
-                this.deleteContribution(this.btnDeleteElt.href)
+                this.deleteContribution(this.deleteBtnElt.href)
             }
         })
 
@@ -158,6 +160,17 @@ export default class SupportContributions {
         if (this.trElt) {
             this.getContribution(contributionId)
         }
+
+        this.pdfBtnElt.addEventListener('click', e => {
+            e.preventDefault()
+            window.open(this.pdfBtnElt.getAttribute('data-url').replace('__id__', this.contributionId));          
+        })
+            
+        this.mailBtnElt.addEventListener('click', e => {
+            e.preventDefault();
+            const url = this.mailBtnElt.getAttribute('data-url').replace('__id__', this.contributionId);
+            this.ajax.send('GET', url, this.responseAjax.bind(this));
+        })
     }
 
     /**
@@ -438,8 +451,9 @@ export default class SupportContributions {
             this.selectType.setOption(this.monthContribYearSelect, this.now.getFullYear())
         }
         this.modalContributionElt.querySelector('form').action = '/support/' + this.supportId + '/contribution/new'
-        this.btnDeleteElt.classList.replace('d-block', 'd-none')
-        this.btnSaveElt.textContent = 'Enregistrer'
+        this.deleteBtnElt.classList.replace('d-block', 'd-none')
+        this.saveBtnElt.textContent = 'Enregistrer'
+        this.blockExportElt.classList.replace('d-block', 'd-none')
     }
 
     /**
@@ -450,11 +464,11 @@ export default class SupportContributions {
         this.loader.on()
 
         this.contributionId = id
-        this.modalContributionElt.querySelector('form').action = '/contribution/' + id + '/edit'
+        this.modalContributionElt.querySelector('form').action = `/contribution/${id}/edit`
 
-        this.btnDeleteElt.classList.replace('d-none', 'd-block')
-        this.btnDeleteElt.href = '/contribution/' + id + '/delete'
-        this.btnSaveElt.textContent = 'Mettre à jour'
+        this.deleteBtnElt.classList.replace('d-none', 'd-block')
+        this.deleteBtnElt.href = this.deleteBtnElt.getAttribute('data-url').replace('__id__', id);
+        this.saveBtnElt.textContent = 'Mettre à jour'
 
         this.initForm()
         this.checkType()
@@ -472,8 +486,12 @@ export default class SupportContributions {
                 inputElt.value = null
             }
         })
+        this.selectType.setOption(this.paymentTypeSelect, '')
+        // this.selectType.setOption(this.actionSelect, '')
         this.commentInput.value = ''
         this.infoContribElt.innerHTML = ''
+
+        this.blockExportElt.classList.replace('d-block', 'd-none')
     }
 
     /**
@@ -522,7 +540,7 @@ export default class SupportContributions {
     responseAjax(response) {
         if (response.code === 200) {
             switch (response.action) {
-                case 'getResources':
+                case 'get_resources':
                     this.getResources(response.data)
                     break
                 case 'show':
@@ -549,6 +567,7 @@ export default class SupportContributions {
                     break
             }
         }
+        // this.selectType.setOption(this.actionBlockElt, '')
         this.loading = false
         this.calculateSumAmts()
     }
@@ -582,8 +601,6 @@ export default class SupportContributions {
      * @param {Array} data 
      */
     showContribution(data) {
-        // const modalContentElt = document.querySelector('.modal-content')
-        // modalContentElt.innerHTML = contribution.content
         const contribution = data.contribution
         this.modalElt.show()
         this.selectOption(this.typeSelect, contribution.type)
@@ -605,6 +622,9 @@ export default class SupportContributions {
         this.infoContribElt.innerHTML = this.getInfoContribElt(data)
 
         this.checkType()
+        if (contribution.id) {
+            this.blockExportElt.classList.replace('d-none', 'd-block')
+        }
         this.loader.off()
     }
 

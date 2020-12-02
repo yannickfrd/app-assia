@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Repository\ContributionRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -155,6 +156,16 @@ class Contribution
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $checkAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $pdfGenerateAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $mailSentAt;
 
     public function getId(): ?int
     {
@@ -327,6 +338,27 @@ class Contribution
         return $this;
     }
 
+    public function getStartDate(): ?DateTime
+    {
+        return max($this->monthContrib, $this->supportGroup->getStartDate());
+    }
+
+    public function getEndDate(): ?DateTime
+    {
+        if ($this->monthContrib) {
+            $lastDay = (clone $this->monthContrib)->modify('last day of this month');
+
+            return min($lastDay, $this->supportGroup->getEndDate() ?? $lastDay);
+        }
+
+        return null;
+    }
+
+    public function getNbDays(): ?int
+    {
+        return $this->monthContrib ? $this->getStartDate()->diff($this->getEndDate())->days + 1 : null;
+    }
+
     public function getComment(): ?string
     {
         return $this->comment;
@@ -361,5 +393,39 @@ class Contribution
         $this->checkAt = $checkAt;
 
         return $this;
+    }
+
+    public function getPdfGenerateAt(): ?\DateTimeInterface
+    {
+        return $this->pdfGenerateAt;
+    }
+
+    public function setPdfGenerateAt(?\DateTimeInterface $pdfGenerateAt): self
+    {
+        $this->pdfGenerateAt = $pdfGenerateAt;
+
+        return $this;
+    }
+
+    public function PdfGenerate(): bool
+    {
+        return null !== $this->pdfGenerateAt;
+    }
+
+    public function getMailSentAt(): ?\DateTimeInterface
+    {
+        return $this->mailSentAt;
+    }
+
+    public function setMailSentAt(?\DateTimeInterface $mailSentAt): self
+    {
+        $this->mailSentAt = $mailSentAt;
+
+        return $this;
+    }
+
+    public function MailSent(): bool
+    {
+        return null !== $this->mailSentAt;
     }
 }

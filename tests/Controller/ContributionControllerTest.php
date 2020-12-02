@@ -132,6 +132,15 @@ class ContributionControllerTest extends WebTestCase
         $this->assertSame('delete', $data['action']);
     }
 
+    public function test_contribution_export_pdf()
+    {
+        $this->client->request('GET', $this->generateUri('contribution_export_pdf', [
+            'id' => $this->contribution->getId(),
+        ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();

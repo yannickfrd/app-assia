@@ -6,20 +6,23 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Contribution;
 use App\Entity\SupportGroup;
 use App\Entity\User;
+use App\EntityManager\SupportManager;
 use App\Form\Contribution\ContributionSearchType;
 use App\Form\Contribution\ContributionType;
 use App\Form\Contribution\SupportContributionSearchType;
 use App\Form\Model\ContributionSearch;
 use App\Form\Model\SupportContributionSearch;
+use App\Notification\MailNotification;
 use App\Repository\AccommodationRepository;
 use App\Repository\ContributionRepository;
 use App\Repository\EvaluationGroupRepository;
+use App\Service\Calendar;
 use App\Service\Export\ContributionFullExport;
 use App\Service\Export\ContributionLightExport;
+use App\Service\ExportPDF;
 use App\Service\Indicators\ContributionIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
-use App\EntityManager\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
@@ -30,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Twig\Environment;
 
 class ContributionController extends AbstractController
 {
@@ -97,25 +101,25 @@ class ContributionController extends AbstractController
         }
 
         $contribution = (new Contribution())
-            ->setMonthContrib((new \DateTime())->modify('-1 month')->modify('first day of this month'));
+            ->setMonthContrib((new \DateTime())->modify('first day of last month'));
 
         $form = $this->createForm(ContributionType::class, $contribution);
 
         // Récupère les contributions en cache.
-        $contributions = (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
-            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(\DateInterval::createFromDateString('7 hours'));
+        // $contributions = (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
+        //     function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
+        //         $item->expiresAfter(\DateInterval::createFromDateString('7 hours'));
 
-                return $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200);
-            }
-        );
+        //         return $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200);
+        //     }
+        // );
 
         return $this->render('app/contribution/supportContributions.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->repoContribution->count(['supportGroup' => $supportGroup]) : null,
-            'contributions' => $contributions,
+            'contributions' => $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200),
         ]);
     }
 
@@ -153,7 +157,7 @@ class ContributionController extends AbstractController
 
         return $this->json([
             'code' => 200,
-            'action' => 'getResources',
+            'action' => 'get_resources',
             'data' => [
                 'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
@@ -195,15 +199,10 @@ class ContributionController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
 
-        // $form = $this->createForm(ContributionType::class, $contribution);
-
         return $this->json([
             'code' => 200,
             'action' => 'show',
             'data' => [
-                // 'contribution' => $this->render('app/contribution/modalContribution.html.twig', [
-                //     'form' => $form->createView(),
-                // ]),
                 'contribution' => $normalizer->normalize($contribution, null, ['groups' => ['get', 'view']]),
                 'createdBy' => $contribution->getCreatedBy()->getFullname(),
                 'updatedBy' => $contribution->getUpdatedBy()->getFullname(),
@@ -250,6 +249,122 @@ class ContributionController extends AbstractController
             'alert' => 'warning',
             'msg' => 'L\'opération "'.$contribution->getTypeToString().'" est supprimée.',
         ], 200);
+    }
+
+    /**
+     * Export un reçu de paiement au format PDF.
+     *
+     * @Route("contribution/{id}/export/pdf", name="contribution_export_pdf", methods="GET")
+     */
+    public function exportPayment(int $id, Request $request, SupportManager $supportManager, ExportPDF $exportPDF, Environment $renderer): Response
+    {
+        /** @var Contribution $contribution */
+        $contribution = $this->repoContribution->findContribution($id);
+
+        $supportGroup = $contribution->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $title = $contribution->getPaymentDate() ? 'Reçu de paiement' : 'Avis d\'échéance';
+        $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
+        $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
+
+        $content = $renderer->render('app/contribution/contributionExport.html.twig', [
+            'title' => $title,
+            'logo_path' => $exportPDF->getPathImage($logoPath),
+            'contribution' => $contribution,
+            'support' => $supportGroup,
+            'paidAmtToString' => (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($contribution->getPaidAmt()),
+        ]);
+
+        $exportPDF->createDocument($content, $title, $logoPath, $fullnameSupport);
+
+        $contribution->setPdfGenerateAt(new \Datetime());
+
+        $this->manager->flush();
+
+        return $exportPDF->download($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+    }
+
+    /**
+     * Envoie un email avec le reçu de paiement au format PDF.
+     *
+     * @Route("contribution/{id}/send/pdf", name="contribution_send_pdf", methods="GET")
+     */
+    public function sendPaymentByEmail(int $id, SupportManager $supportManager, ExportPDF $exportPDF, Environment $renderer, MailNotification $notification): Response
+    {
+        $contribution = $this->repoContribution->findContribution($id);
+        $supportGroup = $contribution->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $title = 'Reçu de paiement';
+        $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
+        $person = $supportManager->getHeadPersonSupport($supportGroup);
+        $fullnameSupport = $person->getFullname();
+        $email = $person->getEmail();
+
+        $content = $renderer->render('app/contribution/contributionExport.html.twig', [
+            'title' => $title,
+            'logo_path' => $exportPDF->getPathImage($logoPath),
+            'contribution' => $contribution,
+            'support' => $supportGroup,
+            'paidAmtToString' => (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($contribution->getPaidAmt()),
+        ]);
+
+        if (!$person->getEmail()) {
+            return $this->json([
+                'code' => 200,
+                'action' => 'error',
+                'alert' => 'danger',
+                'msg' => 'Le suivi n\'a pas d\'adresse e-mail renseignée.',
+            ]);
+        }
+
+        if (!$contribution->getPaymentDate() || !$contribution->getPaidAmt()) {
+            return $this->json([
+                'code' => 200,
+                'action' => 'error',
+                'alert' => 'danger',
+                'msg' => 'Il n\'y a pas de paiment enregistré.',
+            ]);
+        }
+
+        $exportPDF->createDocument($content, $title, $logoPath, $fullnameSupport);
+
+        $path = $exportPDF->save();
+
+        $context = [
+            'person' => $person,
+            'contribution' => $contribution,
+            'support' => $supportGroup,
+        ];
+
+        $date = $contribution->getMonthContrib() ? Calendar::MONTHS[(int) $contribution->getMonthContrib()->format('m')].$contribution->getMonthContrib()->format(' Y') : '';
+        $notification->send(
+            [
+                'email' => $email,
+                'name' => $fullnameSupport,
+            ],
+            'ESPERER 95 | '.$title.' '.$date.' | '.$fullnameSupport,
+            $renderer->render('emails/receiptPayment.html.twig', $context),
+            null,
+            null,
+            $this->getUser()->getEmail(),
+            $this->getUser()->getEmail(),
+            [$path],
+        );
+
+        $contribution->setMailSentAt(new \Datetime());
+
+        $this->manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'action' => 'send_receipt',
+            'alert' => 'success',
+            'msg' => "Le reçu du paiement a été envoyé par email à $fullnameSupport.",
+        ]);
     }
 
     /**

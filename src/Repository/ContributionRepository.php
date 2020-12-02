@@ -28,12 +28,29 @@ class ContributionRepository extends ServiceEntityRepository
         $this->currentUser = $currentUser;
     }
 
+    public function findContribution(int $id)
+    {
+        return $this->createQueryBuilder('c')->select('c')
+            ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate, address, city}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1, contribution, contributionType, contributionRate}')
+            ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name, email, phone1}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender, email}')
+
+            ->where("c.id = $id")
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
+    }
+
     /**
      * Donne toutes les participations financières à afficher.
      */
     public function findAllContributionsQuery(?ContributionSearch $search = null): Query
     {
-        $query = $this->getContributionsQuery()
+        $query = $this->getContributionQuery()
             ->andWhere('sp.head = TRUE');
 
         if ($search) {
@@ -74,7 +91,7 @@ class ContributionRepository extends ServiceEntityRepository
      */
     public function findContributionsToExport($search, SupportGroup $supportGroup = null): ?array
     {
-        $query = $this->getContributionsQuery()
+        $query = $this->getContributionQuery()
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}');
 
         if ($supportGroup) {
@@ -108,13 +125,13 @@ class ContributionRepository extends ServiceEntityRepository
     /**
      * Donne la requête.
      */
-    protected function getContributionsQuery()
+    protected function getContributionQuery()
     {
         return $this->createQueryBuilder('c')->select('c') // 'c', '(c.toPayAmt - c.paidAmt) AS stillToPayAmt'
         ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate}')
         ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
         ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
-        ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
+        ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head}')
         ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
         ->leftJoin('c.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
         ->leftJoin('c.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');

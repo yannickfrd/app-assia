@@ -59,6 +59,8 @@
 								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mode de règlement", "c.paymentType") }}</th>
 								<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
 								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Date de création", "c.createdAt") }}</th>
+								<th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(contributions, "PDF", "c.pdfGenerateAt") }}</th>
+								<th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(contributions, "Mail", "c.mailSentAt") }}</th>
 								<th scope="col" class="align-middle th-w-20"></th>
 							</tr>
 						</thead>
@@ -66,7 +68,8 @@
 							{% for contribution in contributions %}
 								<tr id="contribution-{{ contribution.id }}" class="contribution">
 									<td scope="row" class="align-middle text-center">
-										<button class="btn btn-{{ theme_color }} btn-sm shadow js-get" data-id="{{ contribution.id }}"
+										<button class="btn btn-{{ theme_color }} btn-sm shadow js-get" 
+											data-url="{{ path('contribution_get', {'id': contribution.id}) }}" data-id="{{ contribution.id }}"
 											data-toggle="tooltip" data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
 										</button>
 									</td>
@@ -83,7 +86,16 @@
 									<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}
 									<td class="align-middle js-paymentType">{{ contribution.paymentTypeToString }}</td>
 									<td class="align-middle js-comment">{{ contribution.comment|slice(0,65) }}{% if contribution.comment|length > 65 %}...{% endif %}</td>
-									<td class="align-middle js-type">{{ contribution.createdAt|date("d/m/Y") }}</td>
+									<td class="align-middle js-createdAt">{{ contribution.createdAt|date("d/m/Y") }}</td>
+									<td class="align-middle text-center js-pdfGenerate">
+										<a href="{{ path('contribution_export_pdf', {'id': contribution.id}) }}"data-toggle="tooltip" data-placement="bottom" 
+										title="{{ contribution.pdfGenerate ? 'PDF généré le ' ~ contribution.pdfGenerateAt|date('d/m/Y à H:i') : 'Générer un PDF' }}"><i 
+										class="fas fa-file-pdf{{ contribution.pdfGenerate ? ' text-success' : ' text-secondary' }} fa-lg"></i></a></td>
+									<td class="align-middle text-center js-mailSent">
+										<a href="{{ path('contribution_send_pdf', {'id': contribution.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+										title="{{ contribution.mailSent ? 'Mail envoyé le ' ~ contribution.mailSentAt|date('d/m/Y à H:i') : 'Envoyer un mail avec le reçu' }}" 
+										onclick="if(window.confirm('Confirmer l'envoi d'un email avec le reçu ?')){return true;}else{return false;}"><i 
+										class="fas fa-envelope{{ contribution.mailSent ? '-open text-success' : ' text-secondary' }} fa-lg"></i></a></td>
 									<td class="align-middle text-center">
 										<button class="js-delete btn btn-danger btn-sm shadow my-1" 
 											data-url="{{ path('contribution_delete', {'id':contribution.id}) }}" 

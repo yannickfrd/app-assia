@@ -64,9 +64,9 @@ class ContributionIndicators
                 'monthToString' => Calendar::MONTHS[(int) $month->format('m')].' '.$month->format('Y'),
                 'nbContributions' => $nbContributions,
                 'sumToPayAmt' => $sumToPayAmt,
-                'averageContributionAmt' => $nbContributions ? round(($sumToPayAmt / $nbContributions) * 100) / 100 : '',
+                'averageContributionAmt' => $nbContributions ? round(($sumToPayAmt / $nbContributions) * 100) / 100 : null,
                 'sumPaidAmt' => $sumPaidAmt,
-                'averagePaidAmt' => $nbContributions ? round(($sumPaidAmt / $nbContributions) * 100) / 100 : '',
+                'averagePaidAmt' => $nbContributions ? round(($sumPaidAmt / $nbContributions) * 100) / 100 : null,
                 'sumStillToPayAmt' => $sumStillToPayAmt,
             ];
 
@@ -80,9 +80,9 @@ class ContributionIndicators
             'months' => $datasMonths,
             'nbContributions' => $this->nbContributions,
             'sumToPayAmt' => $this->sumToPayAmt,
-            'averageContributionAmt' => $this->nbContributions ? round(($this->sumToPayAmt / $this->nbContributions) * 100) / 100 : '',
+            'averageContributionAmt' => $this->nbContributions ? round(($this->sumToPayAmt / $this->nbContributions) * 100) / 100 : null,
             'sumPaidAmt' => $this->sumPaidAmt,
-            'averagePaidAmt' => $this->nbContributions ? round(($this->sumPaidAmt / $this->nbContributions) * 100) / 100 : '',
+            'averagePaidAmt' => $this->nbContributions ? round(($this->sumPaidAmt / $this->nbContributions) * 100) / 100 : null,
             'sumStillToPayAmt' => $this->sumStillToPayAmt,
         ];
     }

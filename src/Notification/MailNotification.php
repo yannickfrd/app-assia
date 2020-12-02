@@ -29,7 +29,7 @@ class MailNotification
         $this->port = $port;
     }
 
-    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null, string $cc = null, string $bcc = null): bool
+    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null, string $cc = null, string $bcc = null, string $replyTo = null, array $attachments = []): bool
     {
         $mail = new PHPMailer(true);
 
@@ -63,12 +63,14 @@ class MailNotification
             if ($bcc) { // Copie cachée
                 $mail->addBCC($bcc);
             }
-            // $mail->addAddress("ellen@example.com"); // Name is optional
-            // $mail->addReplyTo("info@example.com", "Information");
+            if ($replyTo) { // Copie cachée
+                $mail->addReplyTo($replyTo, 'Information');
+            }
 
             // Attachments
-            // $mail->addAttachment("/var/tmp/file.tar.gz"); // Add attachments
-            // $mail->addAttachment("/tmp/image.jpg", "new.jpg"); // Optional name
+            foreach ($attachments as $path) {
+                $mail->addAttachment($path);
+            }
 
             // Content
             $mail->Subject = $subject;
@@ -77,8 +79,9 @@ class MailNotification
 
             return $mail->send();
         } catch (Exception $e) {
-            return false;
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+
+            return false;
         }
     }
 
@@ -97,7 +100,7 @@ class MailNotification
     }
 
     /**
-     * Mail d'initialisation du mot de psasse.
+     * Mail d'initialisation du mot de passe.
      */
     public function createUserAccount(User $user): bool
     {
