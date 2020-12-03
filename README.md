@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.10.0 - 02/12/2020
+2.10.1 - 03/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,9 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+
+## Version 2.10.1 - 03/12/2020
+- Correction de l'affichage du montant total des charges dans l'export de l'évaluation sociale.
 
 ## Version 2.10.0 - 01/12/2020
 - Créé fonctionnalité d'export des paiements en PDF et par email.
