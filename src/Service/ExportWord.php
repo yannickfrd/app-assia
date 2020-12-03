@@ -190,6 +190,7 @@ class ExportWord
             ['<th>&nbsp;', '&nbsp;</th>', '<td>&nbsp;', '&nbsp;</td>'],
             $content
         );
+        $content = \str_replace('&amp;', 'et', $content); // &amp; provoque une erreur à l'ouverture du fichier Word.
 
         if (\strstr($content, '<br/>{LOGO_SIGNATURE}')) {
             $content = \str_replace('<br/>{LOGO_SIGNATURE}', '', $content);
