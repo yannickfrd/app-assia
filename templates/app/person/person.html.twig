@@ -4,11 +4,7 @@
 {% set EDIT_MODE = person.id != null %}
 {% set title = EDIT_MODE ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") : 'Création d\'une personne' %}
 
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 {% block title %}{{ title }}{{ parent() }}{% endblock %}
-
-{% block stylesheets %}{% endblock %}
 
 {% block body %}
 

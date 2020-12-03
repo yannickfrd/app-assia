@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 {% if EDIT_MODE %}{% set support = form.vars.value.supportGroup %}{% endif %}
 
 {% block title %}{% if EDIT_MODE %}Édition RDV{% else %}Rendez-vous{% endif %}{{ parent() }}{% endblock %}

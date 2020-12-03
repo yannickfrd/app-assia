@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 {% set device = form.vars.value %}
 {% set disabled = device.isDisabled %}
 {% set EDIT_MODE = device.id != null %}

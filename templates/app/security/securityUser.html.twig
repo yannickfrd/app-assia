@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 {% set user = form.vars.value  %}
 {% set disabled = user.isDisabled %}
 {% set title = user.id ? user.fullname ~ (disabled ? " (désactivé)") : "Création d'un compte utilisateur"  %}

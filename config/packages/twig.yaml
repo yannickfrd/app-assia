@@ -3,8 +3,9 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: [
-                'bootstrap_4_layout.html.twig', 
-                'bootstrap_4_horizontal_layout.html.twig', 
-                'form_div_layout.html.twig', 
-                'form_table_layout.html.twig',
-                ]
+        'bootstrap_4_layout.html.twig', 
+        'form/bootstrap_4_horizontal.html.twig',
+        # 'bootstrap_4_horizontal_layout.html.twig',
+        # 'form_div_layout.html.twig', 
+        # 'form_table_layout.html.twig',
+    ]

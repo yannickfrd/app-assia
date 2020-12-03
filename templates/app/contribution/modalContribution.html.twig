@@ -1,5 +1,3 @@
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 {% set contribution = form.vars.value %}
 
 <div id="modal-contribution" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalContributionLabel" aria-hidden="true">
@@ -70,15 +68,17 @@
                             data-url="{{ path('contribution_delete', {'id': '__id__'}) }}"
                             data-placement="bottom" title="Supprimer"><span class="fas fa-trash-alt"></span><span 
                             class="d-none d-md-inline ml-2">Supprimer</span></button>
-                            <div id="js-block-export" class="d-none">
-                                <button id="js-btn-pdf" class="btn btn-{{ theme_color }} mr-1 mr-md-2 shadow"
-                                    data-url="{{ path('contribution_export_pdf', {'id': '__id__'}) }}"
-                                    data-toggle="tooltip" data-placement="bottom" title="Générer le reçu en PDF">
-                                    <span class="fas fa-file-pdf bg-secondary fa-lg"></span><span class="d-none d-sm-inline ml-2">PDF</span></button>
-                                <button id="js-btn-mail" class="btn btn-{{ theme_color }} shadow"
-                                    data-url="{{ path('contribution_send_pdf', {'id': '__id__'}) }}"
-                                    data-toggle="tooltip" data-placement="bottom" title="Envoyer un email avec le reçu en PDF">
-                                    <span class="fas fa-envelope bg-secondary fa-lg"></span><span class="d-none d-sm-inline ml-2">Mail</span></button>
+                            <div class="{% if is_granted("ROLE_SUPER_ADMIN") == false %}d-none{% endif %}">
+                                <div id="js-block-export" class="d-none">
+                                    <button id="js-btn-pdf" class="btn btn-{{ theme_color }} mr-1 mr-md-2 shadow"
+                                        data-url="{{ path('contribution_export_pdf', {'id': '__id__'}) }}"
+                                        data-toggle="tooltip" data-placement="bottom" title="Générer le reçu en PDF">
+                                        <span class="fas fa-file-pdf bg-secondary fa-lg"></span><span class="d-none d-sm-inline ml-2">PDF</span></button>
+                                    <button id="js-btn-mail" class="btn btn-{{ theme_color }} shadow"
+                                        data-url="{{ path('contribution_send_pdf', {'id': '__id__'}) }}"
+                                        data-toggle="tooltip" data-placement="bottom" title="Envoyer un email avec le reçu en PDF">
+                                        <span class="fas fa-envelope bg-secondary fa-lg"></span><span class="d-none d-sm-inline ml-2">Mail</span></button>
+                                </div>
                             </div>
                     </div>
                     <div class="float-right">

@@ -1,7 +1,5 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form "form/bootstrap_4_horizontal.html.twig" %}
-
 {% set subService = form.vars.value %}
 {% set disabled = subService.isDisabled %}
 {% set EDIT_MODE = subService.id != null %}
