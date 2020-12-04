@@ -29,7 +29,7 @@ class RdvVoter extends Voter
     protected function voteOnAttribute($attribute, $rdv, TokenInterface $token)
     {
         $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
+        // $this->currentUserId = $this->currentUser->getId();
         $this->rdv = $rdv;
 
         if (!$this->currentUser) {
@@ -53,31 +53,40 @@ class RdvVoter extends Voter
 
     protected function canView()
     {
-        if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()
+        if ($this->currentUser == $this->rdv->getCreatedBy()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->currentUserId == $this->rdv->getSupportGroup()->getReferent()->getId()
+            || $this->currentUser == $this->rdv->getSupportGroup()->getReferent()
         ) {
             return true;
         }
 
-        $user = $this->rdv->getCreatedBy();
+        $supportGroup = $this->rdv->getSupportGroup();
         foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
-            foreach ($user->getServiceUser() as $serviceUser) {
-                if ($serviceCurrentUser->getService()->getId() == $serviceUser->getService()->getId()) {
-                    return true;
-                }
+            if ($supportGroup && $supportGroup->getService()->getId() === $serviceCurrentUser->getService()->getId()) {
+                return true;
             }
         }
+
+        // $user = $this->rdv->getCreatedBy();
+        // foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
+        //     foreach ($user->getServiceUser() as $serviceUser) {
+        //         if ($serviceCurrentUser->getService()->getId() == $serviceUser->getService()->getId()) {
+        //             return true;
+        //         }
+        //     }
+        // }
 
         return false;
     }
 
     protected function canEdit()
     {
-        if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()
+        $supportGroup = $this->rdv->getSupportGroup();
+
+        if ($this->currentUser == $this->rdv->getCreatedBy()
             || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->isAdminUserOfService($this->rdv->getSupportGroup()->getService())
-            || $this->currentUserId == $this->rdv->getSupportGroup()->getReferent()->getId()
+            || $supportGroup && ($this->isAdminUserOfService($supportGroup->getService())
+            || $this->currentUser == $supportGroup->getReferent())
         ) {
             return true;
         }
@@ -87,14 +96,6 @@ class RdvVoter extends Voter
 
     protected function canDelete()
     {
-        if ($this->currentUserId == $this->rdv->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->isAdminUserOfService($this->rdv->getSupportGroup()->getService())
-            || $this->currentUserId == $this->rdv->getSupportGroup()->getReferent()->getId()
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->canEdit();
     }
 }

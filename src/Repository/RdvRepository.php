@@ -47,7 +47,9 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
+
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->where('r.id = :id')
@@ -79,6 +81,7 @@ class RdvRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
@@ -87,7 +90,9 @@ class RdvRepository extends ServiceEntityRepository
     protected function filter($query, RdvSearch $search, CurrentUserService $currentUser = null)
     {
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->where('sg.service IN (:services)')
+            $query->where('r.createdBy IN (:user)')
+                ->setParameter('user', $currentUser->getUser());
+            $query->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
@@ -157,6 +162,7 @@ class RdvRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
 
             ->andWhere('sg.id = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);

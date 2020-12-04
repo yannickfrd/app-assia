@@ -15,9 +15,11 @@ export default class Calendar {
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
 
+        this.calendarContainer = document.getElementById('calendar-container')
         this.newRdvBtn = document.getElementById('js-new-rdv')
         this.dayElts = document.querySelectorAll('.calendar-day-block')
         this.rdvElts = document.querySelectorAll('.calendar-event')
+        this.fullWidthCheckbox = document.getElementById('full-width');
         this.showWeekendCheckbox = document.getElementById('show-weekend');
         this.weekendElts = document.querySelectorAll('div[data-weekend=true]')
 
@@ -41,7 +43,8 @@ export default class Calendar {
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
 
-        this.showWeekendsItem = sessionStorage.getItem('showWeekends')
+        this.showWeekendsItem = sessionStorage.getItem('agenda.show_weekends')
+        this.fullWidthItem = sessionStorage.getItem('agenda.full_width')
 
         this.init()
     }
@@ -79,7 +82,14 @@ export default class Calendar {
             this.requestDeleteRdv()
         })
 
-        if (this.showWeekendsItem) {
+        if (this.fullWidthItem === 'true') {
+            this.fullWidthCheckbox.checked = 'checked'
+        }
+        this.changeWidthCalendar();
+
+        this.fullWidthCheckbox.addEventListener('click', () => this.changeWidthCalendar())
+
+        if (this.showWeekendsItem === 'true') {
             this.showWeekendCheckbox.checked = 'checked'
         } else {
             this.hideWeekends();
@@ -95,6 +105,18 @@ export default class Calendar {
     }
 
     /**
+     * Modifie la largeur de l'agenda.
+     */
+    changeWidthCalendar() {
+        if (this.fullWidthCheckbox.checked) {
+            this.calendarContainer.classList.replace('container', 'container-fluid');
+            sessionStorage.setItem('agenda.full_width', true);
+        } else {   
+            this.calendarContainer.classList.replace('container-fluid', 'container');
+            sessionStorage.setItem('agenda.full_width', false);
+        }
+    }
+    /**
      * Masque ou affiche les week-ends.
      */
     hideWeekends() {
@@ -102,9 +124,10 @@ export default class Calendar {
             elt.classList.toggle('d-none');
         });
         if (this.showWeekendCheckbox.checked) {
-            return sessionStorage.setItem('showWeekends', true);
-        } 
-        return sessionStorage.removeItem('showWeekends');
+            sessionStorage.setItem('agenda.show_weekends', true);
+        } else {
+            sessionStorage.setItem('agenda.show_weekends', false);
+        }
     }
 
     /**
@@ -136,24 +159,12 @@ export default class Calendar {
         this.selectType.setOption(this.rdvStatusInput)
 
         this.modalRdvElt.querySelector('#rdv_content').value = ''
-        this.btnDeleteElt.classList.replace('d-block', 'd-none')
+        this.btnDeleteElt.classList.add('d-none')
+        this.btnSaveElt.classList.remove('d-none')
 
-        if (!this.eventIsTarget(e)) {
+        if (e.target.className && e.target.className.search('calendar-event') != 0) {
             this.modalElt.show()
         }
-    }
-
-    /**
-     * Vérfie si un RDV est ciblé.
-     * @param {Event} e 
-     */
-    eventIsTarget(e) {
-        for (let i = 0; i < e.path.length; i++) {
-            if (e.path[i].className && e.path[i].className.search('calendar-event') === 0) {
-                return true;
-            }
-        }
-        return false
     }
 
     /**
@@ -279,8 +290,14 @@ export default class Calendar {
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
         this.rdvTitleElt.textContent = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
 
-        this.btnDeleteElt.classList.replace('d-none', 'd-block')
-        this.btnDeleteElt.href = '/rdv/' + this.rdvId + '/delete'
+        if (rdv.canEdit) {
+            this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete` 
+            this.btnDeleteElt.classList.remove('d-none')
+            this.btnSaveElt.classList.remove('d-none')
+        } else {
+            this.btnDeleteElt.classList.add('d-none')
+            this.btnSaveElt.classList.add('d-none')
+        }
     }
 
     /**  
@@ -309,10 +326,7 @@ export default class Calendar {
 
         const title = this.modalRdvElt.querySelector('#rdv_title').value
 
-        rdvElt.innerHTML =
-            ` <span class='rdv-start'>${rdv.start}</span> 
-                <span class='rdv-title'>${title}</span> `
-
+        rdvElt.innerHTML = rdv.start + ' ' + title
         const dayElt = document.getElementById(rdv.day)
         dayElt.insertBefore(rdvElt, dayElt.lastChild)
 
@@ -327,8 +341,7 @@ export default class Calendar {
      * @param {Object} rdv 
      */
     updateRdv(rdv) {
-        this.rdvElt.querySelector('.rdv-start').textContent = rdv.start
-        this.rdvElt.querySelector('.rdv-title').textContent = this.modalRdvElt.querySelector('#rdv_title').value
+        this.rdvElt.textContent = rdv.start + ' ' + rdv.title;
     }
 
     /**

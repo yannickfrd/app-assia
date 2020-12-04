@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.10.6 - 04/12/2020
+2.10.9 - 04/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,11 +16,14 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 2.10.4-6 - 04/12/2020
+## Version 2.10.4-9 - 04/12/2020
 - Correction erreur lors de la création d'un suivi avec récupération des infos si le groupe a plus d'un suivi.
 - Possibilité de supprimer des rdv dans la vue en liste.
-- Possibilité d'afficher les week-ends dnas la vue agenda.
+- Possibilité d'afficher les week-ends dans la vue agenda.
 - Affichage automatique du formulaire du RDV en paramètre de l'URL.
+- Modif erreur VoterRdv.
+- Possibilité d'afficher le calendrier sur toute la largeur de l'écran.
+- Affichage des boutons 'Supprimer' et 'Enregistrer' du formulaire du RDV uniquement si l'utilisateur dispose des droits.
 
 ## Version 2.10.1-3 - 03/12/2020
 - Correction de l'affichage du montant total des charges dans l'export de l'évaluation sociale.

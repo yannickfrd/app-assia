@@ -151,7 +151,7 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null, int $rdv_id = null): Response
+    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null, $rdv_id = null): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
@@ -247,6 +247,7 @@ class RdvController extends AbstractController
                 'createdAt' => $rdv->getCreatedAt()->format('d/m/Y à H:i'),
                 'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
                 'updatedAt' => $rdv->getUpdatedAt()->format('d/m/Y à H:i'),
+                'canEdit' => $this->isGranted('EDIT', $rdv),
             ],
         ], 200);
     }

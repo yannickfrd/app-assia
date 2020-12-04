@@ -19,10 +19,12 @@ export default class Rdvs {
     init() {
         this.rdvElts.forEach(rdvElt => {
             const btnDeleteElt = rdvElt.querySelector('button.js-delete')
-            btnDeleteElt.addEventListener('click', () => {
-                this.modalDeleteElt.show()
-                this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
-            })
+            if (btnDeleteElt) {
+                btnDeleteElt.addEventListener('click', () => {
+                    this.modalDeleteElt.show()
+                    this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
+                })
+            }
         })  
         
         this.modalConfirmElt.addEventListener('click', e => {
