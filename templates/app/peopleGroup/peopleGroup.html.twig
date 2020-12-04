@@ -121,7 +121,7 @@
                     {% if is_granted("ROLE_ADMIN") %}
                     <div class="float-left d-flex">
                         <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('people_group_delete', {'id':people_group.id}) }}"
-                            data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
+                            data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
                             class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
                     </div>

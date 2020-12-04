@@ -2,44 +2,47 @@
 
 namespace App\Controller;
 
-use App\Entity\Rdv;
-use App\Entity\Note;
-use App\Entity\User;
-use App\Entity\Document;
-use App\Entity\Referent;
-use App\Service\Grammar;
-use App\Service\Calendar;
-use App\Entity\PeopleGroup;
-use App\Form\Utils\Choices;
-use App\Service\Pagination;
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Contribution;
+use App\Entity\Document;
+use App\Entity\EvaluationGroup;
+use App\Entity\Note;
+use App\Entity\PeopleGroup;
+use App\Entity\Rdv;
+use App\Entity\Referent;
 use App\Entity\SupportGroup;
 use App\Entity\SupportPerson;
-use App\Entity\EvaluationGroup;
-use App\Form\Model\SupportSearch;
-use App\Repository\RdvRepository;
+use App\Entity\User;
 use App\EntityManager\SupportManager;
-use App\Repository\ServiceRepository;
-use App\Form\Support\SupportGroupType;
-use App\Form\Support\SupportSearchType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Model\SupportSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Form\Support\NewSupportGroupType;
+use App\Form\Support\SupportCoefficientType;
+use App\Form\Support\SupportGroupType;
+use App\Form\Support\SupportSearchType;
+use App\Form\Support\SupportsInMonthSearchType;
+use App\Form\Utils\Choices;
 use App\Repository\ContributionRepository;
+use App\Repository\DocumentRepository;
+use App\Repository\EvaluationGroupRepository;
+use App\Repository\NoteRepository;
+use App\Repository\PeopleGroupRepository;
+use App\Repository\RdvRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\SupportGroupRepository;
 use App\Repository\SupportPersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Form\Support\SupportCoefficientType;
+use App\Service\Calendar;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\Support\SupportsInMonthSearchType;
-use App\Repository\EvaluationGroupRepository;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class SupportController extends AbstractController
 {
@@ -80,8 +83,10 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
+    public function newSupportGroup(int $id, PeopleGroupRepository $repoPeopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
     {
+        $peopleGroup = $repoPeopleGroup->findPeopleGroupById($id);
+
         $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
@@ -341,11 +346,16 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, SupportManager $supportManager, SupportGroupRepository $repoSupportGroup): Response
+    public function cloneSupport(
+        SupportGroup $supportGroup,
+        SupportManager $supportManager,
+        EvaluationGroupRepository $repoEvaluation,
+        NoteRepository $repoNote,
+        DocumentRepository $repoDocument): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($supportManager->cloneSupport($supportGroup, $repoSupportGroup)) {
+        if ($supportManager->cloneSupport($supportGroup, $repoEvaluation, $repoNote, $repoDocument)) {
             $this->manager->flush();
 
             $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');

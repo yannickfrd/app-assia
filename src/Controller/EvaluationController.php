@@ -19,7 +19,6 @@ use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Normalisation;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,14 +48,15 @@ class EvaluationController extends AbstractController
      */
     public function showEvaluation(int $id, Request $request): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
-        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+        $evaluationGroup = $this->repoEvaluation->findLastEvaluationOfSupport($id);
 
-        $evaluationGroup = $this->repoEvaluation->findEvaluationById($supportGroup);
-
-        if (!$evaluationGroup) {
-            return $this->createEvaluationGroup($supportGroup);
+        if (null === $evaluationGroup) {
+            return $this->createEvaluationGroup($this->repoSupportGroup->findSupportById($id));
         }
+
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
@@ -78,10 +78,11 @@ class EvaluationController extends AbstractController
      */
     public function editEvaluation(int $id, Request $request, Normalisation $normalisation): Response
     {
-        $supportGroup = $this->repoSupportGroup->findSupportById($id);
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        $evaluationGroup = $this->repoEvaluation->findLastEvaluationOfSupport($id);
 
-        $evaluationGroup = $this->repoEvaluation->findEvaluationById($supportGroup);
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = ($this->createForm(EvaluationGroupType::class, $evaluationGroup))
             ->handleRequest($request);
@@ -132,6 +133,8 @@ class EvaluationController extends AbstractController
      */
     protected function createEvaluationGroup(SupportGroup $supportGroup)
     {
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+
         $evaluationGroup = (new EvaluationGroup())
             ->setSupportGroup($supportGroup)
             ->setDate(new \DateTime());
@@ -264,30 +267,6 @@ class EvaluationController extends AbstractController
         // Ressources et dettes initiales
         $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
-    }
-
-    /**
-     * Donne le suivi social.
-     */
-    protected function getSupportGroup(int $id): ?SupportGroup
-    {
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
-            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
-
-            return $this->repoSupportGroup->findSupportById($id);
-        });
-    }
-
-    /**
-     * Donne l'évaluation sociale complète.
-     */
-    protected function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
-    {
-        return (new FilesystemAdapter())->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
-            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
-
-            return $this->repoEvaluation->findEvaluationById($supportGroup);
-        });
     }
 
     protected function discache(EvaluationGroup $evaluationGroup)

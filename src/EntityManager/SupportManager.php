@@ -3,8 +3,10 @@
 namespace App\EntityManager;
 
 use App\Entity\AccommodationGroup;
+use App\Entity\Document;
 use App\Entity\EvaluationGroup;
 use App\Entity\EvaluationPerson;
+use App\Entity\Note;
 use App\Entity\PeopleGroup;
 use App\Entity\Person;
 use App\Entity\Rdv;
@@ -82,7 +84,7 @@ class SupportManager
 
         // Si l'utilisateur veut récupérer les informations du précédent suivi, alors clone l'évaluation sociale et les documents existants.
         if (true === $cloneSupport) {
-            $this->cloneSupport($supportGroup);
+            $this->cloneSupport($supportGroup, $manager->getRepository(EvaluationGroup::class), $manager->getRepository(Note::class), $manager->getRepository(Document::class));
         }
 
         $serviceId = $supportGroup->getService()->getId();
@@ -204,29 +206,35 @@ class SupportManager
     /**
      * Crée une copie d'un suivi social.
      */
-    public function cloneSupport(SupportGroup $supportGroup): ?SupportGroup
+    public function cloneSupport(
+        SupportGroup $supportGroup,
+        EvaluationGroupRepository $repoEvaluation,
+        NoteRepository $repoNote,
+        DocumentRepository $repoDocument): ?SupportGroup
     {
-        $oldSupport = $this->repoSupportGroup->findLastSupport($supportGroup);
+        $lastSupport = $this->repoSupportGroup->findLastSupport($supportGroup);
 
-        if (null === $oldSupport) {
+        if (null === $lastSupport) {
             return null;
         }
 
-        foreach ($oldSupport->getDocuments() as $document) {
+        $lastEvaluation = $repoEvaluation->findLastEvaluationOfSupport($lastSupport->getId());
+        $documents = $repoDocument->findBy(['supportGroup' => $lastSupport]);
+        $lastNote = $repoNote->findOneBy(['supportGroup' => $lastSupport], ['updatedAt' => 'DESC']);
+
+        if ($lastEvaluation && 0 === $supportGroup->getEvaluationsGroup()->count()) {
+            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($supportGroup);
+            $supportGroup->getEvaluationsGroup()->add($evaluationGroup);
+        }
+
+        foreach ($documents as $document) {
             $newDocument = (clone $document)->setSupportGroup($supportGroup);
             $supportGroup->getDocuments()->add($newDocument);
         }
 
-        $lastNote = $oldSupport->getNotes()->last();
-        $lastEvaluation = $oldSupport->getEvaluationsGroup()->last();
-
         if ($lastNote) {
             $note = (clone $lastNote)->setSupportGroup($supportGroup);
             $supportGroup->getNotes()->add($note);
-        }
-        if (0 === $supportGroup->getEvaluationsGroup()->count() && $lastEvaluation) {
-            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($supportGroup);
-            $supportGroup->getEvaluationsGroup()->add($evaluationGroup);
         }
 
         return $supportGroup;
@@ -284,7 +292,7 @@ class SupportManager
     public function getSupportGroup(int $id): ?SupportGroup
     {
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
-            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $this->repoSupportGroup->findSupportById($id);
         });
@@ -296,9 +304,9 @@ class SupportManager
     public function getEvaluation(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluationGroup): ?EvaluationGroup
     {
         return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoEvaluationGroup) {
-            $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $repoEvaluationGroup->findEvaluationById($supportGroup);
+            return $repoEvaluationGroup->findLastEvaluationOfSupport($supportGroup->getId());
         });
     }
 
@@ -308,7 +316,7 @@ class SupportManager
     public function getReferents(PeopleGroup $peopleGroup, ReferentRepository $repoReferent)
     {
         return $this->cache->get(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup, $repoReferent) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $repoReferent->findReferentsOfPeopleGroup($peopleGroup);
         });
@@ -320,7 +328,7 @@ class SupportManager
     public function getNbNotes(SupportGroup $supportGroup, NoteRepository $repoNote): int
     {
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoNote) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $repoNote->count(['supportGroup' => $supportGroup->getId()]);
         });
@@ -332,7 +340,7 @@ class SupportManager
     public function getNbRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): int
     {
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $repoRdv->count(['supportGroup' => $supportGroup->getId()]);
         });
@@ -368,7 +376,7 @@ class SupportManager
     public function getNbDocuments(SupportGroup $supportGroup, DocumentRepository $repoDocument): int
     {
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoDocument) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $repoDocument->count(['supportGroup' => $supportGroup->getId()]);
         });
@@ -384,7 +392,7 @@ class SupportManager
         }
 
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoContribution) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $repoContribution->count(['supportGroup' => $supportGroup->getId()]);
         });

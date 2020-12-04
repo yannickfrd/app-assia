@@ -3,9 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\EvaluationGroup;
-use App\Entity\Service;
 use App\Entity\SupportGroup;
-use App\Form\Utils\Choices;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,15 +24,18 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     /**
      * Donne toute l'évaluation sociale du groupe.
      */
-    public function findEvaluationById(SupportGroup $supportGroup): ?EvaluationGroup
+    public function findLastEvaluationOfSupport(int $id): ?EvaluationGroup
     {
-        $service = $supportGroup->getService();
-
-        $query = $this->createQueryBuilder('eg')->select('eg')
+        // $lastEvaluationId = $this->getLastEvaluationId($id);
+        // if (0 === count($lastEvaluationId)) {
+        //     return null;
+        // }
+        return $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->join('sg.peopleGroup', 'gp')->addSelect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
-            ->join('sg.service', 's')->addSelect('s')
+            ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice}')
+            ->join('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
             ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role}')
@@ -51,17 +52,15 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
             ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
             ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson');
+            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
 
-        if ($service && Choices::YES == $service->getJustice()) {
-            $query = $query->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp');
-        }
-        if ($service && Service::SERVICE_PASH_ID == $service->getId()) {
-            $query = $query->leftJoin('eg.evalHotelLifeGroup', 'ehlg')->addSelect('ehlg');
-        }
+            ->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp')
+            ->leftJoin('eg.evalHotelLifeGroup', 'ehlg')->addSelect('ehlg')
 
-        return $query->andWhere('eg.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroup->getId())
+            ->andWhere('eg.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $id)
+            // ->andWhere('eg.id = :id')
+            // ->setParameter('id', $lastEvaluationId)
 
             ->addOrderBy('sp.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC')
@@ -69,8 +68,6 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
-
-        // $evaluations = new Paginator($query, $fetchJoinCollection = true);
     }
 
     /**
@@ -133,5 +130,19 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
         return $query->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Retourne l'ID de la dernière évaluation sociale du suivi.
+     */
+    public function getLastEvaluationId(int $id): array
+    {
+        return $this->createQueryBuilder('eg')->select('eg.id')
+            ->where('eg.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $id)
+            ->orderBy('eg.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getScalarResult();
     }
 }

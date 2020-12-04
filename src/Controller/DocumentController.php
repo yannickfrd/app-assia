@@ -153,12 +153,17 @@ class DocumentController extends AbstractController
 
         $file = 'uploads/documents/'.$document->getSupportGroup()->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
 
-        if (\file_exists($file)) {
-            \unlink($file);
-        }
-
         $this->manager->remove($document);
         $this->manager->flush();
+
+        $count = $this->repo->count([
+            'peopleGroup' => $document->getSupportGroup()->getPeopleGroup(),
+            'internalFileName' => $document->getInternalFileName(),
+        ]);
+
+        if (1 === $count && \file_exists($file)) {
+            \unlink($file);
+        }
 
         $this->discache($document->getSupportGroup());
 
@@ -166,7 +171,7 @@ class DocumentController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'Le document "'.$documentName.'" est supprimé.',
+            'msg' => "Le document $documentName est supprimé.",
         ], 200);
     }
 

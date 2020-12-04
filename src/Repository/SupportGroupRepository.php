@@ -5,14 +5,12 @@ namespace App\Repository;
 use App\Entity\PeopleGroup;
 use App\Entity\SupportGroup;
 use App\Entity\User;
-use App\Form\Model\AvdlSupportSearch;
 use App\Form\Model\SupportsByUserSearch;
-use App\Form\Model\SupportSearch;
 use App\Form\Model\SupportsInMonthSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -52,7 +50,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findFullSupportById(int $id): ?SupportGroup
     {
-        $query = $this->getsupportQuery()
+        return $this->getsupportQuery()
         ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
         ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
         ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
@@ -72,10 +70,10 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('ag')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('ap')
-            ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2');
+            ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2')
         // }
 
-        return $query->andWhere('sg.id = :id')
+            ->andWhere('sg.id = :id')
             ->setParameter('id', $id)
 
             ->addOrderBy('sp.head', 'DESC')
@@ -265,32 +263,33 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne le dernier suivi social auquel l'utilisateur peur avoir accès.
+     * Trouve le dernier suivi social en fonction de l'utilisateur.
      */
     public function findLastSupport(SupportGroup $supportGroup): ?SupportGroup
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('eg')
-            ->leftJoin('sg.notes', 'n')->addSelect('n')
-            ->leftJoin('sg.documents', 'd')->addSelect('d')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
 
-            ->where('sg.peopleGroup = :peopleGroup')
+            ->andWhere('sg.peopleGroup = :peopleGroup')
             ->setParameter('peopleGroup', $supportGroup->getPeopleGroup());
 
-        if ($supportGroup->getId()) {
-            $query->andWhere('sg.id != :id')
-            ->setParameter('id', $supportGroup->getId());
-        }
-
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('sg.service IN (:services)')
+            $query->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        return $query->orderBy('sg.updatedAt', 'DESC')
-
+        return $query
+            ->orderBy('sg.updatedAt', 'DESC')
+            ->setMaxResults(1)
+    
             ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
+
+        // $paginator = new Paginator($query);
+        // foreach ($paginator->getIterator() as $supportGroup) {
+        //     return $supportGroup;
+        // }
     }
 
     public function countSupports(array $criteria = null): int
