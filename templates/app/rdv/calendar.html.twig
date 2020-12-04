@@ -3,7 +3,7 @@
 {% block title %}Agenda{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
-	{{ encore_entry_link_tags("calendar") }}
+	{{ encore_entry_link_tags("calendar_css") }}
 {% endblock %}
 
 {% block body %}
@@ -27,16 +27,30 @@
 				</div>
 				<h3 class="h4 text-secondary">{{ calendar.getMonthMinToString|capitalize }}</h3>
 				<div class="float-right">
+					<div class="form-group d-inline-flex mr-2">
+						<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
+							data-toggle="tooltip" data-placement="bottom" title="Afficher les week-end">
+							<div class="form-check">
+								<input type="checkbox" id="show-weekend" name="show-weekend" 
+									class="custom-control-input checkbox form-check-input">
+								<label class="custom-control-label form-check-label" for="show-weekend">WE</label>
+							</div>
+						</div>
+					</div>
 					<a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}" 
 						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois actuel"><!--
 						--><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline ml-2">Mois actuel</span></a>
-					<a href="{% if support is defined %}{{ path('support_calendar_show', {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
+					<a href="{% if support is defined %}{{ path('support_calendar_show', 
+						{'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}" 
-						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" 
+						data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
 					</a>
-					<a href="{% if support is defined %}{{ path('support_calendar_show', {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
+					<a href="{% if support is defined %}{{ path('support_calendar_show', 
+						{'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}{% endif %}" 
-						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" 
+						data-toggle="tooltip" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
 					</a>
 				</div>
 			</div>
@@ -46,9 +60,9 @@
 			<div class="calendar-table calendar-{{ calendar.weeks }}weeks">
 				<div class="calendar-header text-secondary">
 					<div class="calendar-week-number"></div>
-					{% for day in calendar.daysList %}
-						{% if loop.index0 < 5 %}
-							<div class="calendar-header-col week-5days">{{ day }}</div>
+					{% for key, day in calendar.daysList %}
+						{% if key < 7 %}
+							<div class="calendar-header-col week-5days" {% if key >= 5 %}data-weekend="true"{% endif %}>{{ day }}</div>
 						{% endif %}
 					{% endfor %}
 				</div>
@@ -64,16 +78,19 @@
 							<div class="calendar-week-number text-secondary">
 								<div class="my-auto">{{ week_number }}</div>
 							</div>
-							{% for day in 0..6 %}
-								{% if day < 5 %}
+							{% for key, day in 0..6 %}
+								{% if key < 7 %}
 									{% set day = start_day|date_modify("+" ~ (day + week * 7) ~ " day") %}
-									<div class="calendar-day-block week-5days {% if calendar.withinMonth(day) == false %}calendar-other-month{% endif %}{% if calendar.isToday(day) %}calendar-today{% endif %}" id="{{ day|date("Y-m-d") }}" title="Ajouter un rendez-vous">
+									<div class="calendar-day-block week-5days {{ calendar.withinMonth(day) == false ? 'calendar-other-month' }}
+										{{ calendar.isToday(day) ? 'calendar-today' }}" id="{{ day|date("Y-m-d") }}" 
+										title="Ajouter un rendez-vous" {% if key >= 5 %}data-weekend="true"{% endif %}>
 										<div class="text-dark calendar-day">{{ day|date("d") }}
 											{{ calendar.otherMonth(day) }}
 										</div>
 										{% if day|date("Y-m-d") in rdvs %}
 											{% for rdv in rdvs[day|date("Y-m-d")] %}
-												<a class="calendar-event bg-{{ theme_color }} text-light js-rdv" id="rdv-{{ rdv.id }}" data-toggle="tooltip" data-placement="bottom" title="Voir le rendez-vous">
+												<a class="calendar-event bg-{{ theme_color }} text-light" id="rdv-{{ rdv.id }}" 
+													data-toggle="tooltip" data-placement="bottom" title="Voir le rendez-vous">
 													<span class="rdv-start">{{ rdv.start|date("H:i") }}</span>
 													<span class="rdv-title">{{ rdv.title }}</span>
 												</a>
@@ -94,5 +111,5 @@
 {% endblock %}
 
 {% block javascripts %}
-	{{ encore_entry_script_tags("rdv") }}
+	{{ encore_entry_script_tags("calendar") }}
 {% endblock javascripts %}

@@ -25,7 +25,8 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('accommodation', './assets/js/accommodation/accommodation.js')
-    .addEntry('calendar', './assets/css/calendar.scss')
+    .addEntry('calendar_css', './assets/css/calendar.scss')
+    .addEntry('calendar', './assets/js/rdv/calendarIndex.js')
     .addEntry('contribution', './assets/js/contribution/contribution.js')
     .addEntry('directory', './assets/js/directory/directory.js')
     .addEntry('device', './assets/js/device/device.js')
@@ -40,7 +41,7 @@ Encore
     .addEntry('note', './assets/js/note/note.js')
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/accommodation/accommodation.js')
-    .addEntry('rdv', './assets/js/rdv/rdv.js')
+    .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')
     .addEntry('referent', './assets/js/referent/referent.js')
     .addEntry('search', './assets/js/search.js')
     .addEntry('service', './assets/js/service/service.js')

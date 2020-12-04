@@ -4,19 +4,22 @@ import Loader from '../utils/loader'
 import DateFormat from '../utils/dateFormat'
 import SelectType from '../utils/selectType'
 import { Modal } from 'bootstrap'
+import ParametersUrl from '../utils/parametersUrl'
 
 export default class Calendar {
 
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.modalElt = new Modal(document.getElementById('modal-rdv'))
-
         this.selectType = new SelectType()
+        this.parametersUrl = new ParametersUrl()
+        this.modalElt = new Modal(document.getElementById('modal-rdv'))
 
         this.newRdvBtn = document.getElementById('js-new-rdv')
         this.dayElts = document.querySelectorAll('.calendar-day-block')
-        this.rdvElts = document.querySelectorAll('.js-rdv')
+        this.rdvElts = document.querySelectorAll('.calendar-event')
+        this.showWeekendCheckbox = document.getElementById('show-weekend');
+        this.weekendElts = document.querySelectorAll('div[data-weekend=true]')
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
@@ -38,11 +41,15 @@ export default class Calendar {
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
 
+        this.showWeekendsItem = sessionStorage.getItem('showWeekends')
+
         this.init()
     }
 
     init() {
-        this.newRdvBtn.addEventListener('click', e => this.resetData(e))
+        this.newRdvBtn.addEventListener('click', e => {
+            this.resetData(e);
+        })
 
         this.dayElts.forEach(dayElt => {
             this.hideRdvElts(dayElt)
@@ -67,14 +74,37 @@ export default class Calendar {
 
         this.btnSaveElt.addEventListener('click', e => this.requestSaveRdv(e))
 
-        // this.btnCancelElt.addEventListener('click', e => {
-        //     e.preventDefault()
-        // })
-
         this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
             this.requestDeleteRdv()
         })
+
+        if (this.showWeekendsItem) {
+            this.showWeekendCheckbox.checked = 'checked'
+        } else {
+            this.hideWeekends();
+        }
+
+        this.showWeekendCheckbox.addEventListener('click', () => this.hideWeekends())
+        
+        // Si l'ID d'une suivi est en pramètre, affiche le rendez-vous
+        const rdvElt = document.getElementById('rdv-' + this.parametersUrl.last())
+        if (rdvElt) {
+            rdvElt.click()
+        }
+    }
+
+    /**
+     * Masque ou affiche les week-ends.
+     */
+    hideWeekends() {
+        this.weekendElts.forEach(elt => {
+            elt.classList.toggle('d-none');
+        });
+        if (this.showWeekendCheckbox.checked) {
+            return sessionStorage.setItem('showWeekends', true);
+        } 
+        return sessionStorage.removeItem('showWeekends');
     }
 
     /**
@@ -85,7 +115,7 @@ export default class Calendar {
         e.preventDefault()
         if (this.supportElt) {
             this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.getAttribute('data-support') + '/rdv/new'
-            let fullname = this.supportPeopleElt.querySelector('.btn').textContent
+            const fullname = this.supportPeopleElt.querySelector('.btn').textContent
             this.modalRdvElt.querySelector('#rdv_title').value = fullname
         } else {
             this.modalRdvElt.querySelector('form').action = '/rdv/new'
@@ -93,10 +123,10 @@ export default class Calendar {
         }
         this.rdvTitleElt.textContent = 'Rendez-vous'
 
-        let dateFormat = new DateFormat()
+        const dateFormat = new DateFormat()
         this.dateInput.value = dateFormat.getDateNow()
         this.startInput.value = dateFormat.getHour()
-        let end = parseInt(this.startInput.value.substr(0, 2)) + 1
+        const end = parseInt(this.startInput.value.substr(0, 2)) + 1
         this.endInput.value = end + ':00'
 
         this.infoRdvElt.innerHTML = ''
@@ -105,11 +135,25 @@ export default class Calendar {
         this.rdvLocationInput.value = ''
         this.selectType.setOption(this.rdvStatusInput)
 
-        // this.modalRdvElt.querySelector('#rdv_status').value = 0
         this.modalRdvElt.querySelector('#rdv_content').value = ''
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
 
-        this.modalElt.show()
+        if (!this.eventIsTarget(e)) {
+            this.modalElt.show()
+        }
+    }
+
+    /**
+     * Vérfie si un RDV est ciblé.
+     * @param {Event} e 
+     */
+    eventIsTarget(e) {
+        for (let i = 0; i < e.path.length; i++) {
+            if (e.path[i].className && e.path[i].className.search('calendar-event') === 0) {
+                return true;
+            }
+        }
+        return false
     }
 
     /**
@@ -120,11 +164,11 @@ export default class Calendar {
     }
 
     /**
-     * Vérifie si l 'heure de début est valide.
+     * Vérifie si l'heure de début est valide.
      */
     checkStart() {
         if (isNaN(this.startInput.value)) {
-            let endHour = parseInt(this.startInput.value.substr(0, 2)) + 1
+            const endHour = parseInt(this.startInput.value.substr(0, 2)) + 1
 
             this.endInput.value = endHour.toString().padStart(2, '0') + ':' + this.startInput.value.substr(3, 2)
             this.updateDatetimes()
@@ -132,7 +176,7 @@ export default class Calendar {
     }
 
     /**
-     * Vérifie si l 'heure de fin est valide.
+     * Vérifie si l'heure de fin est valide.
      */
     checkEnd() {
         this.updateDatetimes()
@@ -256,20 +300,20 @@ export default class Calendar {
      * @param {Object} rdv 
      */
     createRdv(rdv) {
-        let rdvElt = document.createElement('div')
-        rdvElt.className = 'calendar-event bg-' + this.themeColor + ' text-light js-rdv'
-        rdvElt.id = 'rdv-' + rdv.id
+        const rdvElt = document.createElement('div')
+        rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
+        rdvElt.id = `rdv-${rdv.id}`
         rdvElt.setAttribute('data-toggle', 'modal')
         rdvElt.setAttribute('data-target', '#modal-rdv')
         rdvElt.setAttribute('title', 'Voir le rendez-vous')
 
-        let title = this.modalRdvElt.querySelector('#rdv_title').value
+        const title = this.modalRdvElt.querySelector('#rdv_title').value
 
         rdvElt.innerHTML =
             ` <span class='rdv-start'>${rdv.start}</span> 
                 <span class='rdv-title'>${title}</span> `
 
-        let dayElt = document.getElementById(rdv.day)
+        const dayElt = document.getElementById(rdv.day)
         dayElt.insertBefore(rdvElt, dayElt.lastChild)
 
         this.sortDayBlock(dayElt)
@@ -291,8 +335,8 @@ export default class Calendar {
      * Supprime le RDV dans l 'agenda.
      */
     deleteRdv() {
-        let rdvElt = document.getElementById('rdv-' + this.rdvId)
-        let dayElt = rdvElt.parentNode
+        const rdvElt = document.getElementById('rdv-' + this.rdvId)
+        const dayElt = rdvElt.parentNode
         rdvElt.remove()
         this.hideRdvElts(dayElt)
     }
@@ -303,7 +347,7 @@ export default class Calendar {
      */
     sortDayBlock(dayElt) {
 
-        let rdvArr = []
+        const rdvArr = []
         dayElt.querySelectorAll('.calendar-event').forEach(rdvElt => {
             rdvArr.push(rdvElt)
         })
@@ -318,14 +362,14 @@ export default class Calendar {
      */
     hideRdvElts(dayElt) {
 
-        let rdvElts = dayElt.querySelectorAll('.calendar-event')
+        const rdvElts = dayElt.querySelectorAll('.calendar-event')
 
-        let othersEventsElt = dayElt.querySelector('.calendar-others-events')
+        const othersEventsElt = dayElt.querySelector('.calendar-others-events')
         if (othersEventsElt) {
             othersEventsElt.remove()
         }
 
-        let maxHeight = (dayElt.clientHeight - 24) / 21.2
+        const maxHeight = (dayElt.clientHeight - 24) / 21.2
 
         dayElt.querySelectorAll('a').forEach(divElt => {
             divElt.classList.remove('d-none')
@@ -333,7 +377,7 @@ export default class Calendar {
 
         let sumHeightdivElts = 44
         dayElt.querySelectorAll('a').forEach(divElt => {
-            var styles = window.getComputedStyle(divElt)
+            const styles = window.getComputedStyle(divElt)
             sumHeightdivElts = sumHeightdivElts + divElt.clientHeight + parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom'])
             if (sumHeightdivElts > dayElt.clientHeight && rdvElts.length > maxHeight) {
                 divElt.classList.add('d-none')
@@ -341,9 +385,9 @@ export default class Calendar {
         })
 
         if (sumHeightdivElts > dayElt.clientHeight && rdvElts.length > maxHeight) {
-            let divElt = document.createElement('a')
+            const divElt = document.createElement('a')
             divElt.className = 'calendar-others-events bg-' + this.themeColor + ' text-light font-weight-bold'
-            let date = dayElt.id.replace('-', '/')
+            const date = dayElt.id.replace('-', '/')
             date = date.replace('-', '/')
             divElt.href = '/calendar/day/' + date
             // divElt.setAttribute('data-toggle', 'modal')

@@ -1,5 +1,5 @@
 /**
- * Donne les paramètres présents dans l'URL
+ * Donne les paramètres présents dans l'URL.
  */
 export default class ParametersUrl {
 
@@ -14,15 +14,25 @@ export default class ParametersUrl {
         this.vars = vars
     }
 
+    /**
+     * Donne tous les paramètres.
+     */
     getAll() {
         return this.vars
     }
 
+    /**
+     * Donne un paramètre.
+     * @param {String} param 
+     */
     get(param) {
         return this.vars[param] ? this.vars[param] : null
     }
 
-    lastParam() {
+    /**
+     * Donne le dernier paramètre.
+     */
+    last() {
         const splitPath = window.location.pathname.split('/')
         return splitPath[splitPath.length - 1]
     }

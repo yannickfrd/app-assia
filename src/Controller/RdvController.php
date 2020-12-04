@@ -116,13 +116,13 @@ class RdvController extends AbstractController
     /**
      * Affiche l'agenda de l'utilisateur (vue mensuelle).
      *
-     * @Route("/calendar/{year}/{month}", name="calendar_show", methods="GET", requirements={
+     * @Route("/calendar/{year}/{month}/{rdv_id}", name="calendar_show", methods="GET", requirements={
      * "year" : "\d{4}",
      * "month" : "0?[1-9]|1[0-2]",
      * })
      * @Route("/calendar", name="calendar", methods="GET")
      */
-    public function showCalendar(int $year = null, int $month = null): Response
+    public function showCalendar(int $year = null, int $month = null, int $rdv_id = null): Response
     {
         $calendar = new Calendar($year, $month);
 
@@ -143,7 +143,7 @@ class RdvController extends AbstractController
     /**
      * Affiche l'agenda d'un suivi (vue mensuelle).
      *
-     * @Route("/support/{id}/calendar/{year}/{month}", name="support_calendar_show", methods="GET", requirements={
+     * @Route("/support/{id}/calendar/{year}/{month}/{rdv_id}", name="support_calendar_show", methods="GET", requirements={
      * "year" : "\d{4}",
      * "month" : "0?[1-9]|1[0-2]",
      * })
@@ -151,7 +151,7 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null, int $rdv_id = null): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
@@ -278,12 +278,15 @@ class RdvController extends AbstractController
      */
     public function deleteRdv(Rdv $rdv): Response
     {
+        $id = $rdv->getId();
+
         $this->manager->remove($rdv);
         $this->manager->flush();
 
         return $this->json([
             'code' => 200,
             'action' => 'delete',
+            'rdv' => ['id' => $id],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
         ], 200);

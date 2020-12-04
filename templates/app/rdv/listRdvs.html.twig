@@ -39,42 +39,45 @@
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Lieu", "r.location") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Référent·e", "ref.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Suivi", "p.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-20"></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for rdv in rdvs %}
-                        <tr id="rdv-{{ rdv.id }}">
-                            <th scope="row" class="align-middle">
-                            {% if rdv.supportGroup %}
-                                <a href="{{ path('support_calendar_show', {'id':rdv.supportGroup.id, 'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" 
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Voir le rendez-vous"><span class="fas fa-eye"></span>
-                                </a>
-                            </th>
-                            {% endif %}
-                            <td class="align-middle justify"><span class="font-weight-bold">
-                                {{ rdv.title }}{% if rdv.content %} : {% endif %}</span>
-                                <span class="">{{ rdv.content|slice(0,200)|striptags|raw }}</span> 
-                                {% if rdv.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
-                            </td>                        
-                            <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
-                            <td class="align-middle">{{ rdv.location }}</td>
-                            <td class="align-middle">{{ rdv.supportGroup and rdv.supportGroup.referent ? rdv.supportGroup.referent.fullname }}</td>
-                            <td class="align-middle">
-                                {% if rdv.supportGroup %}
-                                    {% for supportPerson in rdv.supportGroup.supportPeople|filter(s => s.head == true) %}
-                                        {{ supportPerson.person.fullname }}<br/>
-                                    {% endfor %}
-                                {% endif %} 
-                            </td>
-                        </tr>
+                            {% set support = rdv.supportGroup %}
+                            <tr id="rdv-{{ rdv.id }}" class="js-rdv">
+                                <td scope="row" class="align-middle text-center">
+                                    <a href="{% if support %}{{ path('support_calendar_show', 
+                                        {'id':support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m'), 'rdv_id':  rdv.id}) }}
+                                        {% else %}{{ path('calendar_show', {'year': rdv.start|date('Y'),'month': rdv.start|date('m'), 'rdv_id': rdv.id}) }}{% endif %}" 
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" title="Voir le rendez-vous"><span class="fas fa-eye"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle justify"><span class="font-weight-bold">
+                                    {{ rdv.title }}{% if rdv.content %} : {% endif %}</span>
+                                    <span class="">{{ rdv.content|slice(0,200)|striptags|raw }}</span> 
+                                    {% if rdv.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
+                                </td>                        
+                                <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
+                                <td class="align-middle">{{ rdv.location }}</td>
+                                <td class="align-middle">{{ support and support.referent ? support.referent.fullname : rdv.createdBy.fullname }}</td>
+                                <td class="align-middle">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
+                                <td class="align-middle text-center">
+                                    {% if is_granted("DELETE", rdv) %}
+                                        <button data-url="{{ path('rdv_delete', {'id':rdv.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
+                                            data-placement="bottom" title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span>
+                                        </button>        
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            
             <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
-
         </div>
+
+		{% include "app/rdv/modalDeleteRdv.html.twig" %}
 
     </section>
 
@@ -82,4 +85,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("rdvs") }}
 {% endblock javascripts %}
