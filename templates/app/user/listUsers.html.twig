@@ -62,7 +62,7 @@
                     <tbody>
                         {% for user in users %}
                         <tr>
-                            <td scope="row" class="align-middle">
+                            <td scope="row" class="align-middle text-center">
                                 {% if is_granted("ROLE_ADMIN") %}
                                     <a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
                                         data-toggle="tooltip" data-placement="bottom" title="Voir la fiche"><span class="fas fa-eye"></span>

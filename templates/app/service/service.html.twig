@@ -5,6 +5,7 @@
 {% set EDIT_MODE = service.id != null %}
 {% set YES = 1 %}
 {% set title = EDIT_MODE ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
+{% set is_granted_edit_service = is_granted("EDIT", service) %}
 
 {% block title %}{{ title }}{{ parent() }}{% endblock %}
 
@@ -78,7 +79,7 @@
             <div class="form-group row">
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
             </div>
-            {% if is_granted("EDIT", service) %}
+            {% if is_granted_edit_service %}
                 <div class="form-group row">
                     <div class="col-md-12">
                         {% if EDIT_MODE and is_granted("DISABLE", service) %}
@@ -105,7 +106,7 @@
         {% if EDIT_MODE == true %}
 			{% include "app/service/serviceSubServices.html.twig" %}
         {% endif %}
-        {% if is_granted("EDIT", service) %}
+        {% if is_granted_edit_service %}
             {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
         		{% include "app/service/serviceOrganizations.html.twig" %}
             {% endif %}

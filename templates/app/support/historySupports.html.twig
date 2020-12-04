@@ -34,16 +34,16 @@
                         </div>
                     {% endset %}
                     <tr>
-                        <td scope="row" class="align-middle">
+                        <td scope="row" class="align-middle text-center">
                             {% if is_granted("VIEW", supportGroup) %}
-                            <a href="{{ path('support_view', {'id':supportGroup.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
-                                title="Voir le suivi social"><span class="fas fa-eye"></span>
-                            </a>
+                                <a href="{{ path('support_view', {'id':supportGroup.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                    title="Voir le suivi social"><span class="fas fa-eye"></span>
+                                </a>
                             {% else %}
-                            <span class="btn btn-{{ theme_color }} btn-sm shadow my-1 cursor-default" data-toggle="tooltip" data-placement="bottom"
-                                title="Accès non autorisé"><span class="fas fa-ban"></span>
-                            </span>
+                                <span class="btn btn-{{ theme_color }} btn-sm shadow my-1 cursor-default" data-toggle="tooltip" data-placement="bottom"
+                                    title="Accès non autorisé"><span class="fas fa-ban"></span>
+                                </span>
                             {% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>

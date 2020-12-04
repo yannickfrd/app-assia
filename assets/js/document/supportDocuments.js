@@ -128,7 +128,7 @@ export default class SupportDocuments {
         // Vérifie si l'extension du fichier est valide
         if (!validExtensions.includes(extensionFile)) {
             error = true
-            new MessageFlash('danger', `Le format du fichier n'est pas valide (${extensionFile}).\n'Formats acceptés : ${validExtensions.join(', ')}.`)
+            new MessageFlash('danger', `Le format du fichier n'est pas valide (${extensionFile}).\n Formats acceptés : ${validExtensions.join(', ')}.`)
         }
 
         const sizeFile = Math.round((this.documentFileInput.files[0].size / 1024 / 1024) * 10) / 10

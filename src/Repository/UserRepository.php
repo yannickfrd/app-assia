@@ -229,7 +229,7 @@ class UserRepository extends ServiceEntityRepository
 
             ->orderBy('u.lastname', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
             ->getResult();
     }
 

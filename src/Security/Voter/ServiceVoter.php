@@ -10,7 +10,6 @@ class ServiceVoter extends Voter
 {
     private $security;
     protected $currentUser;
-    protected $currentUserId;
     protected $service;
 
     public function __construct(Security $security)
@@ -27,7 +26,6 @@ class ServiceVoter extends Voter
     protected function voteOnAttribute($attribute, $service, TokenInterface $token)
     {
         $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
         $this->service = $service;
 
         if (!$this->currentUser) {
@@ -56,7 +54,7 @@ class ServiceVoter extends Voter
         }
         if ($this->security->isGranted('ROLE_ADMIN')) {
             foreach ($this->currentUser->getServiceUser() as $serviceUser) {
-                if ($serviceUser->getService() && $serviceUser->getService()->getId() == $this->service->getId()) {
+                if ($serviceUser->getService() && $serviceUser->getService()->getId() === $this->service->getId()) {
                     return true;
                 }
             }

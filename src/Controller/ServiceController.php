@@ -158,6 +158,8 @@ class ServiceController extends AbstractController
 
     protected function getSubServices(Service $service, SubServiceRepository $repoSubService, FilesystemAdapter $cache)
     {
+        return $repoSubService->findSubServicesOfService($service);
+
         return $cache->get(Service::CACHE_SERVICE_SUBSERVICES_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoSubService) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
@@ -167,6 +169,8 @@ class ServiceController extends AbstractController
 
     protected function getAccommodations(Service $service, AccommodationRepository $repoAccommodation, FilesystemAdapter $cache)
     {
+        return $repoAccommodation->findAccommodationsOfService($service);
+
         return $cache->get(Service::CACHE_SERVICE_ACCOMMODATIONS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoAccommodation) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
@@ -176,6 +180,8 @@ class ServiceController extends AbstractController
 
     protected function getUsers(Service $service, UserRepository $repoUser, FilesystemAdapter $cache)
     {
+        return $repoUser->findUsersOfService($service);
+
         return $cache->get(Service::CACHE_SERVICE_USERS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoUser) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 

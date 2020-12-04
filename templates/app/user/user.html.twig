@@ -186,11 +186,11 @@
                                 <tr>
                                     <th scope="row" class="align-middle">
                                         {% if is_granted("EDIT", service) %}
-                                        <a href="{{ path('service_edit', {'id':service.id}) }}"
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-                                            title="Voir la fiche du service">
-                                            <span class="fas fa-eye"></span>
-                                        </a>
+                                            <a href="{{ path('service_edit', {'id':service.id}) }}"
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                                title="Voir la fiche du service">
+                                                <span class="fas fa-eye"></span>
+                                            </a>
                                         {% endif %}
                                     </th>
                                     <td class="align-middle">{{ service.name }}</td>

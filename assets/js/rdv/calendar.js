@@ -98,7 +98,7 @@ export default class Calendar {
         this.showWeekendCheckbox.addEventListener('click', () => this.hideWeekends())
         
         // Si l'ID d'une suivi est en pramètre, affiche le rendez-vous
-        const rdvElt = document.getElementById('rdv-' + this.parametersUrl.last())
+        const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
         if (rdvElt) {
             rdvElt.click()
         }

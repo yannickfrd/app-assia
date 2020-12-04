@@ -94,35 +94,15 @@ class RdvController extends AbstractController
     }
 
     /**
-     * Donne les rendez-vous du suivi.
-     */
-    protected function getRdvs(SupportGroup $supportGroup, Request $request, SupportRdvSearch $search, Pagination $pagination)
-    {
-        // Si filtre ou tri utilisé, n'utilise pas le cache.
-        if ($request->query->count() > 0) {
-            return  $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
-        }
-
-        // Sinon, récupère les rendez-vous en cache.
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
-            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
-
-                return $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
-            }
-        );
-    }
-
-    /**
      * Affiche l'agenda de l'utilisateur (vue mensuelle).
      *
-     * @Route("/calendar/{year}/{month}/{rdv_id}", name="calendar_show", methods="GET", requirements={
+     * @Route("/calendar/month/{year}/{month}", name="calendar_show", methods="GET", requirements={
      * "year" : "\d{4}",
      * "month" : "0?[1-9]|1[0-2]",
      * })
-     * @Route("/calendar", name="calendar", methods="GET")
+     * @Route("/calendar/month", name="calendar", methods="GET")
      */
-    public function showCalendar(int $year = null, int $month = null, int $rdv_id = null): Response
+    public function showCalendar(int $year = null, int $month = null): Response
     {
         $calendar = new Calendar($year, $month);
 
@@ -143,15 +123,15 @@ class RdvController extends AbstractController
     /**
      * Affiche l'agenda d'un suivi (vue mensuelle).
      *
-     * @Route("/support/{id}/calendar/{year}/{month}/{rdv_id}", name="support_calendar_show", methods="GET", requirements={
+     * @Route("/support/{id}/calendar//month/{year}/{month}", name="support_calendar_show", methods="GET", requirements={
      * "year" : "\d{4}",
      * "month" : "0?[1-9]|1[0-2]",
      * })
-     * @Route("/support/{id}/calendar", name="support_calendar", methods="GET")
+     * @Route("/support/{id}/calendar/month", name="support_calendar", methods="GET")
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null, $rdv_id = null): Response
+    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
@@ -291,6 +271,26 @@ class RdvController extends AbstractController
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
         ], 200);
+    }
+
+    /**
+     * Donne les rendez-vous du suivi.
+     */
+    protected function getRdvs(SupportGroup $supportGroup, Request $request, SupportRdvSearch $search, Pagination $pagination)
+    {
+        // Si filtre ou tri utilisé, n'utilise pas le cache.
+        if ($request->query->count() > 0) {
+            return  $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
+        }
+
+        // Sinon, récupère les rendez-vous en cache.
+        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
+            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
+                $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+
+                return $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
+            }
+        );
     }
 
     /**

@@ -38,7 +38,7 @@
                     <tbody>
                         {% for pole in poles %}
                         <tr>
-                            <td scope="row" class="align-middle">
+                            <td scope="row" class="align-middle text-center">
                                 {% if is_granted("EDIT", pole) %}
                                 <a href="{{ path('pole_edit', {'id':pole.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"

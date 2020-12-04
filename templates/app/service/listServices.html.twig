@@ -52,7 +52,7 @@
                         <tbody>
                             {% for service in services %}
                                 <tr class="{% if service.disabled %}text-secondary{% endif %}">
-                                    <td scope="row" class="align-middle">
+                                    <td scope="row" class="align-middle text-center">
                                         {% if is_granted("VIEW", service) %}
                                             <a href="{{ path('service_edit', {'id':service.id}) }}" class="btn btn-{{ theme_color }}  btn-sm shadow" 
                                                 data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
