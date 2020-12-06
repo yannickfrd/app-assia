@@ -1,0 +1,31 @@
+{% extends "model/_search.html.twig" %}
+
+{% block search_form %}
+
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form.fullname) }}</div>
+    {% if form.service.services.vars.choices|length > 1 %}
+        <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
+    {% endif %}
+    {% if form.service.subServices.vars.choices|length > 1 %}
+        <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.subServices) }}</div>
+    {% endif %}
+    {% if form.service.devices.vars.choices|length > 1 %}
+        <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.devices) }}</div>
+    {% endif %}
+    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.referents) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form.type) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form.dateType) }}</div>
+    <div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+        title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
+    </div>
+        <div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+        title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
+    </div>
+{% endblock %}
+
+{% block search_form_buttons %}
+    {{ parent() }}
+    <button id="js-btn-export-2" name="export2" value="true" class="btn btn-{{ theme_color }} ml-2 shadow" data-toggle="tooltip"
+        data-placement="bottom" title="Exporter les données sur Excel pour la comptabilité"><span
+            class="fas fa-file-excel mr-2"></span>Export compta.</button>
+{% endblock %}

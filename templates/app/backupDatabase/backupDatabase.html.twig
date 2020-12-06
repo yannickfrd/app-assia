@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Sauvegarde et export base de données{{ parent() }}{% endblock %}
+{% block title %}Sauvegarde et export base de données{% endblock %}
 
 {% block body %}
 
@@ -11,7 +11,7 @@
         <hr>
 
         <section>
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
             <a href="{{ path('database_backup_create') }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
                 data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle sauvegarde"><span class="fas fa-cloud-upload-alt mr-2"></span>Créer backup

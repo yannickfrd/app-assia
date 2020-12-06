@@ -1,21 +1,17 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Utilisateurs{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}Utilisateurs{% endblock %}
 
 {% block body %}
 
     <section class="mt-0 mb-4">
 
         <div class="container">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <h1 class="h2 mb-3">Utilisateurs</h1>
         </div>
 
-        {% include "app/user/searchUsers.html.twig" %}
+        {% include "app/user/_searchUsers.html.twig" %}
 
         {% if users %}
 

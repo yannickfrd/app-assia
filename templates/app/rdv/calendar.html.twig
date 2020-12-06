@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Agenda{{ parent() }}{% endblock %}
+{% block title %}Agenda{% endblock %}
 
 {% block stylesheets %}
 	{{ encore_entry_link_tags("calendar_css") }}
@@ -12,7 +12,7 @@
 		<div class="container pt-4" id="calendar-container">
 			{% if support is defined %}
 				{% set title = "Rendez-vous" %}
-				{% include "app/support/navSuppport.html.twig" %}
+				{% include "app/support/_navSuppport.html.twig" %}
 			{% endif %}
 			<div class="d-flex flex-row align-items-center justify-content-between ml-1 mb-2">
 				<div class="d-flex align-items-center">
@@ -120,7 +120,7 @@
 		</div>
 	</section>
 
-	{% include "app/rdv/modalRdv.html.twig" %}
+	{% include "app/rdv/_modalRdv.html.twig" %}
 
 {% endblock %}
 

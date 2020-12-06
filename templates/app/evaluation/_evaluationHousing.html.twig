@@ -1,0 +1,159 @@
+{% extends "model/_collapseCard.html.twig" %}
+
+{% set id = "eval_housing" %}
+
+{% block card_title %}Logement - Hébergement{{ badgeTitle }}{% endblock %}
+
+{% block card_body %}
+
+	<div class="js-evalGroup" data-support-id="g-{{form.vars.value.supportGroup.id}}">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
+				<div class="col-md-6" data-parent-field="housingStatus">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
+			</div>
+			<div class="row" data-parent-field="housingStatus">
+				<div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
+				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
+				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
+				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
+			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
+			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoUpdatedRequestDate) }}</div>
+			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDept) }}</div>
+			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRecommendation) }}</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequest) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.socialHousingRequestId) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.socialHousingRequestDate) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.socialHousingUpdatedRequestDate) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.housingWishes) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.citiesWishes) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.specificities) }}</div>
+			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.syplo) }}</div>
+			<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploId) }}</div>
+			<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploDate) }}</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloAction) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloType) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloRecordDate) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloId) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloDecisionDate) }}</div>
+			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloTribunalAction) }}</div>
+			<div class="col-md-6" data-parent-field="daloTribunalAction">{{ form_row(form.evalHousingGroup.daloTribunalActionDate) }}</div>
+		</div>
+		{# <div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.collectiveAgreementHousing) }}</div>
+			<div class="col-md-6" data-parent-field="collectiveAgreementHousing">{{ form_row(form.evalHousingGroup.collectiveAgreementHousingDate) }}</div>
+		</div> #}
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.hsgActionEligibility) }}</div>
+			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionRecord) }}</div>
+			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionDate) }}</div>
+			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionDept) }}</div>
+			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionRecordId) }}</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingExperience) }}</div>
+			<div class="col-md-6" data-parent-field="housingExperience">{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
+		</div>
+
+		{% set housingHelps = constant("App\\Entity\\EvalHousingGroup::HOUSING_HELPS") %}
+
+		<div class="form-group row" data-parent-field="housingStatus">
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-form-label col-sm-4">Type d'aides liées au logement</div>
+					<div class="col-sm-8">
+						<select id="js-_evalHousingGroup_hsgHelps" name="hsgHelps" class="form-control">
+							<option class="default" value="">-- Ajouter --</option>
+							{% for hsgKey, hsgValue in housingHelps %}
+								<option value="{{ hsgKey }}">{{ hsgValue }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-md-12 mt-3">
+						<div class="table-responsive js-_evalSocialPerson_healthProblemType" data-parent-field="">
+							<table class="table table-sm table-hover text-dark">
+								<tbody>
+									<tr id="js-_evalHousingGroup_hsgHelps-fsl" class="js-_evalHousingGroup_hsgHelps d-table-row">
+										<th scope="row">
+											<div class="d-none">{{ form_widget(form.evalHousingGroup.fsl) }}</div>
+										</th>
+										<td class="align-middle">Fonds de solidarité pour le logement (FSL)</td>
+										<td>
+											<button class="btn btn-danger js-remove">
+												<span class="fas fa-trash-alt"></span>
+											</button>
+										</td>
+									</tr>
+									<tr id="js-_evalHousingGroup_hsgHelps-fslEligibility" class="js-_evalHousingGroup_hsgHelps d-table-row">
+										<th scope="row">
+											<div class="d-none">{{ form_widget(form.evalHousingGroup.fslEligibility) }}</div>
+										</th>
+										<td class="align-middle">Eligibilité aide à l'installation FSL</td>
+										<td>
+											<button class="btn btn-danger js-remove">
+												<span class="fas fa-trash-alt"></span>
+											</button>
+										</td>
+									</tr>
+									<tr id="js-_evalHousingGroup_hsgHelps-cafEligibility" class="js-_evalHousingGroup_hsgHelps d-table-row">
+										<th scope="row">
+											<div class="d-none">{{ form_widget(form.evalHousingGroup.cafEligibility) }}</div>
+										</th>
+										<td class="align-middle">Eligibilité CAF</td>
+										<td>
+											<button class="btn btn-danger js-remove">
+												<span class="fas fa-trash-alt"></span>
+											</button>
+										</td>
+									</tr>
+									<tr id="js-_evalHousingGroup_hsgHelps-otherHelps" class="js-_evalHousingGroup_hsgHelps d-table-row">
+										<th scope="row">
+											<div class="d-none">{{ form_widget(form.evalHousingGroup.otherHelps) }}</div>
+										</th>
+										<td class="align-middle">{{ form_widget(form.evalHousingGroup.hepsPrecision) }}</td>
+										<td>
+											<button class="btn btn-danger js-remove">
+												<span class="fas fa-trash-alt"></span>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="row">
+				<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>
+			</div>
+			<div class="row" id="domiciliation_location">
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationSearch) }}</div>
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationAddress) }}</div>
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationCity) }}</div>
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationDept) }}</div>
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationComment) }}</div>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-12">
+				{{ form_widget(form.evalHousingGroup.commentEvalHousing) }}
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

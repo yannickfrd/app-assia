@@ -2,16 +2,16 @@
 
 {% set support_group_accommodations = support.accommodationGroups %}
 
-{% block title %}Logement/hébergement{{ parent() }}{% endblock %}
+{% block title %}Logement/hébergement{% endblock %}
 
 {% block body %}
 
 	<div class="container">
 
 		{% set title = "Logement/hébergement" %}
-		{% include "app/support/navSuppport.html.twig" %}
+		{% include "app/support/_navSuppport.html.twig" %}
 
-		{% include "model/msgFlash.html.twig" %}
+		{% include "model/_msgFlash.html.twig" %}
 		<a href="{{ path("support_accommodation_new", {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-3">
 			<span class="fas fa-plus-square mr-2"></span>Ajouter une prise en charge</a>
 		{% if support_group_accommodations|length == 0 %}

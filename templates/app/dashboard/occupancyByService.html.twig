@@ -1,16 +1,16 @@
 {% extends "base.html.twig" %}
 {% import "macros/alertColor.html.twig" as utils %}
 
-{% block title %}Taux d'occupation{{ parent() }}{% endblock %}
+{% block title %}Taux d'occupation{% endblock %}
 
 {% block body %}
 
     <div class="container">
-        {% include "model/msgFlash.html.twig" %}
+        {% include "model/_msgFlash.html.twig" %}
         <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span>Services</h1>
     </div>
 
-    {% include "app/dashboard/searchOccupancy.html.twig" %}
+    {% include "app/dashboard/_searchOccupancy.html.twig" %}
 
     <div class="container">
         <div class="row">

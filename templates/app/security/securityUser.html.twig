@@ -4,7 +4,7 @@
 {% set disabled = user.isDisabled %}
 {% set title = user.id ? user.fullname ~ (disabled ? " (désactivé)") : "Création d'un compte utilisateur"  %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -28,7 +28,7 @@
                 </ol>
             </nav>
 
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
 
             <hr>

@@ -3,22 +3,18 @@
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
 {% set form_head = form.vars.value.head == true %}          
 
-{% block title %}Suivis{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}Suivis{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
         <div class="container">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <h1 class="h2 mb-3">Suivis</h1>
         </div>
 
-        {% include "app/support/searchSupports.html.twig" %}
+        {% include "app/support/_searchSupports.html.twig" %}
 
         <div class="container-fluid mt-4">
 

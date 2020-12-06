@@ -5,7 +5,7 @@
 {% set disabled = accommodation.isDisabled %}
 {% set title = EDIT_MODE ? accommodation.name ~ (disabled ? ' (désactivé)') : 'Nouveau groupe de places' %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -35,7 +35,7 @@
         <hr>
 
         <section>
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}
@@ -150,7 +150,7 @@
 
     </div>
 
-{% include "app/accommodation/deleteAccommodation.html.twig" %}
+{% include "app/accommodation/_modalDeleteAccommodation.html.twig" %}
 
 {% endblock %}
 

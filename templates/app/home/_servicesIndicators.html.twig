@@ -1,0 +1,140 @@
+ {% extends "model/_collapseCard.html.twig" %}
+
+ {% set id = "listservices" %}
+
+ {% block card_title %}Indicateurs {% if servicesIndicators|length > 1  %}des services{% else %}du service{% endif %}{% endblock %}
+
+ {% block card_body %}
+
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table id="table-services" class="table table-striped table-hover text-dark">
+                <thead>
+                    <tr>
+                        <th scope="row" class="align-middle th-w-20"></th>
+                        <th class="align-middle th-w-120">Service</th>
+                        {% set items = [
+                            "Nb de suivis en cours",
+                            "Nb de personnes",
+                            "Moyenne suivis par TS",
+                            "Durée moyenne accompagnement",
+                            "Nb de demandes SIAO",
+                            "Nb de DLS",
+                        ] %}
+                            {# "Nb de notes", "Nb de rendez-vous", "Nb de documents", "Nb de paiements", #}
+                        {% for item in items %}
+                            <th class="align-middle text-right th-w-100">{{ item }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% set sumActiveSupports = 0 %}
+                {% set sumActiveSupportsPeople = 0 %}
+                    {% for service_id, service in servicesIndicators %}  
+                        {% set activeSupports = service["activeSupportsGroups"] %}
+                        {% if activeSupports %}
+                            {% set sumActiveSupports = sumActiveSupports + activeSupports %}
+                            {% set sumActiveSupportsPeople = sumActiveSupportsPeople + service["activeSupportsPeople"] %}
+                            <tr>
+                                <td scope="row" class="align-middle text-center">
+                                    <a href="{{ path('supports', {'status':[2], 'service':{'services':[service_id]} }) }}" 
+                                        class="btn btn-{{ theme_color }} shadow" data-placement="bottom" 
+                                        title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle font-weight-bold ">{{ service["name"] }}</td>
+                                <td class="align-middle text-right">{{ activeSupports|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ service["activeSupportsPeople"]|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ service["avgSupportsByUser"] }}</td>
+                                <td class="align-middle text-right">{{ service["avgTimeSupport"] }} jours</td>
+                                <td class="align-middle text-right">{{ service["siaoRequest"]|number_format(0, ",", " ") }}<br/>
+                                    <span class="text-secondary font-italic">{{ activeSupports ? 
+                                        ((service["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                    </span>
+                                </td>
+                                <td class="align-middle text-right">{{ service["socialHousingRequest"] }}<br/>
+                                    <span class="text-secondary font-italic">{{ activeSupports ? 
+                                        ((service["socialHousingRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                    </span>
+                                </td>
+                                {# <td class="align-middle text-right">{{ service["notes"]|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ service["rdvs"]|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ service["documents"]|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ service["contributions"]|number_format(0, ",", " ") }}</td> #}
+                            </tr>
+                            {% for sub_service_id, sub_service in service.subServices %}
+                                {% set activeSupports = sub_service["activeSupportsGroups"] %}
+                                <tr>
+                                    <td scope="row" class="align-middle text-center">
+                                        <a href="{{ path('supports', {'status':[2], 'service':{'services':[service_id], 'subServices':[sub_service_id]} }) }}" 
+                                            class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
+                                            title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
+                                        </a>
+                                    </td>
+                                    <td class="align-middle">{{ sub_service["name"] }}</td>
+                                    <td class="align-middle text-right">{{ activeSupports }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["activeSupportsPeople"] }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["avgSupportsByUser"] }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["avgTimeSupport"] }} jours</td>
+                                    <td class="align-middle text-right">{{ sub_service["siaoRequest"] }}<br/>
+                                        <span class="text-secondary font-italic">{{ activeSupports ? 
+                                            ((sub_service["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-right">{{ sub_service["socialHousingRequest"] }}<br/>
+                                        <span class="text-secondary font-italic">{{ activeSupports ? 
+                                            ((sub_service["socialHousingRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                        </span>
+                                    </td>
+                                    {# <td class="align-middle text-right">{{ sub_service["notes"]|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["rdvs"]|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["documents"]|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["contributions"]|number_format(0, ",", " ") }}</td> #}
+                                </tr>
+                            {% endfor %}
+                            {% for device_id, device in service.devices %}
+                                {% set activeSupports = device["activeSupportsGroups"] %}
+                                <tr class="text-secondary">
+                                    <td scope="row" class="align-middle text-center">
+                                        <a href="{{ path('supports', {'status':[2], 'service':{'services':[service_id], 'devices':[device_id]} }) }}" 
+                                            class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
+                                            title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
+                                        </a>
+                                    </td>
+                                    <td class="align-middle">{{ device["name"] }}</td>
+                                    <td class="align-middle text-right">{{ activeSupports }}</td>
+                                    <td class="align-middle text-right">{{ device["activeSupportsPeople"] }}</td>
+                                    <td class="align-middle text-right">{{ device["avgSupportsByUser"] }}</td>
+                                    <td class="align-middle text-right">{{ device["avgTimeSupport"] }} jours</td>
+                                    <td class="align-middle text-right">{{ device["siaoRequest"] }}<br/>
+                                        <span class="text-secondary font-italic">{{ activeSupports ? 
+                                            ((device["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-right">{{ device["socialHousingRequest"] }}<br/>
+                                        <span class="text-secondary font-italic">{{ activeSupports ? 
+                                            ((device["socialHousingRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                        </span>
+                                    </td>
+                                    {# <td class="align-middle text-right">{{ device["notes"]|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ device["rdvs"]|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ device["documents"]|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ device["contributions"]|number_format(0, ",", " ") }}</td> #}
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+                <tfooter>
+                    <tr class="font-weight-bold">
+                        <td class="align-middle text-center" colspan="2">Total</td>
+                        <td class="align-middle text-right">{{ sumActiveSupports|number_format(0, ",", " ") }}</td>
+                        <td class="align-middle text-right">{{ sumActiveSupportsPeople|number_format(0, ",", " ") }}</td>
+                        <td colspan="5"></td>
+                    </tr>
+                </tfooter>
+            </table>
+        </div>
+    </div>
+
+ {% endblock %}

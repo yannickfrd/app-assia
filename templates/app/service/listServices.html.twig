@@ -1,17 +1,17 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Services{{ parent() }}{% endblock %}
+{% block title %}Services{% endblock %}
 
 {% block body %}
 
         <section class="mt-0 mb-4">
 
             <div class="container">
-                {% include "model/msgFlash.html.twig" %}
+                {% include "model/_msgFlash.html.twig" %}
                 <h1 class="h2 mb-3">Services</h1>
             </div>
 
-            {% include "app/service/searchServices.html.twig" %}
+            {% include "app/service/_searchServices.html.twig" %}
 
             {% if services %}
 

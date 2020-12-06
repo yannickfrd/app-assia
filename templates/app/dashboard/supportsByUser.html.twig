@@ -2,11 +2,7 @@
 
 {% set title = "Répartition des suivis en cours" %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -24,7 +20,7 @@
 
 </div>
 
-    {% include "app/dashboard/searchSupportsByUser.html.twig" %}
+    {% include "app/dashboard/_searchSupportsByUser.html.twig" %}
 
     <div class="container{{ datas and devices|length > 8 ? '-fluid mt-4' }}">
 {% if datas %}

@@ -1,0 +1,34 @@
+<div class="row my-2">
+	<div class="col-md-12">
+		<div class="accordion" id="accordionSearch">
+			<div id="form-search">
+				<div role="button" class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" data-toggle="collapse" data-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
+					<h2 class="h5">Recherche<span class="float-right"><span class="fa fa-chevron-down"></span></span></h2>
+				</div>
+				<div id="collapseSearch" class="collapse show float-right" aria-labelledby="headingSearch" data-parent="#accordionSearch">
+					{{ form_start(form_search) }}
+					<div class="form-inline justify-content-md-center align-items-end">
+						{% block search_form %}{% endblock %}
+						<div class="form-group col-auto my-1 px-1">
+							<div class="form-group">
+								<button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom" title="Rechercher">
+									<span class="fas fa-search"></span><span class="sr-only">Rechercher</span>
+								</button>
+								<button type="reset" class="btn btn-secondary ml-2 shadow" data-toggle="tooltip" data-placement="bottom">
+									<span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
+								</button>
+								{% if form_search.export is defined %}
+									<button id="js-btn-export" name="export" value="true" class="btn btn-success ml-2 shadow"
+										data-toggle="tooltip" data-placement="bottom" title="Exporter les données sur Excel"><span
+										class="fas fa-file-excel"></span><span class="sr-only">Exporter</span>
+									</button>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					{{ form_end(form_search, {"render_rest": false}) }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,8 +1,8 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ form.vars.value.fullname }}{{ parent() }}{% endblock %}
+{% block title %}{{ form.vars.value.fullname }}{% endblock %}
 
-{% block stylesheets %}{% endblock %}
+
 
 {% block body %}
 
@@ -10,7 +10,7 @@
 
         <section>
 
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <h1 class="h2 mb-3">{{ form.vars.value.fullname }}</h1>
 
             {{ form_start(form)}}

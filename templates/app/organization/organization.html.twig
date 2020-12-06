@@ -4,7 +4,7 @@
 {% set EDIT_MODE = organization.id != null %}
 {% set title = EDIT_MODE ? 'Organisme ' ~ organization.name : 'Nouvel organisme' %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -33,7 +33,7 @@
         <hr>
 
         <section>
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}

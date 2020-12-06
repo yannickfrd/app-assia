@@ -4,17 +4,17 @@
 {% set EDIT_MODE = person.id != null %}
 {% set title = EDIT_MODE ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") : 'Création d\'une personne' %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
     <div class="container">
 
         {% if people_group is defined %}
-            {% include "app/peopleGroup/navGroup.html.twig" %}
+            {% include "app/peopleGroup/_navGroup.html.twig" %}
         {% else %}
             <h1 class="h2 mb-3">{{ title }}</h1>
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
         {% endif %}
         
@@ -168,18 +168,18 @@
 
         <hr>
 
-        {% include "app/support/historySupports.html.twig" %}
+        {% include "app/support/_historySupports.html.twig" %}
 
         {% endif %}
 
     </div>
 
     {% if people_group is defined %}
-        {% include "app/support/modalNewSupport.html.twig" %}
+        {% include "app/support/_modalNewSupport.html.twig" %}
     {% endif %}
 
     {% if EDIT_MODE == true %}
-        {% include "app/person/modalNewGroup.html.twig" %}
+        {% include "app/person/_modalNewGroup.html.twig" %}
     {% endif %}
 
 {% endblock %}

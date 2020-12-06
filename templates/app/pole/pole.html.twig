@@ -3,7 +3,7 @@
 {% set pole = form.vars.value %}
 {% set EDIT_MODE = pole.id != null %}
 {% set title =  EDIT_MODE ? pole.name : 'Nouveau pôle' %}
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -31,7 +31,7 @@
 
         <hr>
 
-        {% include "model/msgFlash.html.twig" %}
+        {% include "model/_msgFlash.html.twig" %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}

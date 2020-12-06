@@ -7,7 +7,7 @@
 {% set title = EDIT_MODE ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
 {% set is_granted_edit_service = is_granted("EDIT", service) %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -33,7 +33,7 @@
                 </ol>
             </nav>
             
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
             
             <hr>
@@ -98,22 +98,22 @@
             {% endif %}
         </section>
 
-        {% include "app/service/serviceDevices.html.twig" %}
+        {% include "app/service/_serviceDevices.html.twig" %}
 
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
 
         {% if EDIT_MODE == true %}
-			{% include "app/service/serviceSubServices.html.twig" %}
+			{% include "app/service/_serviceSubServices.html.twig" %}
         {% endif %}
         {% if is_granted_edit_service %}
             {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
-        		{% include "app/service/serviceOrganizations.html.twig" %}
+        		{% include "app/service/_serviceOrganizations.html.twig" %}
             {% endif %}
         {% endif %}
         {% if EDIT_MODE %}
-        	{% include "app/service/serviceAccommodations.html.twig" %}
-        	{% include "app/service/serviceUsers.html.twig" %}
+        	{% include "app/service/_serviceAccommodations.html.twig" %}
+        	{% include "app/service/_serviceUsers.html.twig" %}
         {% endif %}
     </div>
 

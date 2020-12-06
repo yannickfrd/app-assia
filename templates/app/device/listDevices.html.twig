@@ -1,16 +1,16 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Dispositifs{{ parent() }}{% endblock %}
+{% block title %}Dispositifs{% endblock %}
 
 {% block body %}
 
     <section class="mt-0 mb-4">
         <div class="container">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <h1 class="h2 mb-3">Dispositifs</h1>
         </div>
 
-            {% include "app/device/searchDevices.html.twig" %}
+            {% include "app/device/_searchDevices.html.twig" %}
 
         <div class="container">
             <div class="row align-items-baseline">

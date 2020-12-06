@@ -2,18 +2,18 @@
 
 {% set EDIT_MODE = form.vars.value.id != null %}
 
-{% block title %}Logement/hébergement{{ parent() }}{% endblock %}
+{% block title %}Logement/hébergement{% endblock %}
 
 {% block body %}
 
 	<div class="container">
 
 		{% set title = "Logement/hébergement" %}
-		{% include "app/support/navSuppport.html.twig" %}
+		{% include "app/support/_navSuppport.html.twig" %}
 
 		{{ form_start(form) }}
 
-		{% include "model/msgFlash.html.twig" %}
+		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
 		<div class="form-group row">

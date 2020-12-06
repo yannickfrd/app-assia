@@ -2,22 +2,18 @@
 
 {% set form_head = form.vars.value.head == true %}          
 
-{% block title %}Suivis PASH{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}Suivis PASH{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
         <div class="container">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <h1 class="h2 mb-3">Suivis PASH</h1>
         </div>
 
-        {% include "app/hotelSupport/searchHotelSupports.html.twig" %}
+        {% include "app/hotelSupport/_searchHotelSupports.html.twig" %}
 
         <div class="container-fluid mt-4">
 

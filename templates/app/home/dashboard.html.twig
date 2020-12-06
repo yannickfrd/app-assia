@@ -3,7 +3,7 @@
 {% set title = "Tableau de bord" %}
 {% set isSocialWorker = app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
 
-{% block title %}{{ title }}{{ parent() }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -12,25 +12,25 @@
     <h1 class="h2 mb-3">{{ title }}</h1>
     <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date("d/m/Y à H:i") }}</p>
 
-    {% include "model/msgFlash.html.twig" %}
+    {% include "model/_msgFlash.html.twig" %}
 
     <hr>
 
     <div class="my-5">
-      {% include "app/managing/managingServices.html.twig" %}
+      {% include "app/managing/_managingServices.html.twig" %}
           {% if isSocialWorker or supports|length > 0 %}
-            {% include "app/home/listSupports.html.twig" %}
+            {% include "app/home/_listSupports.html.twig" %}
           {% endif %}
           {% if isSocialWorker or notes|length > 0 %}
-            {% include "app/home/listNotes.html.twig" %}
+            {% include "app/home/_listNotes.html.twig" %}
           {% endif %}
           {% if isSocialWorker or rdvs|length > 0 %}
-            {% include "app/home/listRdvs.html.twig" %}
+            {% include "app/home/_listRdvs.html.twig" %}
           {% endif %}
           {% if is_granted("ROLE_SUPER_ADMIN") %}
-            {% include "app/home/indicators.html.twig" %}
+            {% include "app/home/_indicators.html.twig" %}
           {% endif %}
-        {% include "app/home/servicesIndicators.html.twig" %}
+        {% include "app/home/_servicesIndicators.html.twig" %}
     </div>
 
   </div>

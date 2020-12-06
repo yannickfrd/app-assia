@@ -2,13 +2,11 @@
 
 {% block title %}Agenda{% endblock %}
 
-{% block stylesheets %}{% endblock %}
-
 {% block body %}
 
     <section class="my-0">
         <div class="container pt-3">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div class="d-flex flex-row align-items-center justify-content-between mx-2">
                 <div class="d-flex align-items-center mb-3">
                     <h1 class="h2 mr-3">Agenda</h1>
@@ -37,7 +35,7 @@
         </div>
     </section>
 
-{% include "app/rdv/modalRdv.html.twig" %}
+{% include "app/rdv/_modalRdv.html.twig" %}
 
 {% endblock %}
 

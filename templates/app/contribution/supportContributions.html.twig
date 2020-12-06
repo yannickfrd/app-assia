@@ -1,19 +1,13 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form_search "bootstrap_4_layout.html.twig" %}
-
-{% block title %}Paiements{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}Paiements{% endblock %}
 
 {% block body %}
 
 	<div class="container">
 
 		{% set title = "Paiements" %}
-		{% include "app/support/navSuppport.html.twig" %}
+		{% include "app/support/_navSuppport.html.twig" %}
 
 		<div class="row">
 			<div class="d-flex col-md-6 mb-1 align-items-center">
@@ -34,7 +28,7 @@
 			</div>
 		</div>
 
-		{% include "app/contribution/searchSupportContributions.html.twig" %}
+		{% include "app/contribution/_searchSupportContributions.html.twig" %}
 
 		<div class="row mb-4">
 			<div class="col-md-12">
@@ -126,8 +120,8 @@
 
 	</div>
 
-	{% include "app/contribution/modalContribution.html.twig" %}
-	{% include "app/contribution/modalDeleteContribution.html.twig" %}
+	{% include "app/contribution/_modalContribution.html.twig" %}
+	{% include "app/contribution/_modalDeleteContribution.html.twig" %}
 
 {% endblock %}
 

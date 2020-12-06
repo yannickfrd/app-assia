@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Évaluation sociale{{ parent() }}{% endblock %}
+{% block title %}Évaluation sociale{% endblock %}
 
 {% block body %}
 
@@ -17,11 +17,11 @@
 		{% set typo = support.peopleGroup.familyTypology %}
 
 		{% set title = "Évaluation sociale" %}
-		{% include "app/support/navSuppport.html.twig" %}
+		{% include "app/support/_navSuppport.html.twig" %}
 
 		{{ form_start(form) }}
 
-		{% include "model/msgFlash.html.twig" %}
+		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
 		<div class="row my-3 align-items-center">
@@ -41,19 +41,19 @@
 				<span class="badge badge-pill badge-warning fade-out ml-2 small" data-toggle="tooltip" data-placement="bottom" 
 					title="Nombre d'informations importantes non-renseignées dans le bloc"></span>
 			{% endset %}
-			{% include "app/evaluation/initEvaluation.html.twig" %}
+			{% include "app/evaluation/_initEvaluation.html.twig" %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/evaluationJustice.html.twig" %}
+				{% include "app/evaluation/_evaluationJustice.html.twig" %}
 			{% endif %}
-			{% include "app/evaluation/evaluationAdm.html.twig" %}
-			{% include "app/evaluation/evaluationFamily.html.twig" %}
-			{% include "app/evaluation/evaluationBudget.html.twig" %}
-			{% include "app/evaluation/evaluationProf.html.twig" %}
-			{% include "app/evaluation/evaluationSocial.html.twig" %}
-			{% include "app/evaluation/evaluationHousing.html.twig" %}
-			{% include "app/evaluation/backgroundPeople.html.twig" %}
+			{% include "app/evaluation/_evaluationAdm.html.twig" %}
+			{% include "app/evaluation/_evaluationFamily.html.twig" %}
+			{% include "app/evaluation/_evaluationBudget.html.twig" %}
+			{% include "app/evaluation/_evaluationProf.html.twig" %}
+			{% include "app/evaluation/_evaluationSocial.html.twig" %}
+			{% include "app/evaluation/_evaluationHousing.html.twig" %}
+			{% include "app/evaluation/_backgroundPeople.html.twig" %}
 			{% if support.service.id == constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
-				{% include "app/evaluation/evaluationHotelLife.html.twig" %}
+				{% include "app/evaluation/_evaluationHotelLife.html.twig" %}
 			{% endif %}
 		</div>
 

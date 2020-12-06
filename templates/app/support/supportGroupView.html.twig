@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+
 {% import "macros/viewDiv.html.twig" as view_div %}
 
 {% set ROLE_CHILD = constant("App\\Entity\\RolePerson::ROLE_CHILD") %}
@@ -6,7 +7,7 @@
 {% set SERVICE_AVDL_ID = constant("App\\Entity\\Service::SERVICE_AVDL_ID") %}
 {% set SERVICE_PASH_ID = constant("App\\Entity\\Service::SERVICE_PASH_ID") %}
 
-{% block title %}Suivi social{{ parent() }}{% endblock %}
+{% block title %}Suivi social{% endblock %}
 
 {% block body %}
 
@@ -19,7 +20,7 @@
 			</div>
 		</div>
 
-		{% include "model/msgFlash.html.twig" %}
+		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
 		{# {% cache "support_group.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
@@ -88,11 +89,11 @@
 		</div>
 
 		{% if support.service.id == SERVICE_AVDL_ID and support.avdl %}
-			{% include "app/avdl/avdlView.html.twig" %}
+			{% include "app/avdl/_avdlView.html.twig" %}
 		{% elseif support.service.id == SERVICE_PASH_ID %}
-			{% include "app/hotelSupport/hotelSupportView.html.twig" %}
+			{% include "app/hotelSupport/_hotelSupportView.html.twig" %}
 		{% else %}		
-			{% include "app/support/supportRegularView.html.twig" %}
+			{% include "app/support/_supportRegularView.html.twig" %}
 		{% endif %}
 
 		<div class="row mt-3">
@@ -137,7 +138,7 @@
 
 		<hr>
 
-        {% include "app/referent/historyReferents.html.twig" %}
+        {% include "app/referent/_historyReferents.html.twig" %}
 
 		{# {% endcache %} #}
 
@@ -159,7 +160,7 @@
 				</div>
 			</div>	
 			{# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
-			{% include "app/evaluation/evaluationView.html.twig" %}
+			{% include "app/evaluation/_evaluationView.html.twig" %}
 			{# {% endcache %} #}
 		{% endif %}
 

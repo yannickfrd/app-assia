@@ -1,5 +1,7 @@
 require('../css/app.scss')
 require('../css/table.scss')
+import 'select2/dist/css/select2.min.css'
+import 'select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'
 import SearchPerson from './searchPerson'
 import autoLogout from './utils/autoLogout'
 import { Tooltip, Popover } from 'bootstrap'

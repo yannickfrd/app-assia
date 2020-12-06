@@ -1,16 +1,13 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form_search "bootstrap_4_layout.html.twig" %}
-{% form_theme form "bootstrap_4_layout.html.twig" %}
-
-{% block title %}Documents{{ parent() }}{% endblock %}
+{% block title %}Documents{% endblock %}
 
 {% block body %}
 
 	<div class="container">
 
 		{% set title = "Documents" %}
-		{% include "app/support/navSuppport.html.twig" %}
+		{% include "app/support/_navSuppport.html.twig" %}
 
 		<div class="row">
 			<div class="col-md-6 mb-1">
@@ -25,7 +22,7 @@
 			</div>
 		</div>
 
-		{% include "app/document/searchSupportDocuments.html.twig" %}
+		{% include "app/document/_searchSupportDocuments.html.twig" %}
 
 		<div class="table-responsive">
 			<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
@@ -68,8 +65,8 @@
 
 		<div class="navigation">{{ knp_pagination_render(documents) }}</div>
 
-		{% include "app/document/modalDocument.html.twig" %}
-		{% include "app/document/modalDeleteDocument.html.twig" %}
+		{% include "app/document/_modalDocument.html.twig" %}
+		{% include "app/document/_modalDeleteDocument.html.twig" %}
 
 	</div>
 

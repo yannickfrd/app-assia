@@ -1,0 +1,14 @@
+{% extends "model/_collapseCard.html.twig" %}
+
+{% set id = "eval_background" %}
+
+{% block card_title %}Parcours de vie{% endblock %}
+
+{% block card_body %}
+
+	<div class="form-group row">
+		<div class="col-md-12 sr-only">{{ form_label(form.backgroundPeople) }}</div>
+		<div class="col-md-12">{{ form_widget(form.backgroundPeople) }}</div>
+	</div>
+
+{% endblock %}

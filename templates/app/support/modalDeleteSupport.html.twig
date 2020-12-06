@@ -1,9 +1,0 @@
-{% extends "model/modalDialog.html.twig" %}
-
-{% block modal_body %}
-Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).<br/>
-Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?
-{% endblock %}
-{% block modal_href %}{{ path('support_delete', {'id':support.id}) }}{% endblock %}
-{% block modal_confirm %}Supprimer le suivi social{% endblock %}
-{% block modal_alert %}danger{% endblock %}

@@ -112,7 +112,7 @@ class ExportPDF
      */
     public function formatContent(string $content, Environment $renderer, string $title, string $logoPath, string $infoAdd): string
     {
-        $style = $renderer->render('pdf/style/pdf.css.twig');
+        $style = $renderer->render('pdf/style/_pdf.css.twig');
 
         $logoPath = $this->getPathImage($logoPath);
 

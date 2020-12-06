@@ -3,14 +3,14 @@
 {% form_theme form_search "bootstrap_4_layout.html.twig" %}
 {% form_theme form "bootstrap_4_layout.html.twig" %}
 
-{% block title %}Notes sociales{{ parent() }}{% endblock %}
+{% block title %}Notes sociales{% endblock %}
 
 {% block body %}
 
 	<div class="container">
 
 		{% set title = "Notes sociales" %}
-		{% include "app/support/navSuppport.html.twig" %}
+		{% include "app/support/_navSuppport.html.twig" %}
 
 		<div class="row">
 			<div class="col-md-6 mb-1">
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 
-		{% include "app/note/searchSupportNotes.html.twig" %}
+		{% include "app/note/_searchSupportNotes.html.twig" %}
 
 		<div id="container-notes" class="row" data-support="{{ support.id }}">
 			{% for note in notes %}
@@ -64,7 +64,7 @@
 
 	</div>
 
-	{% include "app/note/modalNote.html.twig" %}
+	{% include "app/note/_modalNote.html.twig" %}
 
 {% endblock %}
 

@@ -2,7 +2,7 @@
 
 {% set people_group = form.vars.value %}
 
-{% block title %}Fiche de groupe{{ parent() }}{% endblock %}
+{% block title %}Fiche de groupe{% endblock %}
 
 {% block body %}
 
@@ -30,7 +30,7 @@
 
         <div>
 
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
 
             <div class="row">
@@ -138,17 +138,17 @@
 
         <hr>
 
-        {% include "app/support/historySupports.html.twig" %}
+        {% include "app/support/_historySupports.html.twig" %}
 
         <hr>
 
-        {% include "app/referent/historyReferents.html.twig" %}
+        {% include "app/referent/_historyReferents.html.twig" %}
 
     </div>
 
-{% include "app/peopleGroup/removePerson.html.twig" %}
+{% include "app/peopleGroup/_removePerson.html.twig" %}
 
-{% include "app/support/modalNewSupport.html.twig" %}
+{% include "app/support/_modalNewSupport.html.twig" %}
 
 {% endblock %}
 

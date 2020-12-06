@@ -1,0 +1,56 @@
+{% extends "model/_collapseCard.html.twig" %}
+
+{% import "macros/loopSupportPeople.html.twig" as utils %}
+
+{% set id = "eval_prof" %}
+
+{% block card_title %}Emploi{{ badgeTitle }}{% endblock %}
+
+{% block card_body %}
+
+    <div class="row">
+        <div class="col-md-12 accordion" id="accordion-eval_prof">
+			{{ utils.loopSupportPeople(id, people_over_16, theme_color) }}
+
+            {% for key, evalPerson in people_over_16 %}
+                <div id="collapse-eval_prof-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+                    aria-labelledby="heading-eval_prof-{{ key }}" data-parent="#accordion-eval_prof" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+                    <div class="form-group row">
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.schoolLevel) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profStatus) }}</div>
+                        <div class="col-md-6"  data-parent-field="{{ key }}_evalProfPerson_profStatus" data-parent-field-options="2, 3, 8, 97">
+                            {{ form_row(evalPerson.evalProfPerson.jobCenterId) }}</div>
+                    </div>
+                    <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus" data-parent-field-options="3, 5, 8">
+                        <div class="col-md-6" >{{ form_row(evalPerson.evalProfPerson.contractType) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.jobType) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.contractStartDate) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.contractEndDate) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.nbWorkingHours) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.workingHours) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.workPlace) }}</div>
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.employerName) }}</div>
+                    </div>
+                    <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus">
+                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.transportMeansType) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalProfPerson_transportMeansType">{{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
+                    </div>
+                    <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus">
+                        <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé">
+                            {{ form_row(evalPerson.evalProfPerson.rqth) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalProfPerson_rqth">
+                            {{ form_row(evalPerson.evalProfPerson.endRqthDate) }}</div>
+                    </div>
+                    <div class="form-group row">
+                        {# {{ form_label(evalPerson.evalProfPerson.commentEvalProf) }} #}
+                        <div class="col-md-12">{{ form_widget(evalPerson.evalProfPerson.commentEvalProf) }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

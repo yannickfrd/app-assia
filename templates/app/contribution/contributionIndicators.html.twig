@@ -1,24 +1,20 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Indicateurs paiements{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}Indicateurs paiements{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
         <div class="container">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <div class="d-flex mb-3 align-items-center">
                 <h1 class="h2 mr-1">Indicateurs<span class="fas fa-angle-right fa-xs mx-1"></span>Paiements</h1>
                 <span class="text-secondary">(redevances, PF, caution...)</span>
             </div>
         </div>
 
-        {% include "app/contribution/searchContribution.html.twig" %}
+        {% include "app/contribution/_searchContribution.html.twig" %}
 
         <div class="container">
             <div class="row">

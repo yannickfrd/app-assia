@@ -1,0 +1,8 @@
+{% extends "model/_supportSearch.html.twig" %}
+
+{% form_theme form_search "bootstrap_4_layout.html.twig" %}
+
+{% block search_form %}
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.name) }}</div>
+    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
+{% endblock %}

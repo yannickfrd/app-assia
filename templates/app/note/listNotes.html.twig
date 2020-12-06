@@ -1,21 +1,17 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Notes{{ parent() }}{% endblock %}
-
-{% block stylesheets %}
-	{{ encore_entry_link_tags("multiSelect") }}
-{% endblock %}
+{% block title %}Notes{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
         <div class="container">
-            {% include "model/msgFlash.html.twig" %}
+            {% include "model/_msgFlash.html.twig" %}
             <h1 class="h2 mb-3">Notes</h1>
         </div>
 
-        {% include "app/note/searchNotes.html.twig" %}
+        {% include "app/note/_searchNotes.html.twig" %}
 
         <div class="container-fluid mt-4">
 
