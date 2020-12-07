@@ -105,7 +105,7 @@ class DocumentControllerTest extends WebTestCase
     //             'name' => 'Rerum quis temporibus eligendi.',
     //             'type' => 1,
     //             'content' => 'Ut ipsum dolorem rem vel quis rem occaecati.',
-    //             '_csrf_token' => $form->getValues('_token')['document[_token]'],
+    //             '_token' => $form->getValues('_token')['document[_token]'],
     //        ],
     //        'file' => 'undefined',
     //     ]);

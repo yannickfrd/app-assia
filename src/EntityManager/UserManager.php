@@ -60,26 +60,6 @@ class UserManager
     }
 
     /**
-     * En cas d'erreur lors de la tentative de connexion.
-     */
-    public function errorLogin(User $user = null): void
-    {
-        if ($user) {
-            $user->setFailureLoginCount($user->getFailureLoginCount() + 1);
-
-            $this->manager->flush();
-            if ($user->getFailureLoginCount() >= 5) {
-                $this->addFlash('danger', "Ce compte est bloqué suite à de nombreux échecs de connexion.<br/> 
-                Veuillez-vous rapprocher d'un administrateur ou réinitialiser votre mot de passe.");
-            }
-        }
-
-        $this->addFlash('danger', 'Identifiant ou mot de passe incorrect.');
-
-        return;
-    }
-
-    /**
      * Met à jour le mot de passe.
      */
     public function updatePassword(User $user, UserPasswordEncoderInterface $encoder, string $password): void
@@ -151,6 +131,10 @@ class UserManager
         if ($this->isValidTokenDate($user, 5 * 60)) { // 5 minutes
             // Met à jour le nouveau mot de passe et supprime le token
             $this->setPassword($user, $encoder, $userResetPassword->getPassword());
+
+            $user->setFailureLoginCount(0);
+
+            $this->manager->flush();
 
             return $this->addFlash('success', 'Votre mot de passe est réinitialisé !');
         }

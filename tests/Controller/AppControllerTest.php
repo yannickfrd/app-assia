@@ -58,6 +58,8 @@ class AppControllerTest extends WebTestCase
 
         $this->client->request('GET', $this->generateUri('home'));
 
+        // dd($this->client->getResponse());
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Tableau de bord');
     }

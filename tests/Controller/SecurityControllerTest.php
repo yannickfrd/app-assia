@@ -65,14 +65,14 @@ class SecurityController extends WebTestCase
         $this->assertSelectorTextContains('h1', $user->getFullname());
     }
 
-    public function testAfterLoginIsUp()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-        $this->client->request('GET', $this->generateUri('security_after_login'));
-        // $this->client->followRedirect();
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Tableau de bord');
-    }
+    // public function testAfterLoginIsUp()
+    // {
+    //     $this->createLogin($this->dataFixtures['userRoleUser']);
+    //     $this->client->request('GET', $this->generateUri('security_after_login'));
+    //     // $this->client->followRedirect();
+    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    //     $this->assertSelectorTextContains('h1', 'Tableau de bord');
+    // }
 
     public function testInitPasswordIsUp()
     {

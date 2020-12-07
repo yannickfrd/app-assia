@@ -41,9 +41,8 @@
                                     title="Voir le suivi social"><span class="fas fa-eye"></span>
                                 </a>
                             {% else %}
-                                <span class="btn btn-{{ theme_color }} btn-sm shadow my-1 cursor-default" data-toggle="tooltip" data-placement="bottom"
-                                    title="Accès non autorisé"><span class="fas fa-ban"></span>
-                                </span>
+                                <span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+                                    title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
                             {% endif %}
                         </td>
                         <td class="align-middle">{{ support.statusToString }}</td>

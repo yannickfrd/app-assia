@@ -80,15 +80,15 @@ class UserRepositoryTest extends WebTestCase
         $this->assertNotNull($this->repo->findUserById($this->user->getId()));
     }
 
-    public function testFindAllUsersQueryWithoutFilters()
+    public function testFindUsersQueryWithoutFilters()
     {
-        $query = $this->repo->findAllUsersQuery(new UserSearch());
+        $query = $this->repo->findUsersQuery(new UserSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllUsersQueryWithFilters()
+    public function testFindUsersQueryWithFilters()
     {
-        $query = $this->repo->findAllUsersQuery($this->search);
+        $query = $this->repo->findUsersQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 

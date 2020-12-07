@@ -11,6 +11,7 @@ use App\Form\Model\UserResetPassword;
 use App\Form\Security\ChangePasswordType;
 use App\Form\Security\ForgotPasswordType;
 use App\Form\Security\InitPasswordType;
+use App\Form\Security\LoginType;
 use App\Form\Security\ReinitPasswordType;
 use App\Form\Security\SecurityUserType;
 use App\Form\User\UserChangeInfoType;
@@ -73,45 +74,40 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="security_login", methods="GET|POST")
+     * Page de connexion.
+     *
+     * @Route("/login", name="security_login", priority=1, methods="GET|POST")
      */
-    public function login(AuthenticationUtils $authenticationUtils, UserRepository $repoUser): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
         if ($this->getUser()) {
             return $this->redirectToRoute('home');
         }
 
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        $user = $repoUser->findOneBy(['username' => $lastUsername]);
-
-        if ($error) {
-            $this->userManager->errorLogin($user ?? null);
-        }
+        $form = $this->createForm(LoginType::class, ['_username' => $authenticationUtils->getLastUsername()]);
 
         return $this->render('app/security/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
+            'form' => $form->createView(),
+            'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
     }
 
-    /**
-     * Création du mot de passe par l'utilisateur à sa première connexion.
-     *
-     * @Route("/login/after_login", name="security_after_login", methods="GET|POST")
-     */
-    public function afterLogin(): Response
-    {
-        $this->addFlash('success', 'Bonjour '.$this->getUser()->getFirstname().' !');
+    // /**
+    //  * Création du mot de passe par l'utilisateur à sa première connexion.
+    //  *
+    //  * @Route("/login/after_login", name="security_after_login", methods="GET|POST")
+    //  */
+    // public function afterLogin(): Response
+    // {
+    //     $this->addFlash('success', 'Bonjour '.$this->getUser()->getFirstname().' !');
 
-        if (1 == $this->getUser()->getLoginCount() && $this->getUser()->getTokenCreatedAt()) {
-            return $this->redirectToRoute('security_init_password');
-        }
+    //     if (1 == $this->getUser()->getLoginCount() && $this->getUser()->getTokenCreatedAt()) {
+    //         return $this->redirectToRoute('security_init_password');
+    //     }
 
-        return $this->redirectToRoute('home');
-    }
+    //     return $this->redirectToRoute('home');
+    // }
 
     /**
      * Création du mot de passe par l'utilisateur à sa première connexion.

@@ -28,16 +28,19 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Trouve l'utilisateur par son login ou son adresse email.
      */
-    public function findUserByUsernameOrEmail(string $username): ?User
+    public function findUser(string $username): ?User
     {
-        return $this->createQueryBuilder('u')->select('u')
+        $query = $this->createQueryBuilder('u')->select('u');
 
-            ->andWhere('u.username = :username')
-            ->setParameter('username', $username)
-            ->orWhere('u.email = :email')
-            ->setParameter('email', $username)
+        if (1 === $this->count(['email' => $username])) {
+            $query->where('u.email = :email')
+            ->setParameter('email', $username);
+        } else {
+            $query->where('u.username = :username')
+            ->setParameter('username', $username);
+        }
 
-            ->getQuery()
+        return $query->getQuery()
             ->getOneOrNullResult();
     }
 
@@ -66,14 +69,48 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Retourne tous les utilisateurs.
      */
-    public function findAllUsersQuery(UserSearch $search, ?User $user = null): Query
+    public function findUsersQuery(UserSearch $search, ?User $user = null): Query
     {
-        $query = $this->createQueryBuilder('u')->select('u')
-            ->leftJoin('u.createdBy', 'creatorUser')->addSelect('creatorUser')
-            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
-            ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id,name}')
-            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id,name}');
+        $query = $this->queryUsers();
 
+        return $this->filters($query, $search, $user)
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Retourne tous les utilisateurs.
+     */
+    public function findUsersAdminQuery(UserSearch $search, User $user): Query
+    {
+        $query = $this->queryUsers();
+
+        if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $query = $query->leftJoin('u.serviceUser', 'r')
+                ->andWhere('r.service IN (:services)')
+                ->setParameter('services', $user->getServices());
+        }
+
+        return $this->filters($query, $search, $user)
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * Donne le querybuilder des utilisateurs.
+     */
+    protected function queryUsers()
+    {
+        return $this->createQueryBuilder('u')->select('u')
+            // ->leftJoin('u.createdBy', 'creator')->addSelect('PARTIAL creator.{id, lastname, firstname}')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
+            ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
+    }
+
+    /**
+     * Filtre les utilisateurs.
+     */
+    protected function filters($query, UserSearch $search, ?User $user = null)
+    {
         if ($search->getFirstname()) {
             $query->andWhere('u.firstname LIKE :firstname')
                 ->setParameter('firstname', $search->getFirstname().'%');
@@ -94,11 +131,13 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere('p.id = :pole_id')
                 ->setParameter('pole_id', $search->getPole());
         }
+
         if (Choices::DISABLED == $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE == $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NULL');
         }
+
         if ($search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -114,7 +153,7 @@ class UserRepository extends ServiceEntityRepository
             $query = $query->orderBy('u.lastname', 'ASC');
         }
 
-        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $query;
     }
 
     /**
@@ -124,7 +163,7 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersToExport(UserSearch $search)
     {
-        $query = $this->findAllUsersQuery($search);
+        $query = $this->findUsersQuery($search);
 
         return $query->getResult();
     }

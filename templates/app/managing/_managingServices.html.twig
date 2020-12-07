@@ -28,10 +28,10 @@
                 </ul>
             </div>
             <div class="col-md-6">
-                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                {% if is_granted("ROLE_ADMIN") %}
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_users') }}">Liste des utilisateurs</a>
+                            <a class="text-dark" href="{{ path('admin_users') }}">Gérer les utilisateurs</a>
                         </li>
                     </ul>
                 {% endif %}   

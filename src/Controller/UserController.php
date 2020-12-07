@@ -42,7 +42,7 @@ class UserController extends AbstractController
         return $this->render('app/user/listUsers.html.twig', [
             'userSearch' => $search,
             'form' => $form->createView(),
-            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search), $request) ?? null,
+            'users' => $pagination->paginate($this->repo->findUsersQuery($search), $request) ?? null,
         ]);
     }
 
@@ -50,7 +50,7 @@ class UserController extends AbstractController
      * Administration des utilisateurs.
      *
      * @Route("admin/users", name="admin_users", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function adminListUsers(Request $request, Pagination $pagination): Response
     {
@@ -66,7 +66,7 @@ class UserController extends AbstractController
         return $this->render('app/user/adminListUsers.html.twig', [
             'userSearch' => $search,
             'form' => $form->createView(),
-            'users' => $pagination->paginate($this->repo->findAllUsersQuery($search, $this->getUser()), $request),
+            'users' => $pagination->paginate($this->repo->findUsersAdminQuery($search, $this->getUser()), $request),
         ]);
     }
 

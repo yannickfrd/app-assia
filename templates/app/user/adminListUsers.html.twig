@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 
+{% set is_granted_role_super_admin = is_granted('ROLE_SUPER_ADMIN') %}
+
 {% block title %}Admin | Utilisateurs{% endblock %}
 
 {% block body %}
@@ -13,6 +15,13 @@
         {% include "app/user/_searchUsers.html.twig" %}
 
         <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                         <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                    </p>
+                </div>
+            </div>
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
                     <p class="align-middle">Total : {{ users.getTotalItemCount|number_format(0,'', ' ')}} utilisateurs.</p>
@@ -41,10 +50,12 @@
                                 {{ knp_pagination_sortable(users, "Service", "s.name") }}</th>
                             <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">
                                 {{ knp_pagination_sortable(users, "Pôle", "p.name") }}</th>
-                            <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}</th>
-                            <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(users, "Nombre de connexions", "u.loginCount") }}</th>
+                            {% if is_granted_role_super_admin %}
+                                <th scope="col" class="align-middle th-w-80">
+                                    {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}</th>
+                                <th scope="col" class="align-middle th-w-80">
+                                    {{ knp_pagination_sortable(users, "Nombre de connexions", "u.loginCount") }}</th>
+                            {% endif %}
                             <th scope="col" class="align-middle th-w-60">
                                 {{ knp_pagination_sortable(users, "Désactivé", "u.disabledAt") }}
                             </th>                        
@@ -57,12 +68,10 @@
                         {% for user in users %}
                             <tr class="{% if user.disabled %}text-secondary{% endif %}">
                                 <td class="align-middle" scope="row">
-                                    {% if is_granted("ROLE_ADMIN") %}
-                                        <a href="{{ path('security_user', {'id':user.id}) }}"
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-                                            title="Voir la fiche"><span class="fas fa-eye"></span>
-                                        </a>
-                                    {% endif %}
+                                    <a href="{{ path('security_user', {'id': user.id}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                        title="Voir la fiche"><span class="fas fa-eye"></span>
+                                    </a>
                                 </td>
                                 <td class="align-middle">{% if user.disabled %}<del>{{ user.lastname }}</del> (désactivé){% else %}{{ user.lastname }}{% endif %}</td>
                                 <td class="align-middle">{{ user.firstname }}</td>
@@ -86,10 +95,12 @@
                                         {% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="align-middle">{{ user.lastActivityAt ? user.lastActivityAt|date("d/m/Y H:i") }}</td>
-                                <td class="align-middle">{{ user.loginCount }}</td>
-                                <td class="align-middle">{{ user.disabledAt ? "Oui" }}</td>
-                                <td class="align-middle">{{ user.createdAt|date("d/m/Y") }}</td>
+                                {% if is_granted_role_super_admin %}
+                                    <td class="align-middle">{{ user.lastActivityAt ? user.lastActivityAt|date("d/m/Y H:i") }}</td>
+                                    <td class="align-middle">{{ user.loginCount }}</td>
+                                {% endif %}
+                                <td class="align-middle">{{ user.disabledAt ? user.disabledAt|date("d/m/Y H:i") }}</td>
+                                <td class="align-middle">{{ user.createdAt|date("d/m/Y H:i") }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

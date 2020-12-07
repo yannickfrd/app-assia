@@ -154,7 +154,7 @@ class MailNotification
         if ($send) {
             return [
                 'type' => 'success',
-                'content' => "Un mail vous a été envoyé. Le lien est valide durant 5 minutes. <br/>Si vous n'avez rien reçu, merci de vérifier dans vos courriers indésirables.",
+                'content' => "Un mail vous a été envoyé. Le lien est valide durant 5 minutes. <br/>Si vous n'avez rien reçu, veuillez vérifier dans les courriers indésirables.",
             ];
         }
 

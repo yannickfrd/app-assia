@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -23,32 +24,38 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
-    private $entityManager;
-    private $router;
-    private $csrfTokenManager;
-    private $passwordEncoder;
+    public const LOGIN_ROUTE = 'security_login';
 
-    public function __construct(EntityManagerInterface $entityManager, RouterInterface $router, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
+    private $manager;
+    private $csrfTokenManager;
+    private $router;
+
+    public function __construct(
+        EntityManagerInterface $manager,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        UserPasswordEncoderInterface $encoder,
+        RouterInterface $router)
     {
-        $this->entityManager = $entityManager;
-        $this->router = $router;
+        $this->manager = $manager;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->encoder = $encoder;
+        $this->router = $router;
     }
 
     public function supports(Request $request)
     {
-        return 'app_login' === $request->attributes->get('_route')
+        return self::LOGIN_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'username' => $request->request->get('username'),
-            'password' => $request->request->get('password'),
-            'csrf_token' => $request->request->get('_csrf_token'),
+            'username' => $request->request->get('_username'),
+            'password' => $request->request->get('_password'),
+            'token' => $request->request->get('_csrf_token'),
         ];
+
         $request->getSession()->set(
             Security::LAST_USERNAME,
             $credentials['username']
@@ -59,38 +66,95 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+        $token = new CsrfToken('authenticate', $credentials['token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
+            $this->getErrorMessage('invalid_token');
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
+        /** @var UserRepository */
+        $repo = $this->manager->getRepository(User::class);
+        $user = $repo->findUser($credentials['username']); // $user = $userProvider->loadUserByUsername($credentials['username']);
 
-        if (!$user) {
-            // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+        try {
+            if (!$user) {
+                $this->getErrorMessage();
+            }
+
+            if ($user->getFailureLoginCount() >= 5) {
+                $this->getErrorMessage('blocked_user');
+            }
+
+            return $user;
+        } catch (UsernameNotFoundException $e) {
+            $this->getErrorMessage();
         }
-
-        return $user;
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        $isPasswordValid = $this->encoder->isPasswordValid($user, $credentials['password']);
+
+        if (!$isPasswordValid) {
+            $countFails = $user->getFailureLoginCount() + 1;
+            $user->setFailureLoginCount($countFails);
+
+            $this->manager->flush();
+
+            $this->getErrorMessage('invalid_password', ['count' => $countFails]);
+        }
+
+        return $isPasswordValid;
+    }
+
+    /**
+     * Used to upgrade (rehash) the user's password automatically over time.
+     */
+    public function getPassword($credentials): ?string
+    {
+        return $credentials['password'];
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+        /** @var User */
+        $user = $token->getUser();
+        $session = $request->getSession();
+
+        $session->getFlashBag()->add('success', "Bonjour {$user->getFirstname()} !");
+
+        if ($targetPath = $this->getTargetPath($session, $providerKey)) {
             return new RedirectResponse($targetPath);
         }
 
-        // For example : return new RedirectResponse($this->router->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        return new RedirectResponse($this->getLoginUrl());
+    }
+
+    /**
+     * Override to change what happens after a bad username/password is submitted.
+     *
+     * @return RedirectResponse
+     */
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    {
+        if ($request->hasSession()) {
+            $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        }
+
+        return new RedirectResponse($this->getLoginUrl());
+    }
+
+    public function supportsRememberMe()
+    {
+        return true;
     }
 
     protected function getLoginUrl()
     {
-        return $this->router->generate('app_login');
+        return $this->router->generate(self::LOGIN_ROUTE);
+    }
+
+    protected function getErrorMessage($message = 'invalid_credentials', $messageData = [])
+    {
+        throw new CustomUserMessageAuthenticationException($message, $messageData);
     }
 }
