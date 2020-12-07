@@ -253,8 +253,18 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         if ($search->getFullname()) {
-            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                ->setParameter('fullname', '%'.$search->getFullname().'%');
+            $date = \DateTime::createFromFormat('d/m/Y', $search->getFullname()) ?? false;
+            $int = ((int) $search->getFullname());
+            if ($date) {
+                $query->andWhere('p.birthdate = :birthdate')
+                    ->setParameter('birthdate', $date->format('Y-m-d'));
+            } elseif ($int > 0) {
+                $query->andWhere('sg.id = :id')
+                    ->setParameter('id', $int);
+            } else {
+                $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+                    ->setParameter('fullname', '%'.$search->getFullname().'%');
+            }
         }
 
         if ($search->getServices() && $search->getServices()->count()) {

@@ -13,10 +13,27 @@ class NoteSearch
     use ReferentServiceDeviceSearchTrait;
 
     /**
+     * @var int
+     */
+    private $id;
+    
+    /**
      * @var string|null
      */
     private $fullname;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+    
     public function getFullname(): ?string
     {
         return $this->fullname;

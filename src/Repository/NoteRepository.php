@@ -41,6 +41,11 @@ class NoteRepository extends ServiceEntityRepository
                 ->setParameter('services', $currentUser->getServices());
         }
 
+        if ($search->getId()) {
+            $query->andWhere('n.id = :id')
+                ->setParameter('id', $search->getId());
+        }
+
         if ($search->getServices() && count($search->getServices())) {
             $expr = $query->expr();
             $orX = $expr->orX();

@@ -14,6 +14,13 @@ class RdvSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('id', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'placeholder' => 'ID',
+                    'class' => 'w-max-80',
+                ],
+            ])
             ->add('title', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [

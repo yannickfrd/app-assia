@@ -96,6 +96,11 @@ class RdvRepository extends ServiceEntityRepository
                 ->setParameter('services', $currentUser->getServices());
         }
 
+        if ($search->getId()) {
+            $query->andWhere('r.id = :id')
+                ->setParameter('id', $search->getId());
+        }
+
         if ($search->getTitle()) {
             $query->andWhere('r.title LIKE :title')
                 ->setParameter('title', '%'.$search->getTitle().'%');

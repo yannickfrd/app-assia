@@ -13,6 +13,11 @@ class RdvSearch
     use DateSearchTrait;
 
     /**
+     * @var int
+     */
+    private $id;
+    
+    /**
      * @var string|null
      */
     private $fullname;
@@ -21,6 +26,18 @@ class RdvSearch
      * @var bool
      */
     private $export;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getFullname(): ?string
     {
