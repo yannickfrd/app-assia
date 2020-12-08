@@ -1,14 +1,16 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Notes{% endblock %}
+{% set title = "Notes" %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
-        <div class="container">
+        <div class="container-fluid mt-4">
+            <h1 class="h2 mb-3">{{ title }}</h1>
             {% include "model/_msgFlash.html.twig" %}
-            <h1 class="h2 mb-3">Notes</h1>
         </div>
 
         {% include "app/note/_searchNotes.html.twig" %}
@@ -52,14 +54,10 @@
                             </th>
                             <td class="align-middle justify"><span class="font-weight-bold">
                                 {{ note.title }}{% if note.title %} : {% endif %}</span>
-                                <span class="">{{ note.content|slice(0,200)|striptags|raw }}</span> 
+                                <span class="">{{ note.content|slice(0,200)|striptags|raw }}</span>
                                 {% if note.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
                             </td>
-                            <td class="align-middle">
-                                {% for supportPerson in note.supportGroup.supportPeople|filter(s => s.head == true) %}
-                                {{ supportPerson.person.fullname }}
-                                {% endfor %}
-                            </td>
+                            <td class="align-middle">{{ note.supportGroup.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
                             <td class="align-middle">{{ note.typeToString }}</td>
                             <td class="align-middle">{{ note.statusToString }}</td>
                             <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>

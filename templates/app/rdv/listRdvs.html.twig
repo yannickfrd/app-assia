@@ -1,14 +1,16 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Rendez-vous{% endblock %}
+{% set title = "Rendez-vous" %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
         <div class="container">
+            <h1 class="h2 mb-3"><a class="fas fa-calendar-alt mr-2 text-{{ theme_color }}" href="{{ path("calendar") }}" title="Passer en vue agenda"></a>{{ title }}</h1>
             {% include "model/_msgFlash.html.twig" %}
-            <h1 class="h2 mb-3"><a class="fas fa-calendar-alt mr-2 text-{{ theme_color }}" href="{{ path("calendar") }}" title="Passer en vue agenda"></a>Rendez-vous</h1>
         </div>
 
         {% include "app/rdv/_searchRdvs.html.twig" %}

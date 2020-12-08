@@ -16,7 +16,7 @@ class RolePersonType extends AbstractType
         $builder
             ->add('role', ChoiceType::class, [
                 'choices' => Choices::getChoices(RolePerson::ROLE),
-                'placeholder' => '-- Sélectionner --',
+                'placeholder' => 'placeholder.select',
             ]);
     }
 

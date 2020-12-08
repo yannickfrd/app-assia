@@ -22,18 +22,7 @@ App\Entity\Document:
     createdBy: "@userRoleUser"
     peopleGroup: "@peopleGroup"
     supportGroup: "@supportGroup"
-
-App\Entity\User:
-  userRoleUser:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-    
+  
 App\Entity\Person:
   person: 
     firstname: John
@@ -57,18 +46,3 @@ App\Entity\SupportGroup:
     updatedAt: <date_create()>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-
-
-App\Entity\Service:
-  service1:
-    name: AVDL
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-
-App\Entity\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>

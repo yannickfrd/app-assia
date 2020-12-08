@@ -43,8 +43,8 @@ export default class Calendar {
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
 
-        this.showWeekendsItem = sessionStorage.getItem('agenda.show_weekends')
-        this.fullWidthItem = sessionStorage.getItem('agenda.full_width')
+        this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
+        this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
         this.init()
     }
@@ -110,10 +110,10 @@ export default class Calendar {
     changeWidthCalendar() {
         if (this.fullWidthCheckbox.checked) {
             this.calendarContainer.classList.replace('container', 'container-fluid');
-            sessionStorage.setItem('agenda.full_width', true);
+            localStorage.setItem('agenda.full_width', true);
         } else {   
             this.calendarContainer.classList.replace('container-fluid', 'container');
-            sessionStorage.setItem('agenda.full_width', false);
+            localStorage.setItem('agenda.full_width', false);
         }
     }
     /**
@@ -124,9 +124,9 @@ export default class Calendar {
             elt.classList.toggle('d-none');
         });
         if (this.showWeekendCheckbox.checked) {
-            sessionStorage.setItem('agenda.show_weekends', true);
+            localStorage.setItem('agenda.show_weekends', true);
         } else {
-            sessionStorage.setItem('agenda.show_weekends', false);
+            localStorage.setItem('agenda.show_weekends', false);
         }
     }
 

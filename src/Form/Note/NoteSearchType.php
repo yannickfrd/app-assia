@@ -46,7 +46,7 @@ class NoteSearchType extends AbstractType
                 'attr' => [
                     'class' => 'w-max-160',
                 ],
-                'placeholder' => '-- Type --',
+                'placeholder' => 'placeholder.type',
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [

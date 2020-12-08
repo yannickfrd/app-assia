@@ -32,7 +32,7 @@ class SupportNoteSearchType extends AbstractType
                 'attr' => [
                     'class' => 'w-max-150',
                 ],
-                'placeholder' => '-- Type --',
+                'placeholder' => 'placeholder.type',
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [

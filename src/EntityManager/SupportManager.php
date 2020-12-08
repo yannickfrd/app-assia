@@ -166,7 +166,7 @@ class SupportManager
             }
         }
 
-        if ($nbHeads != 1 || true === $minorHead) {
+        if (1 != $nbHeads || true === $minorHead) {
             foreach ($supportGroup->getSupportPeople() as $supportPerson) {
                 $supportPerson->setHead(false);
                 if ($supportPerson->getPerson()->getAge() === $maxAge) {

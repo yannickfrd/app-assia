@@ -30,7 +30,7 @@ class DocumentType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getchoices(Document::TYPE),
-                'placeholder' => 'document.type.placeholder',
+                'placeholder' => 'document.placeholder.type',
             ])
             ->add('file', FileType::class, [
                 'mapped' => false,

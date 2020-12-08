@@ -30,17 +30,28 @@ class DocumentControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/DocumentFixturesTest.yaml',
         ]);
-
-        $this->createLogin($this->dataFixtures['userRoleUser']);
 
         $this->supportGroup = $this->dataFixtures['supportGroup'];
         $this->document = $this->dataFixtures['document1'];
     }
 
-    public function testListDocumentsIsUp()
+    public function testPageDocumentsIsUp()
     {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
+        $this->client->request('GET', $this->generateUri('documents'));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Documents');
+    }
+
+    public function testSupportDocumentsIsUp()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('support_documents', [
             'id' => $this->supportGroup->getId(),
         ]));
@@ -51,6 +62,8 @@ class DocumentControllerTest extends WebTestCase
 
     public function testSearchDocument()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('support_documents', [
             'id' => $this->supportGroup->getId(),
@@ -70,6 +83,8 @@ class DocumentControllerTest extends WebTestCase
 
     public function testFailToCreateNewDocument()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('POST', $this->generateUri('document_new', [
             'id' => $this->supportGroup->getId(),
         ]));
@@ -81,6 +96,8 @@ class DocumentControllerTest extends WebTestCase
 
     public function testFailToEditDocument()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('POST', $this->generateUri('document_edit', [
             'id' => $this->document->getId(),
         ]));
@@ -117,6 +134,8 @@ class DocumentControllerTest extends WebTestCase
 
     public function testDeleteDocument()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('document_delete', [
             'id' => $this->document->getId(),
         ]));

@@ -3,13 +3,13 @@
 namespace App\Form\Avdl;
 
 use App\Entity\Avdl;
-use App\Form\Utils\Choices;
 use App\Form\Model\AvdlSupportSearch;
 use App\Form\Support\SupportSearchType;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AvdlSupportSearchType extends AbstractType
 {
@@ -30,7 +30,7 @@ class AvdlSupportSearchType extends AbstractType
                     'class' => 'multi-select w-min-120',
                     'data-select2-id' => 'support-type',
                 ],
-                'placeholder' => '-- Type --',
+                'placeholder' => 'placeholder.type',
                 'required' => false,
             ]);
     }

@@ -27,7 +27,7 @@ class NoteType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Note::TYPE),
-                'placeholder' => '-- Type --',
+                'placeholder' => 'placeholder.type',
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getchoices(Note::STATUS),

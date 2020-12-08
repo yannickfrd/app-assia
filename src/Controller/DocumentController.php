@@ -8,8 +8,11 @@ use App\Entity\SupportGroup;
 use App\EntityManager\SupportManager;
 use App\Form\Document\DocumentSearchType;
 use App\Form\Document\DocumentType;
+use App\Form\Document\SupportDocumentSearchType;
 use App\Form\Model\DocumentSearch;
+use App\Form\Model\SupportDocumentSearch;
 use App\Repository\DocumentRepository;
+use App\Security\CurrentUserService;
 use App\Service\Download;
 use App\Service\FileUploader;
 use App\Service\Pagination;
@@ -36,24 +39,43 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * Liste des documents.
+     *
+     * @Route("/documents", name="documents", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function viewListDocuments(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    {
+        $search = new DocumentSearch();
+
+        $form = ($this->createForm(DocumentSearchType::class, $search))
+            ->handleRequest($request);
+
+        return $this->render('app/document/listDocuments.html.twig', [
+            'form' => $form->createView(),
+            'documents' => $pagination->paginate($this->repo->findDocumentsQuery($search, $currentUser), $request, 20) ?? null,
+        ]);
+    }
+
+    /**
      * Liste des documents du suivi.
      *
      * @Route("support/{id}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listDocuments(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
+    public function listSupportDocuments(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $search = new DocumentSearch();
+        $search = new SupportDocumentSearch();
 
-        $formSearch = $this->createForm(DocumentSearchType::class, $search);
+        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search);
         $formSearch->handleRequest($request);
 
         $form = $this->createForm(DocumentType::class, new Document());
 
-        return $this->render('app/document/listDocuments.html.twig', [
+        return $this->render('app/document/supportDocuments.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
@@ -64,11 +86,11 @@ class DocumentController extends AbstractController
     /**
      * Donne les documents du suivi.
      */
-    protected function getDocuments(SupportGroup $supportGroup, Request $request, DocumentSearch $search, Pagination $pagination)
+    protected function getDocuments(SupportGroup $supportGroup, Request $request, SupportDocumentSearch $search, Pagination $pagination)
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0) {
-            return  $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request);
+            return  $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup->getId(), $search), $request);
         }
 
         // Sinon, récupère les documents en cache.
@@ -76,7 +98,7 @@ class DocumentController extends AbstractController
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $pagination->paginate($this->repo->findAllDocumentsQuery($supportGroup->getId(), $search), $request);
+                return $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup->getId(), $search), $request);
             }
         );
     }

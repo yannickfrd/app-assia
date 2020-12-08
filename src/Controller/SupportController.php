@@ -72,7 +72,6 @@ class SupportController extends AbstractController
         }
 
         return $this->render('app/support/listSupports.html.twig', [
-            'SupportSearch' => $search,
             'form' => $form->createView(),
             'supports' => $pagination->paginate($repo->findSupportsQuery($search), $request),
         ]);

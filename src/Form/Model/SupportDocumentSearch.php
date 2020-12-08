@@ -3,19 +3,9 @@
 namespace App\Form\Model;
 
 use App\Entity\Document;
-use App\Form\Model\Traits\DateSearchTrait;
-use App\Form\Model\Traits\ReferentServiceDeviceSearchTrait;
 
-class DocumentSearch
+class SupportDocumentSearch
 {
-    use ReferentServiceDeviceSearchTrait;
-    use DateSearchTrait;
-
-    /**
-     * @var int
-     */
-    private $id;
-
     /**
      * @var string|null
      */
@@ -25,18 +15,6 @@ class DocumentSearch
      * @var int|null
      */
     private $type;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(?int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     public function getName(): ?string
     {

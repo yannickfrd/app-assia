@@ -59,12 +59,13 @@
 
                     <hr class="my-3">
 
-                    <h2 class="h5">Cache</h2>
+                    <h2 class="h5">Documents</h2>
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path("cache_clear") }}">Vider le cache</a>
+                            <a class="text-dark" href="{{ path("documents") }}">Rechercher des documents</a>
                         </li>
                     </ul>
+
                 {% endif %}
 
                 <hr class="my-3">
@@ -84,6 +85,15 @@
 
                 {% if app.user.id == 1 %}
 
+
+                    <h2 class="h5">Cache</h2>
+                    <ul>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("cache_clear") }}">Vider le cache</a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-3">
 
                     <h2 class="h5">Base de données</h2>
                     <ul>

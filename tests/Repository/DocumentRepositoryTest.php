@@ -6,6 +6,7 @@ use App\Entity\Document;
 use App\Entity\SupportGroup;
 use App\Entity\User;
 use App\Form\Model\DocumentSearch;
+use App\Form\Model\SupportDocumentSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -25,12 +26,13 @@ class DocumentRepositoryTest extends WebTestCase
     /** @var User */
     protected $user;
 
-    /** @var DocumentSearch */
+    /** @var SupportDocumentSearch */
     protected $search;
 
     protected function setUp()
     {
         $dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/DocumentFixturesTest.yaml',
         ]);
 
@@ -45,7 +47,7 @@ class DocumentRepositoryTest extends WebTestCase
 
         $this->supportGroup = $dataFixtures['supportGroup'];
         $this->user = $dataFixtures['userRoleUser'];
-        $this->search = (new DocumentSearch())
+        $this->search = (new SupportDocumentSearch())
             ->setName('Document 666')
             ->setType(1);
     }
@@ -55,30 +57,36 @@ class DocumentRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(2, $this->repo->count([]));
     }
 
-    public function testFindAllDocumentsQueryWithoutFilters()
+    public function testFindDocumentsQueryWithoutFilters()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), new DocumentSearch());
+        $query = $this->repo->findDocumentsQuery(new DocumentSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllDocumentsQueryWithFilters()
+    public function testFindSupportDocumentsQueryWithoutFilters()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->search);
+        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup->getId(), new SupportDocumentSearch());
+        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+    }
+
+    public function testFindSupportDocumentsQueryWithFilters()
+    {
+        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup->getId(), $this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllDocumentsQueryWithFilterByContent()
+    public function testFindSupportsDocumentsQueryWithFilterByContent()
     {
-        $query = $this->repo->findAllDocumentsQuery($this->supportGroup->getId(), $this->search->setName('Description'));
+        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup->getId(), $this->search->setName('Description'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testCountAllDocumentsWithoutCriteria()
+    public function testCountDocumentsWithoutCriteria()
     {
         $this->assertGreaterThanOrEqual(5, $this->repo->countDocuments());
     }
 
-    public function testCountAllDocumentsWithCriteria()
+    public function testCountDocumentsWithCriteria()
     {
         $this->assertGreaterThanOrEqual(5, $this->repo->countDocuments(['user' => $this->user]));
     }

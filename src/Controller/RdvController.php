@@ -2,30 +2,30 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Rdv;
-use App\Entity\SupportGroup;
 use App\Entity\User;
-use App\EntityManager\SupportManager;
-use App\Form\Model\RdvSearch;
-use App\Form\Model\SupportRdvSearch;
-use App\Form\Rdv\RdvSearchType;
 use App\Form\Rdv\RdvType;
-use App\Form\Rdv\SupportRdvSearchType;
-use App\Repository\RdvRepository;
-use App\Security\CurrentUserService;
 use App\Service\Calendar;
-use App\Service\Export\RdvExport;
 use App\Service\Pagination;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\SupportGroup;
+use App\Form\Model\RdvSearch;
+use App\Form\Rdv\RdvSearchType;
+use App\Repository\RdvRepository;
+use App\Service\Export\RdvExport;
 use Psr\Cache\CacheItemInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Form\Model\SupportRdvSearch;
+use App\Security\CurrentUserService;
+use App\EntityManager\SupportManager;
+use App\Form\Rdv\SupportRdvSearchType;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\Traits\ErrorMessageTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
 {
@@ -62,7 +62,6 @@ class RdvController extends AbstractController
         }
 
         return $this->render('app/rdv/listRdvs.html.twig', [
-            'rdvSearch' => $search,
             'form' => $form->createView(),
             'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search, $currentUser), $request, 10) ?? null,
         ]);

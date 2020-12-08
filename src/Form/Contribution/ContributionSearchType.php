@@ -39,7 +39,7 @@ class ContributionSearchType extends AbstractType
             ->add('dateType', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(ContributionSearch::DATE_TYPE),
-                'placeholder' => '-- Type de date --',
+                'placeholder' => 'placeholder.dateType',
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [

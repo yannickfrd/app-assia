@@ -1,76 +1,88 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Documents{% endblock %}
+{% set title = "Documents" %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
-	<div class="container">
+    <section class="mt-0">
 
-		{% set title = "Documents" %}
-		{% include "app/support/_navSuppport.html.twig" %}
+        <div class="container-fluid mt-4">
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            {% include "model/_msgFlash.html.twig" %}
+        </div>
 
-		<div class="row">
-			<div class="col-md-6 mb-1">
-				<button id="js-new-document" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-					data-toggle="tooltip" data-placement="bottom" title="Ajouter un nouveau document"><span class="fas fa-plus-square mr-2"></span>Nouveau document</button>
-				<div class="d-inline align-middle">Total :
-					<span id="count-documents">{{ documents.getTotalItemCount|number_format(0,'', ' ')}}</span>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="navigation">{{ knp_pagination_render(documents) }}</div>
-			</div>
-		</div>
+        {% include "app/document/_searchDocuments.html.twig" %}
 
-		{% include "app/document/_searchSupportDocuments.html.twig" %}
+        <div class="container-fluid mt-4">
 
-		<div class="table-responsive">
-			<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-				<thead>
-					<tr>
-						<th scope="row" class="align-middle th-w-20"></th>
-						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
-						<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
-						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
-						<th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
-						<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Date d'ajout", "d.createdAt") }}</th>
-						<th scope="col" class="align-middle th-w-20"></th>
-					</tr>
-				</thead>
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ documents.getTotalItemCount|number_format(0,'', ' ')  }} <!--
+                    -->document{% if documents.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(documents) }}</div>
+                </div>
+            </div>
 
-				<tbody id="container-documents" data-support="{{ support.id }}">
-					{% for document in documents %}
-						<tr id="document-{{ document.id }}" class="js-document">
-							<td scope="row" class="align-middle text-center">
-								<a href="{{ path('document_read', {'id': document.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-									data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
-								</a>
-							</td>
-							<td class="align-middle js-document-name">{{ document.name }}</td>
-							<td class="align-middle js-document-type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
-							<td class="align-middle js-document-content">{{ document.content }}</td>
-							<td class="align-middle js-document-size text-right">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
-							<td class="align-middle js-document-createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
-							<td class="align-middle text-center">
-								<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
-									data-placement="bottom" title="Supprimer le document">
-									<span class="fas fa-trash-alt"></span>
-								</button>
-							</td>
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+					<thead>
+						<tr>
+							<th scope="row" class="align-middle th-w-20"></th>
+							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
+							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Nom du suivi", "p.lastname") }}</th>
+							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Service", "s.name") }}</th>
+							<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
+							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
+							<th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
+							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé le", "d.createdAt") }}</th>
+							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé par", "d.createdBy") }}</th>
+							<th scope="row" class="align-middle th-w-20"></th>
 						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
+					</thead>
+					<tbody id="container-documents">
+						{% for document in documents %}
+						{% set support = document.supportGroup %}
+							<tr id="document-{{ document.id }}" class="js-document">
+								<th scope="row" class="align-middle text-center ">
+									<a href="{{ path('support_documents', {'id':document.supportGroup.id, 'documentId':document.id}) }}"
+										class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+										title="Voir le suivi"><span class="fas fa-eye"></span>
+									</a>
+								</th>
+								<td class="align-middle js-document-name">{{ document.name }}</td>
+                            	<td class="align-middle">
+									<a href="{{ path('support_documents', {'id':document.supportGroup.id}) }}"
+										class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="bottom"
+										title="Voir le suivi">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}
+									</a>
+								</td>
+                            	<td class="align-middle">{{ support ? support.service.name }}</td>
+								<td class="align-middle js-document-type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
+								<td class="align-middle js-document-content">{{ document.content }}</td>
+								<td class="align-middle js-document-size text-right">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
+								<td class="align-middle js-document-createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+								<td class="align-middle js-document-createdAt">{{ document.createdBy ? document.createdBy.fullname }}</td>
+								<td scope="row" class="align-middle text-center">
+									<a href="{{ path('document_read', {'id': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+										data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+            <div class="navigation">{{ knp_pagination_render(documents) }}</div>
+        </div>
 
-		<div class="navigation">{{ knp_pagination_render(documents) }}</div>
+    </section>
 
-		{% include "app/document/_modalDocument.html.twig" %}
-		{% include "app/document/_modalDeleteDocument.html.twig" %}
+{% endblock %}
 
-	</div>
-
-{% endblock %}{% block javascripts %}
+{% block javascripts %}
     {{ encore_entry_script_tags("search") }}
-	{{ encore_entry_script_tags("document") }}
 {% endblock javascripts %}
