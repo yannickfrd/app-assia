@@ -86,7 +86,7 @@
                     {% endif %}
                 {% endif %}
                 relatif {{ contribution_type }}{# 
-                #}{% if contribution.type in [1, 2, 10] %}
+                #}{% if support.city and contribution.type in [1, 2, 10] %}
                     au {{ support.address ~ " à " ~ support.city }} ({{ service.name }}),
                     {% if contribution.type in [1, 2] %}
                         pour la période du <b>{{ contribution.startDate|date("d/m/Y") }}</b> au <b>{{ contribution.endDate|date("d/m/Y") }}</b> 
@@ -111,9 +111,11 @@
                 <p>Montant réglé : {{ contribution.paidAmt|format_currency("EUROS") }}</p>
                 <p>Date de règlement : {{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</p>
                 <p>Mode de règlement : {{ contribution.paymentTypeToString }}</p>
-            {% endif %}
-            {% if contribution.stillToPayAmt > 0 %}  
-                <p>Montant restant à payer : {{ contribution.stillToPayAmt|format_currency("EUROS") }}</p>
+                {% if contribution.stillToPayAmt > 0 %}  
+                    <p>Montant restant à payer : {{ contribution.stillToPayAmt|format_currency("EUROS") }}</p>
+                {% endif %}
+            {% else %}
+                <p>Montant à payer : {{ contribution.toPayAmt|format_currency("EUROS") }}</p>
             {% endif %}
 
             <br/>

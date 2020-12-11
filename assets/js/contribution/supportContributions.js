@@ -715,9 +715,16 @@ export default class SupportContributions {
             <td class='align-middle js-paymentType'>${contribution.paymentType ? contribution.paymentTypeToString : ''}</td>
             <td class='align-middle js-comment'>${this.sliceComment(contribution.comment)}</td>
             <td class='align-middle js-createdAt'>${this.formatDatetime(this.now, 'date')}</td>
+            <td class="align-middle text-center js-pdfGenerate">
+                <span><i class="fas fa-file-pdf text-secondary fa-lg"></i></span>
+            </td>
+            <td class="align-middle text-center js-mailSent">
+                <span><i class="fas fa-envelope text-secondary fa-lg"></i></span>
+            </td>
             <td class='align-middle text-center'>
                 <button data-url='/contribution/${contribution.id}/delete' 
-                    class='js-delete btn btn-danger btn-sm shadow my-1' data-placement='bottom' title='Supprimer l'enregistrement' data-toggle='modal' data-target='#modal-block'>
+                    class='js-delete btn btn-danger btn-sm shadow my-1' data-placement='bottom' 
+                        title='Supprimer l'enregistrement' data-toggle='modal' data-target='#modal-block'>
                     <span class='fas fa-trash-alt'></span>
                 </button>
             </td>`

@@ -42,7 +42,6 @@ export default class UpdatePerson {
      * @param {Object} data 
      */
     response(data) {
-        console.log(data)
         if (data.code === 200) {
             if (data.alert === 'success') {
                 document.getElementById('js-person-updated').textContent = `(modifié le ${data.date} par ${data.user}')`
