@@ -2,32 +2,32 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\SupportGroup;
-use App\Security\Voter\VoterTrait;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Entity\Contribution;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class SupportGroupVoter extends Voter
+class ContributionVoter extends Voter
 {
     use VoterTrait;
 
     protected $user;
     protected $userId;
-    protected $supportGroup;
+    protected $contribution;
 
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\SupportGroup;
+            && $subject instanceof \App\Entity\Contribution;
     }
 
-    protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $contribution, TokenInterface $token): bool
     {
-        /**  @var User */
+        /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var SupportGroup */
-        $this->supportGroup = $supportGroup;
+        /** @var Contribution */
+        $this->contribution = $contribution;
+        $this->supportGroup = $this->contribution->getSupportGroup();
 
         if (!$this->user) {
             return false;
@@ -48,10 +48,22 @@ class SupportGroupVoter extends Voter
         return false;
     }
 
-    protected function canView()
+    protected function canView(): bool
     {
         if ($this->isCreatorOrReferent()
             || $this->isUserOfService($this->supportGroup->getService())
+            || $this->isGranted('ROLE_SUPER_ADMIN')
+            ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function canEdit(): bool
+    {
+        if ($this->isCreatorOrReferent()
+            || $this->isAdminOfService($this->supportGroup->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
@@ -60,26 +72,16 @@ class SupportGroupVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canDelete(): bool
     {
-        return $this->canView();
-    }
-
-    protected function canDelete()
-    {
-        if ($this->isAdminOfService($this->supportGroup->getService()) 
-            || $this->isGranted('ROLE_SUPER_ADMIN')) {
-            return true;
-        }
-
-        return false;
+        return $this->canEdit();
     }
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
+        if (($this->contribution->getCreatedBy() && $this->contribution->getCreatedBy()->getId() === $this->userId)
+            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
             || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
-            || ($this->supportGroup->getCreatedBy() && $this->supportGroup->getCreatedBy()->getId() === $this->userId)
         ) {
             return true;
         }

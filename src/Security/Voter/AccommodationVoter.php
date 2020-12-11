@@ -2,23 +2,17 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Entity\Accommodation;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AccommodationVoter extends Voter
 {
-    use UserAdminOfServiceTrait;
+    use VoterTrait;
 
-    private $security;
     protected $user;
     protected $userId;
     protected $accommodation;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
 
     protected function supports($attribute, $subject)
     {
@@ -28,11 +22,13 @@ class AccommodationVoter extends Voter
 
     protected function voteOnAttribute($attribute, $accommodation, TokenInterface $token)
     {
-        $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
+        /** @var User */
+        $this->user = $token->getUser();
+        $this->userId = $this->user->getId();
+        /**  @var Accommodation */
         $this->accommodation = $accommodation;
 
-        if (!$this->currentUser) {
+        if (!$this->user) {
             return false;
         }
 
@@ -56,47 +52,27 @@ class AccommodationVoter extends Voter
 
     protected function canView()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUserOfService(($this->accommodation->getService()))) {
+        if ($this->isUserOfService($this->accommodation->getService())
+            || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
-        }
-
-        foreach ($this->currentUser->getServiceUser() as $serviceUser) {
-            if ($this->accommodation->getService()->getId() == $serviceUser->getService()->getId()) {
-                return true;
-            }
         }
 
         return false;
     }
 
     protected function canEdit()
-    {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUserOfService(($this->accommodation->getService()))) {
-            return true;
-        }
-
-        if (($this->accommodation->getReferent() && $this->accommodation->getReferent()->getId() == $this->currentUserId)
-            || ($this->accommodation->getReferent2() && $this->accommodation->getReferent2()->getId() == $this->currentUserId)
-            || ($this->accommodation->getCreatedBy() && $this->accommodation->getCreatedBy()->getId() == $this->currentUserId)
+    { 
+        if ($this->isAdminOfService($this->accommodation->getService())
+            || $this->security->isGranted('ROLE_SUPER_ADMIN') 
         ) {
             return true;
         }
-
+        
         return false;
     }
 
     protected function canDelete()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUserOfService(($this->accommodation->getService()))) {
-            return true;
-        }
-
-        // if (($this->accommodation->getReferent() && $this->accommodation->getReferent()->getId() == $this->currentUserId)
-        //     || ($this->accommodation->getReferent2() && $this->accommodation->getReferent2()->getId() == $this->currentUserId)
-        //     || ($this->accommodation->getCreatedBy() && $this->accommodation->getCreatedBy()->getId() == $this->currentUserId)
-        // ) {
-        //     return true;
-        // }
-        return false;
+        return $this->canEdit();
     }
 }

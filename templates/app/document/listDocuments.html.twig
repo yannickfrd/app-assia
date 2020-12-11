@@ -48,18 +48,15 @@
 						{% set support = document.supportGroup %}
 							<tr id="document-{{ document.id }}" class="js-document">
 								<th scope="row" class="align-middle text-center ">
-									<a href="{{ path('support_documents', {'id':document.supportGroup.id, 'documentId':document.id}) }}"
-										class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-										title="Voir le suivi"><span class="fas fa-eye"></span>
-									</a>
+								{% if support %}
+										<a href="{{ path('support_documents', {'id':document.supportGroup.id, 'documentId':document.id}) }}"
+											class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+											title="Voir le suivi"><span class="fas fa-eye"></span>
+										</a>
+								{% endif %}
 								</th>
 								<td class="align-middle js-document-name">{{ document.name }}</td>
-                            	<td class="align-middle">
-									<a href="{{ path('support_documents', {'id':document.supportGroup.id}) }}"
-										class="text-{{ theme_color }}" data-toggle="tooltip" data-placement="bottom"
-										title="Voir le suivi">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}
-									</a>
-								</td>
+                            	<td class="align-middle">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
                             	<td class="align-middle">{{ support ? support.service.name }}</td>
 								<td class="align-middle js-document-type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
 								<td class="align-middle js-document-content">{{ document.content }}</td>

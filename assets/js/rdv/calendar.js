@@ -320,8 +320,6 @@ export default class Calendar {
         const rdvElt = document.createElement('div')
         rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
         rdvElt.id = `rdv-${rdv.id}`
-        rdvElt.setAttribute('data-toggle', 'modal')
-        rdvElt.setAttribute('data-target', '#modal-rdv')
         rdvElt.setAttribute('title', 'Voir le rendez-vous')
 
         const title = this.modalRdvElt.querySelector('#rdv_title').value
@@ -403,8 +401,6 @@ export default class Calendar {
             const date = dayElt.id.replace('-', '/')
             date = date.replace('-', '/')
             divElt.href = '/calendar/day/' + date
-            // divElt.setAttribute('data-toggle', 'modal')
-            // divElt.setAttribute('data-target', '#modal-rdv')
             divElt.setAttribute('title', 'Voir tous les rendez-vous du jour')
             divElt.textContent = (parseInt(rdvElts.length - maxHeight) + 2) + ' autres...'
             dayElt.insertBefore(divElt, dayElt.lastChild)

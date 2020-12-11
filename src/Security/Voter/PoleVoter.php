@@ -2,21 +2,18 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Entity\Pole;
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PoleVoter extends Voter
 {
-    private $security;
-    protected $currentUser;
-    protected $currentUserId;
-    protected $pole;
+    use VoterTrait;
 
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
+    protected $user;
+    protected $userId;
+    protected $pole;
 
     protected function supports($attribute, $subject)
     {
@@ -26,11 +23,13 @@ class PoleVoter extends Voter
 
     protected function voteOnAttribute($attribute, $pole, TokenInterface $token)
     {
-        $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
+        /**  @var User */
+        $this->user = $token->getUser();
+        $this->userId = $this->user->getId();
+        /**  @var Pole */
         $this->pole = $pole;
 
-        if (!$this->currentUser) {
+        if (!$this->user) {
             return false;
         }
 
@@ -51,14 +50,14 @@ class PoleVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN') && 4 == $this->currentUser->getStatus()) {
-            foreach ($this->currentUser->getServiceUser() as $serviceUser) {
+        if ($this->isGranted('ROLE_ADMIN') && User::STATUS_DIRECTOR === $this->user->getStatus()) {
+            foreach ($this->user->getServiceUser() as $serviceUser) {
                 foreach ($this->pole->getServices() as $service) {
-                    if ($service->getId() == $serviceUser->getService()->getId()) {
+                    if ($service->getId() === $serviceUser->getService()->getId()) {
                         return true;
                     }
                 }
@@ -70,7 +69,7 @@ class PoleVoter extends Voter
 
     protected function canDisable()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 

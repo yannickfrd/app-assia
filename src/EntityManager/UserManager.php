@@ -2,26 +2,26 @@
 
 namespace App\EntityManager;
 
-use App\Entity\Service;
 use App\Entity\User;
+use App\Entity\Service;
 use App\Form\Model\UserChangeInfo;
+use App\Repository\UserRepository;
 use App\Form\Model\UserResetPassword;
 use App\Notification\MailNotification;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserManager
 {
-    private $session;
     private $manager;
+    private $flashbag;
 
-    public function __construct(EntityManagerInterface $manager, SessionInterface $session)
+    public function __construct(EntityManagerInterface $manager, FlashBagInterface $flashbag)
     {
-        $this->session = $session;
         $this->manager = $manager;
+        $this->flashbag = $flashbag;
     }
 
     /**
@@ -198,6 +198,6 @@ class UserManager
      */
     protected function addFlash(string $alert, string $msg): void
     {
-        $this->session->getFlashBag()->add($alert, $msg);
+        $this->flashbag->add($alert, $msg);
     }
 }

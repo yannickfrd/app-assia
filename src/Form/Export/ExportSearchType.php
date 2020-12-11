@@ -3,14 +3,14 @@
 namespace App\Form\Export;
 
 use App\Entity\PeopleGroup;
-use App\Form\Utils\Choices;
 use App\Form\Model\ExportSearch;
 use App\Form\Support\SupportSearchType;
+use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ExportSearchType extends AbstractType
 {
@@ -21,10 +21,9 @@ class ExportSearchType extends AbstractType
                 'label' => 'Demandeur principal',
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
+                'required' => false,
             ])
-            ->add('calcul', null, [
-                'mapped' => false,
-            ])
+            ->add('calcul', null, ['mapped' => false])
             ->add('familyTypologies', ChoiceType::class, [
                 'multiple' => true,
                 'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),

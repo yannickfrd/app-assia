@@ -2,23 +2,15 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 class UserVoter extends Voter
 {
-    use UserIsAdminTrait;
+    use VoterTrait;
 
-    private $security;
-    protected $currentUser;
-    protected $currentUserId;
     protected $user;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
 
     protected function supports($attribute, $subject)
     {
@@ -28,11 +20,11 @@ class UserVoter extends Voter
 
     protected function voteOnAttribute($attribute, $user, TokenInterface $token)
     {
-        $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
-        $this->user = $user;
+        /**  @var User */
+        $this->user = $token->getUser();
+        $this->userId = $this->user->getId();
 
-        if (!$this->currentUser) {
+        if (!$this->user) {
             return false;
         }
 
@@ -41,33 +33,50 @@ class UserVoter extends Voter
                 return true;
                 break;
             case 'EDIT':
-                return $this->canEdit();
+                return $this->canEdit($user);
                 break;
             case 'DISABLE':
-                return $this->canDisable();
+                return $this->canDisable($user);
                 break;
         }
 
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(User $user)
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || $this->isAdminUser($this->user)) {
-            return true;
-        }
-
-        if ($this->currentUser->getId() == $this->user->getId()) {
+        if ($this->userId === $user->getId()
+            || $this->isAdminUser($user)
+            || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 
         return false;
     }
 
-    protected function canDisable()
+    protected function canDisable(User $user)
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN') || ($this->isAdminUser($this->user))) {
+        if ($this->isAdminUser($user)
+            || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * If current user is administrator.
+     */
+    protected function isAdminUser(User $user): bool
+    {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            foreach ($this->user->getServiceUser() as $serviceCurrentUser) {
+                foreach ($user->getServiceUser() as $serviceUser) {
+                    if ($serviceUser->getService()->getId() === $serviceCurrentUser->getService()->getId()) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;

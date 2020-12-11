@@ -79,7 +79,7 @@ class ExportPDF
 
         $output = $this->dompdf->output();
 
-        $filename = $path.$this->getFilename().'.pdf';  
+        $filename = $path.$this->getFilename().'.pdf';
 
         file_put_contents($filename, $output);
 
@@ -110,13 +110,13 @@ class ExportPDF
     /**
      * Format the HTML content.
      */
-    public function formatContent(string $content, Environment $renderer, string $title, string $logoPath, string $infoAdd): string
+    public function formatContent(string $content, Environment $renderer, string $title, string $logoPath = null, string $infoAdd): string
     {
         $style = $renderer->render('pdf/style/_pdf.css.twig');
 
         $logoPath = $this->getPathImage($logoPath);
 
-        $headerFooter = $renderer->render('pdf/headerFooterPdf.html.twig', [
+        $headerFooter = $renderer->render('pdf/_headerFooterPdf.html.twig', [
             'logo_path' => $logoPath,
             'header_info' => 'ESPERER 95 | '.$title.' | '.$infoAdd,
         ]);

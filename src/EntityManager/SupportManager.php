@@ -35,7 +35,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -43,14 +43,14 @@ class SupportManager
 {
     use hydrateObjectWithArray;
 
-    private $session;
     private $repoSupportGroup;
+    private $flashbag;
     private $cache;
 
-    public function __construct(SessionInterface $session, SupportGroupRepository $repoSupportGroup)
+    public function __construct(SupportGroupRepository $repoSupportGroup, FlashBagInterface $flashbag)
     {
-        $this->session = $session;
         $this->repoSupportGroup = $repoSupportGroup;
+        $this->flashbag = $flashbag;
         $this->cache = new FilesystemAdapter();
     }
 
@@ -655,6 +655,6 @@ class SupportManager
      */
     protected function addFlash(string $alert, string $msg)
     {
-        $this->session->getFlashBag()->add($alert, $msg);
+        $this->flashbag->add($alert, $msg);
     }
 }

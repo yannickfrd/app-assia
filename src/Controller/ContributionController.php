@@ -197,7 +197,7 @@ class ContributionController extends AbstractController
      */
     public function getContribution(Contribution $contribution, NormalizerInterface $normalizer): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
+        $this->denyAccessUnlessGranted('VIEW', $contribution);
 
         return $this->json([
             'code' => 200,
@@ -217,7 +217,7 @@ class ContributionController extends AbstractController
      */
     public function editContribution(Contribution $contribution, Request $request, NormalizerInterface $normalizer, Normalisation $normalisation): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
+        $this->denyAccessUnlessGranted('EDIT', $contribution);
 
         $form = ($this->createForm(ContributionType::class, $contribution))
             ->handleRequest($request);
@@ -236,7 +236,7 @@ class ContributionController extends AbstractController
      */
     public function deleteContribution(Contribution $contribution): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $contribution->getSupportGroup());
+        $this->denyAccessUnlessGranted('DELETE', $contribution);
 
         $this->manager->remove($contribution);
         $this->manager->flush();
@@ -263,7 +263,7 @@ class ContributionController extends AbstractController
 
         $supportGroup = $contribution->getSupportGroup();
 
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        $this->denyAccessUnlessGranted('VIEW', $contribution);
 
         $title = $contribution->getPaymentDate() ? 'Reçu de paiement' : 'Avis d\'échéance';
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
@@ -294,9 +294,10 @@ class ContributionController extends AbstractController
     public function sendPaymentByEmail(int $id, SupportManager $supportManager, ExportPDF $exportPDF, Environment $renderer, MailNotification $notification): Response
     {
         $contribution = $this->repoContribution->findContribution($id);
+        
+        $this->denyAccessUnlessGranted('VIEW', $contribution);
+        
         $supportGroup = $contribution->getSupportGroup();
-
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $title = 'Reçu de paiement';
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();

@@ -33,7 +33,8 @@
 						<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
 						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
 						<th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
-						<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Date d'ajout", "d.createdAt") }}</th>
+						<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé le", "d.createdAt") }}</th>
+						<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(documents, "Créé par", "u.lastname") }}</th>
 						<th scope="col" class="align-middle th-w-20"></th>
 					</tr>
 				</thead>
@@ -51,6 +52,7 @@
 							<td class="align-middle js-document-content">{{ document.content }}</td>
 							<td class="align-middle js-document-size text-right">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
 							<td class="align-middle js-document-createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+							<td class="align-middle js-document-createdBy">{{ document.createdby ? document.createdby.fullname }}</td>
 							<td class="align-middle text-center">
 								<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1" 
 									data-placement="bottom" title="Supprimer le document">

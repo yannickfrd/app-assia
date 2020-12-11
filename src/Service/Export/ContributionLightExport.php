@@ -26,7 +26,7 @@ class ContributionLightExport extends ExportExcel
             $arrayData[] = $this->getDatas($contribution);
         }
 
-        $this->createSheet('export_paiements', 'xlsx', $arrayData, 16);
+        $this->createSheet('export_paiements', 'xlsx', $arrayData, 22);
         $this->addTotalRow();
 
         return $this->exportFile();

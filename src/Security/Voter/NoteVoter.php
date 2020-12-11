@@ -5,24 +5,15 @@ namespace App\Security\Voter;
 use App\Entity\Note;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 class NoteVoter extends Voter
 {
-    use UserAdminOfServiceTrait;
+    use VoterTrait;
 
-    private $security;
-    protected $currentUser;
-    protected $currentUserId;
-    /**
-     * @var Note
-     */
+    protected $user;
+    protected $userId;
+    /** @var Note */
     protected $note;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
 
     protected function supports($attribute, $subject)
     {
@@ -32,11 +23,14 @@ class NoteVoter extends Voter
 
     protected function voteOnAttribute($attribute, $note, TokenInterface $token): bool
     {
-        $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
+        /** @var User */
+        $this->user = $token->getUser();
+        $this->userId = $this->user->getId();
+        /** @var Note */
         $this->note = $note;
+        $this->supportGroup = $this->note->getSupportGroup();
 
-        if (!$this->currentUser) {
+        if (!$this->user) {
             return false;
         }
 
@@ -57,20 +51,11 @@ class NoteVoter extends Voter
 
     protected function canView(): bool
     {
-        if ($this->currentUserId === $this->note->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->currentUserId === $this->note->getSupportGroup()->getReferent()->getId()
+        if ($this->isCreatorOrReferent()
+            || $this->isUserOfService($this->supportGroup->getService())
+            || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
-        }
-
-        $user = $this->note->getCreatedBy();
-        foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
-            foreach ($user->getServiceUser() as $serviceUser) {
-                if ($serviceCurrentUser->getService()->getId() === $serviceUser->getService()->getId()) {
-                    return true;
-                }
-            }
         }
 
         return false;
@@ -78,10 +63,9 @@ class NoteVoter extends Voter
 
     protected function canEdit(): bool
     {
-        if ($this->currentUserId === $this->note->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->isAdminUserOfService($this->note->getSupportGroup()->getService())
-            || $this->currentUserId === $this->note->getSupportGroup()->getReferent()->getId()
+        if ($this->isCreatorOrReferent()
+            || $this->isAdminOfService($this->supportGroup->getService())
+            || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
         }
@@ -91,14 +75,18 @@ class NoteVoter extends Voter
 
     protected function canDelete(): bool
     {
-        if ($this->currentUserId === $this->note->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->isAdminUserOfService($this->note->getSupportGroup()->getService())
-            || $this->currentUserId === $this->note->getSupportGroup()->getReferent()->getId()
+        return $this->canView();
+    }
+
+    protected function isCreatorOrReferent(): bool
+    {
+        if (($this->note->getCreatedBy() && $this->note->getCreatedBy()->getId() === $this->userId)
+            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
         ) {
             return true;
         }
-
+        
         return false;
     }
 }

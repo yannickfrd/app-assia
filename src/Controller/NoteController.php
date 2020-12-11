@@ -193,13 +193,8 @@ class NoteController extends AbstractController
 
         $title = 'Grille d\'évaluation sociale ';
 
-        $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
-        $extension = pathinfo($logoPath, PATHINFO_EXTENSION);
-        $data = file_get_contents($logoPath);
-        $base64 = 'data:image/'.$extension.';base64,'.base64_encode($data);
-
         $note = (new Note())
-                ->setTitle('Grille d\'évaluation sociale '.(new \DateTime())->format('d/m/Y'))
+                ->setTitle( $title.(new \DateTime())->format('d/m/Y'))
                 ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
                     'type' => 'note',
                     'support' => $supportGroup,
@@ -207,7 +202,6 @@ class NoteController extends AbstractController
                     'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
                     'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
                     'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
-                    'logo_path' => $base64,
                     'title' => $title,
                 ]))
                 ->setType(2)

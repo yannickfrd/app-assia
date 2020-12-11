@@ -37,12 +37,11 @@
                                 {% set query = app.request.query.get('service') %}
                                 {% for month in datas.months %}
                                     <tr>
-                                        {% set endMonth = month.date|date_modify("last day of this month") %}
                                         <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('contributions', {'type': form.vars.value.type, 
                                                 'service': {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
                                                 'dateType': app.request.query.get('dateType'),
-                                                'date': {'start': month.date|date('Y-m-d'), 'end': endMonth.date|date('Y-m-d')} }) }}" 
+                                                'date': {'start': month.date|date('Y-m-d'), 'end': month.date|date_modify("last day of this month")|date('Y-m-d')} }) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail des paiements du mois"><span class="fas fa-eye fa-sm"></span>
                                             </a>

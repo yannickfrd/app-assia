@@ -2,20 +2,16 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Entity\Service;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ServiceVoter extends Voter
 {
-    private $security;
-    protected $currentUser;
-    protected $service;
+    use VoterTrait;
 
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
+    protected $user;
+    protected $service;
 
     protected function supports($attribute, $subject)
     {
@@ -25,10 +21,12 @@ class ServiceVoter extends Voter
 
     protected function voteOnAttribute($attribute, $service, TokenInterface $token)
     {
-        $this->currentUser = $token->getUser();
+        /** @var User */
+        $this->user = $token->getUser();
+        /** @var Service */
         $this->service = $service;
 
-        if (!$this->currentUser) {
+        if (!$this->user) {
             return false;
         }
 
@@ -49,15 +47,9 @@ class ServiceVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isAdminOfService($this->service)
+            || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
-        }
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            foreach ($this->currentUser->getServiceUser() as $serviceUser) {
-                if ($serviceUser->getService() && $serviceUser->getService()->getId() === $this->service->getId()) {
-                    return true;
-                }
-            }
         }
 
         return false;
@@ -65,7 +57,7 @@ class ServiceVoter extends Voter
 
     protected function canDisable()
     {
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }
 

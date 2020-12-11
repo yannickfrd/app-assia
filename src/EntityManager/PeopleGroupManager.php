@@ -14,18 +14,18 @@ use App\Repository\RolePersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SupportGroupRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PeopleGroupManager
 {
-    private $session;
     private $manager;
+    private $flashbag;
     private $cache;
 
-    public function __construct(EntityManagerInterface $manager, SessionInterface $session)
+    public function __construct(EntityManagerInterface $manager, FlashBagInterface $flashbag)
     {
-        $this->session = $session;
         $this->manager = $manager;
+        $this->flashbag = $flashbag;
         $this->cache = new FilesystemAdapter();
     }
 
@@ -200,6 +200,6 @@ class PeopleGroupManager
      */
     protected function addFlash(string $alert, string $msg)
     {
-        $this->session->getFlashBag()->add($alert, $msg);
+        $this->flashbag->add($alert, $msg);
     }
 }

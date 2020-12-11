@@ -53,7 +53,7 @@ class DocumentController extends AbstractController
 
         return $this->render('app/document/listDocuments.html.twig', [
             'form' => $form->createView(),
-            'documents' => $pagination->paginate($this->repo->findDocumentsQuery($search, $currentUser), $request, 20) ?? null,
+            'documents' => $pagination->paginate($this->repo->findDocumentsQuery($search, $currentUser), $request, 20),
         ]);
     }
 

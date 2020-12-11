@@ -2,23 +2,17 @@
 
 namespace App\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use App\Entity\Document;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DocumentVoter extends Voter
 {
-    use UserAdminOfServiceTrait;
+    use VoterTrait;
 
-    private $security;
-    protected $currentUser;
-    protected $currentUserId;
+    protected $user;
+    protected $userId;
     protected $document;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
 
     protected function supports($attribute, $subject)
     {
@@ -28,11 +22,14 @@ class DocumentVoter extends Voter
 
     protected function voteOnAttribute($attribute, $document, TokenInterface $token): bool
     {
-        $this->currentUser = $token->getUser();
-        $this->currentUserId = $this->currentUser->getId();
+        /** @var User */
+        $this->user = $token->getUser();
+        $this->userId = $this->user->getId();
+        /** @var Document */
         $this->document = $document;
+        $this->supportGroup = $this->document->getSupportGroup();
 
-        if (!$this->currentUser) {
+        if (!$this->user) {
             return false;
         }
 
@@ -53,19 +50,11 @@ class DocumentVoter extends Voter
 
     protected function canView(): bool
     {
-        if ($this->currentUserId == $this->document->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->currentUserId == $this->document->getSupportGroup()->getReferent()->getId()) {
+        if ($this->isCreatorOrReferent()
+            || $this->isUserOfService($this->supportGroup->getService())
+            || $this->isGranted('ROLE_SUPER_ADMIN')
+            ) {
             return true;
-        }
-
-        $user = $this->document->getCreatedBy();
-        foreach ($this->currentUser->getServiceUser() as $serviceCurrentUser) {
-            foreach ($user->getServiceUser() as $serviceUser) {
-                if ($serviceCurrentUser->getService()->getId() == $serviceUser->getService()->getId()) {
-                    return true;
-                }
-            }
         }
 
         return false;
@@ -73,10 +62,9 @@ class DocumentVoter extends Voter
 
     protected function canEdit(): bool
     {
-        if ($this->currentUserId == $this->document->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->isAdminUserOfService($this->document->getSupportGroup()->getService())
-            || $this->currentUserId == $this->document->getSupportGroup()->getReferent()->getId()
+        if ($this->isCreatorOrReferent()
+            || $this->isAdminOfService($this->supportGroup->getService())
+            || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
         }
@@ -86,14 +74,18 @@ class DocumentVoter extends Voter
 
     protected function canDelete(): bool
     {
-        if ($this->currentUserId == $this->document->getCreatedBy()->getId()
-            || $this->security->isGranted('ROLE_SUPER_ADMIN')
-            || $this->isAdminUserOfService($this->document->getSupportGroup()->getService())
-            || $this->currentUserId == $this->document->getSupportGroup()->getReferent()->getId()
+        return $this->canEdit();
+    }
+
+    protected function isCreatorOrReferent(): bool
+    {
+        if (($this->document->getCreatedBy() && $this->document->getCreatedBy()->getId() === $this->userId)
+            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
         ) {
             return true;
         }
-
+        
         return false;
     }
 }

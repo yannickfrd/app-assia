@@ -32,9 +32,9 @@ class NoteRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('n')->select('n')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
-            ->leftJoin('n.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+            ->join('n.supportGroup', 'sg')->addSelect('sg')
+            ->join('sg.supportPeople', 'sp')->addSelect('sp')
+            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('sg.service IN (:services)')

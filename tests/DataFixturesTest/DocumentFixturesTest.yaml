@@ -43,6 +43,17 @@ App\Entity\SupportGroup:
     peopleGroup: "@peopleGroup"
     service: "@service1"
     createdAt: <date_create()>
-    updatedAt: <date_create()>
     createdBy: "@userRoleUser"
+    updatedAt: <date_create()>
     updatedBy: "@userRoleUser"
+
+App\Entity\SupportPerson:
+  supportPerson:
+    person: "@person"
+    supportGroup: "@supportGroup"
+    startDate: "@supportGroup->startDate"
+    status: "@supportGroup->status"
+    createdAt: "@supportGroup->createdAt"
+    createdBy: "@supportGroup->createdBy"
+    updatedAt: "@supportGroup->updatedAt"
+    updatedBy: "@supportGroup->updatedBy"

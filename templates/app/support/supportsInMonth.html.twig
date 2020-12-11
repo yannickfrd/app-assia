@@ -1,14 +1,16 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Suivis du mois{% endblock %}
+{% set title = "Suivis en présence" %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
     <section class="mt-0">
 
-        <div class="container">
+        <div class="container-fluid mt-4">
             {% include "model/_msgFlash.html.twig" %}
-            <h1 class="h2 mb-3">Suivis en présence | {{ calendar.getMonthToString }}</h1>
+            <h1 class="h2 mb-3">{{ title }} | {{ calendar.getMonthToString }}</h1>
         </div>
 
         {% include "app/support/_searchSupportsInMonth.html.twig" %}
@@ -61,7 +63,7 @@
                             {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
                             <tr>
                                 <th scope="row" class="align-middle">
-                                    <a href="{{ path('support_view', {'id':support.id}) }}"
+                                    <a href="{{ path('support_contributions', {'id':support.id}) }}"
                                         class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
                                         title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                     </a>

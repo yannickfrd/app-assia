@@ -28,14 +28,12 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findDocumentsQuery(DocumentSearch $search, CurrentUserService $currentUser = null): Query
     {
-        $query = $this->createQueryBuilder('d')
+        $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
-
-        $query = $this->filters($query, $search);
+            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('d.createdBy IN (:user)')
@@ -94,6 +92,8 @@ class DocumentRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
+        $query = $this->filters($query, $search);
+
         $query->orderBy('d.createdAt', 'DESC');
 
         return $query->getQuery()
@@ -105,7 +105,9 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findSupportDocumentsQuery(int $supportGroupId, SupportDocumentSearch $search): Query
     {
-        $query = $this->createQueryBuilder('d')
+        $query = $this->createQueryBuilder('d')->select('d')
+            ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+
             ->andWhere('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 

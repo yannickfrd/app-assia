@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -11,10 +12,11 @@ class CurrentUserService
 
     public function __construct(Security $security)
     {
+        /** @var User */
         $this->user = $security->getUser();
     }
 
-    public function getUser(): UserInterface
+    public function getUser(): User
     {
         return $this->user;
     }

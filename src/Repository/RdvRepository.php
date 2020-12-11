@@ -97,7 +97,7 @@ class RdvRepository extends ServiceEntityRepository
         }
 
         if ($search->getId()) {
-            $query->andWhere('r.id = :id')
+            return $query->andWhere('r.id = :id')
                 ->setParameter('id', $search->getId());
         }
 
