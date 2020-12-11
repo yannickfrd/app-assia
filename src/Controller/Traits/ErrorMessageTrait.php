@@ -20,7 +20,7 @@ trait ErrorMessageTrait
                 if ($normalisation) {
                     $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName()).' => '.$error->getMessage();
                 } else {
-                    $msg[] = $error->getMessage().' ('.$error->getCause().')';
+                    $msg[] = $error->getMessage();
                 }
             }
         }

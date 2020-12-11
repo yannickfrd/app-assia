@@ -80,8 +80,8 @@ class RdvVoter extends Voter
     protected function isCreatorOrReferent(): bool
     {
         if (($this->rdv->getCreatedBy() && $this->rdv->getCreatedBy()->getId() === $this->userId)
-            || ($this->supportGroup && ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId))
-            || ($this->supportGroup && ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId))
+            || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId))
         ) {
             return true;
         }

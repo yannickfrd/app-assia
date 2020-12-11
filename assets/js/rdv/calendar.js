@@ -223,12 +223,14 @@ export default class Calendar {
     requestSaveRdv(e) {
         e.preventDefault()
 
-        if (this.modalRdvElt.querySelector('#rdv_title').value != '') {
+        if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
+            return new MessageFlash('danger', 'La rdv est vide.')
+        }
+
+        if (!this.loader.isActive()) {
             this.updateDatetimes()
             this.loader.on()
             this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
-        } else {
-            new MessageFlash('danger', 'La rdv est vide.')
         }
     }
 
@@ -398,7 +400,7 @@ export default class Calendar {
         if (sumHeightdivElts > dayElt.clientHeight && rdvElts.length > maxHeight) {
             const divElt = document.createElement('a')
             divElt.className = 'calendar-others-events bg-' + this.themeColor + ' text-light font-weight-bold'
-            const date = dayElt.id.replace('-', '/')
+            let date = dayElt.id.replace('-', '/')
             date = date.replace('-', '/')
             divElt.href = '/calendar/day/' + date
             divElt.setAttribute('title', 'Voir tous les rendez-vous du jour')

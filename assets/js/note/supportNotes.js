@@ -229,7 +229,7 @@ export default class SupportNotes {
                     break
             }
 
-            if (!this.autoSave.active) {
+            if (!this.autoSave.active && response.msg) {
                 new MessageFlash(response.alert, response.msg)
                 this.loader.off()
             }

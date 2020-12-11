@@ -107,11 +107,10 @@ class DocumentController extends AbstractController
      * Nouveau document.
      *
      * @Route("support/{id}/document/new", name="document_new", methods="POST")
+     * @IsGranted("EDIT", subject="supportGroup")
      */
     public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
         $document = new Document();
 
         $form = ($this->createForm(DocumentType::class, $document))
@@ -128,11 +127,10 @@ class DocumentController extends AbstractController
      * Lit le document.
      *
      * @Route("document/{id}/read", name="document_read", methods="GET")
+     * @IsGranted("VIEW", subject="document")
      */
     public function readDocument(Document $document, Download $download): Response
     {
-        $this->denyAccessUnlessGranted('VIEW', $document);
-
         $file = 'uploads/documents/'.$document->getPeopleGroup()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
 
         if (file_exists($file)) {
@@ -148,11 +146,10 @@ class DocumentController extends AbstractController
      * Modification d'un document.
      *
      * @Route("document/{id}/edit", name="document_edit", methods="POST")
+     * @IsGranted("EDIT", subject="document")
      */
     public function editDocument(Document $document, Request $request): Response
     {
-        $this->denyAccessUnlessGranted('EDIT', $document);
-
         $form = ($this->createForm(DocumentType::class, $document))
             ->handleRequest($request);
 
@@ -167,7 +164,7 @@ class DocumentController extends AbstractController
      * Supprime un document.
      *
      * @Route("document/{id}/delete", name="document_delete", methods="GET")
-     * @IsGranted("DELETE", subject="document")
+     * @IsGranted("DELETE", subject="document", message="Vous n'avez pas les droits pour effectuer cette action.")
      */
     public function deleteDocument(Document $document): Response
     {
@@ -234,6 +231,7 @@ class DocumentController extends AbstractController
                 'peopleGroupId' => $peopleGroup->getId(),
                 'type' => $document->getTypeToString(),
                 'size' => $size,
+                'createdBy' => $this->getUser()->getFullname(),
                 'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
             ],
         ], 200);

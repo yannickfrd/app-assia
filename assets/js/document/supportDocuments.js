@@ -172,9 +172,10 @@ export default class SupportDocuments {
             return new MessageFlash('danger', 'Il n\'y a pas de fichier choisi.')
         }
         
-        this.loader.on()
-
-        this.uploadFiles(this.formDocumentElt.getAttribute('action'))
+        if (!this.loader.isActive()) {
+            this.loader.on()
+            this.uploadFiles(this.formDocumentElt.getAttribute('action'))
+        }
     }
 
     /**
@@ -274,6 +275,7 @@ export default class SupportDocuments {
                     <td class='align-middle js-document-content'>${this.documentContentInput.value}</td>
                     <td class='align-middle js-document-size text-right'>${size}</td>
                     <td class='align-middle js-document-createdAt'>${data.createdAt}</td>
+                    <td class='align-middle js-document-createdBy'>${data.createdBy}</td>
                     <td class='align-middle text-center'>
                         <button data-url='/document/${data.documentId}/delete' class='js-delete btn btn-danger btn-sm shadow my-1' 
                             title='Supprimer le document'><span class='fas fa-trash-alt'></span>

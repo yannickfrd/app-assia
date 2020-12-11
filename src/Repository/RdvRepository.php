@@ -47,6 +47,8 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id}')
+            ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
 

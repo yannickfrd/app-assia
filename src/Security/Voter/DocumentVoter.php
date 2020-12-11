@@ -3,8 +3,8 @@
 namespace App\Security\Voter;
 
 use App\Entity\Document;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class DocumentVoter extends Voter
 {
@@ -85,7 +85,7 @@ class DocumentVoter extends Voter
         ) {
             return true;
         }
-        
+
         return false;
     }
 }

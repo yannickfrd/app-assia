@@ -51,10 +51,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     public function findFullSupportById(int $id): ?SupportGroup
     {
         return $this->getsupportQuery()
-        ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
         ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
-        ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
-        ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
         ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
         ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
         ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
@@ -87,6 +84,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     protected function getsupportQuery()
     {
         return $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
+            ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
+            ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice}')
             ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name, email}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')

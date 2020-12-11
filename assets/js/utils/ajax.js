@@ -35,7 +35,7 @@ export default class Ajax {
             method: method, 
             body: data
         }).then(response => this.getResponse(response, callback) 
-        ).catch(error => this.getError(`Une erreur s'est produite (${error}).`))
+        ).catch(error => this.getError(error))
     }
 
     /**
@@ -59,8 +59,7 @@ export default class Ajax {
         this.loader.off()
         clearInterval(this.countdownID)
         if (response.status === 403) {
-            new MessageFlash('Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
-            throw new Error('403 Forbidden access.')
+            throw new Error('403 Forbidden access')
         }
 
         const contentType = response.headers.get('content-type');
@@ -114,13 +113,18 @@ export default class Ajax {
 
     /**
      * Donne l'erreur.
-     * @param {String} msg 
+     * @param {Error} error 
      */
-    getError(msg) {
+    getError(error) {       
         this.loading = false
         this.loader.off()
         clearInterval(this.countdownID)
-        console.error(msg)
-        new MessageFlash('danger', msg)
+        console.error(error.message)
+
+        if (error.message === '403 Forbidden access') {
+            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
+        }
+
+        new MessageFlash('danger', `Une erreur s'est produite (${error.message}).`)
     }
 }
