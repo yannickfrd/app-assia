@@ -3,8 +3,8 @@
 namespace App\Security\Voter;
 
 use App\Entity\Rdv;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class RdvVoter extends Voter
 {
@@ -63,7 +63,7 @@ class RdvVoter extends Voter
     protected function canEdit()
     {
         if ($this->isCreatorOrReferent()
-            || $this->isAdminOfService($this->supportGroup->getService())
+            || ($this->supportGroup && $this->isAdminOfService($this->supportGroup->getService()))
             || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
@@ -85,8 +85,7 @@ class RdvVoter extends Voter
         ) {
             return true;
         }
-        
+
         return false;
     }
-
 }
