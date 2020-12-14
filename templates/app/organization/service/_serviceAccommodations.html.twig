@@ -1,9 +1,5 @@
 {% extends "model/_collapseCard.html.twig" %}
 
-{% set id = "accommodations" %}
-
-{% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
-
 {% block card_title %}{% if service.id == SERVICE_PASH_ID  %}Hôtels{% else %}Groupes de places rattachés{% endif %}{% endblock %}
 
 {% block card_body %}

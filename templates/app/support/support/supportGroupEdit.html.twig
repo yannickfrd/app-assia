@@ -5,7 +5,6 @@
 {% set support = form.vars.value %}
 {% set people = support.id ? form.vars.value.supportPeople : people_group.rolePeople %}
 {% set title =  (support.id  ? "Édition du" : "Nouveau") ~ " suivi" %}
-{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 
 {% block title %}{{ title }}{% endblock %}
 

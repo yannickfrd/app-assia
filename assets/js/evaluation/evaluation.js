@@ -262,14 +262,16 @@ export default class evaluation {
      */
     changeResources(collapseId, prefix, i, entity) {
         const resourceInput = document.getElementById(prefix + i + "_" + entity + "_resources_resources")
-        resourceInput.addEventListener("change", e => {
-            if (this.selectType.getOption(resourceInput) === "2") {
-                document.querySelectorAll(".js-" + i + "_" + entity + "_resources_type").forEach(trElt => {
-                    this.removeTr(collapseId, entity, i, trElt)
-                })
-                document.getElementById(prefix + i + "_" + entity + "_resources_resourcesAmt").value = 0 // met le total des ressources à zéro
-            }
-        })
+        if (resourceInput) {
+            resourceInput.addEventListener("change", e => {
+                if (this.selectType.getOption(resourceInput) === "2") {
+                    document.querySelectorAll(".js-" + i + "_" + entity + "_resources_type").forEach(trElt => {
+                        this.removeTr(collapseId, entity, i, trElt)
+                    })
+                    document.getElementById(prefix + i + "_" + entity + "_resources_resourcesAmt").value = 0 // met le total des ressources à zéro
+                }
+            })
+        }
     }
 
     /**
@@ -316,13 +318,15 @@ export default class evaluation {
     editElt(i, eltId, display) {
         const selectElt = document.getElementById("js-" + i + eltId)
         const inputElts = document.querySelectorAll(".js-" + i + eltId)
-        selectElt.addEventListener("change", this.addOption.bind(this, selectElt, i, eltId, display))
-        inputElts.forEach(inputElt => {
-            inputElt.addEventListener("click", e => {
+        if (selectElt) {
+            selectElt.addEventListener("change", this.addOption.bind(this, selectElt, i, eltId, display))
+            inputElts.forEach(inputElt => {
+                inputElt.addEventListener("click", e => {
+                    this.displayNone(inputElt, display)
+                })
                 this.displayNone(inputElt, display)
             })
-            this.displayNone(inputElt, display)
-        })
+        }
     }
 
     /**

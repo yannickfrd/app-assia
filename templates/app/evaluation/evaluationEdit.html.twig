@@ -7,7 +7,6 @@
 	{% set evaluationGroup = form.vars.value %}
 	{% set EDIT_MODE = form.vars.value.evalBudgetGroup != null %}
 	{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
-	{% set YES = constant("App\\Form\\Utils\\Choices::YES") %}
 	{% set people_over_16 = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set people_adults = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
 
@@ -41,19 +40,19 @@
 				<span class="badge badge-pill badge-warning fade-out ml-2 small" data-toggle="tooltip" data-placement="bottom" 
 					title="Nombre d'informations importantes non-renseignées dans le bloc"></span>
 			{% endset %}
-			{% include "app/evaluation/_initEvaluation.html.twig" %}
+			{% include "app/evaluation/_initEvaluation.html.twig" with {id: "init_eval"} %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/_evaluationJustice.html.twig" %}
+				{% include "app/evaluation/_evaluationJustice.html.twig" with {id: "eval_adm"}  %}
 			{% endif %}
-			{% include "app/evaluation/_evaluationAdm.html.twig" %}
-			{% include "app/evaluation/_evaluationFamily.html.twig" %}
-			{% include "app/evaluation/_evaluationBudget.html.twig" %}
-			{% include "app/evaluation/_evaluationProf.html.twig" %}
-			{% include "app/evaluation/_evaluationSocial.html.twig" %}
-			{% include "app/evaluation/_evaluationHousing.html.twig" %}
-			{% include "app/evaluation/_backgroundPeople.html.twig" %}
+			{% include "app/evaluation/_evaluationAdm.html.twig" with {id: "eval_justice"} %}
+			{% include "app/evaluation/_evaluationFamily.html.twig" with {id: "eval_family"} %}
+			{% include "app/evaluation/_evaluationBudget.html.twig" with {id: "eval_budget"} %}
+			{% include "app/evaluation/_evaluationProf.html.twig" with {id: "eval_prof"} %}
+			{% include "app/evaluation/_evaluationSocial.html.twig" with {id: "eval_social"} %}
+			{% include "app/evaluation/_evaluationHousing.html.twig" with {id: "eval_housing"} %}
+			{% include "app/evaluation/_backgroundPeople.html.twig" with {id: "eval_background"} %}
 			{% if support.service.id == constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
-				{% include "app/evaluation/_evaluationHotelLife.html.twig" %}
+				{% include "app/evaluation/_evaluationHotelLife.html.twig" with {id: "eval_hotel_life"} %}
 			{% endif %}
 		</div>
 
